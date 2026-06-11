@@ -331,6 +331,22 @@ def enrich_collection(raw_collection):
         status_result = determine_site_status(site)
 
         enriched_site = dict(site)
+        enriched_site = dict(site)
+
+        audit_fetch_status = enriched_site.get("audit_fetch_status", {}) or {}
+
+        if audit_fetch_status.get("ok") is True:
+            enriched_site["audit_status"] = "available"
+            enriched_site["audit_api_access"] = True
+
+        elif audit_fetch_status.get("error_category") == "permission_limited":
+            enriched_site["audit_status"] = "permission_limited"
+            enriched_site["audit_api_access"] = False
+
+        else:
+            enriched_site["audit_status"] = "unavailable"
+            enriched_site["audit_api_access"] = False
+
         enriched_site["status"] = status_result["status"]
         enriched_site["risk_score"] = status_result["risk_score"]
         enriched_site["failed_api_checks"] = status_result["failed_api_checks"]

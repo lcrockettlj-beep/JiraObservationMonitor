@@ -1,6 +1,6 @@
 Jira Observation Monitor - Backend Summary
 ========================================================================
-Generated at local          : 2026-06-11T16:15:10.863734
+Generated at local          : 2026-06-11T15:49:49.542549
 
 STATUS SUMMARY
 ------------------------------------------------------------------------
@@ -18,8 +18,8 @@ Permission-limited checks  : 4
 
 COLLECTION SUMMARY
 ------------------------------------------------------------------------
-Collected at UTC           : 2026-06-11T15:15:06.035004+00:00
-Collection duration (sec)  : 4.8119
+Collected at UTC           : 2026-06-11T14:49:43.685969+00:00
+Collection duration (sec)  : 5.8405
 Endpoint checks passed     : 26
 Endpoint checks failed     : 4
 Permission-limited         : 4

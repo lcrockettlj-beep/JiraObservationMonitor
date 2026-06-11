@@ -1,5 +1,5 @@
 {
-  "generated_at_local": "2026-06-11T16:15:10.863734",
+  "generated_at_local": "2026-06-11T15:49:49.542549",
   "summary": {
     "site_count": 3,
     "healthy_count": 3,
@@ -15,8 +15,8 @@
     "total_permission_limited_checks": 4
   },
   "raw_collection_summary": {
-    "collected_at_utc": "2026-06-11T15:15:06.035004+00:00",
-    "collection_duration_seconds": 4.8119,
+    "collected_at_utc": "2026-06-11T14:49:43.685969+00:00",
+    "collection_duration_seconds": 5.8405,
     "site_count": 3,
     "excluded_sites": [
       {
@@ -444,7 +444,7 @@
   ],
   "snapshot_files": {
     "latest_file": "snapshots\\latest_snapshot.json",
-    "timestamp_file": "snapshots\\2026-06-11\\snapshot_2026-06-11_16-15-10.json",
+    "timestamp_file": "snapshots\\2026-06-11\\snapshot_2026-06-11_15-49-49.json",
     "index_file": "snapshots\\snapshot_index.json"
   }
 }

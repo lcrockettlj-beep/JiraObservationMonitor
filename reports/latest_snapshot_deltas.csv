@@ -1,0 +1,4 @@
+site_name,site_url,cloud_id,project_count_delta,total_users_delta,active_users_delta,inactive_users_delta,licensed_users_estimate_delta,growth_status
+gli-delivery-tm,https://gli-delivery-tm.atlassian.net,de2de731-c6ae-4e15-a2cf-92d976f0fb7c,0,0,0,0,0,stable
+gli-it-project,https://gli-it-project.atlassian.net,d4b3adb4-bd39-435e-bd65-f29db2b11a37,0,0,0,0,0,stable
+gli-global-technology,https://gli-global-technology.atlassian.net,aaa90a93-f0af-47ba-98d6-47829cc032b7,0,0,0,0,0,stable
