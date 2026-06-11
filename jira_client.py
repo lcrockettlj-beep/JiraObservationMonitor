@@ -1,8 +1,15 @@
+import os
+import threading
+
 import requests
+from requests.adapters import HTTPAdapter
 
 
 ATLASSIAN_API_BASE = "https://api.atlassian.com"
-REQUEST_TIMEOUT = 30
+REQUEST_TIMEOUT = int(os.getenv("JOM_REQUEST_TIMEOUT", "30"))
+HTTP_POOL_SIZE = int(os.getenv("JOM_HTTP_POOL_SIZE", "20"))
+
+_thread_local = threading.local()
 
 
 def build_headers(access_token):
@@ -13,6 +20,25 @@ def build_headers(access_token):
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"
     }
+
+
+def _get_session():
+    session = getattr(_thread_local, "session", None)
+
+    if session is None:
+        session = requests.Session()
+
+        adapter = HTTPAdapter(
+            pool_connections=HTTP_POOL_SIZE,
+            pool_maxsize=HTTP_POOL_SIZE
+        )
+
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+
+        _thread_local.session = session
+
+    return session
 
 
 def _safe_text(response):
@@ -62,7 +88,9 @@ def _request_json(method, url, access_token, params=None):
     response = None
 
     try:
-        response = requests.request(
+        session = _get_session()
+
+        response = session.request(
             method=method,
             url=url,
             headers=build_headers(access_token),
@@ -77,6 +105,7 @@ def _request_json(method, url, access_token, params=None):
             "ok": True,
             "data": data,
             "error": None,
+            "error_detail": None,
             "status_code": response.status_code,
             "url": response.url
         }
@@ -154,7 +183,8 @@ def safe_jira_get(access_token, cloud_id, endpoint, params=None):
 def test_client_setup():
     return {
         "status": "ok",
-        "message": "Improved Jira client module loaded successfully",
+        "message": "Performance-optimised Jira client module loaded successfully",
         "base_url": ATLASSIAN_API_BASE,
-        "timeout_seconds": REQUEST_TIMEOUT
+        "timeout_seconds": REQUEST_TIMEOUT,
+        "http_pool_size": HTTP_POOL_SIZE
     }

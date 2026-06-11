@@ -52,6 +52,7 @@ def build_export_summary(output):
     raw_collection_summary = output.get("raw_collection_summary", {}) or {}
     comparison = output.get("comparison", {}) or {}
     snapshot_files = output.get("snapshot_files", {}) or {}
+    historical_trends = output.get("historical_trends", {}) or {}
     sites = output.get("sites", []) or []
 
     change_counts = _normalise_change_counts(comparison)
@@ -68,13 +69,28 @@ def build_export_summary(output):
             "status_reasons": site.get("status_reasons", [])
         })
 
+    top_trend_sites = []
+    for site in (historical_trends.get("site_trends", []) or [])[:5]:
+        top_trend_sites.append({
+            "name": site.get("name"),
+            "current_status": site.get("current_status"),
+            "current_risk_score": site.get("current_risk_score", 0),
+            "trend_score": site.get("trend_score", 0),
+            "trend_signals": site.get("trend_signals", []),
+            "status_streak": site.get("status_streak", {}),
+            "unresolved_trend": site.get("unresolved_trend", {}),
+            "risk_trend": site.get("risk_trend", {})
+        })
+
     return {
         "generated_at_local": datetime.now().isoformat(),
         "summary": summary,
         "risk_summary": risk_summary,
         "raw_collection_summary": raw_collection_summary,
         "change_counts": change_counts,
+        "historical_trend_summary": historical_trends.get("summary", {}),
         "top_risky_sites": top_risky_sites,
+        "top_trend_sites": top_trend_sites,
         "snapshot_files": snapshot_files
     }
 
@@ -126,6 +142,16 @@ def _build_text_report(export_summary):
     lines.append(f"Critical changes           : {change_counts.get('critical', 0)}")
     lines.append("")
 
+    historical_summary = export_summary.get("historical_trend_summary", {}) or {}
+    lines.append("HISTORICAL TREND SUMMARY")
+    lines.append("-" * 72)
+    lines.append(f"Sites in history           : {historical_summary.get('site_count', 0)}")
+    lines.append(f"Warning/Critical streaks   : {historical_summary.get('warning_or_critical_streak_sites', 0)}")
+    lines.append(f"Rising unresolved sites    : {historical_summary.get('rising_unresolved_sites', 0)}")
+    lines.append(f"Rising risk sites          : {historical_summary.get('rising_risk_sites', 0)}")
+    lines.append(f"Recurring blocking sites   : {historical_summary.get('recurring_blocking_failure_sites', 0)}")
+    lines.append("")
+
     top_risky_sites = export_summary.get("top_risky_sites", []) or []
     lines.append("TOP RISKY SITES")
     lines.append("-" * 72)
@@ -144,6 +170,33 @@ def _build_text_report(export_summary):
             reasons = site.get("status_reasons", []) or []
             if reasons:
                 lines.append(f"   Reasons                 : {', '.join(str(r) for r in reasons)}")
+
+            lines.append("")
+
+    top_trend_sites = export_summary.get("top_trend_sites", []) or []
+    lines.append("TOP TREND SITES")
+    lines.append("-" * 72)
+
+    if not top_trend_sites:
+        lines.append("No historical trend data available.")
+    else:
+        for index, site in enumerate(top_trend_sites, start=1):
+            lines.append(
+                f"{index}. {site.get('name')} | current_status={site.get('current_status')} | "
+                f"current_risk={site.get('current_risk_score', 0)} | trend_score={site.get('trend_score', 0)}"
+            )
+
+            streak = site.get("status_streak", {}) or {}
+            unresolved_trend = site.get("unresolved_trend", {}) or {}
+            risk_trend = site.get("risk_trend", {}) or {}
+
+            lines.append(f"   Status streak           : {streak.get('status')} x{streak.get('length', 0)}")
+            lines.append(f"   Unresolved delta        : {unresolved_trend.get('delta', 0)}")
+            lines.append(f"   Risk delta              : {risk_trend.get('delta', 0)}")
+
+            signals = site.get("trend_signals", []) or []
+            if signals:
+                lines.append(f"   Trend signals           : {', '.join(str(s) for s in signals)}")
 
             lines.append("")
 

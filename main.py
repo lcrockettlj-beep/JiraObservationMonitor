@@ -12,6 +12,7 @@ from intelligence import enrich_collection
 from monitoring import compare_snapshots
 from reporting import save_reports
 from snapshots import load_latest_snapshot, save_snapshot
+from trends import analyze_historical_trends
 
 
 RUN_OUTPUT_FILE = "latest_run.json"
@@ -71,6 +72,11 @@ def print_runtime_summary(raw_collection, enriched_collection):
     print(f"Collection duration (sec)    : {raw_collection.get('collection_duration_seconds', 0)}")
     print(f"Sites collected              : {raw_collection.get('site_count', 0)}")
 
+    collector_settings = raw_collection.get("collector_settings", {}) or {}
+    print(f"Site worker limit            : {collector_settings.get('max_site_workers', 0)}")
+    print(f"Site workers used            : {collector_settings.get('site_workers_used', 0)}")
+    print(f"Endpoint workers per site    : {collector_settings.get('endpoint_workers', 0)}")
+
     endpoint_totals = raw_collection.get("endpoint_totals", {}) or {}
     print(f"Endpoint checks passed       : {endpoint_totals.get('successful_checks', 0)}")
     print(f"Endpoint checks failed       : {endpoint_totals.get('failed_checks', 0)}")
@@ -92,6 +98,70 @@ def print_status_summary(enriched_collection):
     print(f"Healthy                      : {enriched_collection.get('healthy_count', 0)}")
     print(f"Warning                      : {enriched_collection.get('warning_count', 0)}")
     print(f"Critical                     : {enriched_collection.get('critical_count', 0)}")
+
+
+def print_historical_trend_summary(historical_trends):
+    print_section("HISTORICAL TREND SUMMARY")
+
+    if not historical_trends.get("has_history"):
+        print("No historical trend data yet.")
+        return
+
+    summary = historical_trends.get("summary", {}) or {}
+
+    print(f"Snapshots analysed           : {historical_trends.get('lookback_snapshots', 0)}")
+    print(f"Sites in history             : {summary.get('site_count', 0)}")
+    print(f"Warning/Critical streaks     : {summary.get('warning_or_critical_streak_sites', 0)}")
+    print(f"Rising unresolved sites      : {summary.get('rising_unresolved_sites', 0)}")
+    print(f"Rising risk sites            : {summary.get('rising_risk_sites', 0)}")
+    print(f"Recurring blocking sites     : {summary.get('recurring_blocking_failure_sites', 0)}")
+
+
+def print_top_trend_sites(historical_trends, limit=5):
+    print_section("TOP TREND SITES")
+
+    if not historical_trends.get("has_history"):
+        print("No historical trend data available.")
+        return
+
+    site_trends = historical_trends.get("site_trends", []) or []
+    if not site_trends:
+        print("No trend sites available.")
+        return
+
+    for index, site in enumerate(site_trends[:limit], start=1):
+        print(
+            f"{index}. {status_icon(site.get('current_status'))} "
+            f"{site.get('name')} | current_status={site.get('current_status')} | "
+            f"current_risk={site.get('current_risk_score', 0)} | trend_score={site.get('trend_score', 0)}"
+        )
+
+        streak = site.get("status_streak", {}) or {}
+        print(f"    Status streak            : {streak.get('status')} x{streak.get('length', 0)}")
+
+        unresolved_trend = site.get("unresolved_trend", {}) or {}
+        risk_trend = site.get("risk_trend", {}) or {}
+        failed_api_trend = site.get("failed_api_trend", {}) or {}
+
+        print(f"    Unresolved delta         : {unresolved_trend.get('delta', 0)}")
+        print(f"    Risk delta               : {risk_trend.get('delta', 0)}")
+        print(f"    Failed API delta         : {failed_api_trend.get('delta', 0)}")
+
+        trend_signals = site.get("trend_signals", []) or []
+        if trend_signals:
+            print(f"    Trend signals            : {format_list(trend_signals)}")
+
+        recurring_blocking = site.get("recurring_blocking_failures", []) or []
+        if recurring_blocking:
+            top = recurring_blocking[0]
+            print(f"    Top recurring blocking   : {top.get('name')} x{top.get('count', 0)}")
+
+        recurring_permission = site.get("recurring_permission_limits", []) or []
+        if recurring_permission:
+            top = recurring_permission[0]
+            print(f"    Top permission limit     : {top.get('name')} x{top.get('count', 0)}")
+
+        print()
 
 
 def print_top_risky_sites(sites, limit=5):
@@ -139,79 +209,6 @@ def print_top_risky_sites(sites, limit=5):
         print()
 
 
-def print_site_group(title, sites):
-    if not sites:
-        return
-
-    print_section(title)
-
-    for site in sites:
-        icon = status_icon(site.get("status"))
-
-        print(f"{icon} {site.get('name')}")
-        print(f"    Status                   : {site.get('status')}")
-        print(f"    Risk score               : {site.get('risk_score', 0)}")
-        print(f"    URL                      : {site.get('url')}")
-        print(f"    Cloud ID                 : {site.get('cloud_id')}")
-        print(f"    Collected at UTC         : {site.get('collected_at_utc')}")
-        print(f"    Site collection (sec)    : {site.get('collection_duration_seconds', 0)}")
-
-        print(f"    Projects                 : {site.get('project_count', 0)}")
-        print(f"    Application roles        : {site.get('application_role_count', 0)}")
-        print(f"    Total issues             : {site.get('issue_count_total', 0)}")
-        print(f"    Unresolved issues        : {site.get('issue_count_unresolved', 0)}")
-        print(f"    Updated last 7 days      : {site.get('issue_count_updated_last_7d', 0)}")
-        print(f"    Failed API checks        : {site.get('failed_api_checks', 0)}")
-
-        issue_metrics = site.get("issue_metrics", {}) or {}
-        print(f"    Unresolved ratio         : {issue_metrics.get('unresolved_ratio', 0)}")
-        print(f"    Issues per project       : {issue_metrics.get('issues_per_project', 0)}")
-        print(f"    Unresolved per project   : {issue_metrics.get('unresolved_per_project', 0)}")
-        print(f"    Issue risk score         : {site.get('issue_risk_score', 0)}")
-        print(f"    Operational risk score   : {site.get('operational_risk_score', 0)}")
-
-        health_breakdown = site.get("site_health_breakdown", {}) or {}
-        print(f"    Endpoint failure ratio   : {health_breakdown.get('endpoint_failure_ratio', 0)}")
-
-        endpoint_summary = site.get("endpoint_summary", {}) or {}
-        print(f"    Endpoint checks total    : {endpoint_summary.get('total_checks', 0)}")
-        print(f"    Endpoint checks passed   : {endpoint_summary.get('successful_checks', 0)}")
-        print(f"    Endpoint checks failed   : {endpoint_summary.get('failed_checks', 0)}")
-
-        blocking_failed = site.get("blocking_failed_checks", [])
-        permission_limited = site.get("permission_limited_checks", [])
-        status_reasons = site.get("status_reasons", [])
-        issue_signals = site.get("issue_risk_signals", [])
-        operational_signals = site.get("operational_risk_signals", [])
-
-        if blocking_failed:
-            print(f"    Blocking failures        : {format_list(blocking_failed)}")
-
-        if permission_limited:
-            print(f"    Permission limited       : {format_list(permission_limited)}")
-
-        if issue_signals:
-            print(f"    Issue risk signals       : {format_list(issue_signals)}")
-
-        if operational_signals:
-            print(f"    Operational signals      : {format_list(operational_signals)}")
-
-        if status_reasons:
-            print(f"    Status reasons           : {format_list(status_reasons)}")
-
-        failed_details = endpoint_summary.get("failed_check_details", []) or []
-        if failed_details:
-            print("    Failed endpoint details  :")
-            for detail in failed_details:
-                print(
-                    f"      - {detail.get('endpoint_key')} "
-                    f"(status={detail.get('status_code')}, "
-                    f"permission_limited={detail.get('permission_limited')})"
-                )
-
-        print()
-
-
 def print_changes(comparison):
     print_section("SNAPSHOT CHANGES")
 
@@ -236,41 +233,16 @@ def print_changes(comparison):
     print(f"Warning changes              : {comparison.get('warning_change_count', 0)}")
     print(f"Critical changes             : {comparison.get('critical_change_count', 0)}")
 
-    changes = comparison.get("changes", [])
-    if not changes:
-        print("No detailed changes detected.")
-        return
 
-    print()
-
-    for change in changes:
-        severity = change.get("severity", "info").upper()
-        change_type = change.get("type", "unknown")
-        site_name = change.get("site_name", "Unknown site")
-        field = change.get("field")
-        old_value = change.get("old")
-        new_value = change.get("new")
-
-        print(f"[{severity}] {change_type} - {site_name}")
-
-        if field is not None:
-            print(f"    Field : {field}")
-
-        if old_value is not None or new_value is not None:
-            print(f"    From  : {old_value}")
-            print(f"    To    : {new_value}")
-
-        print()
-
-
-def build_output(raw_collection, enriched_collection, comparison, snapshot_files, report_files):
+def build_output(raw_collection, enriched_collection, comparison, snapshot_files, report_files, historical_trends):
     return {
         "run_timestamp_local": datetime.now().isoformat(),
         "raw_collection_summary": {
             "collected_at_utc": raw_collection.get("collected_at_utc"),
             "collection_duration_seconds": raw_collection.get("collection_duration_seconds", 0),
             "site_count": raw_collection.get("site_count", 0),
-            "endpoint_totals": raw_collection.get("endpoint_totals", {})
+            "endpoint_totals": raw_collection.get("endpoint_totals", {}),
+            "collector_settings": raw_collection.get("collector_settings", {})
         },
         "summary": {
             "site_count": enriched_collection.get("site_count", 0),
@@ -288,6 +260,7 @@ def build_output(raw_collection, enriched_collection, comparison, snapshot_files
         },
         "sites": enriched_collection.get("sites", []),
         "comparison": comparison,
+        "historical_trends": historical_trends,
         "snapshot_files": snapshot_files,
         "report_files": report_files
     }
@@ -349,12 +322,17 @@ def main():
     snapshot_files = save_snapshot(enriched_collection)
     print("Snapshot save                : SUCCESS")
 
+    print("Analysing historical trends...")
+    historical_trends = analyze_historical_trends(lookback=10)
+    print("Historical trends            : SUCCESS")
+
     temp_output = {
         "raw_collection_summary": {
             "collected_at_utc": raw_collection.get("collected_at_utc"),
             "collection_duration_seconds": raw_collection.get("collection_duration_seconds", 0),
             "site_count": raw_collection.get("site_count", 0),
-            "endpoint_totals": raw_collection.get("endpoint_totals", {})
+            "endpoint_totals": raw_collection.get("endpoint_totals", {}),
+            "collector_settings": raw_collection.get("collector_settings", {})
         },
         "summary": {
             "site_count": enriched_collection.get("site_count", 0),
@@ -372,6 +350,7 @@ def main():
         },
         "sites": enriched_collection.get("sites", []),
         "comparison": comparison,
+        "historical_trends": historical_trends,
         "snapshot_files": snapshot_files
     }
 
@@ -384,30 +363,19 @@ def main():
         enriched_collection=enriched_collection,
         comparison=comparison,
         snapshot_files=snapshot_files,
-        report_files=report_files
+        report_files=report_files,
+        historical_trends=historical_trends
     )
 
     save_run_output(output)
 
     sites = output["sites"]
 
-    healthy_sites = [s for s in sites if s.get("status") == "healthy"]
-    warning_sites = [s for s in sites if s.get("status") == "warning"]
-    critical_sites = [s for s in sites if s.get("status") == "critical"]
-
     print_runtime_summary(raw_collection, enriched_collection)
     print_status_summary(enriched_collection)
+    print_historical_trend_summary(historical_trends)
+    print_top_trend_sites(historical_trends, limit=5)
     print_top_risky_sites(sites, limit=5)
-
-    if critical_sites:
-        print_site_group("CRITICAL SITES", critical_sites)
-
-    if warning_sites:
-        print_site_group("WARNING SITES", warning_sites)
-
-    if healthy_sites:
-        print_site_group("HEALTHY SITES", healthy_sites)
-
     print_changes(comparison)
 
     print_section("OUTPUT FILES")

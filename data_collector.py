@@ -1,7 +1,13 @@
-from datetime import datetime, timezone
+import os
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 
 from jira_client import get_accessible_resources, safe_jira_get
+
+
+MAX_SITE_WORKERS = int(os.getenv("JOM_MAX_SITE_WORKERS", "4"))
+ENDPOINT_WORKERS = int(os.getenv("JOM_ENDPOINT_WORKERS", "4"))
 
 
 def _utc_now_iso():
@@ -227,69 +233,46 @@ def _build_endpoint_results(result_map):
     return endpoint_results
 
 
+def _fetch_endpoint(access_token, cloud_id, endpoint_key, endpoint, params=None):
+    result = safe_jira_get(
+        access_token=access_token,
+        cloud_id=cloud_id,
+        endpoint=endpoint,
+        params=params
+    )
+    return endpoint_key, result
+
+
 def _collect_site_metrics(access_token, cloud_id):
-    """
-    Collects all endpoint responses for a single Jira site.
-    Every call is wrapped with safe_jira_get so one failed endpoint
-    does not break the entire site collection.
-    """
+    endpoint_jobs = [
+        ("server_info", "serverInfo", None),
+        ("myself", "myself", {"expand": "groups,applicationRoles"}),
+        ("projects", "project/search", {"maxResults": 100}),
+        ("application_roles", "applicationrole", None),
+        ("all_issues", "search", {"jql": "order by created desc", "maxResults": 0}),
+        ("unresolved_issues", "search", {"jql": "resolution = Unresolved", "maxResults": 0}),
+        ("updated_last_7d", "search", {"jql": "updated >= -7d", "maxResults": 0}),
+    ]
+
     result_map = {}
+    worker_count = min(ENDPOINT_WORKERS, len(endpoint_jobs))
 
-    result_map["server_info"] = safe_jira_get(
-        access_token,
-        cloud_id,
-        "serverInfo"
-    )
-
-    result_map["myself"] = safe_jira_get(
-        access_token,
-        cloud_id,
-        "myself",
-        params={"expand": "groups,applicationRoles"}
-    )
-
-    result_map["projects"] = safe_jira_get(
-        access_token,
-        cloud_id,
-        "project/search",
-        params={"maxResults": 100}
-    )
-
-    result_map["application_roles"] = safe_jira_get(
-        access_token,
-        cloud_id,
-        "applicationrole"
-    )
-
-    result_map["all_issues"] = safe_jira_get(
-        access_token,
-        cloud_id,
-        "search",
-        params={
-            "jql": "order by created desc",
-            "maxResults": 0
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        futures = {
+            executor.submit(
+                _fetch_endpoint,
+                access_token,
+                cloud_id,
+                endpoint_key,
+                endpoint,
+                params
+            ): endpoint_key
+            for endpoint_key, endpoint, params in endpoint_jobs
         }
-    )
 
-    result_map["unresolved_issues"] = safe_jira_get(
-        access_token,
-        cloud_id,
-        "search",
-        params={
-            "jql": "resolution = Unresolved",
-            "maxResults": 0
-        }
-    )
-
-    result_map["updated_last_7d"] = safe_jira_get(
-        access_token,
-        cloud_id,
-        "search",
-        params={
-            "jql": "updated >= -7d",
-            "maxResults": 0
-        }
-    )
+        for future in as_completed(futures):
+            endpoint_key, result = future.result()
+            result_map[endpoint_key] = result
 
     return result_map
 
@@ -357,20 +340,17 @@ def collect_site_data(access_token, resource):
         "collected_at_utc": _utc_now_iso(),
         "collection_duration_seconds": site_elapsed_seconds,
 
-        # Core metrics
         "project_count": project_count,
         "application_role_count": application_role_count,
         "issue_count_total": total_issue_count,
         "issue_count_unresolved": unresolved_issue_count,
         "issue_count_updated_last_7d": updated_last_7d_count,
 
-        # Samples / summaries
         "project_sample": project_sample,
         "application_role_sample": application_role_sample,
         "server_info": _extract_server_info_summary(server_info_data),
         "myself": _extract_myself_summary(myself_data),
 
-        # API / endpoint health
         "api_checks": api_checks,
         "api_errors": api_errors,
         "api_status_codes": api_status_codes,
@@ -382,17 +362,53 @@ def collect_site_data(access_token, resource):
     return site_record
 
 
+def _collect_site_wrapper(index, access_token, resource):
+    site_record = collect_site_data(access_token, resource)
+    return index, site_record
+
+
 def collect_all_sites(access_token):
     run_start = time.perf_counter()
     collected_at_utc = _utc_now_iso()
 
     resources = get_accessible_resources(access_token)
+    site_count = len(resources)
 
-    sites = []
+    if site_count == 0:
+        return {
+            "collected_at_utc": collected_at_utc,
+            "collection_duration_seconds": 0,
+            "site_count": 0,
+            "endpoint_totals": {
+                "successful_checks": 0,
+                "failed_checks": 0,
+                "permission_limited_checks": 0,
+                "blocking_failed_checks": 0
+            },
+            "collector_settings": {
+                "max_site_workers": MAX_SITE_WORKERS,
+                "endpoint_workers": ENDPOINT_WORKERS,
+                "site_workers_used": 0
+            },
+            "sites": []
+        }
 
-    for resource in resources:
-        site_record = collect_site_data(access_token, resource)
-        sites.append(site_record)
+    site_workers_used = min(MAX_SITE_WORKERS, site_count)
+
+    ordered_results = []
+
+    with ThreadPoolExecutor(max_workers=site_workers_used) as executor:
+        futures = {
+            executor.submit(_collect_site_wrapper, index, access_token, resource): index
+            for index, resource in enumerate(resources)
+        }
+
+        for future in as_completed(futures):
+            index, site_record = future.result()
+            ordered_results.append((index, site_record))
+
+    ordered_results.sort(key=lambda item: item[0])
+    sites = [site_record for _, site_record in ordered_results]
 
     total_duration_seconds = round(time.perf_counter() - run_start, 4)
 
@@ -418,6 +434,11 @@ def collect_all_sites(access_token):
             "failed_checks": failed_endpoint_checks,
             "permission_limited_checks": permission_limited_endpoint_checks,
             "blocking_failed_checks": blocking_failed_endpoint_checks
+        },
+        "collector_settings": {
+            "max_site_workers": MAX_SITE_WORKERS,
+            "endpoint_workers": ENDPOINT_WORKERS,
+            "site_workers_used": site_workers_used
         },
         "sites": sites
     }
