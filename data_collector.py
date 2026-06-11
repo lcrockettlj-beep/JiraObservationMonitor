@@ -349,9 +349,7 @@ def _fetch_search_count(access_token, cloud_id, endpoint_key, jql_variants):
 def _collect_site_metrics(access_token, cloud_id):
     result_map = {}
 
-    worker_count = ENDPOINT_WORKERS
-
-    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+    with ThreadPoolExecutor(max_workers=ENDPOINT_WORKERS) as executor:
         futures = []
 
         futures.append(executor.submit(
@@ -487,7 +485,7 @@ def collect_site_data(access_token, resource):
 
     site_elapsed_seconds = round(time.perf_counter() - site_start, 4)
 
-    site_record = {
+    return {
         "name": site_name,
         "url": site_url,
         "cloud_id": cloud_id,
@@ -519,12 +517,9 @@ def collect_site_data(access_token, resource):
         "search_debug": search_debug
     }
 
-    return site_record
-
 
 def _collect_site_wrapper(index, access_token, resource):
-    site_record = collect_site_data(access_token, resource)
-    return index, site_record
+    return index, collect_site_data(access_token, resource)
 
 
 def collect_all_sites(access_token):
@@ -556,7 +551,6 @@ def collect_all_sites(access_token):
         }
 
     site_workers_used = min(MAX_SITE_WORKERS, site_count)
-
     ordered_results = []
 
     with ThreadPoolExecutor(max_workers=site_workers_used) as executor:

@@ -82,9 +82,6 @@ def _classify_error(response=None, exc=None):
     if isinstance(exc, requests.exceptions.ConnectionError):
         return "connection_error"
 
-    if isinstance(exc, requests.exceptions.JSONDecodeError):
-        return "invalid_json"
-
     if status_code == 400:
         return "bad_request"
     if status_code == 401:
@@ -185,7 +182,6 @@ def _request_json_once(method, url, access_token, params=None, json_body=None):
 
 def _request_json(method, url, access_token, params=None, json_body=None):
     last_error_info = None
-
     total_attempts = RETRY_ATTEMPTS + 1
 
     for attempt_index in range(1, total_attempts + 1):
@@ -221,8 +217,7 @@ def _request_json(method, url, access_token, params=None, json_body=None):
             last_error_info = error_info
 
             if error_info["retryable"] and attempt_index < total_attempts:
-                sleep_seconds = RETRY_BACKOFF_SECONDS * attempt_index
-                time.sleep(sleep_seconds)
+                time.sleep(RETRY_BACKOFF_SECONDS * attempt_index)
                 continue
 
             break
@@ -365,11 +360,12 @@ def _extract_search_total(search_payload):
 
 def safe_jira_search_count(access_token, cloud_id, jql_variants, fields=None):
     """
-    Search compatibility helper:
-    - tries POST /search first
-    - falls back to GET /search
+    Jira Cloud search/jql compatibility helper:
+    - uses /search/jql (current Jira Cloud endpoint)
+    - tries POST first
+    - falls back to GET
     - tries multiple JQL variants
-    - uses maxResults=1 for safer lightweight total retrieval
+    - uses maxResults=1 to keep the call light while still getting total
     """
     jql_list = _normalise_jql_variants(jql_variants)
 
@@ -381,7 +377,7 @@ def safe_jira_search_count(access_token, cloud_id, jql_variants, fields=None):
             "error_detail": {"error_category": "bad_request"},
             "status_code": None,
             "url": None,
-            "endpoint": "search",
+            "endpoint": "search/jql",
             "cloud_id": cloud_id,
             "attempt_count": 0,
             "retryable": False,
@@ -393,7 +389,6 @@ def safe_jira_search_count(access_token, cloud_id, jql_variants, fields=None):
         }
 
     search_attempts = []
-
     selected_fields = fields if isinstance(fields, list) else ["key"]
 
     for jql_index, jql in enumerate(jql_list):
@@ -408,7 +403,7 @@ def safe_jira_search_count(access_token, cloud_id, jql_variants, fields=None):
         post_result = safe_jira_post(
             access_token=access_token,
             cloud_id=cloud_id,
-            endpoint="search",
+            endpoint="search/jql",
             json_body=post_body
         )
 
@@ -433,7 +428,7 @@ def safe_jira_search_count(access_token, cloud_id, jql_variants, fields=None):
         get_result = safe_jira_get(
             access_token=access_token,
             cloud_id=cloud_id,
-            endpoint="search",
+            endpoint="search/jql",
             params={
                 "jql": jql,
                 "maxResults": 1,
@@ -464,11 +459,11 @@ def safe_jira_search_count(access_token, cloud_id, jql_variants, fields=None):
     return {
         "ok": False,
         "data": None,
-        "error": last_attempt.get("error", "Search compatibility attempts failed"),
+        "error": last_attempt.get("error", "Search/JQL attempts failed"),
         "error_detail": {"error_category": last_attempt.get("error_category", "unknown_error")},
         "status_code": last_attempt.get("status_code"),
         "url": None,
-        "endpoint": "search",
+        "endpoint": "search/jql",
         "cloud_id": cloud_id,
         "attempt_count": len(search_attempts),
         "retryable": False,
@@ -483,7 +478,7 @@ def safe_jira_search_count(access_token, cloud_id, jql_variants, fields=None):
 def test_client_setup():
     return {
         "status": "ok",
-        "message": "Search-compatibility Jira client module loaded successfully",
+        "message": "Search/JQL migration client loaded successfully",
         "base_url": ATLASSIAN_API_BASE,
         "timeout_seconds": REQUEST_TIMEOUT,
         "http_pool_size": HTTP_POOL_SIZE,
