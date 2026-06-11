@@ -9,7 +9,7 @@ from auth import (
 )
 from data_collector import collect_all_sites
 from intelligence import enrich_collection
-from monitoring import compare_snapshots
+from monitoring import apply_snapshot_deltas, compare_snapshots
 from reporting import save_reports
 from snapshots import load_latest_snapshot, save_snapshot
 from trends import analyze_historical_trends
@@ -48,6 +48,14 @@ def format_list(values):
     if not values:
         return "None"
     return ", ".join(str(v) for v in values)
+
+
+def signed_value(value):
+    if value is None:
+        return "baseline"
+    if value > 0:
+        return f"+{value}"
+    return str(value)
 
 
 def save_run_output(output):
@@ -125,6 +133,18 @@ def print_status_summary(enriched_collection):
     print(f"Critical                     : {enriched_collection.get('critical_count', 0)}")
 
 
+def print_delta_summary(enriched_collection):
+    print_section("DELTA SUMMARY")
+
+    delta_summary = enriched_collection.get("delta_summary", {}) or {}
+
+    print(f"Project delta total          : {signed_value(delta_summary.get('project_delta_total'))}")
+    print(f"Total users delta total      : {signed_value(delta_summary.get('total_users_delta_total'))}")
+    print(f"Active users delta total     : {signed_value(delta_summary.get('active_users_delta_total'))}")
+    print(f"Inactive users delta total   : {signed_value(delta_summary.get('inactive_users_delta_total'))}")
+    print(f"Licensed users delta total   : {signed_value(delta_summary.get('licensed_users_estimate_delta_total'))}")
+
+
 def print_permission_checker(sites):
     print_section("PERMISSION CHECKER")
 
@@ -173,6 +193,11 @@ def print_user_licence_summary(sites):
         print(f"  Active users             : {user_summary.get('active_users')}")
         print(f"  Inactive users           : {user_summary.get('inactive_users')}")
         print(f"  Licensed users estimate  : {licence_summary.get('licensed_users_estimate')}")
+        print(f"  Total users delta        : {signed_value(site.get('total_users_delta'))}")
+        print(f"  Active users delta       : {signed_value(site.get('active_users_delta'))}")
+        print(f"  Inactive users delta     : {signed_value(site.get('inactive_users_delta'))}")
+        print(f"  Licensed users delta     : {signed_value(site.get('licensed_users_estimate_delta'))}")
+        print(f"  Growth status            : {site.get('growth_status')}")
 
         products = licence_summary.get("products", []) or []
         if products:
@@ -248,16 +273,30 @@ def print_top_sites(sites, limit=5):
             f"{site.get('name')} | status={site.get('status')} | risk={site.get('risk_score', 0)}"
         )
         print(f"    Projects                 : {site.get('project_count', 0)}")
+        print(f"    Project delta            : {signed_value(site.get('project_count_delta'))}")
         print(f"    Total issues             : {site.get('issue_count_total', 0)}")
+        print(f"    Issue total delta        : {signed_value(site.get('issue_count_total_delta'))}")
         print(f"    Unresolved issues        : {site.get('issue_count_unresolved', 0)}")
+        print(f"    Unresolved delta         : {signed_value(site.get('issue_count_unresolved_delta'))}")
         print(f"    Updated last 7 days      : {site.get('issue_count_updated_last_7d', 0)}")
         print(f"    Site collection (sec)    : {site.get('collection_duration_seconds', 0)}")
 
         user_summary = site.get("user_summary", {}) or {}
-        print(f"    Users total / active / inactive : {user_summary.get('total_users')} / {user_summary.get('active_users')} / {user_summary.get('inactive_users')}")
+        print(
+            "    Users total / active / inactive : "
+            f"{user_summary.get('total_users')} / {user_summary.get('active_users')} / {user_summary.get('inactive_users')}"
+        )
+        print(
+            "    User deltas total / active / inactive : "
+            f"{signed_value(site.get('total_users_delta'))} / "
+            f"{signed_value(site.get('active_users_delta'))} / "
+            f"{signed_value(site.get('inactive_users_delta'))}"
+        )
 
         licence_summary = site.get("licence_summary", {}) or {}
         print(f"    Licensed users estimate  : {licence_summary.get('licensed_users_estimate')}")
+        print(f"    Licensed users delta     : {signed_value(site.get('licensed_users_estimate_delta'))}")
+        print(f"    Growth status            : {site.get('growth_status')}")
 
         reasons = site.get("status_reasons", []) or []
         print(f"    Reasons                  : {format_list(reasons)}")
@@ -315,6 +354,7 @@ def build_output(raw_collection, enriched_collection, comparison, snapshot_files
             "total_blocking_failures": enriched_collection.get("total_blocking_failures", 0),
             "total_permission_limited_checks": enriched_collection.get("total_permission_limited_checks", 0)
         },
+        "delta_summary": enriched_collection.get("delta_summary", {}),
         "sites": enriched_collection.get("sites", []),
         "comparison": comparison,
         "historical_trends": historical_trends,
@@ -372,6 +412,10 @@ def main():
     print("Loading previous snapshot...")
     previous_snapshot = load_latest_snapshot()
 
+    print("Applying snapshot deltas...")
+    enriched_collection = apply_snapshot_deltas(previous_snapshot, enriched_collection)
+    print("Snapshot delta apply         : SUCCESS")
+
     print("Comparing snapshots...")
     comparison = compare_snapshots(previous_snapshot, enriched_collection)
 
@@ -407,6 +451,7 @@ def main():
             "total_blocking_failures": enriched_collection.get("total_blocking_failures", 0),
             "total_permission_limited_checks": enriched_collection.get("total_permission_limited_checks", 0)
         },
+        "delta_summary": enriched_collection.get("delta_summary", {}),
         "sites": enriched_collection.get("sites", []),
         "comparison": comparison,
         "historical_trends": historical_trends,
@@ -433,6 +478,7 @@ def main():
     print_runtime_summary(raw_collection, enriched_collection)
     print_excluded_sites(raw_collection)
     print_status_summary(enriched_collection)
+    print_delta_summary(enriched_collection)
     print_permission_checker(sites)
     print_user_licence_summary(sites)
     print_audit_automation_summary(sites)

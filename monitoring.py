@@ -1,3 +1,9 @@
+def _safe_int(value, default=0):
+    if isinstance(value, int):
+        return value
+    return default
+
+
 def _build_site_lookup(snapshot):
     lookup = {}
 
@@ -38,73 +44,54 @@ def _append_change(changes, change_type, site_name, cloud_id, field=None, old=No
     changes.append(change)
 
 
-def _compare_numeric_field(
-    changes,
-    site_name,
-    cloud_id,
-    field_name,
-    previous_site,
-    current_site,
-    severity="info"
-):
-    previous_value = previous_site.get(field_name, 0)
-    current_value = current_site.get(field_name, 0)
+def _site_metric(site, metric_name):
+    user_summary = site.get("user_summary", {}) or {}
+    licence_summary = site.get("licence_summary", {}) or {}
+
+    if metric_name == "project_count":
+        return _safe_int(site.get("project_count", 0))
+    if metric_name == "issue_count_total":
+        return _safe_int(site.get("issue_count_total", 0))
+    if metric_name == "issue_count_unresolved":
+        return _safe_int(site.get("issue_count_unresolved", 0))
+    if metric_name == "issue_count_updated_last_7d":
+        return _safe_int(site.get("issue_count_updated_last_7d", 0))
+    if metric_name == "total_users":
+        return _safe_int(user_summary.get("total_users", 0))
+    if metric_name == "active_users":
+        return _safe_int(user_summary.get("active_users", 0))
+    if metric_name == "inactive_users":
+        return _safe_int(user_summary.get("inactive_users", 0))
+    if metric_name == "licensed_users_estimate":
+        value = licence_summary.get("licensed_users_estimate")
+        if isinstance(value, int):
+            return value
+        return 0
+
+    return 0
+
+
+def _compare_numeric_metric(changes, previous_site, current_site, metric_name, severity="info"):
+    site_name = current_site.get("name")
+    cloud_id = current_site.get("cloud_id")
+
+    previous_value = _site_metric(previous_site, metric_name)
+    current_value = _site_metric(current_site, metric_name)
 
     if previous_value != current_value:
         _append_change(
             changes=changes,
-            change_type=f"{field_name}_change",
+            change_type=f"{metric_name}_change",
             site_name=site_name,
             cloud_id=cloud_id,
-            field=field_name,
+            field=metric_name,
             old=previous_value,
             new=current_value,
             severity=severity
         )
 
 
-def _compare_ratio_field(
-    changes,
-    site_name,
-    cloud_id,
-    field_path,
-    previous_value,
-    current_value,
-    threshold=0.05,
-    severity="info"
-):
-    try:
-        previous_num = float(previous_value)
-    except Exception:
-        previous_num = 0.0
-
-    try:
-        current_num = float(current_value)
-    except Exception:
-        current_num = 0.0
-
-    if abs(current_num - previous_num) >= threshold:
-        _append_change(
-            changes=changes,
-            change_type=f"{field_path}_change",
-            site_name=site_name,
-            cloud_id=cloud_id,
-            field=field_path,
-            old=previous_num,
-            new=current_num,
-            severity=severity
-        )
-
-
-def _compare_list_field(
-    changes,
-    site_name,
-    cloud_id,
-    field_name,
-    previous_site,
-    current_site,
-    severity="info"
-):
+def _compare_list_field(changes, site_name, cloud_id, field_name, previous_site, current_site, severity="info"):
     previous_value = _normalise_list(previous_site.get(field_name, []))
     current_value = _normalise_list(current_site.get(field_name, []))
 
@@ -117,6 +104,32 @@ def _compare_list_field(
             field=field_name,
             old=previous_value,
             new=current_value,
+            severity=severity
+        )
+
+
+def _compare_status(previous_site, current_site, changes):
+    site_name = current_site.get("name")
+    cloud_id = current_site.get("cloud_id")
+
+    previous_status = previous_site.get("status")
+    current_status = current_site.get("status")
+
+    if previous_status != current_status:
+        severity = "info"
+        if current_status == "warning":
+            severity = "warning"
+        elif current_status == "critical":
+            severity = "critical"
+
+        _append_change(
+            changes=changes,
+            change_type="status_change",
+            site_name=site_name,
+            cloud_id=cloud_id,
+            field="status",
+            old=previous_status,
+            new=current_status,
             severity=severity
         )
 
@@ -148,32 +161,6 @@ def _compare_endpoint_checks(changes, site_name, cloud_id, previous_site, curren
             )
 
 
-def _compare_status(previous_site, current_site, changes):
-    site_name = current_site.get("name")
-    cloud_id = current_site.get("cloud_id")
-
-    previous_status = previous_site.get("status")
-    current_status = current_site.get("status")
-
-    if previous_status != current_status:
-        severity = "info"
-        if current_status == "warning":
-            severity = "warning"
-        elif current_status == "critical":
-            severity = "critical"
-
-        _append_change(
-            changes=changes,
-            change_type="status_change",
-            site_name=site_name,
-            cloud_id=cloud_id,
-            field="status",
-            old=previous_status,
-            new=current_status,
-            severity=severity
-        )
-
-
 def _compare_site(previous_site, current_site):
     changes = []
 
@@ -182,50 +169,26 @@ def _compare_site(previous_site, current_site):
 
     _compare_status(previous_site, current_site, changes)
 
-    _compare_numeric_field(changes, site_name, cloud_id, "risk_score", previous_site, current_site, severity="warning")
-    _compare_numeric_field(changes, site_name, cloud_id, "project_count", previous_site, current_site, severity="info")
-    _compare_numeric_field(changes, site_name, cloud_id, "application_role_count", previous_site, current_site, severity="info")
-    _compare_numeric_field(changes, site_name, cloud_id, "issue_count_total", previous_site, current_site, severity="info")
-    _compare_numeric_field(changes, site_name, cloud_id, "issue_count_unresolved", previous_site, current_site, severity="warning")
-    _compare_numeric_field(changes, site_name, cloud_id, "issue_count_updated_last_7d", previous_site, current_site, severity="info")
-    _compare_numeric_field(changes, site_name, cloud_id, "failed_api_checks", previous_site, current_site, severity="warning")
-    _compare_numeric_field(changes, site_name, cloud_id, "issue_risk_score", previous_site, current_site, severity="warning")
-    _compare_numeric_field(changes, site_name, cloud_id, "operational_risk_score", previous_site, current_site, severity="warning")
+    _compare_numeric_metric(changes, previous_site, current_site, "project_count", severity="info")
+    _compare_numeric_metric(changes, previous_site, current_site, "issue_count_total", severity="info")
+    _compare_numeric_metric(changes, previous_site, current_site, "issue_count_unresolved", severity="warning")
+    _compare_numeric_metric(changes, previous_site, current_site, "issue_count_updated_last_7d", severity="info")
 
-    previous_issue_metrics = previous_site.get("issue_metrics", {}) or {}
-    current_issue_metrics = current_site.get("issue_metrics", {}) or {}
+    _compare_numeric_metric(changes, previous_site, current_site, "total_users", severity="warning")
+    _compare_numeric_metric(changes, previous_site, current_site, "active_users", severity="warning")
+    _compare_numeric_metric(changes, previous_site, current_site, "inactive_users", severity="warning")
+    _compare_numeric_metric(changes, previous_site, current_site, "licensed_users_estimate", severity="warning")
 
-    _compare_ratio_field(
+    _compare_numeric_metric(changes, previous_site, current_site, "risk_score", severity="warning")
+
+    _compare_list_field(
         changes,
         site_name,
         cloud_id,
-        "issue_metrics.unresolved_ratio",
-        previous_issue_metrics.get("unresolved_ratio", 0),
-        current_issue_metrics.get("unresolved_ratio", 0),
-        threshold=0.05,
-        severity="warning"
-    )
-
-    _compare_ratio_field(
-        changes,
-        site_name,
-        cloud_id,
-        "issue_metrics.issues_per_project",
-        previous_issue_metrics.get("issues_per_project", 0),
-        current_issue_metrics.get("issues_per_project", 0),
-        threshold=5,
+        "permission_limited_checks",
+        previous_site,
+        current_site,
         severity="info"
-    )
-
-    _compare_ratio_field(
-        changes,
-        site_name,
-        cloud_id,
-        "issue_metrics.unresolved_per_project",
-        previous_issue_metrics.get("unresolved_per_project", 0),
-        current_issue_metrics.get("unresolved_per_project", 0),
-        threshold=2,
-        severity="warning"
     )
 
     _compare_list_field(
@@ -242,27 +205,7 @@ def _compare_site(previous_site, current_site):
         changes,
         site_name,
         cloud_id,
-        "permission_limited_checks",
-        previous_site,
-        current_site,
-        severity="info"
-    )
-
-    _compare_list_field(
-        changes,
-        site_name,
-        cloud_id,
-        "issue_risk_signals",
-        previous_site,
-        current_site,
-        severity="info"
-    )
-
-    _compare_list_field(
-        changes,
-        site_name,
-        cloud_id,
-        "operational_risk_signals",
+        "status_reasons",
         previous_site,
         current_site,
         severity="info"
@@ -327,6 +270,101 @@ def _count_severity(changes, severity_name):
         if (change.get("severity") or "info").lower() == severity_name:
             count += 1
     return count
+
+
+def _growth_status_from_deltas(project_delta, total_users_delta, licensed_delta):
+    values = []
+
+    for value in [project_delta, total_users_delta, licensed_delta]:
+        if isinstance(value, int):
+            values.append(value)
+
+    if not values:
+        return "baseline"
+
+    score = 0
+    for value in values:
+        if value > 0:
+            score += 1
+        elif value < 0:
+            score -= 1
+
+    if score > 0:
+        return "growing"
+    if score < 0:
+        return "reducing"
+    return "stable"
+
+
+def apply_snapshot_deltas(previous_snapshot, current_collection):
+    previous_sites = _build_site_lookup(previous_snapshot)
+    current_sites = current_collection.get("sites", []) or []
+
+    delta_summary = {
+        "project_delta_total": 0,
+        "total_users_delta_total": 0,
+        "active_users_delta_total": 0,
+        "inactive_users_delta_total": 0,
+        "licensed_users_estimate_delta_total": 0
+    }
+
+    updated_sites = []
+
+    for site in current_sites:
+        cloud_id = site.get("cloud_id")
+        previous_site = previous_sites.get(cloud_id)
+
+        updated_site = dict(site)
+
+        if not previous_site:
+            updated_site["snapshot_baseline"] = True
+            updated_site["project_count_delta"] = None
+            updated_site["total_users_delta"] = None
+            updated_site["active_users_delta"] = None
+            updated_site["inactive_users_delta"] = None
+            updated_site["licensed_users_estimate_delta"] = None
+            updated_site["issue_count_total_delta"] = None
+            updated_site["issue_count_unresolved_delta"] = None
+            updated_site["growth_status"] = "baseline"
+
+            updated_sites.append(updated_site)
+            continue
+
+        project_delta = _site_metric(site, "project_count") - _site_metric(previous_site, "project_count")
+        total_users_delta = _site_metric(site, "total_users") - _site_metric(previous_site, "total_users")
+        active_users_delta = _site_metric(site, "active_users") - _site_metric(previous_site, "active_users")
+        inactive_users_delta = _site_metric(site, "inactive_users") - _site_metric(previous_site, "inactive_users")
+        licensed_delta = _site_metric(site, "licensed_users_estimate") - _site_metric(previous_site, "licensed_users_estimate")
+        issue_total_delta = _site_metric(site, "issue_count_total") - _site_metric(previous_site, "issue_count_total")
+        unresolved_delta = _site_metric(site, "issue_count_unresolved") - _site_metric(previous_site, "issue_count_unresolved")
+
+        updated_site["snapshot_baseline"] = False
+        updated_site["project_count_delta"] = project_delta
+        updated_site["total_users_delta"] = total_users_delta
+        updated_site["active_users_delta"] = active_users_delta
+        updated_site["inactive_users_delta"] = inactive_users_delta
+        updated_site["licensed_users_estimate_delta"] = licensed_delta
+        updated_site["issue_count_total_delta"] = issue_total_delta
+        updated_site["issue_count_unresolved_delta"] = unresolved_delta
+        updated_site["growth_status"] = _growth_status_from_deltas(
+            project_delta=project_delta,
+            total_users_delta=total_users_delta,
+            licensed_delta=licensed_delta
+        )
+
+        delta_summary["project_delta_total"] += project_delta
+        delta_summary["total_users_delta_total"] += total_users_delta
+        delta_summary["active_users_delta_total"] += active_users_delta
+        delta_summary["inactive_users_delta_total"] += inactive_users_delta
+        delta_summary["licensed_users_estimate_delta_total"] += licensed_delta
+
+        updated_sites.append(updated_site)
+
+    updated_collection = dict(current_collection)
+    updated_collection["sites"] = updated_sites
+    updated_collection["delta_summary"] = delta_summary
+
+    return updated_collection
 
 
 def compare_snapshots(previous_snapshot, current_snapshot):
