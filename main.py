@@ -55,6 +55,12 @@ def save_run_output(output):
         json.dump(output, handle, indent=2)
 
 
+def build_mypermissions_url(cloud_id):
+    if not cloud_id:
+        return None
+    return f"https://api.atlassian.com/ex/jira/{cloud_id}/rest/api/3/mypermissions"
+
+
 def print_auth_status():
     token_status = get_token_status()
 
@@ -98,6 +104,19 @@ def print_runtime_summary(raw_collection, enriched_collection):
     print(f"Permission-limited checks    : {enriched_collection.get('total_permission_limited_checks', 0)}")
 
 
+def print_excluded_sites(raw_collection):
+    excluded_sites = raw_collection.get("excluded_sites", []) or []
+
+    print_section("EXCLUDED SITES")
+
+    if not excluded_sites:
+        print("No excluded sites.")
+        return
+
+    for site in excluded_sites:
+        print(f"- {site.get('name')} | {site.get('url')} | cloud_id={site.get('cloud_id')}")
+
+
 def print_status_summary(enriched_collection):
     print_section("STATUS SUMMARY")
     print(f"Sites total                  : {enriched_collection.get('site_count', 0)}")
@@ -126,6 +145,38 @@ def print_attention_summary(sites):
     else:
         print()
         print("No warning or critical sites.")
+
+
+def print_permission_checker(sites):
+    print_section("PERMISSION CHECKER")
+
+    if not sites:
+        print("No sites available.")
+        return
+
+    for site in sites:
+        checker = site.get("permission_checker", {}) or {}
+        endpoint_summary = site.get("endpoint_summary", {}) or {}
+        permission_issue_urls = endpoint_summary.get("permission_issue_urls", []) or []
+
+        print(f"{site.get('name')}")
+        print(f"  Site URL                  : {site.get('url')}")
+        print(f"  My permissions URL        : {build_mypermissions_url(site.get('cloud_id'))}")
+        print(f"  Permission data available : {checker.get('available')}")
+        print(f"  Has ADMINISTER            : {checker.get('has_administer_jira')}")
+        print(f"  Has ADMINISTER_PROJECTS   : {checker.get('has_administer_projects')}")
+        print(f"  Has BROWSE_PROJECTS       : {checker.get('has_browse_projects')}")
+
+        if permission_issue_urls:
+            for item in permission_issue_urls:
+                print(f"  Related failing endpoint  : {item.get('endpoint_key')}")
+                print(f"  Related endpoint URL      : {item.get('url')}")
+                print(f"  Status code               : {item.get('status_code')}")
+                print(f"  Error category            : {item.get('error_category')}")
+        else:
+            print("  Related failing endpoint  : None")
+
+        print()
 
 
 def print_historical_trend_summary(historical_trends):
@@ -206,6 +257,7 @@ def build_output(raw_collection, enriched_collection, comparison, snapshot_files
             "collected_at_utc": raw_collection.get("collected_at_utc"),
             "collection_duration_seconds": raw_collection.get("collection_duration_seconds", 0),
             "site_count": raw_collection.get("site_count", 0),
+            "excluded_sites": raw_collection.get("excluded_sites", []),
             "endpoint_totals": raw_collection.get("endpoint_totals", {}),
             "error_category_totals": raw_collection.get("error_category_totals", {}),
             "collector_settings": raw_collection.get("collector_settings", {})
@@ -297,6 +349,7 @@ def main():
             "collected_at_utc": raw_collection.get("collected_at_utc"),
             "collection_duration_seconds": raw_collection.get("collection_duration_seconds", 0),
             "site_count": raw_collection.get("site_count", 0),
+            "excluded_sites": raw_collection.get("excluded_sites", []),
             "endpoint_totals": raw_collection.get("endpoint_totals", {}),
             "error_category_totals": raw_collection.get("error_category_totals", {}),
             "collector_settings": raw_collection.get("collector_settings", {})
@@ -339,8 +392,10 @@ def main():
     sites = output["sites"]
 
     print_runtime_summary(raw_collection, enriched_collection)
+    print_excluded_sites(raw_collection)
     print_status_summary(enriched_collection)
     print_attention_summary(sites)
+    print_permission_checker(sites)
     print_historical_trend_summary(historical_trends)
     print_top_risky_sites(sites, limit=5)
     print_changes(comparison)

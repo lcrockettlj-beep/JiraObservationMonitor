@@ -1,0 +1,4 @@
+severity,type,site_name,cloud_id,field,old,new
+info,endpoint_check_change,gli-delivery-tm,de2de731-c6ae-4e15-a2cf-92d976f0fb7c,my_permissions,,True
+info,endpoint_check_change,gli-global-technology,aaa90a93-f0af-47ba-98d6-47829cc032b7,my_permissions,,True
+info,endpoint_check_change,gli-it-project,d4b3adb4-bd39-435e-bd65-f29db2b11a37,my_permissions,,True

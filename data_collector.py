@@ -162,6 +162,35 @@ def _extract_myself_summary(myself_payload):
     }
 
 
+def _extract_permission_summary(mypermissions_payload):
+    if not isinstance(mypermissions_payload, dict):
+        return {
+            "available": False,
+            "permissions_checked": {},
+            "has_administer_jira": None,
+            "has_administer_projects": None,
+            "has_browse_projects": None
+        }
+
+    permissions = mypermissions_payload.get("permissions", {}) or {}
+
+    def _perm_have(permission_key):
+        details = permissions.get(permission_key, {}) or {}
+        return details.get("havePermission")
+
+    return {
+        "available": True,
+        "permissions_checked": {
+            "ADMINISTER": _perm_have("ADMINISTER"),
+            "ADMINISTER_PROJECTS": _perm_have("ADMINISTER_PROJECTS"),
+            "BROWSE_PROJECTS": _perm_have("BROWSE_PROJECTS")
+        },
+        "has_administer_jira": _perm_have("ADMINISTER"),
+        "has_administer_projects": _perm_have("ADMINISTER_PROJECTS"),
+        "has_browse_projects": _perm_have("BROWSE_PROJECTS")
+    }
+
+
 def _build_api_checks(result_map):
     return {key: bool(value.get("ok")) for key, value in result_map.items()}
 
@@ -374,6 +403,15 @@ def _collect_site_metrics(access_token, cloud_id):
         ))
 
         futures.append(executor.submit(
+            _fetch_endpoint,
+            access_token,
+            cloud_id,
+            "my_permissions",
+            "mypermissions",
+            {"permissions": "ADMINISTER,ADMINISTER_PROJECTS,BROWSE_PROJECTS"}
+        ))
+
+        futures.append(executor.submit(
             _fetch_search_count,
             access_token,
             cloud_id,
@@ -449,6 +487,10 @@ def collect_site_data(access_token, resource):
         result_map["application_roles"]["data"]
         if result_map["application_roles"]["ok"] else None
     )
+    my_permissions_data = (
+        result_map["my_permissions"]["data"]
+        if result_map["my_permissions"]["ok"] else None
+    )
     all_issues_data = result_map["all_issues"]["data"] if result_map["all_issues"]["ok"] else None
     unresolved_issues_data = (
         result_map["unresolved_issues"]["data"]
@@ -489,8 +531,9 @@ def collect_site_data(access_token, resource):
 
         "project_sample": project_sample,
         "application_role_sample": application_role_sample,
-        "server_info": _extract_server_info_summary(server_info_data),
+        "server_info": _extract_serverInfo_summary(server_info_data) if False else _extract_server_info_summary(server_info_data),
         "myself": _extract_myself_summary(myself_data),
+        "permission_checker": _extract_permission_summary(my_permissions_data),
 
         "api_checks": api_checks,
         "api_errors": api_errors,

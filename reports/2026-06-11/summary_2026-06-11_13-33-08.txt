@@ -1,6 +1,6 @@
 Jira Observation Monitor - Summary Report
 ========================================================================
-Generated at local          : 2026-06-11T13:41:56.828074
+Generated at local          : 2026-06-11T13:33:08.618299
 
 STATUS SUMMARY
 ------------------------------------------------------------------------
@@ -18,9 +18,9 @@ Permission-limited checks  : 0
 
 COLLECTION SUMMARY
 ------------------------------------------------------------------------
-Collected at UTC           : 2026-06-11T12:41:53.669250+00:00
-Collection duration (sec)  : 3.1528
-Endpoint checks passed     : 24
+Collected at UTC           : 2026-06-11T12:33:05.237467+00:00
+Collection duration (sec)  : 3.364
+Endpoint checks passed     : 21
 Endpoint checks failed     : 0
 Permission-limited         : 0
 Core blocking             : 0
@@ -28,11 +28,11 @@ Enrichment failed         : 0
 
 HISTORICAL TREND SUMMARY
 ------------------------------------------------------------------------
-Sites in history           : 3
+Sites in history           : 6
 Warning/Critical streaks   : 0
 Rising unresolved sites    : 0
 Rising risk sites          : 0
-Recurring blocking sites   : 0
+Recurring blocking sites   : 6
 
 TOP RISKY SITES
 ------------------------------------------------------------------------
