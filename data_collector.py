@@ -4,7 +4,11 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
-from jira_client import get_accessible_resources, safe_jira_get
+from jira_client import (
+    get_accessible_resources,
+    safe_jira_get,
+    safe_jira_search_count
+)
 
 
 MAX_SITE_WORKERS = int(os.getenv("JOM_MAX_SITE_WORKERS", "3"))
@@ -207,6 +211,22 @@ def _build_api_attempt_counts(result_map):
     return attempt_counts
 
 
+def _build_search_debug(result_map):
+    search_debug = {}
+
+    for key, value in result_map.items():
+        if key not in {"all_issues", "unresolved_issues", "updated_last_7d"}:
+            continue
+
+        search_debug[key] = {
+            "used_fallback": value.get("used_fallback", False),
+            "selected_jql": value.get("selected_jql"),
+            "search_attempts": value.get("search_attempts", [])
+        }
+
+    return search_debug
+
+
 def _build_endpoint_results(result_map):
     endpoint_results = {}
 
@@ -219,7 +239,10 @@ def _build_endpoint_results(result_map):
             "endpoint": result.get("endpoint"),
             "attempt_count": result.get("attempt_count", 1),
             "retryable": result.get("retryable", False),
-            "error_category": result.get("error_category")
+            "error_category": result.get("error_category"),
+            "method": result.get("method"),
+            "used_fallback": result.get("used_fallback", False),
+            "selected_jql": result.get("selected_jql")
         }
 
     return endpoint_results
@@ -313,38 +336,14 @@ def _fetch_endpoint(access_token, cloud_id, endpoint_key, endpoint, params=None)
     return endpoint_key, result
 
 
-def _fetch_search_with_fallback(access_token, cloud_id, endpoint_key, primary_params, fallback_params):
-    primary_result = safe_jira_get(
+def _fetch_search_count(access_token, cloud_id, endpoint_key, jql_variants):
+    result = safe_jira_search_count(
         access_token=access_token,
         cloud_id=cloud_id,
-        endpoint="search",
-        params=primary_params
+        jql_variants=jql_variants,
+        fields=["key"]
     )
-
-    if primary_result.get("ok"):
-        return endpoint_key, primary_result
-
-    category = primary_result.get("error_category")
-    status_code = primary_result.get("status_code")
-
-    # Only fallback for softer request issues
-    if category in {"bad_request", "not_found"} or status_code in {400, 404}:
-        fallback_result = safe_jira_get(
-            access_token=access_token,
-            cloud_id=cloud_id,
-            endpoint="search",
-            params=fallback_params
-        )
-
-        if fallback_result.get("ok"):
-            fallback_result["used_fallback"] = True
-            return endpoint_key, fallback_result
-
-        fallback_result["used_fallback"] = True
-        return endpoint_key, fallback_result
-
-    primary_result["used_fallback"] = False
-    return endpoint_key, primary_result
+    return endpoint_key, result
 
 
 def _collect_site_metrics(access_token, cloud_id):
@@ -392,30 +391,36 @@ def _collect_site_metrics(access_token, cloud_id):
         ))
 
         futures.append(executor.submit(
-            _fetch_search_with_fallback,
+            _fetch_search_count,
             access_token,
             cloud_id,
             "all_issues",
-            {"jql": "order by created desc", "maxResults": 0},
-            {"maxResults": 0}
+            [
+                "order by created desc",
+                "project is not EMPTY"
+            ]
         ))
 
         futures.append(executor.submit(
-            _fetch_search_with_fallback,
+            _fetch_search_count,
             access_token,
             cloud_id,
             "unresolved_issues",
-            {"jql": "resolution = Unresolved", "maxResults": 0},
-            {"jql": "resolution is EMPTY", "maxResults": 0}
+            [
+                "resolution is EMPTY",
+                "resolution = Unresolved"
+            ]
         ))
 
         futures.append(executor.submit(
-            _fetch_search_with_fallback,
+            _fetch_search_count,
             access_token,
             cloud_id,
             "updated_last_7d",
-            {"jql": "updated >= -7d", "maxResults": 0},
-            {"jql": "updated >= startOfDay(-7d)", "maxResults": 0}
+            [
+                "updated >= -7d",
+                "updated >= startOfDay(-7d)"
+            ]
         ))
 
         for future in as_completed(futures):
@@ -451,6 +456,7 @@ def collect_site_data(access_token, resource):
     )
 
     endpoint_results = _build_endpoint_results(result_map)
+    search_debug = _build_search_debug(result_map)
 
     server_info_data = result_map["server_info"]["data"] if result_map["server_info"]["ok"] else None
     myself_data = result_map["myself"]["data"] if result_map["myself"]["ok"] else None
@@ -509,7 +515,8 @@ def collect_site_data(access_token, resource):
         "api_error_categories": api_error_categories,
         "api_attempt_counts": api_attempt_counts,
         "endpoint_summary": endpoint_health_summary,
-        "endpoint_results": endpoint_results
+        "endpoint_results": endpoint_results,
+        "search_debug": search_debug
     }
 
     return site_record
