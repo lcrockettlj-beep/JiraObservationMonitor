@@ -1,4 +1,4 @@
 site_name,site_url,cloud_id,mypermissions_url,permission_data_available,has_administer_jira,has_administer_projects,has_browse_projects
-gli-delivery-tm,https://gli-delivery-tm.atlassian.net,de2de731-c6ae-4e15-a2cf-92d976f0fb7c,https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/mypermissions,True,True,True,True
 gli-it-project,https://gli-it-project.atlassian.net,d4b3adb4-bd39-435e-bd65-f29db2b11a37,https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/mypermissions,True,True,True,True
+gli-delivery-tm,https://gli-delivery-tm.atlassian.net,de2de731-c6ae-4e15-a2cf-92d976f0fb7c,https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/mypermissions,True,True,True,True
 gli-global-technology,https://gli-global-technology.atlassian.net,aaa90a93-f0af-47ba-98d6-47829cc032b7,https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/mypermissions,True,True,True,True

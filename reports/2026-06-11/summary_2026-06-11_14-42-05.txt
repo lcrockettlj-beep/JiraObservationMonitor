@@ -1,6 +1,6 @@
 Jira Observation Monitor - Backend Summary
 ========================================================================
-Generated at local          : 2026-06-11T14:53:37.466192
+Generated at local          : 2026-06-11T14:42:05.315298
 
 STATUS SUMMARY
 ------------------------------------------------------------------------
@@ -11,20 +11,20 @@ Critical                   : 0
 
 RISK SUMMARY
 ------------------------------------------------------------------------
-Total risk score           : 6
-Average risk score         : 2.0
+Total risk score           : 4
+Average risk score         : 1.33
 Blocking failures          : 0
-Permission-limited checks  : 4
+Permission-limited checks  : 0
 
 COLLECTION SUMMARY
 ------------------------------------------------------------------------
-Collected at UTC           : 2026-06-11T13:53:32.444619+00:00
-Collection duration (sec)  : 4.9943
-Endpoint checks passed     : 26
-Endpoint checks failed     : 4
-Permission-limited         : 4
+Collected at UTC           : 2026-06-11T13:41:57.757611+00:00
+Collection duration (sec)  : 7.5459
+Endpoint checks passed     : 27
+Endpoint checks failed     : 3
+Permission-limited         : 0
 Core blocking             : 0
-Enrichment failed         : 0
+Enrichment failed         : 3
 
 EXCLUDED SITES
 ------------------------------------------------------------------------
@@ -37,29 +37,12 @@ HISTORICAL TREND SUMMARY
 Sites in history           : 3
 Warning/Critical streaks   : 0
 Rising unresolved sites    : 0
-Rising risk sites          : 2
+Rising risk sites          : 1
 Recurring blocking sites   : 0
 
 TOP SITES
 ------------------------------------------------------------------------
-1. gli-delivery-tm | status=healthy | risk=3
-   Projects                : 22
-   Total issues            : 1
-   Unresolved issues       : 1
-   Updated last 7 days     : 1
-   Total users             : 473
-   Active users            : 378
-   Inactive users          : 95
-   Licensed users estimate : None
-   Has ADMINISTER          : True
-   Has ADMINISTER_PROJECTS : True
-   Has BROWSE_PROJECTS     : True
-   Audit record count      : None
-   Automation audit hits   : None
-   Automation API support  : False
-   Reasons                 : permission_limited=application_roles,audit_records, operational_signal=multiple_permission_limited_endpoints
-
-2. gli-it-project | status=healthy | risk=3
+1. gli-it-project | status=healthy | risk=2
    Projects                : 55
    Total issues            : 1
    Unresolved issues       : 1
@@ -67,16 +50,33 @@ TOP SITES
    Total users             : 484
    Active users            : 378
    Inactive users          : 106
-   Licensed users estimate : None
+   Licensed users estimate : 58
    Has ADMINISTER          : True
    Has ADMINISTER_PROJECTS : True
    Has BROWSE_PROJECTS     : True
    Audit record count      : None
    Automation audit hits   : None
    Automation API support  : False
-   Reasons                 : permission_limited=application_roles,audit_records, operational_signal=multiple_permission_limited_endpoints
+   Reasons                 : enrichment_failures=audit_records, operational_signal=elevated_collection_time, operational_signal=some_enrichment_failures
 
-3. gli-global-technology | status=healthy | risk=0
+2. gli-delivery-tm | status=healthy | risk=1
+   Projects                : 22
+   Total issues            : 1
+   Unresolved issues       : 1
+   Updated last 7 days     : 1
+   Total users             : 473
+   Active users            : 378
+   Inactive users          : 95
+   Licensed users estimate : 28
+   Has ADMINISTER          : True
+   Has ADMINISTER_PROJECTS : True
+   Has BROWSE_PROJECTS     : True
+   Audit record count      : None
+   Automation audit hits   : None
+   Automation API support  : False
+   Reasons                 : enrichment_failures=audit_records, operational_signal=some_enrichment_failures
+
+3. gli-global-technology | status=healthy | risk=1
    Projects                : 8
    Total issues            : 1
    Unresolved issues       : 1
@@ -88,7 +88,7 @@ TOP SITES
    Has ADMINISTER          : True
    Has ADMINISTER_PROJECTS : True
    Has BROWSE_PROJECTS     : True
-   Audit record count      : 50
-   Automation audit hits   : 0
+   Audit record count      : None
+   Automation audit hits   : None
    Automation API support  : False
-   Reasons                 : no_risk_signals_detected
+   Reasons                 : enrichment_failures=audit_records, operational_signal=some_enrichment_failures

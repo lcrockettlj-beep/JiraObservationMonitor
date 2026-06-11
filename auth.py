@@ -20,12 +20,29 @@ AUTH_URL = "https://auth.atlassian.com/authorize"
 TOKEN_URL = "https://auth.atlassian.com/oauth/token"
 TOKEN_FILE = "tokens.json"
 
+# IMPORTANT:
+# These are the scopes actually requested in the OAuth consent URL.
+# If a scope is only added in the developer console but not listed here,
+# the token grant will not include it.
 SCOPES = [
+    # Core Jira read access
     "read:jira-work",
     "read:jira-user",
+
+    # User / identity / profile
     "read:me",
-    "read:application-role:jira",
     "read:user:jira",
+    "read:group:jira",
+    "read:avatar:jira",
+
+    # Application roles / licence-style data
+    "read:application-role:jira",
+
+    # Audit access
+    "read:audit-log:jira",
+    "manage:jira-configuration",
+
+    # Refresh token support
     "offline_access"
 ]
 

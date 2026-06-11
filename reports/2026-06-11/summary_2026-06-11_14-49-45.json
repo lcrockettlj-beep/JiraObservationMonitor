@@ -1,0 +1,245 @@
+{
+  "generated_at_local": "2026-06-11T14:49:45.311768",
+  "summary": {
+    "site_count": 3,
+    "healthy_count": 3,
+    "warning_count": 0,
+    "critical_count": 0
+  },
+  "risk_summary": {
+    "total_risk_score": 3,
+    "average_risk_score": 1.0,
+    "total_issue_risk_score": 0,
+    "total_operational_risk_score": 3,
+    "total_blocking_failures": 0,
+    "total_permission_limited_checks": 0
+  },
+  "raw_collection_summary": {
+    "collected_at_utc": "2026-06-11T13:49:40.439501+00:00",
+    "collection_duration_seconds": 4.8612,
+    "site_count": 3,
+    "excluded_sites": [
+      {
+        "name": "gaminglabs-team-h2pbpmis",
+        "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
+        "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9"
+      },
+      {
+        "name": "gaminglabs-team-tsyfo716",
+        "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
+        "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6"
+      },
+      {
+        "name": "gli-usa",
+        "url": "https://gli-usa.atlassian.net",
+        "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018"
+      }
+    ],
+    "endpoint_totals": {
+      "successful_checks": 27,
+      "failed_checks": 3,
+      "permission_limited_checks": 0,
+      "core_blocking_failed_checks": 0,
+      "enrichment_failed_checks": 3
+    },
+    "error_category_totals": {
+      "auth_error": 3
+    },
+    "collector_settings": {
+      "max_site_workers": 3,
+      "endpoint_workers": 3,
+      "site_workers_used": 3
+    }
+  },
+  "change_counts": {
+    "info": 1,
+    "warning": 2,
+    "critical": 0,
+    "total": 3
+  },
+  "historical_trend_summary": {
+    "site_count": 3,
+    "warning_or_critical_streak_sites": 0,
+    "rising_unresolved_sites": 0,
+    "rising_risk_sites": 0,
+    "recurring_blocking_failure_sites": 0
+  },
+  "top_risky_sites": [
+    {
+      "name": "gli-delivery-tm",
+      "status": "healthy",
+      "risk_score": 1,
+      "project_count": 22,
+      "issue_count_total": 1,
+      "issue_count_unresolved": 1,
+      "issue_count_updated_last_7d": 1,
+      "user_summary": {
+        "total_users": 473,
+        "active_users": 378,
+        "inactive_users": 95
+      },
+      "licence_summary": {
+        "licensed_users_estimate": 28,
+        "products": [
+          {
+            "key": "jira-software",
+            "name": "Jira Software",
+            "user_count": 28,
+            "number_of_seats": 50,
+            "remaining_seats": 22,
+            "has_unlimited_seats": false,
+            "selected_by_default": false,
+            "defined": true
+          }
+        ]
+      },
+      "audit_summary": {
+        "record_count": null,
+        "automation_related_record_count": null,
+        "category_counts": {},
+        "records_sample": []
+      },
+      "automation_summary": {
+        "rule_management_supported_with_current_auth": false,
+        "reason": "Automation REST rule management is not accessible with the current Jira OAuth2 app flow. The official Automation REST API uses API token or browser session authentication, and the rule management endpoints are not available to OAuth2 apps.",
+        "rule_count": null,
+        "failure_count": null,
+        "processing_metrics": null
+      },
+      "permission_checker": {
+        "available": true,
+        "permissions_checked": {
+          "ADMINISTER": true,
+          "ADMINISTER_PROJECTS": true,
+          "BROWSE_PROJECTS": true
+        },
+        "has_administer_jira": true,
+        "has_administer_projects": true,
+        "has_browse_projects": true
+      },
+      "status_reasons": [
+        "enrichment_failures=audit_records",
+        "operational_signal=some_enrichment_failures"
+      ]
+    },
+    {
+      "name": "gli-global-technology",
+      "status": "healthy",
+      "risk_score": 1,
+      "project_count": 8,
+      "issue_count_total": 1,
+      "issue_count_unresolved": 1,
+      "issue_count_updated_last_7d": 1,
+      "user_summary": {
+        "total_users": 441,
+        "active_users": 378,
+        "inactive_users": 63
+      },
+      "licence_summary": {
+        "licensed_users_estimate": 53,
+        "products": [
+          {
+            "key": "jira-software",
+            "name": "Jira Software",
+            "user_count": 53,
+            "number_of_seats": 100000,
+            "remaining_seats": 99947,
+            "has_unlimited_seats": false,
+            "selected_by_default": false,
+            "defined": true
+          }
+        ]
+      },
+      "audit_summary": {
+        "record_count": null,
+        "automation_related_record_count": null,
+        "category_counts": {},
+        "records_sample": []
+      },
+      "automation_summary": {
+        "rule_management_supported_with_current_auth": false,
+        "reason": "Automation REST rule management is not accessible with the current Jira OAuth2 app flow. The official Automation REST API uses API token or browser session authentication, and the rule management endpoints are not available to OAuth2 apps.",
+        "rule_count": null,
+        "failure_count": null,
+        "processing_metrics": null
+      },
+      "permission_checker": {
+        "available": true,
+        "permissions_checked": {
+          "ADMINISTER": true,
+          "ADMINISTER_PROJECTS": true,
+          "BROWSE_PROJECTS": true
+        },
+        "has_administer_jira": true,
+        "has_administer_projects": true,
+        "has_browse_projects": true
+      },
+      "status_reasons": [
+        "enrichment_failures=audit_records",
+        "operational_signal=some_enrichment_failures"
+      ]
+    },
+    {
+      "name": "gli-it-project",
+      "status": "healthy",
+      "risk_score": 1,
+      "project_count": 55,
+      "issue_count_total": 1,
+      "issue_count_unresolved": 1,
+      "issue_count_updated_last_7d": 1,
+      "user_summary": {
+        "total_users": 484,
+        "active_users": 378,
+        "inactive_users": 106
+      },
+      "licence_summary": {
+        "licensed_users_estimate": 58,
+        "products": [
+          {
+            "key": "jira-software",
+            "name": "Jira Software",
+            "user_count": 58,
+            "number_of_seats": 100,
+            "remaining_seats": 42,
+            "has_unlimited_seats": false,
+            "selected_by_default": false,
+            "defined": true
+          }
+        ]
+      },
+      "audit_summary": {
+        "record_count": null,
+        "automation_related_record_count": null,
+        "category_counts": {},
+        "records_sample": []
+      },
+      "automation_summary": {
+        "rule_management_supported_with_current_auth": false,
+        "reason": "Automation REST rule management is not accessible with the current Jira OAuth2 app flow. The official Automation REST API uses API token or browser session authentication, and the rule management endpoints are not available to OAuth2 apps.",
+        "rule_count": null,
+        "failure_count": null,
+        "processing_metrics": null
+      },
+      "permission_checker": {
+        "available": true,
+        "permissions_checked": {
+          "ADMINISTER": true,
+          "ADMINISTER_PROJECTS": true,
+          "BROWSE_PROJECTS": true
+        },
+        "has_administer_jira": true,
+        "has_administer_projects": true,
+        "has_browse_projects": true
+      },
+      "status_reasons": [
+        "enrichment_failures=audit_records",
+        "operational_signal=some_enrichment_failures"
+      ]
+    }
+  ],
+  "snapshot_files": {
+    "latest_file": "snapshots\\latest_snapshot.json",
+    "timestamp_file": "snapshots\\2026-06-11\\snapshot_2026-06-11_14-49-45.json",
+    "index_file": "snapshots\\snapshot_index.json"
+  }
+}
