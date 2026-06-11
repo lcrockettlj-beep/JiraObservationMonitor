@@ -43,9 +43,7 @@ def validate_auth_config():
         missing.append("ATLASSIAN_REDIRECT_URI")
 
     if missing:
-        raise ValueError(
-            "Missing required values in .env: " + ", ".join(missing)
-        )
+        raise ValueError("Missing required values in .env: " + ", ".join(missing))
 
 
 def generate_state():
@@ -72,15 +70,22 @@ def load_token_bundle():
     if not os.path.exists(TOKEN_FILE):
         return None
 
-    with open(TOKEN_FILE, "r", encoding="utf-8") as handle:
-        return json.load(handle)
+    try:
+        with open(TOKEN_FILE, "r", encoding="utf-8") as handle:
+            return json.load(handle)
+    except Exception:
+        return None
 
 
 def save_token_bundle(token_data):
     token_copy = dict(token_data)
 
     expires_in = int(token_copy.get("expires_in", 3600))
-    token_copy["expires_at"] = int(time.time()) + expires_in - 60
+    now = int(time.time())
+
+    token_copy["saved_at"] = now
+    token_copy["expires_at"] = now + expires_in - 60
+    token_copy["has_refresh_token"] = bool(token_copy.get("refresh_token"))
 
     with open(TOKEN_FILE, "w", encoding="utf-8") as handle:
         json.dump(token_copy, handle, indent=2)
@@ -93,12 +98,31 @@ def token_is_valid(token_bundle):
         return False
 
     access_token = token_bundle.get("access_token")
-    expires_at = token_bundle.get("expires_at", 0)
+    expires_at = int(token_bundle.get("expires_at", 0))
 
     if not access_token:
         return False
 
     return time.time() < expires_at
+
+
+def get_token_status():
+    token_bundle = load_token_bundle()
+
+    if not token_bundle:
+        return {
+            "exists": False,
+            "valid": False,
+            "has_refresh_token": False,
+            "expires_at": None
+        }
+
+    return {
+        "exists": True,
+        "valid": token_is_valid(token_bundle),
+        "has_refresh_token": bool(token_bundle.get("refresh_token")),
+        "expires_at": token_bundle.get("expires_at")
+    }
 
 
 def exchange_code_for_token(code):
@@ -196,15 +220,20 @@ def wait_for_callback(expected_state, timeout_seconds=300):
     OAuthCallbackHandler.auth_error = None
     OAuthCallbackHandler.callback_path = callback_path
 
-    server = HTTPServer((host, port), OAuthCallbackHandler)
+    try:
+        server = HTTPServer((host, port), OAuthCallbackHandler)
+    except OSError as exc:
+        raise RuntimeError(
+            f"Could not start callback server on {host}:{port}. Is the port already in use? {exc}"
+        )
+
+    server.timeout = timeout_seconds
 
     print(f"Listening for OAuth callback on {REDIRECT_URI} ...")
     server.handle_request()
 
     if OAuthCallbackHandler.auth_error:
-        raise ValueError(
-            f"Atlassian returned an OAuth error: {OAuthCallbackHandler.auth_error}"
-        )
+        raise ValueError(f"Atlassian returned an OAuth error: {OAuthCallbackHandler.auth_error}")
 
     if not OAuthCallbackHandler.auth_code:
         raise TimeoutError("No authorization code received from callback.")

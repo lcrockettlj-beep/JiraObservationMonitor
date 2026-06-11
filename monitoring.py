@@ -38,7 +38,15 @@ def _append_change(changes, change_type, site_name, cloud_id, field=None, old=No
     changes.append(change)
 
 
-def _compare_numeric_field(changes, site_name, cloud_id, field_name, previous_site, current_site, severity="info"):
+def _compare_numeric_field(
+    changes,
+    site_name,
+    cloud_id,
+    field_name,
+    previous_site,
+    current_site,
+    severity="info"
+):
     previous_value = previous_site.get(field_name, 0)
     current_value = current_site.get(field_name, 0)
 
@@ -55,7 +63,48 @@ def _compare_numeric_field(changes, site_name, cloud_id, field_name, previous_si
         )
 
 
-def _compare_list_field(changes, site_name, cloud_id, field_name, previous_site, current_site, severity="info"):
+def _compare_ratio_field(
+    changes,
+    site_name,
+    cloud_id,
+    field_path,
+    previous_value,
+    current_value,
+    threshold=0.05,
+    severity="info"
+):
+    try:
+        previous_num = float(previous_value)
+    except Exception:
+        previous_num = 0.0
+
+    try:
+        current_num = float(current_value)
+    except Exception:
+        current_num = 0.0
+
+    if abs(current_num - previous_num) >= threshold:
+        _append_change(
+            changes=changes,
+            change_type=f"{field_path}_change",
+            site_name=site_name,
+            cloud_id=cloud_id,
+            field=field_path,
+            old=previous_num,
+            new=current_num,
+            severity=severity
+        )
+
+
+def _compare_list_field(
+    changes,
+    site_name,
+    cloud_id,
+    field_name,
+    previous_site,
+    current_site,
+    severity="info"
+):
     previous_value = _normalise_list(previous_site.get(field_name, []))
     current_value = _normalise_list(current_site.get(field_name, []))
 
@@ -84,9 +133,7 @@ def _compare_endpoint_checks(changes, site_name, cloud_id, previous_site, curren
 
         if previous_ok != current_ok:
             severity = "warning"
-            if current_ok is False:
-                severity = "warning"
-            elif current_ok is True:
+            if current_ok is True:
                 severity = "info"
 
             _append_change(
@@ -101,9 +148,7 @@ def _compare_endpoint_checks(changes, site_name, cloud_id, previous_site, curren
             )
 
 
-def _compare_site(previous_site, current_site):
-    changes = []
-
+def _compare_status(previous_site, current_site, changes):
     site_name = current_site.get("name")
     cloud_id = current_site.get("cloud_id")
 
@@ -128,12 +173,60 @@ def _compare_site(previous_site, current_site):
             severity=severity
         )
 
+
+def _compare_site(previous_site, current_site):
+    changes = []
+
+    site_name = current_site.get("name")
+    cloud_id = current_site.get("cloud_id")
+
+    _compare_status(previous_site, current_site, changes)
+
+    _compare_numeric_field(changes, site_name, cloud_id, "risk_score", previous_site, current_site, severity="warning")
     _compare_numeric_field(changes, site_name, cloud_id, "project_count", previous_site, current_site, severity="info")
     _compare_numeric_field(changes, site_name, cloud_id, "application_role_count", previous_site, current_site, severity="info")
     _compare_numeric_field(changes, site_name, cloud_id, "issue_count_total", previous_site, current_site, severity="info")
     _compare_numeric_field(changes, site_name, cloud_id, "issue_count_unresolved", previous_site, current_site, severity="warning")
     _compare_numeric_field(changes, site_name, cloud_id, "issue_count_updated_last_7d", previous_site, current_site, severity="info")
     _compare_numeric_field(changes, site_name, cloud_id, "failed_api_checks", previous_site, current_site, severity="warning")
+    _compare_numeric_field(changes, site_name, cloud_id, "issue_risk_score", previous_site, current_site, severity="warning")
+    _compare_numeric_field(changes, site_name, cloud_id, "operational_risk_score", previous_site, current_site, severity="warning")
+
+    previous_issue_metrics = previous_site.get("issue_metrics", {}) or {}
+    current_issue_metrics = current_site.get("issue_metrics", {}) or {}
+
+    _compare_ratio_field(
+        changes,
+        site_name,
+        cloud_id,
+        "issue_metrics.unresolved_ratio",
+        previous_issue_metrics.get("unresolved_ratio", 0),
+        current_issue_metrics.get("unresolved_ratio", 0),
+        threshold=0.05,
+        severity="warning"
+    )
+
+    _compare_ratio_field(
+        changes,
+        site_name,
+        cloud_id,
+        "issue_metrics.issues_per_project",
+        previous_issue_metrics.get("issues_per_project", 0),
+        current_issue_metrics.get("issues_per_project", 0),
+        threshold=5,
+        severity="info"
+    )
+
+    _compare_ratio_field(
+        changes,
+        site_name,
+        cloud_id,
+        "issue_metrics.unresolved_per_project",
+        previous_issue_metrics.get("unresolved_per_project", 0),
+        current_issue_metrics.get("unresolved_per_project", 0),
+        threshold=2,
+        severity="warning"
+    )
 
     _compare_list_field(
         changes,
@@ -155,6 +248,26 @@ def _compare_site(previous_site, current_site):
         severity="info"
     )
 
+    _compare_list_field(
+        changes,
+        site_name,
+        cloud_id,
+        "issue_risk_signals",
+        previous_site,
+        current_site,
+        severity="info"
+    )
+
+    _compare_list_field(
+        changes,
+        site_name,
+        cloud_id,
+        "operational_risk_signals",
+        previous_site,
+        current_site,
+        severity="info"
+    )
+
     _compare_endpoint_checks(changes, site_name, cloud_id, previous_site, current_site)
 
     return changes
@@ -166,14 +279,22 @@ def _build_summary(snapshot):
             "site_count": 0,
             "healthy_count": 0,
             "warning_count": 0,
-            "critical_count": 0
+            "critical_count": 0,
+            "total_risk_score": 0,
+            "average_risk_score": 0,
+            "total_blocking_failures": 0,
+            "total_permission_limited_checks": 0
         }
 
     return {
         "site_count": snapshot.get("site_count", 0),
         "healthy_count": snapshot.get("healthy_count", 0),
         "warning_count": snapshot.get("warning_count", 0),
-        "critical_count": snapshot.get("critical_count", 0)
+        "critical_count": snapshot.get("critical_count", 0),
+        "total_risk_score": snapshot.get("total_risk_score", 0),
+        "average_risk_score": snapshot.get("average_risk_score", 0),
+        "total_blocking_failures": snapshot.get("total_blocking_failures", 0),
+        "total_permission_limited_checks": snapshot.get("total_permission_limited_checks", 0)
     }
 
 
@@ -200,12 +321,23 @@ def _compare_summary(previous_snapshot, current_snapshot):
     }
 
 
+def _count_severity(changes, severity_name):
+    count = 0
+    for change in changes:
+        if (change.get("severity") or "info").lower() == severity_name:
+            count += 1
+    return count
+
+
 def compare_snapshots(previous_snapshot, current_snapshot):
     if not previous_snapshot:
         return {
             "has_previous_snapshot": False,
             "summary": _compare_summary(None, current_snapshot),
             "change_count": 0,
+            "info_change_count": 0,
+            "warning_change_count": 0,
+            "critical_change_count": 0,
             "changes": []
         }
 
@@ -227,8 +359,7 @@ def compare_snapshots(previous_snapshot, current_snapshot):
             )
             continue
 
-        site_changes = _compare_site(previous_site, current_site)
-        changes.extend(site_changes)
+        changes.extend(_compare_site(previous_site, current_site))
 
     for cloud_id, previous_site in previous_sites.items():
         if cloud_id not in current_sites:
@@ -246,5 +377,8 @@ def compare_snapshots(previous_snapshot, current_snapshot):
         "has_previous_snapshot": True,
         "summary": summary,
         "change_count": len(changes),
+        "info_change_count": _count_severity(changes, "info"),
+        "warning_change_count": _count_severity(changes, "warning"),
+        "critical_change_count": _count_severity(changes, "critical"),
         "changes": changes
     }

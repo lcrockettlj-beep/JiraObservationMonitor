@@ -3,4 +3,5 @@ tokens.json
 __pycache__/
 *.pyc
 snapshots/
+reports/
 latest_run.json
