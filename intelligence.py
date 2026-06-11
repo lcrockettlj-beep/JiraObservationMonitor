@@ -16,13 +16,6 @@ def _safe_divide(numerator, denominator):
     return numerator / denominator
 
 
-CORE_ENDPOINT_KEYS = {
-    "server_info",
-    "myself",
-    "projects"
-}
-
-
 def _classify_api_failures(site_record):
     endpoint_summary = site_record.get("endpoint_summary", {}) or {}
 
@@ -204,14 +197,12 @@ def _build_operational_signals(site_record):
 
 
 def _determine_status(hard_core_failures, transient_core_failures, issue_risk_score, operational_risk_score):
-    # Hard core failures matter most
     if hard_core_failures >= 2:
         return "critical"
 
     if hard_core_failures == 1:
         return "warning"
 
-    # Multiple transient core failures still matter
     if transient_core_failures >= 2:
         return "warning"
 
@@ -313,6 +304,37 @@ def determine_site_status(site_record):
     }
 
 
+def _build_audit_flags(enriched_site):
+    audit_fetch_status = enriched_site.get("audit_fetch_status", {}) or {}
+
+    if audit_fetch_status.get("ok") is True:
+        enriched_site["audit_status"] = "available"
+        enriched_site["audit_api_access"] = True
+    elif audit_fetch_status.get("error_category") == "permission_limited":
+        enriched_site["audit_status"] = "permission_limited"
+        enriched_site["audit_api_access"] = False
+    else:
+        enriched_site["audit_status"] = "unavailable"
+        enriched_site["audit_api_access"] = False
+
+
+def _build_licence_flags(enriched_site):
+    licence_summary = enriched_site.get("licence_summary", {}) or {}
+    licensed_users_estimate = licence_summary.get("licensed_users_estimate")
+
+    permission_limited_checks = enriched_site.get("permission_limited_checks", []) or []
+
+    if isinstance(licensed_users_estimate, int):
+        enriched_site["licence_status"] = "available"
+        enriched_site["licence_api_access"] = True
+    elif "application_roles" in permission_limited_checks:
+        enriched_site["licence_status"] = "permission_limited"
+        enriched_site["licence_api_access"] = False
+    else:
+        enriched_site["licence_status"] = "unavailable"
+        enriched_site["licence_api_access"] = False
+
+
 def enrich_collection(raw_collection):
     sites = raw_collection.get("sites", [])
 
@@ -331,21 +353,6 @@ def enrich_collection(raw_collection):
         status_result = determine_site_status(site)
 
         enriched_site = dict(site)
-        enriched_site = dict(site)
-
-        audit_fetch_status = enriched_site.get("audit_fetch_status", {}) or {}
-
-        if audit_fetch_status.get("ok") is True:
-            enriched_site["audit_status"] = "available"
-            enriched_site["audit_api_access"] = True
-
-        elif audit_fetch_status.get("error_category") == "permission_limited":
-            enriched_site["audit_status"] = "permission_limited"
-            enriched_site["audit_api_access"] = False
-
-        else:
-            enriched_site["audit_status"] = "unavailable"
-            enriched_site["audit_api_access"] = False
 
         enriched_site["status"] = status_result["status"]
         enriched_site["risk_score"] = status_result["risk_score"]
@@ -362,6 +369,9 @@ def enrich_collection(raw_collection):
         enriched_site["operational_risk_score"] = status_result["operational_risk_score"]
         enriched_site["operational_risk_signals"] = status_result["operational_risk_signals"]
         enriched_site["site_health_breakdown"] = status_result["site_health_breakdown"]
+
+        _build_audit_flags(enriched_site)
+        _build_licence_flags(enriched_site)
 
         total_risk_score += status_result["risk_score"]
         total_blocking_failures += status_result["failed_api_checks"]

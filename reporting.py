@@ -9,6 +9,7 @@ REPORT_DIR = "reports"
 LATEST_SUMMARY_JSON = os.path.join(REPORT_DIR, "latest_summary.json")
 LATEST_SUMMARY_TXT = os.path.join(REPORT_DIR, "latest_summary.txt")
 LATEST_SUMMARY_MD = os.path.join(REPORT_DIR, "latest_summary.md")
+LATEST_BACKEND_CONTRACT_JSON = os.path.join(REPORT_DIR, "latest_backend_contract.json")
 
 LATEST_SITES_CSV = os.path.join(REPORT_DIR, "latest_sites.csv")
 LATEST_CHANGES_CSV = os.path.join(REPORT_DIR, "latest_changes.csv")
@@ -17,7 +18,7 @@ LATEST_PERMISSION_ISSUES_CSV = os.path.join(REPORT_DIR, "latest_permission_issue
 LATEST_EXCLUDED_SITES_CSV = os.path.join(REPORT_DIR, "latest_excluded_sites.csv")
 LATEST_USER_LICENCE_CSV = os.path.join(REPORT_DIR, "latest_user_licence.csv")
 LATEST_AUDIT_AUTOMATION_CSV = os.path.join(REPORT_DIR, "latest_audit_automation.csv")
-LATEST_SNAPSHOT_DELTAS_CSV = os.path.join(REPORT_DIR, "latest_snapshot_deltas.csv")
+LATEST_DELTA_CSV = os.path.join(REPORT_DIR, "latest_delta_summary.csv")
 
 
 def ensure_report_dir():
@@ -58,39 +59,6 @@ def _normalise_change_counts(comparison):
     }
 
 
-def _site_nested_delta(site, key, default=None):
-    """
-    Supports both direct site delta fields and nested delta containers.
-    This lets reporting stay compatible while your backend evolves.
-    """
-    if key in site:
-        return site.get(key, default)
-
-    for container_key in [
-        "snapshot_delta",
-        "snapshot_deltas",
-        "delta_summary",
-        "site_deltas",
-        "growth_metrics"
-    ]:
-        container = site.get(container_key, {})
-        if isinstance(container, dict) and key in container:
-            return container.get(key, default)
-
-    return default
-
-
-def _extract_site_delta_summary(site):
-    return {
-        "project_count_delta": _site_nested_delta(site, "project_count_delta"),
-        "total_users_delta": _site_nested_delta(site, "total_users_delta"),
-        "active_users_delta": _site_nested_delta(site, "active_users_delta"),
-        "inactive_users_delta": _site_nested_delta(site, "inactive_users_delta"),
-        "licensed_users_estimate_delta": _site_nested_delta(site, "licensed_users_estimate_delta"),
-        "growth_status": _site_nested_delta(site, "growth_status")
-    }
-
-
 def build_export_summary(output):
     summary = output.get("summary", {}) or {}
     risk_summary = output.get("risk_summary", {}) or {}
@@ -98,29 +66,43 @@ def build_export_summary(output):
     comparison = output.get("comparison", {}) or {}
     snapshot_files = output.get("snapshot_files", {}) or {}
     historical_trends = output.get("historical_trends", {}) or {}
+    delta_summary = output.get("delta_summary", {}) or {}
     sites = output.get("sites", []) or []
 
     change_counts = _normalise_change_counts(comparison)
 
-    top_risky_sites = []
+    top_sites = []
     for site in sites[:5]:
-        delta_summary = _extract_site_delta_summary(site)
-
-        top_risky_sites.append({
+        top_sites.append({
             "name": site.get("name"),
             "status": site.get("status"),
             "risk_score": site.get("risk_score", 0),
             "project_count": site.get("project_count", 0),
+            "project_count_delta": site.get("project_count_delta"),
             "issue_count_total": site.get("issue_count_total", 0),
+            "issue_count_total_delta": site.get("issue_count_total_delta"),
             "issue_count_unresolved": site.get("issue_count_unresolved", 0),
+            "issue_count_unresolved_delta": site.get("issue_count_unresolved_delta"),
             "issue_count_updated_last_7d": site.get("issue_count_updated_last_7d", 0),
+            "growth_status": site.get("growth_status"),
+
             "user_summary": site.get("user_summary", {}),
+            "total_users_delta": site.get("total_users_delta"),
+            "active_users_delta": site.get("active_users_delta"),
+            "inactive_users_delta": site.get("inactive_users_delta"),
+
             "licence_summary": site.get("licence_summary", {}),
+            "licensed_users_estimate_delta": site.get("licensed_users_estimate_delta"),
+            "licence_status": site.get("licence_status"),
+            "licence_api_access": site.get("licence_api_access"),
+
             "audit_summary": site.get("audit_summary", {}),
+            "audit_status": site.get("audit_status"),
+            "audit_api_access": site.get("audit_api_access"),
+
             "automation_summary": site.get("automation_summary", {}),
             "permission_checker": site.get("permission_checker", {}),
-            "status_reasons": site.get("status_reasons", []),
-            "delta_summary": delta_summary
+            "status_reasons": site.get("status_reasons", [])
         })
 
     return {
@@ -128,9 +110,10 @@ def build_export_summary(output):
         "summary": summary,
         "risk_summary": risk_summary,
         "raw_collection_summary": raw_collection_summary,
+        "delta_summary": delta_summary,
         "change_counts": change_counts,
         "historical_trend_summary": historical_trends.get("summary", {}),
-        "top_risky_sites": top_risky_sites,
+        "top_sites": top_sites,
         "snapshot_files": snapshot_files
     }
 
@@ -146,6 +129,7 @@ def _build_text_report(export_summary):
     summary = export_summary.get("summary", {}) or {}
     risk_summary = export_summary.get("risk_summary", {}) or {}
     raw_summary = export_summary.get("raw_collection_summary", {}) or {}
+    delta_summary = export_summary.get("delta_summary", {}) or {}
     endpoint_totals = raw_summary.get("endpoint_totals", {}) or {}
     excluded_sites = raw_summary.get("excluded_sites", []) or []
     historical_summary = export_summary.get("historical_trend_summary", {}) or {}
@@ -177,6 +161,15 @@ def _build_text_report(export_summary):
     lines.append(f"Enrichment failed         : {endpoint_totals.get('enrichment_failed_checks', 0)}")
     lines.append("")
 
+    lines.append("DELTA SUMMARY")
+    lines.append("-" * 72)
+    lines.append(f"Project delta total        : {delta_summary.get('project_delta_total')}")
+    lines.append(f"Total users delta total    : {delta_summary.get('total_users_delta_total')}")
+    lines.append(f"Active users delta total   : {delta_summary.get('active_users_delta_total')}")
+    lines.append(f"Inactive users delta total : {delta_summary.get('inactive_users_delta_total')}")
+    lines.append(f"Licensed delta total       : {delta_summary.get('licensed_users_estimate_delta_total')}")
+    lines.append("")
+
     lines.append("EXCLUDED SITES")
     lines.append("-" * 72)
     if not excluded_sites:
@@ -195,49 +188,42 @@ def _build_text_report(export_summary):
     lines.append(f"Recurring blocking sites   : {historical_summary.get('recurring_blocking_failure_sites', 0)}")
     lines.append("")
 
-    top_risky_sites = export_summary.get("top_risky_sites", []) or []
+    top_sites = export_summary.get("top_sites", []) or []
     lines.append("TOP SITES")
     lines.append("-" * 72)
 
-    if not top_risky_sites:
+    if not top_sites:
         lines.append("No site data available.")
     else:
-        for index, site in enumerate(top_risky_sites, start=1):
+        for index, site in enumerate(top_sites, start=1):
             lines.append(f"{index}. {site.get('name')} | status={site.get('status')} | risk={site.get('risk_score', 0)}")
             lines.append(f"   Projects                : {site.get('project_count', 0)}")
+            lines.append(f"   Project delta           : {site.get('project_count_delta')}")
             lines.append(f"   Total issues            : {site.get('issue_count_total', 0)}")
+            lines.append(f"   Issue total delta       : {site.get('issue_count_total_delta')}")
             lines.append(f"   Unresolved issues       : {site.get('issue_count_unresolved', 0)}")
+            lines.append(f"   Unresolved delta        : {site.get('issue_count_unresolved_delta')}")
             lines.append(f"   Updated last 7 days     : {site.get('issue_count_updated_last_7d', 0)}")
+            lines.append(f"   Growth status           : {site.get('growth_status')}")
 
             user_summary = site.get("user_summary", {}) or {}
             lines.append(f"   Total users             : {user_summary.get('total_users')}")
             lines.append(f"   Active users            : {user_summary.get('active_users')}")
             lines.append(f"   Inactive users          : {user_summary.get('inactive_users')}")
+            lines.append(f"   Users delta             : {site.get('total_users_delta')}")
+            lines.append(f"   Active delta            : {site.get('active_users_delta')}")
+            lines.append(f"   Inactive delta          : {site.get('inactive_users_delta')}")
 
             licence_summary = site.get("licence_summary", {}) or {}
             lines.append(f"   Licensed users estimate : {licence_summary.get('licensed_users_estimate')}")
-
-            checker = site.get("permission_checker", {}) or {}
-            lines.append(f"   Has ADMINISTER          : {checker.get('has_administer_jira')}")
-            lines.append(f"   Has ADMINISTER_PROJECTS : {checker.get('has_administer_projects')}")
-            lines.append(f"   Has BROWSE_PROJECTS     : {checker.get('has_browse_projects')}")
+            lines.append(f"   Licensed delta          : {site.get('licensed_users_estimate_delta')}")
+            lines.append(f"   Licence status          : {site.get('licence_status')}")
+            lines.append(f"   Licence API access      : {site.get('licence_api_access')}")
 
             audit_summary = site.get("audit_summary", {}) or {}
             lines.append(f"   Audit record count      : {audit_summary.get('record_count')}")
-            lines.append(f"   Automation audit hits   : {audit_summary.get('automation_related_record_count')}")
-
-            automation_summary = site.get("automation_summary", {}) or {}
-            lines.append(
-                f"   Automation API support  : {automation_summary.get('rule_management_supported_with_current_auth')}"
-            )
-
-            delta_summary = site.get("delta_summary", {}) or {}
-            lines.append(f"   Project delta           : {delta_summary.get('project_count_delta')}")
-            lines.append(f"   Total users delta       : {delta_summary.get('total_users_delta')}")
-            lines.append(f"   Active users delta      : {delta_summary.get('active_users_delta')}")
-            lines.append(f"   Inactive users delta    : {delta_summary.get('inactive_users_delta')}")
-            lines.append(f"   Licensed users delta    : {delta_summary.get('licensed_users_estimate_delta')}")
-            lines.append(f"   Growth status           : {delta_summary.get('growth_status')}")
+            lines.append(f"   Audit status            : {site.get('audit_status')}")
+            lines.append(f"   Audit API access        : {site.get('audit_api_access')}")
 
             reasons = site.get("status_reasons", []) or []
             if reasons:
@@ -253,8 +239,9 @@ def _build_markdown_report(export_summary):
     risk_summary = export_summary.get("risk_summary", {}) or {}
     raw_summary = export_summary.get("raw_collection_summary", {}) or {}
     endpoint_totals = raw_summary.get("endpoint_totals", {}) or {}
+    delta_summary = export_summary.get("delta_summary", {}) or {}
     excluded_sites = raw_summary.get("excluded_sites", []) or []
-    top_risky_sites = export_summary.get("top_risky_sites", []) or []
+    top_sites = export_summary.get("top_sites", []) or []
 
     lines = []
     lines.append("# Jira Observation Monitor Backend Summary")
@@ -267,6 +254,14 @@ def _build_markdown_report(export_summary):
     lines.append(f"- **Collection duration (sec):** {raw_summary.get('collection_duration_seconds', 0)}")
     lines.append(f"- **Endpoint checks passed / failed:** {endpoint_totals.get('successful_checks', 0)} / {endpoint_totals.get('failed_checks', 0)}")
     lines.append("")
+    lines.append("## Delta summary")
+    lines.append("")
+    lines.append(f"- Project delta total: {delta_summary.get('project_delta_total')}")
+    lines.append(f"- Total users delta total: {delta_summary.get('total_users_delta_total')}")
+    lines.append(f"- Active users delta total: {delta_summary.get('active_users_delta_total')}")
+    lines.append(f"- Inactive users delta total: {delta_summary.get('inactive_users_delta_total')}")
+    lines.append(f"- Licensed users delta total: {delta_summary.get('licensed_users_estimate_delta_total')}")
+    lines.append("")
     lines.append("## Excluded sites")
     lines.append("")
     if not excluded_sites:
@@ -277,47 +272,40 @@ def _build_markdown_report(export_summary):
     lines.append("")
     lines.append("## Top sites")
     lines.append("")
-    if not top_risky_sites:
+    if not top_sites:
         lines.append("- No site data available.")
     else:
-        for site in top_risky_sites:
+        for site in top_sites:
             lines.append(f"### {site.get('name')}")
             lines.append(f"- Status: {site.get('status')}")
             lines.append(f"- Risk score: {site.get('risk_score', 0)}")
             lines.append(f"- Projects: {site.get('project_count', 0)}")
+            lines.append(f"- Project delta: {site.get('project_count_delta')}")
             lines.append(f"- Total issues: {site.get('issue_count_total', 0)}")
+            lines.append(f"- Issue total delta: {site.get('issue_count_total_delta')}")
             lines.append(f"- Unresolved issues: {site.get('issue_count_unresolved', 0)}")
+            lines.append(f"- Unresolved delta: {site.get('issue_count_unresolved_delta')}")
             lines.append(f"- Updated last 7 days: {site.get('issue_count_updated_last_7d', 0)}")
+            lines.append(f"- Growth status: {site.get('growth_status')}")
 
             user_summary = site.get("user_summary", {}) or {}
             lines.append(f"- Total users: {user_summary.get('total_users')}")
             lines.append(f"- Active users: {user_summary.get('active_users')}")
             lines.append(f"- Inactive users: {user_summary.get('inactive_users')}")
+            lines.append(f"- Total users delta: {site.get('total_users_delta')}")
+            lines.append(f"- Active users delta: {site.get('active_users_delta')}")
+            lines.append(f"- Inactive users delta: {site.get('inactive_users_delta')}")
 
             licence_summary = site.get("licence_summary", {}) or {}
             lines.append(f"- Licensed users estimate: {licence_summary.get('licensed_users_estimate')}")
-
-            checker = site.get("permission_checker", {}) or {}
-            lines.append(f"- Has ADMINISTER: {checker.get('has_administer_jira')}")
-            lines.append(f"- Has ADMINISTER_PROJECTS: {checker.get('has_administer_projects')}")
-            lines.append(f"- Has BROWSE_PROJECTS: {checker.get('has_browse_projects')}")
+            lines.append(f"- Licensed users delta: {site.get('licensed_users_estimate_delta')}")
+            lines.append(f"- Licence status: {site.get('licence_status')}")
+            lines.append(f"- Licence API access: {site.get('licence_api_access')}")
 
             audit_summary = site.get("audit_summary", {}) or {}
             lines.append(f"- Audit record count: {audit_summary.get('record_count')}")
-            lines.append(f"- Automation-related audit records: {audit_summary.get('automation_related_record_count')}")
-
-            automation_summary = site.get("automation_summary", {}) or {}
-            lines.append(
-                f"- Automation rule management supported with current auth: {automation_summary.get('rule_management_supported_with_current_auth')}"
-            )
-
-            delta_summary = site.get("delta_summary", {}) or {}
-            lines.append(f"- Project delta: {delta_summary.get('project_count_delta')}")
-            lines.append(f"- Total users delta: {delta_summary.get('total_users_delta')}")
-            lines.append(f"- Active users delta: {delta_summary.get('active_users_delta')}")
-            lines.append(f"- Inactive users delta: {delta_summary.get('inactive_users_delta')}")
-            lines.append(f"- Licensed users delta: {delta_summary.get('licensed_users_estimate_delta')}")
-            lines.append(f"- Growth status: {delta_summary.get('growth_status')}")
+            lines.append(f"- Audit status: {site.get('audit_status')}")
+            lines.append(f"- Audit API access: {site.get('audit_api_access')}")
 
             reasons = site.get("status_reasons", []) or []
             if reasons:
@@ -338,9 +326,17 @@ def _save_sites_csv(output, path):
             "status",
             "risk_score",
             "project_count",
+            "project_count_delta",
             "issue_count_total",
+            "issue_count_total_delta",
             "issue_count_unresolved",
+            "issue_count_unresolved_delta",
             "issue_count_updated_last_7d",
+            "growth_status",
+            "licence_status",
+            "licence_api_access",
+            "audit_status",
+            "audit_api_access",
             "collection_duration_seconds"
         ])
 
@@ -350,9 +346,17 @@ def _save_sites_csv(output, path):
                 site.get("status"),
                 site.get("risk_score", 0),
                 site.get("project_count", 0),
+                site.get("project_count_delta"),
                 site.get("issue_count_total", 0),
+                site.get("issue_count_total_delta"),
                 site.get("issue_count_unresolved", 0),
+                site.get("issue_count_unresolved_delta"),
                 site.get("issue_count_updated_last_7d", 0),
+                site.get("growth_status"),
+                site.get("licence_status"),
+                site.get("licence_api_access"),
+                site.get("audit_status"),
+                site.get("audit_api_access"),
                 site.get("collection_duration_seconds", 0)
             ])
 
@@ -489,9 +493,16 @@ def _save_user_licence_csv(output, path):
             "site_url",
             "cloud_id",
             "total_users",
+            "total_users_delta",
             "active_users",
+            "active_users_delta",
             "inactive_users",
+            "inactive_users_delta",
             "licensed_users_estimate",
+            "licensed_users_estimate_delta",
+            "licence_status",
+            "licence_api_access",
+            "growth_status",
             "user_fetch_ok",
             "user_fetch_error_category"
         ])
@@ -506,9 +517,16 @@ def _save_user_licence_csv(output, path):
                 site.get("url"),
                 site.get("cloud_id"),
                 user_summary.get("total_users"),
+                site.get("total_users_delta"),
                 user_summary.get("active_users"),
+                site.get("active_users_delta"),
                 user_summary.get("inactive_users"),
+                site.get("inactive_users_delta"),
                 licence_summary.get("licensed_users_estimate"),
+                site.get("licensed_users_estimate_delta"),
+                site.get("licence_status"),
+                site.get("licence_api_access"),
+                site.get("growth_status"),
                 fetch_status.get("ok"),
                 fetch_status.get("error_category")
             ])
@@ -524,6 +542,8 @@ def _save_audit_automation_csv(output, path):
             "site_url",
             "cloud_id",
             "audit_record_count",
+            "audit_status",
+            "audit_api_access",
             "automation_related_audit_record_count",
             "audit_fetch_ok",
             "audit_fetch_error_category",
@@ -541,6 +561,8 @@ def _save_audit_automation_csv(output, path):
                 site.get("url"),
                 site.get("cloud_id"),
                 audit_summary.get("record_count"),
+                site.get("audit_status"),
+                site.get("audit_api_access"),
                 audit_summary.get("automation_related_record_count"),
                 audit_fetch_status.get("ok"),
                 audit_fetch_status.get("error_category"),
@@ -549,37 +571,43 @@ def _save_audit_automation_csv(output, path):
             ])
 
 
-def _save_snapshot_deltas_csv(output, path):
+def _save_delta_csv(output, path):
     sites = output.get("sites", []) or []
 
     with open(path, "w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
         writer.writerow([
             "site_name",
-            "site_url",
-            "cloud_id",
             "project_count_delta",
             "total_users_delta",
             "active_users_delta",
             "inactive_users_delta",
             "licensed_users_estimate_delta",
-            "growth_status"
+            "issue_count_total_delta",
+            "issue_count_unresolved_delta",
+            "growth_status",
+            "snapshot_baseline"
         ])
 
         for site in sites:
-            delta_summary = _extract_site_delta_summary(site)
-
             writer.writerow([
                 site.get("name"),
-                site.get("url"),
-                site.get("cloud_id"),
-                delta_summary.get("project_count_delta"),
-                delta_summary.get("total_users_delta"),
-                delta_summary.get("active_users_delta"),
-                delta_summary.get("inactive_users_delta"),
-                delta_summary.get("licensed_users_estimate_delta"),
-                delta_summary.get("growth_status")
+                site.get("project_count_delta"),
+                site.get("total_users_delta"),
+                site.get("active_users_delta"),
+                site.get("inactive_users_delta"),
+                site.get("licensed_users_estimate_delta"),
+                site.get("issue_count_total_delta"),
+                site.get("issue_count_unresolved_delta"),
+                site.get("growth_status"),
+                site.get("snapshot_baseline")
             ])
+
+
+def _save_backend_contract_json(output, path):
+    ui_contract = output.get("ui_contract", {})
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(ui_contract, handle, indent=2)
 
 
 def save_reports(output):
@@ -594,6 +622,7 @@ def save_reports(output):
     timestamp_json = os.path.join(date_folder, f"summary_{timestamp_info['timestamp']}.json")
     timestamp_txt = os.path.join(date_folder, f"summary_{timestamp_info['timestamp']}.txt")
     timestamp_md = os.path.join(date_folder, f"summary_{timestamp_info['timestamp']}.md")
+    timestamp_backend_contract_json = os.path.join(date_folder, f"backend_contract_{timestamp_info['timestamp']}.json")
     timestamp_sites_csv = os.path.join(date_folder, f"sites_{timestamp_info['timestamp']}.csv")
     timestamp_changes_csv = os.path.join(date_folder, f"changes_{timestamp_info['timestamp']}.csv")
     timestamp_permission_checker_csv = os.path.join(date_folder, f"permission_checker_{timestamp_info['timestamp']}.csv")
@@ -601,7 +630,7 @@ def save_reports(output):
     timestamp_excluded_sites_csv = os.path.join(date_folder, f"excluded_sites_{timestamp_info['timestamp']}.csv")
     timestamp_user_licence_csv = os.path.join(date_folder, f"user_licence_{timestamp_info['timestamp']}.csv")
     timestamp_audit_automation_csv = os.path.join(date_folder, f"audit_automation_{timestamp_info['timestamp']}.csv")
-    timestamp_snapshot_deltas_csv = os.path.join(date_folder, f"snapshot_deltas_{timestamp_info['timestamp']}.csv")
+    timestamp_delta_csv = os.path.join(date_folder, f"delta_summary_{timestamp_info['timestamp']}.csv")
 
     with open(LATEST_SUMMARY_JSON, "w", encoding="utf-8") as handle:
         json.dump(export_summary, handle, indent=2)
@@ -624,6 +653,9 @@ def save_reports(output):
     with open(timestamp_md, "w", encoding="utf-8") as handle:
         handle.write(markdown_report)
 
+    _save_backend_contract_json(output, LATEST_BACKEND_CONTRACT_JSON)
+    _save_backend_contract_json(output, timestamp_backend_contract_json)
+
     _save_sites_csv(output, LATEST_SITES_CSV)
     _save_sites_csv(output, timestamp_sites_csv)
 
@@ -645,13 +677,14 @@ def save_reports(output):
     _save_audit_automation_csv(output, LATEST_AUDIT_AUTOMATION_CSV)
     _save_audit_automation_csv(output, timestamp_audit_automation_csv)
 
-    _save_snapshot_deltas_csv(output, LATEST_SNAPSHOT_DELTAS_CSV)
-    _save_snapshot_deltas_csv(output, timestamp_snapshot_deltas_csv)
+    _save_delta_csv(output, LATEST_DELTA_CSV)
+    _save_delta_csv(output, timestamp_delta_csv)
 
     return {
         "latest_summary_json": LATEST_SUMMARY_JSON,
         "latest_summary_txt": LATEST_SUMMARY_TXT,
         "latest_summary_md": LATEST_SUMMARY_MD,
+        "latest_backend_contract_json": LATEST_BACKEND_CONTRACT_JSON,
         "latest_sites_csv": LATEST_SITES_CSV,
         "latest_changes_csv": LATEST_CHANGES_CSV,
         "latest_permission_checker_csv": LATEST_PERMISSION_CHECKER_CSV,
@@ -659,10 +692,11 @@ def save_reports(output):
         "latest_excluded_sites_csv": LATEST_EXCLUDED_SITES_CSV,
         "latest_user_licence_csv": LATEST_USER_LICENCE_CSV,
         "latest_audit_automation_csv": LATEST_AUDIT_AUTOMATION_CSV,
-        "latest_snapshot_deltas_csv": LATEST_SNAPSHOT_DELTAS_CSV,
+        "latest_delta_csv": LATEST_DELTA_CSV,
         "timestamp_summary_json": timestamp_json,
         "timestamp_summary_txt": timestamp_txt,
         "timestamp_summary_md": timestamp_md,
+        "timestamp_backend_contract_json": timestamp_backend_contract_json,
         "timestamp_sites_csv": timestamp_sites_csv,
         "timestamp_changes_csv": timestamp_changes_csv,
         "timestamp_permission_checker_csv": timestamp_permission_checker_csv,
@@ -670,5 +704,5 @@ def save_reports(output):
         "timestamp_excluded_sites_csv": timestamp_excluded_sites_csv,
         "timestamp_user_licence_csv": timestamp_user_licence_csv,
         "timestamp_audit_automation_csv": timestamp_audit_automation_csv,
-        "timestamp_snapshot_deltas_csv": timestamp_snapshot_deltas_csv
+        "timestamp_delta_csv": timestamp_delta_csv
     }

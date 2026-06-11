@@ -7,6 +7,7 @@ from auth import (
     run_interactive_oauth_flow,
     validate_auth_config
 )
+from backend_contract import build_ui_contract
 from data_collector import collect_all_sites
 from intelligence import enrich_collection
 from monitoring import apply_snapshot_deltas, compare_snapshots
@@ -189,6 +190,8 @@ def print_user_licence_summary(sites):
         licence_summary = site.get("licence_summary", {}) or {}
 
         print(f"{site.get('name')}")
+        print(f"  Licence status           : {site.get('licence_status')}")
+        print(f"  Licence API access       : {site.get('licence_api_access')}")
         print(f"  Total users              : {user_summary.get('total_users')}")
         print(f"  Active users             : {user_summary.get('active_users')}")
         print(f"  Inactive users           : {user_summary.get('inactive_users')}")
@@ -227,6 +230,8 @@ def print_audit_automation_summary(sites):
         automation_summary = site.get("automation_summary", {}) or {}
 
         print(f"{site.get('name')}")
+        print(f"  Audit status             : {site.get('audit_status')}")
+        print(f"  Audit API access         : {site.get('audit_api_access')}")
         print(f"  Audit fetch OK           : {audit_fetch_status.get('ok')}")
         print(f"  Audit record count       : {audit_summary.get('record_count')}")
         print(f"  Automation audit hits    : {audit_summary.get('automation_related_record_count')}")
@@ -296,6 +301,8 @@ def print_top_sites(sites, limit=5):
         licence_summary = site.get("licence_summary", {}) or {}
         print(f"    Licensed users estimate  : {licence_summary.get('licensed_users_estimate')}")
         print(f"    Licensed users delta     : {signed_value(site.get('licensed_users_estimate_delta'))}")
+        print(f"    Licence status           : {site.get('licence_status')}")
+        print(f"    Audit status             : {site.get('audit_status')}")
         print(f"    Growth status            : {site.get('growth_status')}")
 
         reasons = site.get("status_reasons", []) or []
@@ -328,7 +335,7 @@ def print_changes(comparison):
     print(f"Critical changes             : {comparison.get('critical_change_count', 0)}")
 
 
-def build_output(raw_collection, enriched_collection, comparison, snapshot_files, report_files, historical_trends):
+def build_output(raw_collection, enriched_collection, comparison, snapshot_files, report_files, historical_trends, ui_contract):
     return {
         "run_timestamp_local": datetime.now().isoformat(),
         "raw_collection_summary": {
@@ -359,7 +366,8 @@ def build_output(raw_collection, enriched_collection, comparison, snapshot_files
         "comparison": comparison,
         "historical_trends": historical_trends,
         "snapshot_files": snapshot_files,
-        "report_files": report_files
+        "report_files": report_files,
+        "ui_contract": ui_contract
     }
 
 
@@ -427,6 +435,10 @@ def main():
     historical_trends = analyze_historical_trends(lookback=10)
     print("Historical trends            : SUCCESS")
 
+    print("Building backend/UI contract...")
+    ui_contract = build_ui_contract(raw_collection, enriched_collection)
+    print("Backend/UI contract          : SUCCESS")
+
     temp_output = {
         "raw_collection_summary": {
             "collected_at_utc": raw_collection.get("collected_at_utc"),
@@ -455,7 +467,8 @@ def main():
         "sites": enriched_collection.get("sites", []),
         "comparison": comparison,
         "historical_trends": historical_trends,
-        "snapshot_files": snapshot_files
+        "snapshot_files": snapshot_files,
+        "ui_contract": ui_contract
     }
 
     print("Saving reports...")
@@ -468,7 +481,8 @@ def main():
         comparison=comparison,
         snapshot_files=snapshot_files,
         report_files=report_files,
-        historical_trends=historical_trends
+        historical_trends=historical_trends,
+        ui_contract=ui_contract
     )
 
     save_run_output(output)
@@ -494,6 +508,7 @@ def main():
     print(f"Latest summary JSON          : {report_files.get('latest_summary_json')}")
     print(f"Latest summary TXT           : {report_files.get('latest_summary_txt')}")
     print(f"Latest summary MD            : {report_files.get('latest_summary_md')}")
+    print(f"Latest backend contract JSON : {report_files.get('latest_backend_contract_json')}")
     print(f"Latest sites CSV             : {report_files.get('latest_sites_csv')}")
     print(f"Latest changes CSV           : {report_files.get('latest_changes_csv')}")
     print(f"Latest permission CSV        : {report_files.get('latest_permission_checker_csv')}")
@@ -501,6 +516,7 @@ def main():
     print(f"Latest excluded sites CSV    : {report_files.get('latest_excluded_sites_csv')}")
     print(f"Latest user/licence CSV      : {report_files.get('latest_user_licence_csv')}")
     print(f"Latest audit/automation CSV  : {report_files.get('latest_audit_automation_csv')}")
+    print(f"Latest delta CSV             : {report_files.get('latest_delta_csv')}")
 
     print()
     print_divider("=")

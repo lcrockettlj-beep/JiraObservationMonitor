@@ -1,0 +1,579 @@
+{
+  "homepage": {
+    "summary_strip": {
+      "site_count": 3,
+      "healthy_count": 3,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 6,
+      "average_risk_score": 2.0,
+      "project_delta_total": 0,
+      "total_users_delta_total": 0,
+      "licensed_users_estimate_delta_total": 0
+    },
+    "cards": [
+      {
+        "name": "gli-delivery-tm",
+        "url": "https://gli-delivery-tm.atlassian.net",
+        "status": "healthy",
+        "status_group": "operationally_stable",
+        "risk_score": 3,
+        "project_count": 22,
+        "project_delta": 0,
+        "total_users": 473,
+        "total_users_delta": 0,
+        "active_users": 378,
+        "inactive_users": 95,
+        "licensed_users_estimate": null,
+        "licensed_users_estimate_delta": 0,
+        "growth_status": "stable",
+        "audit_status": "permission_limited",
+        "audit_api_access": false,
+        "licence_status": "permission_limited",
+        "licence_api_access": false,
+        "permission_limited_checks": [
+          "application_roles",
+          "audit_records"
+        ],
+        "status_reasons": [
+          "permission_limited=application_roles,audit_records",
+          "operational_signal=multiple_permission_limited_endpoints"
+        ]
+      },
+      {
+        "name": "gli-it-project",
+        "url": "https://gli-it-project.atlassian.net",
+        "status": "healthy",
+        "status_group": "operationally_stable",
+        "risk_score": 3,
+        "project_count": 55,
+        "project_delta": 0,
+        "total_users": 484,
+        "total_users_delta": 0,
+        "active_users": 378,
+        "inactive_users": 106,
+        "licensed_users_estimate": null,
+        "licensed_users_estimate_delta": 0,
+        "growth_status": "stable",
+        "audit_status": "permission_limited",
+        "audit_api_access": false,
+        "licence_status": "permission_limited",
+        "licence_api_access": false,
+        "permission_limited_checks": [
+          "application_roles",
+          "audit_records"
+        ],
+        "status_reasons": [
+          "permission_limited=application_roles,audit_records",
+          "operational_signal=multiple_permission_limited_endpoints"
+        ]
+      },
+      {
+        "name": "gli-global-technology",
+        "url": "https://gli-global-technology.atlassian.net",
+        "status": "healthy",
+        "status_group": "operationally_stable",
+        "risk_score": 0,
+        "project_count": 8,
+        "project_delta": 0,
+        "total_users": 441,
+        "total_users_delta": 0,
+        "active_users": 378,
+        "inactive_users": 63,
+        "licensed_users_estimate": 53,
+        "licensed_users_estimate_delta": 0,
+        "growth_status": "stable",
+        "audit_status": "available",
+        "audit_api_access": true,
+        "licence_status": "available",
+        "licence_api_access": true,
+        "permission_limited_checks": [],
+        "status_reasons": [
+          "no_risk_signals_detected"
+        ]
+      }
+    ],
+    "excluded_sites": [
+      {
+        "name": "gaminglabs-team-h2pbpmis",
+        "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
+        "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9"
+      },
+      {
+        "name": "gaminglabs-team-tsyfo716",
+        "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
+        "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6"
+      },
+      {
+        "name": "gli-usa",
+        "url": "https://gli-usa.atlassian.net",
+        "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018"
+      }
+    ]
+  },
+  "site_pages": {
+    "de2de731-c6ae-4e15-a2cf-92d976f0fb7c": {
+      "site_identity": {
+        "name": "gli-delivery-tm",
+        "url": "https://gli-delivery-tm.atlassian.net",
+        "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c"
+      },
+      "health": {
+        "status": "healthy",
+        "risk_score": 3,
+        "status_reasons": [
+          "permission_limited=application_roles,audit_records",
+          "operational_signal=multiple_permission_limited_endpoints"
+        ],
+        "permission_limited_checks": [
+          "application_roles",
+          "audit_records"
+        ]
+      },
+      "usage_growth_panel": {
+        "total_projects": 22,
+        "project_delta": 0,
+        "total_users": 473,
+        "total_users_delta": 0,
+        "active_users": 378,
+        "active_users_delta": 0,
+        "inactive_users": 95,
+        "inactive_users_delta": 0,
+        "licensed_users_estimate": null,
+        "licensed_users_estimate_delta": 0,
+        "growth_status": "stable"
+      },
+      "licence_panel": {
+        "status": "permission_limited",
+        "api_access": false,
+        "licensed_users_estimate": null,
+        "products": []
+      },
+      "operations_panel": {
+        "audit_status": "permission_limited",
+        "audit_api_access": false,
+        "audit_record_count": null,
+        "automation_related_audit_record_count": null,
+        "automation_api_supported": false,
+        "automation_note": "Automation REST rule management is not accessible with the current Jira OAuth2 app flow. The official Automation REST API uses API token or browser session authentication, and the rule management endpoints are not available to OAuth2 apps.",
+        "permission_limited_checks": [
+          "application_roles",
+          "audit_records"
+        ]
+      },
+      "issues_panel": {
+        "issue_count_total": 1,
+        "issue_count_total_delta": 0,
+        "issue_count_unresolved": 1,
+        "issue_count_unresolved_delta": 0,
+        "issue_count_updated_last_7d": 1
+      },
+      "projects_panel": {
+        "project_count": 22,
+        "project_sample": [
+          {
+            "id": "10006",
+            "key": "AGLC",
+            "name": "AGLC",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10018",
+            "key": "AUT",
+            "name": "Automation",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10014",
+            "key": "DCL",
+            "name": "DC Lottery",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10185",
+            "key": "DYN",
+            "name": "Dynamic365",
+            "project_type_key": "business",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10019",
+            "key": "ENGTEST",
+            "name": "Test Approach",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10012",
+            "key": "GDT",
+            "name": "GLI Dev Testing",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10007",
+            "key": "HLII",
+            "name": "Hoosier Lottery - IGT-IN",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10015",
+            "key": "LAN",
+            "name": "Landbased Projects",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10009",
+            "key": "LAPI",
+            "name": "Lazlo - API",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10000",
+            "key": "LAT",
+            "name": "Lottery Acceptance Testing",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          }
+        ]
+      },
+      "raw_backend_flags": {
+        "snapshot_baseline": false,
+        "audit_status": "permission_limited",
+        "audit_api_access": false,
+        "licence_status": "permission_limited",
+        "licence_api_access": false
+      }
+    },
+    "d4b3adb4-bd39-435e-bd65-f29db2b11a37": {
+      "site_identity": {
+        "name": "gli-it-project",
+        "url": "https://gli-it-project.atlassian.net",
+        "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37"
+      },
+      "health": {
+        "status": "healthy",
+        "risk_score": 3,
+        "status_reasons": [
+          "permission_limited=application_roles,audit_records",
+          "operational_signal=multiple_permission_limited_endpoints"
+        ],
+        "permission_limited_checks": [
+          "application_roles",
+          "audit_records"
+        ]
+      },
+      "usage_growth_panel": {
+        "total_projects": 55,
+        "project_delta": 0,
+        "total_users": 484,
+        "total_users_delta": 0,
+        "active_users": 378,
+        "active_users_delta": 0,
+        "inactive_users": 106,
+        "inactive_users_delta": 0,
+        "licensed_users_estimate": null,
+        "licensed_users_estimate_delta": 0,
+        "growth_status": "stable"
+      },
+      "licence_panel": {
+        "status": "permission_limited",
+        "api_access": false,
+        "licensed_users_estimate": null,
+        "products": []
+      },
+      "operations_panel": {
+        "audit_status": "permission_limited",
+        "audit_api_access": false,
+        "audit_record_count": null,
+        "automation_related_audit_record_count": null,
+        "automation_api_supported": false,
+        "automation_note": "Automation REST rule management is not accessible with the current Jira OAuth2 app flow. The official Automation REST API uses API token or browser session authentication, and the rule management endpoints are not available to OAuth2 apps.",
+        "permission_limited_checks": [
+          "application_roles",
+          "audit_records"
+        ]
+      },
+      "issues_panel": {
+        "issue_count_total": 1,
+        "issue_count_total_delta": 0,
+        "issue_count_unresolved": 1,
+        "issue_count_unresolved_delta": 0,
+        "issue_count_updated_last_7d": 1
+      },
+      "projects_panel": {
+        "project_count": 55,
+        "project_sample": [
+          {
+            "id": "10451",
+            "key": "AA",
+            "name": "Auto-Art",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10096",
+            "key": "ACCESS",
+            "name": "GLI Access",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10094",
+            "key": "ACU",
+            "name": "Acumatica Integrations",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10084",
+            "key": "BRS",
+            "name": "Binary Request Site",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10087",
+            "key": "CDI",
+            "name": "Certification Document Interface",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10107",
+            "key": "CER",
+            "name": "Ceridian Integrations",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10106",
+            "key": "CHRON",
+            "name": "CHRONOS",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10098",
+            "key": "DEVINF",
+            "name": "Software Development Infrastructure / Technical Debt",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10059",
+            "key": "DEVPMO",
+            "name": "Dev PMO",
+            "project_type_key": "business",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          },
+          {
+            "id": "10058",
+            "key": "DEVQA",
+            "name": "Dev QA",
+            "project_type_key": "software",
+            "simplified": true,
+            "style": "next-gen",
+            "is_private": false
+          }
+        ]
+      },
+      "raw_backend_flags": {
+        "snapshot_baseline": false,
+        "audit_status": "permission_limited",
+        "audit_api_access": false,
+        "licence_status": "permission_limited",
+        "licence_api_access": false
+      }
+    },
+    "aaa90a93-f0af-47ba-98d6-47829cc032b7": {
+      "site_identity": {
+        "name": "gli-global-technology",
+        "url": "https://gli-global-technology.atlassian.net",
+        "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7"
+      },
+      "health": {
+        "status": "healthy",
+        "risk_score": 0,
+        "status_reasons": [
+          "no_risk_signals_detected"
+        ],
+        "permission_limited_checks": []
+      },
+      "usage_growth_panel": {
+        "total_projects": 8,
+        "project_delta": 0,
+        "total_users": 441,
+        "total_users_delta": 0,
+        "active_users": 378,
+        "active_users_delta": 0,
+        "inactive_users": 63,
+        "inactive_users_delta": 0,
+        "licensed_users_estimate": 53,
+        "licensed_users_estimate_delta": 0,
+        "growth_status": "stable"
+      },
+      "licence_panel": {
+        "status": "available",
+        "api_access": true,
+        "licensed_users_estimate": 53,
+        "products": [
+          {
+            "key": "jira-software",
+            "name": "Jira Software",
+            "user_count": 53,
+            "number_of_seats": 100000,
+            "remaining_seats": 99947,
+            "has_unlimited_seats": false,
+            "selected_by_default": false,
+            "defined": true
+          }
+        ]
+      },
+      "operations_panel": {
+        "audit_status": "available",
+        "audit_api_access": true,
+        "audit_record_count": 50,
+        "automation_related_audit_record_count": 0,
+        "automation_api_supported": false,
+        "automation_note": "Automation REST rule management is not accessible with the current Jira OAuth2 app flow. The official Automation REST API uses API token or browser session authentication, and the rule management endpoints are not available to OAuth2 apps.",
+        "permission_limited_checks": []
+      },
+      "issues_panel": {
+        "issue_count_total": 1,
+        "issue_count_total_delta": 0,
+        "issue_count_unresolved": 1,
+        "issue_count_unresolved_delta": 0,
+        "issue_count_updated_last_7d": 1
+      },
+      "projects_panel": {
+        "project_count": 8,
+        "project_sample": [
+          {
+            "id": "10548",
+            "key": "CIR",
+            "name": "Continual Improvement Register",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10071",
+            "key": "IGS",
+            "name": "Global IT Operations Service",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10200",
+            "key": "MT",
+            "name": "Management Tasks",
+            "project_type_key": "business",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10411",
+            "key": "POL",
+            "name": "IT Policy Register",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10482",
+            "key": "PUR",
+            "name": "IT Purchasing",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10414",
+            "key": "RD",
+            "name": "Reporting & Dashboard",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10132",
+            "key": "SEC",
+            "name": "Security",
+            "project_type_key": "software",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          },
+          {
+            "id": "10515",
+            "key": "TT",
+            "name": "Task Templates",
+            "project_type_key": "business",
+            "simplified": false,
+            "style": "classic",
+            "is_private": false
+          }
+        ]
+      },
+      "raw_backend_flags": {
+        "snapshot_baseline": false,
+        "audit_status": "available",
+        "audit_api_access": true,
+        "licence_status": "available",
+        "licence_api_access": true
+      }
+    }
+  }
+}
