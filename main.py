@@ -125,28 +125,6 @@ def print_status_summary(enriched_collection):
     print(f"Critical                     : {enriched_collection.get('critical_count', 0)}")
 
 
-def print_attention_summary(sites):
-    print_section("ATTENTION SUMMARY")
-
-    permission_limited_sites = [s for s in sites if s.get("permission_limited_checks")]
-    if permission_limited_sites:
-        print("Permission-limited sites:")
-        for site in permission_limited_sites:
-            print(f"  - {site.get('name')}: {format_list(site.get('permission_limited_checks', []))}")
-    else:
-        print("No permission-limited sites.")
-
-    warning_or_critical = [s for s in sites if s.get("status") in ("warning", "critical")]
-    if warning_or_critical:
-        print()
-        print("Sites needing attention:")
-        for site in warning_or_critical:
-            print(f"  - {site.get('name')} ({site.get('status')})")
-    else:
-        print()
-        print("No warning or critical sites.")
-
-
 def print_permission_checker(sites):
     print_section("PERMISSION CHECKER")
 
@@ -179,6 +157,67 @@ def print_permission_checker(sites):
         print()
 
 
+def print_user_licence_summary(sites):
+    print_section("USER & LICENCE SUMMARY")
+
+    if not sites:
+        print("No sites available.")
+        return
+
+    for site in sites:
+        user_summary = site.get("user_summary", {}) or {}
+        licence_summary = site.get("licence_summary", {}) or {}
+
+        print(f"{site.get('name')}")
+        print(f"  Total users              : {user_summary.get('total_users')}")
+        print(f"  Active users             : {user_summary.get('active_users')}")
+        print(f"  Inactive users           : {user_summary.get('inactive_users')}")
+        print(f"  Licensed users estimate  : {licence_summary.get('licensed_users_estimate')}")
+
+        products = licence_summary.get("products", []) or []
+        if products:
+            print("  Licence products         :")
+            for product in products[:10]:
+                print(
+                    f"    - {product.get('name')} "
+                    f"(key={product.get('key')}, user_count={product.get('user_count')}, "
+                    f"seats={product.get('number_of_seats')}, remaining={product.get('remaining_seats')})"
+                )
+        else:
+            print("  Licence products         : None")
+
+        print()
+
+
+def print_audit_automation_summary(sites):
+    print_section("AUTOMATION & AUDIT SUMMARY")
+
+    if not sites:
+        print("No sites available.")
+        return
+
+    for site in sites:
+        audit_summary = site.get("audit_summary", {}) or {}
+        audit_fetch_status = site.get("audit_fetch_status", {}) or {}
+        automation_summary = site.get("automation_summary", {}) or {}
+
+        print(f"{site.get('name')}")
+        print(f"  Audit fetch OK           : {audit_fetch_status.get('ok')}")
+        print(f"  Audit record count       : {audit_summary.get('record_count')}")
+        print(f"  Automation audit hits    : {audit_summary.get('automation_related_record_count')}")
+
+        category_counts = audit_summary.get("category_counts", {}) or {}
+        if category_counts:
+            print("  Audit categories         :")
+            for category_name, count in sorted(category_counts.items()):
+                print(f"    - {category_name}: {count}")
+
+        print("  Automation API support   : "
+              f"{automation_summary.get('rule_management_supported_with_current_auth')}")
+        print(f"  Automation note          : {automation_summary.get('reason')}")
+        print()
+
+
 def print_historical_trend_summary(historical_trends):
     print_section("HISTORICAL TREND SUMMARY")
 
@@ -196,8 +235,8 @@ def print_historical_trend_summary(historical_trends):
     print(f"Recurring blocking sites     : {summary.get('recurring_blocking_failure_sites', 0)}")
 
 
-def print_top_risky_sites(sites, limit=5):
-    print_section("TOP RISKY SITES")
+def print_top_sites(sites, limit=5):
+    print_section("TOP SITES")
 
     if not sites:
         print("No sites available.")
@@ -214,14 +253,14 @@ def print_top_risky_sites(sites, limit=5):
         print(f"    Updated last 7 days      : {site.get('issue_count_updated_last_7d', 0)}")
         print(f"    Site collection (sec)    : {site.get('collection_duration_seconds', 0)}")
 
-        permission_limited = site.get("permission_limited_checks", [])
-        if permission_limited:
-            print(f"    Permission limited       : {format_list(permission_limited)}")
+        user_summary = site.get("user_summary", {}) or {}
+        print(f"    Users total / active / inactive : {user_summary.get('total_users')} / {user_summary.get('active_users')} / {user_summary.get('inactive_users')}")
 
-        status_reasons = site.get("status_reasons", [])
-        if status_reasons:
-            print(f"    Status reasons           : {format_list(status_reasons)}")
+        licence_summary = site.get("licence_summary", {}) or {}
+        print(f"    Licensed users estimate  : {licence_summary.get('licensed_users_estimate')}")
 
+        reasons = site.get("status_reasons", []) or []
+        print(f"    Reasons                  : {format_list(reasons)}")
         print()
 
 
@@ -394,10 +433,11 @@ def main():
     print_runtime_summary(raw_collection, enriched_collection)
     print_excluded_sites(raw_collection)
     print_status_summary(enriched_collection)
-    print_attention_summary(sites)
     print_permission_checker(sites)
+    print_user_licence_summary(sites)
+    print_audit_automation_summary(sites)
     print_historical_trend_summary(historical_trends)
-    print_top_risky_sites(sites, limit=5)
+    print_top_sites(sites, limit=5)
     print_changes(comparison)
 
     print_section("OUTPUT FILES")
@@ -407,8 +447,14 @@ def main():
     print(f"Latest run output            : {RUN_OUTPUT_FILE}")
     print(f"Latest summary JSON          : {report_files.get('latest_summary_json')}")
     print(f"Latest summary TXT           : {report_files.get('latest_summary_txt')}")
-    print(f"Timestamp summary JSON       : {report_files.get('timestamp_summary_json')}")
-    print(f"Timestamp summary TXT        : {report_files.get('timestamp_summary_txt')}")
+    print(f"Latest summary MD            : {report_files.get('latest_summary_md')}")
+    print(f"Latest sites CSV             : {report_files.get('latest_sites_csv')}")
+    print(f"Latest changes CSV           : {report_files.get('latest_changes_csv')}")
+    print(f"Latest permission CSV        : {report_files.get('latest_permission_checker_csv')}")
+    print(f"Latest permission issues CSV : {report_files.get('latest_permission_issues_csv')}")
+    print(f"Latest excluded sites CSV    : {report_files.get('latest_excluded_sites_csv')}")
+    print(f"Latest user/licence CSV      : {report_files.get('latest_user_licence_csv')}")
+    print(f"Latest audit/automation CSV  : {report_files.get('latest_audit_automation_csv')}")
 
     print()
     print_divider("=")

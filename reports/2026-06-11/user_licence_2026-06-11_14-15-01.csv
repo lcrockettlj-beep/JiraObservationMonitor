@@ -1,0 +1,4 @@
+site_name,site_url,cloud_id,total_users,active_users,inactive_users,licensed_users_estimate,user_fetch_ok,user_fetch_error_category
+gli-delivery-tm,https://gli-delivery-tm.atlassian.net,de2de731-c6ae-4e15-a2cf-92d976f0fb7c,473,378,95,28,True,
+gli-global-technology,https://gli-global-technology.atlassian.net,aaa90a93-f0af-47ba-98d6-47829cc032b7,441,378,63,53,True,
+gli-it-project,https://gli-it-project.atlassian.net,d4b3adb4-bd39-435e-bd65-f29db2b11a37,484,378,106,58,True,

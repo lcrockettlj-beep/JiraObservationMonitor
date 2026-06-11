@@ -4,11 +4,13 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
+from automation_audit import collect_audit_and_automation_data
 from jira_client import (
     get_accessible_resources,
     safe_jira_get,
     safe_jira_search_count
 )
+from user_license import collect_user_and_licence_data
 
 
 MAX_SITE_WORKERS = int(os.getenv("JOM_MAX_SITE_WORKERS", "3"))
@@ -28,9 +30,12 @@ CORE_ENDPOINT_KEYS = {
 
 ENRICHMENT_ENDPOINT_KEYS = {
     "application_roles",
+    "my_permissions",
     "all_issues",
     "unresolved_issues",
-    "updated_last_7d"
+    "updated_last_7d",
+    "users_search",
+    "audit_records"
 }
 
 
@@ -108,7 +113,10 @@ def _extract_application_role_sample(role_payload, limit=10):
             "name": role.get("name"),
             "default_groups_count": len(role.get("defaultGroups", []) or []),
             "selected_by_default": role.get("selectedByDefault"),
-            "defined": role.get("defined")
+            "defined": role.get("defined"),
+            "user_count": role.get("userCount"),
+            "number_of_seats": role.get("numberOfSeats"),
+            "remaining_seats": role.get("remainingSeats")
         })
 
     return sample
@@ -444,6 +452,24 @@ def _collect_site_metrics(access_token, cloud_id):
             ]
         ))
 
+        futures.append(executor.submit(
+            _fetch_endpoint,
+            access_token,
+            cloud_id,
+            "users_search",
+            "users/search",
+            {"startAt": 0, "maxResults": 1}
+        ))
+
+        futures.append(executor.submit(
+            _fetch_endpoint,
+            access_token,
+            cloud_id,
+            "audit_records",
+            "auditing/record",
+            {"limit": 1}
+        ))
+
         for future in as_completed(futures):
             endpoint_key, result = future.result()
             result_map[endpoint_key] = result
@@ -511,6 +537,17 @@ def collect_site_data(access_token, resource):
     unresolved_issue_count = _extract_issue_total(unresolved_issues_data)
     updated_last_7d_count = _extract_issue_total(updated_last_7d_data)
 
+    user_licence_data = collect_user_and_licence_data(
+        access_token=access_token,
+        cloud_id=cloud_id,
+        application_roles_payload=application_roles_data
+    )
+
+    audit_automation_data = collect_audit_and_automation_data(
+        access_token=access_token,
+        cloud_id=cloud_id
+    )
+
     site_elapsed_seconds = round(time.perf_counter() - site_start, 4)
 
     return {
@@ -531,9 +568,17 @@ def collect_site_data(access_token, resource):
 
         "project_sample": project_sample,
         "application_role_sample": application_role_sample,
-        "server_info": _extract_serverInfo_summary(server_info_data) if False else _extract_server_info_summary(server_info_data),
+        "server_info": _extract_server_info_summary(server_info_data),
         "myself": _extract_myself_summary(myself_data),
         "permission_checker": _extract_permission_summary(my_permissions_data),
+
+        "user_summary": user_licence_data.get("user_summary"),
+        "user_fetch_status": user_licence_data.get("user_fetch_status"),
+        "licence_summary": user_licence_data.get("licence_summary"),
+
+        "audit_summary": audit_automation_data.get("audit_summary"),
+        "audit_fetch_status": audit_automation_data.get("audit_fetch_status"),
+        "automation_summary": audit_automation_data.get("automation_summary"),
 
         "api_checks": api_checks,
         "api_errors": api_errors,

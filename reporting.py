@@ -15,6 +15,8 @@ LATEST_CHANGES_CSV = os.path.join(REPORT_DIR, "latest_changes.csv")
 LATEST_PERMISSION_CHECKER_CSV = os.path.join(REPORT_DIR, "latest_permission_checker.csv")
 LATEST_PERMISSION_ISSUES_CSV = os.path.join(REPORT_DIR, "latest_permission_issues.csv")
 LATEST_EXCLUDED_SITES_CSV = os.path.join(REPORT_DIR, "latest_excluded_sites.csv")
+LATEST_USER_LICENCE_CSV = os.path.join(REPORT_DIR, "latest_user_licence.csv")
+LATEST_AUDIT_AUTOMATION_CSV = os.path.join(REPORT_DIR, "latest_audit_automation.csv")
 
 
 def ensure_report_dir():
@@ -55,67 +57,6 @@ def _normalise_change_counts(comparison):
     }
 
 
-def _extract_permission_overview(sites):
-    checked_sites = 0
-    available_sites = 0
-    administer_true = 0
-    administer_projects_true = 0
-    browse_projects_true = 0
-
-    for site in sites:
-        checker = site.get("permission_checker", {}) or {}
-
-        if checker:
-            checked_sites += 1
-
-        if checker.get("available"):
-            available_sites += 1
-
-        if checker.get("has_administer_jira") is True:
-            administer_true += 1
-
-        if checker.get("has_administer_projects") is True:
-            administer_projects_true += 1
-
-        if checker.get("has_browse_projects") is True:
-            browse_projects_true += 1
-
-    return {
-        "checked_sites": checked_sites,
-        "available_sites": available_sites,
-        "administer_true": administer_true,
-        "administer_projects_true": administer_projects_true,
-        "browse_projects_true": browse_projects_true
-    }
-
-
-def _extract_permission_issue_rows(sites):
-    rows = []
-
-    for site in sites:
-        endpoint_summary = site.get("endpoint_summary", {}) or {}
-        permission_issue_urls = endpoint_summary.get("permission_issue_urls", []) or []
-
-        mypermissions_url = None
-        cloud_id = site.get("cloud_id")
-        if cloud_id:
-            mypermissions_url = f"https://api.atlassian.com/ex/jira/{cloud_id}/rest/api/3/mypermissions"
-
-        for issue in permission_issue_urls:
-            rows.append({
-                "site_name": site.get("name"),
-                "site_url": site.get("url"),
-                "cloud_id": cloud_id,
-                "mypermissions_url": mypermissions_url,
-                "endpoint_key": issue.get("endpoint_key"),
-                "related_endpoint_url": issue.get("url"),
-                "status_code": issue.get("status_code"),
-                "error_category": issue.get("error_category")
-            })
-
-    return rows
-
-
 def build_export_summary(output):
     summary = output.get("summary", {}) or {}
     risk_summary = output.get("risk_summary", {}) or {}
@@ -125,10 +66,7 @@ def build_export_summary(output):
     historical_trends = output.get("historical_trends", {}) or {}
     sites = output.get("sites", []) or []
 
-    excluded_sites = raw_collection_summary.get("excluded_sites", []) or []
     change_counts = _normalise_change_counts(comparison)
-    permission_overview = _extract_permission_overview(sites)
-    permission_issue_rows = _extract_permission_issue_rows(sites)
 
     top_risky_sites = []
     for site in sites[:5]:
@@ -140,9 +78,12 @@ def build_export_summary(output):
             "issue_count_total": site.get("issue_count_total", 0),
             "issue_count_unresolved": site.get("issue_count_unresolved", 0),
             "issue_count_updated_last_7d": site.get("issue_count_updated_last_7d", 0),
-            "permission_limited_checks": site.get("permission_limited_checks", []),
-            "status_reasons": site.get("status_reasons", []),
-            "permission_checker": site.get("permission_checker", {})
+            "user_summary": site.get("user_summary", {}),
+            "licence_summary": site.get("licence_summary", {}),
+            "audit_summary": site.get("audit_summary", {}),
+            "automation_summary": site.get("automation_summary", {}),
+            "permission_checker": site.get("permission_checker", {}),
+            "status_reasons": site.get("status_reasons", [])
         })
 
     return {
@@ -152,10 +93,6 @@ def build_export_summary(output):
         "raw_collection_summary": raw_collection_summary,
         "change_counts": change_counts,
         "historical_trend_summary": historical_trends.get("summary", {}),
-        "permission_overview": permission_overview,
-        "permission_issue_count": len(permission_issue_rows),
-        "permission_issues": permission_issue_rows,
-        "excluded_sites": excluded_sites,
         "top_risky_sites": top_risky_sites,
         "snapshot_files": snapshot_files
     }
@@ -164,12 +101,18 @@ def build_export_summary(output):
 def _build_text_report(export_summary):
     lines = []
 
-    lines.append("Jira Observation Monitor - Summary Report")
+    lines.append("Jira Observation Monitor - Backend Summary")
     lines.append("=" * 72)
     lines.append(f"Generated at local          : {export_summary.get('generated_at_local')}")
     lines.append("")
 
     summary = export_summary.get("summary", {}) or {}
+    risk_summary = export_summary.get("risk_summary", {}) or {}
+    raw_summary = export_summary.get("raw_collection_summary", {}) or {}
+    endpoint_totals = raw_summary.get("endpoint_totals", {}) or {}
+    excluded_sites = raw_summary.get("excluded_sites", []) or []
+    historical_summary = export_summary.get("historical_trend_summary", {}) or {}
+
     lines.append("STATUS SUMMARY")
     lines.append("-" * 72)
     lines.append(f"Sites total                : {summary.get('site_count', 0)}")
@@ -178,7 +121,6 @@ def _build_text_report(export_summary):
     lines.append(f"Critical                   : {summary.get('critical_count', 0)}")
     lines.append("")
 
-    risk_summary = export_summary.get("risk_summary", {}) or {}
     lines.append("RISK SUMMARY")
     lines.append("-" * 72)
     lines.append(f"Total risk score           : {risk_summary.get('total_risk_score', 0)}")
@@ -187,8 +129,6 @@ def _build_text_report(export_summary):
     lines.append(f"Permission-limited checks  : {risk_summary.get('total_permission_limited_checks', 0)}")
     lines.append("")
 
-    raw_summary = export_summary.get("raw_collection_summary", {}) or {}
-    endpoint_totals = raw_summary.get("endpoint_totals", {}) or {}
     lines.append("COLLECTION SUMMARY")
     lines.append("-" * 72)
     lines.append(f"Collected at UTC           : {raw_summary.get('collected_at_utc')}")
@@ -200,7 +140,6 @@ def _build_text_report(export_summary):
     lines.append(f"Enrichment failed         : {endpoint_totals.get('enrichment_failed_checks', 0)}")
     lines.append("")
 
-    excluded_sites = export_summary.get("excluded_sites", []) or []
     lines.append("EXCLUDED SITES")
     lines.append("-" * 72)
     if not excluded_sites:
@@ -210,34 +149,6 @@ def _build_text_report(export_summary):
             lines.append(f"- {site.get('name')} | {site.get('url')} | cloud_id={site.get('cloud_id')}")
     lines.append("")
 
-    permission_overview = export_summary.get("permission_overview", {}) or {}
-    lines.append("PERMISSION OVERVIEW")
-    lines.append("-" * 72)
-    lines.append(f"Checked sites              : {permission_overview.get('checked_sites', 0)}")
-    lines.append(f"Permission data available  : {permission_overview.get('available_sites', 0)}")
-    lines.append(f"Has ADMINISTER            : {permission_overview.get('administer_true', 0)}")
-    lines.append(f"Has ADMINISTER_PROJECTS   : {permission_overview.get('administer_projects_true', 0)}")
-    lines.append(f"Has BROWSE_PROJECTS       : {permission_overview.get('browse_projects_true', 0)}")
-    lines.append(f"Permission issue count     : {export_summary.get('permission_issue_count', 0)}")
-    lines.append("")
-
-    permission_issues = export_summary.get("permission_issues", []) or []
-    lines.append("PERMISSION ISSUES")
-    lines.append("-" * 72)
-    if not permission_issues:
-        lines.append("No permission issues.")
-    else:
-        for issue in permission_issues:
-            lines.append(f"- Site                     : {issue.get('site_name')}")
-            lines.append(f"  My permissions URL       : {issue.get('mypermissions_url')}")
-            lines.append(f"  Related endpoint         : {issue.get('endpoint_key')}")
-            lines.append(f"  Related endpoint URL     : {issue.get('related_endpoint_url')}")
-            lines.append(f"  Status code              : {issue.get('status_code')}")
-            lines.append(f"  Error category           : {issue.get('error_category')}")
-            lines.append("")
-    lines.append("")
-
-    historical_summary = export_summary.get("historical_trend_summary", {}) or {}
     lines.append("HISTORICAL TREND SUMMARY")
     lines.append("-" * 72)
     lines.append(f"Sites in history           : {historical_summary.get('site_count', 0)}")
@@ -248,30 +159,40 @@ def _build_text_report(export_summary):
     lines.append("")
 
     top_risky_sites = export_summary.get("top_risky_sites", []) or []
-    lines.append("TOP RISKY SITES")
+    lines.append("TOP SITES")
     lines.append("-" * 72)
 
     if not top_risky_sites:
         lines.append("No site data available.")
     else:
         for index, site in enumerate(top_risky_sites, start=1):
-            lines.append(
-                f"{index}. {site.get('name')} | status={site.get('status')} | risk={site.get('risk_score', 0)}"
-            )
+            lines.append(f"{index}. {site.get('name')} | status={site.get('status')} | risk={site.get('risk_score', 0)}")
             lines.append(f"   Projects                : {site.get('project_count', 0)}")
             lines.append(f"   Total issues            : {site.get('issue_count_total', 0)}")
             lines.append(f"   Unresolved issues       : {site.get('issue_count_unresolved', 0)}")
             lines.append(f"   Updated last 7 days     : {site.get('issue_count_updated_last_7d', 0)}")
 
-            perm = site.get("permission_limited_checks", []) or []
-            if perm:
-                lines.append(f"   Permission limited      : {', '.join(str(v) for v in perm)}")
+            user_summary = site.get("user_summary", {}) or {}
+            lines.append(f"   Total users             : {user_summary.get('total_users')}")
+            lines.append(f"   Active users            : {user_summary.get('active_users')}")
+            lines.append(f"   Inactive users          : {user_summary.get('inactive_users')}")
+
+            licence_summary = site.get("licence_summary", {}) or {}
+            lines.append(f"   Licensed users estimate : {licence_summary.get('licensed_users_estimate')}")
 
             checker = site.get("permission_checker", {}) or {}
-            if checker:
-                lines.append(f"   Has ADMINISTER          : {checker.get('has_administer_jira')}")
-                lines.append(f"   Has ADMINISTER_PROJECTS : {checker.get('has_administer_projects')}")
-                lines.append(f"   Has BROWSE_PROJECTS     : {checker.get('has_browse_projects')}")
+            lines.append(f"   Has ADMINISTER          : {checker.get('has_administer_jira')}")
+            lines.append(f"   Has ADMINISTER_PROJECTS : {checker.get('has_administer_projects')}")
+            lines.append(f"   Has BROWSE_PROJECTS     : {checker.get('has_browse_projects')}")
+
+            audit_summary = site.get("audit_summary", {}) or {}
+            lines.append(f"   Audit record count      : {audit_summary.get('record_count')}")
+            lines.append(f"   Automation audit hits   : {audit_summary.get('automation_related_record_count')}")
+
+            automation_summary = site.get("automation_summary", {}) or {}
+            lines.append(
+                f"   Automation API support  : {automation_summary.get('rule_management_supported_with_current_auth')}"
+            )
 
             reasons = site.get("status_reasons", []) or []
             if reasons:
@@ -287,14 +208,11 @@ def _build_markdown_report(export_summary):
     risk_summary = export_summary.get("risk_summary", {}) or {}
     raw_summary = export_summary.get("raw_collection_summary", {}) or {}
     endpoint_totals = raw_summary.get("endpoint_totals", {}) or {}
-    historical_summary = export_summary.get("historical_trend_summary", {}) or {}
+    excluded_sites = raw_summary.get("excluded_sites", []) or []
     top_risky_sites = export_summary.get("top_risky_sites", []) or []
-    excluded_sites = export_summary.get("excluded_sites", []) or []
-    permission_overview = export_summary.get("permission_overview", {}) or {}
-    permission_issues = export_summary.get("permission_issues", []) or []
 
     lines = []
-    lines.append("# Jira Observation Monitor Summary")
+    lines.append("# Jira Observation Monitor Backend Summary")
     lines.append("")
     lines.append(f"- **Generated:** {export_summary.get('generated_at_local')}")
     lines.append(f"- **Sites total:** {summary.get('site_count', 0)}")
@@ -303,7 +221,6 @@ def _build_markdown_report(export_summary):
     lines.append(f"- **Average risk score:** {risk_summary.get('average_risk_score', 0)}")
     lines.append(f"- **Collection duration (sec):** {raw_summary.get('collection_duration_seconds', 0)}")
     lines.append(f"- **Endpoint checks passed / failed:** {endpoint_totals.get('successful_checks', 0)} / {endpoint_totals.get('failed_checks', 0)}")
-    lines.append(f"- **Permission-limited endpoints:** {endpoint_totals.get('permission_limited_checks', 0)}")
     lines.append("")
     lines.append("## Excluded sites")
     lines.append("")
@@ -313,38 +230,8 @@ def _build_markdown_report(export_summary):
         for site in excluded_sites:
             lines.append(f"- **{site.get('name')}** — {site.get('url')} (cloud_id={site.get('cloud_id')})")
     lines.append("")
-    lines.append("## Permission overview")
+    lines.append("## Top sites")
     lines.append("")
-    lines.append(f"- Checked sites: {permission_overview.get('checked_sites', 0)}")
-    lines.append(f"- Permission data available: {permission_overview.get('available_sites', 0)}")
-    lines.append(f"- Has ADMINISTER: {permission_overview.get('administer_true', 0)}")
-    lines.append(f"- Has ADMINISTER_PROJECTS: {permission_overview.get('administer_projects_true', 0)}")
-    lines.append(f"- Has BROWSE_PROJECTS: {permission_overview.get('browse_projects_true', 0)}")
-    lines.append(f"- Permission issue count: {export_summary.get('permission_issue_count', 0)}")
-    lines.append("")
-    lines.append("## Permission issues")
-    lines.append("")
-    if not permission_issues:
-        lines.append("- No permission issues.")
-    else:
-        for issue in permission_issues:
-            lines.append(f"### {issue.get('site_name')}")
-            lines.append(f"- My permissions URL: {issue.get('mypermissions_url')}")
-            lines.append(f"- Related endpoint: {issue.get('endpoint_key')}")
-            lines.append(f"- Related endpoint URL: {issue.get('related_endpoint_url')}")
-            lines.append(f"- Status code: {issue.get('status_code')}")
-            lines.append(f"- Error category: {issue.get('error_category')}")
-            lines.append("")
-    lines.append("## Historical trend summary")
-    lines.append("")
-    lines.append(f"- Sites in history: {historical_summary.get('site_count', 0)}")
-    lines.append(f"- Warning/Critical streaks: {historical_summary.get('warning_or_critical_streak_sites', 0)}")
-    lines.append(f"- Rising unresolved sites: {historical_summary.get('rising_unresolved_sites', 0)}")
-    lines.append(f"- Rising risk sites: {historical_summary.get('rising_risk_sites', 0)}")
-    lines.append("")
-    lines.append("## Top risky sites")
-    lines.append("")
-
     if not top_risky_sites:
         lines.append("- No site data available.")
     else:
@@ -357,15 +244,27 @@ def _build_markdown_report(export_summary):
             lines.append(f"- Unresolved issues: {site.get('issue_count_unresolved', 0)}")
             lines.append(f"- Updated last 7 days: {site.get('issue_count_updated_last_7d', 0)}")
 
-            checker = site.get("permission_checker", {}) or {}
-            if checker:
-                lines.append(f"- Has ADMINISTER: {checker.get('has_administer_jira')}")
-                lines.append(f"- Has ADMINISTER_PROJECTS: {checker.get('has_administer_projects')}")
-                lines.append(f"- Has BROWSE_PROJECTS: {checker.get('has_browse_projects')}")
+            user_summary = site.get("user_summary", {}) or {}
+            lines.append(f"- Total users: {user_summary.get('total_users')}")
+            lines.append(f"- Active users: {user_summary.get('active_users')}")
+            lines.append(f"- Inactive users: {user_summary.get('inactive_users')}")
 
-            perm = site.get("permission_limited_checks", []) or []
-            if perm:
-                lines.append(f"- Permission limited: {', '.join(str(v) for v in perm)}")
+            licence_summary = site.get("licence_summary", {}) or {}
+            lines.append(f"- Licensed users estimate: {licence_summary.get('licensed_users_estimate')}")
+
+            checker = site.get("permission_checker", {}) or {}
+            lines.append(f"- Has ADMINISTER: {checker.get('has_administer_jira')}")
+            lines.append(f"- Has ADMINISTER_PROJECTS: {checker.get('has_administer_projects')}")
+            lines.append(f"- Has BROWSE_PROJECTS: {checker.get('has_browse_projects')}")
+
+            audit_summary = site.get("audit_summary", {}) or {}
+            lines.append(f"- Audit record count: {audit_summary.get('record_count')}")
+            lines.append(f"- Automation-related audit records: {audit_summary.get('automation_related_record_count')}")
+
+            automation_summary = site.get("automation_summary", {}) or {}
+            lines.append(
+                f"- Automation rule management supported with current auth: {automation_summary.get('rule_management_supported_with_current_auth')}"
+            )
 
             reasons = site.get("status_reasons", []) or []
             if reasons:
@@ -386,36 +285,22 @@ def _save_sites_csv(output, path):
             "status",
             "risk_score",
             "project_count",
-            "application_role_count",
             "issue_count_total",
             "issue_count_unresolved",
             "issue_count_updated_last_7d",
-            "collection_duration_seconds",
-            "permission_limited_checks",
-            "has_administer_jira",
-            "has_administer_projects",
-            "has_browse_projects",
-            "status_reasons"
+            "collection_duration_seconds"
         ])
 
         for site in sites:
-            checker = site.get("permission_checker", {}) or {}
-
             writer.writerow([
                 site.get("name"),
                 site.get("status"),
                 site.get("risk_score", 0),
                 site.get("project_count", 0),
-                site.get("application_role_count", 0),
                 site.get("issue_count_total", 0),
                 site.get("issue_count_unresolved", 0),
                 site.get("issue_count_updated_last_7d", 0),
-                site.get("collection_duration_seconds", 0),
-                ", ".join(site.get("permission_limited_checks", []) or []),
-                checker.get("has_administer_jira"),
-                checker.get("has_administer_projects"),
-                checker.get("has_browse_projects"),
-                ", ".join(site.get("status_reasons", []) or [])
+                site.get("collection_duration_seconds", 0)
             ])
 
 
@@ -541,6 +426,76 @@ def _save_excluded_sites_csv(output, path):
             ])
 
 
+def _save_user_licence_csv(output, path):
+    sites = output.get("sites", []) or []
+
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow([
+            "site_name",
+            "site_url",
+            "cloud_id",
+            "total_users",
+            "active_users",
+            "inactive_users",
+            "licensed_users_estimate",
+            "user_fetch_ok",
+            "user_fetch_error_category"
+        ])
+
+        for site in sites:
+            user_summary = site.get("user_summary", {}) or {}
+            licence_summary = site.get("licence_summary", {}) or {}
+            fetch_status = site.get("user_fetch_status", {}) or {}
+
+            writer.writerow([
+                site.get("name"),
+                site.get("url"),
+                site.get("cloud_id"),
+                user_summary.get("total_users"),
+                user_summary.get("active_users"),
+                user_summary.get("inactive_users"),
+                licence_summary.get("licensed_users_estimate"),
+                fetch_status.get("ok"),
+                fetch_status.get("error_category")
+            ])
+
+
+def _save_audit_automation_csv(output, path):
+    sites = output.get("sites", []) or []
+
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow([
+            "site_name",
+            "site_url",
+            "cloud_id",
+            "audit_record_count",
+            "automation_related_audit_record_count",
+            "audit_fetch_ok",
+            "audit_fetch_error_category",
+            "automation_rule_management_supported_with_current_auth",
+            "automation_reason"
+        ])
+
+        for site in sites:
+            audit_summary = site.get("audit_summary", {}) or {}
+            audit_fetch_status = site.get("audit_fetch_status", {}) or {}
+            automation_summary = site.get("automation_summary", {}) or {}
+
+            writer.writerow([
+                site.get("name"),
+                site.get("url"),
+                site.get("cloud_id"),
+                audit_summary.get("record_count"),
+                audit_summary.get("automation_related_record_count"),
+                audit_fetch_status.get("ok"),
+                audit_fetch_status.get("error_category"),
+                automation_summary.get("rule_management_supported_with_current_auth"),
+                automation_summary.get("reason")
+            ])
+
+
 def save_reports(output):
     ensure_report_dir()
 
@@ -558,6 +513,8 @@ def save_reports(output):
     timestamp_permission_checker_csv = os.path.join(date_folder, f"permission_checker_{timestamp_info['timestamp']}.csv")
     timestamp_permission_issues_csv = os.path.join(date_folder, f"permission_issues_{timestamp_info['timestamp']}.csv")
     timestamp_excluded_sites_csv = os.path.join(date_folder, f"excluded_sites_{timestamp_info['timestamp']}.csv")
+    timestamp_user_licence_csv = os.path.join(date_folder, f"user_licence_{timestamp_info['timestamp']}.csv")
+    timestamp_audit_automation_csv = os.path.join(date_folder, f"audit_automation_{timestamp_info['timestamp']}.csv")
 
     with open(LATEST_SUMMARY_JSON, "w", encoding="utf-8") as handle:
         json.dump(export_summary, handle, indent=2)
@@ -595,6 +552,12 @@ def save_reports(output):
     _save_excluded_sites_csv(output, LATEST_EXCLUDED_SITES_CSV)
     _save_excluded_sites_csv(output, timestamp_excluded_sites_csv)
 
+    _save_user_licence_csv(output, LATEST_USER_LICENCE_CSV)
+    _save_user_licence_csv(output, timestamp_user_licence_csv)
+
+    _save_audit_automation_csv(output, LATEST_AUDIT_AUTOMATION_CSV)
+    _save_audit_automation_csv(output, timestamp_audit_automation_csv)
+
     return {
         "latest_summary_json": LATEST_SUMMARY_JSON,
         "latest_summary_txt": LATEST_SUMMARY_TXT,
@@ -604,6 +567,8 @@ def save_reports(output):
         "latest_permission_checker_csv": LATEST_PERMISSION_CHECKER_CSV,
         "latest_permission_issues_csv": LATEST_PERMISSION_ISSUES_CSV,
         "latest_excluded_sites_csv": LATEST_EXCLUDED_SITES_CSV,
+        "latest_user_licence_csv": LATEST_USER_LICENCE_CSV,
+        "latest_audit_automation_csv": LATEST_AUDIT_AUTOMATION_CSV,
         "timestamp_summary_json": timestamp_json,
         "timestamp_summary_txt": timestamp_txt,
         "timestamp_summary_md": timestamp_md,
@@ -611,5 +576,7 @@ def save_reports(output):
         "timestamp_changes_csv": timestamp_changes_csv,
         "timestamp_permission_checker_csv": timestamp_permission_checker_csv,
         "timestamp_permission_issues_csv": timestamp_permission_issues_csv,
-        "timestamp_excluded_sites_csv": timestamp_excluded_sites_csv
+        "timestamp_excluded_sites_csv": timestamp_excluded_sites_csv,
+        "timestamp_user_licence_csv": timestamp_user_licence_csv,
+        "timestamp_audit_automation_csv": timestamp_audit_automation_csv
     }
