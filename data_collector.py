@@ -14,6 +14,11 @@ from jira_client import (
 MAX_SITE_WORKERS = int(os.getenv("JOM_MAX_SITE_WORKERS", "3"))
 ENDPOINT_WORKERS = int(os.getenv("JOM_ENDPOINT_WORKERS", "3"))
 
+IGNORED_SITE_NAMES = {
+    name.strip().lower()
+    for name in os.getenv("JOM_IGNORED_SITE_NAMES", "").split(",")
+    if name.strip()
+}
 
 CORE_ENDPOINT_KEYS = {
     "server_info",
@@ -158,57 +163,27 @@ def _extract_myself_summary(myself_payload):
 
 
 def _build_api_checks(result_map):
-    checks = {}
-
-    for key, value in result_map.items():
-        checks[key] = bool(value.get("ok"))
-
-    return checks
+    return {key: bool(value.get("ok")) for key, value in result_map.items()}
 
 
 def _build_api_errors(result_map):
-    errors = {}
-
-    for key, value in result_map.items():
-        errors[key] = value.get("error")
-
-    return errors
+    return {key: value.get("error") for key, value in result_map.items()}
 
 
 def _build_api_status_codes(result_map):
-    status_codes = {}
-
-    for key, value in result_map.items():
-        status_codes[key] = value.get("status_code")
-
-    return status_codes
+    return {key: value.get("status_code") for key, value in result_map.items()}
 
 
 def _build_api_urls(result_map):
-    urls = {}
-
-    for key, value in result_map.items():
-        urls[key] = value.get("url")
-
-    return urls
+    return {key: value.get("url") for key, value in result_map.items()}
 
 
 def _build_api_error_categories(result_map):
-    categories = {}
-
-    for key, value in result_map.items():
-        categories[key] = value.get("error_category")
-
-    return categories
+    return {key: value.get("error_category") for key, value in result_map.items()}
 
 
 def _build_api_attempt_counts(result_map):
-    attempt_counts = {}
-
-    for key, value in result_map.items():
-        attempt_counts[key] = value.get("attempt_count", 1)
-
-    return attempt_counts
+    return {key: value.get("attempt_count", 1) for key, value in result_map.items()}
 
 
 def _build_search_debug(result_map):
@@ -269,7 +244,7 @@ def _is_permission_limited(status_code, error_text, error_category):
     return False
 
 
-def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api_error_categories):
+def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api_error_categories, api_urls):
     total_checks = len(api_checks)
     successful_checks = 0
     failed_checks = 0
@@ -279,6 +254,7 @@ def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api
     enrichment_failed_checks = []
 
     failed_check_details = []
+    permission_issue_urls = []
     error_category_counter = Counter()
 
     for check_name, ok in api_checks.items():
@@ -292,6 +268,7 @@ def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api
         status_code = api_status_codes.get(check_name)
         error_category = api_error_categories.get(check_name)
         endpoint_type = _endpoint_type(check_name)
+        related_url = api_urls.get(check_name)
 
         permission_limited = _is_permission_limited(status_code, error_text, error_category)
 
@@ -300,6 +277,12 @@ def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api
 
         if permission_limited:
             permission_limited_checks.append(check_name)
+            permission_issue_urls.append({
+                "endpoint_key": check_name,
+                "url": related_url,
+                "status_code": status_code,
+                "error_category": error_category
+            })
         elif endpoint_type == "core":
             core_blocking_failed_checks.append(check_name)
         else:
@@ -311,7 +294,8 @@ def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api
             "status_code": status_code,
             "error": error_text,
             "error_category": error_category,
-            "permission_limited": permission_limited
+            "permission_limited": permission_limited,
+            "url": related_url
         })
 
     return {
@@ -321,6 +305,7 @@ def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api
         "core_blocking_failed_checks": core_blocking_failed_checks,
         "enrichment_failed_checks": enrichment_failed_checks,
         "permission_limited_checks": permission_limited_checks,
+        "permission_issue_urls": permission_issue_urls,
         "failed_check_details": failed_check_details,
         "error_category_counts": dict(error_category_counter)
     }
@@ -450,7 +435,8 @@ def collect_site_data(access_token, resource):
         api_checks=api_checks,
         api_errors=api_errors,
         api_status_codes=api_status_codes,
-        api_error_categories=api_error_categories
+        api_error_categories=api_error_categories,
+        api_urls=api_urls
     )
 
     endpoint_results = _build_endpoint_results(result_map)
@@ -527,13 +513,29 @@ def collect_all_sites(access_token):
     collected_at_utc = _utc_now_iso()
 
     resources = get_accessible_resources(access_token)
-    site_count = len(resources)
+
+    filtered_resources = []
+    excluded_sites = []
+
+    for resource in resources:
+        site_name = (resource.get("name") or "").strip()
+        if site_name.lower() in IGNORED_SITE_NAMES:
+            excluded_sites.append({
+                "name": site_name,
+                "url": resource.get("url"),
+                "cloud_id": resource.get("id")
+            })
+            continue
+        filtered_resources.append(resource)
+
+    site_count = len(filtered_resources)
 
     if site_count == 0:
         return {
             "collected_at_utc": collected_at_utc,
             "collection_duration_seconds": 0,
             "site_count": 0,
+            "excluded_sites": excluded_sites,
             "endpoint_totals": {
                 "successful_checks": 0,
                 "failed_checks": 0,
@@ -556,7 +558,7 @@ def collect_all_sites(access_token):
     with ThreadPoolExecutor(max_workers=site_workers_used) as executor:
         futures = {
             executor.submit(_collect_site_wrapper, index, access_token, resource): index
-            for index, resource in enumerate(resources)
+            for index, resource in enumerate(filtered_resources)
         }
 
         for future in as_completed(futures):
@@ -591,6 +593,7 @@ def collect_all_sites(access_token):
         "collected_at_utc": collected_at_utc,
         "collection_duration_seconds": total_duration_seconds,
         "site_count": len(sites),
+        "excluded_sites": excluded_sites,
         "endpoint_totals": {
             "successful_checks": healthy_endpoint_checks,
             "failed_checks": failed_endpoint_checks,
