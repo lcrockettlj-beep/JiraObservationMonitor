@@ -16,42 +16,47 @@ def _safe_divide(numerator, denominator):
     return numerator / denominator
 
 
-def _normalise_error_text(error_text):
-    if not error_text:
-        return ""
-    return str(error_text).strip().lower()
+CORE_ENDPOINT_KEYS = {
+    "server_info",
+    "myself",
+    "projects"
+}
 
 
 def _classify_api_failures(site_record):
-    api_checks = site_record.get("api_checks", {}) or {}
-    api_errors = site_record.get("api_errors", {}) or {}
-    api_status_codes = site_record.get("api_status_codes", {}) or {}
+    endpoint_summary = site_record.get("endpoint_summary", {}) or {}
 
-    blocking_failed_checks = []
-    permission_limited_checks = []
+    core_blocking_failed_checks = endpoint_summary.get("core_blocking_failed_checks", []) or []
+    enrichment_failed_checks = endpoint_summary.get("enrichment_failed_checks", []) or []
+    permission_limited_checks = endpoint_summary.get("permission_limited_checks", []) or []
+    failed_check_details = endpoint_summary.get("failed_check_details", []) or []
 
-    for check_name, ok in api_checks.items():
-        if ok:
+    transient_failed_checks = []
+    hard_failed_checks = []
+
+    for detail in failed_check_details:
+        endpoint_key = detail.get("endpoint_key")
+        endpoint_type = detail.get("endpoint_type")
+        error_category = detail.get("error_category")
+        permission_limited = detail.get("permission_limited", False)
+
+        if permission_limited:
             continue
 
-        error_text = _normalise_error_text(api_errors.get(check_name))
-        status_code = api_status_codes.get(check_name)
+        if endpoint_type != "core":
+            continue
 
-        is_permission_limited = False
-
-        if status_code == 403:
-            is_permission_limited = True
-        elif "403" in error_text or "forbidden" in error_text:
-            is_permission_limited = True
-
-        if is_permission_limited:
-            permission_limited_checks.append(check_name)
+        if error_category in {"timeout", "connection_error", "rate_limited", "server_error", "transient_error"}:
+            transient_failed_checks.append(endpoint_key)
         else:
-            blocking_failed_checks.append(check_name)
+            hard_failed_checks.append(endpoint_key)
 
     return {
-        "blocking_failed_checks": blocking_failed_checks,
-        "permission_limited_checks": permission_limited_checks
+        "core_blocking_failed_checks": core_blocking_failed_checks,
+        "enrichment_failed_checks": enrichment_failed_checks,
+        "permission_limited_checks": permission_limited_checks,
+        "transient_failed_checks": sorted(set(transient_failed_checks)),
+        "hard_failed_checks": sorted(set(hard_failed_checks))
     }
 
 
@@ -134,10 +139,6 @@ def _build_issue_signals(site_record):
         signals.append("no_recent_activity")
 
     return {
-        "total_issues": total_issues,
-        "unresolved_issues": unresolved_issues,
-        "updated_last_7d": updated_last_7d,
-        "project_count": project_count,
         "unresolved_ratio": round(unresolved_ratio, 4),
         "issues_per_project": round(issues_per_project, 2),
         "unresolved_per_project": round(unresolved_per_project, 2),
@@ -152,8 +153,12 @@ def _build_operational_signals(site_record):
 
     collection_duration_seconds = _safe_float(site_record.get("collection_duration_seconds", 0))
     endpoint_summary = site_record.get("endpoint_summary", {}) or {}
+
     total_checks = _safe_int(endpoint_summary.get("total_checks", 0))
     failed_checks = _safe_int(endpoint_summary.get("failed_checks", 0))
+    core_blocking_count = len(endpoint_summary.get("core_blocking_failed_checks", []) or [])
+    enrichment_failed_count = len(endpoint_summary.get("enrichment_failed_checks", []) or [])
+    permission_limited_count = len(endpoint_summary.get("permission_limited_checks", []) or [])
 
     failed_ratio = _safe_divide(failed_checks, total_checks)
 
@@ -164,16 +169,31 @@ def _build_operational_signals(site_record):
         score += 1
         signals.append("elevated_collection_time")
 
+    if core_blocking_count >= 2:
+        score += 3
+        signals.append("multiple_core_endpoint_failures")
+    elif core_blocking_count == 1:
+        score += 2
+        signals.append("single_core_endpoint_failure")
+
+    if enrichment_failed_count >= 3:
+        score += 2
+        signals.append("multiple_enrichment_failures")
+    elif enrichment_failed_count >= 1:
+        score += 1
+        signals.append("some_enrichment_failures")
+
+    if permission_limited_count >= 2:
+        score += 1
+        signals.append("multiple_permission_limited_endpoints")
+
     if total_checks >= 4:
         if failed_ratio >= 0.50:
-            score += 3
+            score += 2
             signals.append("high_endpoint_failure_ratio")
         elif failed_ratio >= 0.25:
-            score += 2
-            signals.append("moderate_endpoint_failure_ratio")
-        elif failed_ratio > 0:
             score += 1
-            signals.append("low_endpoint_failure_ratio")
+            signals.append("moderate_endpoint_failure_ratio")
 
     return {
         "operational_risk_score": score,
@@ -183,32 +203,32 @@ def _build_operational_signals(site_record):
     }
 
 
-def _determine_status(blocking_failure_count, issue_risk_score, operational_risk_score):
-    if blocking_failure_count >= 2:
+def _determine_status(hard_core_failures, transient_core_failures, issue_risk_score, operational_risk_score):
+    # Hard core failures matter most
+    if hard_core_failures >= 2:
         return "critical"
 
-    if blocking_failure_count == 1:
+    if hard_core_failures == 1:
         return "warning"
 
-    combined_non_blocking_risk = issue_risk_score + operational_risk_score
+    # Multiple transient core failures still matter
+    if transient_core_failures >= 2:
+        return "warning"
 
-    if combined_non_blocking_risk >= 8:
+    if issue_risk_score + operational_risk_score >= 8:
         return "warning"
 
     return "healthy"
 
 
-def _build_status_reasons(
-    blocking_failed_checks,
-    permission_limited_checks,
-    issue_signals,
-    operational_signals,
-    status
-):
+def _build_status_reasons(core_blocking_failed_checks, enrichment_failed_checks, permission_limited_checks, issue_signals, operational_signals):
     reasons = []
 
-    if blocking_failed_checks:
-        reasons.append(f"blocking_api_failures={','.join(blocking_failed_checks)}")
+    if core_blocking_failed_checks:
+        reasons.append(f"core_failures={','.join(core_blocking_failed_checks)}")
+
+    if enrichment_failed_checks:
+        reasons.append(f"enrichment_failures={','.join(enrichment_failed_checks)}")
 
     if permission_limited_checks:
         reasons.append(f"permission_limited={','.join(permission_limited_checks)}")
@@ -222,52 +242,56 @@ def _build_status_reasons(
     if not reasons:
         reasons.append("no_risk_signals_detected")
 
-    if status == "healthy" and permission_limited_checks and not blocking_failed_checks:
-        reasons.append("permission_limits_only_no_health_impact")
-
     return reasons
 
 
 def determine_site_status(site_record):
     api_failure_result = _classify_api_failures(site_record)
-    blocking_failed_checks = api_failure_result["blocking_failed_checks"]
+
+    core_blocking_failed_checks = api_failure_result["core_blocking_failed_checks"]
+    enrichment_failed_checks = api_failure_result["enrichment_failed_checks"]
     permission_limited_checks = api_failure_result["permission_limited_checks"]
+    transient_failed_checks = api_failure_result["transient_failed_checks"]
+    hard_failed_checks = api_failure_result["hard_failed_checks"]
 
     issue_result = _build_issue_signals(site_record)
     operational_result = _build_operational_signals(site_record)
 
-    blocking_failure_count = len(blocking_failed_checks)
-    permission_limited_count = len(permission_limited_checks)
-    issue_risk_score = issue_result["issue_risk_score"]
-    operational_risk_score = operational_result["operational_risk_score"]
+    hard_core_failure_count = len(hard_failed_checks)
+    transient_core_failure_count = len(transient_failed_checks)
 
     status = _determine_status(
-        blocking_failure_count=blocking_failure_count,
-        issue_risk_score=issue_risk_score,
-        operational_risk_score=operational_risk_score
+        hard_core_failures=hard_core_failure_count,
+        transient_core_failures=transient_core_failure_count,
+        issue_risk_score=issue_result["issue_risk_score"],
+        operational_risk_score=operational_result["operational_risk_score"]
     )
 
     risk_score = (
-        (blocking_failure_count * 6)
-        + issue_risk_score
-        + operational_risk_score
-        + permission_limited_count
+        (hard_core_failure_count * 6)
+        + (transient_core_failure_count * 3)
+        + issue_result["issue_risk_score"]
+        + operational_result["operational_risk_score"]
+        + len(permission_limited_checks)
     )
 
     status_reasons = _build_status_reasons(
-        blocking_failed_checks=blocking_failed_checks,
+        core_blocking_failed_checks=core_blocking_failed_checks,
+        enrichment_failed_checks=enrichment_failed_checks,
         permission_limited_checks=permission_limited_checks,
         issue_signals=issue_result["issue_risk_signals"],
-        operational_signals=operational_result["operational_risk_signals"],
-        status=status
+        operational_signals=operational_result["operational_risk_signals"]
     )
 
     return {
         "status": status,
         "risk_score": risk_score,
-        "failed_api_checks": blocking_failure_count,
-        "blocking_failed_checks": blocking_failed_checks,
+        "failed_api_checks": hard_core_failure_count + transient_core_failure_count,
+        "blocking_failed_checks": core_blocking_failed_checks,
+        "enrichment_failed_checks": enrichment_failed_checks,
         "permission_limited_checks": permission_limited_checks,
+        "transient_failed_checks": transient_failed_checks,
+        "hard_failed_checks": hard_failed_checks,
         "status_reasons": status_reasons,
         "issue_metrics": {
             "unresolved_ratio": issue_result["unresolved_ratio"],
@@ -279,8 +303,10 @@ def determine_site_status(site_record):
         "operational_risk_score": operational_result["operational_risk_score"],
         "operational_risk_signals": operational_result["operational_risk_signals"],
         "site_health_breakdown": {
-            "blocking_failure_count": blocking_failure_count,
-            "permission_limited_count": permission_limited_count,
+            "hard_core_failure_count": hard_core_failure_count,
+            "transient_core_failure_count": transient_core_failure_count,
+            "enrichment_failure_count": len(enrichment_failed_checks),
+            "permission_limited_count": len(permission_limited_checks),
             "collection_duration_seconds": operational_result["collection_duration_seconds"],
             "endpoint_failure_ratio": operational_result["endpoint_failure_ratio"]
         }
@@ -309,7 +335,10 @@ def enrich_collection(raw_collection):
         enriched_site["risk_score"] = status_result["risk_score"]
         enriched_site["failed_api_checks"] = status_result["failed_api_checks"]
         enriched_site["blocking_failed_checks"] = status_result["blocking_failed_checks"]
+        enriched_site["enrichment_failed_checks"] = status_result["enrichment_failed_checks"]
         enriched_site["permission_limited_checks"] = status_result["permission_limited_checks"]
+        enriched_site["transient_failed_checks"] = status_result["transient_failed_checks"]
+        enriched_site["hard_failed_checks"] = status_result["hard_failed_checks"]
         enriched_site["status_reasons"] = status_result["status_reasons"]
         enriched_site["issue_metrics"] = status_result["issue_metrics"]
         enriched_site["issue_risk_score"] = status_result["issue_risk_score"]

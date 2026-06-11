@@ -1,13 +1,28 @@
 import os
 import time
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 from jira_client import get_accessible_resources, safe_jira_get
 
 
-MAX_SITE_WORKERS = int(os.getenv("JOM_MAX_SITE_WORKERS", "4"))
-ENDPOINT_WORKERS = int(os.getenv("JOM_ENDPOINT_WORKERS", "4"))
+MAX_SITE_WORKERS = int(os.getenv("JOM_MAX_SITE_WORKERS", "3"))
+ENDPOINT_WORKERS = int(os.getenv("JOM_ENDPOINT_WORKERS", "3"))
+
+
+CORE_ENDPOINT_KEYS = {
+    "server_info",
+    "myself",
+    "projects"
+}
+
+ENRICHMENT_ENDPOINT_KEYS = {
+    "application_roles",
+    "all_issues",
+    "unresolved_issues",
+    "updated_last_7d"
+}
 
 
 def _utc_now_iso():
@@ -174,48 +189,22 @@ def _build_api_urls(result_map):
     return urls
 
 
-def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes):
-    total_checks = len(api_checks)
-    successful_checks = 0
-    failed_checks = 0
-    permission_limited_checks = []
-    blocking_failed_checks = []
-    failed_check_details = []
+def _build_api_error_categories(result_map):
+    categories = {}
 
-    for check_name, ok in api_checks.items():
-        if ok:
-            successful_checks += 1
-            continue
+    for key, value in result_map.items():
+        categories[key] = value.get("error_category")
 
-        failed_checks += 1
+    return categories
 
-        error_text = (api_errors.get(check_name) or "").lower()
-        status_code = api_status_codes.get(check_name)
 
-        is_permission_limited = False
-        if status_code == 403 or "403" in error_text or "forbidden" in error_text:
-            is_permission_limited = True
+def _build_api_attempt_counts(result_map):
+    attempt_counts = {}
 
-        if is_permission_limited:
-            permission_limited_checks.append(check_name)
-        else:
-            blocking_failed_checks.append(check_name)
+    for key, value in result_map.items():
+        attempt_counts[key] = value.get("attempt_count", 1)
 
-        failed_check_details.append({
-            "endpoint_key": check_name,
-            "status_code": status_code,
-            "error": api_errors.get(check_name),
-            "permission_limited": is_permission_limited
-        })
-
-    return {
-        "total_checks": total_checks,
-        "successful_checks": successful_checks,
-        "failed_checks": failed_checks,
-        "blocking_failed_checks": blocking_failed_checks,
-        "permission_limited_checks": permission_limited_checks,
-        "failed_check_details": failed_check_details
-    }
+    return attempt_counts
 
 
 def _build_endpoint_results(result_map):
@@ -227,10 +216,91 @@ def _build_endpoint_results(result_map):
             "status_code": result.get("status_code"),
             "url": result.get("url"),
             "error": result.get("error"),
-            "endpoint": result.get("endpoint")
+            "endpoint": result.get("endpoint"),
+            "attempt_count": result.get("attempt_count", 1),
+            "retryable": result.get("retryable", False),
+            "error_category": result.get("error_category")
         }
 
     return endpoint_results
+
+
+def _endpoint_type(endpoint_key):
+    if endpoint_key in CORE_ENDPOINT_KEYS:
+        return "core"
+    return "enrichment"
+
+
+def _is_permission_limited(status_code, error_text, error_category):
+    error_text = (error_text or "").lower()
+
+    if error_category == "permission_limited":
+        return True
+
+    if status_code == 403:
+        return True
+
+    if "403" in error_text or "forbidden" in error_text:
+        return True
+
+    return False
+
+
+def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api_error_categories):
+    total_checks = len(api_checks)
+    successful_checks = 0
+    failed_checks = 0
+
+    permission_limited_checks = []
+    core_blocking_failed_checks = []
+    enrichment_failed_checks = []
+
+    failed_check_details = []
+    error_category_counter = Counter()
+
+    for check_name, ok in api_checks.items():
+        if ok:
+            successful_checks += 1
+            continue
+
+        failed_checks += 1
+
+        error_text = api_errors.get(check_name)
+        status_code = api_status_codes.get(check_name)
+        error_category = api_error_categories.get(check_name)
+        endpoint_type = _endpoint_type(check_name)
+
+        permission_limited = _is_permission_limited(status_code, error_text, error_category)
+
+        if error_category:
+            error_category_counter[error_category] += 1
+
+        if permission_limited:
+            permission_limited_checks.append(check_name)
+        elif endpoint_type == "core":
+            core_blocking_failed_checks.append(check_name)
+        else:
+            enrichment_failed_checks.append(check_name)
+
+        failed_check_details.append({
+            "endpoint_key": check_name,
+            "endpoint_type": endpoint_type,
+            "status_code": status_code,
+            "error": error_text,
+            "error_category": error_category,
+            "permission_limited": permission_limited
+        })
+
+    return {
+        "total_checks": total_checks,
+        "successful_checks": successful_checks,
+        "failed_checks": failed_checks,
+        "core_blocking_failed_checks": core_blocking_failed_checks,
+        "enrichment_failed_checks": enrichment_failed_checks,
+        "permission_limited_checks": permission_limited_checks,
+        "failed_check_details": failed_check_details,
+        "error_category_counts": dict(error_category_counter)
+    }
 
 
 def _fetch_endpoint(access_token, cloud_id, endpoint_key, endpoint, params=None):
@@ -243,32 +313,110 @@ def _fetch_endpoint(access_token, cloud_id, endpoint_key, endpoint, params=None)
     return endpoint_key, result
 
 
-def _collect_site_metrics(access_token, cloud_id):
-    endpoint_jobs = [
-        ("server_info", "serverInfo", None),
-        ("myself", "myself", {"expand": "groups,applicationRoles"}),
-        ("projects", "project/search", {"maxResults": 100}),
-        ("application_roles", "applicationrole", None),
-        ("all_issues", "search", {"jql": "order by created desc", "maxResults": 0}),
-        ("unresolved_issues", "search", {"jql": "resolution = Unresolved", "maxResults": 0}),
-        ("updated_last_7d", "search", {"jql": "updated >= -7d", "maxResults": 0}),
-    ]
+def _fetch_search_with_fallback(access_token, cloud_id, endpoint_key, primary_params, fallback_params):
+    primary_result = safe_jira_get(
+        access_token=access_token,
+        cloud_id=cloud_id,
+        endpoint="search",
+        params=primary_params
+    )
 
+    if primary_result.get("ok"):
+        return endpoint_key, primary_result
+
+    category = primary_result.get("error_category")
+    status_code = primary_result.get("status_code")
+
+    # Only fallback for softer request issues
+    if category in {"bad_request", "not_found"} or status_code in {400, 404}:
+        fallback_result = safe_jira_get(
+            access_token=access_token,
+            cloud_id=cloud_id,
+            endpoint="search",
+            params=fallback_params
+        )
+
+        if fallback_result.get("ok"):
+            fallback_result["used_fallback"] = True
+            return endpoint_key, fallback_result
+
+        fallback_result["used_fallback"] = True
+        return endpoint_key, fallback_result
+
+    primary_result["used_fallback"] = False
+    return endpoint_key, primary_result
+
+
+def _collect_site_metrics(access_token, cloud_id):
     result_map = {}
-    worker_count = min(ENDPOINT_WORKERS, len(endpoint_jobs))
+
+    worker_count = ENDPOINT_WORKERS
 
     with ThreadPoolExecutor(max_workers=worker_count) as executor:
-        futures = {
-            executor.submit(
-                _fetch_endpoint,
-                access_token,
-                cloud_id,
-                endpoint_key,
-                endpoint,
-                params
-            ): endpoint_key
-            for endpoint_key, endpoint, params in endpoint_jobs
-        }
+        futures = []
+
+        futures.append(executor.submit(
+            _fetch_endpoint,
+            access_token,
+            cloud_id,
+            "server_info",
+            "serverInfo",
+            None
+        ))
+
+        futures.append(executor.submit(
+            _fetch_endpoint,
+            access_token,
+            cloud_id,
+            "myself",
+            "myself",
+            {"expand": "groups,applicationRoles"}
+        ))
+
+        futures.append(executor.submit(
+            _fetch_endpoint,
+            access_token,
+            cloud_id,
+            "projects",
+            "project/search",
+            {"maxResults": 100}
+        ))
+
+        futures.append(executor.submit(
+            _fetch_endpoint,
+            access_token,
+            cloud_id,
+            "application_roles",
+            "applicationrole",
+            None
+        ))
+
+        futures.append(executor.submit(
+            _fetch_search_with_fallback,
+            access_token,
+            cloud_id,
+            "all_issues",
+            {"jql": "order by created desc", "maxResults": 0},
+            {"maxResults": 0}
+        ))
+
+        futures.append(executor.submit(
+            _fetch_search_with_fallback,
+            access_token,
+            cloud_id,
+            "unresolved_issues",
+            {"jql": "resolution = Unresolved", "maxResults": 0},
+            {"jql": "resolution is EMPTY", "maxResults": 0}
+        ))
+
+        futures.append(executor.submit(
+            _fetch_search_with_fallback,
+            access_token,
+            cloud_id,
+            "updated_last_7d",
+            {"jql": "updated >= -7d", "maxResults": 0},
+            {"jql": "updated >= startOfDay(-7d)", "maxResults": 0}
+        ))
 
         for future in as_completed(futures):
             endpoint_key, result = future.result()
@@ -292,11 +440,14 @@ def collect_site_data(access_token, resource):
     api_errors = _build_api_errors(result_map)
     api_status_codes = _build_api_status_codes(result_map)
     api_urls = _build_api_urls(result_map)
+    api_error_categories = _build_api_error_categories(result_map)
+    api_attempt_counts = _build_api_attempt_counts(result_map)
 
     endpoint_health_summary = _build_endpoint_health_summary(
         api_checks=api_checks,
         api_errors=api_errors,
-        api_status_codes=api_status_codes
+        api_status_codes=api_status_codes,
+        api_error_categories=api_error_categories
     )
 
     endpoint_results = _build_endpoint_results(result_map)
@@ -355,6 +506,8 @@ def collect_site_data(access_token, resource):
         "api_errors": api_errors,
         "api_status_codes": api_status_codes,
         "api_urls": api_urls,
+        "api_error_categories": api_error_categories,
+        "api_attempt_counts": api_attempt_counts,
         "endpoint_summary": endpoint_health_summary,
         "endpoint_results": endpoint_results
     }
@@ -383,8 +536,10 @@ def collect_all_sites(access_token):
                 "successful_checks": 0,
                 "failed_checks": 0,
                 "permission_limited_checks": 0,
-                "blocking_failed_checks": 0
+                "core_blocking_failed_checks": 0,
+                "enrichment_failed_checks": 0
             },
+            "error_category_totals": {},
             "collector_settings": {
                 "max_site_workers": MAX_SITE_WORKERS,
                 "endpoint_workers": ENDPOINT_WORKERS,
@@ -415,7 +570,9 @@ def collect_all_sites(access_token):
     healthy_endpoint_checks = 0
     failed_endpoint_checks = 0
     permission_limited_endpoint_checks = 0
-    blocking_failed_endpoint_checks = 0
+    core_blocking_failed_endpoint_checks = 0
+    enrichment_failed_endpoint_checks = 0
+    error_category_counter = Counter()
 
     for site in sites:
         endpoint_summary = site.get("endpoint_summary", {}) or {}
@@ -423,7 +580,11 @@ def collect_all_sites(access_token):
         healthy_endpoint_checks += _safe_number(endpoint_summary.get("successful_checks", 0), 0)
         failed_endpoint_checks += _safe_number(endpoint_summary.get("failed_checks", 0), 0)
         permission_limited_endpoint_checks += len(endpoint_summary.get("permission_limited_checks", []) or [])
-        blocking_failed_endpoint_checks += len(endpoint_summary.get("blocking_failed_checks", []) or [])
+        core_blocking_failed_endpoint_checks += len(endpoint_summary.get("core_blocking_failed_checks", []) or [])
+        enrichment_failed_endpoint_checks += len(endpoint_summary.get("enrichment_failed_checks", []) or [])
+
+        for category_name, count in (endpoint_summary.get("error_category_counts", {}) or {}).items():
+            error_category_counter[category_name] += count
 
     return {
         "collected_at_utc": collected_at_utc,
@@ -433,8 +594,10 @@ def collect_all_sites(access_token):
             "successful_checks": healthy_endpoint_checks,
             "failed_checks": failed_endpoint_checks,
             "permission_limited_checks": permission_limited_endpoint_checks,
-            "blocking_failed_checks": blocking_failed_endpoint_checks
+            "core_blocking_failed_checks": core_blocking_failed_endpoint_checks,
+            "enrichment_failed_checks": enrichment_failed_endpoint_checks
         },
+        "error_category_totals": dict(error_category_counter),
         "collector_settings": {
             "max_site_workers": MAX_SITE_WORKERS,
             "endpoint_workers": ENDPOINT_WORKERS,

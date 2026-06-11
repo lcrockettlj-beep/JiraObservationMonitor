@@ -61,8 +61,8 @@ def print_auth_status():
     print_section("AUTH STATUS")
     print(f"Token file exists            : {token_status.get('exists')}")
     print(f"Stored token valid           : {token_status.get('valid')}")
-    print(f"Has refresh token           : {token_status.get('has_refresh_token')}")
-    print(f"Token expires at            : {token_status.get('expires_at')}")
+    print(f"Has refresh token            : {token_status.get('has_refresh_token')}")
+    print(f"Token expires at             : {token_status.get('expires_at')}")
 
 
 def print_runtime_summary(raw_collection, enriched_collection):
@@ -81,7 +81,14 @@ def print_runtime_summary(raw_collection, enriched_collection):
     print(f"Endpoint checks passed       : {endpoint_totals.get('successful_checks', 0)}")
     print(f"Endpoint checks failed       : {endpoint_totals.get('failed_checks', 0)}")
     print(f"Permission-limited endpoints : {endpoint_totals.get('permission_limited_checks', 0)}")
-    print(f"Blocking failed endpoints    : {endpoint_totals.get('blocking_failed_checks', 0)}")
+    print(f"Core blocking endpoints      : {endpoint_totals.get('core_blocking_failed_checks', 0)}")
+    print(f"Enrichment failed endpoints  : {endpoint_totals.get('enrichment_failed_checks', 0)}")
+
+    error_category_totals = raw_collection.get("error_category_totals", {}) or {}
+    if error_category_totals:
+        print("Error category totals        :")
+        for category_name, count in sorted(error_category_totals.items()):
+            print(f"  - {category_name}: {count}")
 
     print(f"Total risk score             : {enriched_collection.get('total_risk_score', 0)}")
     print(f"Average risk score           : {enriched_collection.get('average_risk_score', 0)}")
@@ -117,53 +124,6 @@ def print_historical_trend_summary(historical_trends):
     print(f"Recurring blocking sites     : {summary.get('recurring_blocking_failure_sites', 0)}")
 
 
-def print_top_trend_sites(historical_trends, limit=5):
-    print_section("TOP TREND SITES")
-
-    if not historical_trends.get("has_history"):
-        print("No historical trend data available.")
-        return
-
-    site_trends = historical_trends.get("site_trends", []) or []
-    if not site_trends:
-        print("No trend sites available.")
-        return
-
-    for index, site in enumerate(site_trends[:limit], start=1):
-        print(
-            f"{index}. {status_icon(site.get('current_status'))} "
-            f"{site.get('name')} | current_status={site.get('current_status')} | "
-            f"current_risk={site.get('current_risk_score', 0)} | trend_score={site.get('trend_score', 0)}"
-        )
-
-        streak = site.get("status_streak", {}) or {}
-        print(f"    Status streak            : {streak.get('status')} x{streak.get('length', 0)}")
-
-        unresolved_trend = site.get("unresolved_trend", {}) or {}
-        risk_trend = site.get("risk_trend", {}) or {}
-        failed_api_trend = site.get("failed_api_trend", {}) or {}
-
-        print(f"    Unresolved delta         : {unresolved_trend.get('delta', 0)}")
-        print(f"    Risk delta               : {risk_trend.get('delta', 0)}")
-        print(f"    Failed API delta         : {failed_api_trend.get('delta', 0)}")
-
-        trend_signals = site.get("trend_signals", []) or []
-        if trend_signals:
-            print(f"    Trend signals            : {format_list(trend_signals)}")
-
-        recurring_blocking = site.get("recurring_blocking_failures", []) or []
-        if recurring_blocking:
-            top = recurring_blocking[0]
-            print(f"    Top recurring blocking   : {top.get('name')} x{top.get('count', 0)}")
-
-        recurring_permission = site.get("recurring_permission_limits", []) or []
-        if recurring_permission:
-            top = recurring_permission[0]
-            print(f"    Top permission limit     : {top.get('name')} x{top.get('count', 0)}")
-
-        print()
-
-
 def print_top_risky_sites(sites, limit=5):
     print_section("TOP RISKY SITES")
 
@@ -171,18 +131,7 @@ def print_top_risky_sites(sites, limit=5):
         print("No sites available.")
         return
 
-    sorted_sites = sorted(
-        sites,
-        key=lambda site: (
-            0 if site.get("status") == "critical" else
-            1 if site.get("status") == "warning" else
-            2,
-            -site.get("risk_score", 0),
-            site.get("name", "")
-        )
-    )
-
-    for index, site in enumerate(sorted_sites[:limit], start=1):
+    for index, site in enumerate(sites[:limit], start=1):
         print(
             f"{index}. {status_icon(site.get('status'))} "
             f"{site.get('name')} | status={site.get('status')} | risk={site.get('risk_score', 0)}"
@@ -193,18 +142,26 @@ def print_top_risky_sites(sites, limit=5):
         print(f"    Updated last 7 days      : {site.get('issue_count_updated_last_7d', 0)}")
         print(f"    Site collection (sec)    : {site.get('collection_duration_seconds', 0)}")
 
-        status_reasons = site.get("status_reasons", [])
-        issue_signals = site.get("issue_risk_signals", [])
-        operational_signals = site.get("operational_risk_signals", [])
+        blocking_failed = site.get("blocking_failed_checks", [])
+        enrichment_failed = site.get("enrichment_failed_checks", [])
+        permission_limited = site.get("permission_limited_checks", [])
+        transient_failed = site.get("transient_failed_checks", [])
+        hard_failed = site.get("hard_failed_checks", [])
 
+        if blocking_failed:
+            print(f"    Core blocking failures   : {format_list(blocking_failed)}")
+        if enrichment_failed:
+            print(f"    Enrichment failures      : {format_list(enrichment_failed)}")
+        if permission_limited:
+            print(f"    Permission limited       : {format_list(permission_limited)}")
+        if transient_failed:
+            print(f"    Transient failed checks  : {format_list(transient_failed)}")
+        if hard_failed:
+            print(f"    Hard failed checks       : {format_list(hard_failed)}")
+
+        status_reasons = site.get("status_reasons", [])
         if status_reasons:
             print(f"    Status reasons           : {format_list(status_reasons)}")
-
-        if issue_signals:
-            print(f"    Issue risk signals       : {format_list(issue_signals)}")
-
-        if operational_signals:
-            print(f"    Operational signals      : {format_list(operational_signals)}")
 
         print()
 
@@ -242,6 +199,7 @@ def build_output(raw_collection, enriched_collection, comparison, snapshot_files
             "collection_duration_seconds": raw_collection.get("collection_duration_seconds", 0),
             "site_count": raw_collection.get("site_count", 0),
             "endpoint_totals": raw_collection.get("endpoint_totals", {}),
+            "error_category_totals": raw_collection.get("error_category_totals", {}),
             "collector_settings": raw_collection.get("collector_settings", {})
         },
         "summary": {
@@ -332,6 +290,7 @@ def main():
             "collection_duration_seconds": raw_collection.get("collection_duration_seconds", 0),
             "site_count": raw_collection.get("site_count", 0),
             "endpoint_totals": raw_collection.get("endpoint_totals", {}),
+            "error_category_totals": raw_collection.get("error_category_totals", {}),
             "collector_settings": raw_collection.get("collector_settings", {})
         },
         "summary": {
@@ -374,7 +333,6 @@ def main():
     print_runtime_summary(raw_collection, enriched_collection)
     print_status_summary(enriched_collection)
     print_historical_trend_summary(historical_trends)
-    print_top_trend_sites(historical_trends, limit=5)
     print_top_risky_sites(sites, limit=5)
     print_changes(comparison)
 
