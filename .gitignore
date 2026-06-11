@@ -3,4 +3,4 @@ tokens.json
 __pycache__/
 *.pyc
 snapshots/
-``
+latest_run.json

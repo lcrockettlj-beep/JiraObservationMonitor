@@ -1,6 +1,17 @@
 from datetime import datetime, timezone
+import time
 
 from jira_client import get_accessible_resources, safe_jira_get
+
+
+def _utc_now_iso():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _safe_number(value, default=0):
+    if isinstance(value, (int, float)):
+        return value
+    return default
 
 
 def _extract_project_count(project_payload):
@@ -8,8 +19,9 @@ def _extract_project_count(project_payload):
         return 0
 
     if isinstance(project_payload, dict):
-        if isinstance(project_payload.get("total"), int):
-            return project_payload["total"]
+        total = project_payload.get("total")
+        if isinstance(total, int):
+            return total
 
         values = project_payload.get("values")
         if isinstance(values, list):
@@ -39,7 +51,7 @@ def _extract_project_sample(project_payload, limit=10):
             "project_type_key": project.get("projectTypeKey"),
             "simplified": project.get("simplified"),
             "style": project.get("style"),
-            "is_private": project.get("isPrivate"),
+            "is_private": project.get("isPrivate")
         })
 
     return sample
@@ -48,17 +60,16 @@ def _extract_project_sample(project_payload, limit=10):
 def _extract_application_role_count(role_payload):
     if isinstance(role_payload, list):
         return len(role_payload)
-
     return 0
 
 
-def _extract_application_role_sample(role_payload):
+def _extract_application_role_sample(role_payload, limit=10):
     if not isinstance(role_payload, list):
         return []
 
     sample = []
 
-    for role in role_payload[:10]:
+    for role in role_payload[:limit]:
         if not isinstance(role, dict):
             continue
 
@@ -139,11 +150,31 @@ def _build_api_errors(result_map):
     return errors
 
 
-def _build_endpoint_summary(api_checks, api_errors):
+def _build_api_status_codes(result_map):
+    status_codes = {}
+
+    for key, value in result_map.items():
+        status_codes[key] = value.get("status_code")
+
+    return status_codes
+
+
+def _build_api_urls(result_map):
+    urls = {}
+
+    for key, value in result_map.items():
+        urls[key] = value.get("url")
+
+    return urls
+
+
+def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes):
     total_checks = len(api_checks)
     successful_checks = 0
     failed_checks = 0
     permission_limited_checks = []
+    blocking_failed_checks = []
+    failed_check_details = []
 
     for check_name, ok in api_checks.items():
         if ok:
@@ -153,15 +184,47 @@ def _build_endpoint_summary(api_checks, api_errors):
         failed_checks += 1
 
         error_text = (api_errors.get(check_name) or "").lower()
-        if "403" in error_text or "forbidden" in error_text:
+        status_code = api_status_codes.get(check_name)
+
+        is_permission_limited = False
+        if status_code == 403 or "403" in error_text or "forbidden" in error_text:
+            is_permission_limited = True
+
+        if is_permission_limited:
             permission_limited_checks.append(check_name)
+        else:
+            blocking_failed_checks.append(check_name)
+
+        failed_check_details.append({
+            "endpoint_key": check_name,
+            "status_code": status_code,
+            "error": api_errors.get(check_name),
+            "permission_limited": is_permission_limited
+        })
 
     return {
         "total_checks": total_checks,
         "successful_checks": successful_checks,
         "failed_checks": failed_checks,
-        "permission_limited_checks": permission_limited_checks
+        "blocking_failed_checks": blocking_failed_checks,
+        "permission_limited_checks": permission_limited_checks,
+        "failed_check_details": failed_check_details
     }
+
+
+def _build_endpoint_results(result_map):
+    endpoint_results = {}
+
+    for endpoint_key, result in result_map.items():
+        endpoint_results[endpoint_key] = {
+            "ok": result.get("ok"),
+            "status_code": result.get("status_code"),
+            "url": result.get("url"),
+            "error": result.get("error"),
+            "endpoint": result.get("endpoint")
+        }
+
+    return endpoint_results
 
 
 def _collect_site_metrics(access_token, cloud_id):
@@ -170,29 +233,35 @@ def _collect_site_metrics(access_token, cloud_id):
     Every call is wrapped with safe_jira_get so one failed endpoint
     does not break the entire site collection.
     """
-    server_info = safe_jira_get(access_token, cloud_id, "serverInfo")
+    result_map = {}
 
-    myself = safe_jira_get(
+    result_map["server_info"] = safe_jira_get(
+        access_token,
+        cloud_id,
+        "serverInfo"
+    )
+
+    result_map["myself"] = safe_jira_get(
         access_token,
         cloud_id,
         "myself",
         params={"expand": "groups,applicationRoles"}
     )
 
-    projects = safe_jira_get(
+    result_map["projects"] = safe_jira_get(
         access_token,
         cloud_id,
         "project/search",
         params={"maxResults": 100}
     )
 
-    application_roles = safe_jira_get(
+    result_map["application_roles"] = safe_jira_get(
         access_token,
         cloud_id,
         "applicationrole"
     )
 
-    all_issues = safe_jira_get(
+    result_map["all_issues"] = safe_jira_get(
         access_token,
         cloud_id,
         "search",
@@ -202,7 +271,7 @@ def _collect_site_metrics(access_token, cloud_id):
         }
     )
 
-    unresolved_issues = safe_jira_get(
+    result_map["unresolved_issues"] = safe_jira_get(
         access_token,
         cloud_id,
         "search",
@@ -212,7 +281,7 @@ def _collect_site_metrics(access_token, cloud_id):
         }
     )
 
-    updated_last_7d = safe_jira_get(
+    result_map["updated_last_7d"] = safe_jira_get(
         access_token,
         cloud_id,
         "search",
@@ -222,18 +291,12 @@ def _collect_site_metrics(access_token, cloud_id):
         }
     )
 
-    return {
-        "server_info": server_info,
-        "myself": myself,
-        "projects": projects,
-        "application_roles": application_roles,
-        "all_issues": all_issues,
-        "unresolved_issues": unresolved_issues,
-        "updated_last_7d": updated_last_7d
-    }
+    return result_map
 
 
 def collect_site_data(access_token, resource):
+    site_start = time.perf_counter()
+
     cloud_id = resource.get("id")
     site_name = resource.get("name") or resource.get("url") or cloud_id
     site_url = resource.get("url")
@@ -244,7 +307,16 @@ def collect_site_data(access_token, resource):
 
     api_checks = _build_api_checks(result_map)
     api_errors = _build_api_errors(result_map)
-    endpoint_summary = _build_endpoint_summary(api_checks, api_errors)
+    api_status_codes = _build_api_status_codes(result_map)
+    api_urls = _build_api_urls(result_map)
+
+    endpoint_health_summary = _build_endpoint_health_summary(
+        api_checks=api_checks,
+        api_errors=api_errors,
+        api_status_codes=api_status_codes
+    )
+
+    endpoint_results = _build_endpoint_results(result_map)
 
     server_info_data = result_map["server_info"]["data"] if result_map["server_info"]["ok"] else None
     myself_data = result_map["myself"]["data"] if result_map["myself"]["ok"] else None
@@ -267,11 +339,13 @@ def collect_site_data(access_token, resource):
     project_sample = _extract_project_sample(projects_data, limit=10)
 
     application_role_count = _extract_application_role_count(application_roles_data)
-    application_role_sample = _extract_application_role_sample(application_roles_data)
+    application_role_sample = _extract_application_role_sample(application_roles_data, limit=10)
 
     total_issue_count = _extract_issue_total(all_issues_data)
     unresolved_issue_count = _extract_issue_total(unresolved_issues_data)
     updated_last_7d_count = _extract_issue_total(updated_last_7d_data)
+
+    site_elapsed_seconds = round(time.perf_counter() - site_start, 4)
 
     site_record = {
         "name": site_name,
@@ -279,7 +353,9 @@ def collect_site_data(access_token, resource):
         "cloud_id": cloud_id,
         "avatar_url": avatar_url,
         "scopes": site_scopes,
-        "collected_at_utc": datetime.now(timezone.utc).isoformat(),
+
+        "collected_at_utc": _utc_now_iso(),
+        "collection_duration_seconds": site_elapsed_seconds,
 
         # Core metrics
         "project_count": project_count,
@@ -294,16 +370,22 @@ def collect_site_data(access_token, resource):
         "server_info": _extract_server_info_summary(server_info_data),
         "myself": _extract_myself_summary(myself_data),
 
-        # API health
+        # API / endpoint health
         "api_checks": api_checks,
         "api_errors": api_errors,
-        "endpoint_summary": endpoint_summary
+        "api_status_codes": api_status_codes,
+        "api_urls": api_urls,
+        "endpoint_summary": endpoint_health_summary,
+        "endpoint_results": endpoint_results
     }
 
     return site_record
 
 
 def collect_all_sites(access_token):
+    run_start = time.perf_counter()
+    collected_at_utc = _utc_now_iso()
+
     resources = get_accessible_resources(access_token)
 
     sites = []
@@ -312,8 +394,30 @@ def collect_all_sites(access_token):
         site_record = collect_site_data(access_token, resource)
         sites.append(site_record)
 
+    total_duration_seconds = round(time.perf_counter() - run_start, 4)
+
+    healthy_endpoint_checks = 0
+    failed_endpoint_checks = 0
+    permission_limited_endpoint_checks = 0
+    blocking_failed_endpoint_checks = 0
+
+    for site in sites:
+        endpoint_summary = site.get("endpoint_summary", {}) or {}
+
+        healthy_endpoint_checks += _safe_number(endpoint_summary.get("successful_checks", 0), 0)
+        failed_endpoint_checks += _safe_number(endpoint_summary.get("failed_checks", 0), 0)
+        permission_limited_endpoint_checks += len(endpoint_summary.get("permission_limited_checks", []) or [])
+        blocking_failed_endpoint_checks += len(endpoint_summary.get("blocking_failed_checks", []) or [])
+
     return {
-        "collected_at_utc": datetime.now(timezone.utc).isoformat(),
+        "collected_at_utc": collected_at_utc,
+        "collection_duration_seconds": total_duration_seconds,
         "site_count": len(sites),
+        "endpoint_totals": {
+            "successful_checks": healthy_endpoint_checks,
+            "failed_checks": failed_endpoint_checks,
+            "permission_limited_checks": permission_limited_endpoint_checks,
+            "blocking_failed_checks": blocking_failed_endpoint_checks
+        },
         "sites": sites
     }
