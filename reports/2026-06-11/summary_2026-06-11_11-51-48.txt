@@ -1,0 +1,71 @@
+Jira Observation Monitor - Summary Report
+========================================================================
+Generated at local          : 2026-06-11T11:51:48.852994
+
+STATUS SUMMARY
+------------------------------------------------------------------------
+Sites total                : 6
+Healthy                    : 0
+Warning                    : 0
+Critical                   : 6
+
+RISK SUMMARY
+------------------------------------------------------------------------
+Total risk score           : 127
+Average risk score         : 21.17
+Blocking failures          : 18
+Permission-limited checks  : 3
+
+COLLECTION SUMMARY
+------------------------------------------------------------------------
+Collected at UTC           : 2026-06-11T10:51:23.857872+00:00
+Collection duration (sec)  : 24.9883
+Endpoint checks passed     : 21
+Endpoint checks failed     : 21
+Permission-limited         : 3
+Blocking failed            : 18
+
+CHANGE SUMMARY
+------------------------------------------------------------------------
+Total changes              : 18
+Info changes               : 6
+Warning changes            : 12
+Critical changes           : 0
+
+TOP RISKY SITES
+------------------------------------------------------------------------
+1. gli-usa | status=critical | risk=23
+   Projects                : 1
+   Total issues            : 0
+   Unresolved issues       : 0
+   Reasons                 : blocking_api_failures=all_issues,unresolved_issues,updated_last_7d, permission_limited=application_roles, operational_signal=elevated_collection_time, operational_signal=high_endpoint_failure_ratio
+
+2. gaminglabs-team-h2pbpmis | status=critical | risk=22
+   Projects                : 1
+   Total issues            : 0
+   Unresolved issues       : 0
+   Reasons                 : blocking_api_failures=all_issues,unresolved_issues,updated_last_7d, permission_limited=application_roles, operational_signal=high_endpoint_failure_ratio
+
+3. gaminglabs-team-tsyfo716 | status=critical | risk=22
+   Projects                : 2
+   Total issues            : 0
+   Unresolved issues       : 0
+   Reasons                 : blocking_api_failures=all_issues,unresolved_issues,updated_last_7d, permission_limited=application_roles, operational_signal=high_endpoint_failure_ratio
+
+4. gli-delivery-tm | status=critical | risk=20
+   Projects                : 22
+   Total issues            : 0
+   Unresolved issues       : 0
+   Reasons                 : blocking_api_failures=all_issues,unresolved_issues,updated_last_7d, operational_signal=moderate_endpoint_failure_ratio
+
+5. gli-global-technology | status=critical | risk=20
+   Projects                : 8
+   Total issues            : 0
+   Unresolved issues       : 0
+   Reasons                 : blocking_api_failures=all_issues,unresolved_issues,updated_last_7d, operational_signal=moderate_endpoint_failure_ratio
+
+FILES
+------------------------------------------------------------------------
+Latest snapshot            : snapshots\latest_snapshot.json
+Timestamp snapshot         : snapshots\2026-06-11\snapshot_2026-06-11_11-51-48.json
+Snapshot index             : snapshots\snapshot_index.json

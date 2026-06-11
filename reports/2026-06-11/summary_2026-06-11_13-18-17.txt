@@ -1,0 +1,75 @@
+Jira Observation Monitor - Summary Report
+========================================================================
+Generated at local          : 2026-06-11T13:18:17.094446
+
+STATUS SUMMARY
+------------------------------------------------------------------------
+Sites total                : 6
+Healthy                    : 6
+Warning                    : 0
+Critical                   : 0
+
+RISK SUMMARY
+------------------------------------------------------------------------
+Total risk score           : 3
+Average risk score         : 0.5
+Blocking failures          : 0
+Permission-limited checks  : 3
+
+COLLECTION SUMMARY
+------------------------------------------------------------------------
+Collected at UTC           : 2026-06-11T12:18:11.339829+00:00
+Collection duration (sec)  : 5.7376
+Endpoint checks passed     : 39
+Endpoint checks failed     : 3
+Permission-limited         : 3
+Core blocking             : 0
+Enrichment failed         : 0
+
+HISTORICAL TREND SUMMARY
+------------------------------------------------------------------------
+Sites in history           : 6
+Warning/Critical streaks   : 0
+Rising unresolved sites    : 0
+Rising risk sites          : 0
+Recurring blocking sites   : 6
+
+TOP RISKY SITES
+------------------------------------------------------------------------
+1. gaminglabs-team-h2pbpmis | status=healthy | risk=1
+   Projects                : 1
+   Total issues            : 1
+   Unresolved issues       : 1
+   Updated last 7 days     : 0
+   Permission limited      : application_roles
+   Reasons                 : permission_limited=application_roles
+
+2. gaminglabs-team-tsyfo716 | status=healthy | risk=1
+   Projects                : 2
+   Total issues            : 1
+   Unresolved issues       : 1
+   Updated last 7 days     : 0
+   Permission limited      : application_roles
+   Reasons                 : permission_limited=application_roles
+
+3. gli-usa | status=healthy | risk=1
+   Projects                : 1
+   Total issues            : 0
+   Unresolved issues       : 0
+   Updated last 7 days     : 0
+   Permission limited      : application_roles
+   Reasons                 : permission_limited=application_roles
+
+4. gli-delivery-tm | status=healthy | risk=0
+   Projects                : 22
+   Total issues            : 1
+   Unresolved issues       : 1
+   Updated last 7 days     : 1
+   Reasons                 : no_risk_signals_detected
+
+5. gli-global-technology | status=healthy | risk=0
+   Projects                : 8
+   Total issues            : 1
+   Unresolved issues       : 1
+   Updated last 7 days     : 1
+   Reasons                 : no_risk_signals_detected

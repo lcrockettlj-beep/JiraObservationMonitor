@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 from datetime import datetime
@@ -6,6 +7,9 @@ from datetime import datetime
 REPORT_DIR = "reports"
 LATEST_SUMMARY_JSON = os.path.join(REPORT_DIR, "latest_summary.json")
 LATEST_SUMMARY_TXT = os.path.join(REPORT_DIR, "latest_summary.txt")
+LATEST_SUMMARY_MD = os.path.join(REPORT_DIR, "latest_summary.md")
+LATEST_SITES_CSV = os.path.join(REPORT_DIR, "latest_sites.csv")
+LATEST_CHANGES_CSV = os.path.join(REPORT_DIR, "latest_changes.csv")
 
 
 def ensure_report_dir():
@@ -66,20 +70,9 @@ def build_export_summary(output):
             "project_count": site.get("project_count", 0),
             "issue_count_total": site.get("issue_count_total", 0),
             "issue_count_unresolved": site.get("issue_count_unresolved", 0),
+            "issue_count_updated_last_7d": site.get("issue_count_updated_last_7d", 0),
+            "permission_limited_checks": site.get("permission_limited_checks", []),
             "status_reasons": site.get("status_reasons", [])
-        })
-
-    top_trend_sites = []
-    for site in (historical_trends.get("site_trends", []) or [])[:5]:
-        top_trend_sites.append({
-            "name": site.get("name"),
-            "current_status": site.get("current_status"),
-            "current_risk_score": site.get("current_risk_score", 0),
-            "trend_score": site.get("trend_score", 0),
-            "trend_signals": site.get("trend_signals", []),
-            "status_streak": site.get("status_streak", {}),
-            "unresolved_trend": site.get("unresolved_trend", {}),
-            "risk_trend": site.get("risk_trend", {})
         })
 
     return {
@@ -90,7 +83,6 @@ def build_export_summary(output):
         "change_counts": change_counts,
         "historical_trend_summary": historical_trends.get("summary", {}),
         "top_risky_sites": top_risky_sites,
-        "top_trend_sites": top_trend_sites,
         "snapshot_files": snapshot_files
     }
 
@@ -130,16 +122,8 @@ def _build_text_report(export_summary):
     lines.append(f"Endpoint checks passed     : {endpoint_totals.get('successful_checks', 0)}")
     lines.append(f"Endpoint checks failed     : {endpoint_totals.get('failed_checks', 0)}")
     lines.append(f"Permission-limited         : {endpoint_totals.get('permission_limited_checks', 0)}")
-    lines.append(f"Blocking failed            : {endpoint_totals.get('blocking_failed_checks', 0)}")
-    lines.append("")
-
-    change_counts = export_summary.get("change_counts", {}) or {}
-    lines.append("CHANGE SUMMARY")
-    lines.append("-" * 72)
-    lines.append(f"Total changes              : {change_counts.get('total', 0)}")
-    lines.append(f"Info changes               : {change_counts.get('info', 0)}")
-    lines.append(f"Warning changes            : {change_counts.get('warning', 0)}")
-    lines.append(f"Critical changes           : {change_counts.get('critical', 0)}")
+    lines.append(f"Core blocking             : {endpoint_totals.get('core_blocking_failed_checks', 0)}")
+    lines.append(f"Enrichment failed         : {endpoint_totals.get('enrichment_failed_checks', 0)}")
     lines.append("")
 
     historical_summary = export_summary.get("historical_trend_summary", {}) or {}
@@ -166,6 +150,11 @@ def _build_text_report(export_summary):
             lines.append(f"   Projects                : {site.get('project_count', 0)}")
             lines.append(f"   Total issues            : {site.get('issue_count_total', 0)}")
             lines.append(f"   Unresolved issues       : {site.get('issue_count_unresolved', 0)}")
+            lines.append(f"   Updated last 7 days     : {site.get('issue_count_updated_last_7d', 0)}")
+
+            perm = site.get("permission_limited_checks", []) or []
+            if perm:
+                lines.append(f"   Permission limited      : {', '.join(str(v) for v in perm)}")
 
             reasons = site.get("status_reasons", []) or []
             if reasons:
@@ -173,41 +162,125 @@ def _build_text_report(export_summary):
 
             lines.append("")
 
-    top_trend_sites = export_summary.get("top_trend_sites", []) or []
-    lines.append("TOP TREND SITES")
-    lines.append("-" * 72)
+    return "\n".join(lines)
 
-    if not top_trend_sites:
-        lines.append("No historical trend data available.")
+
+def _build_markdown_report(export_summary):
+    summary = export_summary.get("summary", {}) or {}
+    risk_summary = export_summary.get("risk_summary", {}) or {}
+    raw_summary = export_summary.get("raw_collection_summary", {}) or {}
+    endpoint_totals = raw_summary.get("endpoint_totals", {}) or {}
+    historical_summary = export_summary.get("historical_trend_summary", {}) or {}
+    top_risky_sites = export_summary.get("top_risky_sites", []) or []
+
+    lines = []
+    lines.append("# Jira Observation Monitor Summary")
+    lines.append("")
+    lines.append(f"- **Generated:** {export_summary.get('generated_at_local')}")
+    lines.append(f"- **Sites total:** {summary.get('site_count', 0)}")
+    lines.append(f"- **Healthy / Warning / Critical:** {summary.get('healthy_count', 0)} / {summary.get('warning_count', 0)} / {summary.get('critical_count', 0)}")
+    lines.append(f"- **Total risk score:** {risk_summary.get('total_risk_score', 0)}")
+    lines.append(f"- **Average risk score:** {risk_summary.get('average_risk_score', 0)}")
+    lines.append(f"- **Collection duration (sec):** {raw_summary.get('collection_duration_seconds', 0)}")
+    lines.append(f"- **Endpoint checks passed / failed:** {endpoint_totals.get('successful_checks', 0)} / {endpoint_totals.get('failed_checks', 0)}")
+    lines.append(f"- **Permission-limited endpoints:** {endpoint_totals.get('permission_limited_checks', 0)}")
+    lines.append("")
+    lines.append("## Historical trend summary")
+    lines.append("")
+    lines.append(f"- Sites in history: {historical_summary.get('site_count', 0)}")
+    lines.append(f"- Warning/Critical streaks: {historical_summary.get('warning_or_critical_streak_sites', 0)}")
+    lines.append(f"- Rising unresolved sites: {historical_summary.get('rising_unresolved_sites', 0)}")
+    lines.append(f"- Rising risk sites: {historical_summary.get('rising_risk_sites', 0)}")
+    lines.append("")
+    lines.append("## Top risky sites")
+    lines.append("")
+
+    if not top_risky_sites:
+        lines.append("- No site data available.")
     else:
-        for index, site in enumerate(top_trend_sites, start=1):
-            lines.append(
-                f"{index}. {site.get('name')} | current_status={site.get('current_status')} | "
-                f"current_risk={site.get('current_risk_score', 0)} | trend_score={site.get('trend_score', 0)}"
-            )
+        for site in top_risky_sites:
+            lines.append(f"### {site.get('name')}")
+            lines.append(f"- Status: {site.get('status')}")
+            lines.append(f"- Risk score: {site.get('risk_score', 0)}")
+            lines.append(f"- Projects: {site.get('project_count', 0)}")
+            lines.append(f"- Total issues: {site.get('issue_count_total', 0)}")
+            lines.append(f"- Unresolved issues: {site.get('issue_count_unresolved', 0)}")
+            lines.append(f"- Updated last 7 days: {site.get('issue_count_updated_last_7d', 0)}")
 
-            streak = site.get("status_streak", {}) or {}
-            unresolved_trend = site.get("unresolved_trend", {}) or {}
-            risk_trend = site.get("risk_trend", {}) or {}
+            perm = site.get("permission_limited_checks", []) or []
+            if perm:
+                lines.append(f"- Permission limited: {', '.join(str(v) for v in perm)}")
 
-            lines.append(f"   Status streak           : {streak.get('status')} x{streak.get('length', 0)}")
-            lines.append(f"   Unresolved delta        : {unresolved_trend.get('delta', 0)}")
-            lines.append(f"   Risk delta              : {risk_trend.get('delta', 0)}")
-
-            signals = site.get("trend_signals", []) or []
-            if signals:
-                lines.append(f"   Trend signals           : {', '.join(str(s) for s in signals)}")
+            reasons = site.get("status_reasons", []) or []
+            if reasons:
+                lines.append(f"- Reasons: {', '.join(str(v) for v in reasons)}")
 
             lines.append("")
 
-    snapshot_files = export_summary.get("snapshot_files", {}) or {}
-    lines.append("FILES")
-    lines.append("-" * 72)
-    lines.append(f"Latest snapshot            : {snapshot_files.get('latest_file')}")
-    lines.append(f"Timestamp snapshot         : {snapshot_files.get('timestamp_file')}")
-    lines.append(f"Snapshot index             : {snapshot_files.get('index_file')}")
-
     return "\n".join(lines)
+
+
+def _save_sites_csv(output, path):
+    sites = output.get("sites", []) or []
+
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow([
+            "name",
+            "status",
+            "risk_score",
+            "project_count",
+            "application_role_count",
+            "issue_count_total",
+            "issue_count_unresolved",
+            "issue_count_updated_last_7d",
+            "collection_duration_seconds",
+            "permission_limited_checks",
+            "status_reasons"
+        ])
+
+        for site in sites:
+            writer.writerow([
+                site.get("name"),
+                site.get("status"),
+                site.get("risk_score", 0),
+                site.get("project_count", 0),
+                site.get("application_role_count", 0),
+                site.get("issue_count_total", 0),
+                site.get("issue_count_unresolved", 0),
+                site.get("issue_count_updated_last_7d", 0),
+                site.get("collection_duration_seconds", 0),
+                ", ".join(site.get("permission_limited_checks", []) or []),
+                ", ".join(site.get("status_reasons", []) or [])
+            ])
+
+
+def _save_changes_csv(output, path):
+    comparison = output.get("comparison", {}) or {}
+    changes = comparison.get("changes", []) or []
+
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow([
+            "severity",
+            "type",
+            "site_name",
+            "cloud_id",
+            "field",
+            "old",
+            "new"
+        ])
+
+        for change in changes:
+            writer.writerow([
+                change.get("severity"),
+                change.get("type"),
+                change.get("site_name"),
+                change.get("cloud_id"),
+                change.get("field"),
+                change.get("old"),
+                change.get("new")
+            ])
 
 
 def save_reports(output):
@@ -219,14 +292,11 @@ def save_reports(output):
     date_folder = os.path.join(REPORT_DIR, timestamp_info["date_folder"])
     os.makedirs(date_folder, exist_ok=True)
 
-    timestamp_json = os.path.join(
-        date_folder,
-        f"summary_{timestamp_info['timestamp']}.json"
-    )
-    timestamp_txt = os.path.join(
-        date_folder,
-        f"summary_{timestamp_info['timestamp']}.txt"
-    )
+    timestamp_json = os.path.join(date_folder, f"summary_{timestamp_info['timestamp']}.json")
+    timestamp_txt = os.path.join(date_folder, f"summary_{timestamp_info['timestamp']}.txt")
+    timestamp_md = os.path.join(date_folder, f"summary_{timestamp_info['timestamp']}.md")
+    timestamp_sites_csv = os.path.join(date_folder, f"sites_{timestamp_info['timestamp']}.csv")
+    timestamp_changes_csv = os.path.join(date_folder, f"changes_{timestamp_info['timestamp']}.csv")
 
     with open(LATEST_SUMMARY_JSON, "w", encoding="utf-8") as handle:
         json.dump(export_summary, handle, indent=2)
@@ -235,6 +305,7 @@ def save_reports(output):
         json.dump(export_summary, handle, indent=2)
 
     text_report = _build_text_report(export_summary)
+    markdown_report = _build_markdown_report(export_summary)
 
     with open(LATEST_SUMMARY_TXT, "w", encoding="utf-8") as handle:
         handle.write(text_report)
@@ -242,9 +313,27 @@ def save_reports(output):
     with open(timestamp_txt, "w", encoding="utf-8") as handle:
         handle.write(text_report)
 
+    with open(LATEST_SUMMARY_MD, "w", encoding="utf-8") as handle:
+        handle.write(markdown_report)
+
+    with open(timestamp_md, "w", encoding="utf-8") as handle:
+        handle.write(markdown_report)
+
+    _save_sites_csv(output, LATEST_SITES_CSV)
+    _save_sites_csv(output, timestamp_sites_csv)
+
+    _save_changes_csv(output, LATEST_CHANGES_CSV)
+    _save_changes_csv(output, timestamp_changes_csv)
+
     return {
         "latest_summary_json": LATEST_SUMMARY_JSON,
         "latest_summary_txt": LATEST_SUMMARY_TXT,
+        "latest_summary_md": LATEST_SUMMARY_MD,
+        "latest_sites_csv": LATEST_SITES_CSV,
+        "latest_changes_csv": LATEST_CHANGES_CSV,
         "timestamp_summary_json": timestamp_json,
-        "timestamp_summary_txt": timestamp_txt
+        "timestamp_summary_txt": timestamp_txt,
+        "timestamp_summary_md": timestamp_md,
+        "timestamp_sites_csv": timestamp_sites_csv,
+        "timestamp_changes_csv": timestamp_changes_csv
     }

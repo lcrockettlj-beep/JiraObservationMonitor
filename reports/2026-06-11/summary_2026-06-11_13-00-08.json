@@ -1,0 +1,297 @@
+{
+  "generated_at_local": "2026-06-11T13:00:08.751324",
+  "summary": {
+    "site_count": 6,
+    "healthy_count": 6,
+    "warning_count": 0,
+    "critical_count": 0
+  },
+  "risk_summary": {
+    "total_risk_score": 25,
+    "average_risk_score": 4.17,
+    "total_issue_risk_score": 0,
+    "total_operational_risk_score": 22,
+    "total_blocking_failures": 0,
+    "total_permission_limited_checks": 3
+  },
+  "raw_collection_summary": {
+    "collected_at_utc": "2026-06-11T11:59:57.423539+00:00",
+    "collection_duration_seconds": 11.3067,
+    "site_count": 6,
+    "endpoint_totals": {
+      "successful_checks": 21,
+      "failed_checks": 21,
+      "permission_limited_checks": 3,
+      "core_blocking_failed_checks": 0,
+      "enrichment_failed_checks": 18
+    },
+    "error_category_totals": {
+      "permission_limited": 3,
+      "jql_error": 18
+    },
+    "collector_settings": {
+      "max_site_workers": 3,
+      "endpoint_workers": 3,
+      "site_workers_used": 3
+    }
+  },
+  "change_counts": {
+    "info": 1,
+    "warning": 2,
+    "critical": 0,
+    "total": 3
+  },
+  "historical_trend_summary": {
+    "site_count": 6,
+    "warning_or_critical_streak_sites": 0,
+    "rising_unresolved_sites": 0,
+    "rising_risk_sites": 0,
+    "recurring_blocking_failure_sites": 6
+  },
+  "top_risky_sites": [
+    {
+      "name": "gaminglabs-team-h2pbpmis",
+      "status": "healthy",
+      "risk_score": 5,
+      "project_count": 1,
+      "issue_count_total": 0,
+      "issue_count_unresolved": 0,
+      "status_reasons": [
+        "enrichment_failures=all_issues,updated_last_7d,unresolved_issues",
+        "permission_limited=application_roles",
+        "operational_signal=multiple_enrichment_failures",
+        "operational_signal=high_endpoint_failure_ratio"
+      ]
+    },
+    {
+      "name": "gaminglabs-team-tsyfo716",
+      "status": "healthy",
+      "risk_score": 5,
+      "project_count": 2,
+      "issue_count_total": 0,
+      "issue_count_unresolved": 0,
+      "status_reasons": [
+        "enrichment_failures=all_issues,unresolved_issues,updated_last_7d",
+        "permission_limited=application_roles",
+        "operational_signal=multiple_enrichment_failures",
+        "operational_signal=high_endpoint_failure_ratio"
+      ]
+    },
+    {
+      "name": "gli-usa",
+      "status": "healthy",
+      "risk_score": 5,
+      "project_count": 1,
+      "issue_count_total": 0,
+      "issue_count_unresolved": 0,
+      "status_reasons": [
+        "enrichment_failures=all_issues,unresolved_issues,updated_last_7d",
+        "permission_limited=application_roles",
+        "operational_signal=multiple_enrichment_failures",
+        "operational_signal=high_endpoint_failure_ratio"
+      ]
+    },
+    {
+      "name": "gli-it-project",
+      "status": "healthy",
+      "risk_score": 4,
+      "project_count": 55,
+      "issue_count_total": 0,
+      "issue_count_unresolved": 0,
+      "status_reasons": [
+        "enrichment_failures=all_issues,updated_last_7d,unresolved_issues",
+        "operational_signal=elevated_collection_time",
+        "operational_signal=multiple_enrichment_failures",
+        "operational_signal=moderate_endpoint_failure_ratio"
+      ]
+    },
+    {
+      "name": "gli-delivery-tm",
+      "status": "healthy",
+      "risk_score": 3,
+      "project_count": 22,
+      "issue_count_total": 0,
+      "issue_count_unresolved": 0,
+      "status_reasons": [
+        "enrichment_failures=all_issues,updated_last_7d,unresolved_issues",
+        "operational_signal=multiple_enrichment_failures",
+        "operational_signal=moderate_endpoint_failure_ratio"
+      ]
+    }
+  ],
+  "top_trend_sites": [
+    {
+      "name": "gaminglabs-team-h2pbpmis",
+      "current_status": "healthy",
+      "current_risk_score": 5,
+      "trend_score": 5,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "persistent_permission_limits",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 2
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 0.0,
+        "delta": 0.0,
+        "direction": "stable",
+        "max": 0.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 16.0,
+        "latest": 5.0,
+        "delta": -11.0,
+        "direction": "down",
+        "max": 22.0,
+        "min": 5.0
+      }
+    },
+    {
+      "name": "gaminglabs-team-tsyfo716",
+      "current_status": "healthy",
+      "current_risk_score": 5,
+      "trend_score": 5,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "persistent_permission_limits",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 2
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 0.0,
+        "delta": 0.0,
+        "direction": "stable",
+        "max": 0.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 16.0,
+        "latest": 5.0,
+        "delta": -11.0,
+        "direction": "down",
+        "max": 22.0,
+        "min": 5.0
+      }
+    },
+    {
+      "name": "gli-usa",
+      "current_status": "healthy",
+      "current_risk_score": 5,
+      "trend_score": 5,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "persistent_permission_limits",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 2
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 0.0,
+        "delta": 0.0,
+        "direction": "stable",
+        "max": 0.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 16.0,
+        "latest": 5.0,
+        "delta": -11.0,
+        "direction": "down",
+        "max": 23.0,
+        "min": 5.0
+      }
+    },
+    {
+      "name": "gli-it-project",
+      "current_status": "healthy",
+      "current_risk_score": 4,
+      "trend_score": 4,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 2
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 0.0,
+        "delta": 0.0,
+        "direction": "stable",
+        "max": 0.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 15.0,
+        "latest": 4.0,
+        "delta": -11.0,
+        "direction": "down",
+        "max": 20.0,
+        "min": 3.0
+      }
+    },
+    {
+      "name": "gli-delivery-tm",
+      "current_status": "healthy",
+      "current_risk_score": 3,
+      "trend_score": 4,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 2
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 0.0,
+        "delta": 0.0,
+        "direction": "stable",
+        "max": 0.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 15.0,
+        "latest": 3.0,
+        "delta": -12.0,
+        "direction": "down",
+        "max": 20.0,
+        "min": 3.0
+      }
+    }
+  ],
+  "snapshot_files": {
+    "latest_file": "snapshots\\latest_snapshot.json",
+    "timestamp_file": "snapshots\\2026-06-11\\snapshot_2026-06-11_13-00-08.json",
+    "index_file": "snapshots\\snapshot_index.json"
+  }
+}

@@ -100,11 +100,32 @@ def print_runtime_summary(raw_collection, enriched_collection):
 
 def print_status_summary(enriched_collection):
     print_section("STATUS SUMMARY")
-
     print(f"Sites total                  : {enriched_collection.get('site_count', 0)}")
     print(f"Healthy                      : {enriched_collection.get('healthy_count', 0)}")
     print(f"Warning                      : {enriched_collection.get('warning_count', 0)}")
     print(f"Critical                     : {enriched_collection.get('critical_count', 0)}")
+
+
+def print_attention_summary(sites):
+    print_section("ATTENTION SUMMARY")
+
+    permission_limited_sites = [s for s in sites if s.get("permission_limited_checks")]
+    if permission_limited_sites:
+        print("Permission-limited sites:")
+        for site in permission_limited_sites:
+            print(f"  - {site.get('name')}: {format_list(site.get('permission_limited_checks', []))}")
+    else:
+        print("No permission-limited sites.")
+
+    warning_or_critical = [s for s in sites if s.get("status") in ("warning", "critical")]
+    if warning_or_critical:
+        print()
+        print("Sites needing attention:")
+        for site in warning_or_critical:
+            print(f"  - {site.get('name')} ({site.get('status')})")
+    else:
+        print()
+        print("No warning or critical sites.")
 
 
 def print_historical_trend_summary(historical_trends):
@@ -142,22 +163,9 @@ def print_top_risky_sites(sites, limit=5):
         print(f"    Updated last 7 days      : {site.get('issue_count_updated_last_7d', 0)}")
         print(f"    Site collection (sec)    : {site.get('collection_duration_seconds', 0)}")
 
-        blocking_failed = site.get("blocking_failed_checks", [])
-        enrichment_failed = site.get("enrichment_failed_checks", [])
         permission_limited = site.get("permission_limited_checks", [])
-        transient_failed = site.get("transient_failed_checks", [])
-        hard_failed = site.get("hard_failed_checks", [])
-
-        if blocking_failed:
-            print(f"    Core blocking failures   : {format_list(blocking_failed)}")
-        if enrichment_failed:
-            print(f"    Enrichment failures      : {format_list(enrichment_failed)}")
         if permission_limited:
             print(f"    Permission limited       : {format_list(permission_limited)}")
-        if transient_failed:
-            print(f"    Transient failed checks  : {format_list(transient_failed)}")
-        if hard_failed:
-            print(f"    Hard failed checks       : {format_list(hard_failed)}")
 
         status_reasons = site.get("status_reasons", [])
         if status_reasons:
@@ -332,6 +340,7 @@ def main():
 
     print_runtime_summary(raw_collection, enriched_collection)
     print_status_summary(enriched_collection)
+    print_attention_summary(sites)
     print_historical_trend_summary(historical_trends)
     print_top_risky_sites(sites, limit=5)
     print_changes(comparison)

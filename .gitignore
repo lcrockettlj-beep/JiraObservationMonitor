@@ -1,7 +1,6 @@
 .env
 tokens.json
-__pycache__/
+reports/__pycache__/
+latest_run.json
 *.pyc
 snapshots/
-reports/
-latest_run.json

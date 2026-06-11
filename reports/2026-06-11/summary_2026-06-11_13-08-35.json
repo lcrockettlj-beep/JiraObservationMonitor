@@ -1,0 +1,281 @@
+{
+  "generated_at_local": "2026-06-11T13:08:35.053808",
+  "summary": {
+    "site_count": 6,
+    "healthy_count": 6,
+    "warning_count": 0,
+    "critical_count": 0
+  },
+  "risk_summary": {
+    "total_risk_score": 3,
+    "average_risk_score": 0.5,
+    "total_issue_risk_score": 0,
+    "total_operational_risk_score": 0,
+    "total_blocking_failures": 0,
+    "total_permission_limited_checks": 3
+  },
+  "raw_collection_summary": {
+    "collected_at_utc": "2026-06-11T12:08:29.261977+00:00",
+    "collection_duration_seconds": 5.775,
+    "site_count": 6,
+    "endpoint_totals": {
+      "successful_checks": 39,
+      "failed_checks": 3,
+      "permission_limited_checks": 3,
+      "core_blocking_failed_checks": 0,
+      "enrichment_failed_checks": 0
+    },
+    "error_category_totals": {
+      "permission_limited": 3
+    },
+    "collector_settings": {
+      "max_site_workers": 3,
+      "endpoint_workers": 3,
+      "site_workers_used": 3
+    }
+  },
+  "change_counts": {
+    "info": 32,
+    "warning": 22,
+    "critical": 0,
+    "total": 54
+  },
+  "historical_trend_summary": {
+    "site_count": 6,
+    "warning_or_critical_streak_sites": 0,
+    "rising_unresolved_sites": 0,
+    "rising_risk_sites": 0,
+    "recurring_blocking_failure_sites": 6
+  },
+  "top_risky_sites": [
+    {
+      "name": "gaminglabs-team-h2pbpmis",
+      "status": "healthy",
+      "risk_score": 1,
+      "project_count": 1,
+      "issue_count_total": 1,
+      "issue_count_unresolved": 1,
+      "status_reasons": [
+        "permission_limited=application_roles"
+      ]
+    },
+    {
+      "name": "gaminglabs-team-tsyfo716",
+      "status": "healthy",
+      "risk_score": 1,
+      "project_count": 2,
+      "issue_count_total": 1,
+      "issue_count_unresolved": 1,
+      "status_reasons": [
+        "permission_limited=application_roles"
+      ]
+    },
+    {
+      "name": "gli-usa",
+      "status": "healthy",
+      "risk_score": 1,
+      "project_count": 1,
+      "issue_count_total": 0,
+      "issue_count_unresolved": 0,
+      "status_reasons": [
+        "permission_limited=application_roles"
+      ]
+    },
+    {
+      "name": "gli-delivery-tm",
+      "status": "healthy",
+      "risk_score": 0,
+      "project_count": 22,
+      "issue_count_total": 1,
+      "issue_count_unresolved": 1,
+      "status_reasons": [
+        "no_risk_signals_detected"
+      ]
+    },
+    {
+      "name": "gli-global-technology",
+      "status": "healthy",
+      "risk_score": 0,
+      "project_count": 8,
+      "issue_count_total": 1,
+      "issue_count_unresolved": 1,
+      "status_reasons": [
+        "no_risk_signals_detected"
+      ]
+    }
+  ],
+  "top_trend_sites": [
+    {
+      "name": "gaminglabs-team-h2pbpmis",
+      "current_status": "healthy",
+      "current_risk_score": 1,
+      "trend_score": 5,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "persistent_permission_limits",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 3
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 1.0,
+        "delta": 1.0,
+        "direction": "up",
+        "max": 1.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 16.0,
+        "latest": 1.0,
+        "delta": -15.0,
+        "direction": "down",
+        "max": 22.0,
+        "min": 1.0
+      }
+    },
+    {
+      "name": "gaminglabs-team-tsyfo716",
+      "current_status": "healthy",
+      "current_risk_score": 1,
+      "trend_score": 5,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "persistent_permission_limits",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 3
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 1.0,
+        "delta": 1.0,
+        "direction": "up",
+        "max": 1.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 16.0,
+        "latest": 1.0,
+        "delta": -15.0,
+        "direction": "down",
+        "max": 22.0,
+        "min": 1.0
+      }
+    },
+    {
+      "name": "gli-usa",
+      "current_status": "healthy",
+      "current_risk_score": 1,
+      "trend_score": 5,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "persistent_permission_limits",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 3
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 0.0,
+        "delta": 0.0,
+        "direction": "stable",
+        "max": 0.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 16.0,
+        "latest": 1.0,
+        "delta": -15.0,
+        "direction": "down",
+        "max": 23.0,
+        "min": 1.0
+      }
+    },
+    {
+      "name": "gli-global-technology",
+      "current_status": "healthy",
+      "current_risk_score": 0,
+      "trend_score": 4,
+      "trend_signals": [
+        "slower_collection_trend",
+        "recurring_blocking_failures",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 3
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 1.0,
+        "delta": 1.0,
+        "direction": "up",
+        "max": 1.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 15.0,
+        "latest": 0.0,
+        "delta": -15.0,
+        "direction": "down",
+        "max": 20.0,
+        "min": 0.0
+      }
+    },
+    {
+      "name": "gli-delivery-tm",
+      "current_status": "healthy",
+      "current_risk_score": 0,
+      "trend_score": 3,
+      "trend_signals": [
+        "recurring_blocking_failures",
+        "recurring_operational_signals"
+      ],
+      "status_streak": {
+        "status": "healthy",
+        "length": 3
+      },
+      "unresolved_trend": {
+        "field": "issue_count_unresolved",
+        "first": 0.0,
+        "latest": 1.0,
+        "delta": 1.0,
+        "direction": "up",
+        "max": 1.0,
+        "min": 0.0
+      },
+      "risk_trend": {
+        "field": "risk_score",
+        "first": 15.0,
+        "latest": 0.0,
+        "delta": -15.0,
+        "direction": "down",
+        "max": 20.0,
+        "min": 0.0
+      }
+    }
+  ],
+  "snapshot_files": {
+    "latest_file": "snapshots\\latest_snapshot.json",
+    "timestamp_file": "snapshots\\2026-06-11\\snapshot_2026-06-11_13-08-35.json",
+    "index_file": "snapshots\\snapshot_index.json"
+  }
+}

@@ -1,0 +1,111 @@
+Jira Observation Monitor - Summary Report
+========================================================================
+Generated at local          : 2026-06-11T13:08:35.053808
+
+STATUS SUMMARY
+------------------------------------------------------------------------
+Sites total                : 6
+Healthy                    : 6
+Warning                    : 0
+Critical                   : 0
+
+RISK SUMMARY
+------------------------------------------------------------------------
+Total risk score           : 3
+Average risk score         : 0.5
+Blocking failures          : 0
+Permission-limited checks  : 3
+
+COLLECTION SUMMARY
+------------------------------------------------------------------------
+Collected at UTC           : 2026-06-11T12:08:29.261977+00:00
+Collection duration (sec)  : 5.775
+Endpoint checks passed     : 39
+Endpoint checks failed     : 3
+Permission-limited         : 3
+Blocking failed            : 0
+
+CHANGE SUMMARY
+------------------------------------------------------------------------
+Total changes              : 54
+Info changes               : 32
+Warning changes            : 22
+Critical changes           : 0
+
+HISTORICAL TREND SUMMARY
+------------------------------------------------------------------------
+Sites in history           : 6
+Warning/Critical streaks   : 0
+Rising unresolved sites    : 0
+Rising risk sites          : 0
+Recurring blocking sites   : 6
+
+TOP RISKY SITES
+------------------------------------------------------------------------
+1. gaminglabs-team-h2pbpmis | status=healthy | risk=1
+   Projects                : 1
+   Total issues            : 1
+   Unresolved issues       : 1
+   Reasons                 : permission_limited=application_roles
+
+2. gaminglabs-team-tsyfo716 | status=healthy | risk=1
+   Projects                : 2
+   Total issues            : 1
+   Unresolved issues       : 1
+   Reasons                 : permission_limited=application_roles
+
+3. gli-usa | status=healthy | risk=1
+   Projects                : 1
+   Total issues            : 0
+   Unresolved issues       : 0
+   Reasons                 : permission_limited=application_roles
+
+4. gli-delivery-tm | status=healthy | risk=0
+   Projects                : 22
+   Total issues            : 1
+   Unresolved issues       : 1
+   Reasons                 : no_risk_signals_detected
+
+5. gli-global-technology | status=healthy | risk=0
+   Projects                : 8
+   Total issues            : 1
+   Unresolved issues       : 1
+   Reasons                 : no_risk_signals_detected
+
+TOP TREND SITES
+------------------------------------------------------------------------
+1. gaminglabs-team-h2pbpmis | current_status=healthy | current_risk=1 | trend_score=5
+   Status streak           : healthy x3
+   Unresolved delta        : 1.0
+   Risk delta              : -15.0
+   Trend signals           : slower_collection_trend, recurring_blocking_failures, persistent_permission_limits, recurring_operational_signals
+
+2. gaminglabs-team-tsyfo716 | current_status=healthy | current_risk=1 | trend_score=5
+   Status streak           : healthy x3
+   Unresolved delta        : 1.0
+   Risk delta              : -15.0
+   Trend signals           : slower_collection_trend, recurring_blocking_failures, persistent_permission_limits, recurring_operational_signals
+
+3. gli-usa | current_status=healthy | current_risk=1 | trend_score=5
+   Status streak           : healthy x3
+   Unresolved delta        : 0.0
+   Risk delta              : -15.0
+   Trend signals           : slower_collection_trend, recurring_blocking_failures, persistent_permission_limits, recurring_operational_signals
+
+4. gli-global-technology | current_status=healthy | current_risk=0 | trend_score=4
+   Status streak           : healthy x3
+   Unresolved delta        : 1.0
+   Risk delta              : -15.0
+   Trend signals           : slower_collection_trend, recurring_blocking_failures, recurring_operational_signals
+
+5. gli-delivery-tm | current_status=healthy | current_risk=0 | trend_score=3
+   Status streak           : healthy x3
+   Unresolved delta        : 1.0
+   Risk delta              : -15.0
+   Trend signals           : recurring_blocking_failures, recurring_operational_signals
+
+FILES
+------------------------------------------------------------------------
+Latest snapshot            : snapshots\latest_snapshot.json
+Timestamp snapshot         : snapshots\2026-06-11\snapshot_2026-06-11_13-08-35.json
+Snapshot index             : snapshots\snapshot_index.json
