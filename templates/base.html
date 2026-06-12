@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ home.title if home and home.title else "Jira Observation Monitor" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
+</head>
+<body>
+    {% set current_site_key = site.site_key if site else '' %}
+
+    <div class="app-shell">
+        <header class="top-nav">
+            <div class="brand-block">
+                <div class="brand-kicker">GLI · Atlassian Operations</div>
+                <div class="brand-title">Jira Observation Monitor</div>
+            </div>
+
+            <nav class="site-tabs" aria-label="Primary navigation">
+                <a class="site-tab {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">
+                    Home
+                </a>
+
+                {% for tab in home.site_tabs %}
+                    <a class="site-tab {% if current_site_key == tab.site_key %}active{% endif %}"
+                       href="{{ url_for('site_detail', site_key=tab.site_key) }}">
+                        {{ tab.site_name }}
+                    </a>
+                {% endfor %}
+            </nav>
+        </header>
+
+        <main class="page-wrap">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+{% extends "base.html" %}{% extends "base.html' in text or 'available' in text or 'success' in text or 'granted' in text -%}
+        signal-healthy
+    {%- else -%}
+        signal-neutral
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro state_label(value) -%}
+    {%- if value == "critical" -%}
+        Critical
+    {%- elif value == "warning" -%}
+        Warning
+    {%- elif value == "stable" -%}
+        Operationally Stable
+    {%- else -%}
+        Unknown
+    {%- endif -%}
+{%- endmacro %}
+
+{% block content %}
+{% if not site %}
+    <section class="hero-panel">
+        <div class="hero-panel__content">
+            <div class="hero-panel__left">
+                <div class="hero-eyebrow">Site page</div>
+                <h1 class="hero-title">Site not found</h1>
+                <p class="hero-subtitle">The selected site could not be resolved from the current homepage view model.</p>
+                <div class="hero-action-row">
+                    <a class="button button--primary" href="{{ url_for('home') }}">Back to homepage</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% else %}
+    <section class="hero-panel">
+        <div class="hero-panel__content">
+            <div class="hero-panel__left">
+                <div class="hero-eyebrow">Site dashboard</div>
+                <h1 class="hero-title">{{ site.site_name }}</h1>
+                <p class="hero-subtitle">{{ site.site_url }}</p>
+
+                <div class="hero-pill-row">
+                    <span class="status-badge status-badge--{{ site.status }}">
+                        {{ state_label(site.status) }}
+                    </span>
+
+                    <span class="signal-pill {{ signal_class(site.permissions.overall_status) }}">
+                        Permissions: {{ site.permissions.overall_status or "unknown" }}
+                    </span>
+
+                    <span class="signal-pill {{ signal_class(site.audit.audit_status or site.audit.audit_api_access) }}">
+                        Audit: {{ site.audit.audit_status or site.audit.audit_api_access or "unknown" }}
+                    </span>
+
+                    <span class="signal-pill {{ signal_class(site.licence.licence_status or site.licence.licence_api_access) }}">
+                        Licence: {{ site.licence.licence_status or site.licence.licence_api_access or "unknown" }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="hero-panel__right">
+                <div class="hero-meta-card">
+                    <div class="hero-meta-label">Last collected</div>
+                    <div class="hero-meta-value">{{ site.last_collected or home.collected_at or "Not available" }}</div>
+                </div>
+
+                <div class="hero-action-row">
+                    <a class="button button--ghost" href="{{ url_for('home') }}">Back to home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="summary-grid">
+        <article class="summary-card">
+            <div class="summary-card__label">Projects</div>
+            <div class="summary-card__value">{{ site.metrics.project_count }}</div>
+        </article>
+        <article class="summary-card">
+            <div class="summary-card__label">Issues</div>
+            <div class="summary-card__value">{{ site.metrics.issue_count }}</div>
+        </article>
+        <article class="summary-card">
+            <div class="summary-card__label">Unresolved</div>
+            <div class="summary-card__value">{{ site.metrics.unresolved_issue_count }}</div>
+        </article>
+        <article class="summary-card">
+            <div class="summary-card__label">Updated 7d</div>
+            <div class="summary-card__value">{{ site.metrics.updated_last_7_days_count }}</div>
+        </article>
+    </section>
+
+    <section class="detail-grid">
+        <article class="detail-panel">
+            <div class="detail-panel__header">
+                <h2>Users</h2>
+            </div>
+            <div class="detail-list">
+                <div class="detail-row">
+                    <span>Total users</span>
+                    <strong>{{ site.users.total_users if site.users.total_users is not none else "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Active users</span>
+                    <strong>{{ site.users.active_users if site.users.active_users is not none else "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Inactive users</span>
+                    <strong>{{ site.users.inactive_users if site.users.inactive_users is not none else "Not available" }}</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="detail-panel">
+            <div class="detail-panel__header">
+                <h2>Licence</h2>
+            </div>
+            <div class="detail-list">
+                <div class="detail-row">
+                    <span>Licensed users estimate</span>
+                    <strong>{{ site.licence.licensed_users_estimate if site.licence.licensed_users_estimate is not none else "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Seats</span>
+                    <strong>{{ site.licence.seats if site.licence.seats is not none else "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Remaining seats</span>
+                    <strong>{{ site.licence.remaining_seats if site.licence.remaining_seats is not none else "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Licence status</span>
+                    <strong>{{ site.licence.licence_status or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Licence API access</span>
+                    <strong>{{ site.licence.licence_api_access or "Not available" }}</strong>
+                </div>
+            </div>
+
+            {% if site.usage_percent is not none %}
+                <div class="usage-bar-block usage-bar-block--tight">
+                    <div class="usage-bar__meta">
+                        <span>Licence usage</span>
+                        <span>{{ site.usage_percent }}%</span>
+                    </div>
+                    <div class="usage-bar">
+                        <div class="usage-bar__fill {% if site.usage_percent >= 90 %}usage-bar__fill--high{% elif site.usage_percent >= 70 %}usage-bar__fill--med{% else %}usage-bar__fill--low{% endif %}"
+                             style="width: {{ site.usage_percent }}%;"></div>
+                    </div>
+                </div>
+            {% endif %}
+        </article>
+
+        <article class="detail-panel">
+            <div class="detail-panel__header">
+                <h2>Audit</h2>
+            </div>
+            <div class="detail-list">
+                <div class="detail-row">
+                    <span>Audit status</span>
+                    <strong>{{ site.audit.audit_status or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Audit API access</span>
+                    <strong>{{ site.audit.audit_api_access or "Not available" }}</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="detail-panel">
+            <div class="detail-panel__header">
+                <h2>Permissions</h2>
+            </div>
+            <div class="detail-list">
+                <div class="detail-row">
+                    <span>Overall status</span>
+                    <strong>{{ site.permissions.overall_status or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Granted</span>
+                    <strong>{{ site.permissions.granted_count }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Denied</span>
+                    <strong>{{ site.permissions.denied_count }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Total checked</span>
+                    <strong>{{ site.permissions.total_count }}</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="detail-panel detail-panel--wide">
+            <div class="detail-panel__header">
+                <h2>Snapshot & Billing Summary</h2>
+            </div>
+
+            <div class="detail-list">
+                <div class="detail-row">
+                    <span>Snapshot collected</span>
+                    <strong>{{ site.snapshot.collected_at or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Growth status</span>
+                    <strong>{{ site.snapshot.growth_status or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Delta available</span>
+                    <strong>{% if site.snapshot.delta_available %}Yes{% else %}No{% endif %}</strong>
+                </div>
+            </div>
+
+            {% if site.billing_summary.billing_cycle or site.billing_summary.next_bill_date or site.billing_summary.next_price_estimate %}
+                <div class="billing-summary-box">
+                    <div class="billing-summary-title">Billing summary</div>
+                    <div class="billing-summary-row">
+                        <span>Billing cycle</span>
+                        <strong>{{ site.billing_summary.billing_cycle or "Not available" }}</strong>
+                    </div>
+                    <div class="billing-summary-row">
+                        <span>Next bill date</span>
+                        <strong>{{ site.billing_summary.next_bill_date or "Not available" }}</strong>
+                    </div>
+                    <div class="billing-summary-row">
+                        <span>Next price estimate</span>
+                        <strong>{{ site.billing_summary.next_price_estimate or "Not available" }}</strong>
+                    </div>
+                </div>
+            {% endif %}
+        </article>
+    </section>
+{% endif %}
+{% endblock %}
+
+
+{% macro signal_class(value) -%}
+    {%- set text = (value or '')|string|lower -%}
+    {%- if 'error' in text or 'failed' in text or 'denied' in text or 'critical' in text or 'unavailable' in text -%}
+        signal-critical
+    {%- elif 'warning' in text or 'partial' in text or 'limited' in text or 'changed' in text or 'review' in text -%}
+        signal-warning

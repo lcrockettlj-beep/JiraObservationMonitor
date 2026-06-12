@@ -84,9 +84,11 @@ def normalize_backend_payload(raw: Dict[str, Any]) -> Dict[str, Any]:
         return {"collected_at": None, "sites": []}
 
     collected_at = (
-        raw.get("collected_at")
+        raw.get("run_timestamp_local")
+        or raw.get("collected_at")
         or raw.get("snapshot_collected_at")
         or raw.get("generated_at")
+        or raw.get("run_timestamp_utc")
     )
 
     sites = raw.get("sites")
@@ -108,10 +110,25 @@ def normalize_backend_payload(raw: Dict[str, Any]) -> Dict[str, Any]:
             "sites": [site for site in raw["data"]["sites"] if isinstance(site, dict)],
         }
 
+    # If sites are stored as a dict keyed by site name/url
+    if isinstance(raw.get("sites"), dict):
+        dict_sites = []
+        for _, value in raw["sites"].items():
+            if isinstance(value, dict):
+                dict_sites.append(value)
+        return {
+            "collected_at": collected_at,
+            "sites": dict_sites,
+        }
+
     possible_sites = []
     for _, value in raw.items():
         if isinstance(value, dict) and (
-            value.get("site_url") or value.get("url") or value.get("base_url")
+            value.get("site_url")
+            or value.get("url")
+            or value.get("base_url")
+            or value.get("site_name")
+            or value.get("site_key")
         ):
             possible_sites.append(value)
 
@@ -175,39 +192,117 @@ def _build_site_card(site: Dict[str, Any], fallback_collected_at: Optional[str])
     site_key = _slugify_site_name(site_name)
 
     metrics = SiteMetricViewModel(
-        project_count=_safe_int(_first(site, ["project_count", "projects_count"])) or 0,
-        issue_count=_safe_int(_first(site, ["issue_count", "issues_count"])) or 0,
-        unresolved_issue_count=_safe_int(_first(site, ["unresolved_issue_count"])) or 0,
-        updated_last_7_days_count=_safe_int(_first(site, ["updated_last_7_days_count"])) or 0,
+        project_count=_safe_int(
+            _deep_first(site, [
+                "project_count",
+                "projects_count",
+                "projects",
+                "project_total",
+                "counts.project_count",
+                "counts.projects",
+            ])
+        ) or 0,
+        issue_count=_safe_int(
+            _deep_first(site, [
+                "issue_count",
+                "issues_count",
+                "total_issues",
+                "issues",
+                "issue_total",
+                "counts.issue_count",
+                "counts.issues",
+                "metrics.issue_count",
+            ])
+        ) or 0,
+        unresolved_issue_count=_safe_int(
+            _deep_first(site, [
+                "unresolved_issue_count",
+                "unresolved_count",
+                "issues_unresolved",
+                "open_issues",
+                "counts.unresolved_issue_count",
+                "counts.unresolved",
+                "metrics.unresolved_issue_count",
+            ])
+        ) or 0,
+        updated_last_7_days_count=_safe_int(
+            _deep_first(site, [
+                "updated_last_7_days_count",
+                "updated_7d_count",
+                "updated_last_7_days",
+                "recently_updated_count",
+                "issues_updated_last_7_days",
+                "counts.updated_last_7_days_count",
+                "counts.updated_7d",
+                "metrics.updated_last_7_days_count",
+            ])
+        ) or 0,
     )
 
     users = SiteUsersViewModel(
-        total_users=_safe_int(_first(site, ["total_users"])),
-        active_users=_safe_int(_first(site, ["active_users"])),
-        inactive_users=_safe_int(_first(site, ["inactive_users"])),
+        total_users=_safe_int(_deep_first(site, ["total_users", "users.total_users"])),
+        active_users=_safe_int(_deep_first(site, ["active_users", "users.active_users"])),
+        inactive_users=_safe_int(_deep_first(site, ["inactive_users", "users.inactive_users"])),
     )
 
     licence = SiteLicenceViewModel(
-        licensed_users_estimate=_safe_int(_first(site, ["licensed_users_estimate"])),
-        seats=_safe_int(_first(site, ["seats"])),
-        remaining_seats=_safe_int(_first(site, ["remaining_seats"])),
-        licence_status=_as_str(_first(site, ["licence_status", "license_status"])),
-        licence_api_access=_as_str(_first(site, ["licence_api_access", "license_api_access"])),
+        licensed_users_estimate=_safe_int(
+            _deep_first(site, [
+                "licensed_users_estimate",
+                "license_users_estimate",
+                "licence.licensed_users_estimate",
+            ])
+        ),
+        seats=_safe_int(
+            _deep_first(site, [
+                "seats",
+                "seat_count",
+                "licence.seats",
+            ])
+        ),
+        remaining_seats=_safe_int(
+            _deep_first(site, [
+                "remaining_seats",
+                "seats_remaining",
+                "licence.remaining_seats",
+            ])
+        ),
+        licence_status=_as_str(
+            _deep_first(site, [
+                "licence_status",
+                "license_status",
+                "licence.licence_status",
+            ])
+        ),
+        licence_api_access=_as_str(
+            _deep_first(site, [
+                "licence_api_access",
+                "license_api_access",
+                "licence.licence_api_access",
+            ])
+        ),
     )
 
     audit = SiteAuditViewModel(
-        audit_status=_as_str(_first(site, ["audit_status"])),
-        audit_api_access=_as_str(_first(site, ["audit_api_access"])),
+        audit_status=_as_str(_deep_first(site, ["audit_status", "audit.audit_status"])),
+        audit_api_access=_as_str(_deep_first(site, ["audit_api_access", "audit.audit_api_access"])),
     )
 
     permissions = _extract_permissions_view_model(site)
 
     collected_at = (
-        _as_str(_first(site, ["collected_at", "snapshot_collected_at", "last_collected"]))
+        _as_str(_deep_first(site, [
+            "run_timestamp_local",
+            "collected_at",
+            "snapshot_collected_at",
+            "last_collected",
+            "run_timestamp_utc",
+        ]))
         or fallback_collected_at
     )
-    growth_status = _as_str(_first(site, ["growth_status"]))
-    delta_available = bool(_first(site, ["delta", "snapshot_delta", "delta_summary"]))
+
+    growth_status = _as_str(_deep_first(site, ["growth_status", "snapshot.growth_status"]))
+    delta_available = bool(_deep_first(site, ["delta", "snapshot_delta", "delta_summary", "snapshot.delta"]))
 
     snapshot = SiteSnapshotViewModel(
         collected_at=collected_at,
@@ -245,7 +340,13 @@ def _build_site_card(site: Dict[str, Any], fallback_collected_at: Optional[str])
 
 
 def _extract_permissions_view_model(site: Dict[str, Any]) -> SitePermissionsViewModel:
-    permissions = site.get("permissions") or site.get("permission_checker") or site.get("mypermissions")
+    permissions = (
+        site.get("permissions")
+        or site.get("permission_checker")
+        or site.get("mypermissions")
+        or _deep_first(site, ["permissions", "permission_checker", "mypermissions"])
+    )
+
     if not isinstance(permissions, dict):
         return SitePermissionsViewModel()
 
@@ -346,12 +447,28 @@ def _is_active_operational_site(site: Dict[str, Any]) -> bool:
 
 
 def _extract_site_url(site: Dict[str, Any]) -> str:
-    value = _as_str(_first(site, ["site_url", "url", "base_url"])) or ""
+    value = _as_str(
+        _deep_first(site, [
+            "site_url",
+            "url",
+            "base_url",
+            "site.url",
+            "site.site_url",
+        ])
+    ) or ""
     return value.rstrip("/")
 
 
 def _extract_site_name(site: Dict[str, Any], site_url: str) -> str:
-    explicit_name = _as_str(_first(site, ["site_name", "name", "site_key"]))
+    explicit_name = _as_str(
+        _deep_first(site, [
+            "site_name",
+            "name",
+            "site_key",
+            "site.name",
+            "site.site_name",
+        ])
+    )
     if explicit_name:
         return explicit_name
 
@@ -366,11 +483,22 @@ def _slugify_site_name(name: str) -> str:
     return name.strip().lower().replace(" ", "-").replace("_", "-")
 
 
-def _first(data: Dict[str, Any], keys: List[str]) -> Any:
-    for key in keys:
-        if key in data:
-            return data.get(key)
+def _deep_first(data: Dict[str, Any], paths: List[str]) -> Any:
+    for path in paths:
+        value = _deep_get(data, path)
+        if value is not None:
+            return value
     return None
+
+
+def _deep_get(data: Any, path: str) -> Any:
+    current = data
+    for part in path.split("."):
+        if isinstance(current, dict) and part in current:
+            current = current.get(part)
+        else:
+            return None
+    return current
 
 
 def _safe_int(value: Any) -> Optional[int]:

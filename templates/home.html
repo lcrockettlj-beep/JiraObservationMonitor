@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% macro state_label(value) -%}
+    {%- if value == "critical" -%}
+        Critical
+    {%- elif value == "warning" -%}
+        Warning
+    {%- elif value == "stable" -%}
+        Operationally Stable
+    {%- else -%}
+        Unknown
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro signal_class(value) -%}
+    {%- set text = (value or '')|string|lower -%}
+    {%- if 'error' in text or 'failed' in text or 'denied' in text or 'critical' in text or 'unavailable' in text -%}
+        signal-critical
+    {%- elif 'warning' in text or 'partial' in text or 'limited' in text or 'changed' in text or 'review' in text -%}
+        signal-warning
+    {%- elif 'ok' in text or 'healthy' in text or 'available' in text or 'success' in text or 'granted' in text -%}
+        signal-healthy
+    {%- else -%}
+        signal-neutral
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro render_site_card(site) -%}
+    <article class="site-card site-card--{{ site.status }}">
+        <div class="site-card__header">
+            <div>
+                <div class="site-card__title-row">
+                    <h3 class="site-card__title">{{ site.site_name }}</h3>
+                    <span class="status-badge status-badge--{{ site.status }}">
+                        {{ state_label(site.status) }}
+                    </span>
+                </div>
+                <div class="site-card__url">{{ site.site_url }}</div>
+            </div>
+
+            <a class="button button--ghost" href="{{ url_for('site_detail', site_key=site.site_key) }}">
+                Open site
+            </a>
+        </div>
+
+        <div class="metric-grid metric-grid--site">
+            <div class="metric-tile">
+                <div class="metric-label">Projects</div>
+                <div class="metric-value">{{ site.metrics.project_count }}</div>
+            </div>
+            <div class="metric-tile">
+                <div class="metric-label">Issues</div>
+                <div class="metric-value">{{ site.metrics.issue_count }}</div>
+            </div>
+            <div class="metric-tile">
+                <div class="metric-label">Unresolved</div>
+                <div class="metric-value">{{ site.metrics.unresolved_issue_count }}</div>
+            </div>
+            <div class="metric-tile">
+                <div class="metric-label">Updated 7d</div>
+                <div class="metric-value">{{ site.metrics.updated_last_7_days_count }}</div>
+            </div>
+        </div>
+
+        <div class="info-line-list">
+            <div class="info-line">
+                <span class="info-key">Users</span>
+                <span class="info-value">
+                    {% if site.users.total_users is not none %}
+                        {{ site.users.total_users }} total
+                        {% if site.users.active_users is not none %}| {{ site.users.active_users }} active{% endif %}
+                        {% if site.users.inactive_users is not none %}| {{ site.users.inactive_users }} inactive{% endif %}
+                    {% else %}
+                        Not available
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-line">
+                <span class="info-key">Licence</span>
+                <span class="info-value">
+                    {% if site.licence.licensed_users_estimate is not none %}
+                        Estimate {{ site.licence.licensed_users_estimate }}
+                    {% else %}
+                        Estimate not available
+                    {% endif %}
+
+                    {% if site.licence.seats is not none %}
+                        | Seats {{ site.licence.seats }}
+                    {% endif %}
+
+                    {% if site.licence.remaining_seats is not none %}
+                        | Remaining {{ site.licence.remaining_seats }}
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if site.usage_percent is not none %}
+                <div class="usage-bar-block">
+                    <div class="usage-bar__meta">
+                        <span>Licence usage</span>
+                        <span>{{ site.usage_percent }}%</span>
+                    </div>
+                    <div class="usage-bar">
+                        <div class="usage-bar__fill {% if site.usage_percent >= 90 %}usage-bar__fill--high{% elif site.usage_percent >= 70 %}usage-bar__fill--med{% else %}usage-bar__fill--low{% endif %}"
+                             style="width: {{ site.usage_percent }}%;"></div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if site.billing_summary.billing_cycle or site.billing_summary.next_bill_date or site.billing_summary.next_price_estimate %}
+                <div class="billing-pill-row">
+                    <span class="billing-pill-label">Billing</span>
+                    <span class="billing-pill-value">
+                        {% if site.billing_summary.billing_cycle %}{{ site.billing_summary.billing_cycle }}{% endif %}
+                        {% if site.billing_summary.next_bill_date %}• Next bill {{ site.billing_summary.next_bill_date }}{% endif %}
+                        {% if site.billing_summary.next_price_estimate %}• {{ site.billing_summary.next_price_estimate }}{% endif %}
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="signal-row">
+            <span class="signal-pill {{ signal_class(site.permissions.overall_status) }}">
+                Permissions: {{ site.permissions.overall_status or "unknown" }}
+            </span>
+
+            <span class="signal-pill {{ signal_class(site.audit.audit_status or site.audit.audit_api_access) }}">
+                Audit: {{ site.audit.audit_status or site.audit.audit_api_access or "unknown" }}
+            </span>
+
+            <span class="signal-pill {{ signal_class(site.licence.licence_status or site.licence.licence_api_access) }}">
+                Licence: {{ site.licence.licence_status or site.licence.licence_api_access or "unknown" }}
+            </span>
+
+            <span class="signal-pill {{ signal_class(site.snapshot.growth_status) }}">
+                Snapshot:
+                {% if site.snapshot.growth_status %}
+                    {{ site.snapshot.growth_status }}
+                {% elif site.snapshot.delta_available %}
+                    changed
+                {% else %}
+                    ok
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="site-card__footer">
+            <div class="footer-meta">
+                Last collected:
+                <strong>{{ site.last_collected or home.collected_at or "Not available" }}</strong>
+            </div>
+            <a class="button button--primary" href="{{ url_for('site_detail', site_key=site.site_key) }}">
+                Open site dashboard
+            </a>
+        </div>
+    </article>
+{%- endmacro %}
+
+{% block content %}
+<section class="hero-panel">
+    <div class="hero-panel__content">
+        <div class="hero-panel__left">
+            <div class="hero-eyebrow">Operational homepage</div>
+            <h1 class="hero-title">{{ home.title }}</h1>
+            <p class="hero-subtitle">{{ home.subtitle }}</p>
+
+            <div class="hero-pill-row">
+                <span class="hero-pill">Live snapshot</span>
+                <span class="hero-pill">Operational sites only</span>
+                <span class="hero-pill">Grouped by operational state</span>
+                <span class="hero-pill">Real backend data only</span>
+            </div>
+        </div>
+
+        <div class="hero-panel__right">
+            <div class="hero-meta-card">
+                <div class="hero-meta-label">Last snapshot</div>
+                <div class="hero-meta-value">{{ home.collected_at or "Not available" }}</div>
+            </div>
+            <div class="hero-meta-card">
+                <div class="hero-meta-label">Operational sites</div>
+                <div class="hero-meta-value">{{ home.active_site_count }}</div>
+            </div>
+            <div class="hero-action-row">
+                <a class="button button--primary" href="{{ url_for('home') }}">Refresh</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="summary-grid">
+    <article class="summary-card">
+        <div class="summary-card__label">Operational Sites</div>
+        <div class="summary-card__value">{{ home.summary.active_site_count }}</div>
+    </article>
+    <article class="summary-card summary-card--critical">
+        <div class="summary-card__label">Critical</div>
+        <div class="summary-card__value">{{ home.summary.critical_count }}</div>
+    </article>
+    <article class="summary-card summary-card--warning">
+        <div class="summary-card__label">Warning</div>
+        <div class="summary-card__value">{{ home.summary.warning_count }}</div>
+    </article>
+    <article class="summary-card summary-card--stable">
+        <div class="summary-card__label">Operationally Stable</div>
+        <div class="summary-card__value">{{ home.summary.stable_count }}</div>
+    </article>
+    <article class="summary-card">
+        <div class="summary-card__label">Projects</div>
+        <div class="summary-card__value">{{ home.summary.total_projects }}</div>
+    </article>
+    <article class="summary-card">
+        <div class="summary-card__label">Issues</div>
+        <div class="summary-card__value">{{ home.summary.total_issues }}</div>
+    </article>
+    <article class="summary-card">
+        <div class="summary-card__label">Unresolved</div>
+        <div class="summary-card__value">{{ home.summary.total_unresolved }}</div>
+    </article>
+    <article class="summary-card">
+        <div class="summary-card__label">Updated Last 7 Days</div>
+        <div class="summary-card__value">{{ home.summary.total_updated_last_7_days }}</div>
+    </article>
+</section>
+
+<section class="group-section">
+    <div class="section-heading">
+        <div>
+            <div class="section-kicker">Priority 1</div>
+            <h2>Critical</h2>
+        </div>
+        <span class="group-count">{{ home.summary.critical_count }}</span>
+    </div>
+
+    {% if home.critical_sites %}
+        <div class="site-card-grid">
+            {% for site in home.critical_sites %}
+                {{ render_site_card(site) }}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">No sites in this state</div>
+    {% endif %}
+</section>
+
+<section class="group-section">
+    <div class="section-heading">
+        <div>
+            <div class="section-kicker">Priority 2</div>
+            <h2>Warning</h2>
+        </div>
+        <span class="group-count">{{ home.summary.warning_count }}</span>
+    </div>
+
+    {% if home.warning_sites %}
+        <div class="site-card-grid">
+            {% for site in home.warning_sites %}
+                {{ render_site_card(site) }}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">No sites in this state</div>
+    {% endif %}
+</section>
+
+<section class="group-section">
+    <div class="section-heading">
+        <div>
+            <div class="section-kicker">Priority 3</div>
+            <h2>Operationally Stable</h2>
+        </div>
+        <span class="group-count">{{ home.summary.stable_count }}</span>
+    </div>
+
+    {% if home.stable_sites %}
+        <div class="site-card-grid">
+            {% for site in home.stable_sites %}
+                {{ render_site_card(site) }}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">No sites in this state</div>
+    {% endif %}
+</section>
+
+<section class="page-footer-meta">
+    <div>Data freshness: <strong>{{ home.collected_at or "Not available" }}</strong></div>
+    <div>Operational sites evaluated: <strong>{{ home.active_site_count }}</strong></div>
+</section>
+{% endblock %}

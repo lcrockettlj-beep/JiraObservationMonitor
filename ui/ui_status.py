@@ -1,8 +1,8 @@
 from typing import Any, Dict, Iterable, Optional
 
 
-HEALTHY_WORDS = {"ok", "healthy", "success", "available", "granted", "pass", "passed"}
-WARNING_WORDS = {"warning", "partial", "limited", "degraded", "changed", "review"}
+HEALTHY_WORDS = {"ok", "healthy", "success", "available", "granted", "pass", "passed", "stable"}
+WARNING_WORDS = {"warning", "partial", "limited", "degraded", "changed", "review", "permission_limited"}
 CRITICAL_WORDS = {"error", "failed", "failure", "denied", "unavailable", "missing", "critical"}
 
 
@@ -16,11 +16,22 @@ def _contains_any(text: str, words: Iterable[str]) -> bool:
     return any(word in text for word in words)
 
 
-def _extract_first(data: Dict[str, Any], keys: Iterable[str]) -> Optional[Any]:
-    for key in keys:
-        if key in data:
-            return data.get(key)
+def _deep_first(data: Dict[str, Any], paths: Iterable[str]) -> Any:
+    for path in paths:
+        value = _deep_get(data, path)
+        if value is not None:
+            return value
     return None
+
+
+def _deep_get(data: Any, path: str) -> Any:
+    current = data
+    for part in path.split("."):
+        if isinstance(current, dict) and part in current:
+            current = current.get(part)
+        else:
+            return None
+    return current
 
 
 def _safe_int(value: Any) -> Optional[int]:
@@ -37,7 +48,12 @@ def _safe_int(value: Any) -> Optional[int]:
 
 
 def _extract_permission_status(site: Dict[str, Any]) -> Optional[str]:
-    permissions = site.get("permissions") or site.get("permission_checker") or site.get("mypermissions")
+    permissions = (
+        site.get("permissions")
+        or site.get("permission_checker")
+        or site.get("mypermissions")
+        or _deep_first(site, ["permissions", "permission_checker", "mypermissions"])
+    )
 
     if isinstance(permissions, dict):
         if "overall_status" in permissions:
@@ -78,21 +94,26 @@ def classify_state(site: Dict[str, Any]) -> str:
     - warning
     - stable
 
-    This uses only real backend truth fields and does not invent risk
-    thresholds from issue counts or project counts.
+    Uses only backend truth.
     """
     permission_status = _norm(_extract_permission_status(site))
-    audit_status = _norm(_extract_first(site, ["audit_status"]))
-    audit_api_access = _norm(_extract_first(site, ["audit_api_access"]))
-    licence_status = _norm(_extract_first(site, ["licence_status", "license_status"]))
-    licence_api_access = _norm(_extract_first(site, ["licence_api_access", "license_api_access"]))
-    growth_status = _norm(_extract_first(site, ["growth_status"]))
-    collected_at = _extract_first(site, ["collected_at", "snapshot_collected_at", "last_collected"])
+    audit_status = _norm(_deep_first(site, ["audit_status", "audit.audit_status"]))
+    audit_api_access = _norm(_deep_first(site, ["audit_api_access", "audit.audit_api_access"]))
+    licence_status = _norm(_deep_first(site, ["licence_status", "license_status", "licence.licence_status"]))
+    licence_api_access = _norm(_deep_first(site, ["licence_api_access", "license_api_access", "licence.licence_api_access"]))
+    growth_status = _norm(_deep_first(site, ["growth_status", "snapshot.growth_status"]))
+    collected_at = _deep_first(site, [
+        "run_timestamp_local",
+        "collected_at",
+        "snapshot_collected_at",
+        "last_collected",
+        "run_timestamp_utc",
+    ])
 
-    project_count = _safe_int(_extract_first(site, ["project_count", "projects_count"]))
-    issue_count = _safe_int(_extract_first(site, ["issue_count", "issues_count"]))
-    unresolved_issue_count = _safe_int(_extract_first(site, ["unresolved_issue_count"]))
-    updated_last_7_days_count = _safe_int(_extract_first(site, ["updated_last_7_days_count"]))
+    project_count = _safe_int(_deep_first(site, ["project_count", "projects_count", "projects", "project_total"]))
+    issue_count = _safe_int(_deep_first(site, ["issue_count", "issues_count", "total_issues", "issues", "issue_total"]))
+    unresolved_issue_count = _safe_int(_deep_first(site, ["unresolved_issue_count", "unresolved_count", "issues_unresolved", "open_issues"]))
+    updated_last_7_days_count = _safe_int(_deep_first(site, ["updated_last_7_days_count", "updated_7d_count", "updated_last_7_days", "recently_updated_count"]))
 
     has_core_metrics = any(
         value is not None
@@ -130,7 +151,7 @@ def classify_state(site: Dict[str, Any]) -> str:
     if any(_contains_any(signal, WARNING_WORDS) for signal in warning_signals if signal):
         return "warning"
 
-    remaining_seats = _safe_int(_extract_first(site, ["remaining_seats"]))
+    remaining_seats = _safe_int(_deep_first(site, ["remaining_seats", "seats_remaining"]))
     if remaining_seats is not None and remaining_seats <= 0:
         return "warning"
 
