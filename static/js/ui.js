@@ -1,7 +1,7 @@
-document.addEventListener("DOMContentLoaded", function () {document.addEventListener("DOMContentLoaded", function    const root = document.documentElement;
+document.addEventListener("DOMContentLoaded", function () {
+    const root = document.documentElement;
     const toggleButton = document.getElementById("theme-toggle");
     const toggleIcon = document.getElementById("theme-toggle-icon");
-    const toggleText = document.getElementById("theme-toggle-text");
     const refreshButtons = document.querySelectorAll('[data-action="refresh"]');
     const collapseButtons = document.querySelectorAll("[data-collapse-target]");
 
@@ -19,18 +19,18 @@ document.addEventListener("DOMContentLoaded", function () {document.addEventList
     }
 
     function updateToggleUi(theme) {
-        if (!toggleButton || !toggleIcon || !toggleText) {
+        if (!toggleButton || !toggleIcon) {
             return;
         }
 
         if (theme === "light") {
             toggleIcon.textContent = "🌞";
-            toggleText.textContent = "Light mode";
             toggleButton.setAttribute("aria-label", "Switch to dark mode");
+            toggleButton.setAttribute("title", "Switch to dark mode");
         } else {
             toggleIcon.textContent = "🌙";
-            toggleText.textContent = "Dark mode";
             toggleButton.setAttribute("aria-label", "Switch to light mode");
+            toggleButton.setAttribute("title", "Switch to light mode");
         }
     }
 
@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {document.addEventList
         const targetId = button.getAttribute("data-collapse-target");
         const target = document.getElementById(targetId);
         const icon = button.querySelector(".collapse-button__icon");
-        const text = button.querySelector(".collapse-button__text");
 
         if (!target) {
             return;
@@ -59,13 +58,15 @@ document.addEventListener("DOMContentLoaded", function () {document.addEventList
         if (collapsed) {
             target.classList.add("is-collapsed");
             button.setAttribute("aria-expanded", "false");
+            button.setAttribute("aria-label", "Expand section");
+            button.setAttribute("title", "Expand section");
             if (icon) icon.textContent = "+";
-            if (text) text.textContent = "Expand";
         } else {
             target.classList.remove("is-collapsed");
             button.setAttribute("aria-expanded", "true");
+            button.setAttribute("aria-label", "Collapse section");
+            button.setAttribute("title", "Collapse section");
             if (icon) icon.textContent = "−";
-            if (text) text.textContent = "Collapse";
         }
     }
 

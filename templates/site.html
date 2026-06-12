@@ -7,7 +7,9 @@
         <div class="hero-panel__left">
             <div class="hero-eyebrow">Site view</div>
             <h1 class="hero-title">Site not found</h1>
-            <p class="hero-subtitle">The selected site could not be resolved from the current data view.</p>
+            <p class="hero-subtitle">
+                The selected site could not be resolved from the current data view.
+            </p>
             <div class="hero-action-row">
                 <a href="{{ url_for('home') }}" class="button button--primary">Back to homepage</a>
             </div>
@@ -72,16 +74,16 @@
         </div>
         <div class="detail-list">
             <div class="detail-row">
-                <span>Total users</span>
+                <span>Users with site access</span>
                 <strong>{{ site.users.total_users if site.users.total_users is not none else "Not available" }}</strong>
             </div>
             <div class="detail-row">
-                <span>Active users</span>
-                <strong>{{ site.users.active_users if site.users.active_users is not none else "Not available" }}</strong>
+                <span>Active users for this site</span>
+                <strong>Not available</strong>
             </div>
             <div class="detail-row">
-                <span>Inactive users</span>
-                <strong>{{ site.users.inactive_users if site.users.inactive_users is not none else "Not available" }}</strong>
+                <span>Inactive users for this site</span>
+                <strong>Not available</strong>
             </div>
         </div>
     </article>
@@ -218,7 +220,6 @@
         <div class="detail-panel__header">
             <h2>Projects</h2>
         </div>
-
         {% if site.project_sample %}
             <div class="project-list">
                 {% for project in site.project_sample %}

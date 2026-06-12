@@ -21,6 +21,7 @@
 </head>
 <body>
     {% set current_site_key = site.site_key if site is defined and site else '' %}
+
     <div class="app-shell">
         <header class="top-nav">
             <div class="brand-block">
@@ -42,6 +43,7 @@
                 >
                     Home
                 </a>
+
                 {% for tab in home.site_tabs %}
                     <a
                         href="{{ url_for('site_detail', site_key=tab.site_key) }}"
@@ -55,12 +57,12 @@
             <div class="top-actions">
                 <button
                     id="theme-toggle"
-                    class="button button--ghost button--sm"
+                    class="button button--ghost button--sm icon-button"
                     type="button"
                     aria-label="Switch theme"
+                    title="Switch theme"
                 >
                     <span id="theme-toggle-icon">🌙</span>
-                    <span id="theme-toggle-text">Dark mode</span>
                 </button>
             </div>
         </header>

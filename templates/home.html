@@ -17,18 +17,15 @@
         </div>
 
         <div class="hero-panel__right hero-panel__right--home">
-            <div class="hero-meta-card">
+            <div class="hero-meta-card hero-meta-card--snapshot">
                 <div class="hero-meta-label">Latest snapshot</div>
                 <div class="hero-meta-value">{{ home.collected_at or "Not available" }}</div>
             </div>
-
-            <div class="hero-action-row">
-                <button class="button button--primary" type="button" data-action="refresh </div>
         </div>
     </div>
 </section>
 
-<section class="summary-grid summary-grid--home">
+<section class="summary-grid summary-grid--home summary-grid--home-separated">
     <article class="summary-card summary-card--focus">
         <div class="summary-card__label">Active Sites</div>
         <div class="summary-card__value">{{ home.summary.active_site_count }}</div>

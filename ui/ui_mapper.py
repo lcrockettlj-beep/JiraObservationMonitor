@@ -1,7 +1,7 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from ui.view_models import (
     AuditRecordSampleViewModel,
@@ -20,7 +20,6 @@ from ui.view_models import (
     SiteUsersViewModel,
 )
 from ui.ui_status import classify_state
-
 
 ACTIVE_SITE_URLS = {
     "https://gli-global-technology.atlassian.net",
@@ -55,24 +54,35 @@ BILLING_TRUTH: Dict[str, Dict[str, Optional[str]]] = {
 
 def load_latest_backend_payload(base_dir: Optional[Path] = None) -> Dict[str, Any]:
     root = Path(base_dir or Path.cwd())
-    latest_run_path = root / "latest_run.json"
 
-    if not latest_run_path.exists():
-        return {
-            "collected_at": None,
-            "sites": [],
-        }
+    best_payload = {"collected_at": None, "sites": []}
+    best_dt: Optional[datetime] = None
 
-    try:
-        with latest_run_path.open("r", encoding="utf-8") as file:
-            raw = json.load(file)
-    except Exception:
-        return {
-            "collected_at": None,
-            "sites": [],
-        }
+    for file_name in ["latest_run.json", "latest_run_pretty.json"]:
+        path = root / file_name
+        if not path.exists():
+            continue
 
-    return normalize_backend_payload(raw)
+        try:
+            with path.open("r", encoding="utf-8") as file:
+                raw = json.load(file)
+        except Exception:
+            continue
+
+        payload = normalize_backend_payload(raw)
+        candidate_ts = payload.get("collected_at")
+        candidate_dt = _parse_datetime(candidate_ts)
+
+        if best_dt is None:
+            best_payload = payload
+            best_dt = candidate_dt
+            continue
+
+        if candidate_dt is not None and (best_dt is None or candidate_dt > best_dt):
+            best_payload = payload
+            best_dt = candidate_dt
+
+    return best_payload
 
 
 def normalize_backend_payload(raw: Dict[str, Any]) -> Dict[str, Any]:
@@ -167,33 +177,9 @@ def _build_site_card(
         updated_last_7_days_count=_safe_int(_deep_first(site, ["issue_count_updated_last_7d"])) or 0,
     )
 
-    users = SiteUsersViewModel(
-        total_users=_safe_int(_deep_first(site, ["user_summary.total_users"])),
-        active_users=_safe_int(_deep_first(site, ["user_summary.active_users"])),
-        inactive_users=_safe_int(_deep_first(site, ["user_summary.inactive_users"])),
-    )
+    users = _extract_site_users(site)
 
-    licensed_users_estimate = _safe_int(
-        _deep_first(site, ["licence_summary.licensed_users_estimate"])
-    )
-    seats = _safe_int(
-        _deep_first(
-            site,
-            [
-                "licence_summary.products.0.number_of_seats",
-                "application_role_sample.0.number_of_seats",
-            ],
-        )
-    )
-    remaining_seats = _safe_int(
-        _deep_first(
-            site,
-            [
-                "licence_summary.products.0.remaining_seats",
-                "application_role_sample.0.remaining_seats",
-            ],
-        )
-    )
+    licensed_users_estimate, seats, remaining_seats = _extract_licence_numbers(site)
 
     licence = SiteLicenceViewModel(
         licensed_users_estimate=licensed_users_estimate,
@@ -216,17 +202,18 @@ def _build_site_card(
 
     permissions = _extract_permissions_view_model(site)
 
-    collected_at = (
+    collected_at_raw = (
         _as_str(
             _deep_first(
                 site,
                 [
                     "collected_at_utc",
+                    "run_timestamp_utc",
+                    "raw_collection_summary.collected_at_utc",
                     "run_timestamp_local",
                     "collected_at",
                     "snapshot_collected_at",
                     "last_collected",
-                    "run_timestamp_utc",
                 ],
             )
         )
@@ -258,7 +245,7 @@ def _build_site_card(
     )
 
     snapshot = SiteSnapshotViewModel(
-        collected_at=collected_at,
+        collected_at=_format_timestamp_for_ui(collected_at_raw),
         growth_status=_as_str(_deep_first(site, ["growth_status"])),
         delta_available=delta_available,
         delta=snapshot_delta,
@@ -302,8 +289,78 @@ def _build_site_card(
         server_info=server_info,
         project_sample=project_sample,
         usage_percent=usage_percent,
-        last_collected=collected_at,
+        last_collected=_format_timestamp_for_ui(collected_at_raw),
     )
+
+
+def _extract_site_users(site: Dict[str, Any]) -> SiteUsersViewModel:
+    """
+    Site-level user display must use only users with access to the site.
+    Do NOT show estate-wide total_users on a site card/page.
+    """
+    site_access_total = _extract_site_access_total(site)
+
+    return SiteUsersViewModel(
+        total_users=site_access_total,
+        active_users=None,
+        inactive_users=None,
+    )
+
+
+def _extract_site_access_total(site: Dict[str, Any]) -> Optional[int]:
+    direct_estimate = _safe_int(_deep_first(site, ["licence_summary.licensed_users_estimate"]))
+    if direct_estimate is not None:
+        return direct_estimate
+
+    licence_products = _deep_first(site, ["licence_summary.products"])
+    if isinstance(licence_products, list):
+        for product in licence_products:
+            if isinstance(product, dict):
+                user_count = _safe_int(product.get("user_count"))
+                if user_count is not None:
+                    return user_count
+
+    app_role_sample = _deep_first(site, ["application_role_sample"])
+    if isinstance(app_role_sample, list):
+        for role in app_role_sample:
+            if isinstance(role, dict):
+                user_count = _safe_int(role.get("user_count"))
+                if user_count is not None:
+                    return user_count
+
+    return None
+
+
+def _extract_licence_numbers(site: Dict[str, Any]) -> Tuple[Optional[int], Optional[int], Optional[int]]:
+    licensed_users_estimate = _safe_int(
+        _deep_first(site, ["licence_summary.licensed_users_estimate"])
+    )
+
+    product_candidates: List[Dict[str, Any]] = []
+
+    licence_products = _deep_first(site, ["licence_summary.products"])
+    if isinstance(licence_products, list):
+        product_candidates.extend([item for item in licence_products if isinstance(item, dict)])
+
+    app_role_sample = _deep_first(site, ["application_role_sample"])
+    if isinstance(app_role_sample, list):
+        product_candidates.extend([item for item in app_role_sample if isinstance(item, dict)])
+
+    seats = None
+    remaining_seats = None
+
+    for item in product_candidates:
+        if seats is None:
+            seats = _safe_int(item.get("number_of_seats"))
+        if remaining_seats is None:
+            remaining_seats = _safe_int(item.get("remaining_seats"))
+        if licensed_users_estimate is None:
+            licensed_users_estimate = _safe_int(item.get("user_count"))
+
+        if licensed_users_estimate is not None and seats is not None:
+            break
+
+    return licensed_users_estimate, seats, remaining_seats
 
 
 def _extract_permissions_view_model(site: Dict[str, Any]) -> SitePermissionsViewModel:
@@ -337,7 +394,6 @@ def _extract_project_sample(site: Dict[str, Any]) -> List[SiteProjectSampleViewM
         return []
 
     projects: List[SiteProjectSampleViewModel] = []
-
     for project in sample[:20]:
         if not isinstance(project, dict):
             continue
@@ -352,7 +408,6 @@ def _extract_project_sample(site: Dict[str, Any]) -> List[SiteProjectSampleViewM
                 is_private=project.get("is_private"),
             )
         )
-
     return projects
 
 
@@ -374,7 +429,6 @@ def _extract_audit_records_sample(site: Dict[str, Any]) -> List[AuditRecordSampl
         return []
 
     output: List[AuditRecordSampleViewModel] = []
-
     for record in records[:8]:
         if not isinstance(record, dict):
             continue
@@ -387,7 +441,7 @@ def _extract_audit_records_sample(site: Dict[str, Any]) -> List[AuditRecordSampl
         output.append(
             AuditRecordSampleViewModel(
                 audit_id=_as_str(record.get("id")),
-                created=_as_str(record.get("created")),
+                created=_format_timestamp_for_ui(_as_str(record.get("created"))),
                 category=_as_str(record.get("category")),
                 summary=_as_str(record.get("summary")),
                 object_name=_as_str(object_name),
@@ -401,31 +455,47 @@ def _pick_latest_collected_at(
     cards: List[SiteCardViewModel],
     fallback: Optional[str],
 ) -> Optional[str]:
-    timestamps = [card.last_collected for card in cards if card.last_collected]
-    if not timestamps:
+    raw_timestamps = [card.last_collected for card in cards if card.last_collected]
+
+    if fallback:
+        raw_timestamps.append(fallback)
+
+    if not raw_timestamps:
         return fallback
 
     parsed = []
-    for timestamp in timestamps:
+    for timestamp in raw_timestamps:
         dt = _parse_datetime(timestamp)
         if dt is not None:
             parsed.append((dt, timestamp))
 
     if not parsed:
-        return timestamps[0]
+        return _format_timestamp_for_ui(raw_timestamps[0])
 
     parsed.sort(key=lambda item: item[0], reverse=True)
-    return parsed[0][1]
+    return _format_timestamp_for_ui(parsed[0][1])
 
 
-def _parse_datetime(value: str) -> Optional[datetime]:
+def _parse_datetime(value: Optional[str]) -> Optional[datetime]:
     if not value:
         return None
 
     try:
-        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
     except ValueError:
         return None
+
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(timezone.utc).replace(tzinfo=None)
+
+    return dt
+
+
+def _format_timestamp_for_ui(value: Optional[str]) -> Optional[str]:
+    dt = _parse_datetime(value)
+    if dt is None:
+        return value
+    return dt.strftime("%d %b %Y %H:%M UTC")
 
 
 def _compute_usage_percent(
