@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
 <section class="hero-panel home-hero">
     <div class="hero-panel__content">
@@ -6,6 +7,7 @@
             <div class="hero-eyebrow">Operational homepage</div>
             <h1 class="hero-title">{{ home.title }}</h1>
             <p class="hero-subtitle">{{ home.subtitle }}</p>
+
             <div class="hero-pill-row">
                 <span class="hero-pill">Active operational sites only</span>
                 <span class="hero-pill">Real backend contract data</span>
@@ -26,7 +28,7 @@
             </div>
 
             <div class="hero-action-row">
-                <button class="button button--primary" type="button" data-action="refresh      </div>
+                <button class="button button--primary" type="button" data-action="refresh </div>
         </div>
     </div>
 </section>
@@ -63,7 +65,7 @@
     </article>
 
     <article class="summary-card">
-        <div class="summary-card__label">Unresolved</div>
+        <div class="summary-card__label">Open issues</div>
         <div class="summary-card__value">{{ home.summary.total_unresolved }}</div>
     </article>
 
@@ -77,10 +79,9 @@
     <section class="group-section group-section--critical group-section--equal">
         <div class="section-heading">
             <div>
-                <div class="section-kicker">Priority 1</div>
+                <div class="section-kicker">Highest attention</div>
                 <h2>Critical</h2>
             </div>
-
             <div class="section-heading__actions">
                 <span class="group-count">{{ home.summary.critical_count }}</span>
                 <button
@@ -109,13 +110,6 @@
                                     </div>
                                     <div class="site-card__url">{{ site.site_url }}</div>
                                 </div>
-
-                                <a
-                                    href="{{ url_for('site_detail', site_key=site.site_key) }}"
-                                    class="button button--ghost button--sm"
-                                >
-                                    Open site
-                                </a>
                             </div>
 
                             <div class="metric-grid metric-grid--site">
@@ -142,7 +136,7 @@
                                     href="{{ url_for('site_detail', site_key=site.site_key) }}"
                                     class="button button--primary button--sm"
                                 >
-                                    Open site dashboard
+                                    View details
                                 </a>
                             </div>
                         </article>
@@ -157,10 +151,9 @@
     <section class="group-section group-section--warning group-section--equal">
         <div class="section-heading">
             <div>
-                <div class="section-kicker">Priority 2</div>
+                <div class="section-kicker">Needs review</div>
                 <h2>Warning</h2>
             </div>
-
             <div class="section-heading__actions">
                 <span class="group-count">{{ home.summary.warning_count }}</span>
                 <button
@@ -189,13 +182,6 @@
                                     </div>
                                     <div class="site-card__url">{{ site.site_url }}</div>
                                 </div>
-
-                                <a
-                                    href="{{ url_for('site_detail', site_key=site.site_key) }}"
-                                    class="button button--ghost button--sm"
-                                >
-                                    Open site
-                                </a>
                             </div>
 
                             <div class="metric-grid metric-grid--site">
@@ -222,7 +208,7 @@
                                     href="{{ url_for('site_detail', site_key=site.site_key) }}"
                                     class="button button--primary button--sm"
                                 >
-                                    Open site dashboard
+                                    View details
                                 </a>
                             </div>
                         </article>
@@ -241,7 +227,6 @@
             <div class="section-kicker">Priority 3</div>
             <h2>Operationally Stable</h2>
         </div>
-
         <div class="section-heading__actions">
             <span class="group-count">{{ home.summary.stable_count }}</span>
             <button

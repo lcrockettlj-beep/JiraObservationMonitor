@@ -1,5 +1,5 @@
 {
-  "generated_at_local": "2026-06-12T08:58:35.526513",
+  "generated_at_local": "2026-06-12T13:54:59.667266",
   "summary": {
     "site_count": 3,
     "healthy_count": 3,
@@ -15,8 +15,8 @@
     "total_permission_limited_checks": 4
   },
   "raw_collection_summary": {
-    "collected_at_utc": "2026-06-12T07:58:30.228999+00:00",
-    "collection_duration_seconds": 5.2717,
+    "collected_at_utc": "2026-06-12T12:54:54.437152+00:00",
+    "collection_duration_seconds": 5.2134,
     "site_count": 3,
     "excluded_sites": [
       {
@@ -68,7 +68,7 @@
     "site_count": 3,
     "warning_or_critical_streak_sites": 0,
     "rising_unresolved_sites": 0,
-    "rising_risk_sites": 2,
+    "rising_risk_sites": 1,
     "recurring_blocking_failure_sites": 0
   },
   "top_sites": [
@@ -471,7 +471,7 @@
   ],
   "snapshot_files": {
     "latest_file": "snapshots\\latest_snapshot.json",
-    "timestamp_file": "snapshots\\2026-06-12\\snapshot_2026-06-12_08-58-35.json",
+    "timestamp_file": "snapshots\\2026-06-12\\snapshot_2026-06-12_13-54-59.json",
     "index_file": "snapshots\\snapshot_index.json"
   }
 }

@@ -1,11 +1,11 @@
 # Jira Observation Monitor Backend Summary
 
-- **Generated:** 2026-06-12T08:58:35.526513
+- **Generated:** 2026-06-12T13:54:59.667266
 - **Sites total:** 3
 - **Healthy / Warning / Critical:** 3 / 0 / 0
 - **Total risk score:** 6
 - **Average risk score:** 2.0
-- **Collection duration (sec):** 5.2717
+- **Collection duration (sec):** 5.2134
 - **Endpoint checks passed / failed:** 26 / 4
 
 ## Delta summary
