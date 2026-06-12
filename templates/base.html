@@ -4,11 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ home.title if home and home.title else "Jira Observation Monitor" }}</title>
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem("jom-theme");
+                var theme = (saved === "light" || saved === "dark")
+                    ? saved
+                    : ((window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark");
+                document.documentElement.setAttribute("data-theme", theme);
+            } catch (e) {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
 </head>
 <body>
     {% set current_site_key = site.site_key if site is defined and site else '' %}
-
     <div class="app-shell">
         <header class="top-nav">
             <div class="brand-block">
@@ -30,7 +42,6 @@
                 >
                     Home
                 </a>
-
                 {% for tab in home.site_tabs %}
                     <a
                         href="{{ url_for('site_detail', site_key=tab.site_key) }}"
@@ -46,7 +57,7 @@
                     id="theme-toggle"
                     class="button button--ghost button--sm"
                     type="button"
-                    aria-label="Toggle dark mode"
+                    aria-label="Switch theme"
                 >
                     <span id="theme-toggle-icon">🌙</span>
                     <span id="theme-toggle-text">Dark mode</span>

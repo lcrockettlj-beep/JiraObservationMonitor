@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 {% if not site %}
 <section class="hero-panel">
@@ -15,14 +14,14 @@
     </div>
 </section>
 {% else %}
-<section class="hero-panel">
-    <div class="hero-panel__content">
+<section class="hero-panel hero-panel--site">
+    <div class="hero-panel__content hero-panel__content--site">
         <div class="hero-panel__left">
             <div class="hero-eyebrow">Site dashboard</div>
-            <h1 class="hero-title">{{ site.site_name }}</h1>
+            <h1 class="hero-title hero-title--site">{{ site.site_name }}</h1>
             <p class="hero-subtitle">{{ site.site_url }}</p>
 
-            <div class="hero-pill-row">
+            <div class="hero-pill-row hero-pill-row--site">
                 <span class="hero-pill">Projects: {{ site.metrics.project_count }}</span>
                 <span class="hero-pill">Issues: {{ site.metrics.issue_count }}</span>
                 <span class="hero-pill">Unresolved: {{ site.metrics.unresolved_issue_count }}</span>
@@ -30,15 +29,10 @@
             </div>
         </div>
 
-        <div class="hero-panel__right">
-            <div class="hero-meta-card">
+        <div class="hero-panel__right hero-panel__right--site">
+            <div class="hero-meta-card hero-meta-card--compact">
                 <div class="hero-meta-label">Last collected</div>
-                <div class="hero-meta-value">{{ site.last_collected or home.collected_at or "Not available" }}</div>
-            </div>
-
-            <div class="hero-meta-card">
-                <div class="hero-meta-label">Server title</div>
-                <div class="hero-meta-value">{{ site.server_info.server_title or "Not available" }}</div>
+                <div class="hero-meta-value hero-meta-value--timestamp">{{ site.last_collected or home.collected_at or "Not available" }}</div>
             </div>
 
             <div class="hero-action-row">
@@ -67,7 +61,7 @@
     </article>
 </section>
 
-<section class="detail-grid">
+<section class="detail-grid detail-grid--site">
     <article class="detail-panel">
         <div class="detail-panel__header">
             <h2>Users</h2>
@@ -222,7 +216,7 @@
 
     <article class="detail-panel detail-panel--wide">
         <div class="detail-panel__header">
-            <h2>Project Sample</h2>
+            <h2>Projects</h2>
         </div>
 
         {% if site.project_sample %}
@@ -233,6 +227,7 @@
                             <div class="project-key">{{ project.key }}</div>
                             <div class="project-name">{{ project.name }}</div>
                         </div>
+
                         <div class="project-row__meta">
                             {% if project.project_type_key %}
                                 <span class="mini-pill">{{ project.project_type_key }}</span>
@@ -248,7 +243,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div class="empty-state">No project sample data available</div>
+            <div class="empty-state">No project data available</div>
         {% endif %}
     </article>
 </section>
