@@ -18,7 +18,7 @@
 <section class="hero-panel hero-panel--site">
     <div class="hero-panel__content hero-panel__content--site">
         <div class="hero-panel__left">
-            <div class="hero-eyebrow">Site dashboard</div>
+            <div class="hero-eyebrow">Site details</div>
             <h1 class="hero-title hero-title--site">{{ site.site_name }}</h1>
             <p class="hero-subtitle">{{ site.site_url }}</p>
 
@@ -218,6 +218,7 @@
         <div class="detail-panel__header">
             <h2>Projects</h2>
         </div>
+
         {% if site.project_sample %}
             <div class="project-list">
                 {% for project in site.project_sample %}

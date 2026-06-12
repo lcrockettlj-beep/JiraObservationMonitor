@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const root = document.documentElement;
+document.addEventListener("DOMContentLoaded", function () {document.addEventListener("DOMContentLoaded", function    const root = document.documentElement;
     const toggleButton = document.getElementById("theme-toggle");
     const toggleIcon = document.getElementById("theme-toggle-icon");
     const toggleText = document.getElementById("theme-toggle-text");
@@ -104,8 +103,12 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", function () {
             const expanded = button.getAttribute("aria-expanded") === "true";
             const nextCollapsed = expanded;
+
             setCollapseState(button, nextCollapsed);
-            localStorage.setItem("jom-collapse-" + targetId, nextCollapsed ? "collapsed" : "expanded");
+            localStorage.setItem(
+                "jom-collapse-" + targetId,
+                nextCollapsed ? "collapsed" : "expanded"
+            );
         });
     });
 });
