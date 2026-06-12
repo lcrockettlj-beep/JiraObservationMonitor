@@ -1,0 +1,4 @@
+site_name,site_url,cloud_id,total_users,total_users_delta,active_users,active_users_delta,inactive_users,inactive_users_delta,licensed_users_estimate,licensed_users_estimate_delta,licence_status,licence_api_access,growth_status,user_fetch_ok,user_fetch_error_category
+gli-delivery-tm,https://gli-delivery-tm.atlassian.net,de2de731-c6ae-4e15-a2cf-92d976f0fb7c,473,0,378,0,95,0,,0,permission_limited,False,stable,True,
+gli-it-project,https://gli-it-project.atlassian.net,d4b3adb4-bd39-435e-bd65-f29db2b11a37,484,0,378,0,106,0,,0,permission_limited,False,stable,True,
+gli-global-technology,https://gli-global-technology.atlassian.net,aaa90a93-f0af-47ba-98d6-47829cc032b7,441,0,378,0,63,0,53,0,available,True,stable,True,

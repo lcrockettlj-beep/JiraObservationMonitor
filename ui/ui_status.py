@@ -1,9 +1,36 @@
 from typing import Any, Dict, Iterable, Optional
 
 
-HEALTHY_WORDS = {"ok", "healthy", "success", "available", "granted", "pass", "passed", "stable"}
-WARNING_WORDS = {"warning", "partial", "limited", "degraded", "changed", "review", "permission_limited"}
-CRITICAL_WORDS = {"error", "failed", "failure", "denied", "unavailable", "missing", "critical"}
+HEALTHY_WORDS = {
+    "ok",
+    "healthy",
+    "success",
+    "available",
+    "granted",
+    "pass",
+    "passed",
+    "stable",
+}
+
+WARNING_WORDS = {
+    "warning",
+    "partial",
+    "limited",
+    "degraded",
+    "changed",
+    "review",
+    "permission_limited",
+}
+
+CRITICAL_WORDS = {
+    "error",
+    "failed",
+    "failure",
+    "denied",
+    "unavailable",
+    "missing",
+    "critical",
+}
 
 
 def _norm(value: Any) -> str:
@@ -48,41 +75,29 @@ def _safe_int(value: Any) -> Optional[int]:
 
 
 def _extract_permission_status(site: Dict[str, Any]) -> Optional[str]:
-    permissions = (
-        site.get("permissions")
-        or site.get("permission_checker")
-        or site.get("mypermissions")
-        or _deep_first(site, ["permissions", "permission_checker", "mypermissions"])
+    permission_checker = site.get("permission_checker") or _deep_first(
+        site,
+        ["permission_checker"],
     )
 
+    if isinstance(permission_checker, dict):
+        if permission_checker.get("available") is True:
+            checked = permission_checker.get("permissions_checked", {})
+            if isinstance(checked, dict) and checked:
+                if all(bool(v) for v in checked.values()):
+                    return "ok"
+                return "warning"
+            return "ok"
+
+        if permission_checker.get("available") is False:
+            return "warning"
+
+    permissions = site.get("permissions") or site.get("mypermissions")
     if isinstance(permissions, dict):
         if "overall_status" in permissions:
             return str(permissions.get("overall_status"))
         if "status" in permissions:
             return str(permissions.get("status"))
-
-        perms = permissions.get("permissions")
-        if isinstance(perms, dict):
-            denied = 0
-            granted = 0
-
-            for _, value in perms.items():
-                granted_flag = False
-
-                if isinstance(value, dict):
-                    granted_flag = bool(value.get("havePermission") or value.get("granted"))
-                elif isinstance(value, bool):
-                    granted_flag = value
-
-                if granted_flag:
-                    granted += 1
-                else:
-                    denied += 1
-
-            if denied > 0:
-                return "warning"
-            if granted > 0:
-                return "ok"
 
     return None
 
@@ -94,26 +109,63 @@ def classify_state(site: Dict[str, Any]) -> str:
     - warning
     - stable
 
-    Uses only backend truth.
+    IMPORTANT:
+    1. Trust backend `status` first if present.
+    2. Only fall back to derived logic if backend status is absent.
     """
+    backend_status = _norm(
+        _deep_first(site, ["status"])
+    )
+
+    if backend_status == "healthy":
+        return "stable"
+    if backend_status == "warning":
+        return "warning"
+    if backend_status == "critical":
+        return "critical"
+
     permission_status = _norm(_extract_permission_status(site))
     audit_status = _norm(_deep_first(site, ["audit_status", "audit.audit_status"]))
-    audit_api_access = _norm(_deep_first(site, ["audit_api_access", "audit.audit_api_access"]))
-    licence_status = _norm(_deep_first(site, ["licence_status", "license_status", "licence.licence_status"]))
-    licence_api_access = _norm(_deep_first(site, ["licence_api_access", "license_api_access", "licence.licence_api_access"]))
+    audit_api_access = _norm(
+        _deep_first(site, ["audit_api_access", "audit.audit_api_access"])
+    )
+    licence_status = _norm(
+        _deep_first(
+            site,
+            ["licence_status", "license_status", "licence.licence_status"],
+        )
+    )
+    licence_api_access = _norm(
+        _deep_first(
+            site,
+            ["licence_api_access", "license_api_access", "licence.licence_api_access"],
+        )
+    )
     growth_status = _norm(_deep_first(site, ["growth_status", "snapshot.growth_status"]))
-    collected_at = _deep_first(site, [
-        "run_timestamp_local",
-        "collected_at",
-        "snapshot_collected_at",
-        "last_collected",
-        "run_timestamp_utc",
-    ])
+    collected_at = _deep_first(
+        site,
+        [
+            "run_timestamp_local",
+            "collected_at",
+            "collected_at_utc",
+            "snapshot_collected_at",
+            "last_collected",
+            "run_timestamp_utc",
+        ],
+    )
 
-    project_count = _safe_int(_deep_first(site, ["project_count", "projects_count", "projects", "project_total"]))
-    issue_count = _safe_int(_deep_first(site, ["issue_count", "issues_count", "total_issues", "issues", "issue_total"]))
-    unresolved_issue_count = _safe_int(_deep_first(site, ["unresolved_issue_count", "unresolved_count", "issues_unresolved", "open_issues"]))
-    updated_last_7_days_count = _safe_int(_deep_first(site, ["updated_last_7_days_count", "updated_7d_count", "updated_last_7_days", "recently_updated_count"]))
+    project_count = _safe_int(
+        _deep_first(site, ["project_count", "projects_count", "projects", "project_total"])
+    )
+    issue_count = _safe_int(
+        _deep_first(site, ["issue_count_total", "issue_count", "issues_count", "total_issues"])
+    )
+    unresolved_issue_count = _safe_int(
+        _deep_first(site, ["issue_count_unresolved", "unresolved_issue_count", "unresolved_count"])
+    )
+    updated_last_7_days_count = _safe_int(
+        _deep_first(site, ["issue_count_updated_last_7d", "updated_last_7_days_count", "updated_7d_count"])
+    )
 
     has_core_metrics = any(
         value is not None
@@ -151,7 +203,16 @@ def classify_state(site: Dict[str, Any]) -> str:
     if any(_contains_any(signal, WARNING_WORDS) for signal in warning_signals if signal):
         return "warning"
 
-    remaining_seats = _safe_int(_deep_first(site, ["remaining_seats", "seats_remaining"]))
+    remaining_seats = _safe_int(
+        _deep_first(
+            site,
+            [
+                "remaining_seats",
+                "seats_remaining",
+                "licence_summary.products.0.remaining_seats",
+            ],
+        )
+    )
     if remaining_seats is not None and remaining_seats <= 0:
         return "warning"
 

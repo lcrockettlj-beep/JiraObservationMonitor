@@ -89,52 +89,20 @@ def normalize_backend_payload(raw: Dict[str, Any]) -> Dict[str, Any]:
         or raw.get("snapshot_collected_at")
         or raw.get("generated_at")
         or raw.get("run_timestamp_utc")
+        or _deep_get(raw, "raw_collection_summary.collected_at_utc")
     )
 
-    sites = raw.get("sites")
-    if isinstance(sites, list):
-        return {
-            "collected_at": collected_at,
-            "sites": [site for site in sites if isinstance(site, dict)],
-        }
-
-    if isinstance(raw.get("site_results"), list):
-        return {
-            "collected_at": collected_at,
-            "sites": [site for site in raw.get("site_results", []) if isinstance(site, dict)],
-        }
-
-    if isinstance(raw.get("data"), dict) and isinstance(raw["data"].get("sites"), list):
-        return {
-            "collected_at": collected_at,
-            "sites": [site for site in raw["data"]["sites"] if isinstance(site, dict)],
-        }
-
-    # If sites are stored as a dict keyed by site name/url
-    if isinstance(raw.get("sites"), dict):
-        dict_sites = []
-        for _, value in raw["sites"].items():
-            if isinstance(value, dict):
-                dict_sites.append(value)
-        return {
-            "collected_at": collected_at,
-            "sites": dict_sites,
-        }
-
-    possible_sites = []
-    for _, value in raw.items():
-        if isinstance(value, dict) and (
-            value.get("site_url")
-            or value.get("url")
-            or value.get("base_url")
-            or value.get("site_name")
-            or value.get("site_key")
-        ):
-            possible_sites.append(value)
+    raw_sites = raw.get("sites")
+    if isinstance(raw_sites, list):
+        sites = [site for site in raw_sites if isinstance(site, dict)]
+    elif isinstance(raw_sites, dict):
+        sites = [value for value in raw_sites.values() if isinstance(value, dict)]
+    else:
+        sites = []
 
     return {
         "collected_at": collected_at,
-        "sites": possible_sites,
+        "sites": sites,
     }
 
 
@@ -163,7 +131,9 @@ def build_homepage_view_model(base_dir: Optional[Path] = None) -> HomepageViewMo
         total_projects=sum(card.metrics.project_count for card in cards),
         total_issues=sum(card.metrics.issue_count for card in cards),
         total_unresolved=sum(card.metrics.unresolved_issue_count for card in cards),
-        total_updated_last_7_days=sum(card.metrics.updated_last_7_days_count for card in cards),
+        total_updated_last_7_days=sum(
+            card.metrics.updated_last_7_days_count for card in cards
+        ),
     )
 
     site_tabs = [
@@ -186,123 +156,98 @@ def build_homepage_view_model(base_dir: Optional[Path] = None) -> HomepageViewMo
     )
 
 
-def _build_site_card(site: Dict[str, Any], fallback_collected_at: Optional[str]) -> SiteCardViewModel:
+def _build_site_card(
+    site: Dict[str, Any],
+    fallback_collected_at: Optional[str],
+) -> SiteCardViewModel:
     site_url = _extract_site_url(site)
     site_name = _extract_site_name(site, site_url)
     site_key = _slugify_site_name(site_name)
 
     metrics = SiteMetricViewModel(
-        project_count=_safe_int(
-            _deep_first(site, [
-                "project_count",
-                "projects_count",
-                "projects",
-                "project_total",
-                "counts.project_count",
-                "counts.projects",
-            ])
-        ) or 0,
-        issue_count=_safe_int(
-            _deep_first(site, [
-                "issue_count",
-                "issues_count",
-                "total_issues",
-                "issues",
-                "issue_total",
-                "counts.issue_count",
-                "counts.issues",
-                "metrics.issue_count",
-            ])
-        ) or 0,
-        unresolved_issue_count=_safe_int(
-            _deep_first(site, [
-                "unresolved_issue_count",
-                "unresolved_count",
-                "issues_unresolved",
-                "open_issues",
-                "counts.unresolved_issue_count",
-                "counts.unresolved",
-                "metrics.unresolved_issue_count",
-            ])
-        ) or 0,
-        updated_last_7_days_count=_safe_int(
-            _deep_first(site, [
-                "updated_last_7_days_count",
-                "updated_7d_count",
-                "updated_last_7_days",
-                "recently_updated_count",
-                "issues_updated_last_7_days",
-                "counts.updated_last_7_days_count",
-                "counts.updated_7d",
-                "metrics.updated_last_7_days_count",
-            ])
-        ) or 0,
+        project_count=_safe_int(_deep_first(site, ["project_count"])) or 0,
+        issue_count=_safe_int(_deep_first(site, ["issue_count_total"])) or 0,
+        unresolved_issue_count=_safe_int(_deep_first(site, ["issue_count_unresolved"])) or 0,
+        updated_last_7_days_count=_safe_int(_deep_first(site, ["issue_count_updated_last_7d"])) or 0,
     )
 
     users = SiteUsersViewModel(
-        total_users=_safe_int(_deep_first(site, ["total_users", "users.total_users"])),
-        active_users=_safe_int(_deep_first(site, ["active_users", "users.active_users"])),
-        inactive_users=_safe_int(_deep_first(site, ["inactive_users", "users.inactive_users"])),
+        total_users=_safe_int(_deep_first(site, ["user_summary.total_users"])),
+        active_users=_safe_int(_deep_first(site, ["user_summary.active_users"])),
+        inactive_users=_safe_int(_deep_first(site, ["user_summary.inactive_users"])),
+    )
+
+    licensed_users_estimate = _safe_int(
+        _deep_first(site, ["licence_summary.licensed_users_estimate"])
+    )
+    seats = _safe_int(
+        _deep_first(
+            site,
+            [
+                "licence_summary.products.0.number_of_seats",
+                "application_role_sample.0.number_of_seats",
+            ],
+        )
+    )
+    remaining_seats = _safe_int(
+        _deep_first(
+            site,
+            [
+                "licence_summary.products.0.remaining_seats",
+                "application_role_sample.0.remaining_seats",
+            ],
+        )
     )
 
     licence = SiteLicenceViewModel(
-        licensed_users_estimate=_safe_int(
-            _deep_first(site, [
-                "licensed_users_estimate",
-                "license_users_estimate",
-                "licence.licensed_users_estimate",
-            ])
-        ),
-        seats=_safe_int(
-            _deep_first(site, [
-                "seats",
-                "seat_count",
-                "licence.seats",
-            ])
-        ),
-        remaining_seats=_safe_int(
-            _deep_first(site, [
-                "remaining_seats",
-                "seats_remaining",
-                "licence.remaining_seats",
-            ])
-        ),
-        licence_status=_as_str(
-            _deep_first(site, [
-                "licence_status",
-                "license_status",
-                "licence.licence_status",
-            ])
-        ),
-        licence_api_access=_as_str(
-            _deep_first(site, [
-                "licence_api_access",
-                "license_api_access",
-                "licence.licence_api_access",
-            ])
-        ),
+        licensed_users_estimate=licensed_users_estimate,
+        seats=seats,
+        remaining_seats=remaining_seats,
+        licence_status=_as_str(_deep_first(site, ["licence_status"])),
+        licence_api_access=_bool_to_status(_deep_first(site, ["licence_api_access"])),
     )
 
     audit = SiteAuditViewModel(
-        audit_status=_as_str(_deep_first(site, ["audit_status", "audit.audit_status"])),
-        audit_api_access=_as_str(_deep_first(site, ["audit_api_access", "audit.audit_api_access"])),
+        audit_status=_as_str(_deep_first(site, ["audit_status"])),
+        audit_api_access=_bool_to_status(_deep_first(site, ["audit_api_access"])),
     )
 
     permissions = _extract_permissions_view_model(site)
 
     collected_at = (
-        _as_str(_deep_first(site, [
-            "run_timestamp_local",
-            "collected_at",
-            "snapshot_collected_at",
-            "last_collected",
-            "run_timestamp_utc",
-        ]))
+        _as_str(
+            _deep_first(
+                site,
+                [
+                    "collected_at_utc",
+                    "run_timestamp_local",
+                    "collected_at",
+                    "snapshot_collected_at",
+                    "last_collected",
+                    "run_timestamp_utc",
+                ],
+            )
+        )
         or fallback_collected_at
     )
 
-    growth_status = _as_str(_deep_first(site, ["growth_status", "snapshot.growth_status"]))
-    delta_available = bool(_deep_first(site, ["delta", "snapshot_delta", "delta_summary", "snapshot.delta"]))
+    growth_status = _as_str(_deep_first(site, ["growth_status"]))
+    delta_available = any(
+        _deep_first(
+            site,
+            [
+                "project_count_delta",
+                "total_users_delta",
+                "active_users_delta",
+                "inactive_users_delta",
+                "licensed_users_estimate_delta",
+                "issue_count_total_delta",
+                "issue_count_unresolved_delta",
+            ],
+        )
+        is not None
+        for _ in [0]
+    )
 
     snapshot = SiteSnapshotViewModel(
         collected_at=collected_at,
@@ -340,52 +285,34 @@ def _build_site_card(site: Dict[str, Any], fallback_collected_at: Optional[str])
 
 
 def _extract_permissions_view_model(site: Dict[str, Any]) -> SitePermissionsViewModel:
-    permissions = (
-        site.get("permissions")
-        or site.get("permission_checker")
-        or site.get("mypermissions")
-        or _deep_first(site, ["permissions", "permission_checker", "mypermissions"])
-    )
-
-    if not isinstance(permissions, dict):
+    permission_checker = _deep_first(site, ["permission_checker"])
+    if not isinstance(permission_checker, dict):
         return SitePermissionsViewModel()
 
-    overall_status = permissions.get("overall_status") or permissions.get("status")
-    granted_count = 0
-    denied_count = 0
-    total_count = 0
+    permissions_checked = permission_checker.get("permissions_checked", {})
+    if not isinstance(permissions_checked, dict):
+        permissions_checked = {}
 
-    perms = permissions.get("permissions")
-    if isinstance(perms, dict):
-        for _, value in perms.items():
-            granted = False
+    total_count = len(permissions_checked)
+    granted_count = sum(1 for value in permissions_checked.values() if bool(value))
+    denied_count = total_count - granted_count
 
-            if isinstance(value, dict):
-                granted = bool(value.get("havePermission") or value.get("granted"))
-            elif isinstance(value, bool):
-                granted = value
-
-            total_count += 1
-            if granted:
-                granted_count += 1
-            else:
-                denied_count += 1
-
-        if not overall_status:
-            if denied_count > 0:
-                overall_status = "warning"
-            elif granted_count > 0:
-                overall_status = "ok"
+    overall_status = "ok" if permission_checker.get("available") else "warning"
+    if denied_count > 0:
+        overall_status = "warning"
 
     return SitePermissionsViewModel(
-        overall_status=_as_str(overall_status),
+        overall_status=overall_status,
         granted_count=granted_count,
         denied_count=denied_count,
         total_count=total_count,
     )
 
 
-def _pick_latest_collected_at(cards: List[SiteCardViewModel], fallback: Optional[str]) -> Optional[str]:
+def _pick_latest_collected_at(
+    cards: List[SiteCardViewModel],
+    fallback: Optional[str],
+) -> Optional[str]:
     timestamps = [card.last_collected for card in cards if card.last_collected]
     if not timestamps:
         return fallback
@@ -413,7 +340,10 @@ def _parse_datetime(value: str) -> Optional[datetime]:
         return None
 
 
-def _compute_usage_percent(licensed_users_estimate: Optional[int], seats: Optional[int]) -> Optional[int]:
+def _compute_usage_percent(
+    licensed_users_estimate: Optional[int],
+    seats: Optional[int],
+) -> Optional[int]:
     if licensed_users_estimate is None or seats is None or seats <= 0:
         return None
 
@@ -433,6 +363,7 @@ def _is_active_operational_site(site: Dict[str, Any]) -> bool:
         for part in [
             site.get("site_key"),
             site.get("site_name"),
+            site.get("name"),
             site.get("site_url"),
             site.get("url"),
             site.get("base_url"),
@@ -448,26 +379,29 @@ def _is_active_operational_site(site: Dict[str, Any]) -> bool:
 
 def _extract_site_url(site: Dict[str, Any]) -> str:
     value = _as_str(
-        _deep_first(site, [
-            "site_url",
-            "url",
-            "base_url",
-            "site.url",
-            "site.site_url",
-        ])
+        _deep_first(
+            site,
+            [
+                "url",
+                "site_url",
+                "base_url",
+                "server_info.base_url",
+            ],
+        )
     ) or ""
     return value.rstrip("/")
 
 
 def _extract_site_name(site: Dict[str, Any], site_url: str) -> str:
     explicit_name = _as_str(
-        _deep_first(site, [
-            "site_name",
-            "name",
-            "site_key",
-            "site.name",
-            "site.site_name",
-        ])
+        _deep_first(
+            site,
+            [
+                "name",
+                "site_name",
+                "site_key",
+            ],
+        )
     )
     if explicit_name:
         return explicit_name
@@ -494,7 +428,13 @@ def _deep_first(data: Dict[str, Any], paths: List[str]) -> Any:
 def _deep_get(data: Any, path: str) -> Any:
     current = data
     for part in path.split("."):
-        if isinstance(current, dict) and part in current:
+        if isinstance(current, list):
+            try:
+                index = int(part)
+                current = current[index]
+            except (ValueError, IndexError):
+                return None
+        elif isinstance(current, dict) and part in current:
             current = current.get(part)
         else:
             return None
@@ -518,3 +458,11 @@ def _as_str(value: Any) -> Optional[str]:
     if value is None:
         return None
     return str(value)
+
+
+def _bool_to_status(value: Any) -> Optional[str]:
+    if value is True:
+        return "available"
+    if value is False:
+        return "permission_limited"
+    return None
