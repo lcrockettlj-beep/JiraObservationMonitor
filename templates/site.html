@@ -32,7 +32,9 @@
             <div class="hero-panel__left">
                 <div class="hero-eyebrow">Site page</div>
                 <h1 class="hero-title">Site not found</h1>
-                <p class="hero-subtitle">The selected site could not be resolved from the current homepage view model.</p>
+                <p class="hero-subtitle">
+                    The selected site could not be resolved from the current homepage view model.
+                </p>
                 <div class="hero-action-row">
                     <a class="button button--primary" href="{{ url_for('home') }}">Back to homepage</a>
                 </div>
@@ -40,294 +42,364 @@
         </div>
     </section>
 {% else %}
-    <section class="hero-panel">
-        <div class="hero-panel__content">
-            <div class="hero-panel__left">
-                <div class="hero-eyebrow">Site dashboard</div>
-                <h1 class="hero-title">{{ site.site_name }}</h1>
-                <p class="hero-subtitle">{{ site.site_url }}</p>
+    <div class="site-layout">
+        <aside class="site-side-nav">
+            <div class="site-side-nav__card">
+                <div class="site-side-nav__eyebrow">Site sections</div>
+                <div class="site-side-nav__title">{{ site.site_name }}</div>
+                <div class="site-side-nav__url">{{ site.site_url }}</div>
 
-                <div class="hero-pill-row">
-                    <span class="status-badge status-badge--{{ site.status }}">
-                        {{ state_label(site.status) }}
-                    </span>
+                <nav class="anchor-nav" aria-label="Site sections">
+                    <a class="anchor-nav__link" href="#overview">Overview</a>
+                    <a class="anchor-nav__link" href="#users-licence">Users & Licence</a>
+                    <a class="anchor-nav__link" href="#audit">Audit</a>
+                    <a class="anchor-nav__link" href="#metadata">Site Metadata</a>
+                    <a class="anchor-nav__link" href="#billing">Billing Summary</a>
+                    <a class="anchor-nav__link" href="#projects">Project Sample</a>
+                </nav>
 
-                    <span class="signal-pill {{ signal_class(site.permissions.overall_status) }}">
-                        Permissions: {{ site.permissions.overall_status or "unknown" }}
-                    </span>
-
-                    <span class="signal-pill {{ signal_class(site.audit.audit_status or site.audit.audit_api_access) }}">
-                        Audit: {{ site.audit.audit_status or site.audit.audit_api_access or "unknown" }}
-                    </span>
-
-                    <span class="signal-pill {{ signal_class(site.licence.licence_status or site.licence.licence_api_access) }}">
-                        Licence: {{ site.licence.licence_status or site.licence.licence_api_access or "unknown" }}
-                    </span>
-
-                    <span class="signal-pill {{ signal_class(site.snapshot.growth_status) }}">
-                        Growth: {{ site.snapshot.growth_status or "unknown" }}
-                    </span>
+                <div class="site-side-nav__footer">
+                    <a class="button button--ghost button--full" href="{{ url_for('home') }}">Back to home</a>
                 </div>
             </div>
+        </aside>
 
-            <div class="hero-panel__right">
-                <div class="hero-meta-card">
-                    <div class="hero-meta-label">Last collected</div>
-                    <div class="hero-meta-value">{{ site.last_collected or home.collected_at or "Not available" }}</div>
-                </div>
+        <div class="site-content">
+            <section class="hero-panel site-hero" id="overview">
+                <div class="hero-panel__content">
+                    <div class="hero-panel__left">
+                        <div class="hero-eyebrow">Site dashboard</div>
+                        <h1 class="hero-title">{{ site.site_name }}</h1>
+                        <p class="hero-subtitle">{{ site.site_url }}</p>
 
-                <div class="hero-meta-card">
-                    <div class="hero-meta-label">Server title</div>
-                    <div class="hero-meta-value">{{ site.server_info.server_title or "Not available" }}</div>
-                </div>
-
-                <div class="hero-action-row">
-                    <a class="button button--ghost" href="{{ url_for('home') }}">Back to home</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="summary-grid">
-        <article class="summary-card">
-            <div class="summary-card__label">Projects</div>
-            <div class="summary-card__value">{{ site.metrics.project_count }}</div>
-        </article>
-        <article class="summary-card">
-            <div class="summary-card__label">Issues</div>
-            <div class="summary-card__value">{{ site.metrics.issue_count }}</div>
-        </article>
-        <article class="summary-card">
-            <div class="summary-card__label">Unresolved</div>
-            <div class="summary-card__value">{{ site.metrics.unresolved_issue_count }}</div>
-        </article>
-        <article class="summary-card">
-            <div class="summary-card__label">Updated 7d</div>
-            <div class="summary-card__value">{{ site.metrics.updated_last_7_days_count }}</div>
-        </article>
-    </section>
-
-    <section class="detail-grid">
-        <article class="detail-panel">
-            <div class="detail-panel__header">
-                <h2>Users</h2>
-            </div>
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Total users</span>
-                    <strong>{{ site.users.total_users if site.users.total_users is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Active users</span>
-                    <strong>{{ site.users.active_users if site.users.active_users is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Inactive users</span>
-                    <strong>{{ site.users.inactive_users if site.users.inactive_users is not none else "Not available" }}</strong>
-                </div>
-            </div>
-        </article>
-
-        <article class="detail-panel">
-            <div class="detail-panel__header">
-                <h2>Licence</h2>
-            </div>
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Licensed users estimate</span>
-                    <strong>{{ site.licence.licensed_users_estimate if site.licence.licensed_users_estimate is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Seats</span>
-                    <strong>{{ site.licence.seats if site.licence.seats is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Remaining seats</span>
-                    <strong>{{ site.licence.remaining_seats if site.licence.remaining_seats is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Licence status</span>
-                    <strong>{{ site.licence.licence_status or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Licence API access</span>
-                    <strong>{{ site.licence.licence_api_access or "Not available" }}</strong>
-                </div>
-            </div>
-
-            {% if site.usage_percent is not none %}
-                <div class="usage-bar-block usage-bar-block--tight">
-                    <div class="usage-bar__meta">
-                        <span>Licence usage</span>
-                        <span>{{ site.usage_percent }}%</span>
-                    </div>
-                    <div class="usage-bar">
-                        <div class="usage-bar__fill {% if site.usage_percent >= 90 %}usage-bar__fill--high{% elif site.usage_percent >= 70 %}usage-bar__fill--med{% else %}usage-bar__fill--low{% endif %}"
-                             style="width: {{ site.usage_percent }}%;"></div>
-                    </div>
-                </div>
-            {% endif %}
-        </article>
-
-        <article class="detail-panel">
-            <div class="detail-panel__header">
-                <h2>Audit</h2>
-            </div>
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Audit status</span>
-                    <strong>{{ site.audit.audit_status or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Audit API access</span>
-                    <strong>{{ site.audit.audit_api_access or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Record count</span>
-                    <strong>{{ site.audit.record_count if site.audit.record_count is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Automation-related records</span>
-                    <strong>{{ site.audit.automation_related_record_count if site.audit.automation_related_record_count is not none else "Not available" }}</strong>
-                </div>
-            </div>
-        </article>
-
-        <article class="detail-panel">
-            <div class="detail-panel__header">
-                <h2>Permissions</h2>
-            </div>
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Overall status</span>
-                    <strong>{{ site.permissions.overall_status or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Granted</span>
-                    <strong>{{ site.permissions.granted_count }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Denied</span>
-                    <strong>{{ site.permissions.denied_count }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Total checked</span>
-                    <strong>{{ site.permissions.total_count }}</strong>
-                </div>
-            </div>
-        </article>
-
-        <article class="detail-panel detail-panel--wide">
-            <div class="detail-panel__header">
-                <h2>Site Metadata</h2>
-            </div>
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Server title</span>
-                    <strong>{{ site.server_info.server_title or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Deployment type</span>
-                    <strong>{{ site.server_info.deployment_type or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Version</span>
-                    <strong>{{ site.server_info.version or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Default locale</span>
-                    <strong>{{ site.server_info.default_locale or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Server time zone</span>
-                    <strong>{{ site.server_info.server_time_zone or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Display URL</span>
-                    <strong>{{ site.server_info.display_url or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Snapshot collected</span>
-                    <strong>{{ site.snapshot.collected_at or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Growth status</span>
-                    <strong>{{ site.snapshot.growth_status or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Delta available</span>
-                    <strong>{% if site.snapshot.delta_available %}Yes{% else %}No{% endif %}</strong>
-                </div>
-            </div>
-        </article>
-
-        <article class="detail-panel detail-panel--wide">
-            <div class="detail-panel__header">
-                <h2>Billing Summary</h2>
-            </div>
-
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Billing cycle</span>
-                    <strong>{{ site.billing_summary.billing_cycle or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Next bill date</span>
-                    <strong>{{ site.billing_summary.next_bill_date or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Next price estimate</span>
-                    <strong>{{ site.billing_summary.next_price_estimate or "Not available" }}</strong>
-                </div>
-            </div>
-        </article>
-
-        <article class="detail-panel detail-panel--wide">
-            <div class="detail-panel__header">
-                <h2>Audit Categories</h2>
-            </div>
-
-            {% if site.audit.category_counts %}
-                <div class="detail-list">
-                    {% for category, count in site.audit.category_counts.items() %}
-                        <div class="detail-row">
-                            <span>{{ category }}</span>
-                            <strong>{{ count }}</strong>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-state">No audit category data available</div>
-            {% endif %}
-        </article>
-
-        <article class="detail-panel detail-panel--wide">
-            <div class="detail-panel__header">
-                <h2>Project Sample</h2>
-            </div>
-
-            {% if site.project_sample %}
-                <div class="detail-list">
-                    {% for project in site.project_sample %}
-                        <div class="detail-row">
-                            <span>
-                                <strong>{{ project.key }}</strong>
-                                — {{ project.name }}
+                        <div class="hero-pill-row">
+                            <span class="status-badge status-badge--{{ site.status }}">
+                                {{ state_label(site.status) }}
                             </span>
-                            <strong>
-                                {{ project.project_type_key or "unknown" }}
-                                {% if project.style %} | {{ project.style }}{% endif %}
-                                {% if project.is_private is not none %}
-                                    | {% if project.is_private %}private{% else %}public{% endif %}
-                                {% endif %}
-                            </strong>
+
+                            <span class="signal-pill {{ signal_class(site.permissions.overall_status) }}">
+                                Permissions: {{ site.permissions.overall_status or "unknown" }}
+                            </span>
+
+                            <span class="signal-pill {{ signal_class(site.audit.audit_status or site.audit.audit_api_access) }}">
+                                Audit: {{ site.audit.audit_status or site.audit.audit_api_access or "unknown" }}
+                            </span>
+
+                            <span class="signal-pill {{ signal_class(site.licence.licence_status or site.licence.licence_api_access) }}">
+                                Licence: {{ site.licence.licence_status or site.licence.licence_api_access or "unknown" }}
+                            </span>
+
+                            <span class="signal-pill {{ signal_class(site.snapshot.growth_status) }}">
+                                Growth: {{ site.snapshot.growth_status or "unknown" }}
+                            </span>
                         </div>
-                    {% endfor %}
+                    </div>
+
+                    <div class="hero-panel__right">
+                        <div class="hero-meta-card">
+                            <div class="hero-meta-label">Last collected</div>
+                            <div class="hero-meta-value">{{ site.last_collected or home.collected_at or "Not available" }}</div>
+                        </div>
+
+                        <div class="hero-meta-card">
+                            <div class="hero-meta-label">Server title</div>
+                            <div class="hero-meta-value">{{ site.server_info.server_title or "Not available" }}</div>
+                        </div>
+
+                        <div class="hero-meta-card">
+                            <div class="hero-meta-label">Display URL</div>
+                            <div class="hero-meta-value">{{ site.server_info.display_url or site.site_url }}</div>
+                        </div>
+                    </div>
                 </div>
-            {% else %}
-                <div class="empty-state">No project sample data available</div>
-            {% endif %}
-        </article>
-    </section>
+            </section>
+
+            <section class="summary-grid summary-grid--site">
+                <article class="summary-card">
+                    <div class="summary-card__label">Projects</div>
+                    <div class="summary-card__value">{{ site.metrics.project_count }}</div>
+                </article>
+                <article class="summary-card">
+                    <div class="summary-card__label">Issues</div>
+                    <div class="summary-card__value">{{ site.metrics.issue_count }}</div>
+                </article>
+                <article class="summary-card">
+                    <div class="summary-card__label">Unresolved</div>
+                    <div class="summary-card__value">{{ site.metrics.unresolved_issue_count }}</div>
+                </article>
+                <article class="summary-card">
+                    <div class="summary-card__label">Updated 7d</div>
+                    <div class="summary-card__value">{{ site.metrics.updated_last_7_days_count }}</div>
+                </article>
+            </section>
+
+            <section class="detail-section" id="users-licence">
+                <div class="section-heading section-heading--tight">
+                    <div>
+                        <div class="section-kicker">Operational detail</div>
+                        <h2>Users & Licence</h2>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <article class="detail-panel">
+                        <div class="detail-panel__header">
+                            <h2>Users</h2>
+                        </div>
+                        <div class="detail-list">
+                            <div class="detail-row">
+                                <span>Total users</span>
+                                <strong>{{ site.users.total_users if site.users.total_users is not none else "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Active users</span>
+                                <strong>{{ site.users.active_users if site.users.active_users is not none else "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Inactive users</span>
+                                <strong>{{ site.users.inactive_users if site.users.inactive_users is not none else "Not available" }}</strong>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="detail-panel">
+                        <div class="detail-panel__header">
+                            <h2>Licence</h2>
+                        </div>
+                        <div class="detail-list">
+                            <div class="detail-row">
+                                <span>Licensed users estimate</span>
+                                <strong>{{ site.licence.licensed_users_estimate if site.licence.licensed_users_estimate is not none else "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Seats</span>
+                                <strong>{{ site.licence.seats if site.licence.seats is not none else "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Remaining seats</span>
+                                <strong>{{ site.licence.remaining_seats if site.licence.remaining_seats is not none else "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Licence status</span>
+                                <strong>{{ site.licence.licence_status or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Licence API access</span>
+                                <strong>{{ site.licence.licence_api_access or "Not available" }}</strong>
+                            </div>
+                        </div>
+
+                        {% if site.usage_percent is not none %}
+                            <div class="usage-bar-block usage-bar-block--tight">
+                                <div class="usage-bar__meta">
+                                    <span>Licence usage</span>
+                                    <span>{{ site.usage_percent }}%</span>
+                                </div>
+                                <div class="usage-bar">
+                                    <div class="usage-bar__fill {% if site.usage_percent >= 90 %}usage-bar__fill--high{% elif site.usage_percent >= 70 %}usage-bar__fill--med{% else %}usage-bar__fill--low{% endif %}"
+                                         style="width: {{ site.usage_percent }}%;"></div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </article>
+                </div>
+            </section>
+
+            <section class="detail-section" id="audit">
+                <div class="section-heading section-heading--tight">
+                    <div>
+                        <div class="section-kicker">Operational detail</div>
+                        <h2>Audit</h2>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <article class="detail-panel">
+                        <div class="detail-panel__header">
+                            <h2>Audit Summary</h2>
+                        </div>
+                        <div class="detail-list">
+                            <div class="detail-row">
+                                <span>Audit status</span>
+                                <strong>{{ site.audit.audit_status or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Audit API access</span>
+                                <strong>{{ site.audit.audit_api_access or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Record count</span>
+                                <strong>{{ site.audit.record_count if site.audit.record_count is not none else "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Automation-related records</span>
+                                <strong>{{ site.audit.automation_related_record_count if site.audit.automation_related_record_count is not none else "Not available" }}</strong>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="detail-panel">
+                        <div class="detail-panel__header">
+                            <h2>Permissions</h2>
+                        </div>
+                        <div class="detail-list">
+                            <div class="detail-row">
+                                <span>Overall status</span>
+                                <strong>{{ site.permissions.overall_status or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Granted</span>
+                                <strong>{{ site.permissions.granted_count }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Denied</span>
+                                <strong>{{ site.permissions.denied_count }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Total checked</span>
+                                <strong>{{ site.permissions.total_count }}</strong>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="detail-panel detail-panel--wide">
+                        <div class="detail-panel__header">
+                            <h2>Audit Categories</h2>
+                        </div>
+
+                        {% if site.audit.category_counts %}
+                            <div class="chip-farm">
+                                {% for category, count in site.audit.category_counts.items() %}
+                                    <div class="info-chip">
+                                        <span class="info-chip__label">{{ category }}</span>
+                                        <span class="info-chip__value">{{ count }}</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-state">No audit category data available</div>
+                        {% endif %}
+                    </article>
+                </div>
+            </section>
+
+            <section class="detail-section" id="metadata">
+                <div class="section-heading section-heading--tight">
+                    <div>
+                        <div class="section-kicker">Platform metadata</div>
+                        <h2>Site Metadata</h2>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <article class="detail-panel detail-panel--wide">
+                        <div class="detail-list">
+                            <div class="detail-row">
+                                <span>Server title</span>
+                                <strong>{{ site.server_info.server_title or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Deployment type</span>
+                                <strong>{{ site.server_info.deployment_type or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Version</span>
+                                <strong>{{ site.server_info.version or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Default locale</span>
+                                <strong>{{ site.server_info.default_locale or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Server time zone</span>
+                                <strong>{{ site.server_info.server_time_zone or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Display URL</span>
+                                <strong>{{ site.server_info.display_url or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Snapshot collected</span>
+                                <strong>{{ site.snapshot.collected_at or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Growth status</span>
+                                <strong>{{ site.snapshot.growth_status or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Delta available</span>
+                                <strong>{% if site.snapshot.delta_available %}Yes{% else %}No{% endif %}</strong>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="detail-section" id="billing">
+                <div class="section-heading section-heading--tight">
+                    <div>
+                        <div class="section-kicker">Commercial summary</div>
+                        <h2>Billing Summary</h2>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <article class="detail-panel detail-panel--wide">
+                        <div class="detail-list">
+                            <div class="detail-row">
+                                <span>Billing cycle</span>
+                                <strong>{{ site.billing_summary.billing_cycle or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Next bill date</span>
+                                <strong>{{ site.billing_summary.next_bill_date or "Not available" }}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Next price estimate</span>
+                                <strong>{{ site.billing_summary.next_price_estimate or "Not available" }}</strong>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="detail-section" id="projects">
+                <div class="section-heading section-heading--tight">
+                    <div>
+                        <div class="section-kicker">Project sample</div>
+                        <h2>Projects</h2>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <article class="detail-panel detail-panel--wide">
+                        {% if site.project_sample %}
+                            <div class="project-list">
+                                {% for project in site.project_sample %}
+                                    <div class="project-row">
+                                        <div class="project-row__main">
+                                            <div class="project-key">{{ project.key }}</div>
+                                            <div class="project-name">{{ project.name }}</div>
+                                        </div>
+                                        <div class="project-row__meta">
+                                            <span class="mini-pill">{{ project.project_type_key or "unknown" }}</span>
+                                            {% if project.style %}
+                                                <span class="mini-pill">{{ project.style }}</span>
+                                            {% endif %}
+                                            {% if project.is_private is not none %}
+                                                <span class="mini-pill">{% if project.is_private %}private{% else %}public{% endif %}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-state">No project sample data available</div>
+                        {% endif %}
+                    </article>
+                </div>
+            </section>
+        </div>
+    </div>
 {% endif %}
 {% endblock %}
