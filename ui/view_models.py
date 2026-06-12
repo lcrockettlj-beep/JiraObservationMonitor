@@ -37,6 +37,9 @@ class SiteLicenceViewModel:
 class SiteAuditViewModel:
     audit_status: Optional[str] = None
     audit_api_access: Optional[str] = None
+    record_count: Optional[int] = None
+    automation_related_record_count: Optional[int] = None
+    category_counts: Dict[str, int] = field(default_factory=dict)
 
 
 @dataclass
@@ -55,6 +58,26 @@ class SiteSnapshotViewModel:
 
 
 @dataclass
+class SiteServerInfoViewModel:
+    server_title: Optional[str] = None
+    deployment_type: Optional[str] = None
+    version: Optional[str] = None
+    default_locale: Optional[str] = None
+    server_time_zone: Optional[str] = None
+    display_url: Optional[str] = None
+
+
+@dataclass
+class SiteProjectSampleViewModel:
+    key: str
+    name: str
+    project_type_key: Optional[str] = None
+    style: Optional[str] = None
+    simplified: Optional[bool] = None
+    is_private: Optional[bool] = None
+
+
+@dataclass
 class SiteCardViewModel:
     site_key: str
     site_name: str
@@ -68,6 +91,9 @@ class SiteCardViewModel:
     permissions: SitePermissionsViewModel = field(default_factory=SitePermissionsViewModel)
     snapshot: SiteSnapshotViewModel = field(default_factory=SiteSnapshotViewModel)
     billing_summary: BillingSummaryViewModel = field(default_factory=BillingSummaryViewModel)
+    server_info: SiteServerInfoViewModel = field(default_factory=SiteServerInfoViewModel)
+
+    project_sample: List[SiteProjectSampleViewModel] = field(default_factory=list)
 
     usage_percent: Optional[int] = None
     last_collected: Optional[str] = None

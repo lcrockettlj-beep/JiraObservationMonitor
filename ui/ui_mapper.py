@@ -12,6 +12,8 @@ from ui.view_models import (
     SiteLicenceViewModel,
     SiteMetricViewModel,
     SitePermissionsViewModel,
+    SiteProjectSampleViewModel,
+    SiteServerInfoViewModel,
     SiteSnapshotViewModel,
     SiteUsersViewModel,
 )
@@ -31,7 +33,6 @@ EXCLUDED_SITE_TOKENS = {
 }
 
 
-# Real billing truth from your notes
 BILLING_TRUTH: Dict[str, Dict[str, Optional[str]]] = {
     "https://gli-global-technology.atlassian.net": {
         "billing_cycle": "monthly",
@@ -52,9 +53,6 @@ BILLING_TRUTH: Dict[str, Dict[str, Optional[str]]] = {
 
 
 def load_latest_backend_payload(base_dir: Optional[Path] = None) -> Dict[str, Any]:
-    """
-    Loads latest_run.json from the project root.
-    """
     root = Path(base_dir or Path.cwd())
     latest_run_path = root / "latest_run.json"
 
@@ -77,9 +75,6 @@ def load_latest_backend_payload(base_dir: Optional[Path] = None) -> Dict[str, An
 
 
 def normalize_backend_payload(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Best-effort normalization so the UI can tolerate small contract changes.
-    """
     if not isinstance(raw, dict):
         return {"collected_at": None, "sites": []}
 
@@ -210,6 +205,11 @@ def _build_site_card(
     audit = SiteAuditViewModel(
         audit_status=_as_str(_deep_first(site, ["audit_status"])),
         audit_api_access=_bool_to_status(_deep_first(site, ["audit_api_access"])),
+        record_count=_safe_int(_deep_first(site, ["audit_summary.record_count"])),
+        automation_related_record_count=_safe_int(
+            _deep_first(site, ["audit_summary.automation_related_record_count"])
+        ),
+        category_counts=_extract_category_counts(site),
     )
 
     permissions = _extract_permissions_view_model(site)
@@ -233,20 +233,16 @@ def _build_site_card(
 
     growth_status = _as_str(_deep_first(site, ["growth_status"]))
     delta_available = any(
-        _deep_first(
-            site,
-            [
-                "project_count_delta",
-                "total_users_delta",
-                "active_users_delta",
-                "inactive_users_delta",
-                "licensed_users_estimate_delta",
-                "issue_count_total_delta",
-                "issue_count_unresolved_delta",
-            ],
-        )
-        is not None
-        for _ in [0]
+        _deep_first(site, [field]) is not None
+        for field in [
+            "project_count_delta",
+            "total_users_delta",
+            "active_users_delta",
+            "inactive_users_delta",
+            "licensed_users_estimate_delta",
+            "issue_count_total_delta",
+            "issue_count_unresolved_delta",
+        ]
     )
 
     snapshot = SiteSnapshotViewModel(
@@ -261,6 +257,17 @@ def _build_site_card(
         next_bill_date=billing_truth.get("next_bill_date"),
         next_price_estimate=billing_truth.get("next_price_estimate"),
     )
+
+    server_info = SiteServerInfoViewModel(
+        server_title=_as_str(_deep_first(site, ["server_info.server_title"])),
+        deployment_type=_as_str(_deep_first(site, ["server_info.deployment_type"])),
+        version=_as_str(_deep_first(site, ["server_info.version"])),
+        default_locale=_as_str(_deep_first(site, ["server_info.default_locale"])),
+        server_time_zone=_as_str(_deep_first(site, ["server_info.server_time_zone"])),
+        display_url=_as_str(_deep_first(site, ["server_info.display_url"])),
+    )
+
+    project_sample = _extract_project_sample(site)
 
     usage_percent = _compute_usage_percent(
         licence.licensed_users_estimate,
@@ -279,6 +286,8 @@ def _build_site_card(
         permissions=permissions,
         snapshot=snapshot,
         billing_summary=billing_summary,
+        server_info=server_info,
+        project_sample=project_sample,
         usage_percent=usage_percent,
         last_collected=collected_at,
     )
@@ -307,6 +316,43 @@ def _extract_permissions_view_model(site: Dict[str, Any]) -> SitePermissionsView
         denied_count=denied_count,
         total_count=total_count,
     )
+
+
+def _extract_project_sample(site: Dict[str, Any]) -> List[SiteProjectSampleViewModel]:
+    sample = _deep_first(site, ["project_sample"])
+    if not isinstance(sample, list):
+        return []
+
+    projects: List[SiteProjectSampleViewModel] = []
+
+    for project in sample[:20]:
+        if not isinstance(project, dict):
+            continue
+
+        projects.append(
+            SiteProjectSampleViewModel(
+                key=str(project.get("key") or ""),
+                name=str(project.get("name") or ""),
+                project_type_key=_as_str(project.get("project_type_key")),
+                style=_as_str(project.get("style")),
+                simplified=project.get("simplified"),
+                is_private=project.get("is_private"),
+            )
+        )
+
+    return projects
+
+
+def _extract_category_counts(site: Dict[str, Any]) -> Dict[str, int]:
+    counts = _deep_first(site, ["audit_summary.category_counts"])
+    if not isinstance(counts, dict):
+        return {}
+
+    output: Dict[str, int] = {}
+    for key, value in counts.items():
+        parsed = _safe_int(value)
+        output[str(key)] = parsed if parsed is not None else 0
+    return output
 
 
 def _pick_latest_collected_at(

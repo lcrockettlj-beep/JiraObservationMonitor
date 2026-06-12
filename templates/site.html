@@ -1,4 +1,12 @@
-{% extends "base.html" %}{% extends "base.html' in text or 'available' in text or 'success' in text or 'granted' in text -%}
+{% extends "base.html" %}
+
+{% macro signal_class(value) -%}
+    {%- set text = (value or "")|string|lower -%}
+    {%- if "error" in text or "failed" in text or "denied" in text or "critical" in text or "unavailable" in text -%}
+        signal-critical
+    {%- elif "warning" in text or "partial" in text or "limited" in text or "changed" in text or "review" in text -%}
+        signal-warning
+    {%- elif "ok" in text or "healthy" in text or "available" in text or "success" in text or "granted" in text or "stable" in text -%}
         signal-healthy
     {%- else -%}
         signal-neutral
@@ -55,6 +63,10 @@
                     <span class="signal-pill {{ signal_class(site.licence.licence_status or site.licence.licence_api_access) }}">
                         Licence: {{ site.licence.licence_status or site.licence.licence_api_access or "unknown" }}
                     </span>
+
+                    <span class="signal-pill {{ signal_class(site.snapshot.growth_status) }}">
+                        Growth: {{ site.snapshot.growth_status or "unknown" }}
+                    </span>
                 </div>
             </div>
 
@@ -62,6 +74,11 @@
                 <div class="hero-meta-card">
                     <div class="hero-meta-label">Last collected</div>
                     <div class="hero-meta-value">{{ site.last_collected or home.collected_at or "Not available" }}</div>
+                </div>
+
+                <div class="hero-meta-card">
+                    <div class="hero-meta-label">Server title</div>
+                    <div class="hero-meta-value">{{ site.server_info.server_title or "Not available" }}</div>
                 </div>
 
                 <div class="hero-action-row">
@@ -165,6 +182,14 @@
                     <span>Audit API access</span>
                     <strong>{{ site.audit.audit_api_access or "Not available" }}</strong>
                 </div>
+                <div class="detail-row">
+                    <span>Record count</span>
+                    <strong>{{ site.audit.record_count if site.audit.record_count is not none else "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Automation-related records</span>
+                    <strong>{{ site.audit.automation_related_record_count if site.audit.automation_related_record_count is not none else "Not available" }}</strong>
+                </div>
             </div>
         </article>
 
@@ -194,10 +219,33 @@
 
         <article class="detail-panel detail-panel--wide">
             <div class="detail-panel__header">
-                <h2>Snapshot & Billing Summary</h2>
+                <h2>Site Metadata</h2>
             </div>
-
             <div class="detail-list">
+                <div class="detail-row">
+                    <span>Server title</span>
+                    <strong>{{ site.server_info.server_title or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Deployment type</span>
+                    <strong>{{ site.server_info.deployment_type or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Version</span>
+                    <strong>{{ site.server_info.version or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Default locale</span>
+                    <strong>{{ site.server_info.default_locale or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Server time zone</span>
+                    <strong>{{ site.server_info.server_time_zone or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Display URL</span>
+                    <strong>{{ site.server_info.display_url or "Not available" }}</strong>
+                </div>
                 <div class="detail-row">
                     <span>Snapshot collected</span>
                     <strong>{{ site.snapshot.collected_at or "Not available" }}</strong>
@@ -211,33 +259,75 @@
                     <strong>{% if site.snapshot.delta_available %}Yes{% else %}No{% endif %}</strong>
                 </div>
             </div>
+        </article>
 
-            {% if site.billing_summary.billing_cycle or site.billing_summary.next_bill_date or site.billing_summary.next_price_estimate %}
-                <div class="billing-summary-box">
-                    <div class="billing-summary-title">Billing summary</div>
-                    <div class="billing-summary-row">
-                        <span>Billing cycle</span>
-                        <strong>{{ site.billing_summary.billing_cycle or "Not available" }}</strong>
-                    </div>
-                    <div class="billing-summary-row">
-                        <span>Next bill date</span>
-                        <strong>{{ site.billing_summary.next_bill_date or "Not available" }}</strong>
-                    </div>
-                    <div class="billing-summary-row">
-                        <span>Next price estimate</span>
-                        <strong>{{ site.billing_summary.next_price_estimate or "Not available" }}</strong>
-                    </div>
+        <article class="detail-panel detail-panel--wide">
+            <div class="detail-panel__header">
+                <h2>Billing Summary</h2>
+            </div>
+
+            <div class="detail-list">
+                <div class="detail-row">
+                    <span>Billing cycle</span>
+                    <strong>{{ site.billing_summary.billing_cycle or "Not available" }}</strong>
                 </div>
+                <div class="detail-row">
+                    <span>Next bill date</span>
+                    <strong>{{ site.billing_summary.next_bill_date or "Not available" }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Next price estimate</span>
+                    <strong>{{ site.billing_summary.next_price_estimate or "Not available" }}</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="detail-panel detail-panel--wide">
+            <div class="detail-panel__header">
+                <h2>Audit Categories</h2>
+            </div>
+
+            {% if site.audit.category_counts %}
+                <div class="detail-list">
+                    {% for category, count in site.audit.category_counts.items() %}
+                        <div class="detail-row">
+                            <span>{{ category }}</span>
+                            <strong>{{ count }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">No audit category data available</div>
+            {% endif %}
+        </article>
+
+        <article class="detail-panel detail-panel--wide">
+            <div class="detail-panel__header">
+                <h2>Project Sample</h2>
+            </div>
+
+            {% if site.project_sample %}
+                <div class="detail-list">
+                    {% for project in site.project_sample %}
+                        <div class="detail-row">
+                            <span>
+                                <strong>{{ project.key }}</strong>
+                                — {{ project.name }}
+                            </span>
+                            <strong>
+                                {{ project.project_type_key or "unknown" }}
+                                {% if project.style %} | {{ project.style }}{% endif %}
+                                {% if project.is_private is not none %}
+                                    | {% if project.is_private %}private{% else %}public{% endif %}
+                                {% endif %}
+                            </strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">No project sample data available</div>
             {% endif %}
         </article>
     </section>
 {% endif %}
 {% endblock %}
-
-
-{% macro signal_class(value) -%}
-    {%- set text = (value or '')|string|lower -%}
-    {%- if 'error' in text or 'failed' in text or 'denied' in text or 'critical' in text or 'unavailable' in text -%}
-        signal-critical
-    {%- elif 'warning' in text or 'partial' in text or 'limited' in text or 'changed' in text or 'review' in text -%}
-        signal-warning

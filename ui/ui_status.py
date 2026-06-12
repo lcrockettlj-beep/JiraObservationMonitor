@@ -54,7 +54,13 @@ def _deep_first(data: Dict[str, Any], paths: Iterable[str]) -> Any:
 def _deep_get(data: Any, path: str) -> Any:
     current = data
     for part in path.split("."):
-        if isinstance(current, dict) and part in current:
+        if isinstance(current, list):
+            try:
+                index = int(part)
+                current = current[index]
+            except (ValueError, IndexError):
+                return None
+        elif isinstance(current, dict) and part in current:
             current = current.get(part)
         else:
             return None
@@ -113,9 +119,7 @@ def classify_state(site: Dict[str, Any]) -> str:
     1. Trust backend `status` first if present.
     2. Only fall back to derived logic if backend status is absent.
     """
-    backend_status = _norm(
-        _deep_first(site, ["status"])
-    )
+    backend_status = _norm(_deep_first(site, ["status"]))
 
     if backend_status == "healthy":
         return "stable"
@@ -130,10 +134,7 @@ def classify_state(site: Dict[str, Any]) -> str:
         _deep_first(site, ["audit_api_access", "audit.audit_api_access"])
     )
     licence_status = _norm(
-        _deep_first(
-            site,
-            ["licence_status", "license_status", "licence.licence_status"],
-        )
+        _deep_first(site, ["licence_status", "license_status", "licence.licence_status"])
     )
     licence_api_access = _norm(
         _deep_first(
@@ -154,18 +155,10 @@ def classify_state(site: Dict[str, Any]) -> str:
         ],
     )
 
-    project_count = _safe_int(
-        _deep_first(site, ["project_count", "projects_count", "projects", "project_total"])
-    )
-    issue_count = _safe_int(
-        _deep_first(site, ["issue_count_total", "issue_count", "issues_count", "total_issues"])
-    )
-    unresolved_issue_count = _safe_int(
-        _deep_first(site, ["issue_count_unresolved", "unresolved_issue_count", "unresolved_count"])
-    )
-    updated_last_7_days_count = _safe_int(
-        _deep_first(site, ["issue_count_updated_last_7d", "updated_last_7_days_count", "updated_7d_count"])
-    )
+    project_count = _safe_int(_deep_first(site, ["project_count"]))
+    issue_count = _safe_int(_deep_first(site, ["issue_count_total"]))
+    unresolved_issue_count = _safe_int(_deep_first(site, ["issue_count_unresolved"]))
+    updated_last_7_days_count = _safe_int(_deep_first(site, ["issue_count_updated_last_7d"]))
 
     has_core_metrics = any(
         value is not None
