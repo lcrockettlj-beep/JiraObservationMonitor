@@ -9,7 +9,7 @@
             <h1 class="hero-title">Site not found</h1>
             <p class="hero-subtitle">The selected site could not be resolved from the current homepage view model.</p>
             <div class="hero-action-row">
-                 }}" class="button button--primary">Back to homepage</a>
+                <a href="{{ url_for('home') }}" class="button button--primary">Back to homepage</a>
             </div>
         </div>
     </div>
@@ -27,7 +27,6 @@
                 <span class="hero-pill">Issues: {{ site.metrics.issue_count }}</span>
                 <span class="hero-pill">Unresolved: {{ site.metrics.unresolved_issue_count }}</span>
                 <span class="hero-pill">Updated 7d: {{ site.metrics.updated_last_7_days_count }}</span>
-                <span class="hero-pill">Growth: {{ site.snapshot.growth_status or "unknown" }}</span>
             </div>
         </div>
 
@@ -43,7 +42,7 @@
             </div>
 
             <div class="hero-action-row">
-                 }}" class="button button--ghost">Back to home</a>
+                <a href="{{ url_for('home') }}" class="button button--ghost">Back to home</a>
             </div>
         </div>
     </div>
@@ -70,300 +69,187 @@
 
 <section class="detail-grid">
     <article class="detail-panel">
-        <div class="detail-panel__header detail-panel__header--with-actions">
+        <div class="detail-panel__header">
             <h2>Users</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#users-panel">Collapse</button>
         </div>
-        <div id="users-panel" class="collapse-panel is-open">
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Total users</span>
-                    <strong>{{ site.users.total_users if site.users.total_users is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Active users</span>
-                    <strong>{{ site.users.active_users if site.users.active_users is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Inactive users</span>
-                    <strong>{{ site.users.inactive_users if site.users.inactive_users is not none else "Not available" }}</strong>
-                </div>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Total users</span>
+                <strong>{{ site.users.total_users if site.users.total_users is not none else "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Active users</span>
+                <strong>{{ site.users.active_users if site.users.active_users is not none else "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Inactive users</span>
+                <strong>{{ site.users.inactive_users if site.users.inactive_users is not none else "Not available" }}</strong>
             </div>
         </div>
     </article>
 
     <article class="detail-panel">
-        <div class="detail-panel__header detail-panel__header--with-actions">
+        <div class="detail-panel__header">
             <h2>Licence</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#licence-panel">Collapse</button>
         </div>
-        <div id="licence-panel" class="collapse-panel is-open">
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Licensed users estimate</span>
-                    <strong>{{ site.licence.licensed_users_estimate if site.licence.licensed_users_estimate is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Seats</span>
-                    <strong>{{ site.licence.seats if site.licence.seats is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Remaining seats</span>
-                    <strong>{{ site.licence.remaining_seats if site.licence.remaining_seats is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Licence status</span>
-                    <strong>{{ site.licence.licence_status or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Licence API access</span>
-                    <strong>{{ site.licence.licence_api_access or "Not available" }}</strong>
-                </div>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Licensed users estimate</span>
+                <strong>{{ site.licence.licensed_users_estimate if site.licence.licensed_users_estimate is not none else "Not available" }}</strong>
             </div>
-
-            {% if site.usage_percent is not none %}
-                <div class="usage-bar-block usage-bar-block--tight">
-                    <div class="usage-bar__meta">
-                        <span>Licence usage</span>
-                        <span>{{ site.usage_percent }}%</span>
-                    </div>
-                    <div class="usage-bar">
-                        <div class="usage-bar__fill usage-bar__fill--low" style="width: {{ site.usage_percent }}%;"></div>
-                    </div>
-                </div>
-            {% endif %}
+            <div class="detail-row">
+                <span>Seats</span>
+                <strong>{{ site.licence.seats if site.licence.seats is not none else "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Remaining seats</span>
+                <strong>{{ site.licence.remaining_seats if site.licence.remaining_seats is not none else "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Licence status</span>
+                <strong>{{ site.licence.licence_status or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Licence API access</span>
+                <strong>{{ site.licence.licence_api_access or "Not available" }}</strong>
+            </div>
         </div>
+
+        {% if site.usage_percent is not none %}
+        <div class="usage-bar-block usage-bar-block--tight">
+            <div class="usage-bar__meta">
+                <span>Licence usage</span>
+                <span>{{ site.usage_percent }}%</span>
+            </div>
+            <div class="usage-bar">
+                <div class="usage-bar__fill usage-bar__fill--low" style="width: {{ site.usage_percent }}%;"></div>
+            </div>
+        </div>
+        {% endif %}
     </article>
 
     <article class="detail-panel">
-        <div class="detail-panel__header detail-panel__header--with-actions">
-            <h2>Audit Summary</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#audit-summary-panel">Collapse</button>
+        <div class="detail-panel__header">
+            <h2>Audit</h2>
         </div>
-        <div id="audit-summary-panel" class="collapse-panel is-open">
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Audit status</span>
-                    <strong>{{ site.audit.audit_status or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Audit API access</span>
-                    <strong>{{ site.audit.audit_api_access or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Record count</span>
-                    <strong>{{ site.audit.record_count if site.audit.record_count is not none else "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Automation-related records</span>
-                    <strong>{{ site.audit.automation_related_record_count if site.audit.automation_related_record_count is not none else "Not available" }}</strong>
-                </div>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Audit status</span>
+                <strong>{{ site.audit.audit_status or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Audit API access</span>
+                <strong>{{ site.audit.audit_api_access or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Record count</span>
+                <strong>{{ site.audit.record_count if site.audit.record_count is not none else "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Automation-related records</span>
+                <strong>{{ site.audit.automation_related_record_count if site.audit.automation_related_record_count is not none else "Not available" }}</strong>
             </div>
         </div>
     </article>
 
     <article class="detail-panel">
-        <div class="detail-panel__header detail-panel__header--with-actions">
+        <div class="detail-panel__header">
             <h2>Permissions</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#permissions-panel">Collapse</button>
         </div>
-        <div id="permissions-panel" class="collapse-panel is-open">
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Overall status</span>
-                    <strong>{{ site.permissions.overall_status or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Granted</span>
-                    <strong>{{ site.permissions.granted_count }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Denied</span>
-                    <strong>{{ site.permissions.denied_count }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Total checked</span>
-                    <strong>{{ site.permissions.total_count }}</strong>
-                </div>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Overall status</span>
+                <strong>{{ site.permissions.overall_status or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Granted</span>
+                <strong>{{ site.permissions.granted_count }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Denied</span>
+                <strong>{{ site.permissions.denied_count }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Total checked</span>
+                <strong>{{ site.permissions.total_count }}</strong>
             </div>
         </div>
     </article>
 
     <article class="detail-panel detail-panel--wide">
-        <div class="detail-panel__header detail-panel__header--with-actions">
-            <h2>Snapshot Delta / Change</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#snapshot-panel">Collapse</button>
-        </div>
-        <div id="snapshot-panel" class="collapse-panel is-open">
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Snapshot baseline</span>
-                    <strong>{% if site.snapshot.delta.snapshot_baseline %}Yes{% else %}No{% endif %}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Project delta</span>
-                    <strong>{{ site.snapshot.delta.project_count_delta if site.snapshot.delta.project_count_delta is not none else "0" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Total users delta</span>
-                    <strong>{{ site.snapshot.delta.total_users_delta if site.snapshot.delta.total_users_delta is not none else "0" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Active users delta</span>
-                    <strong>{{ site.snapshot.delta.active_users_delta if site.snapshot.delta.active_users_delta is not none else "0" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Inactive users delta</span>
-                    <strong>{{ site.snapshot.delta.inactive_users_delta if site.snapshot.delta.inactive_users_delta is not none else "0" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Licensed users estimate delta</span>
-                    <strong>{{ site.snapshot.delta.licensed_users_estimate_delta if site.snapshot.delta.licensed_users_estimate_delta is not none else "0" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Issue total delta</span>
-                    <strong>{{ site.snapshot.delta.issue_count_total_delta if site.snapshot.delta.issue_count_total_delta is not none else "0" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Issue unresolved delta</span>
-                    <strong>{{ site.snapshot.delta.issue_count_unresolved_delta if site.snapshot.delta.issue_count_unresolved_delta is not none else "0" }}</strong>
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <article class="detail-panel detail-panel--wide">
-        <div class="detail-panel__header detail-panel__header--with-actions">
-            <h2>Audit Category Counts</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#audit-category-panel">Collapse</button>
-        </div>
-        <div id="audit-category-panel" class="collapse-panel is-open">
-            {% if site.audit.category_counts %}
-                <div class="chip-farm">
-                    {% for category, count in site.audit.category_counts.items() %}
-                        <div class="mini-pill mini-pill--chip">
-                            {{ category }} · {{ count }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-state">No audit category data available</div>
-            {% endif %}
-        </div>
-    </article>
-
-    <article class="detail-panel detail-panel--wide">
-        <div class="detail-panel__header detail-panel__header--with-actions">
-            <h2>Audit Record Sample</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#audit-records-panel">Collapse</button>
-        </div>
-        <div id="audit-records-panel" class="collapse-panel is-open">
-            {% if site.audit.records_sample %}
-                <div class="audit-record-list">
-                    {% for record in site.audit.records_sample %}
-                        <div class="audit-record-row">
-                            <div class="audit-record-row__main">
-                                <div class="audit-record-row__summary">{{ record.summary or "No summary" }}</div>
-                                <div class="audit-record-row__meta">
-                                    {% if record.category %}
-                                        <span class="mini-pill">{{ record.category }}</span>
-                                    {% endif %}
-                                    {% if record.object_name %}
-                                        <span class="mini-pill">{{ record.object_name }}</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="audit-record-row__time">
-                                {{ record.created or "Not available" }}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-state">No audit record sample available</div>
-            {% endif %}
-        </div>
-    </article>
-
-    <article class="detail-panel detail-panel--wide">
-        <div class="detail-panel__header detail-panel__header--with-actions">
+        <div class="detail-panel__header">
             <h2>Site Metadata</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#metadata-panel">Collapse</button>
         </div>
-        <div id="metadata-panel" class="collapse-panel is-open">
-            <div class="detail-list">
-                <div class="detail-row">
-                    <span>Server title</span>
-                    <strong>{{ site.server_info.server_title or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Deployment type</span>
-                    <strong>{{ site.server_info.deployment_type or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Version</span>
-                    <strong>{{ site.server_info.version or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Default locale</span>
-                    <strong>{{ site.server_info.default_locale or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Server time zone</span>
-                    <strong>{{ site.server_info.server_time_zone or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Display URL</span>
-                    <strong>{{ site.server_info.display_url or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Billing cycle</span>
-                    <strong>{{ site.billing_summary.billing_cycle or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Next bill date</span>
-                    <strong>{{ site.billing_summary.next_bill_date or "Not available" }}</strong>
-                </div>
-                <div class="detail-row">
-                    <span>Next price estimate</span>
-                    <strong>{{ site.billing_summary.next_price_estimate or "Not available" }}</strong>
-                </div>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Server title</span>
+                <strong>{{ site.server_info.server_title or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Deployment type</span>
+                <strong>{{ site.server_info.deployment_type or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Version</span>
+                <strong>{{ site.server_info.version or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Default locale</span>
+                <strong>{{ site.server_info.default_locale or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Server time zone</span>
+                <strong>{{ site.server_info.server_time_zone or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Display URL</span>
+                <strong>{{ site.server_info.display_url or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Billing cycle</span>
+                <strong>{{ site.billing_summary.billing_cycle or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Next bill date</span>
+                <strong>{{ site.billing_summary.next_bill_date or "Not available" }}</strong>
+            </div>
+            <div class="detail-row">
+                <span>Next price estimate</span>
+                <strong>{{ site.billing_summary.next_price_estimate or "Not available" }}</strong>
             </div>
         </div>
     </article>
 
     <article class="detail-panel detail-panel--wide">
-        <div class="detail-panel__header detail-panel__header--with-actions">
+        <div class="detail-panel__header">
             <h2>Project Sample</h2>
-            <button class="collapse-toggle" type="button" data-collapse-trigger="#project-sample-panel">Collapse</button>
         </div>
-        <div id="project-sample-panel" class="collapse-panel is-open">
-            {% if site.project_sample %}
-                <div class="project-list">
-                    {% for project in site.project_sample %}
-                        <div class="project-row">
-                            <div class="project-row__main">
-                                <div class="project-key">{{ project.key }}</div>
-                                <div class="project-name">{{ project.name }}</div>
-                            </div>
-                            <div class="project-row__meta">
-                                {% if project.project_type_key %}
-                                    <span class="mini-pill">{{ project.project_type_key }}</span>
-                                {% endif %}
-                                {% if project.style %}
-                                    <span class="mini-pill">{{ project.style }}</span>
-                                {% endif %}
-                                {% if project.is_private is not none %}
-                                    <span class="mini-pill">{% if project.is_private %}private{% else %}public{% endif %}</span>
-                                {% endif %}
-                            </div>
+
+        {% if site.project_sample %}
+            <div class="project-list">
+                {% for project in site.project_sample %}
+                    <div class="project-row">
+                        <div class="project-row__main">
+                            <div class="project-key">{{ project.key }}</div>
+                            <div class="project-name">{{ project.name }}</div>
                         </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-state">No project sample data available</div>
-            {% endif %}
-        </div>
+                        <div class="project-row__meta">
+                            {% if project.project_type_key %}
+                                <span class="mini-pill">{{ project.project_type_key }}</span>
+                            {% endif %}
+                            {% if project.style %}
+                                <span class="mini-pill">{{ project.style }}</span>
+                            {% endif %}
+                            {% if project.is_private is not none %}
+                                <span class="mini-pill">{% if project.is_private %}private{% else %}public{% endif %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">No project sample data available</div>
+        {% endif %}
     </article>
 </section>
 {% endif %}

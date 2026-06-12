@@ -1,7 +1,9 @@
-document.addEventListener("DOMContentLoaded", function () {document.addEventListener("-toggle-icon");
+document.addEventListener("DOMContentLoaded", function () {
+    const root = document.documentElement;
+    const toggleButton = document.getElementById("theme-toggle");
+    const toggleIcon = document.getElementById("theme-toggle-icon");
     const toggleText = document.getElementById("theme-toggle-text");
     const refreshButtons = document.querySelectorAll('[data-action="refresh"]');
-    const collapseButtons = document.querySelectorAll("[data-collapse-trigger]");
 
     function getPreferredTheme() {
         const saved = localStorage.getItem("jom-theme");
@@ -41,57 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {document.addEventList
         setTheme(next);
     }
 
-    function setCollapseHeight(panel) {
-        if (!panel) return;
-
-        if (panel.classList.contains("is-collapsed")) {
-            panel.style.maxHeight = "0px";
-        } else {
-            panel.style.maxHeight = panel.scrollHeight + "px";
-        }
-    }
-
-    function toggleCollapse(button) {
-        const targetSelector = button.getAttribute("data-collapse-trigger");
-        if (!targetSelector) return;
-
-        const panel = document.querySelector(targetSelector);
-        if (!panel) return;
-
-        panel.classList.toggle("is-collapsed");
-
-        if (panel.classList.contains("is-collapsed")) {
-            button.textContent = "Expand";
-        } else {
-            button.textContent = "Collapse";
-        }
-
-        setCollapseHeight(panel);
-    }
-
-    function initCollapsePanels() {
-        collapseButtons.forEach(function (button) {
-            const targetSelector = button.getAttribute("data-collapse-trigger");
-            if (!targetSelector) return;
-
-            const panel = document.querySelector(targetSelector);
-            if (!panel) return;
-
-            panel.classList.add("is-open");
-            setCollapseHeight(panel);
-
-            button.addEventListener("click", function () {
-                toggleCollapse(button);
-            });
-        });
-
-        window.addEventListener("resize", function () {
-            document.querySelectorAll(".collapse-panel").forEach(function (panel) {
-                setCollapseHeight(panel);
-            });
-        });
-    }
-
     setTheme(getPreferredTheme());
 
     if (toggleButton) {
@@ -103,8 +54,4 @@ document.addEventListener("DOMContentLoaded", function () {document.addEventList
             window.location.reload();
         });
     });
-
-    initCollapsePanels();
 });
-    const root = document.documentElement;
-    const toggleButton = document.getElementById("theme-toggle");
