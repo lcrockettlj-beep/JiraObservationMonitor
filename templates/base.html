@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,27 +7,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
 </head>
 <body>
-    {% set current_site_key = site.site_key if site else '' %}
+    {% set current_site_key = site.site_key if site is defined and site else '' %}
 
     <div class="app-shell">
         <header class="top-nav">
             <div class="brand-block">
-                <div class="brand-kicker">GLI · Atlassian Operations</div>
-                <div class="brand-title">Jira Observation Monitor</div>
+                <img
+                    src="https://gaminglabs.com/wp-content/uploads/2021/12/footer-logo.svg"
+                    class="brand-logo"
+                    alt="GLI Logo"
+                >
+                <div class="brand-text">
+                    <div class="brand-kicker">GLI · Atlassian Operations</div>
+                    <div class="brand-title">Jira Observation Monitor</div>
+                </div>
             </div>
 
             <nav class="site-tabs" aria-label="Primary navigation">
-                <a class="site-tab {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">
+                <a
+                    href="{{ url_for('home') }}"
+                    class="site-tab {% if request.path == '/' %}active{% endif %}"
+                >
                     Home
                 </a>
 
                 {% for tab in home.site_tabs %}
-                    <a class="site-tab {% if current_site_key == tab.site_key %}active{% endif %}"
-                       href="{{ url_for('site_detail', site_key=tab.site_key) }}">
+                    <a
+                        href="{{ url_for('site_detail', site_key=tab.site_key) }}"
+                        class="site-tab {% if current_site_key == tab.site_key %}active{% endif %}"
+                    >
                         {{ tab.site_name }}
                     </a>
                 {% endfor %}
             </nav>
+
+            <div class="top-actions">
+                <button
+                    id="theme-toggle"
+                    class="button button--ghost button--sm"
+                    type="button"
+                    aria-label="Toggle dark mode"
+                >
+                    <span id="theme-toggle-icon">🌙</span>
+                    <span id="theme-toggle-text">Dark mode</span>
+                </button>
+            </div>
         </header>
 
         <main class="page-wrap">
