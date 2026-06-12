@@ -1,6 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets / auth
 .env
 tokens.json
-reports/__pycache__/
+
+# Runtime / generated outputs
 latest_run.json
-*.pyc
+latest_run_pretty.json
+reports/
 snapshots/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test / cache
+.pytest_cache/
+instance/

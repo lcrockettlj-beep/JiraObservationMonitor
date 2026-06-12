@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from ui.view_models import (
+    AuditRecordSampleViewModel,
     BillingSummaryViewModel,
     HomepageSummaryViewModel,
     HomepageViewModel,
@@ -14,6 +15,7 @@ from ui.view_models import (
     SitePermissionsViewModel,
     SiteProjectSampleViewModel,
     SiteServerInfoViewModel,
+    SiteSnapshotDeltaViewModel,
     SiteSnapshotViewModel,
     SiteUsersViewModel,
 )
@@ -31,7 +33,6 @@ EXCLUDED_SITE_TOKENS = {
     "gaminglabs-team-tsyfo716",
     "gaminglabs-team-h2pbpmis",
 }
-
 
 BILLING_TRUTH: Dict[str, Dict[str, Optional[str]]] = {
     "https://gli-global-technology.atlassian.net": {
@@ -210,6 +211,7 @@ def _build_site_card(
             _deep_first(site, ["audit_summary.automation_related_record_count"])
         ),
         category_counts=_extract_category_counts(site),
+        records_sample=_extract_audit_records_sample(site),
     )
 
     permissions = _extract_permissions_view_model(site)
@@ -231,24 +233,35 @@ def _build_site_card(
         or fallback_collected_at
     )
 
-    growth_status = _as_str(_deep_first(site, ["growth_status"]))
+    snapshot_delta = SiteSnapshotDeltaViewModel(
+        snapshot_baseline=bool(_deep_first(site, ["snapshot_baseline"])),
+        project_count_delta=_safe_int(_deep_first(site, ["project_count_delta"])),
+        total_users_delta=_safe_int(_deep_first(site, ["total_users_delta"])),
+        active_users_delta=_safe_int(_deep_first(site, ["active_users_delta"])),
+        inactive_users_delta=_safe_int(_deep_first(site, ["inactive_users_delta"])),
+        licensed_users_estimate_delta=_safe_int(_deep_first(site, ["licensed_users_estimate_delta"])),
+        issue_count_total_delta=_safe_int(_deep_first(site, ["issue_count_total_delta"])),
+        issue_count_unresolved_delta=_safe_int(_deep_first(site, ["issue_count_unresolved_delta"])),
+    )
+
     delta_available = any(
-        _deep_first(site, [field]) is not None
-        for field in [
-            "project_count_delta",
-            "total_users_delta",
-            "active_users_delta",
-            "inactive_users_delta",
-            "licensed_users_estimate_delta",
-            "issue_count_total_delta",
-            "issue_count_unresolved_delta",
+        value is not None
+        for value in [
+            snapshot_delta.project_count_delta,
+            snapshot_delta.total_users_delta,
+            snapshot_delta.active_users_delta,
+            snapshot_delta.inactive_users_delta,
+            snapshot_delta.licensed_users_estimate_delta,
+            snapshot_delta.issue_count_total_delta,
+            snapshot_delta.issue_count_unresolved_delta,
         ]
     )
 
     snapshot = SiteSnapshotViewModel(
         collected_at=collected_at,
-        growth_status=growth_status,
+        growth_status=_as_str(_deep_first(site, ["growth_status"])),
         delta_available=delta_available,
+        delta=snapshot_delta,
     )
 
     billing_truth = BILLING_TRUTH.get(site_url, {})
@@ -352,6 +365,35 @@ def _extract_category_counts(site: Dict[str, Any]) -> Dict[str, int]:
     for key, value in counts.items():
         parsed = _safe_int(value)
         output[str(key)] = parsed if parsed is not None else 0
+    return output
+
+
+def _extract_audit_records_sample(site: Dict[str, Any]) -> List[AuditRecordSampleViewModel]:
+    records = _deep_first(site, ["audit_summary.records_sample"])
+    if not isinstance(records, list):
+        return []
+
+    output: List[AuditRecordSampleViewModel] = []
+
+    for record in records[:8]:
+        if not isinstance(record, dict):
+            continue
+
+        object_name = None
+        object_item = record.get("objectItem")
+        if isinstance(object_item, dict):
+            object_name = object_item.get("name")
+
+        output.append(
+            AuditRecordSampleViewModel(
+                audit_id=_as_str(record.get("id")),
+                created=_as_str(record.get("created")),
+                category=_as_str(record.get("category")),
+                summary=_as_str(record.get("summary")),
+                object_name=_as_str(object_name),
+            )
+        )
+
     return output
 
 

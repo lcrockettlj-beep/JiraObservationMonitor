@@ -34,12 +34,22 @@ class SiteLicenceViewModel:
 
 
 @dataclass
+class AuditRecordSampleViewModel:
+    audit_id: Optional[str] = None
+    created: Optional[str] = None
+    category: Optional[str] = None
+    summary: Optional[str] = None
+    object_name: Optional[str] = None
+
+
+@dataclass
 class SiteAuditViewModel:
     audit_status: Optional[str] = None
     audit_api_access: Optional[str] = None
     record_count: Optional[int] = None
     automation_related_record_count: Optional[int] = None
     category_counts: Dict[str, int] = field(default_factory=dict)
+    records_sample: List[AuditRecordSampleViewModel] = field(default_factory=list)
 
 
 @dataclass
@@ -51,10 +61,23 @@ class SitePermissionsViewModel:
 
 
 @dataclass
+class SiteSnapshotDeltaViewModel:
+    snapshot_baseline: bool = False
+    project_count_delta: Optional[int] = None
+    total_users_delta: Optional[int] = None
+    active_users_delta: Optional[int] = None
+    inactive_users_delta: Optional[int] = None
+    licensed_users_estimate_delta: Optional[int] = None
+    issue_count_total_delta: Optional[int] = None
+    issue_count_unresolved_delta: Optional[int] = None
+
+
+@dataclass
 class SiteSnapshotViewModel:
     collected_at: Optional[str] = None
     growth_status: Optional[str] = None
     delta_available: bool = False
+    delta: SiteSnapshotDeltaViewModel = field(default_factory=SiteSnapshotDeltaViewModel)
 
 
 @dataclass
