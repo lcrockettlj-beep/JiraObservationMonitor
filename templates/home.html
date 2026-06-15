@@ -105,7 +105,8 @@
         }
 
         .stat-card:hover,
-        .breakdown-row.clickable:hover {
+        .breakdown-row.clickable:hover,
+        .site-card-link:hover .site-card {
             border-color: rgba(69, 155, 227, 0.45);
             background: rgba(255,255,255,0.06);
         }
@@ -190,6 +191,10 @@
             gap: 14px;
         }
 
+        .site-card-link {
+            display: block;
+        }
+
         .site-card {
             background: var(--panel-solid);
             border: 1px solid var(--border);
@@ -200,6 +205,7 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
+            transition: 0.15s ease;
         }
 
         .site-card--critical { border-left-color: var(--critical); }
@@ -443,24 +449,26 @@
         {% if sites %}
         <div class="site-grid">
             {% for site in sites %}
-            <article class="site-card site-card--{{ badge }}">
-                <div class="site-top"><h3 class="site-name">{{ site.site_name }}</h3><span class="badge badge--{{ badge }}">{{ site.tier_status }}</span></div>
-                <div class="metrics">
-                    <div class="metric"><div class="metric-label">Jira site users</div><div class="metric-value">{{ site.total_users or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Licensed / Tier</div><div class="metric-value">{{ site.licensed_users or 0 }} / {{ site.tier_limit or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Active Jira users</div><div class="metric-value">{{ site.active_users or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Inactive Jira users</div><div class="metric-value">{{ site.inactive_users or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Confluence users</div><div class="metric-value">{{ site.confluence_users or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Atlas / Goals / Projects</div><div class="metric-value">{{ site.atlas_users or 0 }} / {{ site.goals_users or 0 }} / {{ site.projects_users or 0 }}</div></div>
-                </div>
-                <div class="usage-wrap">
-                    <div class="usage-row"><span>Why this stands out</span><strong>{% if site.tier_status == 'critical' %}Tier full{% elif site.tier_status == 'warning' %}Near tier limit{% else %}Headroom available{% endif %}</strong></div>
-                    <div class="usage-row"><span>Atlassian area</span><strong>Billing / User access</strong></div>
-                    <div class="usage-row"><span>Tier usage</span><strong>{{ site.usage_percent or 0 }}%</strong></div>
-                    <div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div></div>
-                    <div class="usage-row" style="margin-top:8px;"><span>Capacity remaining</span><strong>{{ site.capacity_remaining or 0 }}</strong></div>
-                </div>
-            </article>
+            <a class="site-card-link" href="/detail/site::{{ site.site }}">
+                <article class="site-card site-card--{{ badge }}">
+                    <div class="site-top"><h3 class="site-name">{{ site.site_name }}</h3><span class="badge badge--{{ badge }}">{{ site.tier_status }}</span></div>
+                    <div class="metrics">
+                        <div class="metric"><div class="metric-label">Jira site users</div><div class="metric-value">{{ site.total_users or 0 }}</div></div>
+                        <div class="metric"><div class="metric-label">Licensed / Tier</div><div class="metric-value">{{ site.licensed_users or 0 }} / {{ site.tier_limit or 0 }}</div></div>
+                        <div class="metric"><div class="metric-label">Active Jira users</div><div class="metric-value">{{ site.active_users or 0 }}</div></div>
+                        <div class="metric"><div class="metric-label">Inactive Jira users</div><div class="metric-value">{{ site.inactive_users or 0 }}</div></div>
+                        <div class="metric"><div class="metric-label">Confluence users</div><div class="metric-value">{{ site.confluence_users or 0 }}</div></div>
+                        <div class="metric"><div class="metric-label">Atlas / Goals / Projects</div><div class="metric-value">{{ site.atlas_users or 0 }} / {{ site.goals_users or 0 }} / {{ site.projects_users or 0 }}</div></div>
+                    </div>
+                    <div class="usage-wrap">
+                        <div class="usage-row"><span>Why this stands out</span><strong>{% if site.tier_status == 'critical' %}Tier full{% elif site.tier_status == 'warning' %}Near tier limit{% else %}Headroom available{% endif %}</strong></div>
+                        <div class="usage-row"><span>Atlassian area</span><strong>Billing / User access</strong></div>
+                        <div class="usage-row"><span>Tier usage</span><strong>{{ site.usage_percent or 0 }}%</strong></div>
+                        <div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div></div>
+                        <div class="usage-row" style="margin-top:8px;"><span>Capacity remaining</span><strong>{{ site.capacity_remaining or 0 }}</strong></div>
+                    </div>
+                </article>
+            </a>
             {% endfor %}
         </div>
         {% else %}

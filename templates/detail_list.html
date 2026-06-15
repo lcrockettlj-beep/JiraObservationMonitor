@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -134,10 +133,17 @@
         <div class="reason">Why it stands out: {{ reason }}</div>
         <div class="atlassian-area">Go to Atlassian: {{ atlassian_area }}</div>
         <div class="count">{{ rows|length }} record(s)</div>
+
         <div class="sort-note">
             Sort by clicking a column heading.
             {% if sort_key %}
-            Current sort: <strong>{{ sort_key }}</strong>
+            Current sort:
+            <strong>{{ sort_key }}</strong>
+            {% if sort_order == "desc" %}
+            (descending)
+            {% elif sort_order == "asc" %}
+            (ascending)
+            {% endif %}
             {% endif %}
         </div>
 
@@ -146,9 +152,22 @@
             <thead>
                 <tr>
                     {% for col in columns %}
-                    <th>
-                        <a href="/detail/{{ detail_key }}?sort={{ col }}">{{ col.replace('_', ' ') }}</a>
-                    </th>
+                        {% set next_order = 'asc' %}
+                        {% if sort_key == col and sort_order != 'desc' %}
+                            {% set next_order = 'desc' %}
+                        {% endif %}
+                        <th>
+                            <a href="/detail/{{ detail_key }}?sort={{ col }}&order={{ next_order }}">
+                                {{ col.replace('_', ' ') }}
+                                {% if sort_key == col %}
+                                    {% if sort_order == 'desc' %}
+                                        ↓
+                                    {% else %}
+                                        ↑
+                                    {% endif %}
+                                {% endif %}
+                            </a>
+                        </th>
                     {% endfor %}
                 </tr>
             </thead>

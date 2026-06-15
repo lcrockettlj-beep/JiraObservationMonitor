@@ -1,9 +1,9 @@
-
 from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
 import csv
 import glob
 import os
+from datetime import datetime
 
 from estate_metrics import build_estate_metrics
 from billing_catalog import get_billing_catalog
@@ -34,19 +34,86 @@ def _load_csv_rows(pattern):
         return [], os.path.basename(latest_file)
 
 
-def _sort_rows(rows, sort_key):
+def _parse_possible_datetime(value):
+    """
+    Try to parse different date/time styles that may appear in drill-down rows.
+    Returns a datetime or None.
+    """
+    if value is None:
+        return None
+
+    text = str(value).strip()
+    if not text:
+        return None
+
+    if text.lower() in {"never accessed", "never", "-", "none", "n/a"}:
+        return None
+
+    formats = [
+        "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d",
+        "%d/%m/%Y %H:%M:%S",
+        "%d/%m/%Y",
+        "%b %d, %Y",
+        "%b %d, %Y %H:%M",
+        "%B %d, %Y",
+        "%B %d, %Y %H:%M",
+    ]
+
+    for fmt in formats:
+        try:
+            return datetime.strptime(text, fmt)
+        except ValueError:
+            continue
+
+    return None
+
+
+def _is_last_seen_field(sort_key):
+    if not sort_key:
+        return False
+    key = str(sort_key).lower()
+    return (
+        "last_seen" in key
+        or "last seen" in key
+        or key == "last_active"
+        or "last_active" in key
+    )
+
+
+def _sort_rows(rows, sort_key, order="asc"):
     if not rows or not sort_key:
         return rows
 
-    def safe_value(row):
+    descending = str(order).lower() == "desc"
+
+    if _is_last_seen_field(sort_key):
+        def dt_key(row):
+            parsed = _parse_possible_datetime(row.get(sort_key))
+            if parsed is None:
+                # Put blanks / "Never accessed" at the bottom in both directions
+                return (1, datetime.min)
+            return (0, parsed)
+
+        sorted_rows = sorted(rows, key=dt_key, reverse=descending)
+
+        # default desired behaviour for last-seen fields = newest first
+        if order == "":
+            sorted_rows = sorted(rows, key=dt_key, reverse=True)
+
+        return sorted_rows
+
+    def text_key(row):
         value = row.get(sort_key, "")
         if value is None:
-            return ""
+            value = ""
         if isinstance(value, list):
-            return ", ".join(str(v) for v in value).lower()
+            value = ", ".join(str(v) for v in value)
         return str(value).lower()
 
-    return sorted(rows, key=safe_value)
+    return sorted(rows, key=text_key, reverse=descending)
 
 
 def _build_data():
@@ -93,11 +160,21 @@ def home():
 def detail(key: str):
     data = _build_data()
     item = data.get("drilldowns", {}).get(key)
+
     if not item:
         abort(404)
 
     sort_key = request.args.get("sort", "").strip()
-    rows = _sort_rows(item.get("rows", []), sort_key)
+    order = request.args.get("order", "").strip().lower()
+
+    rows = item.get("rows", [])
+
+    # default behaviour:
+    # if user is sorting a last-seen style field and no order provided, show newest first
+    if sort_key and _is_last_seen_field(sort_key) and order == "":
+        order = "desc"
+
+    rows = _sort_rows(rows, sort_key, order)
 
     return render_template(
         "detail_list.html",
@@ -108,6 +185,7 @@ def detail(key: str):
         columns=item.get("columns", []),
         rows=rows,
         sort_key=sort_key,
+        sort_order=order,
     )
 
 
