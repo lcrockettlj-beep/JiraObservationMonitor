@@ -1,157 +1,68 @@
-import os
+from typing import Dict, List, Any
 
-from jira_client import safe_jira_get
+def has_any_activity(user: Dict[str, Any]) -> bool:
+    for key, value in user.items():
+        if "Last seen in" in key:
+            if value and value != "Never accessed":
+                return True
+    return False
 
+def has_jira_access(user: Dict[str, Any], site_key: str) -> bool:
+    return user.get(site_key) == "User"
 
-USER_PAGE_SIZE = int(os.getenv("JOM_USER_PAGE_SIZE", "100"))
+def has_jira_activity(user: Dict[str, Any], last_seen_key: str) -> bool:
+    value = user.get(last_seen_key)
+    return value and value != "Never accessed"
 
+def calculate_site_users(users: List[Dict[str, Any]], site: str):
+    site_key = f"Jira - {site}"
+    last_seen_key = f"Last seen in Jira - {site}"
 
-def _extract_application_role_products(application_roles_payload):
-    if not isinstance(application_roles_payload, list):
-        return []
+    total = set()
+    active = set()
+    inactive = set()
 
-    products = []
+    for u in users:
+        uid = u.get("User id") or u.get("Atlassian ID") or u.get("email")
 
-    for role in application_roles_payload:
-        if not isinstance(role, dict):
-            continue
+        if has_jira_access(u, site_key):
+            total.add(uid)
 
-        products.append({
-            "key": role.get("key"),
-            "name": role.get("name"),
-            "user_count": role.get("userCount"),
-            "number_of_seats": role.get("numberOfSeats"),
-            "remaining_seats": role.get("remainingSeats"),
-            "has_unlimited_seats": role.get("hasUnlimitedSeats"),
-            "selected_by_default": role.get("selectedByDefault"),
-            "defined": role.get("defined")
-        })
-
-    return products
-
-
-def _estimate_licensed_users_from_roles(products):
-    """
-    Conservative estimate:
-    - take the maximum visible product userCount where present
-    - avoids double-counting across multiple app roles
-    """
-    counts = []
-
-    for product in products:
-        user_count = product.get("user_count")
-        if isinstance(user_count, int):
-            counts.append(user_count)
-
-    if not counts:
-        return None
-
-    return max(counts)
-
-
-def _fetch_all_users(access_token, cloud_id):
-    """
-    Uses Jira Cloud users/search endpoint in pages.
-    Note: Jira user search/list resources only return users found within the first 1000 users.
-    """
-    users = []
-    start_at = 0
-    max_results = USER_PAGE_SIZE
-
-    while True:
-        result = safe_jira_get(
-            access_token=access_token,
-            cloud_id=cloud_id,
-            endpoint="users/search",
-            params={
-                "startAt": start_at,
-                "maxResults": max_results
-            }
-        )
-
-        if not result.get("ok"):
-            return {
-                "ok": False,
-                "users": [],
-                "error": result.get("error"),
-                "error_category": result.get("error_category"),
-                "status_code": result.get("status_code"),
-                "url": result.get("url")
-            }
-
-        payload = result.get("data")
-        if not isinstance(payload, list):
-            payload = []
-
-        users.extend(payload)
-
-        if len(payload) < max_results:
-            break
-
-        start_at += max_results
-
-        if start_at >= 1000:
-            break
+            if has_jira_activity(u, last_seen_key):
+                active.add(uid)
+            else:
+                inactive.add(uid)
 
     return {
-        "ok": True,
-        "users": users,
-        "error": None,
-        "error_category": None,
-        "status_code": 200,
-        "url": None
+        "total_users": len(total),
+        "active_users": len(active),
+        "inactive_users": len(inactive),
     }
 
+def calculate_estate_users(users: List[Dict[str, Any]]):
+    total = set()
+    active = set()
+    inactive = set()
+    no_access = set()
 
-def _summarise_users(users):
-    total_users = 0
-    active_users = 0
-    inactive_users = 0
+    for u in users:
+        uid = u.get("User id") or u.get("Atlassian ID") or u.get("email")
+        total.add(uid)
 
-    for user in users:
-        if not isinstance(user, dict):
-            continue
+        has_access = any(v == "User" for k, v in u.items() if k.startswith("Jira - "))
+        has_activity = has_any_activity(u)
 
-        total_users += 1
+        if has_activity:
+            active.add(uid)
+        else:
+            inactive.add(uid)
 
-        if user.get("active") is True:
-            active_users += 1
-        elif user.get("active") is False:
-            inactive_users += 1
-
-    return {
-        "total_users": total_users,
-        "active_users": active_users,
-        "inactive_users": inactive_users
-    }
-
-
-def collect_user_and_licence_data(access_token, cloud_id, application_roles_payload=None):
-    products = _extract_application_role_products(application_roles_payload)
-    licensed_users_estimate = _estimate_licensed_users_from_roles(products)
-
-    user_fetch = _fetch_all_users(access_token, cloud_id)
-
-    if user_fetch["ok"]:
-        user_summary = _summarise_users(user_fetch["users"])
-    else:
-        user_summary = {
-            "total_users": None,
-            "active_users": None,
-            "inactive_users": None
-        }
+        if not has_access:
+            no_access.add(uid)
 
     return {
-        "user_summary": user_summary,
-        "user_fetch_status": {
-            "ok": user_fetch["ok"],
-            "error": user_fetch["error"],
-            "error_category": user_fetch["error_category"],
-            "status_code": user_fetch["status_code"],
-            "url": user_fetch["url"]
-        },
-        "licence_summary": {
-            "licensed_users_estimate": licensed_users_estimate,
-            "products": products
-        }
+        "total_users": len(total),
+        "active_users": len(active),
+        "inactive_users": len(inactive),
+        "no_site_access": len(no_access),
     }
