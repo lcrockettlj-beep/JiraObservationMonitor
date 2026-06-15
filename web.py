@@ -36,8 +36,7 @@ def _load_csv_rows(pattern):
 
 def _parse_possible_datetime(value):
     """
-    Try to parse different date/time styles that may appear in drill-down rows.
-    Returns a datetime or None.
+    Parse real date formats seen in your drill-downs.
     """
     if value is None:
         return None
@@ -50,6 +49,8 @@ def _parse_possible_datetime(value):
         return None
 
     formats = [
+        "%d %b %Y",          # 15 Jun 2026
+        "%d %B %Y",          # 15 June 2026
         "%Y-%m-%dT%H:%M:%S.%f",
         "%Y-%m-%dT%H:%M:%S",
         "%Y-%m-%d %H:%M:%S",
@@ -93,17 +94,11 @@ def _sort_rows(rows, sort_key, order="asc"):
         def dt_key(row):
             parsed = _parse_possible_datetime(row.get(sort_key))
             if parsed is None:
-                # Put blanks / "Never accessed" at the bottom in both directions
+                # blanks / Never accessed go to bottom
                 return (1, datetime.min)
             return (0, parsed)
 
-        sorted_rows = sorted(rows, key=dt_key, reverse=descending)
-
-        # default desired behaviour for last-seen fields = newest first
-        if order == "":
-            sorted_rows = sorted(rows, key=dt_key, reverse=True)
-
-        return sorted_rows
+        return sorted(rows, key=dt_key, reverse=descending)
 
     def text_key(row):
         value = row.get(sort_key, "")
@@ -169,8 +164,7 @@ def detail(key: str):
 
     rows = item.get("rows", [])
 
-    # default behaviour:
-    # if user is sorting a last-seen style field and no order provided, show newest first
+    # default last-seen behaviour = newest first
     if sort_key and _is_last_seen_field(sort_key) and order == "":
         order = "desc"
 
