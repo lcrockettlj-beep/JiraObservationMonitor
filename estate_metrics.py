@@ -10,9 +10,27 @@ TRACKED_JIRA_SITES = [
 ]
 
 SITE_CONFIG = [
-    {"key": "gli-it-project", "site_name": "GLI IT Project", "tier": 100, "licensed": 58},
-    {"key": "gli-delivery-tm", "site_name": "GLI Delivery TM", "tier": 50, "licensed": 28},
-    {"key": "gli-global-technology", "site_name": "GLI Global Technology", "tier": 53, "licensed": 53},
+    {
+        "key": "gli-it-project",
+        "site_name": "GLI IT Project",
+        "licence_model": "tiered",
+        "tier": 100,
+        "licensed": 58,
+    },
+    {
+        "key": "gli-delivery-tm",
+        "site_name": "GLI Delivery TM",
+        "licence_model": "tiered",
+        "tier": 50,
+        "licensed": 28,
+    },
+    {
+        "key": "gli-global-technology",
+        "site_name": "GLI Global Technology",
+        "licence_model": "seat_paid",
+        "tier": None,
+        "licensed": 53,
+    },
 ]
 
 
@@ -86,6 +104,7 @@ def _build_org_product_breakdown(managed_rows: List[Dict[str, Any]]) -> List[Dic
     for label, column_name in product_columns:
         if column_name not in available_columns:
             continue
+
         count = _unique_count(managed_rows, column_name, id_key)
         if count > 0:
             breakdown.append({
@@ -135,6 +154,7 @@ def _build_users_export_access_breakdown(users_rows: List[Dict[str, Any]]) -> Li
 
 def _tracked_jira_no_access_count(users_rows: List[Dict[str, Any]]) -> int:
     no_access = set()
+
     for row in users_rows:
         uid = _uid(row)
         if not uid:
@@ -154,6 +174,7 @@ def _tracked_jira_no_access_count(users_rows: List[Dict[str, Any]]) -> int:
 
 def _bitbucket_only_count(users_rows: List[Dict[str, Any]]) -> int:
     values = set()
+
     for row in users_rows:
         uid = _uid(row)
         if not uid:
@@ -366,26 +387,83 @@ def _find_site_specific_users(users_rows: List[Dict[str, Any]], site_key: str) -
     return items
 
 
+def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Mixed licence model handling:
+    - tiered sites use tier warning logic
+    - seat_paid sites do NOT use tier warning logic
+    """
+    licence_model = site_record.get("licence_model")
+
+    if licence_model == "seat_paid":
+        return {
+            "status": "stable",
+            "reason": "Seat-paid model — tier usage warnings do not apply at present.",
+            "atlassian_area": "Billing / User access",
+        }
+
+    tier_status = site_record.get("tier_status", "stable")
+    usage_percent = site_record.get("usage_percent", 0)
+    capacity_remaining = site_record.get("capacity_remaining", 0)
+
+    if tier_status == "critical":
+        return {
+            "status": "critical",
+            "reason": f"Tier capacity is effectively full ({usage_percent}% used, {capacity_remaining} remaining).",
+            "atlassian_area": "Billing / User access",
+        }
+    if tier_status == "warning":
+        return {
+            "status": "warning",
+            "reason": f"Tier usage is approaching limit ({usage_percent}% used, {capacity_remaining} remaining).",
+            "atlassian_area": "Billing / User access",
+        }
+
+    return {
+        "status": "stable",
+        "reason": f"Tier usage currently has headroom ({usage_percent}% used, {capacity_remaining} remaining).",
+        "atlassian_area": "Billing / User access",
+    }
+
+
 def build_estate_metrics(users_rows: List[Dict[str, Any]], managed_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     site_results = []
+
     for site in SITE_CONFIG:
         site_key = site["key"]
+        licence_model = site["licence_model"]
+
         users_data = calculate_site_users(users_rows, site_key)
-        tier_data = generate_tier_metrics(site["licensed"], site["tier"])
-        site_results.append({
+
+        if licence_model == "tiered":
+            tier_data = generate_tier_metrics(site["licensed"], site["tier"])
+        else:
+            tier_data = {
+                "licensed_users": site["licensed"],
+                "tier_limit": None,
+                "usage_percent": None,
+                "capacity_remaining": None,
+                "tier_status": "not_applicable",
+            }
+
+        site_result = {
             "site": site_key,
             "site_name": site["site_name"],
+            "licence_model": licence_model,
             **users_data,
             **tier_data,
             "confluence_users": _site_extra_access_count(users_rows, "Confluence", site_key),
             "atlas_users": _site_extra_access_count(users_rows, "Atlas", site_key),
             "goals_users": _site_extra_access_count(users_rows, "Goals", site_key),
             "projects_users": _site_extra_access_count(users_rows, "Projects", site_key),
-        })
+        }
 
-    critical_sites = [s for s in site_results if s["tier_status"] == "critical"]
-    warning_sites = [s for s in site_results if s["tier_status"] == "warning"]
-    stable_sites = [s for s in site_results if s["tier_status"] == "stable"]
+        site_result.update(_build_site_operational_status(site_result))
+        site_results.append(site_result)
+
+    critical_sites = [s for s in site_results if s["status"] == "critical"]
+    warning_sites = [s for s in site_results if s["status"] == "warning"]
+    stable_sites = [s for s in site_results if s["status"] == "stable"]
 
     activity = calculate_estate_users(users_rows)
     managed_total_users = len({_uid(r) for r in managed_rows if _uid(r)}) if managed_rows else 0
