@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -64,6 +65,17 @@
             margin-bottom:20px;
         }
 
+        .count {
+            color:var(--muted);
+            margin-bottom:12px;
+        }
+
+        .sort-note {
+            color:var(--muted);
+            margin-bottom:10px;
+            font-size:13px;
+        }
+
         table {
             width:100%;
             border-collapse:collapse;
@@ -83,9 +95,13 @@
             letter-spacing:0.05em;
         }
 
-        .count {
-            color:var(--muted);
-            margin-bottom:12px;
+        th a {
+            color:inherit;
+            text-decoration:none;
+        }
+
+        th a:hover {
+            text-decoration:underline;
         }
 
         .empty {
@@ -94,16 +110,16 @@
         }
 
         .line-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            display:flex;
+            flex-direction:column;
+            gap:4px;
         }
 
         .line-item {
-            padding: 3px 0;
-            color: var(--text);
-            white-space: normal;
-            word-break: break-word;
+            padding:3px 0;
+            color:var(--text);
+            white-space:normal;
+            word-break:break-word;
         }
     </style>
 </head>
@@ -118,13 +134,21 @@
         <div class="reason">Why it stands out: {{ reason }}</div>
         <div class="atlassian-area">Go to Atlassian: {{ atlassian_area }}</div>
         <div class="count">{{ rows|length }} record(s)</div>
+        <div class="sort-note">
+            Sort by clicking a column heading.
+            {% if sort_key %}
+            Current sort: <strong>{{ sort_key }}</strong>
+            {% endif %}
+        </div>
 
         {% if rows %}
         <table>
             <thead>
                 <tr>
                     {% for col in columns %}
-                    <th>{{ col.replace('_', ' ') }}</th>
+                    <th>
+                        <a href="/detail/{{ detail_key }}?sort={{ col }}">{{ col.replace('_', ' ') }}</a>
+                    </th>
                     {% endfor %}
                 </tr>
             </thead>

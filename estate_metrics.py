@@ -198,9 +198,11 @@ def _bitbucket_only_count(users_rows: List[Dict[str, Any]]) -> int:
 def _site_extra_access_count(users_rows: List[Dict[str, Any]], app_label: str, site_key: str) -> int:
     if not users_rows:
         return 0
+
     column_name = f"{app_label} - {site_key}"
     if column_name not in users_rows[0]:
         return 0
+
     return _unique_count(users_rows, column_name, "User id")
 
 
@@ -391,14 +393,25 @@ def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any
     """
     Mixed licence model handling:
     - tiered sites use tier warning logic
-    - seat_paid sites do NOT use tier warning logic
+    - seat_paid sites do not use tier warning logic
     """
     licence_model = site_record.get("licence_model")
+    inactive_users = site_record.get("inactive_users", 0) or 0
+    confluence_users = site_record.get("confluence_users", 0) or 0
 
     if licence_model == "seat_paid":
+        reason_lines = [
+            "Seat-paid model — tier usage warnings do not apply at present."
+        ]
+        if inactive_users > 0:
+            reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
+        if confluence_users > 0:
+            reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
+
         return {
             "status": "stable",
-            "reason": "Seat-paid model — tier usage warnings do not apply at present.",
+            "reason": "Seat-paid model — tier warnings not applicable at present.",
+            "reason_lines": reason_lines,
             "atlassian_area": "Billing / User access",
         }
 
@@ -407,21 +420,49 @@ def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any
     capacity_remaining = site_record.get("capacity_remaining", 0)
 
     if tier_status == "critical":
+        reason_lines = [
+            f"Tier capacity is effectively full ({usage_percent}% used, {capacity_remaining} remaining)."
+        ]
+        if inactive_users > 0:
+            reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
+        if confluence_users > 0:
+            reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
+
         return {
             "status": "critical",
-            "reason": f"Tier capacity is effectively full ({usage_percent}% used, {capacity_remaining} remaining).",
-            "atlassian_area": "Billing / User access",
-        }
-    if tier_status == "warning":
-        return {
-            "status": "warning",
-            "reason": f"Tier usage is approaching limit ({usage_percent}% used, {capacity_remaining} remaining).",
+            "reason": f"Tier capacity is full ({usage_percent}% used).",
+            "reason_lines": reason_lines,
             "atlassian_area": "Billing / User access",
         }
 
+    if tier_status == "warning":
+        reason_lines = [
+            f"Tier usage is approaching limit ({usage_percent}% used, {capacity_remaining} remaining)."
+        ]
+        if inactive_users > 0:
+            reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
+        if confluence_users > 0:
+            reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
+
+        return {
+            "status": "warning",
+            "reason": f"Tier usage is approaching limit ({usage_percent}% used).",
+            "reason_lines": reason_lines,
+            "atlassian_area": "Billing / User access",
+        }
+
+    reason_lines = [
+        f"Tier usage currently has headroom ({usage_percent}% used, {capacity_remaining} remaining)."
+    ]
+    if inactive_users > 0:
+        reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
+    if confluence_users > 0:
+        reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
+
     return {
         "status": "stable",
-        "reason": f"Tier usage currently has headroom ({usage_percent}% used, {capacity_remaining} remaining).",
+        "reason": f"Tier usage currently has headroom ({usage_percent}% used).",
+        "reason_lines": reason_lines,
         "atlassian_area": "Billing / User access",
     }
 
