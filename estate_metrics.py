@@ -26,16 +26,13 @@ def _uid(row: Dict[str, Any]) -> Optional[str]:
 
 
 def _has_text(value: Any) -> bool:
-    return value is not None and str(value).strip() != "" and str(value).strip().lower() != "none"
+    if value is None:
+        return False
+    text = str(value).strip()
+    return text != "" and text.lower() != "none"
 
 
 def _split_multi_value(value: Any) -> List[str]:
-    """
-    Turns:
-      'gli-it-project.atlassian.net,gli-delivery-tm.atlassian.net'
-    into:
-      ['gli-it-project.atlassian.net', 'gli-delivery-tm.atlassian.net']
-    """
     if not _has_text(value):
         return []
     return [part.strip() for part in str(value).split(",") if part.strip()]
@@ -83,13 +80,12 @@ def _build_org_product_breakdown(managed_rows: List[Dict[str, Any]]) -> List[Dic
         ("Feedback", "Feedback"),
     ]
 
+    available_columns = set(managed_rows[0].keys())
     breakdown = []
-    first = managed_rows[0].keys()
 
     for label, column_name in product_columns:
-        if column_name not in first:
+        if column_name not in available_columns:
             continue
-
         count = _unique_count(managed_rows, column_name, id_key)
         if count > 0:
             breakdown.append({
@@ -118,16 +114,13 @@ def _build_users_export_access_breakdown(users_rows: List[Dict[str, Any]]) -> Li
         "Org role",
     }
 
-    access_columns = []
+    breakdown = []
     for column in users_rows[0].keys():
         if column in meta_cols:
             continue
         if column.startswith("Last seen in "):
             continue
-        access_columns.append(column)
 
-    breakdown = []
-    for column in access_columns:
         count = _unique_count(users_rows, column, id_key)
         if count > 0:
             breakdown.append({
@@ -142,19 +135,18 @@ def _build_users_export_access_breakdown(users_rows: List[Dict[str, Any]]) -> Li
 
 def _tracked_jira_no_access_count(users_rows: List[Dict[str, Any]]) -> int:
     no_access = set()
-
     for row in users_rows:
         uid = _uid(row)
         if not uid:
             continue
 
-        has_access = False
+        has_tracked_jira = False
         for site in TRACKED_JIRA_SITES:
             if str(row.get(f"Jira - {site}", "")).strip() == "User":
-                has_access = True
+                has_tracked_jira = True
                 break
 
-        if not has_access:
+        if not has_tracked_jira:
             no_access.add(uid)
 
     return len(no_access)
@@ -162,7 +154,6 @@ def _tracked_jira_no_access_count(users_rows: List[Dict[str, Any]]) -> int:
 
 def _bitbucket_only_count(users_rows: List[Dict[str, Any]]) -> int:
     values = set()
-
     for row in users_rows:
         uid = _uid(row)
         if not uid:
@@ -172,7 +163,6 @@ def _bitbucket_only_count(users_rows: List[Dict[str, Any]]) -> int:
             str(row.get(f"Jira - {site}", "")).strip() == "User"
             for site in TRACKED_JIRA_SITES
         )
-
         has_bitbucket = any(
             key.startswith("Bitbucket - ") and str(value).strip() == "User"
             for key, value in row.items()
@@ -187,11 +177,9 @@ def _bitbucket_only_count(users_rows: List[Dict[str, Any]]) -> int:
 def _site_extra_access_count(users_rows: List[Dict[str, Any]], app_label: str, site_key: str) -> int:
     if not users_rows:
         return 0
-
     column_name = f"{app_label} - {site_key}"
     if column_name not in users_rows[0]:
         return 0
-
     return _unique_count(users_rows, column_name, "User id")
 
 
@@ -201,21 +189,22 @@ def _find_users_for_managed_status(managed_rows: List[Dict[str, Any]], statuses)
     seen = set()
 
     for row in managed_rows:
-        status = str(row.get("Status", "")).strip().lower()
         uid = _uid(row)
+        status = str(row.get("Status", "")).strip().lower()
+        if not uid or uid in seen or status not in expected:
+            continue
 
-        if uid and status in expected and uid not in seen:
-            seen.add(uid)
-            items.append({
-                "name": row.get("Name", ""),
-                "email": row.get("Email", ""),
-                "id": uid,
-                "status": row.get("Status", ""),
-                "last_active": row.get("Last active date [UTC]", ""),
-                "bitbucket": row.get("Bitbucket", ""),
-                "jira": row.get("Jira", ""),
-                "confluence": row.get("Confluence", ""),
-            })
+        seen.add(uid)
+        items.append({
+            "name": row.get("Name", ""),
+            "email": row.get("Email", ""),
+            "id": uid,
+            "status": row.get("Status", ""),
+            "last_active": row.get("Last active date [UTC]", ""),
+            "bitbucket": row.get("Bitbucket", ""),
+            "jira": row.get("Jira", ""),
+            "confluence": row.get("Confluence", ""),
+        })
 
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
@@ -229,21 +218,20 @@ def _find_users_for_org_product(managed_rows: List[Dict[str, Any]], product_key:
         uid = _uid(row)
         if not uid or uid in seen:
             continue
+        if not _has_text(row.get(product_key)):
+            continue
 
-        if _has_text(row.get(product_key)):
-            seen.add(uid)
-            raw_value = row.get(product_key, "")
-            split_values = _split_multi_value(raw_value)
-
-            items.append({
-                "name": row.get("Name", ""),
-                "email": row.get("Email", ""),
-                "id": uid,
-                "status": row.get("Status", ""),
-                "last_active": row.get("Last active date [UTC]", ""),
-                "product_value": raw_value,
-                "product_sites": split_values,
-            })
+        seen.add(uid)
+        raw_value = row.get(product_key, "")
+        items.append({
+            "name": row.get("Name", ""),
+            "email": row.get("Email", ""),
+            "id": uid,
+            "status": row.get("Status", ""),
+            "last_active": row.get("Last active date [UTC]", ""),
+            "product_value": raw_value,
+            "product_sites": _split_multi_value(raw_value),
+        })
 
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
@@ -268,17 +256,18 @@ def _find_users_for_access_column(users_rows: List[Dict[str, Any]], access_colum
         uid = _uid(row)
         if not uid or uid in seen:
             continue
+        if str(row.get(access_column, "")).strip() != "User":
+            continue
 
-        if str(row.get(access_column, "")).strip() == "User":
-            seen.add(uid)
-            items.append({
-                "name": row.get("User name", ""),
-                "email": row.get("email", ""),
-                "id": uid,
-                "status": row.get("User status", ""),
-                "last_active": row.get(last_seen_column, "") if last_seen_column else "",
-                "access_value": row.get(access_column, ""),
-            })
+        seen.add(uid)
+        items.append({
+            "name": row.get("User name", ""),
+            "email": row.get("email", ""),
+            "id": uid,
+            "status": row.get("User status", ""),
+            "last_active": row.get(last_seen_column, "") if last_seen_column else "",
+            "access_value": row.get(access_column, ""),
+        })
 
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
@@ -292,19 +281,17 @@ def _find_users_with_no_tracked_jira(users_rows: List[Dict[str, Any]]) -> List[D
         uid = _uid(row)
         if not uid or uid in seen:
             continue
+        if any(str(row.get(f"Jira - {site}", "")).strip() == "User" for site in TRACKED_JIRA_SITES):
+            continue
 
-        if not any(
-            str(row.get(f"Jira - {site}", "")).strip() == "User"
-            for site in TRACKED_JIRA_SITES
-        ):
-            seen.add(uid)
-            items.append({
-                "name": row.get("User name", ""),
-                "email": row.get("email", ""),
-                "id": uid,
-                "status": row.get("User status", ""),
-                "last_active": "",
-            })
+        seen.add(uid)
+        items.append({
+            "name": row.get("User name", ""),
+            "email": row.get("email", ""),
+            "id": uid,
+            "status": row.get("User status", ""),
+            "last_active": "",
+        })
 
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
@@ -323,21 +310,57 @@ def _find_bitbucket_only_no_tracked_jira(users_rows: List[Dict[str, Any]]) -> Li
             str(row.get(f"Jira - {site}", "")).strip() == "User"
             for site in TRACKED_JIRA_SITES
         )
-
         has_bitbucket = any(
             key.startswith("Bitbucket - ") and str(value).strip() == "User"
             for key, value in row.items()
         )
+        if not (has_bitbucket and not has_tracked_jira):
+            continue
 
-        if has_bitbucket and not has_tracked_jira:
-            seen.add(uid)
-            items.append({
-                "name": row.get("User name", ""),
-                "email": row.get("email", ""),
-                "id": uid,
-                "status": row.get("User status", ""),
-                "last_active": "",
-            })
+        seen.add(uid)
+        items.append({
+            "name": row.get("User name", ""),
+            "email": row.get("email", ""),
+            "id": uid,
+            "status": row.get("User status", ""),
+            "last_active": "",
+        })
+
+    items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
+    return items
+
+
+def _find_site_specific_users(users_rows: List[Dict[str, Any]], site_key: str) -> List[Dict[str, Any]]:
+    items = []
+    seen = set()
+    jira_col = f"Jira - {site_key}"
+    jira_last_seen = f"Last seen in Jira - {site_key}"
+    confluence_col = f"Confluence - {site_key}"
+    confluence_last_seen = f"Last seen in Confluence - {site_key}"
+    atlas_col = f"Atlas - {site_key}"
+    goals_col = f"Goals - {site_key}"
+    projects_col = f"Projects - {site_key}"
+
+    for row in users_rows:
+        uid = _uid(row)
+        if not uid or uid in seen:
+            continue
+        if str(row.get(jira_col, "")).strip() != "User":
+            continue
+
+        seen.add(uid)
+        items.append({
+            "name": row.get("User name", ""),
+            "email": row.get("email", ""),
+            "id": uid,
+            "status": row.get("User status", ""),
+            "jira_last_seen": row.get(jira_last_seen, ""),
+            "confluence_access": row.get(confluence_col, ""),
+            "confluence_last_seen": row.get(confluence_last_seen, ""),
+            "atlas_access": row.get(atlas_col, ""),
+            "goals_access": row.get(goals_col, ""),
+            "projects_access": row.get(projects_col, ""),
+        })
 
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
@@ -345,13 +368,10 @@ def _find_bitbucket_only_no_tracked_jira(users_rows: List[Dict[str, Any]]) -> Li
 
 def build_estate_metrics(users_rows: List[Dict[str, Any]], managed_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     site_results = []
-
     for site in SITE_CONFIG:
         site_key = site["key"]
-
         users_data = calculate_site_users(users_rows, site_key)
         tier_data = generate_tier_metrics(site["licensed"], site["tier"])
-
         site_results.append({
             "site": site_key,
             "site_name": site["site_name"],
@@ -368,11 +388,9 @@ def build_estate_metrics(users_rows: List[Dict[str, Any]], managed_rows: List[Di
     stable_sites = [s for s in site_results if s["tier_status"] == "stable"]
 
     activity = calculate_estate_users(users_rows)
-
     managed_total_users = len({_uid(r) for r in managed_rows if _uid(r)}) if managed_rows else 0
     managed_active_accounts = _status_count(managed_rows, "Status", {"active"}, "Atlassian ID") if managed_rows else 0
     managed_disabled_accounts = _status_count(managed_rows, "Status", {"disabled", "deactivated"}, "Atlassian ID") if managed_rows else 0
-
     org_product_breakdown = _build_org_product_breakdown(managed_rows)
     users_export_breakdown = _build_users_export_access_breakdown(users_rows)
 
@@ -399,6 +417,26 @@ def build_estate_metrics(users_rows: List[Dict[str, Any]], managed_rows: List[Di
             "rows": _find_bitbucket_only_no_tracked_jira(users_rows),
         },
     }
+
+    for site in SITE_CONFIG:
+        key = f"site::{site['key']}"
+        drilldowns[key] = {
+            "title": f"Site Users — {site['site_name']}",
+            "reason": "These users have explicit Jira access to this tracked site. Use this list to inspect activity and product overlap before actioning in Atlassian.",
+            "atlassian_area": "Atlassian Administration → Directory → Users / App access or Site user management",
+            "columns": [
+                "name",
+                "email",
+                "status",
+                "jira_last_seen",
+                "confluence_access",
+                "confluence_last_seen",
+                "atlas_access",
+                "goals_access",
+                "projects_access",
+            ],
+            "rows": _find_site_specific_users(users_rows, site["key"]),
+        }
 
     for item in org_product_breakdown:
         key = f"product::{item['key']}"

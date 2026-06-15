@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, jsonify, abort
 from pathlib import Path
 import csv
@@ -20,7 +19,9 @@ def _load_csv_rows(pattern):
     matches = glob.glob(str(BASE_DIR / pattern))
     if not matches:
         return [], None
+
     latest_file = max(matches, key=os.path.getmtime)
+
     try:
         with open(latest_file, newline="", encoding="utf-8-sig") as f:
             rows = list(csv.DictReader(f))
@@ -34,6 +35,7 @@ def _load_csv_rows(pattern):
 def _build_data():
     users_rows, users_file = _load_csv_rows("export-users*.csv")
     managed_rows, managed_file = _load_csv_rows("*managed_accounts*.csv")
+
     data = build_estate_metrics(users_rows, managed_rows)
     data["users_source_file"] = users_file
     data["managed_source_file"] = managed_file
@@ -64,10 +66,11 @@ def home():
 @app.route("/detail/<path:key>")
 def detail(key: str):
     data = _build_data()
-    drilldowns = data.get("drilldowns", {})
-    item = drilldowns.get(key)
+    item = data.get("drilldowns", {}).get(key)
+
     if not item:
         abort(404)
+
     return render_template(
         "detail_list.html",
         detail_key=key,
