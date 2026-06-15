@@ -1,3 +1,4 @@
+
 from typing import Any, Dict, List, Optional
 
 from user_license import calculate_site_users, calculate_estate_users
@@ -10,37 +11,14 @@ TRACKED_JIRA_SITES = [
 ]
 
 SITE_CONFIG = [
-    {
-        "key": "gli-it-project",
-        "site_name": "GLI IT Project",
-        "licence_model": "tiered",
-        "tier": 100,
-        "licensed": 58,
-    },
-    {
-        "key": "gli-delivery-tm",
-        "site_name": "GLI Delivery TM",
-        "licence_model": "tiered",
-        "tier": 50,
-        "licensed": 28,
-    },
-    {
-        "key": "gli-global-technology",
-        "site_name": "GLI Global Technology",
-        "licence_model": "seat_paid",
-        "tier": None,
-        "licensed": 53,
-    },
+    {"key": "gli-it-project", "site_name": "GLI IT Project", "licence_model": "tiered", "tier": 100, "licensed": 58},
+    {"key": "gli-delivery-tm", "site_name": "GLI Delivery TM", "licence_model": "tiered", "tier": 50, "licensed": 28},
+    {"key": "gli-global-technology", "site_name": "GLI Global Technology", "licence_model": "seat_paid", "tier": None, "licensed": 53},
 ]
 
 
 def _uid(row: Dict[str, Any]) -> Optional[str]:
-    return (
-        row.get("User id")
-        or row.get("Atlassian ID")
-        or row.get("email")
-        or row.get("Email")
-    )
+    return row.get("User id") or row.get("Atlassian ID") or row.get("email") or row.get("Email")
 
 
 def _has_text(value: Any) -> bool:
@@ -81,7 +59,6 @@ def _status_count(rows: List[Dict[str, Any]], status_key: str, expected_statuses
 def _build_org_product_breakdown(managed_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     if not managed_rows:
         return []
-
     id_key = "Atlassian ID"
     product_columns = [
         ("Jira", "Jira"),
@@ -97,22 +74,14 @@ def _build_org_product_breakdown(managed_rows: List[Dict[str, Any]]) -> List[Dic
         ("Loom", "Loom"),
         ("Feedback", "Feedback"),
     ]
-
     available_columns = set(managed_rows[0].keys())
     breakdown = []
-
     for label, column_name in product_columns:
         if column_name not in available_columns:
             continue
-
         count = _unique_count(managed_rows, column_name, id_key)
         if count > 0:
-            breakdown.append({
-                "key": column_name,
-                "label": label,
-                "count": count,
-            })
-
+            breakdown.append({"key": column_name, "label": label, "count": count})
     breakdown.sort(key=lambda item: (-item["count"], item["label"]))
     return breakdown
 
@@ -120,89 +89,56 @@ def _build_org_product_breakdown(managed_rows: List[Dict[str, Any]]) -> List[Dic
 def _build_users_export_access_breakdown(users_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     if not users_rows:
         return []
-
     id_key = "User id"
-    meta_cols = {
-        "Group id",
-        "Group name",
-        "User id",
-        "User name",
-        "email",
-        "User status",
-        "Added to org",
-        "Org role",
-    }
-
+    meta_cols = {"Group id", "Group name", "User id", "User name", "email", "User status", "Added to org", "Org role"}
     breakdown = []
     for column in users_rows[0].keys():
         if column in meta_cols:
             continue
         if column.startswith("Last seen in "):
             continue
-
         count = _unique_count(users_rows, column, id_key)
         if count > 0:
-            breakdown.append({
-                "key": column,
-                "label": column,
-                "count": count,
-            })
-
+            breakdown.append({"key": column, "label": column, "count": count})
     breakdown.sort(key=lambda item: (-item["count"], item["label"]))
     return breakdown
 
 
 def _tracked_jira_no_access_count(users_rows: List[Dict[str, Any]]) -> int:
     no_access = set()
-
     for row in users_rows:
         uid = _uid(row)
         if not uid:
             continue
-
         has_tracked_jira = False
         for site in TRACKED_JIRA_SITES:
             if str(row.get(f"Jira - {site}", "")).strip() == "User":
                 has_tracked_jira = True
                 break
-
         if not has_tracked_jira:
             no_access.add(uid)
-
     return len(no_access)
 
 
 def _bitbucket_only_count(users_rows: List[Dict[str, Any]]) -> int:
     values = set()
-
     for row in users_rows:
         uid = _uid(row)
         if not uid:
             continue
-
-        has_tracked_jira = any(
-            str(row.get(f"Jira - {site}", "")).strip() == "User"
-            for site in TRACKED_JIRA_SITES
-        )
-        has_bitbucket = any(
-            key.startswith("Bitbucket - ") and str(value).strip() == "User"
-            for key, value in row.items()
-        )
-
+        has_tracked_jira = any(str(row.get(f"Jira - {site}", "")).strip() == "User" for site in TRACKED_JIRA_SITES)
+        has_bitbucket = any(key.startswith("Bitbucket - ") and str(value).strip() == "User" for key, value in row.items())
         if has_bitbucket and not has_tracked_jira:
             values.add(uid)
-
     return len(values)
 
 
 def _site_extra_access_count(users_rows: List[Dict[str, Any]], app_label: str, site_key: str) -> int:
     if not users_rows:
         return 0
-
     column_name = f"{app_label} - {site_key}"
     if column_name not in users_rows[0]:
         return 0
-
     return _unique_count(users_rows, column_name, "User id")
 
 
@@ -210,13 +146,11 @@ def _find_users_for_managed_status(managed_rows: List[Dict[str, Any]], statuses)
     expected = {s.lower() for s in statuses}
     items = []
     seen = set()
-
     for row in managed_rows:
         uid = _uid(row)
         status = str(row.get("Status", "")).strip().lower()
         if not uid or uid in seen or status not in expected:
             continue
-
         seen.add(uid)
         items.append({
             "name": row.get("Name", ""),
@@ -228,7 +162,6 @@ def _find_users_for_managed_status(managed_rows: List[Dict[str, Any]], statuses)
             "jira": row.get("Jira", ""),
             "confluence": row.get("Confluence", ""),
         })
-
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
 
@@ -236,14 +169,12 @@ def _find_users_for_managed_status(managed_rows: List[Dict[str, Any]], statuses)
 def _find_users_for_org_product(managed_rows: List[Dict[str, Any]], product_key: str) -> List[Dict[str, Any]]:
     items = []
     seen = set()
-
     for row in managed_rows:
         uid = _uid(row)
         if not uid or uid in seen:
             continue
         if not _has_text(row.get(product_key)):
             continue
-
         seen.add(uid)
         raw_value = row.get(product_key, "")
         items.append({
@@ -255,7 +186,6 @@ def _find_users_for_org_product(managed_rows: List[Dict[str, Any]], product_key:
             "product_value": raw_value,
             "product_sites": _split_multi_value(raw_value),
         })
-
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
 
@@ -264,7 +194,6 @@ def _find_users_for_access_column(users_rows: List[Dict[str, Any]], access_colum
     items = []
     seen = set()
     last_seen_column = None
-
     if access_column.startswith("Jira - "):
         site = access_column.replace("Jira - ", "", 1)
         last_seen_column = f"Last seen in Jira - {site}"
@@ -274,14 +203,12 @@ def _find_users_for_access_column(users_rows: List[Dict[str, Any]], access_colum
     elif access_column.startswith("Bitbucket - "):
         site = access_column.replace("Bitbucket - ", "", 1)
         last_seen_column = f"Last seen in Bitbucket - {site}"
-
     for row in users_rows:
         uid = _uid(row)
         if not uid or uid in seen:
             continue
         if str(row.get(access_column, "")).strip() != "User":
             continue
-
         seen.add(uid)
         items.append({
             "name": row.get("User name", ""),
@@ -291,7 +218,6 @@ def _find_users_for_access_column(users_rows: List[Dict[str, Any]], access_colum
             "last_active": row.get(last_seen_column, "") if last_seen_column else "",
             "access_value": row.get(access_column, ""),
         })
-
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
 
@@ -299,23 +225,14 @@ def _find_users_for_access_column(users_rows: List[Dict[str, Any]], access_colum
 def _find_users_with_no_tracked_jira(users_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     items = []
     seen = set()
-
     for row in users_rows:
         uid = _uid(row)
         if not uid or uid in seen:
             continue
         if any(str(row.get(f"Jira - {site}", "")).strip() == "User" for site in TRACKED_JIRA_SITES):
             continue
-
         seen.add(uid)
-        items.append({
-            "name": row.get("User name", ""),
-            "email": row.get("email", ""),
-            "id": uid,
-            "status": row.get("User status", ""),
-            "last_active": "",
-        })
-
+        items.append({"name": row.get("User name", ""), "email": row.get("email", ""), "id": uid, "status": row.get("User status", ""), "last_active": ""})
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
 
@@ -323,32 +240,16 @@ def _find_users_with_no_tracked_jira(users_rows: List[Dict[str, Any]]) -> List[D
 def _find_bitbucket_only_no_tracked_jira(users_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     items = []
     seen = set()
-
     for row in users_rows:
         uid = _uid(row)
         if not uid or uid in seen:
             continue
-
-        has_tracked_jira = any(
-            str(row.get(f"Jira - {site}", "")).strip() == "User"
-            for site in TRACKED_JIRA_SITES
-        )
-        has_bitbucket = any(
-            key.startswith("Bitbucket - ") and str(value).strip() == "User"
-            for key, value in row.items()
-        )
+        has_tracked_jira = any(str(row.get(f"Jira - {site}", "")).strip() == "User" for site in TRACKED_JIRA_SITES)
+        has_bitbucket = any(key.startswith("Bitbucket - ") and str(value).strip() == "User" for key, value in row.items())
         if not (has_bitbucket and not has_tracked_jira):
             continue
-
         seen.add(uid)
-        items.append({
-            "name": row.get("User name", ""),
-            "email": row.get("email", ""),
-            "id": uid,
-            "status": row.get("User status", ""),
-            "last_active": "",
-        })
-
+        items.append({"name": row.get("User name", ""), "email": row.get("email", ""), "id": uid, "status": row.get("User status", ""), "last_active": ""})
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
 
@@ -363,14 +264,12 @@ def _find_site_specific_users(users_rows: List[Dict[str, Any]], site_key: str) -
     atlas_col = f"Atlas - {site_key}"
     goals_col = f"Goals - {site_key}"
     projects_col = f"Projects - {site_key}"
-
     for row in users_rows:
         uid = _uid(row)
         if not uid or uid in seen:
             continue
         if str(row.get(jira_col, "")).strip() != "User":
             continue
-
         seen.add(uid)
         items.append({
             "name": row.get("User name", ""),
@@ -384,30 +283,21 @@ def _find_site_specific_users(users_rows: List[Dict[str, Any]], site_key: str) -
             "goals_access": row.get(goals_col, ""),
             "projects_access": row.get(projects_col, ""),
         })
-
     items.sort(key=lambda x: (str(x.get("name", "")).lower(), str(x.get("email", "")).lower()))
     return items
 
 
 def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Mixed licence model handling:
-    - tiered sites use tier warning logic
-    - seat_paid sites do not use tier warning logic
-    """
     licence_model = site_record.get("licence_model")
     inactive_users = site_record.get("inactive_users", 0) or 0
     confluence_users = site_record.get("confluence_users", 0) or 0
 
     if licence_model == "seat_paid":
-        reason_lines = [
-            "Seat-paid model — tier usage warnings do not apply at present."
-        ]
+        reason_lines = ["Seat-paid model — tier usage warnings do not apply at present."]
         if inactive_users > 0:
             reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
         if confluence_users > 0:
             reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
-
         return {
             "status": "stable",
             "reason": "Seat-paid model — tier warnings not applicable at present.",
@@ -420,14 +310,11 @@ def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any
     capacity_remaining = site_record.get("capacity_remaining", 0)
 
     if tier_status == "critical":
-        reason_lines = [
-            f"Tier capacity is effectively full ({usage_percent}% used, {capacity_remaining} remaining)."
-        ]
+        reason_lines = [f"Tier capacity is effectively full ({usage_percent}% used, {capacity_remaining} remaining)."]
         if inactive_users > 0:
             reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
         if confluence_users > 0:
             reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
-
         return {
             "status": "critical",
             "reason": f"Tier capacity is full ({usage_percent}% used).",
@@ -436,14 +323,11 @@ def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any
         }
 
     if tier_status == "warning":
-        reason_lines = [
-            f"Tier usage is approaching limit ({usage_percent}% used, {capacity_remaining} remaining)."
-        ]
+        reason_lines = [f"Tier usage is approaching limit ({usage_percent}% used, {capacity_remaining} remaining)."]
         if inactive_users > 0:
             reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
         if confluence_users > 0:
             reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
-
         return {
             "status": "warning",
             "reason": f"Tier usage is approaching limit ({usage_percent}% used).",
@@ -451,14 +335,11 @@ def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any
             "atlassian_area": "Billing / User access",
         }
 
-    reason_lines = [
-        f"Tier usage currently has headroom ({usage_percent}% used, {capacity_remaining} remaining)."
-    ]
+    reason_lines = [f"Tier usage currently has headroom ({usage_percent}% used, {capacity_remaining} remaining)."]
     if inactive_users > 0:
         reason_lines.append(f"{inactive_users} inactive Jira user(s) still have access.")
     if confluence_users > 0:
         reason_lines.append(f"{confluence_users} Confluence user(s) overlap with this site.")
-
     return {
         "status": "stable",
         "reason": f"Tier usage currently has headroom ({usage_percent}% used).",
@@ -469,11 +350,9 @@ def _build_site_operational_status(site_record: Dict[str, Any]) -> Dict[str, Any
 
 def build_estate_metrics(users_rows: List[Dict[str, Any]], managed_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     site_results = []
-
     for site in SITE_CONFIG:
         site_key = site["key"]
         licence_model = site["licence_model"]
-
         users_data = calculate_site_users(users_rows, site_key)
 
         if licence_model == "tiered":
@@ -498,7 +377,6 @@ def build_estate_metrics(users_rows: List[Dict[str, Any]], managed_rows: List[Di
             "goals_users": _site_extra_access_count(users_rows, "Goals", site_key),
             "projects_users": _site_extra_access_count(users_rows, "Projects", site_key),
         }
-
         site_result.update(_build_site_operational_status(site_result))
         site_results.append(site_result)
 
@@ -543,17 +421,7 @@ def build_estate_metrics(users_rows: List[Dict[str, Any]], managed_rows: List[Di
             "title": f"Site Users — {site['site_name']}",
             "reason": "These users have explicit Jira access to this tracked site. Use this list to inspect activity and product overlap before actioning in Atlassian.",
             "atlassian_area": "Atlassian Administration → Directory → Users / App access or Site user management",
-            "columns": [
-                "name",
-                "email",
-                "status",
-                "jira_last_seen",
-                "confluence_access",
-                "confluence_last_seen",
-                "atlas_access",
-                "goals_access",
-                "projects_access",
-            ],
+            "columns": ["name", "email", "status", "jira_last_seen", "confluence_access", "confluence_last_seen", "atlas_access", "goals_access", "projects_access"],
             "rows": _find_site_specific_users(users_rows, site["key"]),
         }
 

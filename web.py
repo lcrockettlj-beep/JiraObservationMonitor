@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
 import csv
@@ -7,6 +8,7 @@ from datetime import datetime
 
 from estate_metrics import build_estate_metrics
 from billing_catalog import get_billing_catalog
+from project_counts import load_project_counts_from_latest_run
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -35,9 +37,6 @@ def _load_csv_rows(pattern):
 
 
 def _parse_possible_datetime(value):
-    """
-    Parse real date formats seen in your drill-downs.
-    """
     if value is None:
         return None
 
@@ -49,8 +48,8 @@ def _parse_possible_datetime(value):
         return None
 
     formats = [
-        "%d %b %Y",          # 15 Jun 2026
-        "%d %B %Y",          # 15 June 2026
+        "%d %b %Y",
+        "%d %B %Y",
         "%Y-%m-%dT%H:%M:%S.%f",
         "%Y-%m-%dT%H:%M:%S",
         "%Y-%m-%d %H:%M:%S",
@@ -75,6 +74,7 @@ def _parse_possible_datetime(value):
 def _is_last_seen_field(sort_key):
     if not sort_key:
         return False
+
     key = str(sort_key).lower()
     return (
         "last_seen" in key
@@ -94,7 +94,6 @@ def _sort_rows(rows, sort_key, order="asc"):
         def dt_key(row):
             parsed = _parse_possible_datetime(row.get(sort_key))
             if parsed is None:
-                # blanks / Never accessed go to bottom
                 return (1, datetime.min)
             return (0, parsed)
 
@@ -111,6 +110,21 @@ def _sort_rows(rows, sort_key, order="asc"):
     return sorted(rows, key=text_key, reverse=descending)
 
 
+def _merge_project_counts(sites):
+    project_counts = load_project_counts_from_latest_run()
+
+    for site in sites:
+        site_key = site.get("site")
+        project_data = project_counts.get(site_key, {})
+        site["project_count"] = project_data.get("project_count")
+        site["issue_count_total"] = project_data.get("issue_count_total")
+        site["issue_count_unresolved"] = project_data.get("issue_count_unresolved")
+        site["issue_count_updated_last_7d"] = project_data.get("issue_count_updated_last_7d")
+        site["project_count_delta"] = project_data.get("project_count_delta")
+
+    return sites
+
+
 def _build_data():
     users_rows, users_file = _load_csv_rows("export-users*.csv")
     managed_rows, managed_file = _load_csv_rows("*managed_accounts*.csv")
@@ -120,6 +134,11 @@ def _build_data():
     data["managed_source_file"] = managed_file
     data["users_row_count"] = len(users_rows)
     data["managed_row_count"] = len(managed_rows)
+
+    data["sites"] = _merge_project_counts(data.get("sites", []))
+    data["critical_sites"] = [s for s in data["sites"] if s.get("status") == "critical"]
+    data["warning_sites"] = [s for s in data["sites"] if s.get("status") == "warning"]
+    data["stable_sites"] = [s for s in data["sites"] if s.get("status") == "stable"]
 
     billing = get_billing_catalog()
     data["billing_summary"] = billing.get("summary", {})
@@ -164,7 +183,6 @@ def detail(key: str):
 
     rows = item.get("rows", [])
 
-    # default last-seen behaviour = newest first
     if sort_key and _is_last_seen_field(sort_key) and order == "":
         order = "desc"
 
