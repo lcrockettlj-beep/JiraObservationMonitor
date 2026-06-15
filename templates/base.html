@@ -8,9 +8,7 @@
         (function () {
             try {
                 var saved = localStorage.getItem("jom-theme");
-                var theme = (saved === "light" || saved === "dark")
-                    ? saved
-                    : ((window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark");
+                var theme = (saved === "light" || saved === "dark") ? saved : "dark";
                 document.documentElement.setAttribute("data-theme", theme);
             } catch (e) {
                 document.documentElement.setAttribute("data-theme", "dark");

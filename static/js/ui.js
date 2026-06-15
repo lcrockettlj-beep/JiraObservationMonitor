@@ -10,11 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (saved === "dark" || saved === "light") {
             return saved;
         }
-
-        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
-            return "light";
-        }
-
         return "dark";
     }
 
@@ -74,18 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (toggleButton) {
         toggleButton.addEventListener("click", toggleTheme);
-    }
-
-    if (window.matchMedia) {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
-        if (typeof mediaQuery.addEventListener === "function") {
-            mediaQuery.addEventListener("change", function () {
-                const saved = localStorage.getItem("jom-theme");
-                if (saved !== "dark" && saved !== "light") {
-                    setTheme(getPreferredTheme());
-                }
-            });
-        }
     }
 
     refreshButtons.forEach(function (button) {

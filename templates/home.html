@@ -3,29 +3,38 @@
 {% block content %}
 <section class="hero-panel home-hero">
     <div class="hero-panel__content hero-panel__content--home">
-        <div class="hero-panel__left hero-panel__left--home">
-            <div class="hero-eyebrow">Overview</div>
-            <h1 class="hero-title">{{ home.title }}</h1>
-            <p class="hero-subtitle">{{ home.subtitle }}</p>
+        <div class="hero-panel__hero-top">
+            <div class="hero-panel__hero-top-left">
+                <div class="hero-eyebrow">Overview</div>
+                <h1 class="hero-title">{{ home.title }}</h1>
+                <p class="hero-subtitle">{{ home.subtitle }}</p>
+            </div>
 
-            <div class="hero-pill-row">
-                <span class="hero-pill">Active operational sites only</span>
-                <span class="hero-pill">Real backend data</span>
-                <span class="hero-pill">Grouped by operational state</span>
-                <span class="hero-pill">Live platform metrics</span>
+            <div class="hero-panel__hero-top-right">
+                <div class="hero-meta-card hero-meta-card--inline">
+                    <div class="hero-meta-label">Latest snapshot</div>
+                    <div class="hero-meta-value hero-meta-value--timestamp">
+                        {{ home.collected_at or "Not available" }}
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="hero-panel__right hero-panel__right--home">
-            <div class="hero-meta-card hero-meta-card--snapshot">
-                <div class="hero-meta-label">Latest snapshot</div>
-                <div class="hero-meta-value">{{ home.collected_at or "Not available" }}</div>
-            </div>
+        <div class="hero-pill-row">
+            <span class="hero-pill">Active operational sites only</span>
+            <span class="hero-pill">Real backend data</span>
+            <span class="hero-pill">Grouped by operational state</span>
+            <span class="hero-pill">Live platform metrics</span>
+        </div>
+
+        <div class="hero-action-row">
+            <button class="button buttonesh
+            </button>
         </div>
     </div>
 </section>
 
-<section class="summary-grid summary-grid--home summary-grid--home-separated">
+<section class="summary-grid summary-grid--home">
     <article class="summary-card summary-card--focus">
         <div class="summary-card__label">Active Sites</div>
         <div class="summary-card__value">{{ home.summary.active_site_count }}</div>
