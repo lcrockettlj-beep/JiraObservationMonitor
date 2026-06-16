@@ -1,10 +1,8 @@
-
 def get_billing_catalog():
     """
     Static billing/app coverage snapshot based on the billing information supplied.
     Safe temporary layer until live billing/API integration is added.
     """
-
     entries = [
         # Atlassian app coverage
         {"bucket": "atlassian", "app_name": "Jira (Gaminglabs Enterprise)", "plan": "Enterprise", "users": "0 / 5000", "site": "Gaminglabs", "next_price_estimate": "", "billing_cycle": "annual", "next_bill_date": "Jul 03, 2026"},
@@ -37,29 +35,64 @@ def get_billing_catalog():
     atlassian_rows = [e for e in entries if e["bucket"] == "atlassian"]
     marketplace_rows = [e for e in entries if e["bucket"] == "marketplace"]
 
+    jira_rows = [e for e in atlassian_rows if e["app_name"].startswith("Jira")]
+    bitbucket_rows = [e for e in atlassian_rows if e["app_name"].startswith("Bitbucket")]
+    confluence_rows = [e for e in atlassian_rows if e["app_name"].startswith("Confluence")]
+    rovo_rows = [e for e in atlassian_rows if e["app_name"].startswith("Rovo")]
+
+    billing_columns = ["app_name", "plan", "users", "site", "next_price_estimate", "billing_cycle", "next_bill_date"]
+
     return {
         "summary": {
             "atlassian_app_entry_count": len(atlassian_rows),
             "marketplace_app_entry_count": len(marketplace_rows),
-            "unique_jira_entries": len([e for e in atlassian_rows if e["app_name"].startswith("Jira")]),
-            "unique_bitbucket_entries": len([e for e in atlassian_rows if e["app_name"].startswith("Bitbucket")]),
-            "unique_confluence_entries": len([e for e in atlassian_rows if e["app_name"].startswith("Confluence")]),
-            "unique_rovo_entries": len([e for e in atlassian_rows if e["app_name"].startswith("Rovo")]),
+            "unique_jira_entries": len(jira_rows),
+            "unique_bitbucket_entries": len(bitbucket_rows),
+            "unique_confluence_entries": len(confluence_rows),
+            "unique_rovo_entries": len(rovo_rows),
         },
         "drilldowns": {
             "billing::atlassian_apps": {
                 "title": "Billing Coverage — Atlassian Apps",
                 "reason": "These entries reflect broader Atlassian app billing coverage beyond the tracked Jira operational estate.",
                 "atlassian_area": "Atlassian Administration → Billing / Apps",
-                "columns": ["app_name", "plan", "users", "site", "next_price_estimate", "billing_cycle", "next_bill_date"],
+                "columns": billing_columns,
                 "rows": atlassian_rows,
             },
             "billing::marketplace_apps": {
                 "title": "Billing Coverage — Marketplace Apps",
                 "reason": "These entries reflect Marketplace and third-party app billing coverage that is not yet part of the tracked operational site metrics.",
                 "atlassian_area": "Atlassian Administration → Billing / Marketplace apps",
-                "columns": ["app_name", "plan", "users", "site", "next_price_estimate", "billing_cycle", "next_bill_date"],
+                "columns": billing_columns,
                 "rows": marketplace_rows,
+            },
+            "billing::jira_entries": {
+                "title": "Billing Coverage — Jira Entries",
+                "reason": "These entries are the Jira billing records currently present in the supplied billing snapshot.",
+                "atlassian_area": "Atlassian Administration → Billing / Apps",
+                "columns": billing_columns,
+                "rows": jira_rows,
+            },
+            "billing::bitbucket_entries": {
+                "title": "Billing Coverage — Bitbucket Entries",
+                "reason": "These entries are the Bitbucket billing records currently present in the supplied billing snapshot.",
+                "atlassian_area": "Atlassian Administration → Billing / Apps",
+                "columns": billing_columns,
+                "rows": bitbucket_rows,
+            },
+            "billing::confluence_entries": {
+                "title": "Billing Coverage — Confluence Entries",
+                "reason": "These entries are the Confluence billing records currently present in the supplied billing snapshot.",
+                "atlassian_area": "Atlassian Administration → Billing / Apps",
+                "columns": billing_columns,
+                "rows": confluence_rows,
+            },
+            "billing::rovo_entries": {
+                "title": "Billing Coverage — Rovo Entries",
+                "reason": "These entries are the Rovo billing records currently present in the supplied billing snapshot.",
+                "atlassian_area": "Atlassian Administration → Billing / Apps",
+                "columns": billing_columns,
+                "rows": rovo_rows,
             },
         },
     }

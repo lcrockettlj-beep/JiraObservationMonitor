@@ -217,26 +217,43 @@
             {% endif %}
         </div>
 
-        <div class="panel" style="padding:18px;">
-            <div class="section__header">
-                <h2>Billing & Marketplace Coverage</h2>
-                <div class="count">Select a billing area to inspect app entries</div>
-            </div>
-            <div class="breakdown-list">
-                <a class="breakdown-row clickable" href="/detail/billing::atlassian_apps">
-                    <div class="breakdown-row__label">Atlassian app entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div>
-                </a>
-                <a class="breakdown-row clickable" href="/detail/billing::marketplace_apps">
-                    <div class="breakdown-row__label">Marketplace app entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div>
-                </a>
-                <div class="breakdown-row"><div class="breakdown-row__label">Jira billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_jira_entries or 0 }}</div></div>
-                <div class="breakdown-row"><div class="breakdown-row__label">Bitbucket billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div></div>
-                <div class="breakdown-row"><div class="breakdown-row__label">Confluence billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_confluence_entries or 0 }}</div></div>
-                <div class="breakdown-row"><div class="breakdown-row__label">Rovo billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_rovo_entries or 0 }}</div></div>
-            </div>
+            <div class="panel" style="padding:18px;">
+        <div class="section__header">
+            <h2>Billing &amp; Marketplace Coverage</h2>
+            <div class="count">Select a billing area to inspect app entries</div>
         </div>
+        <div class="breakdown-list">
+            <a class="breakdown-row clickable" href="/detail/billing::atlassian_apps">
+                <div class="breakdown-row__label">Atlassian app entries</div>
+                <div class="breakdown-row__value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div>
+            </a>
+
+            <a class="breakdown-row clickable" href="/detail/billing::marketplace_apps">
+                <div class="breakdown-row__label">Marketplace app entries</div>
+                <div class="breakdown-row__value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div>
+            </a>
+
+            <a class="breakdown-row clickable" href="/detail/billing::jira_entries">
+                <div class="breakdown-row__label">Jira billing entries</div>
+                <div class="breakdown-row__value">{{ billing_summary.unique_jira_entries or 0 }}</div>
+            </a>
+
+            <a class="breakdown-row clickable" href="/detail/billing::bitbucket_entries">
+                <div class="breakdown-row__label">Bitbucket billing entries</div>
+                <div class="breakdown-row__value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div>
+            </a>
+
+            <a class="breakdown-row clickable" href="/detail/billing::confluence_entries">
+                <div class="breakdown-row__label">Confluence billing entries</div>
+                <div class="breakdown-row__value">{{ billing_summary.unique_confluence_entries or 0 }}</div>
+            </a>
+
+            <a class="breakdown-row clickable" href="/detail/billing::rovo_entries">
+                <div class="breakdown-row__label">Rovo billing entries</div>
+                <div class="breakdown-row__value">{{ billing_summary.unique_rovo_entries or 0 }}</div>
+            </a>
+        </div>
+</div>
     </section>
 
     {% macro site_section(title, count, sites, badge) -%}
