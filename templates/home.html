@@ -166,13 +166,16 @@
     {% set excluded_sites = change_detection.get("excluded_sites", []) if change_detection else [] %}
     {% if change_summary %}
     <div class="section">
+        
         <div class="section__header">
             <h2>Change Summary</h2>
-            <div class="count">Latest collector comparison</div>
+            <div class="count"><a href="/detail/change::summary">Latest collector comparison</a></div>
         </div>
+
 
         <div class="action-pills">
             <a href="/detail/project::summary" class="pill">View project intelligence</a>
+            <a href="/detail/discovery::summary" class="pill">View site discovery</a>
             <a href="/detail/change::summary" class="pill">View all change intelligence</a>
         </div>
 
@@ -192,11 +195,13 @@
                 <div class="value">{{ change_summary.total_users_delta_total or 0 }}</div>
                 <div class="note">Net total-user movement in the latest comparison</div>
             </a>
-            <a href="/detail/change::excluded_sites" class="stat-card">
+            
+            <a href="/detail/discovery::excluded_sites" class="stat-card">
                 <div class="label">Excluded Sites</div>
                 <div class="value">{{ excluded_sites|length }}</div>
                 <div class="note">Sites discovered but currently outside monitored scope</div>
             </a>
+
         </div>
     </div>
     {% endif %}
