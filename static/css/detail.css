@@ -1,0 +1,11 @@
+.hero p { max-width: 920px; }
+.hero__meta { min-width: 220px; }
+.panel { padding: 18px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(255,255,255,0.07); }
+th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+th a { display: inline-flex; align-items: center; gap: 6px; color: inherit; }
+th a:hover { color: var(--text); }
+td { color: var(--text); white-space: nowrap; }
+td.wrap { white-space: normal; }

@@ -4,187 +4,9 @@
     <meta charset="utf-8">
     <title>Jira Observation Monitor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script>
-        (function () {
-            try {
-                var savedTheme = localStorage.getItem("jom_theme");
-                if (savedTheme === "light") {
-                    document.documentElement.setAttribute("data-theme", "light");
-                }
-            } catch (e) {}
-        })();
-    </script>
-    <style>
-        :root {
-            --bg: #0b122b;
-            --panel: rgba(20, 33, 86, 0.84);
-            --panel-solid: #13204b;
-            --border: rgba(69, 155, 227, 0.24);
-            --text: #ffffff;
-            --muted: #b6c3df;
-            --critical: #e14b5a;
-            --warning: #f0b24a;
-            --stable: #2dbe7f;
-        }
-        html[data-theme="light"] {
-            --bg: #eef4ff;
-            --panel: rgba(255, 255, 255, 0.94);
-            --panel-solid: #ffffff;
-            --border: rgba(28, 70, 130, 0.18);
-            --text: #0f172a;
-            --muted: #5b6785;
-            --critical: #c93b49;
-            --warning: #d6921e;
-            --stable: #1f9f68;
-        }
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            color: var(--text);
-            background:
-                radial-gradient(circle at top left, rgba(69,155,227,0.15), transparent 28%),
-                radial-gradient(circle at top right, rgba(6,153,214,0.10), transparent 24%),
-                linear-gradient(180deg, #081024 0%, #0b122b 100%);
-        }
-        html[data-theme="light"] body {
-            background:
-                radial-gradient(circle at top left, rgba(69,155,227,0.10), transparent 28%),
-                radial-gradient(circle at top right, rgba(6,153,214,0.06), transparent 24%),
-                linear-gradient(180deg, #f7fbff 0%, #e9f1ff 100%);
-        }
-        a { color: inherit; text-decoration: none; }
-        .page { max-width: 1380px; margin: 0 auto; padding: 24px 20px 48px; }
-        .hero, .panel {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
-        }
-        .hero { padding: 22px; margin-bottom: 20px; }
-        .hero__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-        .hero h1 { margin: 0 0 8px 0; font-size: 30px; line-height: 1.08; }
-        .hero p { margin: 0; color: var(--muted); max-width: 820px; }
-        .hero__meta { text-align: right; min-width: 260px; }
-        .pill {
-            display: inline-block;
-            margin: 0 0 8px 8px;
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 13px;
-        }
-        .pill:hover {
-            border-color: rgba(69, 155, 227, 0.45);
-            background: rgba(255,255,255,0.08);
-            color: var(--text);
-        }
-        .pill-button {
-            margin: 0 0 8px 8px;
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .pill-button:hover {
-            border-color: rgba(69, 155, 227, 0.45);
-            background: rgba(255,255,255,0.08);
-            color: var(--text);
-        }
-        .action-pills {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 8px;
-            margin: -6px 0 20px;
-        }
-        .action-pills .pill { margin: 0; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
-        .stat-card {
-            background: var(--panel); border: 1px solid var(--border); border-radius: 18px;
-            padding: 18px; min-height: 112px; display: block;
-        }
-        .stat-card:hover, .breakdown-row.clickable:hover, .site-card:hover, .metric-link:hover {
-            border-color: rgba(69, 155, 227, 0.45); background: rgba(255,255,255,0.06);
-        }
-        .label { color: var(--muted); font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; }
-        .value { font-size: 34px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
-        .note { color: var(--muted); font-size: 13px; }
-        .section { margin-bottom: 24px; }
-        .section__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-        .section__header h2 { margin: 0; font-size: 22px; }
-        .section__header .count { color: var(--muted); font-size: 14px; }
-        .split-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 16px; margin-bottom: 22px; }
-        .breakdown-list { display: grid; gap: 10px; }
-        .breakdown-row {
-            display: flex; justify-content: space-between; gap: 12px; align-items: center;
-            padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-        }
-        .breakdown-row__label { color: var(--text); }
-        .breakdown-row__value { color: var(--text); font-weight: 700; }
-        .site-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-        .site-card {
-            background: var(--panel-solid); border: 1px solid var(--border); border-left: 5px solid var(--stable);
-            border-radius: 18px; padding: 18px; min-height: 360px; display: flex; flex-direction: column; gap: 14px; transition: 0.15s ease;
-        }
-        .site-card--critical { border-left-color: var(--critical); }
-        .site-card--warning { border-left-color: var(--warning); }
-        .site-card--stable { border-left-color: var(--stable); }
-        .site-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-        .site-name { margin: 0; font-size: 20px; line-height: 1.15; }
-        .badge { padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-        .badge--critical { background: rgba(225, 75, 90, 0.14); color: #ffbcc4; border: 1px solid rgba(225, 75, 90, 0.35); }
-        .badge--warning  { background: rgba(240, 178, 74, 0.14); color: #ffd28b; border: 1px solid rgba(240, 178, 74, 0.35); }
-        .badge--stable   { background: rgba(45, 190, 127, 0.14); color: #9be9be; border: 1px solid rgba(45, 190, 127, 0.35); }
-        .site-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 2px;
-        }
-        .site-actions .pill { margin: 0; }
-        .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-        .metric, .metric-link {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 14px;
-            padding: 12px;
-            display: block;
-        }
-
-        .metric .metric-label, .metric-link .metric-label {
-            color: var(--muted);
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-
-        .metric .metric-value, .metric-link .metric-value {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        .usage-wrap { margin-top: auto; }
-        .usage-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 10px; font-size: 14px; }
-        .usage-bar { height: 12px; width: 100%; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
-        .usage-fill { height: 100%; background: var(--stable); }
-        .usage-fill--warning { background: var(--warning); }
-        .usage-fill--critical { background: var(--critical); }
-        .empty { padding: 20px; border-radius: 16px; border: 1px dashed var(--border); color: var(--muted); background: rgba(255,255,255,0.02); }
-        @media (max-width: 1160px) {
-            .grid-4, .site-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .split-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 760px) {
-            .grid-4, .site-grid { grid-template-columns: 1fr; }
-            .hero__meta { text-align: left; min-width: 0; }
-            .pill { margin-left: 0; margin-right: 8px; }
-            .action-pills { justify-content: flex-start; }
-        }
-    </style>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
 <div class="page">
@@ -213,13 +35,11 @@
             <h2>Change Summary</h2>
             <div class="count"><a href="/detail/change::summary">Latest collector comparison</a></div>
         </div>
-
         <div class="action-pills">
             <a href="/detail/project::summary" class="pill">View project intelligence</a>
             <a href="/detail/discovery::summary" class="pill">View site discovery</a>
             <a href="/detail/change::summary" class="pill">View all change intelligence</a>
         </div>
-
         <div class="grid-4" style="margin-bottom: 20px;">
             <a href="/detail/discovery::tracked_sites" class="stat-card">
                 <div class="label">Tracked Sites</div>
@@ -242,7 +62,6 @@
                 <div class="note">Sites to review for future operational classification</div>
             </a>
         </div>
-
         <div class="grid-4">
             <a href="/detail/change::comparison_changes" class="stat-card">
                 <div class="label">Detected Changes</div>
@@ -267,33 +86,28 @@
         </div>
     </div>
     {% endif %}
-
     <section class="grid-4">
         <a href="/detail/managed_disabled_accounts" class="stat-card">
             <div class="label">Managed Disabled Accounts</div>
             <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
             <div class="note">Select to see the disabled accounts list</div>
         </a>
-
         <div class="stat-card">
             <div class="label">Organisation Users</div>
             <div class="value">{{ estate.organisation_users or 0 }}</div>
             <div class="note">Organisation / managed account scope</div>
         </div>
-
         <a href="/detail/no_tracked_jira" class="stat-card">
             <div class="label">No Tracked Jira Site Access</div>
             <div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div>
             <div class="note">Select to see users with no tracked Jira access</div>
         </a>
-
         <a href="/detail/bitbucket_only_no_tracked_jira" class="stat-card">
             <div class="label">Bitbucket Only / No Tracked Jira</div>
             <div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div>
             <div class="note">Select to see Bitbucket-only users</div>
         </a>
     </section>
-
     <section class="grid-4" style="margin-top:-6px;">
         <a href="/detail/inactive_without_site_access" class="stat-card">
             <div class="label">Inactive Without Tracked Site Access</div>
@@ -301,70 +115,31 @@
             <div class="note">Select to see inactive users with no tracked Jira site access</div>
         </a>
     </section>
-    
-    <section class="grid-4" style="margin-top:-6px;">
-        <a href="/detail/inactive_without_site_access" class="stat-card">
-            <div class="label">Inactive Without Tracked Site Access</div>
-            <div class="value">{{ estate.inactive_without_site_access or 0 }}</div>
-            <div class="note">Select to see inactive users with no tracked Jira site access</div>
-        </a>
-    </section>
-
-
     <section class="split-grid">
         <div class="panel" style="padding:18px;">
-            <div class="section__header">
-                <h2>Organisation Product Breakdown</h2>
-                <div class="count">Select a product to inspect users</div>
-            </div>
+            <div class="section__header"><h2>Organisation Product Breakdown</h2><div class="count">Select a product to inspect users</div></div>
             {% if org_product_breakdown %}
             <div class="breakdown-list">
                 {% for item in org_product_breakdown %}
-                <a href="/detail/product::{{ item.key }}" class="breakdown-row clickable">
-                    <div class="breakdown-row__label">{{ item.label }}</div>
-                    <div class="breakdown-row__value">{{ item.count }}</div>
-                </a>
+                <a href="/detail/product::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>
                 {% endfor %}
             </div>
             {% else %}
             <div class="empty">No organisation product breakdown available.</div>
             {% endif %}
         </div>
-
         <div class="panel" style="padding:18px;">
-            <div class="section__header">
-                <h2>Billing &amp; Marketplace Coverage</h2>
-                <div class="count">Select a billing area to inspect app entries</div>
-            </div>
+            <div class="section__header"><h2>Billing &amp; Marketplace Coverage</h2><div class="count">Select a billing area to inspect app entries</div></div>
             <div class="breakdown-list">
-                <a class="breakdown-row clickable" href="/detail/billing::atlassian_apps">
-                    <div class="breakdown-row__label">Atlassian app entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div>
-                </a>
-                <a class="breakdown-row clickable" href="/detail/billing::marketplace_apps">
-                    <div class="breakdown-row__label">Marketplace app entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div>
-                </a>
-                <a class="breakdown-row clickable" href="/detail/billing::jira_entries">
-                    <div class="breakdown-row__label">Jira billing entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.unique_jira_entries or 0 }}</div>
-                </a>
-                <a class="breakdown-row clickable" href="/detail/billing::bitbucket_entries">
-                    <div class="breakdown-row__label">Bitbucket billing entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div>
-                </a>
-                <a class="breakdown-row clickable" href="/detail/billing::confluence_entries">
-                    <div class="breakdown-row__label">Confluence billing entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.unique_confluence_entries or 0 }}</div>
-                </a>
-                <a class="breakdown-row clickable" href="/detail/billing::rovo_entries">
-                    <div class="breakdown-row__label">Rovo billing entries</div>
-                    <div class="breakdown-row__value">{{ billing_summary.unique_rovo_entries or 0 }}</div>
-                </a>
+                <a class="breakdown-row clickable" href="/detail/billing::atlassian_apps"><div class="breakdown-row__label">Atlassian app entries</div><div class="breakdown-row__value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div></a>
+                <a class="breakdown-row clickable" href="/detail/billing::marketplace_apps"><div class="breakdown-row__label">Marketplace app entries</div><div class="breakdown-row__value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div></a>
+                <a class="breakdown-row clickable" href="/detail/billing::jira_entries"><div class="breakdown-row__label">Jira billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_jira_entries or 0 }}</div></a>
+                <a class="breakdown-row clickable" href="/detail/billing::bitbucket_entries"><div class="breakdown-row__label">Bitbucket billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div></a>
+                <a class="breakdown-row clickable" href="/detail/billing::confluence_entries"><div class="breakdown-row__label">Confluence billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_confluence_entries or 0 }}</div></a>
+                <a class="breakdown-row clickable" href="/detail/billing::rovo_entries"><div class="breakdown-row__label">Rovo billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_rovo_entries or 0 }}</div></a>
             </div>
         </div>
     </section>
-
     {% macro site_section(title, count, sites, badge) -%}
     <section class="section">
         <div class="section__header"><h2>{{ title }}</h2><div class="count">{{ count }} site(s)</div></div>
@@ -372,149 +147,42 @@
         <div class="site-grid">
             {% for site in sites %}
             <article class="site-card site-card--{{ badge }}">
-                <div class="site-top">
-                    <h3 class="site-name">{{ site.site_name }}</h3>
-                    <span class="badge badge--{{ badge }}">{{ site.status if site.status else site.tier_status }}</span>
-                </div>
-
-                <div class="site-actions">
-                    <a href="/detail/site::{{ site.site }}" class="pill">View site users</a>
-                    <a href="/detail/project::site::{{ site.site }}" class="pill">View project sample</a>
-                </div>
-
+                <div class="site-top"><h3 class="site-name">{{ site.site_name }}</h3><span class="badge badge--{{ badge }}">{{ site.status if site.status else site.tier_status }}</span></div>
+                <div class="site-actions"><a href="/detail/site::{{ site.site }}" class="pill">View site users</a><a href="/detail/project::site::{{ site.site }}" class="pill">View project sample</a></div>
                 <div class="metrics">
-                    <a href="/detail/site::{{ site.site }}" class="metric-link">
-                        <div class="metric-label">Jira site users</div>
-                        <div class="metric-value">{{ site.total_users or 0 }}</div>
-                    </a>
-
-                    <div class="metric">
-                        <div class="metric-label">{% if site.licence_model == 'seat_paid' %}Licensed users{% else %}Licensed / Tier{% endif %}</div>
-                        <div class="metric-value">
-                            {% if site.licence_model == 'seat_paid' %}
-                                {{ site.licensed_users or 0 }}
-                            {% else %}
-                                {{ site.licensed_users or 0 }} / {{ site.tier_limit or 0 }}
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-label">Active Jira users</div>
-                        <div class="metric-value">{{ site.active_users or 0 }}</div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-label">Inactive Jira users</div>
-                        <div class="metric-value">{{ site.inactive_users or 0 }}</div>
-                    </div>
-
-                    <a href="/detail/access::Confluence - {{ site.site }}" class="metric-link">
-                        <div class="metric-label">Confluence users</div>
-                        <div class="metric-value">{{ site.confluence_users or 0 }}</div>
-                    </a>
-
-                    <a href="/detail/project::site::{{ site.site }}" class="metric-link">
-                        <div class="metric-label">Project count</div>
-                        <div class="metric-value">{{ site.project_count or 0 }}</div>
-                        <div style="margin-top:6px; font-size:12px; color: var(--muted);">
-                            Sample rows: {{ site.sampled_project_rows or 0 }}
-                        </div>
-                    </a>
-
-                    <div class="metric">
-                        <div class="metric-label">Total issues</div>
-                        <div class="metric-value">{{ site.issue_count_total or 0 }}</div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-label">Unresolved issues</div>
-                        <div class="metric-value">{{ site.issue_count_unresolved or 0 }}</div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-label">Updated last 7 days</div>
-                        <div class="metric-value">{{ site.issue_count_updated_last_7d or 0 }}</div>
-                    </div>
-
-                    <div class="metric">
-                        <div class="metric-label">Atlas / Goals / Projects</div>
-                        <div class="metric-value">{{ site.atlas_users or 0 }} / {{ site.goals_users or 0 }} / {{ site.projects_users or 0 }}</div>
-                    </div>
+                    <a href="/detail/site::{{ site.site }}" class="metric-link"><div class="metric-label">Jira site users</div><div class="metric-value">{{ site.total_users or 0 }}</div></a>
+                    <div class="metric"><div class="metric-label">{% if site.licence_model == 'seat_paid' %}Licensed users{% else %}Licensed / Tier{% endif %}</div><div class="metric-value">{% if site.licence_model == 'seat_paid' %}{{ site.licensed_users or 0 }}{% else %}{{ site.licensed_users or 0 }} / {{ site.tier_limit or 0 }}{% endif %}</div></div>
+                    <div class="metric"><div class="metric-label">Active Jira users</div><div class="metric-value">{{ site.active_users or 0 }}</div></div>
+                    <div class="metric"><div class="metric-label">Inactive Jira users</div><div class="metric-value">{{ site.inactive_users or 0 }}</div></div>
+                    <a href="/detail/access::Confluence - {{ site.site }}" class="metric-link"><div class="metric-label">Confluence users</div><div class="metric-value">{{ site.confluence_users or 0 }}</div></a>
+                    <a href="/detail/project::site::{{ site.site }}" class="metric-link"><div class="metric-label">Project count</div><div class="metric-value">{{ site.project_count or 0 }}</div><div style="margin-top:6px; font-size:12px; color: var(--muted);">Sample rows: {{ site.sampled_project_rows or 0 }}</div></a>
+                    <div class="metric"><div class="metric-label">Total issues</div><div class="metric-value">{{ site.issue_count_total or 0 }}</div></div>
+                    <div class="metric"><div class="metric-label">Unresolved issues</div><div class="metric-value">{{ site.issue_count_unresolved or 0 }}</div></div>
+                    <div class="metric"><div class="metric-label">Updated last 7 days</div><div class="metric-value">{{ site.issue_count_updated_last_7d or 0 }}</div></div>
+                    <div class="metric"><div class="metric-label">Atlas / Goals / Projects</div><div class="metric-value">{{ site.atlas_users or 0 }} / {{ site.goals_users or 0 }} / {{ site.projects_users or 0 }}</div></div>
                 </div>
-
                 <div style="margin-bottom:10px; display:flex; gap:6px; flex-wrap:wrap; font-size:11px;">
-                    {% if site.project_count_delta > 0 %}
-                        <span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">
-                            Growing (+{{ site.project_count_delta }})
-                        </span>
-                    {% elif site.project_count_delta < 0 %}
-                        <span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">
-                            Reduced ({{ site.project_count_delta }})
-                        </span>
-                    {% else %}
-                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">
-                            Stable projects
-                        </span>
-                    {% endif %}
-
-                    {% if site.issue_count_updated_last_7d == 0 %}
-                        <span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">
-                            No recent activity
-                        </span>
-                    {% elif site.issue_count_updated_last_7d <= 2 %}
-                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">
-                            Low activity
-                        </span>
-                    {% else %}
-                        <span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">
-                            Active
-                        </span>
-                    {% endif %}
-
-                    {% if site.issue_count_total == 0 %}
-                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">
-                            No issues tracked
-                        </span>
-                    {% endif %}
+                    {% if site.project_count_delta > 0 %}<span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Growing (+{{ site.project_count_delta }})</span>
+                    {% elif site.project_count_delta < 0 %}<span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">Reduced ({{ site.project_count_delta }})</span>
+                    {% else %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Stable projects</span>{% endif %}
+                    {% if site.issue_count_updated_last_7d == 0 %}<span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">No recent activity</span>
+                    {% elif site.issue_count_updated_last_7d <= 2 %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Low activity</span>
+                    {% else %}<span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Active</span>{% endif %}
+                    {% if site.issue_count_total == 0 %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">No issues tracked</span>{% endif %}
                 </div>
-
                 <div class="usage-wrap">
-                    <div class="usage-row">
-                        <span>Why this stands out</span>
-                        <strong>{{ site.reason if site.reason else ('Tier full' if site.tier_status == 'critical' else 'Near tier limit' if site.tier_status == 'warning' else 'Headroom available') }}</strong>
-                    </div>
-
-                    <div class="usage-row">
-                        <span>Atlassian area</span>
-                        <strong>{{ site.atlassian_area if site.atlassian_area else 'Billing / User access' }}</strong>
-                    </div>
-
+                    <div class="usage-row"><span>Why this stands out</span><strong>{{ site.reason if site.reason else ('Tier full' if site.tier_status == 'critical' else 'Near tier limit' if site.tier_status == 'warning' else 'Headroom available') }}</strong></div>
+                    <div class="usage-row"><span>Atlassian area</span><strong>{{ site.atlassian_area if site.atlassian_area else 'Billing / User access' }}</strong></div>
                     {% if site.licence_model == 'seat_paid' %}
-                        <div class="usage-row">
-                            <span>Licence model</span>
-                            <strong>Seat-paid</strong>
-                        </div>
-                        <div class="usage-row">
-                            <span>Tier usage</span>
-                            <strong>Not applicable</strong>
-                        </div>
+                        <div class="usage-row"><span>Licence model</span><strong>Seat-paid</strong></div>
+                        <div class="usage-row"><span>Tier usage</span><strong>Not applicable</strong></div>
                     {% else %}
-                        <div class="usage-row">
-                            <span>Tier usage</span>
-                            <strong>{{ site.usage_percent or 0 }}%</strong>
-                        </div>
-                        <div class="usage-bar">
-                            <div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div>
-                        </div>
-                        <div class="usage-row" style="margin-top:8px;">
-                            <span>Capacity remaining</span>
-                            <strong>{{ site.capacity_remaining or 0 }}</strong>
-                        </div>
+                        <div class="usage-row"><span>Tier usage</span><strong>{{ site.usage_percent or 0 }}%</strong></div>
+                        <div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div></div>
+                        <div class="usage-row" style="margin-top:8px;"><span>Capacity remaining</span><strong>{{ site.capacity_remaining or 0 }}</strong></div>
                     {% endif %}
                 </div>
             </article>
-
             {% endfor %}
         </div>
         {% else %}
@@ -522,56 +190,20 @@
         {% endif %}
     </section>
     {%- endmacro %}
-
     {{ site_section('Critical', critical_sites|length, critical_sites, 'critical') }}
     {{ site_section('Warning', warning_sites|length, warning_sites, 'warning') }}
     {{ site_section('Stable', stable_sites|length, stable_sites, 'stable') }}
-
     <section class="section">
         <div class="section__header"><h2>Users Export Access Breakdown</h2><div class="count">Select an access area to inspect users</div></div>
         {% if users_export_breakdown %}
-        <div class="panel" style="padding:18px;">
-            <div class="breakdown-list">
-                {% for item in users_export_breakdown %}
-                <a href="/detail/access::{{ item.key }}" class="breakdown-row clickable">
-                    <div class="breakdown-row__label">{{ item.label }}</div>
-                    <div class="breakdown-row__value">{{ item.count }}</div>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
+        <div class="panel" style="padding:18px;"><div class="breakdown-list">{% for item in users_export_breakdown %}<a href="/detail/access::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>{% endfor %}</div></div>
         {% else %}
         <div class="empty">No users export access breakdown available.</div>
         {% endif %}
     </section>
 </div>
 <script>
-    (function () {
-        var root = document.documentElement;
-        var button = document.getElementById("theme-toggle");
-        if (!button) {
-            return;
-        }
-
-        function applyLabel() {
-            var isLight = root.getAttribute("data-theme") === "light";
-            button.textContent = isLight ? "Dark mode" : "Light mode";
-        }
-
-        button.addEventListener("click", function () {
-            var isLight = root.getAttribute("data-theme") === "light";
-            if (isLight) {
-                root.removeAttribute("data-theme");
-                try { localStorage.setItem("jom_theme", "dark"); } catch (e) {}
-            } else {
-                root.setAttribute("data-theme", "light");
-                try { localStorage.setItem("jom_theme", "light"); } catch (e) {}
-            }
-            applyLabel();
-        });
-
-        applyLabel();
-    })();
+    window.JOMTheme.initToggle("theme-toggle");
 </script>
 </body>
 </html>
