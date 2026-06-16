@@ -209,27 +209,42 @@ def _build_data():
     return data
 
 
+def _common_template_data(data):
+    return {
+        "estate": data.get("estate", {}),
+        "sites": data.get("sites", []),
+        "critical_sites": data.get("critical_sites", []),
+        "warning_sites": data.get("warning_sites", []),
+        "stable_sites": data.get("stable_sites", []),
+        "org_product_breakdown": data.get("org_product_breakdown", []),
+        "users_export_breakdown": data.get("users_export_breakdown", []),
+        "billing_summary": data.get("billing_summary", {}),
+        "change_detection": data.get("change_detection", {}),
+        "site_discovery": data.get("site_discovery", {}),
+        "project_intelligence": data.get("project_intelligence", {}),
+        "users_source_file": data.get("users_source_file"),
+        "managed_source_file": data.get("managed_source_file"),
+        "users_row_count": data.get("users_row_count", 0),
+        "managed_row_count": data.get("managed_row_count", 0),
+    }
+
+
 @app.route("/")
 def home():
     data = _build_data()
-    return render_template(
-        "home.html",
-        estate=data.get("estate", {}),
-        sites=data.get("sites", []),
-        critical_sites=data.get("critical_sites", []),
-        warning_sites=data.get("warning_sites", []),
-        stable_sites=data.get("stable_sites", []),
-        org_product_breakdown=data.get("org_product_breakdown", []),
-        users_export_breakdown=data.get("users_export_breakdown", []),
-        billing_summary=data.get("billing_summary", {}),
-        change_detection=data.get("change_detection", {}),
-        site_discovery=data.get("site_discovery", {}),
-        project_intelligence=data.get("project_intelligence", {}),
-        users_source_file=data.get("users_source_file"),
-        managed_source_file=data.get("managed_source_file"),
-        users_row_count=data.get("users_row_count", 0),
-        managed_row_count=data.get("managed_row_count", 0),
-    )
+    return render_template("home.html", **_common_template_data(data))
+
+
+@app.route("/reference")
+def reference_page():
+    data = _build_data()
+    return render_template("reference.html", **_common_template_data(data))
+
+
+@app.route("/estate")
+def estate_page():
+    data = _build_data()
+    return render_template("estate.html", **_common_template_data(data))
 
 
 @app.route("/detail/<path:key>")
