@@ -274,22 +274,42 @@
             <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
             <div class="note">Select to see the disabled accounts list</div>
         </a>
+
         <div class="stat-card">
             <div class="label">Organisation Users</div>
             <div class="value">{{ estate.organisation_users or 0 }}</div>
             <div class="note">Organisation / managed account scope</div>
         </div>
+
         <a href="/detail/no_tracked_jira" class="stat-card">
             <div class="label">No Tracked Jira Site Access</div>
             <div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div>
             <div class="note">Select to see users with no tracked Jira access</div>
         </a>
+
         <a href="/detail/bitbucket_only_no_tracked_jira" class="stat-card">
             <div class="label">Bitbucket Only / No Tracked Jira</div>
             <div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div>
             <div class="note">Select to see Bitbucket-only users</div>
         </a>
     </section>
+
+    <section class="grid-4" style="margin-top:-6px;">
+        <a href="/detail/inactive_without_site_access" class="stat-card">
+            <div class="label">Inactive Without Tracked Site Access</div>
+            <div class="value">{{ estate.inactive_without_site_access or 0 }}</div>
+            <div class="note">Select to see inactive users with no tracked Jira site access</div>
+        </a>
+    </section>
+    
+    <section class="grid-4" style="margin-top:-6px;">
+        <a href="/detail/inactive_without_site_access" class="stat-card">
+            <div class="label">Inactive Without Tracked Site Access</div>
+            <div class="value">{{ estate.inactive_without_site_access or 0 }}</div>
+            <div class="note">Select to see inactive users with no tracked Jira site access</div>
+        </a>
+    </section>
+
 
     <section class="split-grid">
         <div class="panel" style="padding:18px;">
