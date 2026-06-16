@@ -39,6 +39,14 @@ def _site_key_for_record(site):
     return _normalise_site_key_from_name(site.get("name"))
 
 
+def _safe_join(value):
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return ", ".join(str(v) for v in value if str(v).strip())
+    return str(value)
+
+
 def load_latest_run_change_detection(file_name="latest_run.json"):
     if not os.path.exists(file_name):
         return {
@@ -170,7 +178,6 @@ def load_latest_run_change_detection(file_name="latest_run.json"):
         }
 
         site_results.append(site_record)
-
         if site_key:
             site_map[site_key] = site_record
 
@@ -203,4 +210,122 @@ def load_latest_run_change_detection(file_name="latest_run.json"):
         "site_map": site_map,
         "comparison_changes": comparison.get("changes", []) or [],
         "excluded_sites": excluded_sites,
+    }
+
+
+def build_change_detection_drilldowns(change_detection):
+    change_detection = change_detection or {}
+    summary = change_detection.get("summary", {}) or {}
+    excluded_sites = change_detection.get("excluded_sites", []) or []
+    comparison_changes = change_detection.get("comparison_changes", []) or []
+    site_rows = change_detection.get("sites", []) or []
+
+    excluded_rows = []
+    for site in excluded_sites:
+        excluded_rows.append({
+            "name": site.get("name", ""),
+            "url": site.get("url", ""),
+            "cloud_id": site.get("cloud_id", ""),
+        })
+
+    comparison_rows = []
+    for index, change in enumerate(comparison_changes, start=1):
+        if not isinstance(change, dict):
+            comparison_rows.append({
+                "change_index": index,
+                "severity": "info",
+                "change_type": "unknown",
+                "site": "",
+                "detail": str(change),
+            })
+            continue
+
+        comparison_rows.append({
+            "change_index": index,
+            "severity": change.get("severity", "info"),
+            "change_type": change.get("change_type") or change.get("type") or change.get("category") or "change",
+            "site": change.get("site_name") or change.get("site") or change.get("name") or "",
+            "detail": _safe_join(change.get("detail") or change.get("message") or change.get("description") or change),
+        })
+
+    site_attention_rows = []
+    for site in site_rows:
+        site_attention_rows.append({
+            "site_name": site.get("site_name", ""),
+            "status": site.get("status", ""),
+            "risk_score": site.get("risk_score", 0),
+            "growth_status": site.get("growth_status", ""),
+            "project_count_delta": site.get("project_count_delta", 0),
+            "total_users_delta": site.get("total_users_delta", 0),
+            "active_users_delta": site.get("active_users_delta", 0),
+            "inactive_users_delta": site.get("inactive_users_delta", 0),
+            "new_site_candidate": "Yes" if site.get("new_site_candidate") else "No",
+            "permission_limited_checks": _safe_join(site.get("permission_limited_checks", [])),
+            "trend_signals": _safe_join(site.get("trend_signals", [])),
+            "attention_reasons": _safe_join(site.get("attention_reasons", [])),
+        })
+
+    site_attention_rows.sort(key=lambda row: (
+        0 if row.get("new_site_candidate") == "Yes" else 1,
+        -(row.get("risk_score", 0) or 0),
+        str(row.get("site_name", "")).lower(),
+    ))
+
+    return {
+        "change::excluded_sites": {
+            "title": "Excluded / Out-of-Scope Sites",
+            "reason": "These sites were discovered by the collector but are currently outside the monitored operational Jira scope.",
+            "atlassian_area": "Atlassian Administration → Site management / Organisation overview",
+            "columns": ["name", "url", "cloud_id"],
+            "rows": excluded_rows,
+        },
+        "change::comparison_changes": {
+            "title": "Collector Comparison Changes",
+            "reason": "These are the explicit comparison changes returned by the latest collector run against the previous successful snapshot.",
+            "atlassian_area": "Monitoring output / Collector comparison",
+            "columns": ["change_index", "severity", "change_type", "site", "detail"],
+            "rows": comparison_rows,
+        },
+        "change::site_attention": {
+            "title": "Site Change Attention",
+            "reason": "This view highlights monitored sites with change signals, permission-limited checks, growth movement, or potential new-site attention markers.",
+            "atlassian_area": "Jira operational monitoring / collector intelligence",
+            "columns": [
+                "site_name",
+                "status",
+                "risk_score",
+                "growth_status",
+                "project_count_delta",
+                "total_users_delta",
+                "active_users_delta",
+                "inactive_users_delta",
+                "new_site_candidate",
+                "permission_limited_checks",
+                "trend_signals",
+                "attention_reasons",
+            ],
+            "rows": site_attention_rows,
+        },
+        "change::summary": {
+            "title": "Change Summary Totals",
+            "reason": "This summary reflects the latest collector comparison and trend totals from the current backend operational state.",
+            "atlassian_area": "Monitoring output / Collector comparison",
+            "columns": ["metric", "value"],
+            "rows": [
+                {"metric": "Detected changes", "value": summary.get("change_count", 0)},
+                {"metric": "Info changes", "value": summary.get("info_change_count", 0)},
+                {"metric": "Warning changes", "value": summary.get("warning_change_count", 0)},
+                {"metric": "Critical changes", "value": summary.get("critical_change_count", 0)},
+                {"metric": "Project delta total", "value": summary.get("project_delta_total", 0)},
+                {"metric": "Total users delta total", "value": summary.get("total_users_delta_total", 0)},
+                {"metric": "Active users delta total", "value": summary.get("active_users_delta_total", 0)},
+                {"metric": "Inactive users delta total", "value": summary.get("inactive_users_delta_total", 0)},
+                {"metric": "Licensed users estimate delta total", "value": summary.get("licensed_users_estimate_delta_total", 0)},
+                {"metric": "Rising risk site count", "value": summary.get("rising_risk_site_count", 0)},
+                {"metric": "Warning or critical streak site count", "value": summary.get("warning_or_critical_streak_site_count", 0)},
+                {"metric": "Recurring blocking failure site count", "value": summary.get("recurring_blocking_failure_site_count", 0)},
+                {"metric": "Excluded site count", "value": summary.get("excluded_site_count", 0)},
+                {"metric": "New site candidate count", "value": summary.get("new_site_candidate_count", 0)},
+            ],
+        },
     }

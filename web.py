@@ -7,7 +7,7 @@ from datetime import datetime
 from estate_metrics import build_estate_metrics
 from billing_catalog import get_billing_catalog
 from project_counts import load_project_counts_from_latest_run
-from change_detection import load_latest_run_change_detection
+from change_detection import load_latest_run_change_detection, build_change_detection_drilldowns
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -79,6 +79,7 @@ def _sort_rows(rows, sort_key, order="asc"):
     if not rows or not sort_key:
         return rows
     descending = str(order).lower() == "desc"
+
     if _is_last_seen_field(sort_key):
         def dt_key(row):
             parsed = _parse_possible_datetime(row.get(sort_key))
@@ -164,6 +165,7 @@ def _build_data():
 
     drilldowns = data.get("drilldowns", {})
     drilldowns.update(billing.get("drilldowns", {}))
+    drilldowns.update(build_change_detection_drilldowns(change_detection))
     data["drilldowns"] = drilldowns
 
     return data
@@ -187,7 +189,6 @@ def home():
         managed_source_file=data.get("managed_source_file"),
         users_row_count=data.get("users_row_count", 0),
         managed_row_count=data.get("managed_row_count", 0),
-
     )
 
 
