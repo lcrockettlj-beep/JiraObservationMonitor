@@ -6,7 +6,11 @@ import os
 from datetime import datetime
 from estate_metrics import build_estate_metrics
 from billing_catalog import get_billing_catalog
-from project_counts import load_project_counts_from_latest_run
+from project_counts import (
+    load_project_counts_from_latest_run,
+    load_project_intelligence_from_latest_run,
+    build_project_drilldowns_from_latest_run,
+)
 from change_detection import load_latest_run_change_detection, build_change_detection_drilldowns
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -112,6 +116,18 @@ def _merge_project_counts(sites):
     return sites
 
 
+def _merge_project_intelligence(sites, project_intelligence):
+    site_map = project_intelligence.get("site_map", {}) if isinstance(project_intelligence, dict) else {}
+
+    for site in sites:
+        site_key = site.get("site")
+        info = site_map.get(site_key, {})
+        site["sampled_project_rows"] = info.get("sampled_project_rows", 0)
+        site["project_sample_available"] = True if info.get("project_rows") else False
+
+    return sites
+
+
 def _merge_change_detection(sites, change_detection):
     site_map = change_detection.get("site_map", {}) if isinstance(change_detection, dict) else {}
 
@@ -152,6 +168,10 @@ def _build_data():
 
     data["sites"] = _merge_project_counts(data.get("sites", []))
 
+    project_intelligence = load_project_intelligence_from_latest_run()
+    data["project_intelligence"] = project_intelligence
+    data["sites"] = _merge_project_intelligence(data.get("sites", []), project_intelligence)
+
     change_detection = load_latest_run_change_detection()
     data["change_detection"] = change_detection
     data["sites"] = _merge_change_detection(data.get("sites", []), change_detection)
@@ -166,6 +186,7 @@ def _build_data():
     drilldowns = data.get("drilldowns", {})
     drilldowns.update(billing.get("drilldowns", {}))
     drilldowns.update(build_change_detection_drilldowns(change_detection))
+    drilldowns.update(build_project_drilldowns_from_latest_run())
     data["drilldowns"] = drilldowns
 
     return data
