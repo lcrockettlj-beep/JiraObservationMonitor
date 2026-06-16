@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
 import csv
@@ -29,6 +28,7 @@ def _load_csv_rows(pattern):
     matches = glob.glob(str(BASE_DIR / pattern))
     if not matches:
         return [], None
+
     latest_file = max(matches, key=os.path.getmtime)
     try:
         with open(latest_file, newline="", encoding="utf-8-sig") as f:
@@ -43,11 +43,14 @@ def _load_csv_rows(pattern):
 def _parse_possible_datetime(value):
     if value is None:
         return None
+
     text = str(value).strip()
     if not text:
         return None
+
     if text.lower() in {"never accessed", "never", "-", "none", "n/a"}:
         return None
+
     formats = [
         "%d %b %Y",
         "%d %B %Y",
@@ -62,17 +65,20 @@ def _parse_possible_datetime(value):
         "%B %d, %Y",
         "%B %d, %Y %H:%M",
     ]
+
     for fmt in formats:
         try:
             return datetime.strptime(text, fmt)
         except ValueError:
             continue
+
     return None
 
 
 def _is_last_seen_field(sort_key):
     if not sort_key:
         return False
+
     key = str(sort_key).lower()
     return (
         "last_seen" in key
@@ -85,6 +91,7 @@ def _is_last_seen_field(sort_key):
 def _sort_rows(rows, sort_key, order="asc"):
     if not rows or not sort_key:
         return rows
+
     descending = str(order).lower() == "desc"
 
     if _is_last_seen_field(sort_key):
@@ -93,6 +100,7 @@ def _sort_rows(rows, sort_key, order="asc"):
             if parsed is None:
                 return (1, datetime.min)
             return (0, parsed)
+
         return sorted(rows, key=dt_key, reverse=descending)
 
     def text_key(row):
@@ -108,6 +116,7 @@ def _sort_rows(rows, sort_key, order="asc"):
 
 def _merge_project_counts(sites):
     project_counts = load_project_counts_from_latest_run()
+
     for site in sites:
         site_key = site.get("site")
         project_data = project_counts.get(site_key, {})
@@ -116,6 +125,7 @@ def _merge_project_counts(sites):
         site["issue_count_unresolved"] = project_data.get("issue_count_unresolved")
         site["issue_count_updated_last_7d"] = project_data.get("issue_count_updated_last_7d")
         site["project_count_delta"] = project_data.get("project_count_delta")
+
     return sites
 
 

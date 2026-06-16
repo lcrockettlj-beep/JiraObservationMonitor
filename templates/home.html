@@ -220,6 +220,29 @@
             <a href="/detail/change::summary" class="pill">View all change intelligence</a>
         </div>
 
+        <div class="grid-4" style="margin-bottom: 20px;">
+            <a href="/detail/discovery::tracked_sites" class="stat-card">
+                <div class="label">Tracked Sites</div>
+                <div class="value">{{ site_discovery.summary.tracked_site_count if site_discovery and site_discovery.summary else 0 }}</div>
+                <div class="note">Operationally monitored Jira sites in current scope</div>
+            </a>
+            <a href="/detail/discovery::excluded_sites" class="stat-card">
+                <div class="label">Excluded Sites</div>
+                <div class="value">{{ site_discovery.summary.excluded_site_count if site_discovery and site_discovery.summary else 0 }}</div>
+                <div class="note">Discovered sites currently outside monitored scope</div>
+            </a>
+            <a href="/detail/discovery::all_sites" class="stat-card">
+                <div class="label">Discovered Sites</div>
+                <div class="value">{{ site_discovery.summary.discovered_site_count if site_discovery and site_discovery.summary else 0 }}</div>
+                <div class="note">Combined tracked and excluded estate view</div>
+            </a>
+            <a href="/detail/discovery::new_site_candidates" class="stat-card">
+                <div class="label">New Site Candidates</div>
+                <div class="value">{{ site_discovery.summary.new_site_candidate_count if site_discovery and site_discovery.summary else 0 }}</div>
+                <div class="note">Sites to review for future operational classification</div>
+            </a>
+        </div>
+
         <div class="grid-4">
             <a href="/detail/change::comparison_changes" class="stat-card">
                 <div class="label">Detected Changes</div>
@@ -502,33 +525,33 @@
         {% endif %}
     </section>
 </div>
-    <script>
-        (function () {
-            var root = document.documentElement;
-            var button = document.getElementById("theme-toggle");
-            if (!button) {
-                return;
+<script>
+    (function () {
+        var root = document.documentElement;
+        var button = document.getElementById("theme-toggle");
+        if (!button) {
+            return;
+        }
+
+        function applyLabel() {
+            var isLight = root.getAttribute("data-theme") === "light";
+            button.textContent = isLight ? "Dark mode" : "Light mode";
+        }
+
+        button.addEventListener("click", function () {
+            var isLight = root.getAttribute("data-theme") === "light";
+            if (isLight) {
+                root.removeAttribute("data-theme");
+                try { localStorage.setItem("jom_theme", "dark"); } catch (e) {}
+            } else {
+                root.setAttribute("data-theme", "light");
+                try { localStorage.setItem("jom_theme", "light"); } catch (e) {}
             }
-
-            function applyLabel() {
-                var isLight = root.getAttribute("data-theme") === "light";
-                button.textContent = isLight ? "Dark mode" : "Light mode";
-            }
-
-            button.addEventListener("click", function () {
-                var isLight = root.getAttribute("data-theme") === "light";
-                if (isLight) {
-                    root.removeAttribute("data-theme");
-                    try { localStorage.setItem("jom_theme", "dark"); } catch (e) {}
-                } else {
-                    root.setAttribute("data-theme", "light");
-                    try { localStorage.setItem("jom_theme", "light"); } catch (e) {}
-                }
-                applyLabel();
-            });
-
             applyLabel();
-        })();
-    </script>
+        });
+
+        applyLabel();
+    })();
+</script>
 </body>
 </html>
