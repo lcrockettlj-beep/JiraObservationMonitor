@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
 </head>
-
 <body>
 <div class="page">
     <nav class="top-nav">
@@ -18,9 +17,26 @@
             <a href="/estate" class="top-nav__link">Estate</a>
             <a href="/reference" class="top-nav__link">Reference</a>
         </div>
+        <div class="top-nav__actions">
+            <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
+        </div>
     </nav>
 
+    <section class="hero">
+        <div class="hero__top">
+            <div>
+                <div style="margin-bottom:10px;"><a href="/" class="text-link">← Back to homepage</a></div>
+                <h1>{{ title }}</h1>
+                <p>Why it stands out: {{ reason }}</p>
+                <p style="margin-top:8px;">Go to Atlassian: {{ atlassian_area }}</p>
+            </div>
+            <div class="hero__meta">
+                <div class="pill">{{ rows|length }} record(s)</div>
+                <div class="pill">Sort by clicking a column heading</div>
+            </div>
+        </div>
     </section>
+
     <section class="panel">
         <div class="section__header"><h2>{{ title }}</h2><div class="count">{{ detail_key }}</div></div>
         {% if rows %}

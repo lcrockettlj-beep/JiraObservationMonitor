@@ -1,4 +1,4 @@
-reference_page.html<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -19,20 +19,31 @@ reference_page.html<!doctype html>
     </style>
 </head>
 <body>
-
 <div class="page">
-    
-        <nav class="top-nav">
-            <div class="top-nav__brand">Jira Observation Monitor</div>
-            <div class="top-nav__links">
-                <a href="/" class="top-nav__link top-nav__link--active">Home</a>
-                <a href="/estate" class="top-nav__link">Estate</a>
-                <a href="/reference" class="top-nav__link">Reference</a>
-                <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
+    <nav class="top-nav">
+        <div class="top-nav__brand">Jira Observation Monitor</div>
+        <div class="top-nav__links">
+            <a href="/" class="top-nav__link">Home</a>
+            <a href="/estate" class="top-nav__link">Estate</a>
+            <a href="/reference" class="top-nav__link top-nav__link--active">Reference</a>
+        </div>
+        <div class="top-nav__actions">
+            <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero__top">
+            <div>
+                <div style="margin-bottom:10px;"><a href="/" class="text-link">← Back to homepage</a></div>
+                <h1>Reference Page</h1>
+                <p>Secondary reference area for product breakdowns, billing coverage, and users export access exploration.</p>
             </div>
-        </nav>
-
-
+            <div class="hero__meta">
+                <div class="pill"><a href="/estate">Open estate page</a></div>
+                <div class="pill"><a href="/detail/project::summary">Project intelligence</a></div>
+            </div>
+        </div>
     </section>
 
     <div class="reference-grid">
@@ -48,7 +59,6 @@ reference_page.html<!doctype html>
             <div class="empty">No organisation product breakdown available.</div>
             {% endif %}
         </div>
-
         <div class="reference-panel">
             <div class="section__header"><h2>Billing &amp; Marketplace Coverage</h2><div class="count">Select a billing area to inspect app entries</div></div>
             <div class="reference-list">
