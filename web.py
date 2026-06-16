@@ -1,9 +1,11 @@
+
 from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
 import csv
 import glob
 import os
 from datetime import datetime
+
 from estate_metrics import build_estate_metrics
 from billing_catalog import get_billing_catalog
 from project_counts import (
@@ -177,6 +179,9 @@ def _build_data():
     data["change_detection"] = change_detection
     data["sites"] = _merge_change_detection(data.get("sites", []), change_detection)
 
+    site_discovery = load_site_discovery_from_latest_run()
+    data["site_discovery"] = site_discovery
+
     data["critical_sites"] = [s for s in data["sites"] if s.get("status") == "critical"]
     data["warning_sites"] = [s for s in data["sites"] if s.get("status") == "warning"]
     data["stable_sites"] = [s for s in data["sites"] if s.get("status") == "stable"]
@@ -188,12 +193,6 @@ def _build_data():
     drilldowns.update(billing.get("drilldowns", {}))
     drilldowns.update(build_change_detection_drilldowns(change_detection))
     drilldowns.update(build_project_drilldowns_from_latest_run())
-    data["drilldowns"] = drilldowns
-
-    site_discovery = load_site_discovery_from_latest_run()
-    data["site_discovery"] = site_discovery
-
-    drilldowns = data.get("drilldowns", {})
     drilldowns.update(build_site_discovery_drilldowns(site_discovery))
     data["drilldowns"] = drilldowns
 
@@ -214,6 +213,8 @@ def home():
         users_export_breakdown=data.get("users_export_breakdown", []),
         billing_summary=data.get("billing_summary", {}),
         change_detection=data.get("change_detection", {}),
+        site_discovery=data.get("site_discovery", {}),
+        project_intelligence=data.get("project_intelligence", {}),
         users_source_file=data.get("users_source_file"),
         managed_source_file=data.get("managed_source_file"),
         users_row_count=data.get("users_row_count", 0),

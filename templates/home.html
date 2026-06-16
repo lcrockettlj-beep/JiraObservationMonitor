@@ -4,6 +4,16 @@
     <meta charset="utf-8">
     <title>Jira Observation Monitor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem("jom_theme");
+                if (savedTheme === "light") {
+                    document.documentElement.setAttribute("data-theme", "light");
+                }
+            } catch (e) {}
+        })();
+    </script>
     <style>
         :root {
             --bg: #0b122b;
@@ -16,6 +26,17 @@
             --warning: #f0b24a;
             --stable: #2dbe7f;
         }
+        html[data-theme="light"] {
+            --bg: #eef4ff;
+            --panel: rgba(255, 255, 255, 0.94);
+            --panel-solid: #ffffff;
+            --border: rgba(28, 70, 130, 0.18);
+            --text: #0f172a;
+            --muted: #5b6785;
+            --critical: #c93b49;
+            --warning: #d6921e;
+            --stable: #1f9f68;
+        }
         * { box-sizing: border-box; }
         body {
             margin: 0;
@@ -25,6 +46,12 @@
                 radial-gradient(circle at top left, rgba(69,155,227,0.15), transparent 28%),
                 radial-gradient(circle at top right, rgba(6,153,214,0.10), transparent 24%),
                 linear-gradient(180deg, #081024 0%, #0b122b 100%);
+        }
+        html[data-theme="light"] body {
+            background:
+                radial-gradient(circle at top left, rgba(69,155,227,0.10), transparent 28%),
+                radial-gradient(circle at top right, rgba(6,153,214,0.06), transparent 24%),
+                linear-gradient(180deg, #f7fbff 0%, #e9f1ff 100%);
         }
         a { color: inherit; text-decoration: none; }
         .page { max-width: 1380px; margin: 0 auto; padding: 24px 20px 48px; }
@@ -50,6 +77,21 @@
             font-size: 13px;
         }
         .pill:hover {
+            border-color: rgba(69, 155, 227, 0.45);
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+        }
+        .pill-button {
+            margin: 0 0 8px 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .pill-button:hover {
             border-color: rgba(69, 155, 227, 0.45);
             background: rgba(255,255,255,0.08);
             color: var(--text);
@@ -158,6 +200,7 @@
                 <div class="pill">Users rows: {{ users_row_count or 0 }}</div>
                 <div class="pill">Managed rows: {{ managed_row_count or 0 }}</div>
                 <div class="pill"><a href="/api/data">Raw API JSON</a></div>
+                <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
             </div>
         </div>
     </section>
@@ -166,12 +209,10 @@
     {% set excluded_sites = change_detection.get("excluded_sites", []) if change_detection else [] %}
     {% if change_summary %}
     <div class="section">
-        
         <div class="section__header">
             <h2>Change Summary</h2>
             <div class="count"><a href="/detail/change::summary">Latest collector comparison</a></div>
         </div>
-
 
         <div class="action-pills">
             <a href="/detail/project::summary" class="pill">View project intelligence</a>
@@ -195,13 +236,11 @@
                 <div class="value">{{ change_summary.total_users_delta_total or 0 }}</div>
                 <div class="note">Net total-user movement in the latest comparison</div>
             </a>
-            
             <a href="/detail/discovery::excluded_sites" class="stat-card">
                 <div class="label">Excluded Sites</div>
                 <div class="value">{{ excluded_sites|length }}</div>
                 <div class="note">Sites discovered but currently outside monitored scope</div>
             </a>
-
         </div>
     </div>
     {% endif %}
@@ -463,5 +502,33 @@
         {% endif %}
     </section>
 </div>
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var button = document.getElementById("theme-toggle");
+            if (!button) {
+                return;
+            }
+
+            function applyLabel() {
+                var isLight = root.getAttribute("data-theme") === "light";
+                button.textContent = isLight ? "Dark mode" : "Light mode";
+            }
+
+            button.addEventListener("click", function () {
+                var isLight = root.getAttribute("data-theme") === "light";
+                if (isLight) {
+                    root.removeAttribute("data-theme");
+                    try { localStorage.setItem("jom_theme", "dark"); } catch (e) {}
+                } else {
+                    root.setAttribute("data-theme", "light");
+                    try { localStorage.setItem("jom_theme", "light"); } catch (e) {}
+                }
+                applyLabel();
+            });
+
+            applyLabel();
+        })();
+    </script>
 </body>
 </html>
