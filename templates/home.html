@@ -23,22 +23,21 @@
     </style>
 </head>
 <body>
+
 <div class="page">
-    <section class="hero">
-        <div class="hero__top">
-            <div>
-                <h1>Jira Observation Monitor</h1>
-                <p>Operational landing page focused on immediate action, recent monitoring changes, discovery awareness, and site health review.</p>
-            </div>
-            <div class="hero__meta">
-                <div class="pill">Users source: {{ users_source_file or "not found" }}</div>
-                <div class="pill">Managed source: {{ managed_source_file or "not found" }}</div>
-                <div class="pill">Users rows: {{ users_row_count or 0 }}</div>
-                <div class="pill">Managed rows: {{ managed_row_count or 0 }}</div>
-                <div class="pill"><a href="/api/data">Raw API JSON</a></div>
+    
+        <nav class="top-nav">
+            <div class="top-nav__brand">Jira Observation Monitor</div>
+            <div class="top-nav__links">
+                <a href="/" class="top-nav__link top-nav__link--active">Home</a>
+                <a href="/estate" class="top-nav__link">Estate</a>
+                <a href="/reference" class="top-nav__link">Reference</a>
                 <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
             </div>
-        </div>
+        </nav>
+
+
+
     </section>
 
     {% set change_summary = change_detection.get("summary", {}) if change_detection else {} %}

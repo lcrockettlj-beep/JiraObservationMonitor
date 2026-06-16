@@ -20,20 +20,20 @@ estate_page.html <!doctype html>
     </style>
 </head>
 <body>
+
 <div class="page">
-    <section class="hero">
-        <div class="hero__top">
-            <div>
-                <div style="margin-bottom:10px;"><a href="/" class="text-link">← Back to homepage</a></div>
-                <h1>Estate Page</h1>
-                <p>Dedicated estate registry and discovery page for tracked sites, excluded sites, discovered inventory, and full operational site review.</p>
-            </div>
-            <div class="hero__meta">
-                <div class="pill"><a href="/reference">Open reference page</a></div>
-                <div class="pill"><a href="/detail/discovery::summary">Discovery summary</a></div>
-                <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
-            </div>
+    
+    <nav class="top-nav">
+        <div class="top-nav__brand">Jira Observation Monitor</div>
+        <div class="top-nav__links">
+            <a href="/" class="top-nav__link top-nav__link--active">Home</a>
+            <a href="/estate" class="top-nav__link">Estate</a>
+            <a href="/reference" class="top-nav__link">Reference</a>
+            <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
         </div>
+    </nav>
+
+
     </section>
 
     {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
