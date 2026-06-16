@@ -121,50 +121,58 @@
             </div>
         </div>
     </section>
-    {% set change_summary = change_detection.get("summary", {}) if change_detection else {} %}
-    {% set excluded_sites = change_detection.get("excluded_sites", []) if change_detection else [] %}
-    {% if change_summary %}
-    
-    <div class="section">
-        <div class="section__header">
-            <h2>Change Summary</h2>
-            <div class="count">Latest collector comparison</div>
+            {% set change_summary = change_detection.get("summary", {}) if change_detection else {} %}
+            {% set excluded_sites = change_detection.get("excluded_sites", []) if change_detection else [] %}
+            {% if change_summary %}
+        <div class="section">
+            <div class="section__header">
+                <h2>Change Summary</h2>
+                <div class="count">
+                    <a href="/detail/change::summary">Latest collector comparison</a>
+                </div>
+            </div>
+
+            <div class="grid-4">
+                <a href="/detail/change::comparison_changes" class="stat-card">
+                    <div class="label">Detected Changes</div>
+                    <div class="value">{{ change_summary.change_count or 0 }}</div>
+                    <div class="note">Comparison changes detected in the latest run</div>
+                </a>
+
+                <a href="/detail/change::site_attention" class="stat-card">
+                    <div class="label">Project Delta</div>
+                    <div class="value">{{ change_summary.project_delta_total or 0 }}</div>
+                    <div class="note">Project movement across the monitored estate</div>
+                </a>
+
+                <a href="/detail/change::site_attention" class="stat-card">
+                    <div class="label">User Delta</div>
+                    <div class="value">{{ change_summary.total_users_delta_total or 0 }}</div>
+                    <div class="note">Net total-user movement in the latest comparison</div>
+                </a>
+
+                <a href="/detail/change::excluded_sites" class="stat-card">
+                    <div class="label">Excluded Sites</div>
+                    <div class="value">{{ excluded_sites|length }}</div>
+                    <div class="note">Sites discovered but currently outside monitored scope</div>
+                </a>
+            </div>
+
+            <div style="margin-top: 10px; text-align: right;">
+                <a href="/detail/change::summary" class="note" style="text-decoration: underline;">
+                    View all change intelligence
+                </a>
+            </div>
         </div>
-
-        <div class="grid-4">
-            <a href="/detail/change::comparison_changes" class="stat-card">
-                <div class="label">Detected Changes</div>
-                <div class="value">{{ change_summary.change_count or 0 }}</div>
-                <div class="note">Comparison changes detected in the latest run</div>
-            </a>
-
-            <a href="/detail/change::site_attention" class="stat-card">
-                <div class="label">Project Delta</div>
-                <div class="value">{{ change_summary.project_delta_total or 0 }}</div>
-                <div class="note">Project movement across the monitored estate</div>
-            </a>
-
-            <a href="/detail/change::site_attention" class="stat-card">
-                <div class="label">User Delta</div>
-                <div class="value">{{ change_summary.total_users_delta_total or 0 }}</div>
-                <div class="note">Net total-user movement in the latest comparison</div>
-            </a>
-
-            <a href="/detail/change::excluded_sites" class="stat-card">
-                <div class="label">Excluded Sites</div>
-                <div class="value">{{ excluded_sites|length }}</div>
-                <div class="note">Sites discovered but currently outside monitored scope</div>
-            </a>
-        </div>
-    </div>
-
-{% endif %}
+        {% endif %}
     <section class="grid-4">
-        <a class="stat-card" href="/detail/managed_disabled_accounts">
+        
+        <a href="/detail/managed_disabled_accounts" class="stat-card">
             <div class="label">Managed Disabled Accounts</div>
             <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
             <div class="note">Select to see the disabled accounts list</div>
         </a>
+
 
         <div class="stat-card">
             <div class="label">Organisation Users</div>
@@ -172,17 +180,19 @@
             <div class="note">Organisation / managed account scope</div>
         </div>
 
-        <a class="stat-card" href="/detail/no_tracked_jira">
+        
+        <a href="/detail/no_tracked_jira" class="stat-card">
             <div class="label">No Tracked Jira Site Access</div>
             <div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div>
             <div class="note">Select to see users with no tracked Jira access</div>
         </a>
-
-        <a class="stat-card" href="/detail/bitbucket_only_no_tracked_jira">
+      
+        <a href="/detail/bitbucket_only_no_tracked_jira" class="stat-card">
             <div class="label">Bitbucket Only / No Tracked Jira</div>
             <div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div>
             <div class="note">Select to see Bitbucket-only users</div>
         </a>
+
     </section>
 
     <section class="split-grid">
@@ -194,10 +204,12 @@
             {% if org_product_breakdown %}
             <div class="breakdown-list">
                 {% for item in org_product_breakdown %}
-                <a class="breakdown-row clickable" href="/detail/product::{{ item.key }}">
-                    <div class="breakdown-row__label">{{ item.label }}</div>
-                    <div class="breakdown-row__value">{{ item.count }}</div>
-                </a>
+                
+            <a href="/detail/product::{{ item.key }}" class="breakdown-row clickable">
+                <div class="breakdown-row__label">{{ item.label }}</div>
+                <div class="breakdown-row__value">{{ item.count }}</div>
+            </a>
+
                 {% endfor %}
             </div>
             {% else %}
@@ -233,7 +245,7 @@
         {% if sites %}
         <div class="site-grid">
             {% for site in sites %}
-            <a class="site-card-link" href="/detail/site::{{ site.site }}">
+            <a href="/detail/site::{{ site.site }}" class="site-card-link">
                 <article class="site-card site-card--{{ badge }}">
                     <div class="site-top"><h3 class="site-name">{{ site.site_name }}</h3><span class="badge badge--{{ badge }}">{{ site.status if site.status else site.tier_status }}</span></div>
                     <div class="metrics">
@@ -259,7 +271,7 @@
                         <div class="usage-row"><span>Tier usage</span><strong>Not applicable</strong></div>
                         {% else %}
                         <div class="usage-row"><span>Tier usage</span><strong>{{ site.usage_percent or 0 }}%</strong></div>
-                        <div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div></div>
+                        <div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: site.usage_percent or 0 %;"></div></div>
                         <div class="usage-row" style="margin-top:8px;"><span>Capacity remaining</span><strong>{{ site.capacity_remaining or 0 }}</strong></div>
                         {% endif %}
                     </div>
@@ -283,10 +295,12 @@
         <div class="panel" style="padding:18px;">
             <div class="breakdown-list">
                 {% for item in users_export_breakdown %}
-                <a class="breakdown-row clickable" href="/detail/access::{{ item.key }}">
-                    <div class="breakdown-row__label">{{ item.label }}</div>
-                    <div class="breakdown-row__value">{{ item.count }}</div>
-                </a>
+                
+            <a href="/detail/access::{{ item.key }}" class="breakdown-row clickable">
+                <div class="breakdown-row__label">{{ item.label }}</div>
+                <div class="breakdown-row__value">{{ item.count }}</div>
+            </a>
+
                 {% endfor %}
             </div>
         </div>
