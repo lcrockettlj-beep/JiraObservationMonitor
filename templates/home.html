@@ -7,6 +7,31 @@
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <style>
+        .home-section-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+        .home-section-title h2 { margin:0; font-size:24px; }
+        .home-section-title .note { max-width:680px; text-align:right; }
+        .attention-grid { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:14px; margin-bottom:20px; }
+        .compact-grid-3 { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; margin-bottom:18px; }
+        .compact-card { background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:16px; display:block; }
+        .compact-card:hover { border-color:rgba(69,155,227,0.45); background:rgba(255,255,255,0.06); }
+        .compact-card .title { font-size:14px; color:var(--muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.04em; }
+        .compact-card .main { font-size:28px; font-weight:700; line-height:1; margin-bottom:8px; }
+        .compact-card .sub { font-size:13px; color:var(--muted); }
+        .reference-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:10px; }
+        .reference-panel { background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:18px; }
+        .reference-list { display:grid; gap:10px; }
+        .reference-row { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px 14px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); }
+        .reference-row:hover { border-color:rgba(69,155,227,0.45); background:rgba(255,255,255,0.06); }
+        .reference-label { color:var(--text); }
+        .reference-value { color:var(--text); font-weight:700; }
+        @media (max-width:1260px) { .attention-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+        @media (max-width:980px) {
+            .compact-grid-3, .reference-grid, .attention-grid { grid-template-columns:1fr; }
+            .home-section-title { flex-direction:column; align-items:flex-start; }
+            .home-section-title .note { text-align:left; }
+        }
+    </style>
 </head>
 <body>
 <div class="page">
@@ -14,7 +39,7 @@
         <div class="hero__top">
             <div>
                 <h1>Jira Observation Monitor</h1>
-                <p>Read-only operational console showing tracked Jira site capacity, broader Atlassian / Marketplace app coverage, and drill-down user lists for investigation before actioning in Atlassian.</p>
+                <p>Operational landing page focused on immediate action, recent monitoring changes, discovery awareness, and site health review.</p>
             </div>
             <div class="hero__meta">
                 <div class="pill">Users source: {{ users_source_file or "not found" }}</div>
@@ -29,117 +54,44 @@
 
     {% set change_summary = change_detection.get("summary", {}) if change_detection else {} %}
     {% set excluded_sites = change_detection.get("excluded_sites", []) if change_detection else [] %}
-    {% if change_summary %}
-    <div class="section">
-        <div class="section__header">
-            <h2>Change Summary</h2>
-            <div class="count"><a href="/detail/change::summary">Latest collector comparison</a></div>
+    {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
+
+    <section class="section">
+        <div class="home-section-title">
+            <h2>Needs Attention</h2>
+            <div class="note">Start here first. These cards surface accounts, access gaps, and estate anomalies most likely to need investigation.</div>
+        </div>
+        <div class="attention-grid">
+            <a href="/detail/managed_disabled_accounts" class="stat-card"><div class="label">Managed Disabled Accounts</div><div class="value">{{ estate.managed_disabled_accounts or 0 }}</div><div class="note">Disabled managed accounts ready for inspection</div></a>
+            <a href="/detail/no_tracked_jira" class="stat-card"><div class="label">No Tracked Jira Site Access</div><div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div><div class="note">Users with no access to the tracked Jira estate</div></a>
+            <a href="/detail/inactive_without_site_access" class="stat-card"><div class="label">Inactive Without Tracked Site Access</div><div class="value">{{ estate.inactive_without_site_access or 0 }}</div><div class="note">Inactive users with no tracked Jira site access</div></a>
+            <a href="/detail/bitbucket_only_no_tracked_jira" class="stat-card"><div class="label">Bitbucket Only / No Tracked Jira</div><div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div><div class="note">Bitbucket-only users outside the tracked Jira scope</div></a>
+            <a href="/detail/discovery::excluded_sites" class="stat-card"><div class="label">Excluded Sites</div><div class="value">{{ discovery_summary.excluded_site_count if discovery_summary else excluded_sites|length }}</div><div class="note">Discovered sites currently outside the monitored scope</div></a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="home-section-title">
+            <h2>Change &amp; Discovery</h2>
+            <div class="note"><a href="/detail/change::summary">Latest collector comparison</a></div>
         </div>
         <div class="action-pills">
             <a href="/detail/project::summary" class="pill">View project intelligence</a>
             <a href="/detail/discovery::summary" class="pill">View site discovery</a>
             <a href="/detail/change::summary" class="pill">View all change intelligence</a>
         </div>
-        <div class="grid-4" style="margin-bottom: 20px;">
-            <a href="/detail/discovery::tracked_sites" class="stat-card">
-                <div class="label">Tracked Sites</div>
-                <div class="value">{{ site_discovery.summary.tracked_site_count if site_discovery and site_discovery.summary else 0 }}</div>
-                <div class="note">Operationally monitored Jira sites in current scope</div>
-            </a>
-            <a href="/detail/discovery::excluded_sites" class="stat-card">
-                <div class="label">Excluded Sites</div>
-                <div class="value">{{ site_discovery.summary.excluded_site_count if site_discovery and site_discovery.summary else 0 }}</div>
-                <div class="note">Discovered sites currently outside monitored scope</div>
-            </a>
-            <a href="/detail/discovery::all_sites" class="stat-card">
-                <div class="label">Discovered Sites</div>
-                <div class="value">{{ site_discovery.summary.discovered_site_count if site_discovery and site_discovery.summary else 0 }}</div>
-                <div class="note">Combined tracked and excluded estate view</div>
-            </a>
-            <a href="/detail/discovery::new_site_candidates" class="stat-card">
-                <div class="label">New Site Candidates</div>
-                <div class="value">{{ site_discovery.summary.new_site_candidate_count if site_discovery and site_discovery.summary else 0 }}</div>
-                <div class="note">Sites to review for future operational classification</div>
-            </a>
+        <div class="compact-grid-3">
+            <a href="/detail/change::comparison_changes" class="compact-card"><div class="title">Detected Changes</div><div class="main">{{ change_summary.change_count or 0 }}</div><div class="sub">Comparison changes detected in the latest run</div></a>
+            <a href="/detail/change::site_attention" class="compact-card"><div class="title">Project Delta</div><div class="main">{{ change_summary.project_delta_total or 0 }}</div><div class="sub">Project movement across the monitored estate</div></a>
+            <a href="/detail/change::site_attention" class="compact-card"><div class="title">User Delta</div><div class="main">{{ change_summary.total_users_delta_total or 0 }}</div><div class="sub">Net total-user movement in the latest comparison</div></a>
         </div>
-        <div class="grid-4">
-            <a href="/detail/change::comparison_changes" class="stat-card">
-                <div class="label">Detected Changes</div>
-                <div class="value">{{ change_summary.change_count or 0 }}</div>
-                <div class="note">Comparison changes detected in the latest run</div>
-            </a>
-            <a href="/detail/change::site_attention" class="stat-card">
-                <div class="label">Project Delta</div>
-                <div class="value">{{ change_summary.project_delta_total or 0 }}</div>
-                <div class="note">Project movement across the monitored estate</div>
-            </a>
-            <a href="/detail/change::site_attention" class="stat-card">
-                <div class="label">User Delta</div>
-                <div class="value">{{ change_summary.total_users_delta_total or 0 }}</div>
-                <div class="note">Net total-user movement in the latest comparison</div>
-            </a>
-            <a href="/detail/discovery::excluded_sites" class="stat-card">
-                <div class="label">Excluded Sites</div>
-                <div class="value">{{ excluded_sites|length }}</div>
-                <div class="note">Sites discovered but currently outside monitored scope</div>
-            </a>
-        </div>
-    </div>
-    {% endif %}
-    <section class="grid-4">
-        <a href="/detail/managed_disabled_accounts" class="stat-card">
-            <div class="label">Managed Disabled Accounts</div>
-            <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
-            <div class="note">Select to see the disabled accounts list</div>
-        </a>
-        <div class="stat-card">
-            <div class="label">Organisation Users</div>
-            <div class="value">{{ estate.organisation_users or 0 }}</div>
-            <div class="note">Organisation / managed account scope</div>
-        </div>
-        <a href="/detail/no_tracked_jira" class="stat-card">
-            <div class="label">No Tracked Jira Site Access</div>
-            <div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div>
-            <div class="note">Select to see users with no tracked Jira access</div>
-        </a>
-        <a href="/detail/bitbucket_only_no_tracked_jira" class="stat-card">
-            <div class="label">Bitbucket Only / No Tracked Jira</div>
-            <div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div>
-            <div class="note">Select to see Bitbucket-only users</div>
-        </a>
-    </section>
-    <section class="grid-4" style="margin-top:-6px;">
-        <a href="/detail/inactive_without_site_access" class="stat-card">
-            <div class="label">Inactive Without Tracked Site Access</div>
-            <div class="value">{{ estate.inactive_without_site_access or 0 }}</div>
-            <div class="note">Select to see inactive users with no tracked Jira site access</div>
-        </a>
-    </section>
-    <section class="split-grid">
-        <div class="panel" style="padding:18px;">
-            <div class="section__header"><h2>Organisation Product Breakdown</h2><div class="count">Select a product to inspect users</div></div>
-            {% if org_product_breakdown %}
-            <div class="breakdown-list">
-                {% for item in org_product_breakdown %}
-                <a href="/detail/product::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="empty">No organisation product breakdown available.</div>
-            {% endif %}
-        </div>
-        <div class="panel" style="padding:18px;">
-            <div class="section__header"><h2>Billing &amp; Marketplace Coverage</h2><div class="count">Select a billing area to inspect app entries</div></div>
-            <div class="breakdown-list">
-                <a class="breakdown-row clickable" href="/detail/billing::atlassian_apps"><div class="breakdown-row__label">Atlassian app entries</div><div class="breakdown-row__value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div></a>
-                <a class="breakdown-row clickable" href="/detail/billing::marketplace_apps"><div class="breakdown-row__label">Marketplace app entries</div><div class="breakdown-row__value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div></a>
-                <a class="breakdown-row clickable" href="/detail/billing::jira_entries"><div class="breakdown-row__label">Jira billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_jira_entries or 0 }}</div></a>
-                <a class="breakdown-row clickable" href="/detail/billing::bitbucket_entries"><div class="breakdown-row__label">Bitbucket billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div></a>
-                <a class="breakdown-row clickable" href="/detail/billing::confluence_entries"><div class="breakdown-row__label">Confluence billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_confluence_entries or 0 }}</div></a>
-                <a class="breakdown-row clickable" href="/detail/billing::rovo_entries"><div class="breakdown-row__label">Rovo billing entries</div><div class="breakdown-row__value">{{ billing_summary.unique_rovo_entries or 0 }}</div></a>
-            </div>
+        <div class="compact-grid-3">
+            <a href="/detail/discovery::tracked_sites" class="compact-card"><div class="title">Tracked Sites</div><div class="main">{{ discovery_summary.tracked_site_count if discovery_summary else 0 }}</div><div class="sub">Operationally monitored Jira sites in current scope</div></a>
+            <a href="/detail/discovery::all_sites" class="compact-card"><div class="title">Discovered Sites</div><div class="main">{{ discovery_summary.discovered_site_count if discovery_summary else 0 }}</div><div class="sub">Combined tracked and excluded estate view</div></a>
+            <a href="/detail/discovery::new_site_candidates" class="compact-card"><div class="title">New Site Candidates</div><div class="main">{{ discovery_summary.new_site_candidate_count if discovery_summary else 0 }}</div><div class="sub">Sites to review for future operational classification</div></a>
         </div>
     </section>
+
     {% macro site_section(title, count, sites, badge) -%}
     <section class="section">
         <div class="section__header"><h2>{{ title }}</h2><div class="count">{{ count }} site(s)</div></div>
@@ -162,25 +114,14 @@
                     <div class="metric"><div class="metric-label">Atlas / Goals / Projects</div><div class="metric-value">{{ site.atlas_users or 0 }} / {{ site.goals_users or 0 }} / {{ site.projects_users or 0 }}</div></div>
                 </div>
                 <div style="margin-bottom:10px; display:flex; gap:6px; flex-wrap:wrap; font-size:11px;">
-                    {% if site.project_count_delta > 0 %}<span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Growing (+{{ site.project_count_delta }})</span>
-                    {% elif site.project_count_delta < 0 %}<span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">Reduced ({{ site.project_count_delta }})</span>
-                    {% else %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Stable projects</span>{% endif %}
-                    {% if site.issue_count_updated_last_7d == 0 %}<span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">No recent activity</span>
-                    {% elif site.issue_count_updated_last_7d <= 2 %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Low activity</span>
-                    {% else %}<span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Active</span>{% endif %}
+                    {% if site.project_count_delta > 0 %}<span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Growing (+{{ site.project_count_delta }})</span>{% elif site.project_count_delta < 0 %}<span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">Reduced ({{ site.project_count_delta }})</span>{% else %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Stable projects</span>{% endif %}
+                    {% if site.issue_count_updated_last_7d == 0 %}<span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">No recent activity</span>{% elif site.issue_count_updated_last_7d <= 2 %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Low activity</span>{% else %}<span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Active</span>{% endif %}
                     {% if site.issue_count_total == 0 %}<span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">No issues tracked</span>{% endif %}
                 </div>
                 <div class="usage-wrap">
                     <div class="usage-row"><span>Why this stands out</span><strong>{{ site.reason if site.reason else ('Tier full' if site.tier_status == 'critical' else 'Near tier limit' if site.tier_status == 'warning' else 'Headroom available') }}</strong></div>
                     <div class="usage-row"><span>Atlassian area</span><strong>{{ site.atlassian_area if site.atlassian_area else 'Billing / User access' }}</strong></div>
-                    {% if site.licence_model == 'seat_paid' %}
-                        <div class="usage-row"><span>Licence model</span><strong>Seat-paid</strong></div>
-                        <div class="usage-row"><span>Tier usage</span><strong>Not applicable</strong></div>
-                    {% else %}
-                        <div class="usage-row"><span>Tier usage</span><strong>{{ site.usage_percent or 0 }}%</strong></div>
-                        <div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div></div>
-                        <div class="usage-row" style="margin-top:8px;"><span>Capacity remaining</span><strong>{{ site.capacity_remaining or 0 }}</strong></div>
-                    {% endif %}
+                    {% if site.licence_model == 'seat_paid' %}<div class="usage-row"><span>Licence model</span><strong>Seat-paid</strong></div><div class="usage-row"><span>Tier usage</span><strong>Not applicable</strong></div>{% else %}<div class="usage-row"><span>Tier usage</span><strong>{{ site.usage_percent or 0 }}%</strong></div><div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div></div><div class="usage-row" style="margin-top:8px;"><span>Capacity remaining</span><strong>{{ site.capacity_remaining or 0 }}</strong></div>{% endif %}
                 </div>
             </article>
             {% endfor %}
@@ -190,16 +131,41 @@
         {% endif %}
     </section>
     {%- endmacro %}
+
+    <section class="section">
+        <div class="home-section-title"><h2>Site Health</h2><div class="note">Critical and warning groups stay at the top. Stable sites remain available for deeper operational review.</div></div>
+    </section>
     {{ site_section('Critical', critical_sites|length, critical_sites, 'critical') }}
     {{ site_section('Warning', warning_sites|length, warning_sites, 'warning') }}
     {{ site_section('Stable', stable_sites|length, stable_sites, 'stable') }}
+
     <section class="section">
-        <div class="section__header"><h2>Users Export Access Breakdown</h2><div class="count">Select an access area to inspect users</div></div>
-        {% if users_export_breakdown %}
-        <div class="panel" style="padding:18px;"><div class="breakdown-list">{% for item in users_export_breakdown %}<a href="/detail/access::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>{% endfor %}</div></div>
-        {% else %}
-        <div class="empty">No users export access breakdown available.</div>
-        {% endif %}
+        <div class="home-section-title"><h2>Reference &amp; Exploration</h2><div class="note">Lower-priority reference data stays available here for exploration, but no longer leads the homepage.</div></div>
+        <div class="reference-grid">
+            <div class="reference-panel">
+                <div class="section__header"><h2>Organisation Product Breakdown</h2><div class="count">Top items</div></div>
+                {% if org_product_breakdown %}
+                <div class="reference-list">
+                    {% for item in org_product_breakdown[:6] %}
+                    <a href="/detail/product::{{ item.key }}" class="reference-row"><div class="reference-label">{{ item.label }}</div><div class="reference-value">{{ item.count }}</div></a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty">No organisation product breakdown available.</div>
+                {% endif %}
+            </div>
+            <div class="reference-panel">
+                <div class="section__header"><h2>Billing &amp; Marketplace</h2><div class="count">Coverage reference</div></div>
+                <div class="reference-list">
+                    <a href="/detail/billing::atlassian_apps" class="reference-row"><div class="reference-label">Atlassian app entries</div><div class="reference-value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div></a>
+                    <a href="/detail/billing::marketplace_apps" class="reference-row"><div class="reference-label">Marketplace app entries</div><div class="reference-value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div></a>
+                    <a href="/detail/billing::jira_entries" class="reference-row"><div class="reference-label">Jira billing entries</div><div class="reference-value">{{ billing_summary.unique_jira_entries or 0 }}</div></a>
+                    <a href="/detail/billing::bitbucket_entries" class="reference-row"><div class="reference-label">Bitbucket billing entries</div><div class="reference-value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div></a>
+                    <a href="/detail/billing::confluence_entries" class="reference-row"><div class="reference-label">Confluence billing entries</div><div class="reference-value">{{ billing_summary.unique_confluence_entries or 0 }}</div></a>
+                    <a href="/detail/billing::rovo_entries" class="reference-row"><div class="reference-label">Rovo billing entries</div><div class="reference-value">{{ billing_summary.unique_rovo_entries or 0 }}</div></a>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 <script>
