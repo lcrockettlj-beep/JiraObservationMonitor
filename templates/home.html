@@ -124,38 +124,40 @@
     {% set change_summary = change_detection.get("summary", {}) if change_detection else {} %}
     {% set excluded_sites = change_detection.get("excluded_sites", []) if change_detection else [] %}
     {% if change_summary %}
+    
     <div class="section">
         <div class="section__header">
             <h2>Change Summary</h2>
             <div class="count">Latest collector comparison</div>
         </div>
 
-    <div class="grid-4">
-        <div class="stat-card">
-            <div class="label">Detected Changes</div>
-            <div class="value">{{ change_summary.change_count or 0 }}</div>
-            <div class="note">Comparison changes detected in the latest run</div>
-        </div>
+        <div class="grid-4">
+            <a href="/detail/change::comparison_changes" class="stat-card">
+                <div class="label">Detected Changes</div>
+                <div class="value">{{ change_summary.change_count or 0 }}</div>
+                <div class="note">Comparison changes detected in the latest run</div>
+            </a>
 
-        <div class="stat-card">
-            <div class="label">Project Delta</div>
-            <div class="value">{{ change_summary.project_delta_total or 0 }}</div>
-            <div class="note">Project movement across the monitored estate</div>
-        </div>
+            <a href="/detail/change::site_attention" class="stat-card">
+                <div class="label">Project Delta</div>
+                <div class="value">{{ change_summary.project_delta_total or 0 }}</div>
+                <div class="note">Project movement across the monitored estate</div>
+            </a>
 
-        <div class="stat-card">
-            <div class="label">User Delta</div>
-            <div class="value">{{ change_summary.total_users_delta_total or 0 }}</div>
-            <div class="note">Net total-user movement in the latest comparison</div>
-        </div>
+            <a href="/detail/change::site_attention" class="stat-card">
+                <div class="label">User Delta</div>
+                <div class="value">{{ change_summary.total_users_delta_total or 0 }}</div>
+                <div class="note">Net total-user movement in the latest comparison</div>
+            </a>
 
-        <div class="stat-card">
-            <div class="label">Excluded Sites</div>
-            <div class="value">{{ excluded_sites|length }}</div>
-            <div class="note">Sites discovered but currently outside monitored scope</div>
+            <a href="/detail/change::excluded_sites" class="stat-card">
+                <div class="label">Excluded Sites</div>
+                <div class="value">{{ excluded_sites|length }}</div>
+                <div class="note">Sites discovered but currently outside monitored scope</div>
+            </a>
         </div>
     </div>
-</div>
+
 {% endif %}
     <section class="grid-4">
         <a class="stat-card" href="/detail/managed_disabled_accounts">
