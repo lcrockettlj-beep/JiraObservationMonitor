@@ -114,8 +114,17 @@
             padding: 12px;
             display: block;
         }
-        .metric .metric-label, .metric-link .metric-label { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
-        .metric .metric-value, .metric-link .metric-value { font-size: 20px; font-weight: 700; }
+
+        .metric .metric-label, .metric-link .metric-label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .metric .metric-value, .metric-link .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
         .usage-wrap { margin-top: auto; }
         .usage-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 10px; font-size: 14px; }
         .usage-bar { height: 12px; width: 100%; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
@@ -276,7 +285,10 @@
         <div class="site-grid">
             {% for site in sites %}
             <article class="site-card site-card--{{ badge }}">
-                <div class="site-top"><h3 class="site-name">{{ site.site_name }}</h3><span class="badge badge--{{ badge }}">{{ site.status if site.status else site.tier_status }}</span></div>
+                <div class="site-top">
+                    <h3 class="site-name">{{ site.site_name }}</h3>
+                    <span class="badge badge--{{ badge }}">{{ site.status if site.status else site.tier_status }}</span>
+                </div>
 
                 <div class="site-actions">
                     <a href="/detail/site::{{ site.site }}" class="pill">View site users</a>
@@ -284,53 +296,138 @@
                 </div>
 
                 <div class="metrics">
-                    <a href="/detail/site::{{ site.site }}" class="metric-link"><div class="metric-label">Jira site users</div><div class="metric-value">{{ site.total_users or 0 }}</div></a>
-                    <div class="metric"><div class="metric-label">{% if site.licence_model == 'seat_paid' %}Licensed users{% else %}Licensed / Tier{% endif %}</div><div class="metric-value">{% if site.licence_model == 'seat_paid' %}{{ site.licensed_users or 0 }}{% else %}{{ site.licensed_users or 0 }} / {{ site.tier_limit or 0 }}{% endif %}</div></div>
-                    <div class="metric"><div class="metric-label">Active Jira users</div><div class="metric-value">{{ site.active_users or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Inactive Jira users</div><div class="metric-value">{{ site.inactive_users or 0 }}</div></div>
-                    <a href="/detail/access::Confluence - {{ site.site }}" class="metric-link"><div class="metric-label">Confluence users</div><div class="metric-value">{{ site.confluence_users or 0 }}</div></a>
-                    <a href="/detail/project::site::{{ site.site }}" class="metric-link"><div class="metric-label">Project count</div><div class="metric-value">{{ site.project_count or 0 }}</div><div style="margin-top:6px; font-size:12px; color: var(--muted);">Sample rows: {{ site.sampled_project_rows or 0 }}</div></a>
-                    <div class="metric"><div class="metric-label">Total issues</div><div class="metric-value">{{ site.issue_count_total or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Unresolved issues</div><div class="metric-value">{{ site.issue_count_unresolved or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Updated last 7 days</div><div class="metric-value">{{ site.issue_count_updated_last_7d or 0 }}</div></div>
-                    <div class="metric"><div class="metric-label">Atlas / Goals / Projects</div><div class="metric-value">{{ site.atlas_users or 0 }} / {{ site.goals_users or 0 }} / {{ site.projects_users or 0 }}</div></div>
+                    <a href="/detail/site::{{ site.site }}" class="metric-link">
+                        <div class="metric-label">Jira site users</div>
+                        <div class="metric-value">{{ site.total_users or 0 }}</div>
+                    </a>
+
+                    <div class="metric">
+                        <div class="metric-label">{% if site.licence_model == 'seat_paid' %}Licensed users{% else %}Licensed / Tier{% endif %}</div>
+                        <div class="metric-value">
+                            {% if site.licence_model == 'seat_paid' %}
+                                {{ site.licensed_users or 0 }}
+                            {% else %}
+                                {{ site.licensed_users or 0 }} / {{ site.tier_limit or 0 }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Active Jira users</div>
+                        <div class="metric-value">{{ site.active_users or 0 }}</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Inactive Jira users</div>
+                        <div class="metric-value">{{ site.inactive_users or 0 }}</div>
+                    </div>
+
+                    <a href="/detail/access::Confluence - {{ site.site }}" class="metric-link">
+                        <div class="metric-label">Confluence users</div>
+                        <div class="metric-value">{{ site.confluence_users or 0 }}</div>
+                    </a>
+
+                    <a href="/detail/project::site::{{ site.site }}" class="metric-link">
+                        <div class="metric-label">Project count</div>
+                        <div class="metric-value">{{ site.project_count or 0 }}</div>
+                        <div style="margin-top:6px; font-size:12px; color: var(--muted);">
+                            Sample rows: {{ site.sampled_project_rows or 0 }}
+                        </div>
+                    </a>
+
+                    <div class="metric">
+                        <div class="metric-label">Total issues</div>
+                        <div class="metric-value">{{ site.issue_count_total or 0 }}</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Unresolved issues</div>
+                        <div class="metric-value">{{ site.issue_count_unresolved or 0 }}</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Updated last 7 days</div>
+                        <div class="metric-value">{{ site.issue_count_updated_last_7d or 0 }}</div>
+                    </div>
+
+                    <div class="metric">
+                        <div class="metric-label">Atlas / Goals / Projects</div>
+                        <div class="metric-value">{{ site.atlas_users or 0 }} / {{ site.goals_users or 0 }} / {{ site.projects_users or 0 }}</div>
+                    </div>
                 </div>
 
                 <div style="margin-bottom:10px; display:flex; gap:6px; flex-wrap:wrap; font-size:11px;">
                     {% if site.project_count_delta > 0 %}
-                        <span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Growing (+{{ site.project_count_delta }})</span>
+                        <span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">
+                            Growing (+{{ site.project_count_delta }})
+                        </span>
                     {% elif site.project_count_delta < 0 %}
-                        <span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">Reduced ({{ site.project_count_delta }})</span>
+                        <span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">
+                            Reduced ({{ site.project_count_delta }})
+                        </span>
                     {% else %}
-                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Stable projects</span>
+                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">
+                            Stable projects
+                        </span>
                     {% endif %}
 
                     {% if site.issue_count_updated_last_7d == 0 %}
-                        <span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">No recent activity</span>
+                        <span style="background:rgba(225,75,90,0.15); border:1px solid rgba(225,75,90,0.4); padding:4px 8px; border-radius:999px;">
+                            No recent activity
+                        </span>
                     {% elif site.issue_count_updated_last_7d <= 2 %}
-                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">Low activity</span>
+                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">
+                            Low activity
+                        </span>
                     {% else %}
-                        <span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">Active</span>
+                        <span style="background:rgba(45,190,127,0.15); border:1px solid rgba(45,190,127,0.4); padding:4px 8px; border-radius:999px;">
+                            Active
+                        </span>
                     {% endif %}
 
                     {% if site.issue_count_total == 0 %}
-                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">No issues tracked</span>
+                        <span style="background:rgba(240,178,74,0.15); border:1px solid rgba(240,178,74,0.4); padding:4px 8px; border-radius:999px;">
+                            No issues tracked
+                        </span>
                     {% endif %}
                 </div>
 
                 <div class="usage-wrap">
-                    <div class="usage-row"><span>Why this stands out</span><strong>{{ site.reason if site.reason else ('Tier full' if site.tier_status == 'critical' else 'Near tier limit' if site.tier_status == 'warning' else 'Headroom available') }}</strong></div>
-                    <div class="usage-row"><span>Atlassian area</span><strong>{{ site.atlassian_area if site.atlassian_area else 'Billing / User access' }}</strong></div>
+                    <div class="usage-row">
+                        <span>Why this stands out</span>
+                        <strong>{{ site.reason if site.reason else ('Tier full' if site.tier_status == 'critical' else 'Near tier limit' if site.tier_status == 'warning' else 'Headroom available') }}</strong>
+                    </div>
+
+                    <div class="usage-row">
+                        <span>Atlassian area</span>
+                        <strong>{{ site.atlassian_area if site.atlassian_area else 'Billing / User access' }}</strong>
+                    </div>
+
                     {% if site.licence_model == 'seat_paid' %}
-                        <div class="usage-row"><span>Licence model</span><strong>Seat-paid</strong></div>
-                        <div class="usage-row"><span>Tier usage</span><strong>Not applicable</strong></div>
+                        <div class="usage-row">
+                            <span>Licence model</span>
+                            <strong>Seat-paid</strong>
+                        </div>
+                        <div class="usage-row">
+                            <span>Tier usage</span>
+                            <strong>Not applicable</strong>
+                        </div>
                     {% else %}
-                        <div class="usage-row"><span>Tier usage</span><strong>{{ site.usage_percent or 0 }}%</strong></div>
-                        <div class="usage-bar"><div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div></div>
-                        <div class="usage-row" style="margin-top:8px;"><span>Capacity remaining</span><strong>{{ site.capacity_remaining or 0 }}</strong></div>
+                        <div class="usage-row">
+                            <span>Tier usage</span>
+                            <strong>{{ site.usage_percent or 0 }}%</strong>
+                        </div>
+                        <div class="usage-bar">
+                            <div class="usage-fill {% if badge == 'critical' %}usage-fill--critical{% elif badge == 'warning' %}usage-fill--warning{% endif %}" style="width: {{ site.usage_percent or 0 }}%;"></div>
+                        </div>
+                        <div class="usage-row" style="margin-top:8px;">
+                            <span>Capacity remaining</span>
+                            <strong>{{ site.capacity_remaining or 0 }}</strong>
+                        </div>
                     {% endif %}
                 </div>
             </article>
+
             {% endfor %}
         </div>
         {% else %}

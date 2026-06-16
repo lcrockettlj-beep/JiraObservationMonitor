@@ -12,6 +12,7 @@ from project_counts import (
     build_project_drilldowns_from_latest_run,
 )
 from change_detection import load_latest_run_change_detection, build_change_detection_drilldowns
+from site_discovery import load_site_discovery_from_latest_run, build_site_discovery_drilldowns
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -187,6 +188,13 @@ def _build_data():
     drilldowns.update(billing.get("drilldowns", {}))
     drilldowns.update(build_change_detection_drilldowns(change_detection))
     drilldowns.update(build_project_drilldowns_from_latest_run())
+    data["drilldowns"] = drilldowns
+
+    site_discovery = load_site_discovery_from_latest_run()
+    data["site_discovery"] = site_discovery
+
+    drilldowns = data.get("drilldowns", {})
+    drilldowns.update(build_site_discovery_drilldowns(site_discovery))
     data["drilldowns"] = drilldowns
 
     return data
