@@ -24,6 +24,7 @@ ENABLE_AUDIT_CHECKS = str(os.getenv("JOM_ENABLE_AUDIT_CHECKS", "false")).strip()
 ENABLE_APPLICATION_ROLE_CHECKS = str(os.getenv("JOM_ENABLE_APPLICATION_ROLE_CHECKS", "false")).strip().lower() == "true"
 PERMISSIONS_QUERY = os.getenv("JOM_PERMISSIONS_QUERY", "BROWSE_PROJECTS")
 SEARCH_MAX_RESULTS = int(os.getenv("JOM_SEARCH_MAX_RESULTS", "1") or 1)
+PROJECT_SAMPLE_LIMIT = int(os.getenv("JOM_PROJECT_SAMPLE_LIMIT", "25") or 25)
 
 REQUIRED_SCOPES = ["read:jira-user", "read:jira-work"]
 OPTIONAL_SCOPES = ["read:jira-project"]
@@ -52,6 +53,26 @@ def _safe_json_write(path: Path, data: Dict[str, Any], pretty: bool = False) -> 
 
 def _site_key_from_name(name: str) -> str:
     return str(name or "site").strip().lower().replace(" ", "-")
+
+
+
+def _escape_project_key(value: str) -> str:
+    return str(value or "").replace('"', '\\"')
+
+
+
+def _build_site_jql(project_keys: List[str], extra_clause: str = "") -> str:
+    keys = [str(value).strip() for value in project_keys if str(value).strip()]
+    if not keys:
+        base = 'project is EMPTY'
+    elif len(keys) == 1:
+        base = f'project = "{_escape_project_key(keys[0])}"'
+    else:
+        joined = ", ".join(f'"{_escape_project_key(key)}"' for key in keys)
+        base = f'project in ({joined})'
+    if extra_clause:
+        return f"{base} AND {extra_clause}"
+    return base
 
 
 
@@ -85,7 +106,7 @@ def _save_snapshot(latest_run: Dict[str, Any]) -> Dict[str, Any]:
         "snapshot_meta": {
             "snapshot_timestamp": snapshot_timestamp,
             "created_at_local": created_at_local,
-            "source": "data_collector.py (safe mode patch 2.2)",
+            "source": "data_collector.py (safe mode patch 2.4)",
         },
         "sites": latest_run.get("sites", []),
     }
@@ -147,7 +168,7 @@ def _save_partial(run_timestamp_local: str, collected_at_utc: str, processed_sit
             "accessible_resource_count": len(accessible_resources),
             "legacy_ignored_site_names_present_in_env": LEGACY_IGNORED_SITE_NAMES,
             "monitor_only_site_names": MONITOR_ONLY_SITE_NAMES,
-            "collector": "data_collector.py (safe mode partial patch 2.2)",
+            "collector": "data_collector.py (safe mode partial patch 2.4)",
         },
         "summary": {
             "site_count": len(processed_sites),
@@ -218,7 +239,7 @@ def _collect_site(resource: Dict[str, Any], client: JiraApiClient, previous_site
         if not application_roles.get("ok"):
             permission_limited_checks.append("application_roles")
     else:
-        endpoint_results["application_roles"] = {"ok": False, "skipped": True, "reason": "Safe mode patch 2.2 disabled application role checks."}
+        endpoint_results["application_roles"] = {"ok": False, "skipped": True, "reason": "Safe mode patch 2.4 disabled application role checks."}
 
     if ENABLE_AUDIT_CHECKS:
         _print(f"  -> {site_name}: audit records")
@@ -228,7 +249,7 @@ def _collect_site(resource: Dict[str, Any], client: JiraApiClient, previous_site
         if not audit_records.get("ok"):
             permission_limited_checks.append("audit_records")
     else:
-        endpoint_results["audit_records"] = {"ok": False, "skipped": True, "reason": "Safe mode patch 2.2 disabled audit checks."}
+        endpoint_results["audit_records"] = {"ok": False, "skipped": True, "reason": "Safe mode patch 2.4 disabled audit checks."}
         audit_status = "skipped_safe_mode"
 
     _print(f"  -> {site_name}: project search")
@@ -239,31 +260,40 @@ def _collect_site(resource: Dict[str, Any], client: JiraApiClient, previous_site
         permission_limited_checks.append("project_search")
         status_reasons.append("Could not read Jira project search results.")
 
+    full_project_keys: List[str] = []
     project_rows: List[Dict[str, Any]] = []
-    for project in projects[:25]:
-        project_rows.append({
-            "key": project.get("key", ""),
-            "name": project.get("name", ""),
-            "projectTypeKey": project.get("projectTypeKey", ""),
-            "simplified": project.get("simplified"),
-        })
+    for index, project in enumerate(projects):
+        key = str(project.get("key", "")).strip()
+        if key:
+            full_project_keys.append(key)
+        if index < PROJECT_SAMPLE_LIMIT:
+            project_rows.append({
+                "key": key,
+                "name": project.get("name", ""),
+                "projectTypeKey": project.get("projectTypeKey", ""),
+                "simplified": project.get("simplified"),
+            })
 
-    _print(f"  -> {site_name}: issue total count (search/jql maxResults={SEARCH_MAX_RESULTS})")
-    total_result = client.search_issue_count(cloud_id, "order by created DESC")
+    total_query = _build_site_jql(full_project_keys)
+    unresolved_query = _build_site_jql(full_project_keys, "resolution = Unresolved")
+    updated_query = _build_site_jql(full_project_keys, "updated >= -7d")
+
+    _print(f"  -> {site_name}: issue total count (full project key set, maxResults={SEARCH_MAX_RESULTS})")
+    total_result = client.search_issue_count(cloud_id, total_query)
     endpoint_results["issue_total_count"] = total_result
     if not total_result.get("ok"):
         permission_limited_checks.append("issue_total_count")
     issue_count_total = int((total_result.get("data", {}) or {}).get("total", 0) or 0) if total_result.get("ok") else 0
 
-    _print(f"  -> {site_name}: unresolved count (search/jql maxResults={SEARCH_MAX_RESULTS})")
-    unresolved_result = client.search_issue_count(cloud_id, "resolution = Unresolved")
+    _print(f"  -> {site_name}: unresolved count (full project key set, maxResults={SEARCH_MAX_RESULTS})")
+    unresolved_result = client.search_issue_count(cloud_id, unresolved_query)
     endpoint_results["issue_unresolved_count"] = unresolved_result
     if not unresolved_result.get("ok"):
         permission_limited_checks.append("issue_unresolved_count")
     issue_count_unresolved = int((unresolved_result.get("data", {}) or {}).get("total", 0) or 0) if unresolved_result.get("ok") else 0
 
-    _print(f"  -> {site_name}: updated last 7d count (search/jql maxResults={SEARCH_MAX_RESULTS})")
-    updated_result = client.search_issue_count(cloud_id, "updated >= -7d")
+    _print(f"  -> {site_name}: updated last 7d count (full project key set, maxResults={SEARCH_MAX_RESULTS})")
+    updated_result = client.search_issue_count(cloud_id, updated_query)
     endpoint_results["issue_updated_last_7d_count"] = updated_result
     if not updated_result.get("ok"):
         permission_limited_checks.append("issue_updated_last_7d_count")
@@ -298,9 +328,9 @@ def _collect_site(resource: Dict[str, Any], client: JiraApiClient, previous_site
     status = _status_from_risk(risk_score)
     if not status_reasons:
         if status == "stable":
-            status_reasons.append("Safe mode patch 2.2 live Jira collection succeeded with no material risk signals.")
+            status_reasons.append("Safe mode patch 2.4 live Jira collection succeeded with no material risk signals.")
         else:
-            status_reasons.append("Safe mode patch 2.2 live Jira collection completed with risk indicators that require review.")
+            status_reasons.append("Safe mode patch 2.4 live Jira collection completed with risk indicators that require review.")
 
     previous_site = previous_site_map.get(cloud_id, {})
     previous_total = int(previous_site.get("issue_count_total", 0) or 0)
@@ -320,6 +350,7 @@ def _collect_site(resource: Dict[str, Any], client: JiraApiClient, previous_site
         "collection_duration_seconds": collection_duration_seconds,
         "project_count": len(projects),
         "project_rows": project_rows,
+        "project_key_count_used_for_queries": len(full_project_keys),
         "issue_count_total": issue_count_total,
         "issue_count_unresolved": issue_count_unresolved,
         "issue_count_updated_last_7d": issue_count_updated_last_7d,
@@ -424,7 +455,7 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
             continue
         monitored_resources.append(item)
 
-    _print(f"Sites selected for safe mode patch 2.2 monitoring: {len(monitored_resources)}")
+    _print(f"Sites selected for safe mode patch 2.4 monitoring: {len(monitored_resources)}")
     previous_snapshot = _load_previous_snapshot()
     previous_site_map = _extract_previous_site_map(previous_snapshot)
     first_snapshot = not bool(previous_site_map)
@@ -445,6 +476,7 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
                 "collection_duration_seconds": 0,
                 "project_count": 0,
                 "project_rows": [],
+                "project_key_count_used_for_queries": 0,
                 "issue_count_total": 0,
                 "issue_count_unresolved": 0,
                 "issue_count_updated_last_7d": 0,
@@ -485,7 +517,7 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
             }
         site_results.append(site_record)
         _save_partial(run_timestamp_local, collected_at_utc, site_results, resources)
-        _print(f"Completed site: {site_name} | projects={site_record.get('project_count', 0)} | issues={site_record.get('issue_count_total', 0)} | unresolved={site_record.get('issue_count_unresolved', 0)} | status={site_record.get('status', '')}")
+        _print(f"Completed site: {site_name} | projects={site_record.get('project_count', 0)} | query_keys={site_record.get('project_key_count_used_for_queries', 0)} | issues={site_record.get('issue_count_total', 0)} | unresolved={site_record.get('issue_count_unresolved', 0)} | status={site_record.get('status', '')}")
 
     site_results.sort(key=lambda item: item.get("name", ""))
 
@@ -522,11 +554,12 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
             "monitored_site_count": len(site_results),
             "legacy_ignored_site_names_present_in_env": LEGACY_IGNORED_SITE_NAMES,
             "monitor_only_site_names": MONITOR_ONLY_SITE_NAMES,
-            "note": "Safe mode patch 2.2 monitors the whole accessible estate by default. Legacy ignored site names are recorded but not automatically excluded.",
+            "note": "Safe mode patch 2.4 monitors the whole accessible estate by default. Legacy ignored site names are recorded but not automatically excluded.",
             "required_scopes": REQUIRED_SCOPES,
             "optional_scopes": OPTIONAL_SCOPES,
             "permissions_query": PERMISSIONS_QUERY,
             "search_max_results": SEARCH_MAX_RESULTS,
+            "project_sample_limit": PROJECT_SAMPLE_LIMIT,
             "safe_mode": True,
             "safe_mode_features": {
                 "sequential_site_processing": True,
@@ -538,8 +571,11 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
                 "search_endpoint": "/rest/api/3/search/jql",
                 "mypermissions_fixed": True,
                 "search_max_results_fixed": True,
+                "bounded_total_issue_queries": True,
+                "full_project_key_set_used_for_queries": True,
+                "sampled_project_rows_for_display_only": True,
             },
-            "collector": "data_collector.py (safe mode patch 2.2)",
+            "collector": "data_collector.py (safe mode patch 2.4)",
         },
         "summary": summary,
         "risk_summary": risk_summary,
@@ -576,14 +612,14 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
 
 
 def main() -> int:
-    _print("Starting Step 2.2 Safe Mode patch live Jira collector...")
+    _print("Starting Step 2.4 Safe Mode patch live Jira collector...")
     access_token = get_valid_access_token()
     client = JiraApiClient(access_token=access_token)
     latest_run = _build_latest_run(client)
     _safe_json_write(LATEST_RUN_PATH, latest_run, pretty=False)
     _safe_json_write(LATEST_RUN_PRETTY_PATH, latest_run, pretty=True)
 
-    _print("Step 2.2 Safe Mode patch live Jira collection complete.")
+    _print("Step 2.4 Safe Mode patch live Jira collection complete.")
     _print(f"Monitored sites: {latest_run.get('summary', {}).get('site_count', 0)}")
     _print(f"Projects total: {latest_run.get('summary', {}).get('project_count_total', 0)}")
     _print(f"Issues total: {latest_run.get('summary', {}).get('issue_count_total', 0)}")

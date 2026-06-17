@@ -1,11 +1,11 @@
 {
-  "run_timestamp_local": "2026-06-17 12:25:00",
+  "run_timestamp_local": "2026-06-17 12:53:45",
   "raw_collection_summary": {
-    "collected_at_utc": "2026-06-17T11:25:00Z",
+    "collected_at_utc": "2026-06-17T11:53:45Z",
     "accessible_resource_count": 6,
     "legacy_ignored_site_names_present_in_env": [],
     "monitor_only_site_names": [],
-    "collector": "data_collector.py (safe mode partial patch 2.2)"
+    "collector": "data_collector.py (safe mode partial patch 2.4)"
   },
   "summary": {
     "site_count": 6,
@@ -20,8 +20,8 @@
       "name": "gaminglabs-team-h2pbpmis",
       "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
       "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-      "collected_at_utc": "2026-06-17T11:25:04Z",
-      "collection_duration_seconds": 2.852,
+      "collected_at_utc": "2026-06-17T11:53:49Z",
+      "collection_duration_seconds": 2.616,
       "project_count": 1,
       "project_rows": [
         {
@@ -31,6 +31,7 @@
           "simplified": true
         }
       ],
+      "project_key_count_used_for_queries": 1,
       "issue_count_total": 0,
       "issue_count_unresolved": 0,
       "issue_count_updated_last_7d": 0,
@@ -50,29 +51,26 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 3,
+      "risk_score": 1,
       "issue_risk_score": 1,
-      "operational_risk_score": 2,
-      "status": "warning",
+      "operational_risk_score": 0,
+      "status": "stable",
       "status_reasons": [
-        "Safe mode patch 2.2 live Jira collection completed with risk indicators that require review."
+        "Safe mode patch 2.4 live Jira collection succeeded with no material risk signals."
       ],
       "scope_notes": [
         "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
-      "permission_limited_checks": [
-        "issue_total_count"
-      ],
+      "permission_limited_checks": [],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present",
         "optional_scope_notes_present"
       ],
-      "failed_api_checks": 1,
+      "failed_api_checks": 0,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -82,7 +80,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.348,
+          "elapsed_seconds": 0.365,
           "data": {
             "baseUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
             "displayUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
@@ -98,7 +96,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T12:02:56.000+0200",
-            "serverTime": "2026-06-17T13:25:02.059+0200",
+            "serverTime": "2026-06-17T13:53:47.738+0200",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -111,7 +109,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.24,
+          "elapsed_seconds": 0.365,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -142,7 +140,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.507,
+          "elapsed_seconds": 0.384,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -160,17 +158,17 @@
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled application role checks."
+          "reason": "Safe mode patch 2.4 disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled audit checks."
+          "reason": "Safe mode patch 2.4 disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.325,
+          "elapsed_seconds": 0.417,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -196,29 +194,31 @@
           "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/project/search?startAt=0&maxResults=50"
         },
         "issue_total_count": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.239,
-          "error": "HTTP 400: {\"errorMessages\":[\"Unbounded JQL queries are not allowed here. Please add a search restriction to your query.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=1&fields=none&validateQuery=strict"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.383,
+          "data": {
+            "total": 0
+          },
+          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=project+%3D+%22KAN%22&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.753,
+          "elapsed_seconds": 0.39,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=project+%3D+%22KAN%22+AND+resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.437,
+          "elapsed_seconds": 0.308,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=project+%3D+%22KAN%22+AND+updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
         }
       }
     },
@@ -227,8 +227,8 @@
       "name": "gaminglabs-team-tsyfo716",
       "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
       "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
-      "collected_at_utc": "2026-06-17T11:25:07Z",
-      "collection_duration_seconds": 2.878,
+      "collected_at_utc": "2026-06-17T11:53:52Z",
+      "collection_duration_seconds": 2.936,
       "project_count": 2,
       "project_rows": [
         {
@@ -244,6 +244,7 @@
           "simplified": true
         }
       ],
+      "project_key_count_used_for_queries": 2,
       "issue_count_total": 0,
       "issue_count_unresolved": 0,
       "issue_count_updated_last_7d": 0,
@@ -263,29 +264,26 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 3,
+      "risk_score": 1,
       "issue_risk_score": 1,
-      "operational_risk_score": 2,
-      "status": "warning",
+      "operational_risk_score": 0,
+      "status": "stable",
       "status_reasons": [
-        "Safe mode patch 2.2 live Jira collection completed with risk indicators that require review."
+        "Safe mode patch 2.4 live Jira collection succeeded with no material risk signals."
       ],
       "scope_notes": [
         "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
-      "permission_limited_checks": [
-        "issue_total_count"
-      ],
+      "permission_limited_checks": [],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present",
         "optional_scope_notes_present"
       ],
-      "failed_api_checks": 1,
+      "failed_api_checks": 0,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -295,7 +293,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.338,
+          "elapsed_seconds": 0.447,
           "data": {
             "baseUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
             "displayUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
@@ -311,7 +309,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T12:02:56.000+0200",
-            "serverTime": "2026-06-17T13:25:04.903+0200",
+            "serverTime": "2026-06-17T13:53:50.437+0200",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -324,7 +322,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.375,
+          "elapsed_seconds": 0.458,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -355,7 +353,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.389,
+          "elapsed_seconds": 0.495,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -373,17 +371,17 @@
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled application role checks."
+          "reason": "Safe mode patch 2.4 disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled audit checks."
+          "reason": "Safe mode patch 2.4 disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.645,
+          "elapsed_seconds": 0.424,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -429,29 +427,31 @@
           "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/project/search?startAt=0&maxResults=50"
         },
         "issue_total_count": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.249,
-          "error": "HTTP 400: {\"errorMessages\":[\"Unbounded JQL queries are not allowed here. Please add a search restriction to your query.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=1&fields=none&validateQuery=strict"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.305,
+          "data": {
+            "total": 0
+          },
+          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=project+in+%28%22KAN%22%2C+%22LEARNJIRA%22%29&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.532,
+          "elapsed_seconds": 0.459,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=project+in+%28%22KAN%22%2C+%22LEARNJIRA%22%29+AND+resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.35,
+          "elapsed_seconds": 0.345,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=project+in+%28%22KAN%22%2C+%22LEARNJIRA%22%29+AND+updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
         }
       }
     },
@@ -460,8 +460,8 @@
       "name": "gli-global-technology",
       "url": "https://gli-global-technology.atlassian.net",
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "collected_at_utc": "2026-06-17T11:25:09Z",
-      "collection_duration_seconds": 2.287,
+      "collected_at_utc": "2026-06-17T11:53:56Z",
+      "collection_duration_seconds": 3.165,
       "project_count": 8,
       "project_rows": [
         {
@@ -513,6 +513,7 @@
           "simplified": false
         }
       ],
+      "project_key_count_used_for_queries": 8,
       "issue_count_total": 0,
       "issue_count_unresolved": 0,
       "issue_count_updated_last_7d": 0,
@@ -532,29 +533,26 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 3,
+      "risk_score": 1,
       "issue_risk_score": 1,
-      "operational_risk_score": 2,
-      "status": "warning",
+      "operational_risk_score": 0,
+      "status": "stable",
       "status_reasons": [
-        "Safe mode patch 2.2 live Jira collection completed with risk indicators that require review."
+        "Safe mode patch 2.4 live Jira collection succeeded with no material risk signals."
       ],
       "scope_notes": [
         "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
-      "permission_limited_checks": [
-        "issue_total_count"
-      ],
+      "permission_limited_checks": [],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present",
         "optional_scope_notes_present"
       ],
-      "failed_api_checks": 1,
+      "failed_api_checks": 0,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -564,7 +562,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.222,
+          "elapsed_seconds": 0.447,
           "data": {
             "baseUrl": "https://gli-global-technology.atlassian.net",
             "displayUrl": "https://gli-global-technology.atlassian.net",
@@ -580,7 +578,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T11:02:56.000+0100",
-            "serverTime": "2026-06-17T12:25:07.675+0100",
+            "serverTime": "2026-06-17T12:53:53.374+0100",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -593,7 +591,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.232,
+          "elapsed_seconds": 0.459,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -624,7 +622,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.287,
+          "elapsed_seconds": 0.476,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -642,17 +640,17 @@
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled application role checks."
+          "reason": "Safe mode patch 2.4 disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled audit checks."
+          "reason": "Safe mode patch 2.4 disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.271,
+          "elapsed_seconds": 0.283,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -832,29 +830,31 @@
           "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/project/search?startAt=0&maxResults=50"
         },
         "issue_total_count": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.174,
-          "error": "HTTP 400: {\"errorMessages\":[\"Unbounded JQL queries are not allowed here. Please add a search restriction to your query.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=1&fields=none&validateQuery=strict"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.572,
+          "data": {
+            "total": 0
+          },
+          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=project+in+%28%22CIR%22%2C+%22IGS%22%2C+%22MT%22%2C+%22POL%22%2C+%22PUR%22%2C+%22RD%22%2C+%22SEC%22%2C+%22TT%22%29&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.626,
+          "elapsed_seconds": 0.341,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=project+in+%28%22CIR%22%2C+%22IGS%22%2C+%22MT%22%2C+%22POL%22%2C+%22PUR%22%2C+%22RD%22%2C+%22SEC%22%2C+%22TT%22%29+AND+resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.472,
+          "elapsed_seconds": 0.586,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=project+in+%28%22CIR%22%2C+%22IGS%22%2C+%22MT%22%2C+%22POL%22%2C+%22PUR%22%2C+%22RD%22%2C+%22SEC%22%2C+%22TT%22%29+AND+updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
         }
       }
     },
@@ -863,8 +863,8 @@
       "name": "gli-usa",
       "url": "https://gli-usa.atlassian.net",
       "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "collected_at_utc": "2026-06-17T11:25:15Z",
-      "collection_duration_seconds": 5.518,
+      "collected_at_utc": "2026-06-17T11:53:59Z",
+      "collection_duration_seconds": 3.387,
       "project_count": 1,
       "project_rows": [
         {
@@ -874,6 +874,7 @@
           "simplified": false
         }
       ],
+      "project_key_count_used_for_queries": 1,
       "issue_count_total": 0,
       "issue_count_unresolved": 0,
       "issue_count_updated_last_7d": 0,
@@ -893,29 +894,26 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 3,
+      "risk_score": 1,
       "issue_risk_score": 1,
-      "operational_risk_score": 2,
-      "status": "warning",
+      "operational_risk_score": 0,
+      "status": "stable",
       "status_reasons": [
-        "Safe mode patch 2.2 live Jira collection completed with risk indicators that require review."
+        "Safe mode patch 2.4 live Jira collection succeeded with no material risk signals."
       ],
       "scope_notes": [
         "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
-      "permission_limited_checks": [
-        "issue_total_count"
-      ],
+      "permission_limited_checks": [],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present",
         "optional_scope_notes_present"
       ],
-      "failed_api_checks": 1,
+      "failed_api_checks": 0,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -925,7 +923,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.836,
+          "elapsed_seconds": 0.377,
           "data": {
             "baseUrl": "https://gli-usa.atlassian.net",
             "displayUrl": "https://gli-usa.atlassian.net",
@@ -941,7 +939,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T03:02:56.000-0700",
-            "serverTime": "2026-06-17T04:25:10.516-0700",
+            "serverTime": "2026-06-17T04:53:56.416-0700",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -954,7 +952,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.755,
+          "elapsed_seconds": 0.599,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -985,7 +983,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.836,
+          "elapsed_seconds": 0.457,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -1003,17 +1001,17 @@
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled application role checks."
+          "reason": "Safe mode patch 2.4 disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled audit checks."
+          "reason": "Safe mode patch 2.4 disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.821,
+          "elapsed_seconds": 0.425,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -1037,29 +1035,31 @@
           "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/project/search?startAt=0&maxResults=50"
         },
         "issue_total_count": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.713,
-          "error": "HTTP 400: {\"errorMessages\":[\"Unbounded JQL queries are not allowed here. Please add a search restriction to your query.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=1&fields=none&validateQuery=strict"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.374,
+          "data": {
+            "total": 0
+          },
+          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=project+%3D+%22D1%22&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.725,
+          "elapsed_seconds": 0.778,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=project+%3D+%22D1%22+AND+resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.83,
+          "elapsed_seconds": 0.376,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=project+%3D+%22D1%22+AND+updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
         }
       }
     },
@@ -1068,8 +1068,8 @@
       "name": "gli-it-project",
       "url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "collected_at_utc": "2026-06-17T11:25:17Z",
-      "collection_duration_seconds": 2.672,
+      "collected_at_utc": "2026-06-17T11:54:02Z",
+      "collection_duration_seconds": 3.163,
       "project_count": 55,
       "project_rows": [
         {
@@ -1223,6 +1223,7 @@
           "simplified": false
         }
       ],
+      "project_key_count_used_for_queries": 55,
       "issue_count_total": 0,
       "issue_count_unresolved": 0,
       "issue_count_updated_last_7d": 0,
@@ -1242,29 +1243,26 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 3,
+      "risk_score": 1,
       "issue_risk_score": 1,
-      "operational_risk_score": 2,
-      "status": "warning",
+      "operational_risk_score": 0,
+      "status": "stable",
       "status_reasons": [
-        "Safe mode patch 2.2 live Jira collection completed with risk indicators that require review."
+        "Safe mode patch 2.4 live Jira collection succeeded with no material risk signals."
       ],
       "scope_notes": [
         "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
-      "permission_limited_checks": [
-        "issue_total_count"
-      ],
+      "permission_limited_checks": [],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present",
         "optional_scope_notes_present"
       ],
-      "failed_api_checks": 1,
+      "failed_api_checks": 0,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -1274,7 +1272,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.306,
+          "elapsed_seconds": 0.292,
           "data": {
             "baseUrl": "https://gli-it-project.atlassian.net",
             "displayUrl": "https://gli-it-project.atlassian.net",
@@ -1290,7 +1288,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T11:02:56.000+0100",
-            "serverTime": "2026-06-17T12:25:15.567+0100",
+            "serverTime": "2026-06-17T12:53:59.779+0100",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "GLI Global IT Project Management",
             "defaultLocale": {
@@ -1303,7 +1301,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.269,
+          "elapsed_seconds": 0.299,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -1352,17 +1350,17 @@
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled application role checks."
+          "reason": "Safe mode patch 2.4 disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled audit checks."
+          "reason": "Safe mode patch 2.4 disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.627,
+          "elapsed_seconds": 0.735,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -2646,29 +2644,31 @@
           "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/project/search?startAt=50&maxResults=50"
         },
         "issue_total_count": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.223,
-          "error": "HTTP 400: {\"errorMessages\":[\"Unbounded JQL queries are not allowed here. Please add a search restriction to your query.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=1&fields=none&validateQuery=strict"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.509,
+          "data": {
+            "total": 0
+          },
+          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=project+in+%28%22AA%22%2C+%22ACCESS%22%2C+%22ACU%22%2C+%22BRS%22%2C+%22CDI%22%2C+%22CER%22%2C+%22CHRON%22%2C+%22DEVINF%22%2C+%22DEVPMO%22%2C+%22DEVQA%22%2C+%22DPT%22%2C+%22EXTJIRA%22%2C+%22FOR%22%2C+%22FOX%22%2C+%22FUWTWO%22%2C+%22GLAM%22%2C+%22GLIDE%22%2C+%22GPSFUW%22%2C+%22GTS%22%2C+%22HACK%22%2C+%22HAM%22%2C+%22IBIS%22%2C+%22IF%22%2C+%22IPJ%22%2C+%22IRIS%22%2C+%22IRISNEXT%22%2C+%22IS%22%2C+%22ITTSK%22%2C+%22JA%22%2C+%22JMS%22%2C+%22JSD%22%2C+%22JSRL%22%2C+%22JW%22%2C+%22KONN%22%2C+%22LAN%22%2C+%22LETGEN%22%2C+%22LUT%22%2C+%22MA%22%2C+%22MAINS%22%2C+%22MAST%22%2C+%22NVS%22%2C+%22ONB%22%2C+%22ORT%22%2C+%22PKR%22%2C+%22PKT%22%2C+%22PRO%22%2C+%22RUN%22%2C+%22SCALE%22%2C+%22STEP%22%2C+%22SUBS%22%2C+%22TA%22%2C+%22TSM%22%2C+%22VMB%22%2C+%22VRFY%22%2C+%22VSEC%22%29&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.517,
+          "elapsed_seconds": 0.542,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=project+in+%28%22AA%22%2C+%22ACCESS%22%2C+%22ACU%22%2C+%22BRS%22%2C+%22CDI%22%2C+%22CER%22%2C+%22CHRON%22%2C+%22DEVINF%22%2C+%22DEVPMO%22%2C+%22DEVQA%22%2C+%22DPT%22%2C+%22EXTJIRA%22%2C+%22FOR%22%2C+%22FOX%22%2C+%22FUWTWO%22%2C+%22GLAM%22%2C+%22GLIDE%22%2C+%22GPSFUW%22%2C+%22GTS%22%2C+%22HACK%22%2C+%22HAM%22%2C+%22IBIS%22%2C+%22IF%22%2C+%22IPJ%22%2C+%22IRIS%22%2C+%22IRISNEXT%22%2C+%22IS%22%2C+%22ITTSK%22%2C+%22JA%22%2C+%22JMS%22%2C+%22JSD%22%2C+%22JSRL%22%2C+%22JW%22%2C+%22KONN%22%2C+%22LAN%22%2C+%22LETGEN%22%2C+%22LUT%22%2C+%22MA%22%2C+%22MAINS%22%2C+%22MAST%22%2C+%22NVS%22%2C+%22ONB%22%2C+%22ORT%22%2C+%22PKR%22%2C+%22PKT%22%2C+%22PRO%22%2C+%22RUN%22%2C+%22SCALE%22%2C+%22STEP%22%2C+%22SUBS%22%2C+%22TA%22%2C+%22TSM%22%2C+%22VMB%22%2C+%22VRFY%22%2C+%22VSEC%22%29+AND+resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.422,
+          "elapsed_seconds": 0.478,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=project+in+%28%22AA%22%2C+%22ACCESS%22%2C+%22ACU%22%2C+%22BRS%22%2C+%22CDI%22%2C+%22CER%22%2C+%22CHRON%22%2C+%22DEVINF%22%2C+%22DEVPMO%22%2C+%22DEVQA%22%2C+%22DPT%22%2C+%22EXTJIRA%22%2C+%22FOR%22%2C+%22FOX%22%2C+%22FUWTWO%22%2C+%22GLAM%22%2C+%22GLIDE%22%2C+%22GPSFUW%22%2C+%22GTS%22%2C+%22HACK%22%2C+%22HAM%22%2C+%22IBIS%22%2C+%22IF%22%2C+%22IPJ%22%2C+%22IRIS%22%2C+%22IRISNEXT%22%2C+%22IS%22%2C+%22ITTSK%22%2C+%22JA%22%2C+%22JMS%22%2C+%22JSD%22%2C+%22JSRL%22%2C+%22JW%22%2C+%22KONN%22%2C+%22LAN%22%2C+%22LETGEN%22%2C+%22LUT%22%2C+%22MA%22%2C+%22MAINS%22%2C+%22MAST%22%2C+%22NVS%22%2C+%22ONB%22%2C+%22ORT%22%2C+%22PKR%22%2C+%22PKT%22%2C+%22PRO%22%2C+%22RUN%22%2C+%22SCALE%22%2C+%22STEP%22%2C+%22SUBS%22%2C+%22TA%22%2C+%22TSM%22%2C+%22VMB%22%2C+%22VRFY%22%2C+%22VSEC%22%29+AND+updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
         }
       }
     },
@@ -2677,8 +2677,8 @@
       "name": "gli-delivery-tm",
       "url": "https://gli-delivery-tm.atlassian.net",
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "collected_at_utc": "2026-06-17T11:25:20Z",
-      "collection_duration_seconds": 2.853,
+      "collected_at_utc": "2026-06-17T11:54:05Z",
+      "collection_duration_seconds": 2.523,
       "project_count": 22,
       "project_rows": [
         {
@@ -2814,6 +2814,7 @@
           "simplified": true
         }
       ],
+      "project_key_count_used_for_queries": 22,
       "issue_count_total": 0,
       "issue_count_unresolved": 0,
       "issue_count_updated_last_7d": 0,
@@ -2833,29 +2834,26 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 3,
+      "risk_score": 1,
       "issue_risk_score": 1,
-      "operational_risk_score": 2,
-      "status": "warning",
+      "operational_risk_score": 0,
+      "status": "stable",
       "status_reasons": [
-        "Safe mode patch 2.2 live Jira collection completed with risk indicators that require review."
+        "Safe mode patch 2.4 live Jira collection succeeded with no material risk signals."
       ],
       "scope_notes": [
         "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
-      "permission_limited_checks": [
-        "issue_total_count"
-      ],
+      "permission_limited_checks": [],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present",
         "optional_scope_notes_present"
       ],
-      "failed_api_checks": 1,
+      "failed_api_checks": 0,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -2865,7 +2863,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.303,
+          "elapsed_seconds": 0.318,
           "data": {
             "baseUrl": "https://gli-delivery-tm.atlassian.net",
             "displayUrl": "https://gli-delivery-tm.atlassian.net",
@@ -2881,7 +2879,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T06:02:56.000-0400",
-            "serverTime": "2026-06-17T07:25:18.235-0400",
+            "serverTime": "2026-06-17T07:54:02.972-0400",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "GLI Test Management",
             "defaultLocale": {
@@ -2894,7 +2892,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.302,
+          "elapsed_seconds": 0.288,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -2925,7 +2923,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.345,
+          "elapsed_seconds": 0.349,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -2943,17 +2941,17 @@
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled application role checks."
+          "reason": "Safe mode patch 2.4 disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode patch 2.2 disabled audit checks."
+          "reason": "Safe mode patch 2.4 disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.306,
+          "elapsed_seconds": 0.426,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -3505,29 +3503,31 @@
           "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/project/search?startAt=0&maxResults=50"
         },
         "issue_total_count": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.235,
-          "error": "HTTP 400: {\"errorMessages\":[\"Unbounded JQL queries are not allowed here. Please add a search restriction to your query.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=1&fields=none&validateQuery=strict"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.428,
+          "data": {
+            "total": 0
+          },
+          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=project+in+%28%22AGLC%22%2C+%22AUT%22%2C+%22DCL%22%2C+%22DYN%22%2C+%22ENGTEST%22%2C+%22GDT%22%2C+%22HLII%22%2C+%22LAN%22%2C+%22LAPI%22%2C+%22LAT%22%2C+%22LAZ%22%2C+%22MATH%22%2C+%22NHL%22%2C+%22NJL%22%2C+%22NYL%22%2C+%22OLTT%22%2C+%22OSLE%22%2C+%22OSLT%22%2C+%22OSLVL%22%2C+%22PAL%22%2C+%22WLC%22%2C+%22WVL%22%29&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.708,
+          "elapsed_seconds": 0.335,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=project+in+%28%22AGLC%22%2C+%22AUT%22%2C+%22DCL%22%2C+%22DYN%22%2C+%22ENGTEST%22%2C+%22GDT%22%2C+%22HLII%22%2C+%22LAN%22%2C+%22LAPI%22%2C+%22LAT%22%2C+%22LAZ%22%2C+%22MATH%22%2C+%22NHL%22%2C+%22NJL%22%2C+%22NYL%22%2C+%22OLTT%22%2C+%22OSLE%22%2C+%22OSLT%22%2C+%22OSLVL%22%2C+%22PAL%22%2C+%22WLC%22%2C+%22WVL%22%29+AND+resolution+%3D+Unresolved&maxResults=1&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.652,
+          "elapsed_seconds": 0.377,
           "data": {
             "total": 0
           },
-          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
+          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=project+in+%28%22AGLC%22%2C+%22AUT%22%2C+%22DCL%22%2C+%22DYN%22%2C+%22ENGTEST%22%2C+%22GDT%22%2C+%22HLII%22%2C+%22LAN%22%2C+%22LAPI%22%2C+%22LAT%22%2C+%22LAZ%22%2C+%22MATH%22%2C+%22NHL%22%2C+%22NJL%22%2C+%22NYL%22%2C+%22OLTT%22%2C+%22OSLE%22%2C+%22OSLT%22%2C+%22OSLVL%22%2C+%22PAL%22%2C+%22WLC%22%2C+%22WVL%22%29+AND+updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
         }
       }
     }
