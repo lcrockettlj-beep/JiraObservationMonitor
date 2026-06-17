@@ -140,9 +140,21 @@ def _risk_category(score: int) -> str:
     return "Healthy"
 
 
+def _site_identity_value(site: Dict[str, Any]) -> str:
+    return (
+        _safe_str(site.get("id"))
+        or _safe_str(site.get("site"))
+        or _safe_str(site.get("name"))
+        or "site"
+    )
+
+
+def _site_display_name(site: Dict[str, Any]) -> str:
+    return _safe_str(site.get("name")) or _safe_str(site.get("site")) or _safe_str(site.get("id"), "Unknown Site")
+
+
 def _site_detail_url(site: Dict[str, Any], slug: str) -> str:
-    site_id = _safe_str(site.get("id")) or _safe_str(site.get("name"), "site")
-    site_id = site_id.replace(" ", "-").lower()
+    site_id = _site_identity_value(site).replace(" ", "-").lower()
     return f"/detail/{slug}::site::{site_id}"
 
 

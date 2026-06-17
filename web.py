@@ -189,6 +189,118 @@ def _merge_historical_trends(sites, historical_trends):
     return sites
 
 
+
+def _prettify_label(value):
+    text = str(value or "").replace("_", " ").replace("-", " ").strip()
+    return text.title() if text else "Value"
+
+
+def _derive_intelligence_columns(items):
+    seen = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        for key in item.keys():
+            if key not in seen:
+                seen.append(key)
+    return seen
+
+
+def _normalise_detail_key_from_action(action):
+    text = str(action or "").strip()
+    if text.startswith("/detail/"):
+        return text[len("/detail/"):]
+    return text
+
+
+def _intelligence_atlassian_area(risk_type):
+    mapping = {
+        "inactive_users": "Atlassian Administration → Directory / Product Access",
+        "unmanaged_accounts": "Atlassian Administration → Managed Accounts",
+        "orphaned_projects": "Jira Administration → Projects",
+        "unused_apps": "Atlassian Administration → Connected Apps",
+        "tier_capacity": "Atlassian Administration → Billing / Subscription",
+        "seat_capacity": "Atlassian Administration → Billing / Subscription",
+    }
+    return mapping.get(risk_type, "Atlassian Administration")
+
+
+def _build_intelligence_drilldowns(data):
+    intelligence = data.get("intelligence", {}) if isinstance(data, dict) else {}
+    sites = intelligence.get("sites", []) if isinstance(intelligence, dict) else []
+    drilldowns = {}
+
+    for site in sites:
+        if not isinstance(site, dict):
+            continue
+        site_name = site.get("name") or site.get("site_key") or site.get("id") or "Site"
+        for risk in site.get("risks", []):
+            if not isinstance(risk, dict):
+                continue
+            detail_key = _normalise_detail_key_from_action(risk.get("action"))
+            if not detail_key:
+                continue
+            details = risk.get("details", {}) if isinstance(risk.get("details"), dict) else {}
+            items = details.get("items", []) if isinstance(details.get("items"), list) else []
+            rows = [row for row in items if isinstance(row, dict)]
+            columns = _derive_intelligence_columns(rows)
+            risk_type = risk.get("type", "risk")
+            title = f"{site_name} — {_prettify_label(risk_type)}"
+            reason = risk.get("reason") or f"Operational intelligence detected {_prettify_label(risk_type).lower()}."
+            if not rows:
+                rows = [{
+                    "site": site_name,
+                    "severity": risk.get("severity", "warning"),
+                    "count": risk.get("count", 0),
+                    "reason": reason,
+                }]
+                columns = _derive_intelligence_columns(rows)
+
+            drilldowns[detail_key] = {
+                "title": title,
+                "reason": reason,
+                "atlassian_area": _intelligence_atlassian_area(risk_type),
+                "columns": columns,
+                "rows": rows,
+            }
+
+    return drilldowns
+
+
+def _build_intelligence_summary_drilldown(data):
+    intelligence = data.get("intelligence", {}) if isinstance(data, dict) else {}
+    estate = intelligence.get("estate", {}) if isinstance(intelligence, dict) else {}
+    top_risks = estate.get("top_risks", []) if isinstance(estate, dict) else []
+    rows = []
+    for risk in top_risks:
+        if not isinstance(risk, dict):
+            continue
+        rows.append({
+            "type": _prettify_label(risk.get("type", "risk")),
+            "severity": risk.get("severity", "warning"),
+            "count": risk.get("count", 0),
+            "reason": risk.get("reason", ""),
+            "action": risk.get("action", ""),
+        })
+
+    if not rows:
+        rows = [{
+            "type": "No Active Risks",
+            "severity": "info",
+            "count": 0,
+            "reason": "No intelligence risks are currently populated.",
+            "action": "",
+        }]
+
+    return {
+        "intelligence::summary": {
+            "title": "Operational Intelligence Summary",
+            "reason": "Top operational intelligence risks across the estate based on the current backend snapshot.",
+            "atlassian_area": "Atlassian Administration",
+            "columns": _derive_intelligence_columns(rows),
+            "rows": rows,
+        }
+    }
 def _build_data():
     users_rows, users_file = _load_csv_rows("export-users*.csv")
     managed_rows, managed_file = _load_csv_rows("*managed_accounts*.csv")
@@ -239,6 +351,8 @@ def _build_data():
     data["drilldowns"] = drilldowns
 
     data = attach_intelligence_safe(data)
+    data["drilldowns"].update(_build_intelligence_drilldowns(data))
+    data["drilldowns"].update(_build_intelligence_summary_drilldown(data))
 
     return data
 
