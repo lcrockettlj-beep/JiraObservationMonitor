@@ -1,699 +1,584 @@
+from __future__ import annotations
+
+import json
 import os
-import time
-from collections import Counter
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Tuple
 
-from automation_audit import collect_audit_and_automation_data
-from jira_client import (
-    get_accessible_resources,
-    safe_jira_get,
-    safe_jira_search_count
-)
-from user_license import collect_user_and_licence_data
+from auth import get_valid_access_token
+from jira_client import JiraApiClient
+from trends import analyze_historical_trends
 
+BASE_DIR = Path(__file__).resolve().parent
+LATEST_RUN_PATH = BASE_DIR / "latest_run.json"
+LATEST_RUN_PRETTY_PATH = BASE_DIR / "latest_run_pretty.json"
+PARTIAL_RUN_PATH = BASE_DIR / "latest_run_safe_partial.json"
+SNAPSHOT_DIR = BASE_DIR / "snapshots"
+SNAPSHOT_INDEX_PATH = SNAPSHOT_DIR / "snapshot_index.json"
+LATEST_SNAPSHOT_PATH = SNAPSHOT_DIR / "latest_snapshot.json"
 
-MAX_SITE_WORKERS = int(os.getenv("JOM_MAX_SITE_WORKERS", "3"))
-ENDPOINT_WORKERS = int(os.getenv("JOM_ENDPOINT_WORKERS", "3"))
+LEGACY_IGNORED_SITE_NAMES = [name.strip().lower() for name in os.getenv("JOM_IGNORED_SITE_NAMES", "").split(",") if name.strip()]
+MONITOR_ONLY_SITE_NAMES = [name.strip().lower() for name in os.getenv("JOM_MONITOR_ONLY_SITE_NAMES", "").split(",") if name.strip()]
+ENABLE_AUDIT_CHECKS = str(os.getenv("JOM_ENABLE_AUDIT_CHECKS", "false")).strip().lower() == "true"
+ENABLE_APPLICATION_ROLE_CHECKS = str(os.getenv("JOM_ENABLE_APPLICATION_ROLE_CHECKS", "false")).strip().lower() == "true"
 
-IGNORED_SITE_NAMES = {
-    name.strip().lower()
-    for name in os.getenv("JOM_IGNORED_SITE_NAMES", "").split(",")
-    if name.strip()
-}
-
-CORE_ENDPOINT_KEYS = {
-    "server_info",
-    "myself",
-    "projects"
-}
-
-ENRICHMENT_ENDPOINT_KEYS = {
-    "application_roles",
-    "my_permissions",
-    "all_issues",
-    "unresolved_issues",
-    "updated_last_7d",
-    "users_search",
-    "audit_records"
-}
+REQUIRED_SCOPES = ["read:jira-user", "read:jira-work"]
+OPTIONAL_SCOPES = ["read:jira-project"]
 
 
-def _utc_now_iso():
-    return datetime.now(timezone.utc).isoformat()
+def _now_strings() -> Tuple[str, str]:
+    now_utc = datetime.now(timezone.utc)
+    run_timestamp_local = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    collected_at_utc = now_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+    return run_timestamp_local, collected_at_utc
 
 
-def _safe_number(value, default=0):
-    if isinstance(value, (int, float)):
-        return value
-    return default
+
+def _print(message: str) -> None:
+    print(message, flush=True)
 
 
-def _extract_project_count(project_payload):
-    if not project_payload:
-        return 0
 
-    if isinstance(project_payload, dict):
-        total = project_payload.get("total")
-        if isinstance(total, int):
-            return total
-
-        values = project_payload.get("values")
-        if isinstance(values, list):
-            return len(values)
-
-    return 0
+def _safe_json_write(path: Path, data: Dict[str, Any], pretty: bool = False) -> None:
+    if pretty:
+        path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    else:
+        path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
 
 
-def _extract_project_sample(project_payload, limit=10):
-    if not project_payload or not isinstance(project_payload, dict):
-        return []
 
-    values = project_payload.get("values", [])
-    if not isinstance(values, list):
-        return []
-
-    sample = []
-
-    for project in values[:limit]:
-        if not isinstance(project, dict):
-            continue
-
-        sample.append({
-            "id": project.get("id"),
-            "key": project.get("key"),
-            "name": project.get("name"),
-            "project_type_key": project.get("projectTypeKey"),
-            "simplified": project.get("simplified"),
-            "style": project.get("style"),
-            "is_private": project.get("isPrivate")
-        })
-
-    return sample
+def _site_key_from_name(name: str) -> str:
+    return str(name or "site").strip().lower().replace(" ", "-")
 
 
-def _extract_application_role_count(role_payload):
-    if isinstance(role_payload, list):
-        return len(role_payload)
-    return 0
+
+def _load_previous_snapshot() -> Dict[str, Any]:
+    if not LATEST_SNAPSHOT_PATH.exists():
+        return {}
+    try:
+        return json.loads(LATEST_SNAPSHOT_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
 
 
-def _extract_application_role_sample(role_payload, limit=10):
-    if not isinstance(role_payload, list):
-        return []
 
-    sample = []
-
-    for role in role_payload[:limit]:
-        if not isinstance(role, dict):
-            continue
-
-        sample.append({
-            "key": role.get("key"),
-            "name": role.get("name"),
-            "default_groups_count": len(role.get("defaultGroups", []) or []),
-            "selected_by_default": role.get("selectedByDefault"),
-            "defined": role.get("defined"),
-            "user_count": role.get("userCount"),
-            "number_of_seats": role.get("numberOfSeats"),
-            "remaining_seats": role.get("remainingSeats")
-        })
-
-    return sample
+def _extract_previous_site_map(previous_snapshot: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    site_map: Dict[str, Dict[str, Any]] = {}
+    for site in previous_snapshot.get("sites", []) or []:
+        cloud_id = site.get("cloud_id")
+        if cloud_id:
+            site_map[cloud_id] = site
+    return site_map
 
 
-def _extract_issue_total(search_payload):
-    if not search_payload or not isinstance(search_payload, dict):
-        return 0
 
-    total = search_payload.get("total")
-    if isinstance(total, int):
-        return total
+def _save_snapshot(latest_run: Dict[str, Any]) -> Dict[str, Any]:
+    SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
+    created_at_local = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    snapshot_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    snapshot_path = SNAPSHOT_DIR / f"snapshot_{snapshot_timestamp}.json"
 
-    return 0
-
-
-def _extract_server_info_summary(server_info_payload):
-    if not isinstance(server_info_payload, dict):
-        return None
-
-    return {
-        "base_url": server_info_payload.get("baseUrl"),
-        "display_url": server_info_payload.get("displayUrl"),
-        "deployment_type": server_info_payload.get("deploymentType"),
-        "version": server_info_payload.get("version"),
-        "build_number": server_info_payload.get("buildNumber"),
-        "build_date": server_info_payload.get("buildDate"),
-        "server_time": server_info_payload.get("serverTime"),
-        "server_title": server_info_payload.get("serverTitle"),
-        "default_locale": (server_info_payload.get("defaultLocale") or {}).get("locale"),
-        "server_time_zone": server_info_payload.get("serverTimeZone")
-    }
-
-
-def _extract_myself_summary(myself_payload):
-    if not isinstance(myself_payload, dict):
-        return None
-
-    groups_info = myself_payload.get("groups") or {}
-    application_roles_info = myself_payload.get("applicationRoles") or {}
-
-    return {
-        "account_id": myself_payload.get("accountId"),
-        "account_type": myself_payload.get("accountType"),
-        "display_name": myself_payload.get("displayName"),
-        "active": myself_payload.get("active"),
-        "time_zone": myself_payload.get("timeZone"),
-        "locale": myself_payload.get("locale"),
-        "group_count_visible": groups_info.get("size", 0),
-        "application_role_count_visible": application_roles_info.get("size", 0)
-    }
-
-
-def _extract_permission_summary(mypermissions_payload):
-    if not isinstance(mypermissions_payload, dict):
-        return {
-            "available": False,
-            "permissions_checked": {},
-            "has_administer_jira": None,
-            "has_administer_projects": None,
-            "has_browse_projects": None
-        }
-
-    permissions = mypermissions_payload.get("permissions", {}) or {}
-
-    def _perm_have(permission_key):
-        details = permissions.get(permission_key, {}) or {}
-        return details.get("havePermission")
-
-    return {
-        "available": True,
-        "permissions_checked": {
-            "ADMINISTER": _perm_have("ADMINISTER"),
-            "ADMINISTER_PROJECTS": _perm_have("ADMINISTER_PROJECTS"),
-            "BROWSE_PROJECTS": _perm_have("BROWSE_PROJECTS")
+    snapshot_data = {
+        "snapshot_meta": {
+            "snapshot_timestamp": snapshot_timestamp,
+            "created_at_local": created_at_local,
+            "source": "data_collector.py (safe mode)",
         },
-        "has_administer_jira": _perm_have("ADMINISTER"),
-        "has_administer_projects": _perm_have("ADMINISTER_PROJECTS"),
-        "has_browse_projects": _perm_have("BROWSE_PROJECTS")
+        "sites": latest_run.get("sites", []),
+    }
+
+    _safe_json_write(snapshot_path, snapshot_data, pretty=True)
+    _safe_json_write(LATEST_SNAPSHOT_PATH, snapshot_data, pretty=True)
+
+    index_data = {"snapshots": []}
+    if SNAPSHOT_INDEX_PATH.exists():
+        try:
+            index_data = json.loads(SNAPSHOT_INDEX_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            index_data = {"snapshots": []}
+
+    snapshots = index_data.get("snapshots", []) or []
+    snapshots.append({
+        "file": str(snapshot_path),
+        "snapshot_timestamp": snapshot_timestamp,
+        "created_at_local": created_at_local,
+    })
+    snapshots = snapshots[-50:]
+    index_data["snapshots"] = snapshots
+    _safe_json_write(SNAPSHOT_INDEX_PATH, index_data, pretty=True)
+
+    return {
+        "snapshot_file": str(snapshot_path),
+        "latest_snapshot_file": str(LATEST_SNAPSHOT_PATH),
+        "snapshot_index_file": str(SNAPSHOT_INDEX_PATH),
     }
 
 
-def _build_api_checks(result_map):
-    return {key: bool(value.get("ok")) for key, value in result_map.items()}
+
+def _status_from_risk(risk_score: int) -> str:
+    if risk_score >= 6:
+        return "critical"
+    if risk_score >= 2:
+        return "warning"
+    return "stable"
 
 
-def _build_api_errors(result_map):
-    return {key: value.get("error") for key, value in result_map.items()}
+
+def _build_issue_risk_signals(project_count: int, unresolved_total: int, updated_last_7d_total: int) -> List[str]:
+    signals: List[str] = []
+    if unresolved_total >= 200:
+        signals.append("high_unresolved_backlog")
+    elif unresolved_total >= 50:
+        signals.append("moderate_unresolved_backlog")
+    if updated_last_7d_total == 0 and project_count > 0:
+        signals.append("no_recent_issue_updates_detected")
+    return signals
 
 
-def _build_api_status_codes(result_map):
-    return {key: value.get("status_code") for key, value in result_map.items()}
+
+def _save_partial(run_timestamp_local: str, collected_at_utc: str, processed_sites: List[Dict[str, Any]], accessible_resources: List[Dict[str, Any]]) -> None:
+    partial = {
+        "run_timestamp_local": run_timestamp_local,
+        "raw_collection_summary": {
+            "collected_at_utc": collected_at_utc,
+            "accessible_resource_count": len(accessible_resources),
+            "legacy_ignored_site_names_present_in_env": LEGACY_IGNORED_SITE_NAMES,
+            "monitor_only_site_names": MONITOR_ONLY_SITE_NAMES,
+            "collector": "data_collector.py (safe mode partial)",
+        },
+        "summary": {
+            "site_count": len(processed_sites),
+            "project_count_total": sum(int(site.get("project_count", 0) or 0) for site in processed_sites),
+            "issue_count_total": sum(int(site.get("issue_count_total", 0) or 0) for site in processed_sites),
+            "issue_count_unresolved_total": sum(int(site.get("issue_count_unresolved", 0) or 0) for site in processed_sites),
+            "issue_count_updated_last_7d_total": sum(int(site.get("issue_count_updated_last_7d", 0) or 0) for site in processed_sites),
+        },
+        "sites": processed_sites,
+        "partial": True,
+    }
+    _safe_json_write(PARTIAL_RUN_PATH, partial, pretty=True)
 
 
-def _build_api_urls(result_map):
-    return {key: value.get("url") for key, value in result_map.items()}
 
+def _collect_site(resource: Dict[str, Any], client: JiraApiClient, previous_site_map: Dict[str, Dict[str, Any]], first_snapshot: bool) -> Dict[str, Any]:
+    site_started = datetime.now(timezone.utc)
+    cloud_id = resource.get("id", "")
+    site_name = resource.get("name", "")
+    site_url = resource.get("url", "")
+    site_key = _site_key_from_name(site_name)
+    granted_scopes = resource.get("scopes", []) or []
+    granted_scope_set = {str(x).strip() for x in granted_scopes}
 
-def _build_api_error_categories(result_map):
-    return {key: value.get("error_category") for key, value in result_map.items()}
+    permission_limited_checks: List[str] = []
+    endpoint_results: Dict[str, Any] = {}
+    status_reasons: List[str] = []
 
+    missing_required_scopes = [scope for scope in REQUIRED_SCOPES if scope not in granted_scope_set]
+    missing_optional_scopes = [scope for scope in OPTIONAL_SCOPES if scope not in granted_scope_set]
+    if missing_required_scopes:
+        permission_limited_checks.append("missing_required_scopes")
+        status_reasons.append(f"Missing required scopes: {', '.join(missing_required_scopes)}")
+    if missing_optional_scopes:
+        permission_limited_checks.append("missing_optional_scopes")
 
-def _build_api_attempt_counts(result_map):
-    return {key: value.get("attempt_count", 1) for key, value in result_map.items()}
+    _print(f"  -> {site_name}: serverInfo")
+    server_info = client.get_server_info(cloud_id)
+    endpoint_results["server_info"] = server_info
+    if not server_info.get("ok"):
+        permission_limited_checks.append("server_info")
+        status_reasons.append("Could not read Jira server info.")
 
+    _print(f"  -> {site_name}: myself")
+    myself = client.get_myself(cloud_id)
+    endpoint_results["myself"] = myself
+    if not myself.get("ok"):
+        permission_limited_checks.append("myself")
+        status_reasons.append("Could not confirm API identity on the site.")
 
-def _build_search_debug(result_map):
-    search_debug = {}
+    _print(f"  -> {site_name}: mypermissions")
+    permissions = client.get_my_permissions(cloud_id)
+    endpoint_results["my_permissions"] = permissions
+    if not permissions.get("ok"):
+        permission_limited_checks.append("my_permissions")
 
-    for key, value in result_map.items():
-        if key not in {"all_issues", "unresolved_issues", "updated_last_7d"}:
-            continue
+    if ENABLE_APPLICATION_ROLE_CHECKS:
+        _print(f"  -> {site_name}: applicationrole")
+        application_roles = client.get_application_roles(cloud_id)
+        endpoint_results["application_roles"] = application_roles
+        if not application_roles.get("ok"):
+            permission_limited_checks.append("application_roles")
+    else:
+        endpoint_results["application_roles"] = {"ok": False, "skipped": True, "reason": "Safe mode disabled application role checks."}
 
-        search_debug[key] = {
-            "used_fallback": value.get("used_fallback", False),
-            "selected_jql": value.get("selected_jql"),
-            "search_attempts": value.get("search_attempts", [])
-        }
+    if ENABLE_AUDIT_CHECKS:
+        _print(f"  -> {site_name}: audit records")
+        audit_records = client.get_audit_records(cloud_id)
+        endpoint_results["audit_records"] = audit_records
+        audit_status = "ok" if audit_records.get("ok") else "permission_limited"
+        if not audit_records.get("ok"):
+            permission_limited_checks.append("audit_records")
+    else:
+        endpoint_results["audit_records"] = {"ok": False, "skipped": True, "reason": "Safe mode disabled audit checks."}
+        audit_status = "skipped_safe_mode"
 
-    return search_debug
+    _print(f"  -> {site_name}: project search")
+    projects_result = client.get_projects(cloud_id)
+    endpoint_results["projects"] = projects_result
+    projects = projects_result.get("data", []) if projects_result.get("ok") else []
+    if not projects_result.get("ok"):
+        permission_limited_checks.append("project_search")
+        status_reasons.append("Could not read Jira project search results.")
 
-
-def _build_endpoint_results(result_map):
-    endpoint_results = {}
-
-    for endpoint_key, result in result_map.items():
-        endpoint_results[endpoint_key] = {
-            "ok": result.get("ok"),
-            "status_code": result.get("status_code"),
-            "url": result.get("url"),
-            "error": result.get("error"),
-            "endpoint": result.get("endpoint"),
-            "attempt_count": result.get("attempt_count", 1),
-            "retryable": result.get("retryable", False),
-            "error_category": result.get("error_category"),
-            "method": result.get("method"),
-            "used_fallback": result.get("used_fallback", False),
-            "selected_jql": result.get("selected_jql")
-        }
-
-    return endpoint_results
-
-
-def _endpoint_type(endpoint_key):
-    if endpoint_key in CORE_ENDPOINT_KEYS:
-        return "core"
-    return "enrichment"
-
-
-def _is_permission_limited(status_code, error_text, error_category):
-    error_text = (error_text or "").lower()
-
-    if error_category == "permission_limited":
-        return True
-
-    if status_code == 403:
-        return True
-
-    if "403" in error_text or "forbidden" in error_text:
-        return True
-
-    return False
-
-
-def _build_endpoint_health_summary(api_checks, api_errors, api_status_codes, api_error_categories, api_urls):
-    total_checks = len(api_checks)
-    successful_checks = 0
-    failed_checks = 0
-
-    permission_limited_checks = []
-    core_blocking_failed_checks = []
-    enrichment_failed_checks = []
-
-    failed_check_details = []
-    permission_issue_urls = []
-    error_category_counter = Counter()
-
-    for check_name, ok in api_checks.items():
-        if ok:
-            successful_checks += 1
-            continue
-
-        failed_checks += 1
-
-        error_text = api_errors.get(check_name)
-        status_code = api_status_codes.get(check_name)
-        error_category = api_error_categories.get(check_name)
-        endpoint_type = _endpoint_type(check_name)
-        related_url = api_urls.get(check_name)
-
-        permission_limited = _is_permission_limited(status_code, error_text, error_category)
-
-        if error_category:
-            error_category_counter[error_category] += 1
-
-        if permission_limited:
-            permission_limited_checks.append(check_name)
-            permission_issue_urls.append({
-                "endpoint_key": check_name,
-                "url": related_url,
-                "status_code": status_code,
-                "error_category": error_category
-            })
-        elif endpoint_type == "core":
-            core_blocking_failed_checks.append(check_name)
-        else:
-            enrichment_failed_checks.append(check_name)
-
-        failed_check_details.append({
-            "endpoint_key": check_name,
-            "endpoint_type": endpoint_type,
-            "status_code": status_code,
-            "error": error_text,
-            "error_category": error_category,
-            "permission_limited": permission_limited,
-            "url": related_url
+    project_rows: List[Dict[str, Any]] = []
+    for project in projects[:25]:
+        project_rows.append({
+            "key": project.get("key", ""),
+            "name": project.get("name", ""),
+            "projectTypeKey": project.get("projectTypeKey", ""),
+            "simplified": project.get("simplified"),
         })
 
-    return {
-        "total_checks": total_checks,
-        "successful_checks": successful_checks,
-        "failed_checks": failed_checks,
-        "core_blocking_failed_checks": core_blocking_failed_checks,
-        "enrichment_failed_checks": enrichment_failed_checks,
-        "permission_limited_checks": permission_limited_checks,
-        "permission_issue_urls": permission_issue_urls,
-        "failed_check_details": failed_check_details,
-        "error_category_counts": dict(error_category_counter)
-    }
+    _print(f"  -> {site_name}: issue total count")
+    total_result = client.search_issue_count(cloud_id, "order by created DESC")
+    endpoint_results["issue_total_count"] = total_result
+    if not total_result.get("ok"):
+        permission_limited_checks.append("issue_total_count")
+    issue_count_total = int((total_result.get("data", {}) or {}).get("total", 0) or 0) if total_result.get("ok") else 0
 
+    _print(f"  -> {site_name}: unresolved count")
+    unresolved_result = client.search_issue_count(cloud_id, "resolution = Unresolved")
+    endpoint_results["issue_unresolved_count"] = unresolved_result
+    if not unresolved_result.get("ok"):
+        permission_limited_checks.append("issue_unresolved_count")
+    issue_count_unresolved = int((unresolved_result.get("data", {}) or {}).get("total", 0) or 0) if unresolved_result.get("ok") else 0
 
-def _fetch_endpoint(access_token, cloud_id, endpoint_key, endpoint, params=None):
-    result = safe_jira_get(
-        access_token=access_token,
-        cloud_id=cloud_id,
-        endpoint=endpoint,
-        params=params
-    )
-    return endpoint_key, result
+    _print(f"  -> {site_name}: updated last 7d count")
+    updated_result = client.search_issue_count(cloud_id, "updated >= -7d")
+    endpoint_results["issue_updated_last_7d_count"] = updated_result
+    if not updated_result.get("ok"):
+        permission_limited_checks.append("issue_updated_last_7d_count")
+    issue_count_updated_last_7d = int((updated_result.get("data", {}) or {}).get("total", 0) or 0) if updated_result.get("ok") else 0
 
+    issue_risk_signals = _build_issue_risk_signals(len(projects), issue_count_unresolved, issue_count_updated_last_7d)
+    operational_risk_signals: List[str] = []
+    if permission_limited_checks:
+        operational_risk_signals.append("permission_limited_checks_present")
+    if not projects_result.get("ok"):
+        operational_risk_signals.append("project_visibility_limited")
+    if audit_status != "ok" and audit_status != "skipped_safe_mode":
+        operational_risk_signals.append("audit_visibility_limited")
 
-def _fetch_search_count(access_token, cloud_id, endpoint_key, jql_variants):
-    result = safe_jira_search_count(
-        access_token=access_token,
-        cloud_id=cloud_id,
-        jql_variants=jql_variants,
-        fields=["key"]
-    )
-    return endpoint_key, result
+    issue_risk_score = 0
+    if issue_count_unresolved >= 200:
+        issue_risk_score += 4
+    elif issue_count_unresolved >= 50:
+        issue_risk_score += 2
+    if issue_count_updated_last_7d == 0 and len(projects) > 0:
+        issue_risk_score += 1
 
+    operational_risk_score = 0
+    if permission_limited_checks:
+        operational_risk_score += 2
+    if missing_required_scopes:
+        operational_risk_score += 3
+    elif missing_optional_scopes:
+        operational_risk_score += 1
 
-def _collect_site_metrics(access_token, cloud_id):
-    result_map = {}
+    risk_score = issue_risk_score + operational_risk_score
+    status = _status_from_risk(risk_score)
+    if not status_reasons:
+        if status == "stable":
+            status_reasons.append("Safe mode live Jira collection succeeded with no material risk signals.")
+        else:
+            status_reasons.append("Safe mode live Jira collection completed with risk indicators that require review.")
 
-    with ThreadPoolExecutor(max_workers=ENDPOINT_WORKERS) as executor:
-        futures = []
+    previous_site = previous_site_map.get(cloud_id, {})
+    previous_total = int(previous_site.get("issue_count_total", 0) or 0)
+    previous_unresolved = int(previous_site.get("issue_count_unresolved", 0) or 0)
+    previous_project_count = int(previous_site.get("project_count", 0) or 0)
 
-        futures.append(executor.submit(
-            _fetch_endpoint,
-            access_token,
-            cloud_id,
-            "server_info",
-            "serverInfo",
-            None
-        ))
-
-        futures.append(executor.submit(
-            _fetch_endpoint,
-            access_token,
-            cloud_id,
-            "myself",
-            "myself",
-            {"expand": "groups,applicationRoles"}
-        ))
-
-        futures.append(executor.submit(
-            _fetch_endpoint,
-            access_token,
-            cloud_id,
-            "projects",
-            "project/search",
-            {"maxResults": 100}
-        ))
-
-        futures.append(executor.submit(
-            _fetch_endpoint,
-            access_token,
-            cloud_id,
-            "application_roles",
-            "applicationrole",
-            None
-        ))
-
-        futures.append(executor.submit(
-            _fetch_endpoint,
-            access_token,
-            cloud_id,
-            "my_permissions",
-            "mypermissions",
-            {"permissions": "ADMINISTER,ADMINISTER_PROJECTS,BROWSE_PROJECTS"}
-        ))
-
-        futures.append(executor.submit(
-            _fetch_search_count,
-            access_token,
-            cloud_id,
-            "all_issues",
-            [
-                "order by created desc",
-                "project is not EMPTY"
-            ]
-        ))
-
-        futures.append(executor.submit(
-            _fetch_search_count,
-            access_token,
-            cloud_id,
-            "unresolved_issues",
-            [
-                "resolution is EMPTY",
-                "resolution = Unresolved"
-            ]
-        ))
-
-        futures.append(executor.submit(
-            _fetch_search_count,
-            access_token,
-            cloud_id,
-            "updated_last_7d",
-            [
-                "updated >= -7d",
-                "updated >= startOfDay(-7d)"
-            ]
-        ))
-
-        futures.append(executor.submit(
-            _fetch_endpoint,
-            access_token,
-            cloud_id,
-            "users_search",
-            "users/search",
-            {"startAt": 0, "maxResults": 1}
-        ))
-
-        futures.append(executor.submit(
-            _fetch_endpoint,
-            access_token,
-            cloud_id,
-            "audit_records",
-            "auditing/record",
-            {"limit": 1}
-        ))
-
-        for future in as_completed(futures):
-            endpoint_key, result = future.result()
-            result_map[endpoint_key] = result
-
-    return result_map
-
-
-def collect_site_data(access_token, resource):
-    site_start = time.perf_counter()
-
-    cloud_id = resource.get("id")
-    site_name = resource.get("name") or resource.get("url") or cloud_id
-    site_url = resource.get("url")
-    site_scopes = resource.get("scopes", [])
-    avatar_url = resource.get("avatarUrl")
-
-    result_map = _collect_site_metrics(access_token, cloud_id)
-
-    api_checks = _build_api_checks(result_map)
-    api_errors = _build_api_errors(result_map)
-    api_status_codes = _build_api_status_codes(result_map)
-    api_urls = _build_api_urls(result_map)
-    api_error_categories = _build_api_error_categories(result_map)
-    api_attempt_counts = _build_api_attempt_counts(result_map)
-
-    endpoint_health_summary = _build_endpoint_health_summary(
-        api_checks=api_checks,
-        api_errors=api_errors,
-        api_status_codes=api_status_codes,
-        api_error_categories=api_error_categories,
-        api_urls=api_urls
-    )
-
-    endpoint_results = _build_endpoint_results(result_map)
-    search_debug = _build_search_debug(result_map)
-
-    server_info_data = result_map["server_info"]["data"] if result_map["server_info"]["ok"] else None
-    myself_data = result_map["myself"]["data"] if result_map["myself"]["ok"] else None
-    projects_data = result_map["projects"]["data"] if result_map["projects"]["ok"] else None
-    application_roles_data = (
-        result_map["application_roles"]["data"]
-        if result_map["application_roles"]["ok"] else None
-    )
-    my_permissions_data = (
-        result_map["my_permissions"]["data"]
-        if result_map["my_permissions"]["ok"] else None
-    )
-    all_issues_data = result_map["all_issues"]["data"] if result_map["all_issues"]["ok"] else None
-    unresolved_issues_data = (
-        result_map["unresolved_issues"]["data"]
-        if result_map["unresolved_issues"]["ok"] else None
-    )
-    updated_last_7d_data = (
-        result_map["updated_last_7d"]["data"]
-        if result_map["updated_last_7d"]["ok"] else None
-    )
-
-    project_count = _extract_project_count(projects_data)
-    project_sample = _extract_project_sample(projects_data, limit=10)
-
-    application_role_count = _extract_application_role_count(application_roles_data)
-    application_role_sample = _extract_application_role_sample(application_roles_data, limit=10)
-
-    total_issue_count = _extract_issue_total(all_issues_data)
-    unresolved_issue_count = _extract_issue_total(unresolved_issues_data)
-    updated_last_7d_count = _extract_issue_total(updated_last_7d_data)
-
-    user_licence_data = collect_user_and_licence_data(
-        access_token=access_token,
-        cloud_id=cloud_id,
-        application_roles_payload=application_roles_data
-    )
-
-    audit_automation_data = collect_audit_and_automation_data(
-        access_token=access_token,
-        cloud_id=cloud_id
-    )
-
-    site_elapsed_seconds = round(time.perf_counter() - site_start, 4)
+    collected_at_utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    collection_duration_seconds = round((datetime.now(timezone.utc) - site_started).total_seconds(), 3)
+    failed_api_checks = len(set(permission_limited_checks))
 
     return {
+        "site_key": site_key,
         "name": site_name,
         "url": site_url,
         "cloud_id": cloud_id,
-        "avatar_url": avatar_url,
-        "scopes": site_scopes,
-
-        "collected_at_utc": _utc_now_iso(),
-        "collection_duration_seconds": site_elapsed_seconds,
-
-        "project_count": project_count,
-        "application_role_count": application_role_count,
-        "issue_count_total": total_issue_count,
-        "issue_count_unresolved": unresolved_issue_count,
-        "issue_count_updated_last_7d": updated_last_7d_count,
-
-        "project_sample": project_sample,
-        "application_role_sample": application_role_sample,
-        "server_info": _extract_server_info_summary(server_info_data),
-        "myself": _extract_myself_summary(myself_data),
-        "permission_checker": _extract_permission_summary(my_permissions_data),
-
-        "user_summary": user_licence_data.get("user_summary"),
-        "user_fetch_status": user_licence_data.get("user_fetch_status"),
-        "licence_summary": user_licence_data.get("licence_summary"),
-
-        "audit_summary": audit_automation_data.get("audit_summary"),
-        "audit_fetch_status": audit_automation_data.get("audit_fetch_status"),
-        "automation_summary": audit_automation_data.get("automation_summary"),
-
-        "api_checks": api_checks,
-        "api_errors": api_errors,
-        "api_status_codes": api_status_codes,
-        "api_urls": api_urls,
-        "api_error_categories": api_error_categories,
-        "api_attempt_counts": api_attempt_counts,
-        "endpoint_summary": endpoint_health_summary,
+        "collected_at_utc": collected_at_utc,
+        "collection_duration_seconds": collection_duration_seconds,
+        "project_count": len(projects),
+        "project_rows": project_rows,
+        "issue_count_total": issue_count_total,
+        "issue_count_unresolved": issue_count_unresolved,
+        "issue_count_updated_last_7d": issue_count_updated_last_7d,
+        "project_count_delta": len(projects) - previous_project_count,
+        "total_users_delta": 0,
+        "active_users_delta": 0,
+        "inactive_users_delta": 0,
+        "issue_count_total_delta": issue_count_total - previous_total,
+        "issue_count_unresolved_delta": issue_count_unresolved - previous_unresolved,
+        "user_summary": {
+            "total_users": None,
+            "active_users": None,
+            "inactive_users": None,
+            "source": "Pending Admin API capability or later user-collection expansion",
+        },
+        "licence_summary": {
+            "licensed_users_estimate": None,
+            "source": "Pending Admin/API enrichment",
+        },
+        "risk_score": risk_score,
+        "issue_risk_score": issue_risk_score,
+        "operational_risk_score": operational_risk_score,
+        "status": status,
+        "status_reasons": status_reasons,
+        "growth_status": "growing" if (len(projects) - previous_project_count) > 0 else "stable",
+        "permission_limited_checks": sorted(set(permission_limited_checks)),
+        "blocking_failed_checks": sorted(set([x for x in permission_limited_checks if x in ("server_info", "myself", "project_search") or x == "missing_required_scopes"])),
+        "issue_risk_signals": issue_risk_signals,
+        "operational_risk_signals": operational_risk_signals,
+        "failed_api_checks": failed_api_checks,
+        "audit_status": audit_status,
+        "audit_api_access": audit_status == "ok",
+        "licence_status": "pending_enrichment",
+        "licence_api_access": False,
+        "snapshot_baseline": first_snapshot,
         "endpoint_results": endpoint_results,
-        "search_debug": search_debug
     }
 
 
-def _collect_site_wrapper(index, access_token, resource):
-    return index, collect_site_data(access_token, resource)
 
-
-def collect_all_sites(access_token):
-    run_start = time.perf_counter()
-    collected_at_utc = _utc_now_iso()
-
-    resources = get_accessible_resources(access_token)
-
-    filtered_resources = []
-    excluded_sites = []
-
-    for resource in resources:
-        site_name = (resource.get("name") or "").strip()
-        if site_name.lower() in IGNORED_SITE_NAMES:
-            excluded_sites.append({
-                "name": site_name,
-                "url": resource.get("url"),
-                "cloud_id": resource.get("id")
+def _build_comparison(current_sites: List[Dict[str, Any]], previous_site_map: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    changes: List[Dict[str, Any]] = []
+    for site in current_sites:
+        name = site.get("name", "")
+        cloud_id = site.get("cloud_id", "")
+        previous = previous_site_map.get(cloud_id)
+        if not previous:
+            changes.append({
+                "severity": "info",
+                "change_type": "new_site_snapshot_baseline",
+                "site_name": name,
+                "detail": f"No previous snapshot found for {name}; baseline established.",
             })
             continue
-        filtered_resources.append(resource)
 
-    site_count = len(filtered_resources)
+        if int(site.get("project_count_delta", 0) or 0) != 0:
+            changes.append({
+                "severity": "info",
+                "change_type": "project_count_changed",
+                "site_name": name,
+                "detail": f"Project count delta = {site.get('project_count_delta', 0)}",
+            })
 
-    if site_count == 0:
-        return {
-            "collected_at_utc": collected_at_utc,
-            "collection_duration_seconds": 0,
-            "site_count": 0,
-            "excluded_sites": excluded_sites,
-            "endpoint_totals": {
-                "successful_checks": 0,
-                "failed_checks": 0,
-                "permission_limited_checks": 0,
-                "core_blocking_failed_checks": 0,
-                "enrichment_failed_checks": 0
-            },
-            "error_category_totals": {},
-            "collector_settings": {
-                "max_site_workers": MAX_SITE_WORKERS,
-                "endpoint_workers": ENDPOINT_WORKERS,
-                "site_workers_used": 0
-            },
-            "sites": []
-        }
+        unresolved_delta = int(site.get("issue_count_unresolved_delta", 0) or 0)
+        if unresolved_delta >= 10:
+            changes.append({
+                "severity": "warning",
+                "change_type": "unresolved_backlog_increase",
+                "site_name": name,
+                "detail": f"Unresolved issue delta = {unresolved_delta}",
+            })
 
-    site_workers_used = min(MAX_SITE_WORKERS, site_count)
-    ordered_results = []
-
-    with ThreadPoolExecutor(max_workers=site_workers_used) as executor:
-        futures = {
-            executor.submit(_collect_site_wrapper, index, access_token, resource): index
-            for index, resource in enumerate(filtered_resources)
-        }
-
-        for future in as_completed(futures):
-            index, site_record = future.result()
-            ordered_results.append((index, site_record))
-
-    ordered_results.sort(key=lambda item: item[0])
-    sites = [site_record for _, site_record in ordered_results]
-
-    total_duration_seconds = round(time.perf_counter() - run_start, 4)
-
-    healthy_endpoint_checks = 0
-    failed_endpoint_checks = 0
-    permission_limited_endpoint_checks = 0
-    core_blocking_failed_endpoint_checks = 0
-    enrichment_failed_endpoint_checks = 0
-    error_category_counter = Counter()
-
-    for site in sites:
-        endpoint_summary = site.get("endpoint_summary", {}) or {}
-
-        healthy_endpoint_checks += _safe_number(endpoint_summary.get("successful_checks", 0), 0)
-        failed_endpoint_checks += _safe_number(endpoint_summary.get("failed_checks", 0), 0)
-        permission_limited_endpoint_checks += len(endpoint_summary.get("permission_limited_checks", []) or [])
-        core_blocking_failed_endpoint_checks += len(endpoint_summary.get("core_blocking_failed_checks", []) or [])
-        enrichment_failed_endpoint_checks += len(endpoint_summary.get("enrichment_failed_checks", []) or [])
-
-        for category_name, count in (endpoint_summary.get("error_category_counts", {}) or {}).items():
-            error_category_counter[category_name] += count
+        if site.get("status") == "critical":
+            changes.append({
+                "severity": "critical",
+                "change_type": "site_status_critical",
+                "site_name": name,
+                "detail": "Site is currently scored as critical.",
+            })
 
     return {
-        "collected_at_utc": collected_at_utc,
-        "collection_duration_seconds": total_duration_seconds,
-        "site_count": len(sites),
-        "excluded_sites": excluded_sites,
-        "endpoint_totals": {
-            "successful_checks": healthy_endpoint_checks,
-            "failed_checks": failed_endpoint_checks,
-            "permission_limited_checks": permission_limited_endpoint_checks,
-            "core_blocking_failed_checks": core_blocking_failed_endpoint_checks,
-            "enrichment_failed_checks": enrichment_failed_endpoint_checks
-        },
-        "error_category_totals": dict(error_category_counter),
-        "collector_settings": {
-            "max_site_workers": MAX_SITE_WORKERS,
-            "endpoint_workers": ENDPOINT_WORKERS,
-            "site_workers_used": site_workers_used
-        },
-        "sites": sites
+        "has_previous_snapshot": bool(previous_site_map),
+        "change_count": len(changes),
+        "info_change_count": len([x for x in changes if x.get("severity") == "info"]),
+        "warning_change_count": len([x for x in changes if x.get("severity") == "warning"]),
+        "critical_change_count": len([x for x in changes if x.get("severity") == "critical"]),
+        "changes": changes,
     }
+
+
+
+def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
+    run_timestamp_local, collected_at_utc = _now_strings()
+    resources = client.list_accessible_resources()
+    _print(f"Accessible Jira resources returned: {len(resources)}")
+
+    monitored_resources: List[Dict[str, Any]] = []
+    for item in resources:
+        site_name = str(item.get("name", "")).strip().lower()
+        if MONITOR_ONLY_SITE_NAMES and site_name not in MONITOR_ONLY_SITE_NAMES:
+            continue
+        monitored_resources.append(item)
+
+    _print(f"Sites selected for safe mode monitoring: {len(monitored_resources)}")
+    previous_snapshot = _load_previous_snapshot()
+    previous_site_map = _extract_previous_site_map(previous_snapshot)
+    first_snapshot = not bool(previous_site_map)
+
+    site_results: List[Dict[str, Any]] = []
+    for index, resource in enumerate(monitored_resources, start=1):
+        site_name = resource.get("name", "")
+        _print(f"[{index}/{len(monitored_resources)}] Collecting site: {site_name}")
+        try:
+            site_record = _collect_site(resource, client, previous_site_map, first_snapshot)
+        except Exception as exc:
+            site_record = {
+                "site_key": _site_key_from_name(site_name),
+                "name": site_name,
+                "url": resource.get("url", ""),
+                "cloud_id": resource.get("id", ""),
+                "collected_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "collection_duration_seconds": 0,
+                "project_count": 0,
+                "project_rows": [],
+                "issue_count_total": 0,
+                "issue_count_unresolved": 0,
+                "issue_count_updated_last_7d": 0,
+                "project_count_delta": 0,
+                "total_users_delta": 0,
+                "active_users_delta": 0,
+                "inactive_users_delta": 0,
+                "issue_count_total_delta": 0,
+                "issue_count_unresolved_delta": 0,
+                "user_summary": {
+                    "total_users": None,
+                    "active_users": None,
+                    "inactive_users": None,
+                    "source": "Collector exception before user enrichment",
+                },
+                "licence_summary": {
+                    "licensed_users_estimate": None,
+                    "source": "Collector exception before licence enrichment",
+                },
+                "risk_score": 8,
+                "issue_risk_score": 0,
+                "operational_risk_score": 8,
+                "status": "critical",
+                "status_reasons": [f"Collector exception: {exc}"],
+                "growth_status": "unknown",
+                "permission_limited_checks": ["collector_exception"],
+                "blocking_failed_checks": ["collector_exception"],
+                "issue_risk_signals": [],
+                "operational_risk_signals": ["collector_exception"],
+                "failed_api_checks": 1,
+                "audit_status": "collector_exception",
+                "audit_api_access": False,
+                "licence_status": "collector_exception",
+                "licence_api_access": False,
+                "snapshot_baseline": first_snapshot,
+                "endpoint_results": {"collector_exception": str(exc)},
+            }
+        site_results.append(site_record)
+        _save_partial(run_timestamp_local, collected_at_utc, site_results, resources)
+        _print(f"Completed site: {site_name} | projects={site_record.get('project_count', 0)} | unresolved={site_record.get('issue_count_unresolved', 0)} | status={site_record.get('status', '')}")
+
+    site_results.sort(key=lambda item: item.get("name", ""))
+
+    summary = {
+        "site_count": len(site_results),
+        "project_count_total": sum(int(site.get("project_count", 0) or 0) for site in site_results),
+        "issue_count_total": sum(int(site.get("issue_count_total", 0) or 0) for site in site_results),
+        "issue_count_unresolved_total": sum(int(site.get("issue_count_unresolved", 0) or 0) for site in site_results),
+        "issue_count_updated_last_7d_total": sum(int(site.get("issue_count_updated_last_7d", 0) or 0) for site in site_results),
+    }
+
+    risk_summary = {
+        "stable_site_count": len([site for site in site_results if site.get("status") == "stable"]),
+        "warning_site_count": len([site for site in site_results if site.get("status") == "warning"]),
+        "critical_site_count": len([site for site in site_results if site.get("status") == "critical"]),
+        "permission_limited_site_count": len([site for site in site_results if site.get("permission_limited_checks")]),
+    }
+
+    delta_summary = {
+        "project_delta_total": sum(int(site.get("project_count_delta", 0) or 0) for site in site_results),
+        "total_users_delta_total": 0,
+        "active_users_delta_total": 0,
+        "inactive_users_delta_total": 0,
+        "licensed_users_estimate_delta_total": 0,
+    }
+
+    comparison = _build_comparison(site_results, previous_site_map)
+
+    latest_run = {
+        "run_timestamp_local": run_timestamp_local,
+        "raw_collection_summary": {
+            "collected_at_utc": collected_at_utc,
+            "accessible_resource_count": len(resources),
+            "monitored_site_count": len(site_results),
+            "legacy_ignored_site_names_present_in_env": LEGACY_IGNORED_SITE_NAMES,
+            "monitor_only_site_names": MONITOR_ONLY_SITE_NAMES,
+            "note": "Safe mode monitors the whole accessible estate by default. Legacy ignored site names are recorded but not automatically excluded.",
+            "required_scopes": REQUIRED_SCOPES,
+            "optional_scopes": OPTIONAL_SCOPES,
+            "safe_mode": True,
+            "safe_mode_features": {
+                "sequential_site_processing": True,
+                "progress_logging": True,
+                "partial_file_written": str(PARTIAL_RUN_PATH),
+                "audit_checks_enabled": ENABLE_AUDIT_CHECKS,
+                "application_role_checks_enabled": ENABLE_APPLICATION_ROLE_CHECKS,
+                "per_project_issue_loops": False,
+            },
+            "collector": "data_collector.py (safe mode)",
+        },
+        "summary": summary,
+        "risk_summary": risk_summary,
+        "delta_summary": delta_summary,
+        "sites": site_results,
+        "comparison": comparison,
+        "historical_trends": {},
+        "snapshot_files": [],
+        "report_files": [],
+    }
+
+    snapshot_files = _save_snapshot(latest_run)
+    latest_run["snapshot_files"] = [snapshot_files]
+
+    try:
+        latest_run["historical_trends"] = analyze_historical_trends(lookback=10)
+    except Exception as exc:
+        latest_run["historical_trends"] = {
+            "has_history": False,
+            "lookback_snapshots": 0,
+            "site_trends": [],
+            "summary": {
+                "site_count": 0,
+                "warning_or_critical_streak_sites": 0,
+                "rising_unresolved_sites": 0,
+                "rising_risk_sites": 0,
+                "recurring_blocking_failure_sites": 0,
+            },
+            "error": str(exc),
+        }
+
+    return latest_run
+
+
+
+def main() -> int:
+    _print("Starting Step 2 Safe Mode live Jira collector...")
+    access_token = get_valid_access_token()
+    client = JiraApiClient(access_token=access_token)
+    latest_run = _build_latest_run(client)
+    _safe_json_write(LATEST_RUN_PATH, latest_run, pretty=False)
+    _safe_json_write(LATEST_RUN_PRETTY_PATH, latest_run, pretty=True)
+
+    _print("Safe Mode live Jira collection complete.")
+    _print(f"Monitored sites: {latest_run.get('summary', {}).get('site_count', 0)}")
+    _print(f"Projects total: {latest_run.get('summary', {}).get('project_count_total', 0)}")
+    _print(f"Issues total: {latest_run.get('summary', {}).get('issue_count_total', 0)}")
+    _print(f"Unresolved total: {latest_run.get('summary', {}).get('issue_count_unresolved_total', 0)}")
+    _print(f"latest_run.json: {LATEST_RUN_PATH}")
+    _print(f"latest_run_pretty.json: {LATEST_RUN_PRETTY_PATH}")
+    _print(f"latest_run_safe_partial.json: {PARTIAL_RUN_PATH}")
+    _print(f"latest_snapshot.json: {LATEST_SNAPSHOT_PATH}")
+    _print(f"snapshot_index.json: {SNAPSHOT_INDEX_PATH}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
