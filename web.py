@@ -20,7 +20,6 @@ from backend.intelligence_runtime import attach_intelligence_safe, enrich_contex
 from backend.runtime_source_adapter import load_preferred_source_payload
 
 BASE_DIR = Path(__file__).resolve().parent
-
 app = Flask(
     __name__,
     template_folder=str(BASE_DIR / "templates"),
@@ -116,6 +115,12 @@ def _coerce_sites(data):
     return [site for site in sites if isinstance(site, dict)]
 
 
+def _site_identity(site):
+    if not isinstance(site, dict):
+        return None
+    return site.get("site") or site.get("site_key") or site.get("cloud_id")
+
+
 def _apply_source_metadata(data, source_mode, source_file=None, users_file=None, managed_file=None, users_rows=None, managed_rows=None):
     data["source_mode"] = source_mode
     data["source_file"] = source_file
@@ -145,8 +150,8 @@ def _finalise_data(data, *, source_mode, source_file=None, users_file=None, mana
         users_rows=users_rows,
         managed_rows=managed_rows,
     )
-    data["sites"] = _merge_project_counts(data.get("sites", []))
 
+    data["sites"] = _merge_project_counts(data.get("sites", []))
     project_intelligence = load_project_intelligence_from_latest_run()
     data["project_intelligence"] = project_intelligence
     data["sites"] = _merge_project_intelligence(data.get("sites", []), project_intelligence)
@@ -187,59 +192,59 @@ def _finalise_data(data, *, source_mode, source_file=None, users_file=None, mana
     data = attach_intelligence_safe(data)
     data["drilldowns"].update(_build_intelligence_drilldowns(data))
     data["drilldowns"].update(_build_intelligence_summary_drilldown(data))
-
-    # Safe additional intelligence layer from checkpoint e01c306 onward.
     data = enrich_estate(data)
-
     return data
 
 
 def _merge_project_counts(sites):
     project_counts = load_project_counts_from_latest_run()
     for site in sites:
-        site_key = site.get("site")
+        site_key = _site_identity(site)
         project_data = project_counts.get(site_key, {})
-        site["project_count"] = project_data.get("project_count")
-        site["issue_count_total"] = project_data.get("issue_count_total")
-        site["issue_count_unresolved"] = project_data.get("issue_count_unresolved")
-        site["issue_count_updated_last_7d"] = project_data.get("issue_count_updated_last_7d")
-        site["project_count_delta"] = project_data.get("project_count_delta")
+        if project_data:
+            site["project_count"] = project_data.get("project_count", site.get("project_count"))
+            site["issue_count_total"] = project_data.get("issue_count_total", site.get("issue_count_total"))
+            site["issue_count_unresolved"] = project_data.get("issue_count_unresolved", site.get("issue_count_unresolved"))
+            site["issue_count_updated_last_7d"] = project_data.get("issue_count_updated_last_7d", site.get("issue_count_updated_last_7d"))
+            site["project_count_delta"] = project_data.get("project_count_delta", site.get("project_count_delta"))
     return sites
 
 
 def _merge_project_intelligence(sites, project_intelligence):
     site_map = project_intelligence.get("site_map", {}) if isinstance(project_intelligence, dict) else {}
     for site in sites:
-        site_key = site.get("site")
+        site_key = _site_identity(site)
         info = site_map.get(site_key, {})
-        site["sampled_project_rows"] = info.get("sampled_project_rows", 0)
-        site["project_sample_available"] = True if info.get("project_rows") else False
+        site["sampled_project_rows"] = info.get("sampled_project_rows", site.get("sampled_project_rows", 0))
+        site["project_sample_available"] = True if info.get("project_rows") else bool(site.get("project_rows"))
     return sites
 
 
 def _merge_change_detection(sites, change_detection):
     site_map = change_detection.get("site_map", {}) if isinstance(change_detection, dict) else {}
     for site in sites:
-        site_key = site.get("site")
+        site_key = _site_identity(site)
         change_data = site_map.get(site_key, {})
-        site["growth_status"] = change_data.get("growth_status")
+        if not change_data:
+            continue
+        site["growth_status"] = change_data.get("growth_status", site.get("growth_status"))
         site["project_count_delta_live"] = change_data.get("project_count_delta", 0)
-        site["total_users_delta"] = change_data.get("total_users_delta", 0)
-        site["active_users_delta"] = change_data.get("active_users_delta", 0)
-        site["inactive_users_delta"] = change_data.get("inactive_users_delta", 0)
-        site["licensed_users_estimate"] = change_data.get("licensed_users_estimate")
-        site["licensed_users_estimate_delta"] = change_data.get("licensed_users_estimate_delta", 0)
-        site["audit_status"] = change_data.get("audit_status")
-        site["audit_api_access"] = change_data.get("audit_api_access")
-        site["licence_status"] = change_data.get("licence_status")
-        site["licence_api_access"] = change_data.get("licence_api_access")
-        site["permission_limited_checks"] = change_data.get("permission_limited_checks", [])
-        site["status_reasons"] = change_data.get("status_reasons", [])
-        site["trend_signals"] = change_data.get("trend_signals", [])
-        site["snapshot_count"] = change_data.get("snapshot_count", 0)
-        site["trend_score"] = change_data.get("trend_score", 0)
-        site["new_site_candidate"] = change_data.get("new_site_candidate", False)
-        site["attention_reasons"] = change_data.get("attention_reasons", [])
+        site["total_users_delta"] = change_data.get("total_users_delta", site.get("total_users_delta", 0))
+        site["active_users_delta"] = change_data.get("active_users_delta", site.get("active_users_delta", 0))
+        site["inactive_users_delta"] = change_data.get("inactive_users_delta", site.get("inactive_users_delta", 0))
+        site["licensed_users_estimate"] = change_data.get("licensed_users_estimate", site.get("licensed_users_estimate"))
+        site["licensed_users_estimate_delta"] = change_data.get("licensed_users_estimate_delta", site.get("licensed_users_estimate_delta", 0))
+        site["audit_status"] = change_data.get("audit_status", site.get("audit_status"))
+        site["audit_api_access"] = change_data.get("audit_api_access", site.get("audit_api_access"))
+        site["licence_status"] = change_data.get("licence_status", site.get("licence_status"))
+        site["licence_api_access"] = change_data.get("licence_api_access", site.get("licence_api_access"))
+        site["permission_limited_checks"] = change_data.get("permission_limited_checks", site.get("permission_limited_checks", []))
+        site["status_reasons"] = change_data.get("status_reasons", site.get("status_reasons", []))
+        site["trend_signals"] = change_data.get("trend_signals", site.get("trend_signals", []))
+        site["snapshot_count"] = change_data.get("snapshot_count", site.get("snapshot_count", 0))
+        site["trend_score"] = change_data.get("trend_score", site.get("trend_score", 0))
+        site["new_site_candidate"] = change_data.get("new_site_candidate", site.get("new_site_candidate", False))
+        site["attention_reasons"] = change_data.get("attention_reasons", site.get("attention_reasons", []))
     return sites
 
 
@@ -247,12 +252,11 @@ def _merge_historical_trends(sites, historical_trends):
     site_trends = historical_trends.get("site_trends", []) if isinstance(historical_trends, dict) else []
     trend_map = {}
     for trend in site_trends:
-        site_key = trend.get("site_key")
+        site_key = trend.get("site_key") or trend.get("site")
         if site_key:
             trend_map[site_key] = trend
-
     for site in sites:
-        site_key = site.get("site")
+        site_key = _site_identity(site)
         trend = trend_map.get(site_key, {})
         unresolved_trend = trend.get("unresolved_trend", {}) or {}
         risk_trend = trend.get("risk_trend", {}) or {}
