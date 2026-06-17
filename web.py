@@ -14,6 +14,8 @@ from project_counts import (
 )
 from change_detection import load_latest_run_change_detection, build_change_detection_drilldowns
 from site_discovery import load_site_discovery_from_latest_run, build_site_discovery_drilldowns
+from snapshots import load_snapshot_index, get_latest_snapshot_entry, load_latest_snapshot
+from trends import analyze_historical_trends, build_trend_drilldowns
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -28,7 +30,6 @@ def _load_csv_rows(pattern):
     matches = glob.glob(str(BASE_DIR / pattern))
     if not matches:
         return [], None
-
     latest_file = max(matches, key=os.path.getmtime)
     try:
         with open(latest_file, newline="", encoding="utf-8-sig") as f:
@@ -43,14 +44,11 @@ def _load_csv_rows(pattern):
 def _parse_possible_datetime(value):
     if value is None:
         return None
-
     text = str(value).strip()
     if not text:
         return None
-
     if text.lower() in {"never accessed", "never", "-", "none", "n/a"}:
         return None
-
     formats = [
         "%d %b %Y",
         "%d %B %Y",
@@ -65,42 +63,38 @@ def _parse_possible_datetime(value):
         "%B %d, %Y",
         "%B %d, %Y %H:%M",
     ]
-
     for fmt in formats:
         try:
             return datetime.strptime(text, fmt)
         except ValueError:
             continue
-
     return None
 
 
 def _is_last_seen_field(sort_key):
     if not sort_key:
         return False
-
     key = str(sort_key).lower()
     return (
         "last_seen" in key
         or "last seen" in key
         or key == "last_active"
         or "last_active" in key
+        or key == "created_at_local"
+        or key == "snapshot_timestamp"
     )
 
 
 def _sort_rows(rows, sort_key, order="asc"):
     if not rows or not sort_key:
         return rows
-
     descending = str(order).lower() == "desc"
-
     if _is_last_seen_field(sort_key):
         def dt_key(row):
             parsed = _parse_possible_datetime(row.get(sort_key))
             if parsed is None:
                 return (1, datetime.min)
             return (0, parsed)
-
         return sorted(rows, key=dt_key, reverse=descending)
 
     def text_key(row):
@@ -116,7 +110,6 @@ def _sort_rows(rows, sort_key, order="asc"):
 
 def _merge_project_counts(sites):
     project_counts = load_project_counts_from_latest_run()
-
     for site in sites:
         site_key = site.get("site")
         project_data = project_counts.get(site_key, {})
@@ -125,29 +118,24 @@ def _merge_project_counts(sites):
         site["issue_count_unresolved"] = project_data.get("issue_count_unresolved")
         site["issue_count_updated_last_7d"] = project_data.get("issue_count_updated_last_7d")
         site["project_count_delta"] = project_data.get("project_count_delta")
-
     return sites
 
 
 def _merge_project_intelligence(sites, project_intelligence):
     site_map = project_intelligence.get("site_map", {}) if isinstance(project_intelligence, dict) else {}
-
     for site in sites:
         site_key = site.get("site")
         info = site_map.get(site_key, {})
         site["sampled_project_rows"] = info.get("sampled_project_rows", 0)
         site["project_sample_available"] = True if info.get("project_rows") else False
-
     return sites
 
 
 def _merge_change_detection(sites, change_detection):
     site_map = change_detection.get("site_map", {}) if isinstance(change_detection, dict) else {}
-
     for site in sites:
         site_key = site.get("site")
         change_data = site_map.get(site_key, {})
-
         site["growth_status"] = change_data.get("growth_status")
         site["project_count_delta_live"] = change_data.get("project_count_delta", 0)
         site["total_users_delta"] = change_data.get("total_users_delta", 0)
@@ -165,7 +153,35 @@ def _merge_change_detection(sites, change_detection):
         site["snapshot_count"] = change_data.get("snapshot_count", 0)
         site["new_site_candidate"] = change_data.get("new_site_candidate", False)
         site["attention_reasons"] = change_data.get("attention_reasons", [])
+    return sites
 
+
+def _merge_historical_trends(sites, historical_trends):
+    site_trends = historical_trends.get("site_trends", []) if isinstance(historical_trends, dict) else []
+    trend_map = {}
+    for trend in site_trends:
+        site_key = trend.get("site_key")
+        if site_key:
+            trend_map[site_key] = trend
+
+    for site in sites:
+        site_key = site.get("site")
+        trend = trend_map.get(site_key, {})
+        unresolved_trend = trend.get("unresolved_trend", {}) or {}
+        risk_trend = trend.get("risk_trend", {}) or {}
+        failed_api_trend = trend.get("failed_api_trend", {}) or {}
+        collection_time_trend = trend.get("collection_time_trend", {}) or {}
+        status_streak = trend.get("status_streak", {}) or {}
+
+        site["historical_trend_score"] = trend.get("trend_score", 0)
+        site["historical_trend_signals"] = trend.get("trend_signals", []) or []
+        site["historical_snapshot_count"] = trend.get("snapshot_count", 0)
+        site["historical_risk_delta"] = risk_trend.get("delta", 0)
+        site["historical_unresolved_delta"] = unresolved_trend.get("delta", 0)
+        site["historical_failed_api_delta"] = failed_api_trend.get("delta", 0)
+        site["historical_collection_time_delta"] = collection_time_trend.get("delta", 0)
+        site["historical_status_streak_status"] = status_streak.get("status")
+        site["historical_status_streak_length"] = status_streak.get("length", 0)
     return sites
 
 
@@ -192,6 +208,17 @@ def _build_data():
     site_discovery = load_site_discovery_from_latest_run()
     data["site_discovery"] = site_discovery
 
+    historical_trends = analyze_historical_trends(lookback=10)
+    data["historical_trends"] = historical_trends
+    data["sites"] = _merge_historical_trends(data.get("sites", []), historical_trends)
+
+    snapshot_index = load_snapshot_index()
+    latest_snapshot_entry = get_latest_snapshot_entry()
+    latest_snapshot = load_latest_snapshot()
+    data["snapshot_index"] = snapshot_index
+    data["latest_snapshot_entry"] = latest_snapshot_entry or {}
+    data["latest_snapshot"] = latest_snapshot or {}
+
     data["critical_sites"] = [s for s in data["sites"] if s.get("status") == "critical"]
     data["warning_sites"] = [s for s in data["sites"] if s.get("status") == "warning"]
     data["stable_sites"] = [s for s in data["sites"] if s.get("status") == "stable"]
@@ -204,6 +231,7 @@ def _build_data():
     drilldowns.update(build_change_detection_drilldowns(change_detection))
     drilldowns.update(build_project_drilldowns_from_latest_run())
     drilldowns.update(build_site_discovery_drilldowns(site_discovery))
+    drilldowns.update(build_trend_drilldowns(lookback=10))
     data["drilldowns"] = drilldowns
 
     return data
@@ -222,6 +250,10 @@ def _common_template_data(data):
         "change_detection": data.get("change_detection", {}),
         "site_discovery": data.get("site_discovery", {}),
         "project_intelligence": data.get("project_intelligence", {}),
+        "historical_trends": data.get("historical_trends", {}),
+        "snapshot_index": data.get("snapshot_index", {}),
+        "latest_snapshot_entry": data.get("latest_snapshot_entry", {}),
+        "latest_snapshot": data.get("latest_snapshot", {}),
         "users_source_file": data.get("users_source_file"),
         "managed_source_file": data.get("managed_source_file"),
         "users_row_count": data.get("users_row_count", 0),
@@ -257,10 +289,8 @@ def detail(key: str):
     sort_key = request.args.get("sort", "").strip()
     order = request.args.get("order", "").strip().lower()
     rows = item.get("rows", [])
-
     if sort_key and _is_last_seen_field(sort_key) and order == "":
         order = "desc"
-
     rows = _sort_rows(rows, sort_key, order)
 
     return render_template(

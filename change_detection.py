@@ -82,24 +82,25 @@ def load_latest_run_change_detection(file_name="latest_run.json"):
 
     trend_map_by_cloud_id = {}
     trend_map_by_name = {}
-
+    trend_map_by_site_key = {}
     for trend in historical.get("site_trends", []) or []:
         if not isinstance(trend, dict):
             continue
         cloud_id = trend.get("cloud_id")
         name = str(trend.get("name", "")).strip().lower()
+        site_key = trend.get("site_key")
         if cloud_id:
             trend_map_by_cloud_id[cloud_id] = trend
         if name:
             trend_map_by_name[name] = trend
+        if site_key:
+            trend_map_by_site_key[site_key] = trend
 
     site_results = []
     site_map = {}
-
     for site in data.get("sites", []) or []:
         if not isinstance(site, dict):
             continue
-
         site_key = _site_key_for_record(site)
         cloud_id = site.get("cloud_id")
         site_name = site.get("name")
@@ -107,6 +108,8 @@ def load_latest_run_change_detection(file_name="latest_run.json"):
         trend = None
         if cloud_id and cloud_id in trend_map_by_cloud_id:
             trend = trend_map_by_cloud_id.get(cloud_id)
+        elif site_key and site_key in trend_map_by_site_key:
+            trend = trend_map_by_site_key.get(site_key)
         elif site_name:
             trend = trend_map_by_name.get(str(site_name).strip().lower())
 
@@ -115,13 +118,14 @@ def load_latest_run_change_detection(file_name="latest_run.json"):
         recurring_operational_signals = []
         recurring_blocking_failures = []
         snapshot_count = 0
-
+        trend_score = 0
         if trend:
             trend_signals = trend.get("trend_signals", []) or []
             recurring_permission_limits = trend.get("recurring_permission_limits", []) or []
             recurring_operational_signals = trend.get("recurring_operational_signals", []) or []
             recurring_blocking_failures = trend.get("recurring_blocking_failures", []) or []
             snapshot_count = trend.get("snapshot_count", 0) or 0
+            trend_score = trend.get("trend_score", 0) or 0
 
         new_site_candidate = bool(site.get("snapshot_baseline")) or (
             comparison.get("has_previous_snapshot") and snapshot_count <= 1
@@ -170,13 +174,13 @@ def load_latest_run_change_detection(file_name="latest_run.json"):
             "snapshot_baseline": bool(site.get("snapshot_baseline")),
             "trend_signals": trend_signals,
             "snapshot_count": snapshot_count,
+            "trend_score": trend_score,
             "new_site_candidate": new_site_candidate,
             "recurring_permission_limits": recurring_permission_limits,
             "recurring_operational_signals": recurring_operational_signals,
             "recurring_blocking_failures": recurring_blocking_failures,
             "attention_reasons": attention_reasons,
         }
-
         site_results.append(site_record)
         if site_key:
             site_map[site_key] = site_record
@@ -200,6 +204,7 @@ def load_latest_run_change_detection(file_name="latest_run.json"):
         "warning_or_critical_streak_site_count": historical_summary.get("warning_or_critical_streak_sites", 0),
         "recurring_blocking_failure_site_count": historical_summary.get("recurring_blocking_failure_sites", 0),
         "new_site_candidate_count": len([s for s in site_results if s.get("new_site_candidate")]),
+        "history_snapshot_count": historical.get("lookback_snapshots", 0),
     }
 
     return {
@@ -239,7 +244,6 @@ def build_change_detection_drilldowns(change_detection):
                 "detail": str(change),
             })
             continue
-
         comparison_rows.append({
             "change_index": index,
             "severity": change.get("severity", "info"),
@@ -254,11 +258,13 @@ def build_change_detection_drilldowns(change_detection):
             "site_name": site.get("site_name", ""),
             "status": site.get("status", ""),
             "risk_score": site.get("risk_score", 0),
+            "trend_score": site.get("trend_score", 0),
             "growth_status": site.get("growth_status", ""),
             "project_count_delta": site.get("project_count_delta", 0),
             "total_users_delta": site.get("total_users_delta", 0),
             "active_users_delta": site.get("active_users_delta", 0),
             "inactive_users_delta": site.get("inactive_users_delta", 0),
+            "snapshot_count": site.get("snapshot_count", 0),
             "new_site_candidate": "Yes" if site.get("new_site_candidate") else "No",
             "permission_limited_checks": _safe_join(site.get("permission_limited_checks", [])),
             "trend_signals": _safe_join(site.get("trend_signals", [])),
@@ -267,6 +273,7 @@ def build_change_detection_drilldowns(change_detection):
 
     site_attention_rows.sort(key=lambda row: (
         0 if row.get("new_site_candidate") == "Yes" else 1,
+        -(row.get("trend_score", 0) or 0),
         -(row.get("risk_score", 0) or 0),
         str(row.get("site_name", "")).lower(),
     ))
@@ -288,17 +295,19 @@ def build_change_detection_drilldowns(change_detection):
         },
         "change::site_attention": {
             "title": "Site Change Attention",
-            "reason": "This view highlights monitored sites with change signals, permission-limited checks, growth movement, or potential new-site attention markers.",
+            "reason": "This view highlights monitored sites with change signals, permission-limited checks, growth movement, trend pressure, or potential new-site attention markers.",
             "atlassian_area": "Jira operational monitoring / collector intelligence",
             "columns": [
                 "site_name",
                 "status",
                 "risk_score",
+                "trend_score",
                 "growth_status",
                 "project_count_delta",
                 "total_users_delta",
                 "active_users_delta",
                 "inactive_users_delta",
+                "snapshot_count",
                 "new_site_candidate",
                 "permission_limited_checks",
                 "trend_signals",
@@ -308,7 +317,7 @@ def build_change_detection_drilldowns(change_detection):
         },
         "change::summary": {
             "title": "Change Summary Totals",
-            "reason": "This summary reflects the latest collector comparison and trend totals from the current backend operational state.",
+            "reason": "This summary reflects the latest collector comparison and current trend-linked totals from the backend operational state.",
             "atlassian_area": "Monitoring output / Collector comparison",
             "columns": ["metric", "value"],
             "rows": [
@@ -324,6 +333,7 @@ def build_change_detection_drilldowns(change_detection):
                 {"metric": "Rising risk site count", "value": summary.get("rising_risk_site_count", 0)},
                 {"metric": "Warning or critical streak site count", "value": summary.get("warning_or_critical_streak_site_count", 0)},
                 {"metric": "Recurring blocking failure site count", "value": summary.get("recurring_blocking_failure_site_count", 0)},
+                {"metric": "History snapshots in lookback", "value": summary.get("history_snapshot_count", 0)},
                 {"metric": "Excluded site count", "value": summary.get("excluded_site_count", 0)},
                 {"metric": "New site candidate count", "value": summary.get("new_site_candidate_count", 0)},
             ],

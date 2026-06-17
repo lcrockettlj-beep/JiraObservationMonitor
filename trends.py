@@ -1,6 +1,6 @@
 import os
+import json
 from collections import Counter, defaultdict
-
 from snapshots import load_snapshot_index
 
 
@@ -22,12 +22,24 @@ def _normalise_list(values):
     return sorted([str(v) for v in values if v is not None])
 
 
-def _load_snapshot_file(path):
-    import json
+def _normalise_site_key_from_name(name):
+    if not name:
+        return None
+    text = str(name).strip().lower()
+    mappings = {
+        "gli-it-project": "gli-it-project",
+        "gli delivery tm": "gli-delivery-tm",
+        "gli-delivery-tm": "gli-delivery-tm",
+        "gli global technology": "gli-global-technology",
+        "gli-global-technology": "gli-global-technology",
+        "gli it project": "gli-it-project",
+    }
+    return mappings.get(text, text.replace(" ", "-"))
 
+
+def _load_snapshot_file(path):
     if not path or not os.path.exists(path):
         return None
-
     try:
         with open(path, "r", encoding="utf-8") as handle:
             return json.load(handle)
@@ -39,18 +51,14 @@ def _get_recent_snapshot_entries(index_data, lookback=10):
     snapshots = (index_data or {}).get("snapshots", []) or []
     if not snapshots:
         return []
-
-    recent = snapshots[-lookback:]
-    return recent
+    return snapshots[-lookback:]
 
 
 def _build_site_history_from_snapshots(snapshot_entries):
     site_history = defaultdict(list)
-
     for entry in snapshot_entries:
         snapshot_path = entry.get("file")
         snapshot_data = _load_snapshot_file(snapshot_path)
-
         if not snapshot_data:
             continue
 
@@ -60,13 +68,18 @@ def _build_site_history_from_snapshots(snapshot_entries):
 
         for site in snapshot_data.get("sites", []) or []:
             cloud_id = site.get("cloud_id")
-            if not cloud_id:
+            site_name = site.get("name")
+            site_key = _normalise_site_key_from_name(site_name)
+            if not cloud_id and not site_key:
                 continue
 
-            site_history[cloud_id].append({
+            history_key = cloud_id or site_key
+            site_history[history_key].append({
+                "site_key": site_key,
+                "cloud_id": cloud_id,
                 "snapshot_timestamp": snapshot_timestamp,
                 "created_at_local": created_at_local,
-                "name": site.get("name"),
+                "name": site_name,
                 "status": site.get("status"),
                 "risk_score": _safe_int(site.get("risk_score", 0)),
                 "issue_count_total": _safe_int(site.get("issue_count_total", 0)),
@@ -81,13 +94,11 @@ def _build_site_history_from_snapshots(snapshot_entries):
                 "operational_risk_signals": _normalise_list(site.get("operational_risk_signals", [])),
                 "collection_duration_seconds": _safe_float(site.get("collection_duration_seconds", 0.0)),
             })
-
     return dict(site_history)
 
 
 def _analyse_numeric_trend(history, field_name):
     values = [_safe_float(item.get(field_name, 0)) for item in history]
-
     if not values:
         return {
             "field": field_name,
@@ -96,20 +107,17 @@ def _analyse_numeric_trend(history, field_name):
             "delta": 0,
             "direction": "stable",
             "max": 0,
-            "min": 0
+            "min": 0,
         }
-
     first = values[0]
     latest = values[-1]
     delta = round(latest - first, 4)
-
     if delta > 0:
         direction = "up"
     elif delta < 0:
         direction = "down"
     else:
         direction = "stable"
-
     return {
         "field": field_name,
         "first": first,
@@ -117,82 +125,53 @@ def _analyse_numeric_trend(history, field_name):
         "delta": delta,
         "direction": direction,
         "max": max(values),
-        "min": min(values)
+        "min": min(values),
     }
 
 
 def _current_status_streak(history):
     if not history:
-        return {
-            "status": None,
-            "length": 0
-        }
-
+        return {"status": None, "length": 0}
     latest_status = history[-1].get("status")
     streak = 0
-
     for item in reversed(history):
         if item.get("status") == latest_status:
             streak += 1
         else:
             break
-
-    return {
-        "status": latest_status,
-        "length": streak
-    }
+    return {"status": latest_status, "length": streak}
 
 
 def _count_recurring_checks(history, field_name):
     counter = Counter()
-
     for item in history:
         values = item.get(field_name, []) or []
         for value in values:
             counter[value] += 1
-
-    recurring = []
-    for check_name, count in counter.items():
-        recurring.append({
-            "name": check_name,
-            "count": count
-        })
-
+    recurring = [{"name": name, "count": count} for name, count in counter.items()]
     recurring.sort(key=lambda item: (-item["count"], item["name"]))
     return recurring
 
 
 def _count_recurring_signals(history, field_name):
     counter = Counter()
-
     for item in history:
         values = item.get(field_name, []) or []
         for value in values:
             counter[value] += 1
-
-    recurring = []
-    for signal_name, count in counter.items():
-        recurring.append({
-            "name": signal_name,
-            "count": count
-        })
-
+    recurring = [{"name": name, "count": count} for name, count in counter.items()]
     recurring.sort(key=lambda item: (-item["count"], item["name"]))
     return recurring
 
 
 def _build_trend_signals(history):
     if not history:
-        return {
-            "trend_score": 0,
-            "trend_signals": []
-        }
+        return {"trend_score": 0, "trend_signals": []}
 
     unresolved_trend = _analyse_numeric_trend(history, "issue_count_unresolved")
     risk_trend = _analyse_numeric_trend(history, "risk_score")
     failed_api_trend = _analyse_numeric_trend(history, "failed_api_checks")
     collection_time_trend = _analyse_numeric_trend(history, "collection_duration_seconds")
-
     streak = _current_status_streak(history)
     recurring_blocking = _count_recurring_checks(history, "blocking_failed_checks")
     recurring_permission = _count_recurring_checks(history, "permission_limited_checks")
@@ -258,16 +237,17 @@ def _build_trend_signals(history):
         "recurring_blocking_failures": recurring_blocking,
         "recurring_permission_limits": recurring_permission,
         "recurring_issue_signals": recurring_issue_signals,
-        "recurring_operational_signals": recurring_operational_signals
+        "recurring_operational_signals": recurring_operational_signals,
     }
 
 
-def _summarise_site_trend(cloud_id, history):
+def _summarise_site_trend(history_key, history):
     latest = history[-1] if history else {}
     trend_result = _build_trend_signals(history)
-
+    site_key = latest.get("site_key") or latest.get("cloud_id") or history_key
     return {
-        "cloud_id": cloud_id,
+        "site_key": site_key,
+        "cloud_id": latest.get("cloud_id"),
         "name": latest.get("name"),
         "current_status": latest.get("status"),
         "current_risk_score": latest.get("risk_score", 0),
@@ -282,14 +262,13 @@ def _summarise_site_trend(cloud_id, history):
         "recurring_blocking_failures": trend_result["recurring_blocking_failures"],
         "recurring_permission_limits": trend_result["recurring_permission_limits"],
         "recurring_issue_signals": trend_result["recurring_issue_signals"],
-        "recurring_operational_signals": trend_result["recurring_operational_signals"]
+        "recurring_operational_signals": trend_result["recurring_operational_signals"],
     }
 
 
 def analyze_historical_trends(lookback=10):
     index_data = load_snapshot_index()
     recent_entries = _get_recent_snapshot_entries(index_data, lookback=lookback)
-
     if not recent_entries:
         return {
             "has_history": False,
@@ -300,20 +279,19 @@ def analyze_historical_trends(lookback=10):
                 "warning_or_critical_streak_sites": 0,
                 "rising_unresolved_sites": 0,
                 "rising_risk_sites": 0,
-                "recurring_blocking_failure_sites": 0
-            }
+                "recurring_blocking_failure_sites": 0,
+            },
         }
 
     site_history = _build_site_history_from_snapshots(recent_entries)
-
     site_trends = []
     warning_or_critical_streak_sites = 0
     rising_unresolved_sites = 0
     rising_risk_sites = 0
     recurring_blocking_failure_sites = 0
 
-    for cloud_id, history in site_history.items():
-        site_trend = _summarise_site_trend(cloud_id, history)
+    for history_key, history in site_history.items():
+        site_trend = _summarise_site_trend(history_key, history)
         site_trends.append(site_trend)
 
         streak = site_trend.get("status_streak", {}) or {}
@@ -334,12 +312,10 @@ def analyze_historical_trends(lookback=10):
 
     site_trends.sort(
         key=lambda site: (
-            0 if site.get("current_status") == "critical" else
-            1 if site.get("current_status") == "warning" else
-            2,
+            0 if site.get("current_status") == "critical" else 1 if site.get("current_status") == "warning" else 2,
             -site.get("trend_score", 0),
             -site.get("current_risk_score", 0),
-            site.get("name", "")
+            site.get("name", ""),
         )
     )
 
@@ -352,6 +328,148 @@ def analyze_historical_trends(lookback=10):
             "warning_or_critical_streak_sites": warning_or_critical_streak_sites,
             "rising_unresolved_sites": rising_unresolved_sites,
             "rising_risk_sites": rising_risk_sites,
-            "recurring_blocking_failure_sites": recurring_blocking_failure_sites
-        }
+            "recurring_blocking_failure_sites": recurring_blocking_failure_sites,
+        },
     }
+
+
+def _build_history_rows(snapshot_entries, site_key):
+    rows = []
+    site_history = _build_site_history_from_snapshots(snapshot_entries)
+    for _, history in site_history.items():
+        for item in history:
+            if item.get("site_key") != site_key:
+                continue
+            rows.append({
+                "snapshot_timestamp": item.get("snapshot_timestamp", ""),
+                "created_at_local": item.get("created_at_local", ""),
+                "status": item.get("status", ""),
+                "risk_score": item.get("risk_score", 0),
+                "issue_count_total": item.get("issue_count_total", 0),
+                "issue_count_unresolved": item.get("issue_count_unresolved", 0),
+                "issue_count_updated_last_7d": item.get("issue_count_updated_last_7d", 0),
+                "failed_api_checks": item.get("failed_api_checks", 0),
+                "collection_duration_seconds": item.get("collection_duration_seconds", 0.0),
+                "permission_limited_checks": ", ".join(item.get("permission_limited_checks", [])),
+                "blocking_failed_checks": ", ".join(item.get("blocking_failed_checks", [])),
+                "operational_risk_signals": ", ".join(item.get("operational_risk_signals", [])),
+            })
+    rows.sort(key=lambda row: str(row.get("snapshot_timestamp", "")))
+    return rows
+
+
+def build_trend_drilldowns(lookback=10):
+    index_data = load_snapshot_index()
+    recent_entries = _get_recent_snapshot_entries(index_data, lookback=lookback)
+    analysis = analyze_historical_trends(lookback=lookback)
+    summary = analysis.get("summary", {}) or {}
+    site_trends = analysis.get("site_trends", []) or []
+
+    summary_rows = [
+        {"metric": "Snapshots in lookback", "value": analysis.get("lookback_snapshots", 0)},
+        {"metric": "Tracked sites with history", "value": summary.get("site_count", 0)},
+        {"metric": "Warning / critical streak sites", "value": summary.get("warning_or_critical_streak_sites", 0)},
+        {"metric": "Rising unresolved sites", "value": summary.get("rising_unresolved_sites", 0)},
+        {"metric": "Rising risk sites", "value": summary.get("rising_risk_sites", 0)},
+        {"metric": "Recurring blocking failure sites", "value": summary.get("recurring_blocking_failure_sites", 0)},
+    ]
+
+    site_rows = []
+    risk_riser_rows = []
+    for site in site_trends:
+        row = {
+            "site_name": site.get("name", ""),
+            "site_key": site.get("site_key", ""),
+            "current_status": site.get("current_status", ""),
+            "snapshot_count": site.get("snapshot_count", 0),
+            "trend_score": site.get("trend_score", 0),
+            "trend_signals": ", ".join(site.get("trend_signals", [])),
+            "risk_delta": (site.get("risk_trend", {}) or {}).get("delta", 0),
+            "unresolved_delta": (site.get("unresolved_trend", {}) or {}).get("delta", 0),
+            "failed_api_delta": (site.get("failed_api_trend", {}) or {}).get("delta", 0),
+            "collection_time_delta": (site.get("collection_time_trend", {}) or {}).get("delta", 0),
+            "status_streak": f"{(site.get('status_streak', {}) or {}).get('status', '')}:{(site.get('status_streak', {}) or {}).get('length', 0)}",
+            "recurring_permission_limits": ", ".join([item.get("name", "") for item in site.get("recurring_permission_limits", [])]),
+            "recurring_operational_signals": ", ".join([item.get("name", "") for item in site.get("recurring_operational_signals", [])]),
+            "recurring_blocking_failures": ", ".join([item.get("name", "") for item in site.get("recurring_blocking_failures", [])]),
+        }
+        site_rows.append(row)
+        if row["risk_delta"] > 0:
+            risk_riser_rows.append(row)
+
+    drilldowns = {
+        "trend::summary": {
+            "title": "Historical Trend Summary",
+            "reason": "This summary shows how many recent snapshots are available and where historical trend pressure is building across the monitored Jira sites.",
+            "atlassian_area": "Monitoring / Snapshot history / Trend review",
+            "columns": ["metric", "value"],
+            "rows": summary_rows,
+        },
+        "trend::sites": {
+            "title": "Historical Trend Sites",
+            "reason": "This list shows current trend pressure by monitored site using snapshot history, risk direction, recurring permission issues, and recurring operational signals.",
+            "atlassian_area": "Monitoring / Snapshot history / Site trend review",
+            "columns": [
+                "site_name",
+                "site_key",
+                "current_status",
+                "snapshot_count",
+                "trend_score",
+                "trend_signals",
+                "risk_delta",
+                "unresolved_delta",
+                "failed_api_delta",
+                "collection_time_delta",
+                "status_streak",
+                "recurring_permission_limits",
+                "recurring_operational_signals",
+                "recurring_blocking_failures",
+            ],
+            "rows": site_rows,
+        },
+        "trend::risk_risers": {
+            "title": "Sites With Rising Risk",
+            "reason": "These sites have a positive risk score trend over the current snapshot lookback window.",
+            "atlassian_area": "Monitoring / Snapshot history / Risk review",
+            "columns": [
+                "site_name",
+                "site_key",
+                "current_status",
+                "snapshot_count",
+                "trend_score",
+                "risk_delta",
+                "trend_signals",
+                "recurring_permission_limits",
+                "recurring_operational_signals",
+            ],
+            "rows": risk_riser_rows,
+        },
+    }
+
+    for site in site_trends:
+        site_key = site.get("site_key")
+        if not site_key:
+            continue
+        history_rows = _build_history_rows(recent_entries, site_key)
+        drilldowns[f"trend::site::{site_key}"] = {
+            "title": f"Historical Trend — {site.get('name', site_key)}",
+            "reason": "Snapshot-by-snapshot operational history for this monitored Jira site.",
+            "atlassian_area": "Monitoring / Snapshot history / Site timeline",
+            "columns": [
+                "snapshot_timestamp",
+                "created_at_local",
+                "status",
+                "risk_score",
+                "issue_count_total",
+                "issue_count_unresolved",
+                "issue_count_updated_last_7d",
+                "failed_api_checks",
+                "collection_duration_seconds",
+                "permission_limited_checks",
+                "blocking_failed_checks",
+                "operational_risk_signals",
+            ],
+            "rows": history_rows,
+        }
+
+    return drilldowns
