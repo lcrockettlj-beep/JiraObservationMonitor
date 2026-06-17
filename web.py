@@ -16,6 +16,7 @@ from change_detection import load_latest_run_change_detection, build_change_dete
 from site_discovery import load_site_discovery_from_latest_run, build_site_discovery_drilldowns
 from snapshots import load_snapshot_index, get_latest_snapshot_entry, load_latest_snapshot
 from trends import analyze_historical_trends, build_trend_drilldowns
+from backend.intelligence_runtime import attach_intelligence_safe, enrich_context_with_intelligence
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -237,11 +238,13 @@ def _build_data():
     drilldowns.update(build_trend_drilldowns(lookback=10))
     data["drilldowns"] = drilldowns
 
+    data = attach_intelligence_safe(data)
+
     return data
 
 
 def _common_template_data(data):
-    return {
+    context = {
         "estate": data.get("estate", {}),
         "sites": data.get("sites", []),
         "critical_sites": data.get("critical_sites", []),
@@ -262,6 +265,7 @@ def _common_template_data(data):
         "users_row_count": data.get("users_row_count", 0),
         "managed_row_count": data.get("managed_row_count", 0),
     }
+    return enrich_context_with_intelligence(context, data)
 
 
 @app.route("/")
