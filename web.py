@@ -17,6 +17,7 @@ from site_discovery import load_site_discovery_from_latest_run, build_site_disco
 from snapshots import load_snapshot_index, get_latest_snapshot_entry, load_latest_snapshot
 from trends import analyze_historical_trends, build_trend_drilldowns
 from backend.intelligence_runtime import attach_intelligence_safe, enrich_context_with_intelligence
+from backend.runtime_source_adapter import load_preferred_source_payload
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -110,6 +111,88 @@ def _sort_rows(rows, sort_key, order="asc"):
 
     return sorted(rows, key=text_key, reverse=descending)
 
+
+def _coerce_sites(data):
+    sites = data.get("sites", []) if isinstance(data, dict) else []
+    return [site for site in sites if isinstance(site, dict)]
+
+
+def _apply_source_metadata(data, source_mode, source_file=None, users_file=None, managed_file=None, users_rows=None, managed_rows=None):
+    data["source_mode"] = source_mode
+    data["source_file"] = source_file
+
+    if source_mode == "runtime":
+        source_label = f"Runtime payload: {source_file}" if source_file else "Runtime payload"
+        data["users_source_file"] = data.get("users_source_file") or source_label
+        data["managed_source_file"] = data.get("managed_source_file") or source_label
+        data["users_row_count"] = data.get("users_row_count", 0) or len(users_rows or [])
+        data["managed_row_count"] = data.get("managed_row_count", 0) or len(managed_rows or [])
+    else:
+        data["users_source_file"] = users_file
+        data["managed_source_file"] = managed_file
+        data["users_row_count"] = len(users_rows or [])
+        data["managed_row_count"] = len(managed_rows or [])
+
+    return data
+
+
+def _finalise_data(data, *, source_mode, source_file=None, users_file=None, managed_file=None, users_rows=None, managed_rows=None):
+    data = data if isinstance(data, dict) else {}
+    data["sites"] = _coerce_sites(data)
+    data = _apply_source_metadata(
+        data,
+        source_mode=source_mode,
+        source_file=source_file,
+        users_file=users_file,
+        managed_file=managed_file,
+        users_rows=users_rows,
+        managed_rows=managed_rows,
+    )
+
+    data["sites"] = _merge_project_counts(data.get("sites", []))
+
+    project_intelligence = load_project_intelligence_from_latest_run()
+    data["project_intelligence"] = project_intelligence
+    data["sites"] = _merge_project_intelligence(data.get("sites", []), project_intelligence)
+
+    change_detection = load_latest_run_change_detection()
+    data["change_detection"] = change_detection
+    data["sites"] = _merge_change_detection(data.get("sites", []), change_detection)
+
+    site_discovery = load_site_discovery_from_latest_run()
+    data["site_discovery"] = site_discovery
+
+    historical_trends = analyze_historical_trends(lookback=10)
+    data["historical_trends"] = historical_trends
+    data["sites"] = _merge_historical_trends(data.get("sites", []), historical_trends)
+
+    snapshot_index = load_snapshot_index()
+    latest_snapshot_entry = get_latest_snapshot_entry()
+    latest_snapshot = load_latest_snapshot()
+    data["snapshot_index"] = snapshot_index
+    data["latest_snapshot_entry"] = latest_snapshot_entry or {}
+    data["latest_snapshot"] = latest_snapshot or {}
+
+    data["critical_sites"] = [s for s in data["sites"] if s.get("status") == "critical"]
+    data["warning_sites"] = [s for s in data["sites"] if s.get("status") == "warning"]
+    data["stable_sites"] = [s for s in data["sites"] if s.get("status") == "stable"]
+
+    billing = get_billing_catalog()
+    data["billing_summary"] = billing.get("summary", {})
+
+    drilldowns = data.get("drilldowns", {}) if isinstance(data.get("drilldowns"), dict) else {}
+    drilldowns.update(billing.get("drilldowns", {}))
+    drilldowns.update(build_change_detection_drilldowns(change_detection))
+    drilldowns.update(build_project_drilldowns_from_latest_run())
+    drilldowns.update(build_site_discovery_drilldowns(site_discovery))
+    drilldowns.update(build_trend_drilldowns(lookback=10))
+    data["drilldowns"] = drilldowns
+
+    data = attach_intelligence_safe(data)
+    data["drilldowns"].update(_build_intelligence_drilldowns(data))
+    data["drilldowns"].update(_build_intelligence_summary_drilldown(data))
+
+    return data
 
 def _merge_project_counts(sites):
     project_counts = load_project_counts_from_latest_run()
@@ -301,61 +384,30 @@ def _build_intelligence_summary_drilldown(data):
             "rows": rows,
         }
     }
+
+
 def _build_data():
+    runtime_payload, runtime_meta = load_preferred_source_payload(BASE_DIR)
+    if runtime_payload:
+        return _finalise_data(
+            runtime_payload,
+            source_mode="runtime",
+            source_file=runtime_meta.get("file"),
+        )
+
     users_rows, users_file = _load_csv_rows("export-users*.csv")
     managed_rows, managed_file = _load_csv_rows("*managed_accounts*.csv")
 
     data = build_estate_metrics(users_rows, managed_rows)
-    data["users_source_file"] = users_file
-    data["managed_source_file"] = managed_file
-    data["users_row_count"] = len(users_rows)
-    data["managed_row_count"] = len(managed_rows)
 
-    data["sites"] = _merge_project_counts(data.get("sites", []))
-
-    project_intelligence = load_project_intelligence_from_latest_run()
-    data["project_intelligence"] = project_intelligence
-    data["sites"] = _merge_project_intelligence(data.get("sites", []), project_intelligence)
-
-    change_detection = load_latest_run_change_detection()
-    data["change_detection"] = change_detection
-    data["sites"] = _merge_change_detection(data.get("sites", []), change_detection)
-
-    site_discovery = load_site_discovery_from_latest_run()
-    data["site_discovery"] = site_discovery
-
-    historical_trends = analyze_historical_trends(lookback=10)
-    data["historical_trends"] = historical_trends
-    data["sites"] = _merge_historical_trends(data.get("sites", []), historical_trends)
-
-    snapshot_index = load_snapshot_index()
-    latest_snapshot_entry = get_latest_snapshot_entry()
-    latest_snapshot = load_latest_snapshot()
-    data["snapshot_index"] = snapshot_index
-    data["latest_snapshot_entry"] = latest_snapshot_entry or {}
-    data["latest_snapshot"] = latest_snapshot or {}
-
-    data["critical_sites"] = [s for s in data["sites"] if s.get("status") == "critical"]
-    data["warning_sites"] = [s for s in data["sites"] if s.get("status") == "warning"]
-    data["stable_sites"] = [s for s in data["sites"] if s.get("status") == "stable"]
-
-    billing = get_billing_catalog()
-    data["billing_summary"] = billing.get("summary", {})
-
-    drilldowns = data.get("drilldowns", {})
-    drilldowns.update(billing.get("drilldowns", {}))
-    drilldowns.update(build_change_detection_drilldowns(change_detection))
-    drilldowns.update(build_project_drilldowns_from_latest_run())
-    drilldowns.update(build_site_discovery_drilldowns(site_discovery))
-    drilldowns.update(build_trend_drilldowns(lookback=10))
-    data["drilldowns"] = drilldowns
-
-    data = attach_intelligence_safe(data)
-    data["drilldowns"].update(_build_intelligence_drilldowns(data))
-    data["drilldowns"].update(_build_intelligence_summary_drilldown(data))
-
-    return data
-
+    return _finalise_data(
+        data,
+        source_mode="csv",
+        users_file=users_file,
+        managed_file=managed_file,
+        users_rows=users_rows,
+        managed_rows=managed_rows,
+    )
 
 def _common_template_data(data):
     context = {
@@ -378,6 +430,8 @@ def _common_template_data(data):
         "managed_source_file": data.get("managed_source_file"),
         "users_row_count": data.get("users_row_count", 0),
         "managed_row_count": data.get("managed_row_count", 0),
+        "source_mode": data.get("source_mode", "csv"),
+        "source_file": data.get("source_file"),
     }
     return enrich_context_with_intelligence(context, data)
 
@@ -426,6 +480,20 @@ def detail(key: str):
         sort_order=order,
     )
 
+
+
+@app.route("/api/source-state")
+def api_source_state():
+    data = _build_data()
+    return jsonify({
+        "source_mode": data.get("source_mode", "csv"),
+        "source_file": data.get("source_file"),
+        "users_source_file": data.get("users_source_file"),
+        "managed_source_file": data.get("managed_source_file"),
+        "users_row_count": data.get("users_row_count", 0),
+        "managed_row_count": data.get("managed_row_count", 0),
+        "sites_count": len(data.get("sites", [])),
+    })
 
 @app.route("/api/data")
 def api_data():
