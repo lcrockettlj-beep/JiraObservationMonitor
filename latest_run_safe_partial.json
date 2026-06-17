@@ -1,11 +1,11 @@
 {
-  "run_timestamp_local": "2026-06-17 11:47:11",
+  "run_timestamp_local": "2026-06-17 12:11:28",
   "raw_collection_summary": {
-    "collected_at_utc": "2026-06-17T10:47:11Z",
+    "collected_at_utc": "2026-06-17T11:11:28Z",
     "accessible_resource_count": 6,
     "legacy_ignored_site_names_present_in_env": [],
     "monitor_only_site_names": [],
-    "collector": "data_collector.py (safe mode partial)"
+    "collector": "data_collector.py (safe mode partial patch)"
   },
   "summary": {
     "site_count": 6,
@@ -20,8 +20,8 @@
       "name": "gaminglabs-team-h2pbpmis",
       "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
       "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-      "collected_at_utc": "2026-06-17T10:47:21Z",
-      "collection_duration_seconds": 9.578,
+      "collected_at_utc": "2026-06-17T11:11:31Z",
+      "collection_duration_seconds": 2.608,
       "project_count": 1,
       "project_rows": [
         {
@@ -50,29 +50,31 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 4,
+      "risk_score": 3,
       "issue_risk_score": 1,
-      "operational_risk_score": 3,
+      "operational_risk_score": 2,
       "status": "warning",
       "status_reasons": [
-        "Safe mode live Jira collection completed with risk indicators that require review."
+        "Safe mode patch live Jira collection completed with risk indicators that require review."
+      ],
+      "scope_notes": [
+        "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
       "permission_limited_checks": [
         "issue_total_count",
         "issue_unresolved_count",
-        "issue_updated_last_7d_count",
-        "missing_optional_scopes",
-        "my_permissions"
+        "issue_updated_last_7d_count"
       ],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present"
+        "permission_limited_checks_present",
+        "optional_scope_notes_present"
       ],
-      "failed_api_checks": 5,
+      "failed_api_checks": 3,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -82,7 +84,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.371,
+          "elapsed_seconds": 0.434,
           "data": {
             "baseUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
             "displayUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
@@ -98,7 +100,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T12:02:56.000+0200",
-            "serverTime": "2026-06-17T12:47:12.619+0200",
+            "serverTime": "2026-06-17T13:11:29.653+0200",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -111,7 +113,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.242,
+          "elapsed_seconds": 0.255,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -140,26 +142,37 @@
           "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/myself"
         },
         "my_permissions": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.263,
-          "error": "HTTP 400: {\"errorMessages\":[\"The 'permissions' query parameter is required.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/mypermissions"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.561,
+          "data": {
+            "permissions": {
+              "BROWSE_PROJECTS": {
+                "id": "10",
+                "key": "BROWSE_PROJECTS",
+                "name": "Browse Projects",
+                "type": "PROJECT",
+                "description": "Ability to browse projects and the issues within them.",
+                "havePermission": true
+              }
+            }
+          },
+          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/mypermissions?permissions=BROWSE_PROJECTS"
         },
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled application role checks."
+          "reason": "Safe mode patch disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled audit checks."
+          "reason": "Safe mode patch disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.857,
+          "elapsed_seconds": 0.586,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -186,24 +199,24 @@
         },
         "issue_total_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.301,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.204,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.264,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
         }
       }
     },
@@ -212,8 +225,8 @@
       "name": "gaminglabs-team-tsyfo716",
       "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
       "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
-      "collected_at_utc": "2026-06-17T10:47:30Z",
-      "collection_duration_seconds": 9.081,
+      "collected_at_utc": "2026-06-17T11:11:34Z",
+      "collection_duration_seconds": 2.703,
       "project_count": 2,
       "project_rows": [
         {
@@ -248,29 +261,31 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 4,
+      "risk_score": 3,
       "issue_risk_score": 1,
-      "operational_risk_score": 3,
+      "operational_risk_score": 2,
       "status": "warning",
       "status_reasons": [
-        "Safe mode live Jira collection completed with risk indicators that require review."
+        "Safe mode patch live Jira collection completed with risk indicators that require review."
+      ],
+      "scope_notes": [
+        "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
       "permission_limited_checks": [
         "issue_total_count",
         "issue_unresolved_count",
-        "issue_updated_last_7d_count",
-        "missing_optional_scopes",
-        "my_permissions"
+        "issue_updated_last_7d_count"
       ],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present"
+        "permission_limited_checks_present",
+        "optional_scope_notes_present"
       ],
-      "failed_api_checks": 5,
+      "failed_api_checks": 3,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -280,7 +295,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.334,
+          "elapsed_seconds": 0.61,
           "data": {
             "baseUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
             "displayUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
@@ -296,7 +311,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T12:02:56.000+0200",
-            "serverTime": "2026-06-17T12:47:22.157+0200",
+            "serverTime": "2026-06-17T13:11:32.446+0200",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -309,7 +324,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.447,
+          "elapsed_seconds": 0.252,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -338,26 +353,37 @@
           "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/myself"
         },
         "my_permissions": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.293,
-          "error": "HTTP 400: {\"errorMessages\":[\"The 'permissions' query parameter is required.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/mypermissions"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.609,
+          "data": {
+            "permissions": {
+              "BROWSE_PROJECTS": {
+                "id": "10",
+                "key": "BROWSE_PROJECTS",
+                "name": "Browse Projects",
+                "type": "PROJECT",
+                "description": "Ability to browse projects and the issues within them.",
+                "havePermission": true
+              }
+            }
+          },
+          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/mypermissions?permissions=BROWSE_PROJECTS"
         },
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled application role checks."
+          "reason": "Safe mode patch disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled audit checks."
+          "reason": "Safe mode patch disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.461,
+          "elapsed_seconds": 0.46,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -404,24 +430,24 @@
         },
         "issue_total_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.26,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.28,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.23,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
         }
       }
     },
@@ -430,8 +456,8 @@
       "name": "gli-global-technology",
       "url": "https://gli-global-technology.atlassian.net",
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "collected_at_utc": "2026-06-17T10:47:38Z",
-      "collection_duration_seconds": 8.069,
+      "collected_at_utc": "2026-06-17T11:11:36Z",
+      "collection_duration_seconds": 2.068,
       "project_count": 8,
       "project_rows": [
         {
@@ -502,29 +528,31 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 4,
+      "risk_score": 3,
       "issue_risk_score": 1,
-      "operational_risk_score": 3,
+      "operational_risk_score": 2,
       "status": "warning",
       "status_reasons": [
-        "Safe mode live Jira collection completed with risk indicators that require review."
+        "Safe mode patch live Jira collection completed with risk indicators that require review."
+      ],
+      "scope_notes": [
+        "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
       "permission_limited_checks": [
         "issue_total_count",
         "issue_unresolved_count",
-        "issue_updated_last_7d_count",
-        "missing_optional_scopes",
-        "my_permissions"
+        "issue_updated_last_7d_count"
       ],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present"
+        "permission_limited_checks_present",
+        "optional_scope_notes_present"
       ],
-      "failed_api_checks": 5,
+      "failed_api_checks": 3,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -550,7 +578,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T11:02:56.000+0100",
-            "serverTime": "2026-06-17T11:47:31.160+0100",
+            "serverTime": "2026-06-17T12:11:34.793+0100",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -563,7 +591,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.242,
+          "elapsed_seconds": 0.241,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -592,26 +620,37 @@
           "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/myself"
         },
         "my_permissions": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.187,
-          "error": "HTTP 400: {\"errorMessages\":[\"The 'permissions' query parameter is required.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/mypermissions"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.423,
+          "data": {
+            "permissions": {
+              "BROWSE_PROJECTS": {
+                "id": "10",
+                "key": "BROWSE_PROJECTS",
+                "name": "Browse Projects",
+                "type": "PROJECT",
+                "description": "Ability to browse projects and the issues within them.",
+                "havePermission": true
+              }
+            }
+          },
+          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/mypermissions?permissions=BROWSE_PROJECTS"
         },
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled application role checks."
+          "reason": "Safe mode patch disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled audit checks."
+          "reason": "Safe mode patch disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.245,
+          "elapsed_seconds": 0.3,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -792,24 +831,24 @@
         },
         "issue_total_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.435,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.252,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.168,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
         }
       }
     },
@@ -818,8 +857,8 @@
       "name": "gli-usa",
       "url": "https://gli-usa.atlassian.net",
       "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "collected_at_utc": "2026-06-17T10:47:53Z",
-      "collection_duration_seconds": 14.112,
+      "collected_at_utc": "2026-06-17T11:11:40Z",
+      "collection_duration_seconds": 4.174,
       "project_count": 1,
       "project_rows": [
         {
@@ -848,29 +887,31 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 4,
+      "risk_score": 3,
       "issue_risk_score": 1,
-      "operational_risk_score": 3,
+      "operational_risk_score": 2,
       "status": "warning",
       "status_reasons": [
-        "Safe mode live Jira collection completed with risk indicators that require review."
+        "Safe mode patch live Jira collection completed with risk indicators that require review."
+      ],
+      "scope_notes": [
+        "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
       "permission_limited_checks": [
         "issue_total_count",
         "issue_unresolved_count",
-        "issue_updated_last_7d_count",
-        "missing_optional_scopes",
-        "my_permissions"
+        "issue_updated_last_7d_count"
       ],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present"
+        "permission_limited_checks_present",
+        "optional_scope_notes_present"
       ],
-      "failed_api_checks": 5,
+      "failed_api_checks": 3,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -880,7 +921,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.959,
+          "elapsed_seconds": 0.786,
           "data": {
             "baseUrl": "https://gli-usa.atlassian.net",
             "displayUrl": "https://gli-usa.atlassian.net",
@@ -896,7 +937,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T03:02:56.000-0700",
-            "serverTime": "2026-06-17T03:47:39.879-0700",
+            "serverTime": "2026-06-17T04:11:37.329-0700",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -909,7 +950,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.362,
+          "elapsed_seconds": 0.617,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -938,26 +979,37 @@
           "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/myself"
         },
         "my_permissions": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.667,
-          "error": "HTTP 400: {\"errorMessages\":[\"The 'permissions' query parameter is required.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/mypermissions"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.913,
+          "data": {
+            "permissions": {
+              "BROWSE_PROJECTS": {
+                "id": "10",
+                "key": "BROWSE_PROJECTS",
+                "name": "Browse Projects",
+                "type": "PROJECT",
+                "description": "Ability to browse projects and the issues within them.",
+                "havePermission": true
+              }
+            }
+          },
+          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/mypermissions?permissions=BROWSE_PROJECTS"
         },
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled application role checks."
+          "reason": "Safe mode patch disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled audit checks."
+          "reason": "Safe mode patch disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 1.068,
+          "elapsed_seconds": 0.49,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -982,24 +1034,24 @@
         },
         "issue_total_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.571,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.454,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.341,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
         }
       }
     },
@@ -1008,8 +1060,8 @@
       "name": "gli-it-project",
       "url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "collected_at_utc": "2026-06-17T10:48:02Z",
-      "collection_duration_seconds": 9.172,
+      "collected_at_utc": "2026-06-17T11:11:43Z",
+      "collection_duration_seconds": 2.858,
       "project_count": 55,
       "project_rows": [
         {
@@ -1182,29 +1234,31 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 4,
+      "risk_score": 3,
       "issue_risk_score": 1,
-      "operational_risk_score": 3,
+      "operational_risk_score": 2,
       "status": "warning",
       "status_reasons": [
-        "Safe mode live Jira collection completed with risk indicators that require review."
+        "Safe mode patch live Jira collection completed with risk indicators that require review."
+      ],
+      "scope_notes": [
+        "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
       "permission_limited_checks": [
         "issue_total_count",
         "issue_unresolved_count",
-        "issue_updated_last_7d_count",
-        "missing_optional_scopes",
-        "my_permissions"
+        "issue_updated_last_7d_count"
       ],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present"
+        "permission_limited_checks_present",
+        "optional_scope_notes_present"
       ],
-      "failed_api_checks": 5,
+      "failed_api_checks": 3,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -1214,7 +1268,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.292,
+          "elapsed_seconds": 0.317,
           "data": {
             "baseUrl": "https://gli-it-project.atlassian.net",
             "displayUrl": "https://gli-it-project.atlassian.net",
@@ -1230,7 +1284,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T11:02:56.000+0100",
-            "serverTime": "2026-06-17T11:47:53.384+0100",
+            "serverTime": "2026-06-17T12:11:41.096+0100",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "GLI Global IT Project Management",
             "defaultLocale": {
@@ -1243,7 +1297,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.273,
+          "elapsed_seconds": 0.302,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -1272,26 +1326,37 @@
           "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/myself"
         },
         "my_permissions": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.243,
-          "error": "HTTP 400: {\"errorMessages\":[\"The 'permissions' query parameter is required.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/mypermissions"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.342,
+          "data": {
+            "permissions": {
+              "BROWSE_PROJECTS": {
+                "id": "10",
+                "key": "BROWSE_PROJECTS",
+                "name": "Browse Projects",
+                "type": "PROJECT",
+                "description": "Ability to browse projects and the issues within them.",
+                "havePermission": true
+              }
+            }
+          },
+          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/mypermissions?permissions=BROWSE_PROJECTS"
         },
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled application role checks."
+          "reason": "Safe mode patch disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled audit checks."
+          "reason": "Safe mode patch disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.733,
+          "elapsed_seconds": 1.002,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -2576,24 +2641,24 @@
         },
         "issue_total_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.337,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.232,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.324,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
         }
       }
     },
@@ -2602,8 +2667,8 @@
       "name": "gli-delivery-tm",
       "url": "https://gli-delivery-tm.atlassian.net",
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "collected_at_utc": "2026-06-17T10:48:10Z",
-      "collection_duration_seconds": 8.571,
+      "collected_at_utc": "2026-06-17T11:11:45Z",
+      "collection_duration_seconds": 2.17,
       "project_count": 22,
       "project_rows": [
         {
@@ -2758,29 +2823,31 @@
         "licensed_users_estimate": null,
         "source": "Pending Admin/API enrichment"
       },
-      "risk_score": 4,
+      "risk_score": 3,
       "issue_risk_score": 1,
-      "operational_risk_score": 3,
+      "operational_risk_score": 2,
       "status": "warning",
       "status_reasons": [
-        "Safe mode live Jira collection completed with risk indicators that require review."
+        "Safe mode patch live Jira collection completed with risk indicators that require review."
+      ],
+      "scope_notes": [
+        "Optional scopes not present in accessible-resource list: read:jira-project"
       ],
       "growth_status": "growing",
       "permission_limited_checks": [
         "issue_total_count",
         "issue_unresolved_count",
-        "issue_updated_last_7d_count",
-        "missing_optional_scopes",
-        "my_permissions"
+        "issue_updated_last_7d_count"
       ],
       "blocking_failed_checks": [],
       "issue_risk_signals": [
         "no_recent_issue_updates_detected"
       ],
       "operational_risk_signals": [
-        "permission_limited_checks_present"
+        "permission_limited_checks_present",
+        "optional_scope_notes_present"
       ],
-      "failed_api_checks": 5,
+      "failed_api_checks": 3,
       "audit_status": "skipped_safe_mode",
       "audit_api_access": false,
       "licence_status": "pending_enrichment",
@@ -2790,7 +2857,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.279,
+          "elapsed_seconds": 0.252,
           "data": {
             "baseUrl": "https://gli-delivery-tm.atlassian.net",
             "displayUrl": "https://gli-delivery-tm.atlassian.net",
@@ -2806,7 +2873,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-16T06:02:56.000-0400",
-            "serverTime": "2026-06-17T06:48:02.547-0400",
+            "serverTime": "2026-06-17T07:11:43.888-0400",
             "scmInfo": "00e13d1c681d6b514b8138e615b92e952f809c8f",
             "serverTitle": "GLI Test Management",
             "defaultLocale": {
@@ -2819,7 +2886,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.264,
+          "elapsed_seconds": 0.301,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -2848,26 +2915,37 @@
           "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/myself"
         },
         "my_permissions": {
-          "ok": false,
-          "status_code": 400,
-          "elapsed_seconds": 0.198,
-          "error": "HTTP 400: {\"errorMessages\":[\"The 'permissions' query parameter is required.\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/mypermissions"
+          "ok": true,
+          "status_code": 200,
+          "elapsed_seconds": 0.451,
+          "data": {
+            "permissions": {
+              "BROWSE_PROJECTS": {
+                "id": "10",
+                "key": "BROWSE_PROJECTS",
+                "name": "Browse Projects",
+                "type": "PROJECT",
+                "description": "Ability to browse projects and the issues within them.",
+                "havePermission": true
+              }
+            }
+          },
+          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/mypermissions?permissions=BROWSE_PROJECTS"
         },
         "application_roles": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled application role checks."
+          "reason": "Safe mode patch disabled application role checks."
         },
         "audit_records": {
           "ok": false,
           "skipped": true,
-          "reason": "Safe mode disabled audit checks."
+          "reason": "Safe mode patch disabled audit checks."
         },
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.401,
+          "elapsed_seconds": 0.306,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -3420,24 +3498,24 @@
         },
         "issue_total_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.285,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=order+by+created+DESC&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_unresolved_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.241,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=resolution+%3D+Unresolved&maxResults=0&fields=none&validateQuery=strict"
         },
         "issue_updated_last_7d_count": {
           "ok": false,
-          "status_code": 0,
-          "elapsed_seconds": 0,
-          "error": "HTTP 410: {\"errorMessages\":[\"The requested API has been removed. Please migrate to the /rest/api/3/search/jql API. A full migration guideline is available at https://developer.atlassian.com/changelog/#CHANGE-2046\"],\"errors\":{}}",
-          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
+          "status_code": 400,
+          "elapsed_seconds": 0.332,
+          "error": "HTTP 400: {\"errorMessages\":[\"The max results parameter has to be between 1 and 5,000.\"],\"errors\":{}}",
+          "url": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/search/jql?jql=updated+%3E%3D+-7d&maxResults=0&fields=none&validateQuery=strict"
         }
       }
     }

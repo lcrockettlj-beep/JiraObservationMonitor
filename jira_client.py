@@ -13,6 +13,7 @@ API_ROOT = "https://api.atlassian.com/ex/jira"
 DEFAULT_TIMEOUT = int(os.getenv("JOM_REQUEST_TIMEOUT", "30") or 30)
 DEFAULT_RETRY_ATTEMPTS = int(os.getenv("JOM_RETRY_ATTEMPTS", "2") or 2)
 DEFAULT_RETRY_BACKOFF = float(os.getenv("JOM_RETRY_BACKOFF_SECONDS", "0.6") or 0.6)
+DEFAULT_PERMISSIONS_QUERY = os.getenv("JOM_PERMISSIONS_QUERY", "BROWSE_PROJECTS")
 
 
 class JiraApiClient:
@@ -51,7 +52,7 @@ class JiraApiClient:
             except urllib.error.HTTPError as exc:
                 raw = exc.read().decode("utf-8", errors="ignore")
                 last_error = f"HTTP {exc.code}: {raw}"
-                if exc.code in (400, 401, 403, 404):
+                if exc.code in (400, 401, 403, 404, 410):
                     return {
                         "ok": False,
                         "status_code": exc.code,
@@ -89,8 +90,13 @@ class JiraApiClient:
     def get_myself(self, cloud_id: str) -> Dict[str, Any]:
         return self.request_jira(cloud_id, "/rest/api/3/myself")
 
-    def get_my_permissions(self, cloud_id: str) -> Dict[str, Any]:
-        return self.request_jira(cloud_id, "/rest/api/3/mypermissions")
+    def get_my_permissions(self, cloud_id: str, permissions: Optional[str] = None) -> Dict[str, Any]:
+        permissions_value = permissions or DEFAULT_PERMISSIONS_QUERY
+        return self.request_jira(
+            cloud_id,
+            "/rest/api/3/mypermissions",
+            params={"permissions": permissions_value},
+        )
 
     def get_projects(self, cloud_id: str) -> Dict[str, Any]:
         start_at = 0
@@ -126,7 +132,7 @@ class JiraApiClient:
     def search_issue_count(self, cloud_id: str, jql: str) -> Dict[str, Any]:
         result = self.request_jira(
             cloud_id,
-            "/rest/api/3/search",
+            "/rest/api/3/search/jql",
             params={
                 "jql": jql,
                 "maxResults": 0,
