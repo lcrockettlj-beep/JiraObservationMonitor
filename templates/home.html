@@ -21,7 +21,6 @@
             <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
         </div>
     </nav>
-
     {% set change_summary = change_detection.get("summary", {}) if change_detection else {} %}
     {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
     {% set trend_summary = historical_trends.get("summary", {}) if historical_trends else {} %}
@@ -32,7 +31,6 @@
     {% set intelligence_risk_site_total = sites_with_risks|length if sites_with_risks else 0 %}
     {% set intelligence_risk_total = intelligence_top_risks|length if intelligence_top_risks else 0 %}
     {% set intelligence_watchlist = sites_with_risks[:6] if sites_with_risks else [] %}
-
     {% macro site_section(title, subtitle, sites, badge_class) -%}
     <section class="panel site-section-panel">
         <div class="section-header">
@@ -44,12 +42,10 @@
                 <span class="pill">{{ sites|length }} sites</span>
             </div>
         </div>
-
         {% if sites %}
         <div class="site-grid">
             {% for site in sites %}
             {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
-
             <article class="site-card site-card--{{ badge_class }}">
                 <div class="site-card__top">
                     <div>
@@ -59,7 +55,6 @@
                         </div>
                         <p class="site-card__sub">{{ site.reason or site.atlassian_area or 'Operational monitoring view' }}</p>
                     </div>
-
                     <div class="site-card__actions">
                         {% if site_key %}
                             <a href="/detail/trend::site::{{ site_key }}" class="pill">Trend history</a>
@@ -70,53 +65,45 @@
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="metric-grid">
                     <div class="metric-box">
                         <div class="metric-label">Users</div>
                         <div class="metric-value">{{ site.total_users or 0 }}</div>
                         <div class="metric-note">Site total users</div>
                     </div>
-
                     <div class="metric-box">
                         <div class="metric-label">Projects</div>
                         <div class="metric-value">{{ site.project_count or 0 }}</div>
                         <div class="metric-note">Current project count</div>
                     </div>
-
                     <div class="metric-box">
                         <div class="metric-label">Risk</div>
                         <div class="metric-value">{{ site.risk_score or site.historical_trend_score or 0 }}</div>
                         <div class="metric-note">Current / trend pressure</div>
                     </div>
-
                     <div class="metric-box">
                         <div class="metric-label">Snapshots</div>
                         <div class="metric-value">{{ site.historical_snapshot_count or site.snapshot_count or 0 }}</div>
                         <div class="metric-note">Historical lookback count</div>
                     </div>
                 </div>
-
                 <div class="delta-grid">
                     <div class="delta-chip"><span>Total users Δ</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
                     <div class="delta-chip"><span>Projects Δ</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
                     <div class="delta-chip"><span>Risk Δ</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
                     <div class="delta-chip"><span>Unresolved Δ</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
                 </div>
-
                 <div class="chip-list">
                     {% if site.permission_limited_checks %}
                         {% for item in site.permission_limited_checks[:4] %}
                             <span class="chip chip--muted">{{ item }}</span>
                         {% endfor %}
                     {% endif %}
-
                     {% if site.historical_trend_signals %}
                         {% for item in site.historical_trend_signals[:4] %}
                             <span class="chip chip--accent">{{ item }}</span>
                         {% endfor %}
                     {% endif %}
-
                     {% if site.attention_reasons %}
                         {% for item in site.attention_reasons[:3] %}
                             <span class="chip chip--warning">{{ item }}</span>
@@ -134,7 +121,6 @@
         {% endif %}
     </section>
     {%- endmacro %}
-
     <section class="hero">
         <div class="hero__top">
             <div>
@@ -148,13 +134,11 @@
             </div>
         </div>
     </section>
-
     <section class="source-strip">
         <div class="source-strip__item"><strong>Users source:</strong> {{ users_source_file or 'Not found' }}</div>
         <div class="source-strip__item"><strong>Managed source:</strong> {{ managed_source_file or 'Not found' }}</div>
         <div class="source-strip__item"><strong>Latest snapshot:</strong> {{ snapshot_meta.snapshot_timestamp or 'Not available' }}</div>
     </section>
-
     <section class="panel intelligence-panel">
         <div class="section-header">
             <div>
@@ -166,26 +150,22 @@
                 <span class="pill">{{ intelligence_site_total }} analysed sites</span>
             </div>
         </div>
-
         <div class="grid-4 stat-grid intelligence-card-grid">
             <a href="/detail/intelligence::summary" class="stat-card stat-card--link intelligence-card">
                 <div class="label">Estate Risk Score</div>
                 <div class="value">{{ estate_risk_score or 0 }}</div>
                 <div class="note">Current intelligence estate category: <strong>{{ estate_risk_category or 'Healthy' }}</strong>.</div>
             </a>
-
             <a href="/detail/intelligence::summary" class="stat-card stat-card--link intelligence-card">
                 <div class="label">Top Intelligence Risks</div>
                 <div class="value">{{ intelligence_risk_total }}</div>
                 <div class="note">Highest-severity intelligence findings currently available in the estate snapshot.</div>
             </a>
-
             <a href="/detail/intelligence::summary" class="stat-card stat-card--link intelligence-card">
                 <div class="label">Sites With Risks</div>
                 <div class="value">{{ intelligence_risk_site_total }}</div>
                 <div class="note">Sites with at least one active intelligence finding and a drilldown-ready payload.</div>
             </a>
-
             <div class="stat-card intelligence-card intelligence-card--status intelligence-card--{{ (estate_risk_category or 'Healthy')|lower }}">
                 <div class="label">Operational Posture</div>
                 <div class="value">{{ estate_risk_category or 'Healthy' }}</div>
@@ -193,7 +173,6 @@
             </div>
         </div>
     </section>
-
     <section class="panel intelligence-watchlist-panel">
         <div class="section-header">
             <div>
@@ -204,7 +183,6 @@
                 <a href="/detail/intelligence::summary" class="pill">View all intelligence risks</a>
             </div>
         </div>
-
         {% if intelligence_watchlist %}
         <div class="site-grid intelligence-watchlist-grid">
             {% for site in intelligence_watchlist %}
@@ -218,7 +196,6 @@
                         </div>
                         <p class="site-card__sub">{{ site.why_it_stands_out[0] if site.why_it_stands_out else 'No standout reason currently provided.' }}</p>
                     </div>
-
                     <div class="site-card__actions">
                         <a href="/detail/intelligence::summary" class="pill">Summary</a>
                         {% if first_risk and first_risk.action %}
@@ -226,7 +203,6 @@
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="metric-grid">
                     <div class="metric-box">
                         <div class="metric-label">Risk Score</div>
@@ -249,7 +225,6 @@
                         <div class="metric-note">Objects scanned for stale/project/app signals</div>
                     </div>
                 </div>
-
                 <div class="chip-list">
                     {% if site.why_it_stands_out %}
                         {% for item in site.why_it_stands_out[:3] %}
@@ -272,7 +247,6 @@
         </div>
         {% endif %}
     </section>
-
     <section class="panel">
         <div class="section-header">
             <div>
@@ -280,7 +254,6 @@
                 <p>Estate-wide counts that may require review in Atlassian administration.</p>
             </div>
         </div>
-
         <div class="grid-4 stat-grid">
             <div class="stat-card">
                 <div class="label">Managed Disabled Accounts</div>
@@ -304,7 +277,6 @@
             </div>
         </div>
     </section>
-
     <section class="panel">
         <div class="section-header">
             <div>
@@ -316,7 +288,6 @@
                 <a href="/detail/discovery::summary" class="pill">Discovery summary</a>
             </div>
         </div>
-
         <div class="grid-4 stat-grid">
             <a href="/detail/change::summary" class="stat-card stat-card--link">
                 <div class="label">Detected Changes</div>
@@ -340,7 +311,6 @@
             </a>
         </div>
     </section>
-
     <section class="panel trend-panel">
         <div class="section-header">
             <div>
@@ -352,7 +322,6 @@
                 <a href="/detail/trend::sites" class="pill">View all trend sites</a>
             </div>
         </div>
-
         {% if trend_has_history %}
         <div class="grid-4 stat-grid trend-card-grid">
             <a href="/detail/trend::summary" class="stat-card stat-card--link trend-card">
@@ -383,12 +352,10 @@
         </div>
         {% endif %}
     </section>
-
     {{ site_section('Critical Sites', 'Immediate attention group based on current backend status.', critical_sites, 'critical') }}
     {{ site_section('Warning Sites', 'Watchlist group where monitoring signals show caution.', warning_sites, 'warning') }}
     {{ site_section('Stable Sites', 'Operationally stable sites still visible for monitoring and drilldown.', stable_sites, 'stable') }}
 </div>
-
 <script>
     window.JOMTheme.initToggle("theme-toggle");
 </script>

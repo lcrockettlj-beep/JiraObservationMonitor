@@ -4,7 +4,6 @@ import csv
 import glob
 import os
 from datetime import datetime
-
 from estate_metrics import build_estate_metrics
 from billing_catalog import get_billing_catalog
 from project_counts import (
@@ -16,6 +15,7 @@ from change_detection import load_latest_run_change_detection, build_change_dete
 from site_discovery import load_site_discovery_from_latest_run, build_site_discovery_drilldowns
 from snapshots import load_snapshot_index, get_latest_snapshot_entry, load_latest_snapshot
 from trends import analyze_historical_trends, build_trend_drilldowns
+from intelligence_engine import enrich_estate
 from backend.intelligence_runtime import attach_intelligence_safe, enrich_context_with_intelligence
 from backend.runtime_source_adapter import load_preferred_source_payload
 
@@ -92,7 +92,6 @@ def _sort_rows(rows, sort_key, order="asc"):
     if not rows or not sort_key:
         return rows
     descending = str(order).lower() == "desc"
-
     if _is_last_seen_field(sort_key):
         def dt_key(row):
             parsed = _parse_possible_datetime(row.get(sort_key))
@@ -120,7 +119,6 @@ def _coerce_sites(data):
 def _apply_source_metadata(data, source_mode, source_file=None, users_file=None, managed_file=None, users_rows=None, managed_rows=None):
     data["source_mode"] = source_mode
     data["source_file"] = source_file
-
     if source_mode == "runtime":
         source_label = f"Runtime payload: {source_file}" if source_file else "Runtime payload"
         data["users_source_file"] = data.get("users_source_file") or source_label
@@ -132,7 +130,6 @@ def _apply_source_metadata(data, source_mode, source_file=None, users_file=None,
         data["managed_source_file"] = managed_file
         data["users_row_count"] = len(users_rows or [])
         data["managed_row_count"] = len(managed_rows or [])
-
     return data
 
 
@@ -148,7 +145,6 @@ def _finalise_data(data, *, source_mode, source_file=None, users_file=None, mana
         users_rows=users_rows,
         managed_rows=managed_rows,
     )
-
     data["sites"] = _merge_project_counts(data.get("sites", []))
 
     project_intelligence = load_project_intelligence_from_latest_run()
@@ -192,7 +188,11 @@ def _finalise_data(data, *, source_mode, source_file=None, users_file=None, mana
     data["drilldowns"].update(_build_intelligence_drilldowns(data))
     data["drilldowns"].update(_build_intelligence_summary_drilldown(data))
 
+    # Safe additional intelligence layer from checkpoint e01c306 onward.
+    data = enrich_estate(data)
+
     return data
+
 
 def _merge_project_counts(sites):
     project_counts = load_project_counts_from_latest_run()
@@ -259,7 +259,6 @@ def _merge_historical_trends(sites, historical_trends):
         failed_api_trend = trend.get("failed_api_trend", {}) or {}
         collection_time_trend = trend.get("collection_time_trend", {}) or {}
         status_streak = trend.get("status_streak", {}) or {}
-
         site["historical_trend_score"] = trend.get("trend_score", 0)
         site["historical_trend_signals"] = trend.get("trend_signals", []) or []
         site["historical_snapshot_count"] = trend.get("snapshot_count", 0)
@@ -270,7 +269,6 @@ def _merge_historical_trends(sites, historical_trends):
         site["historical_status_streak_status"] = status_streak.get("status")
         site["historical_status_streak_length"] = status_streak.get("length", 0)
     return sites
-
 
 
 def _prettify_label(value):
@@ -312,7 +310,6 @@ def _build_intelligence_drilldowns(data):
     intelligence = data.get("intelligence", {}) if isinstance(data, dict) else {}
     sites = intelligence.get("sites", []) if isinstance(intelligence, dict) else []
     drilldowns = {}
-
     for site in sites:
         if not isinstance(site, dict):
             continue
@@ -338,7 +335,6 @@ def _build_intelligence_drilldowns(data):
                     "reason": reason,
                 }]
                 columns = _derive_intelligence_columns(rows)
-
             drilldowns[detail_key] = {
                 "title": title,
                 "reason": reason,
@@ -346,7 +342,6 @@ def _build_intelligence_drilldowns(data):
                 "columns": columns,
                 "rows": rows,
             }
-
     return drilldowns
 
 
@@ -365,7 +360,6 @@ def _build_intelligence_summary_drilldown(data):
             "reason": risk.get("reason", ""),
             "action": risk.get("action", ""),
         })
-
     if not rows:
         rows = [{
             "type": "No Active Risks",
@@ -374,7 +368,6 @@ def _build_intelligence_summary_drilldown(data):
             "reason": "No intelligence risks are currently populated.",
             "action": "",
         }]
-
     return {
         "intelligence::summary": {
             "title": "Operational Intelligence Summary",
@@ -397,9 +390,7 @@ def _build_data():
 
     users_rows, users_file = _load_csv_rows("export-users*.csv")
     managed_rows, managed_file = _load_csv_rows("*managed_accounts*.csv")
-
     data = build_estate_metrics(users_rows, managed_rows)
-
     return _finalise_data(
         data,
         source_mode="csv",
@@ -408,6 +399,7 @@ def _build_data():
         users_rows=users_rows,
         managed_rows=managed_rows,
     )
+
 
 def _common_template_data(data):
     context = {
@@ -432,6 +424,7 @@ def _common_template_data(data):
         "managed_row_count": data.get("managed_row_count", 0),
         "source_mode": data.get("source_mode", "csv"),
         "source_file": data.get("source_file"),
+        "intelligence_summary": data.get("intelligence_summary", {}),
     }
     return enrich_context_with_intelligence(context, data)
 
@@ -460,14 +453,12 @@ def detail(key: str):
     item = data.get("drilldowns", {}).get(key)
     if not item:
         abort(404)
-
     sort_key = request.args.get("sort", "").strip()
     order = request.args.get("order", "").strip().lower()
     rows = item.get("rows", [])
     if sort_key and _is_last_seen_field(sort_key) and order == "":
         order = "desc"
     rows = _sort_rows(rows, sort_key, order)
-
     return render_template(
         "detail_list.html",
         detail_key=key,
@@ -479,7 +470,6 @@ def detail(key: str):
         sort_key=sort_key,
         sort_order=order,
     )
-
 
 
 @app.route("/api/source-state")
@@ -494,6 +484,7 @@ def api_source_state():
         "managed_row_count": data.get("managed_row_count", 0),
         "sites_count": len(data.get("sites", [])),
     })
+
 
 @app.route("/api/data")
 def api_data():
