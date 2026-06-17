@@ -14,6 +14,7 @@ DEFAULT_TIMEOUT = int(os.getenv("JOM_REQUEST_TIMEOUT", "30") or 30)
 DEFAULT_RETRY_ATTEMPTS = int(os.getenv("JOM_RETRY_ATTEMPTS", "2") or 2)
 DEFAULT_RETRY_BACKOFF = float(os.getenv("JOM_RETRY_BACKOFF_SECONDS", "0.6") or 0.6)
 DEFAULT_PERMISSIONS_QUERY = os.getenv("JOM_PERMISSIONS_QUERY", "BROWSE_PROJECTS")
+DEFAULT_SEARCH_MAX_RESULTS = int(os.getenv("JOM_SEARCH_MAX_RESULTS", "1") or 1)
 
 
 class JiraApiClient:
@@ -22,6 +23,7 @@ class JiraApiClient:
         self.timeout = DEFAULT_TIMEOUT
         self.retry_attempts = DEFAULT_RETRY_ATTEMPTS
         self.retry_backoff = DEFAULT_RETRY_BACKOFF
+        self.search_max_results = max(1, min(DEFAULT_SEARCH_MAX_RESULTS, 5000))
 
     def _headers(self) -> Dict[str, str]:
         return {
@@ -135,7 +137,7 @@ class JiraApiClient:
             "/rest/api/3/search/jql",
             params={
                 "jql": jql,
-                "maxResults": 0,
+                "maxResults": self.search_max_results,
                 "fields": "none",
                 "validateQuery": "strict",
             },
