@@ -1,6 +1,7 @@
 import os
 import json
 from collections import Counter, defaultdict
+
 from snapshots import load_snapshot_index
 
 
@@ -395,7 +396,17 @@ def build_trend_drilldowns(lookback=10):
         }
         site_rows.append(row)
         if row["risk_delta"] > 0:
-            risk_riser_rows.append(row)
+            risk_riser_rows.append({
+                "site_name": row["site_name"],
+                "site_key": row["site_key"],
+                "current_status": row["current_status"],
+                "snapshot_count": row["snapshot_count"],
+                "trend_score": row["trend_score"],
+                "risk_delta": row["risk_delta"],
+                "trend_signals": row["trend_signals"],
+                "recurring_permission_limits": row["recurring_permission_limits"],
+                "recurring_operational_signals": row["recurring_operational_signals"],
+            })
 
     drilldowns = {
         "trend::summary": {

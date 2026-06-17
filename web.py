@@ -62,6 +62,7 @@ def _parse_possible_datetime(value):
         "%b %d, %Y %H:%M",
         "%B %d, %Y",
         "%B %d, %Y %H:%M",
+        "%Y-%m-%d_%H-%M-%S",
     ]
     for fmt in formats:
         try:
@@ -89,6 +90,7 @@ def _sort_rows(rows, sort_key, order="asc"):
     if not rows or not sort_key:
         return rows
     descending = str(order).lower() == "desc"
+
     if _is_last_seen_field(sort_key):
         def dt_key(row):
             parsed = _parse_possible_datetime(row.get(sort_key))
@@ -151,6 +153,7 @@ def _merge_change_detection(sites, change_detection):
         site["status_reasons"] = change_data.get("status_reasons", [])
         site["trend_signals"] = change_data.get("trend_signals", [])
         site["snapshot_count"] = change_data.get("snapshot_count", 0)
+        site["trend_score"] = change_data.get("trend_score", 0)
         site["new_site_candidate"] = change_data.get("new_site_candidate", False)
         site["attention_reasons"] = change_data.get("attention_reasons", [])
     return sites
