@@ -1,11 +1,11 @@
 """
 backend/runtime_source_adapter.py
-JSON runtime-first source adapter for Jira Observation Monitor.
+Runtime-only source adapter.
 
-Purpose:
-- Load the newest collector runtime payload.
-- Normalise the payload into the UI/backend contract expected by web.py.
-- Preserve runtime truth without fabricating unavailable Admin/API metrics.
+Rules:
+- Prefer latest_run.json as the canonical source of truth.
+- Fall back to latest_run_safe_partial.json only if latest_run.json does not exist.
+- Fall back to pretty/report variants only if no better canonical file exists.
 """
 from __future__ import annotations
 
@@ -15,15 +15,23 @@ import glob
 import json
 import re
 
-RUNTIME_CANDIDATE_PATTERNS = [
-    "latest_run.json",
-    "latest_run_safe_partial.json",
-    "latest_run_pretty.json",
-    "reports/latest_run.json",
-    "reports/latest_run_safe_partial.json",
-    "reports/latest_run_pretty.json",
-    "latest_run*.json",
-    "reports/latest_run*.json",
+RUNTIME_CANDIDATE_GROUPS = [
+    [
+        "latest_run.json",
+        "reports/latest_run.json",
+    ],
+    [
+        "latest_run_safe_partial.json",
+        "reports/latest_run_safe_partial.json",
+    ],
+    [
+        "latest_run_pretty.json",
+        "reports/latest_run_pretty.json",
+    ],
+    [
+        "latest_run*.json",
+        "reports/latest_run*.json",
+    ],
 ]
 
 
@@ -45,16 +53,25 @@ def _read_json(path: Path) -> Optional[Dict[str, Any]]:
 
 def _candidate_paths(base_dir: Path) -> List[Path]:
     seen = set()
-    results: List[Path] = []
-    for pattern in RUNTIME_CANDIDATE_PATTERNS:
-        for match in glob.glob(str(base_dir / pattern)):
-            path = Path(match)
-            key = str(path.resolve())
-            if key not in seen and path.is_file():
+    ordered: List[Path] = []
+
+    for group in RUNTIME_CANDIDATE_GROUPS:
+        group_paths: List[Path] = []
+        for pattern in group:
+            for match in glob.glob(str(base_dir / pattern)):
+                path = Path(match)
+                key = str(path.resolve())
+                if key in seen or not path.is_file():
+                    continue
                 seen.add(key)
-                results.append(path)
-    results.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-    return results
+                group_paths.append(path)
+
+        if any("*" in pattern for pattern in group):
+            group_paths.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+
+        ordered.extend(group_paths)
+
+    return ordered
 
 
 def _slugify(text: str) -> str:
@@ -353,7 +370,7 @@ def load_preferred_source_payload(base_dir: Path) -> Tuple[Optional[Dict[str, An
             "path": str(path),
         }
     return None, {
-        "mode": "csv",
+        "mode": "runtime",
         "file": None,
         "path": None,
     }

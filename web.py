@@ -1,10 +1,6 @@
 from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
-import csv
-import glob
-import os
 from datetime import datetime
-from estate_metrics import build_estate_metrics
 from billing_catalog import get_billing_catalog
 from project_counts import (
     load_project_counts_from_latest_run,
@@ -25,21 +21,6 @@ app = Flask(
     template_folder=str(BASE_DIR / "templates"),
     static_folder=str(BASE_DIR / "static"),
 )
-
-
-def _load_csv_rows(pattern):
-    matches = glob.glob(str(BASE_DIR / pattern))
-    if not matches:
-        return [], None
-    latest_file = max(matches, key=os.path.getmtime)
-    try:
-        with open(latest_file, newline="", encoding="utf-8-sig") as f:
-            rows = list(csv.DictReader(f))
-            print(f"✅ Loaded {len(rows)} rows from {os.path.basename(latest_file)}")
-            return rows, os.path.basename(latest_file)
-    except Exception as e:
-        print(f"❌ ERROR READING {latest_file}: {e}")
-        return [], os.path.basename(latest_file)
 
 
 def _parse_possible_datetime(value):
@@ -121,35 +102,61 @@ def _site_identity(site):
     return site.get("site") or site.get("site_key") or site.get("cloud_id")
 
 
-def _apply_source_metadata(data, source_mode, source_file=None, users_file=None, managed_file=None, users_rows=None, managed_rows=None):
-    data["source_mode"] = source_mode
+def _apply_source_metadata(data, source_file=None):
+    data["source_mode"] = "runtime"
     data["source_file"] = source_file
-    if source_mode == "runtime":
-        source_label = f"Runtime payload: {source_file}" if source_file else "Runtime payload"
-        data["users_source_file"] = data.get("users_source_file") or source_label
-        data["managed_source_file"] = data.get("managed_source_file") or source_label
-        data["users_row_count"] = data.get("users_row_count", 0) or len(users_rows or [])
-        data["managed_row_count"] = data.get("managed_row_count", 0) or len(managed_rows or [])
-    else:
-        data["users_source_file"] = users_file
-        data["managed_source_file"] = managed_file
-        data["users_row_count"] = len(users_rows or [])
-        data["managed_row_count"] = len(managed_rows or [])
+    source_label = f"Runtime payload: {source_file}" if source_file else "Runtime payload"
+    data["users_source_file"] = data.get("users_source_file") or source_label
+    data["managed_source_file"] = data.get("managed_source_file") or source_label
+    data["users_row_count"] = data.get("users_row_count", 0) or 0
+    data["managed_row_count"] = data.get("managed_row_count", 0) or 0
     return data
 
 
-def _finalise_data(data, *, source_mode, source_file=None, users_file=None, managed_file=None, users_rows=None, managed_rows=None):
+def _runtime_unavailable_payload(reason, source_file=None):
+    return {
+        "estate": {
+            "total_sites": 0,
+            "total_projects": 0,
+            "total_users": None,
+            "total_active_users": None,
+            "total_inactive_users": None,
+            "runtime_error": reason,
+        },
+        "sites": [],
+        "critical_sites": [],
+        "warning_sites": [],
+        "stable_sites": [],
+        "org_product_breakdown": [],
+        "users_export_breakdown": [],
+        "billing_summary": {},
+        "change_detection": {},
+        "site_discovery": {},
+        "project_intelligence": {
+            "has_current_run": False,
+            "site_map": {},
+            "all_projects": [],
+            "summary_rows": [],
+        },
+        "historical_trends": {},
+        "snapshot_index": {},
+        "latest_snapshot_entry": {},
+        "latest_snapshot": {},
+        "drilldowns": {},
+        "source_mode": "runtime",
+        "source_file": source_file,
+        "source_error": reason,
+        "users_source_file": f"Runtime payload: {source_file}" if source_file else None,
+        "managed_source_file": f"Runtime payload: {source_file}" if source_file else None,
+        "users_row_count": 0,
+        "managed_row_count": 0,
+    }
+
+
+def _finalise_data(data, *, source_file=None):
     data = data if isinstance(data, dict) else {}
     data["sites"] = _coerce_sites(data)
-    data = _apply_source_metadata(
-        data,
-        source_mode=source_mode,
-        source_file=source_file,
-        users_file=users_file,
-        managed_file=managed_file,
-        users_rows=users_rows,
-        managed_rows=managed_rows,
-    )
+    data = _apply_source_metadata(data, source_file=source_file)
 
     data["sites"] = _merge_project_counts(data.get("sites", []))
     project_intelligence = load_project_intelligence_from_latest_run()
@@ -385,23 +392,15 @@ def _build_intelligence_summary_drilldown(data):
 
 def _build_data():
     runtime_payload, runtime_meta = load_preferred_source_payload(BASE_DIR)
-    if runtime_payload:
-        return _finalise_data(
-            runtime_payload,
-            source_mode="runtime",
+    if not runtime_payload:
+        return _runtime_unavailable_payload(
+            reason="No runtime collector payload was found. Run the collector to generate latest_run.json before starting the web app.",
             source_file=runtime_meta.get("file"),
         )
 
-    users_rows, users_file = _load_csv_rows("export-users*.csv")
-    managed_rows, managed_file = _load_csv_rows("*managed_accounts*.csv")
-    data = build_estate_metrics(users_rows, managed_rows)
     return _finalise_data(
-        data,
-        source_mode="csv",
-        users_file=users_file,
-        managed_file=managed_file,
-        users_rows=users_rows,
-        managed_rows=managed_rows,
+        runtime_payload,
+        source_file=runtime_meta.get("file"),
     )
 
 
@@ -426,8 +425,9 @@ def _common_template_data(data):
         "managed_source_file": data.get("managed_source_file"),
         "users_row_count": data.get("users_row_count", 0),
         "managed_row_count": data.get("managed_row_count", 0),
-        "source_mode": data.get("source_mode", "csv"),
+        "source_mode": data.get("source_mode", "runtime"),
         "source_file": data.get("source_file"),
+        "source_error": data.get("source_error"),
         "intelligence_summary": data.get("intelligence_summary", {}),
     }
     return enrich_context_with_intelligence(context, data)
@@ -480,13 +480,14 @@ def detail(key: str):
 def api_source_state():
     data = _build_data()
     return jsonify({
-        "source_mode": data.get("source_mode", "csv"),
+        "source_mode": data.get("source_mode", "runtime"),
         "source_file": data.get("source_file"),
         "users_source_file": data.get("users_source_file"),
         "managed_source_file": data.get("managed_source_file"),
         "users_row_count": data.get("users_row_count", 0),
         "managed_row_count": data.get("managed_row_count", 0),
         "sites_count": len(data.get("sites", [])),
+        "source_error": data.get("source_error"),
     })
 
 
