@@ -1,302 +1,299 @@
+from __future__ import annotations
+
 import json
 import os
 import secrets
-import threading
+import sys
 import time
 import urllib.parse
-import webbrowser
-from http.server import BaseHTTPRequestHandler, HTTPServer
+import urllib.request
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-import requests
-from dotenv import load_dotenv
+BASE_DIR = Path(__file__).resolve().parent
+ENV_PATH = BASE_DIR / ".env"
+TOKEN_PATH = BASE_DIR / "tokens.json"
+STATE_PATH = BASE_DIR / ".auth_state.json"
 
-load_dotenv()
-
-CLIENT_ID = os.getenv("ATLASSIAN_CLIENT_ID")
-CLIENT_SECRET = os.getenv("ATLASSIAN_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("ATLASSIAN_REDIRECT_URI", "http://localhost:8090/callback")
-
-AUTH_URL = "https://auth.atlassian.com/authorize"
-TOKEN_URL = "https://auth.atlassian.com/oauth/token"
-TOKEN_FILE = "tokens.json"
-
-# IMPORTANT:
-# These are the scopes actually requested in the OAuth consent URL.
-# If a scope is only added in the developer console but not listed here,
-# the token grant will not include it.
-SCOPES = [
-    # Core Jira read access
-    "read:jira-work",
-    "read:jira-user",
-
-    # User / identity / profile
-    "read:me",
-    "read:user:jira",
-    "read:group:jira",
-    "read:avatar:jira",
-
-    # Application roles / licence-style data
-    "read:application-role:jira",
-
-    # Audit access
-    "read:audit-log:jira",
-    "manage:jira-configuration",
-
-    # Refresh token support
-    "offline_access"
-]
+DEFAULT_AUTH_URL = "https://auth.atlassian.com/authorize"
+DEFAULT_TOKEN_URL = "https://auth.atlassian.com/oauth/token"
+ACCESSIBLE_RESOURCES_URL = "https://api.atlassian.com/oauth/token/accessible-resources"
+AUDIENCE = "api.atlassian.com"
 
 
-def validate_auth_config():
-    missing = []
-
-    if not CLIENT_ID:
-        missing.append("ATLASSIAN_CLIENT_ID")
-
-    if not CLIENT_SECRET:
-        missing.append("ATLASSIAN_CLIENT_SECRET")
-
-    if not REDIRECT_URI:
-        missing.append("ATLASSIAN_REDIRECT_URI")
-
-    if missing:
-        raise ValueError("Missing required values in .env: " + ", ".join(missing))
+def _load_env_file(path: Path = ENV_PATH) -> None:
+    if not path.exists():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
 
 
-def generate_state():
-    return secrets.token_urlsafe(24)
+_load_env_file()
 
 
-def get_auth_url(state):
-    validate_auth_config()
+def _required(name: str) -> str:
+    value = os.getenv(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Missing required setting: {name}. Add it to .env")
+    return value
 
+
+def get_config() -> Dict[str, str]:
+    return {
+        "client_id": _required("ATLASSIAN_CLIENT_ID"),
+        "client_secret": _required("ATLASSIAN_CLIENT_SECRET"),
+        "redirect_uri": _required("ATLASSIAN_REDIRECT_URI"),
+        "scopes": _required("ATLASSIAN_SCOPES"),
+        "auth_url": os.getenv("ATLASSIAN_AUTH_URL", DEFAULT_AUTH_URL).strip() or DEFAULT_AUTH_URL,
+        "token_url": os.getenv("ATLASSIAN_TOKEN_URL", DEFAULT_TOKEN_URL).strip() or DEFAULT_TOKEN_URL,
+    }
+
+
+def _save_json(path: Path, data: Dict[str, Any]) -> None:
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+
+def _load_json(path: Path) -> Dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+
+def save_token_data(token_data: Dict[str, Any]) -> Dict[str, Any]:
+    token_data = dict(token_data or {})
+    expires_in = int(token_data.get("expires_in", 3600) or 3600)
+    token_data["saved_at_epoch"] = int(time.time())
+    token_data["expires_at_epoch"] = int(time.time()) + max(expires_in - 60, 60)
+    _save_json(TOKEN_PATH, token_data)
+    return token_data
+
+
+
+def load_token_data() -> Dict[str, Any]:
+    return _load_json(TOKEN_PATH)
+
+
+
+def token_is_expired(token_data: Optional[Dict[str, Any]] = None) -> bool:
+    token_data = token_data or load_token_data()
+    expires_at = int(token_data.get("expires_at_epoch", 0) or 0)
+    return not expires_at or int(time.time()) >= expires_at
+
+
+
+def _http_json(url: str, method: str = "GET", headers: Optional[Dict[str, str]] = None, payload: Optional[Dict[str, Any]] = None) -> Any:
+    headers = headers or {}
+    body = None
+    if payload is not None:
+        body = json.dumps(payload).encode("utf-8")
+        headers = {**headers, "Content-Type": "application/json"}
+    req = urllib.request.Request(url=url, data=body, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=30) as response:
+            raw = response.read().decode("utf-8")
+            return json.loads(raw) if raw else {}
+    except urllib.error.HTTPError as exc:
+        raw = exc.read().decode("utf-8", errors="ignore")
+        raise RuntimeError(f"HTTP {exc.code} calling {url}: {raw}") from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"Network error calling {url}: {exc}") from exc
+
+
+
+def _save_state(state: str) -> None:
+    _save_json(STATE_PATH, {"state": state, "saved_at_epoch": int(time.time())})
+
+
+
+def _load_state() -> str:
+    return _load_json(STATE_PATH).get("state", "")
+
+
+
+def build_authorization_url(open_browser_hint: bool = False) -> str:
+    config = get_config()
+    state = secrets.token_urlsafe(24)
+    _save_state(state)
     params = {
-        "audience": "api.atlassian.com",
-        "client_id": CLIENT_ID,
-        "scope": " ".join(SCOPES),
-        "redirect_uri": REDIRECT_URI,
+        "audience": AUDIENCE,
+        "client_id": config["client_id"],
+        "scope": config["scopes"],
+        "redirect_uri": config["redirect_uri"],
         "state": state,
         "response_type": "code",
-        "prompt": "consent"
+        "prompt": "consent",
     }
-
-    return AUTH_URL + "?" + urllib.parse.urlencode(params)
-
-
-def load_token_bundle():
-    if not os.path.exists(TOKEN_FILE):
-        return None
-
-    try:
-        with open(TOKEN_FILE, "r", encoding="utf-8") as handle:
-            return json.load(handle)
-    except Exception:
-        return None
+    return f"{config['auth_url']}?{urllib.parse.urlencode(params)}"
 
 
-def save_token_bundle(token_data):
-    token_copy = dict(token_data)
 
-    expires_in = int(token_copy.get("expires_in", 3600))
-    now = int(time.time())
-
-    token_copy["saved_at"] = now
-    token_copy["expires_at"] = now + expires_in - 60
-    token_copy["has_refresh_token"] = bool(token_copy.get("refresh_token"))
-
-    with open(TOKEN_FILE, "w", encoding="utf-8") as handle:
-        json.dump(token_copy, handle, indent=2)
-
-    return token_copy
-
-
-def token_is_valid(token_bundle):
-    if not token_bundle:
-        return False
-
-    access_token = token_bundle.get("access_token")
-    expires_at = int(token_bundle.get("expires_at", 0))
-
-    if not access_token:
-        return False
-
-    return time.time() < expires_at
-
-
-def get_token_status():
-    token_bundle = load_token_bundle()
-
-    if not token_bundle:
+def _extract_code_and_state(user_input: str) -> Dict[str, str]:
+    text = (user_input or "").strip()
+    if not text:
+        raise RuntimeError("No callback URL or code was provided.")
+    if text.startswith("http://") or text.startswith("https://"):
+        parsed = urllib.parse.urlparse(text)
+        params = urllib.parse.parse_qs(parsed.query)
         return {
-            "exists": False,
-            "valid": False,
-            "has_refresh_token": False,
-            "expires_at": None
+            "code": (params.get("code") or [""])[0],
+            "state": (params.get("state") or [""])[0],
         }
-
-    return {
-        "exists": True,
-        "valid": token_is_valid(token_bundle),
-        "has_refresh_token": bool(token_bundle.get("refresh_token")),
-        "expires_at": token_bundle.get("expires_at")
-    }
+    return {"code": text, "state": ""}
 
 
-def exchange_code_for_token(code):
-    validate_auth_config()
 
+def exchange_code_for_token(code: str, state: str = "") -> Dict[str, Any]:
+    if not code:
+        raise RuntimeError("Authorization code is empty.")
+    saved_state = _load_state()
+    if state and saved_state and state != saved_state:
+        raise RuntimeError("Returned state does not match saved auth state.")
+
+    config = get_config()
     payload = {
         "grant_type": "authorization_code",
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
+        "client_id": config["client_id"],
+        "client_secret": config["client_secret"],
         "code": code,
-        "redirect_uri": REDIRECT_URI
+        "redirect_uri": config["redirect_uri"],
     }
-
-    response = requests.post(
-        TOKEN_URL,
-        json=payload,
-        headers={"Accept": "application/json"},
-        timeout=30
-    )
-    response.raise_for_status()
-    return response.json()
+    token_data = _http_json(config["token_url"], method="POST", payload=payload)
+    return save_token_data(token_data)
 
 
-def refresh_access_token(refresh_token):
-    validate_auth_config()
 
+def refresh_access_token() -> Dict[str, Any]:
+    config = get_config()
+    token_data = load_token_data()
+    refresh_token = token_data.get("refresh_token", "")
+    if not refresh_token:
+        raise RuntimeError("No refresh_token found in tokens.json. Run login again.")
     payload = {
         "grant_type": "refresh_token",
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "refresh_token": refresh_token
+        "client_id": config["client_id"],
+        "client_secret": config["client_secret"],
+        "refresh_token": refresh_token,
     }
-
-    response = requests.post(
-        TOKEN_URL,
-        json=payload,
-        headers={"Accept": "application/json"},
-        timeout=30
-    )
-    response.raise_for_status()
-    return response.json()
+    refreshed = _http_json(config["token_url"], method="POST", payload=payload)
+    if not refreshed.get("refresh_token"):
+        refreshed["refresh_token"] = refresh_token
+    return save_token_data(refreshed)
 
 
-class OAuthCallbackHandler(BaseHTTPRequestHandler):
-    auth_code = None
-    auth_state = None
-    auth_error = None
-    callback_path = "/callback"
 
-    def do_GET(self):
-        parsed = urllib.parse.urlparse(self.path)
+def get_valid_access_token() -> str:
+    token_data = load_token_data()
+    access_token = token_data.get("access_token", "")
+    if not access_token:
+        raise RuntimeError("No access token found. Run: python auth.py login")
+    if token_is_expired(token_data):
+        token_data = refresh_access_token()
+    return token_data.get("access_token", "")
 
-        if parsed.path != self.callback_path:
-            self.send_response(404)
-            self.send_header("Content-type", "text/plain; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(b"Not found")
-            return
 
-        query = urllib.parse.parse_qs(parsed.query)
 
-        OAuthCallbackHandler.auth_code = query.get("code", [None])[0]
-        OAuthCallbackHandler.auth_state = query.get("state", [None])[0]
-        OAuthCallbackHandler.auth_error = query.get("error", [None])[0]
+def get_accessible_resources(access_token: Optional[str] = None) -> List[Dict[str, Any]]:
+    token = access_token or get_valid_access_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json",
+    }
+    resources = _http_json(ACCESSIBLE_RESOURCES_URL, headers=headers)
+    return resources if isinstance(resources, list) else []
 
-        self.send_response(200)
-        self.send_header("Content-type", "text/html; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(
-            b"""
-            <html>
-              <head><title>Jira Observation Monitor</title></head>
-              <body>
-                <h2>Authentication complete</h2>
-                <p>You can close this browser tab and return to PowerShell.</p>
-              </body>
-            </html>
-            """
-        )
 
-        threading.Thread(target=self.server.shutdown, daemon=True).start()
 
-    def log_message(self, format, *args):
+def get_accessible_jira_resources(access_token: Optional[str] = None) -> List[Dict[str, Any]]:
+    resources = get_accessible_resources(access_token=access_token)
+    jira_like = []
+    for item in resources:
+        scopes = item.get("scopes", []) or []
+        scope_text = " ".join(str(s) for s in scopes)
+        if "jira" in scope_text.lower() or str(item.get("url", "")).endswith("atlassian.net"):
+            jira_like.append(item)
+    return jira_like
+
+
+
+def print_resources(resources: List[Dict[str, Any]]) -> None:
+    if not resources:
+        print("No accessible resources were returned.")
         return
+    print("Accessible resources:")
+    for index, item in enumerate(resources, start=1):
+        print(f"[{index}] {item.get('name', '')}")
+        print(f"    id: {item.get('id', '')}")
+        print(f"    url: {item.get('url', '')}")
+        scopes = item.get('scopes', []) or []
+        print(f"    scopes: {', '.join(str(s) for s in scopes)}")
 
 
-def wait_for_callback(expected_state, timeout_seconds=300):
-    parsed_redirect = urllib.parse.urlparse(REDIRECT_URI)
-    host = parsed_redirect.hostname or "localhost"
-    port = parsed_redirect.port or 8090
-    callback_path = parsed_redirect.path or "/callback"
 
-    OAuthCallbackHandler.auth_code = None
-    OAuthCallbackHandler.auth_state = None
-    OAuthCallbackHandler.auth_error = None
-    OAuthCallbackHandler.callback_path = callback_path
-
-    try:
-        server = HTTPServer((host, port), OAuthCallbackHandler)
-    except OSError as exc:
-        raise RuntimeError(
-            f"Could not start callback server on {host}:{port}. Is the port already in use? {exc}"
-        )
-
-    server.timeout = timeout_seconds
-
-    print(f"Listening for OAuth callback on {REDIRECT_URI} ...")
-    server.handle_request()
-
-    if OAuthCallbackHandler.auth_error:
-        raise ValueError(f"Atlassian returned an OAuth error: {OAuthCallbackHandler.auth_error}")
-
-    if not OAuthCallbackHandler.auth_code:
-        raise TimeoutError("No authorization code received from callback.")
-
-    if OAuthCallbackHandler.auth_state != expected_state:
-        raise ValueError("OAuth state mismatch. Aborting for safety.")
-
-    return OAuthCallbackHandler.auth_code
-
-
-def run_interactive_oauth_flow():
-    state = generate_state()
-    auth_url = get_auth_url(state)
-
+def login_interactive() -> None:
+    url = build_authorization_url()
+    print("Open this Atlassian authorization URL in your browser:")
+    print(url)
     print()
-    print("AUTH URL BELOW - COPY THIS INTO YOUR BROWSER IF IT DOES NOT OPEN:")
-    print(auth_url)
-    print()
+    print("After approving access, the browser will redirect to your ATLASSIAN_REDIRECT_URI.")
+    print("Copy the FULL redirected URL from the browser address bar and paste it below.")
+    print("If you only have the code value, you can paste just the code.")
+    callback_input = input("Paste callback URL or code: ").strip()
+    parsed = _extract_code_and_state(callback_input)
+    token_data = exchange_code_for_token(parsed.get("code", ""), state=parsed.get("state", ""))
+    print("Token saved to tokens.json")
+    print(f"Access token expires at epoch: {token_data.get('expires_at_epoch')}")
+    resources = get_accessible_jira_resources(token_data.get("access_token", ""))
+    print_resources(resources)
 
+
+
+def show_token_status() -> None:
+    token_data = load_token_data()
+    if not token_data:
+        print("No tokens.json file found.")
+        return
+    print("Token file present.")
+    print(f"Token expired: {'Yes' if token_is_expired(token_data) else 'No'}")
+    print(f"Access token present: {'Yes' if bool(token_data.get('access_token')) else 'No'}")
+    print(f"Refresh token present: {'Yes' if bool(token_data.get('refresh_token')) else 'No'}")
+    print(f"Expires at epoch: {token_data.get('expires_at_epoch', '')}")
+
+
+
+def main(argv: List[str]) -> int:
+    command = argv[1].strip().lower() if len(argv) > 1 else "help"
     try:
-        opened = webbrowser.open(auth_url, new=2)
-        print(f"Browser open attempted: {opened}")
+        if command == "login":
+            login_interactive()
+            return 0
+        if command == "resources":
+            resources = get_accessible_jira_resources()
+            print_resources(resources)
+            return 0
+        if command == "token":
+            show_token_status()
+            return 0
+        print("Usage:")
+        print("  python auth.py login")
+        print("  python auth.py resources")
+        print("  python auth.py token")
+        return 0
     except Exception as exc:
-        print(f"Browser open failed: {exc}")
-
-    code = wait_for_callback(state)
-    token_data = exchange_code_for_token(code)
-    saved = save_token_bundle(token_data)
-
-    print("OAuth token exchange successful.")
-    print(f"Tokens saved to {TOKEN_FILE}")
-    print()
-
-    return saved["access_token"]
+        print(f"ERROR: {exc}")
+        return 1
 
 
-def get_valid_access_token():
-    token_bundle = load_token_bundle()
-
-    if token_is_valid(token_bundle):
-        return token_bundle["access_token"]
-
-    if token_bundle and token_bundle.get("refresh_token"):
-        print("Refreshing expired access token...")
-        refreshed = refresh_access_token(token_bundle["refresh_token"])
-        saved = save_token_bundle(refreshed)
-        return saved["access_token"]
-
-    return None
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))

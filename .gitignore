@@ -12,6 +12,7 @@ env/
 # Secrets / auth
 .env
 tokens.json
+.auth_state.json
 
 # Runtime / generated outputs
 latest_run.json
