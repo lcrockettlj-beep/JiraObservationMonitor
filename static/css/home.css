@@ -1,5 +1,4 @@
-/* FULL HOMEPAGE CSS REPLACEMENT WITH TREND WATCH */
-
+/* FULL HOMEPAGE CSS REPLACEMENT WITH TREND WATCH + INTELLIGENCE */
 .grid-4 {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -92,20 +91,52 @@
     line-height: 1.45;
 }
 
-.trend-panel {
+.intelligence-panel,
+.intelligence-watchlist-panel,
+.trend-panel,
+.site-section-panel {
     margin-top: 18px;
 }
 
+.intelligence-card-grid,
 .trend-card-grid {
     margin-top: 14px;
 }
 
-.trend-card {
-    min-height: 126px;
+.intelligence-card {
+    position: relative;
+    overflow: hidden;
 }
 
-.site-section-panel {
-    margin-top: 18px;
+.intelligence-card::after {
+    content: "";
+    position: absolute;
+    inset: auto -40px -40px auto;
+    width: 160px;
+    height: 160px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(69, 155, 227, 0.14) 0%, rgba(69, 155, 227, 0) 72%);
+    pointer-events: none;
+}
+
+.intelligence-card--status {
+    border-width: 1px;
+}
+
+.intelligence-card--healthy {
+    border-color: rgba(45, 190, 127, 0.28);
+}
+
+.intelligence-card--warning {
+    border-color: rgba(240, 178, 74, 0.28);
+}
+
+.intelligence-card--critical {
+    border-color: rgba(225, 75, 90, 0.28);
+}
+
+.trend-card {
+    min-height: 126px;
 }
 
 .site-grid {
@@ -135,7 +166,8 @@
     border-left-color: var(--warning);
 }
 
-.site-card--stable {
+.site-card--stable,
+.site-card--healthy {
     border-left-color: var(--stable);
 }
 
