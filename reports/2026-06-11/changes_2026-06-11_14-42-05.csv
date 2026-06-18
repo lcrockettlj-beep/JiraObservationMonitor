@@ -1,4 +1,0 @@
-severity,type,site_name,cloud_id,field,old,new
-warning,risk_score_change,gli-it-project,d4b3adb4-bd39-435e-bd65-f29db2b11a37,risk_score,1,2
-warning,operational_risk_score_change,gli-it-project,d4b3adb4-bd39-435e-bd65-f29db2b11a37,operational_risk_score,1,2
-info,operational_risk_signals_change,gli-it-project,d4b3adb4-bd39-435e-bd65-f29db2b11a37,operational_risk_signals,['some_enrichment_failures'],"['elevated_collection_time', 'some_enrichment_failures']"
