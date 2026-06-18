@@ -7,15 +7,23 @@
 
   const state = {
     countdown: REFRESH_SECONDS,
-    sourceFile: null,
     sourceMode: 'runtime',
     sourceError: null,
     sitesCount: null,
-    lastCheck: null,
-    lastBackendRun: null,
     health: 'healthy',
     healthLabel: 'Healthy',
+    lastCheck: null,
     insights: [],
+    criticalSites: 0,
+    warningSites: 0,
+    counts: {
+      users: null,
+      managed: null,
+      human: null,
+      apps: null,
+      suspended: null,
+      notInUserbase: null,
+    },
   };
 
   function pad(num) { return String(num).padStart(2, '0'); }
@@ -44,7 +52,7 @@
         right: 14px;
         bottom: 14px;
         z-index: 9999;
-        width: 248px;
+        width: 236px;
         max-width: calc(100vw - 24px);
         border: 1px solid rgba(255,255,255,0.12);
         border-radius: 14px;
@@ -58,22 +66,22 @@
       }
       #jom-auto-refresh-badge * { box-sizing: border-box; }
       #jom-auto-refresh-badge.jom-healthy {
-        border-color: rgba(34,197,94,0.26);
-        box-shadow: 0 12px 28px rgba(0,0,0,0.27), 0 0 20px rgba(34,197,94,0.22), 0 0 34px rgba(34,197,94,0.10);
+        border-color: rgba(34,197,94,0.28);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.27), 0 0 20px rgba(34,197,94,0.24), 0 0 34px rgba(34,197,94,0.12);
       }
       #jom-auto-refresh-badge.jom-warning {
-        border-color: rgba(245,158,11,0.34);
-        box-shadow: 0 12px 28px rgba(0,0,0,0.29), 0 0 24px rgba(245,158,11,0.30), 0 0 42px rgba(245,158,11,0.14);
+        border-color: rgba(245,158,11,0.38);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.29), 0 0 26px rgba(245,158,11,0.34), 0 0 46px rgba(245,158,11,0.16);
         animation: jomPanelPulseWarn 1.9s ease-in-out infinite;
       }
       #jom-auto-refresh-badge.jom-critical {
-        border-color: rgba(239,68,68,0.42);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.31), 0 0 28px rgba(239,68,68,0.36), 0 0 48px rgba(239,68,68,0.18);
+        border-color: rgba(239,68,68,0.46);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.31), 0 0 30px rgba(239,68,68,0.40), 0 0 56px rgba(239,68,68,0.22);
         animation: jomPanelPulseCritical 1.1s ease-in-out infinite;
       }
       #jom-auto-refresh-badge.jom-collapsed {
         width: auto;
-        min-width: 176px;
+        min-width: 170px;
       }
       #jom-auto-refresh-badge .jom-head {
         display: flex;
@@ -119,10 +127,7 @@
         cursor: pointer;
         font: inherit;
       }
-      #jom-auto-refresh-badge .jom-mini-btn {
-        border-radius: 8px;
-        padding: 4px 7px;
-      }
+      #jom-auto-refresh-badge .jom-mini-btn { border-radius: 8px; padding: 4px 7px; }
       #jom-auto-refresh-badge .jom-mini-btn:hover,
       #jom-auto-refresh-badge .jom-btn:hover { background: rgba(255,255,255,0.1); }
       #jom-auto-refresh-badge .jom-body {
@@ -145,19 +150,13 @@
         letter-spacing: 0.44px;
         margin-bottom: 4px;
       }
-      #jom-auto-refresh-badge .jom-value {
-        font-weight: 700;
-        word-break: break-word;
-      }
+      #jom-auto-refresh-badge .jom-value { font-weight: 700; word-break: break-word; }
       #jom-auto-refresh-badge .jom-actions {
         display: flex;
         gap: 8px;
         padding: 0 10px 9px;
       }
-      #jom-auto-refresh-badge .jom-btn {
-        border-radius: 9px;
-        padding: 6px 9px;
-      }
+      #jom-auto-refresh-badge .jom-btn { border-radius: 9px; padding: 6px 9px; }
       #jom-auto-refresh-badge .jom-footer {
         padding: 0 10px 10px;
         color: #96a2b8;
@@ -179,12 +178,12 @@
       }
       #jom-auto-refresh-badge .jom-hidden { display: none !important; }
       @keyframes jomPanelPulseWarn {
-        0%,100% { box-shadow: 0 12px 28px rgba(0,0,0,0.29), 0 0 20px rgba(245,158,11,0.26), 0 0 36px rgba(245,158,11,0.12); }
-        50% { box-shadow: 0 12px 28px rgba(0,0,0,0.29), 0 0 32px rgba(245,158,11,0.42), 0 0 54px rgba(245,158,11,0.22); }
+        0%,100% { box-shadow: 0 12px 28px rgba(0,0,0,0.29), 0 0 22px rgba(245,158,11,0.28), 0 0 40px rgba(245,158,11,0.14); }
+        50% { box-shadow: 0 12px 28px rgba(0,0,0,0.29), 0 0 36px rgba(245,158,11,0.46), 0 0 60px rgba(245,158,11,0.24); }
       }
       @keyframes jomPanelPulseCritical {
-        0%,100% { box-shadow: 0 12px 30px rgba(0,0,0,0.31), 0 0 24px rgba(239,68,68,0.30), 0 0 44px rgba(239,68,68,0.16); }
-        50% { box-shadow: 0 12px 30px rgba(0,0,0,0.31), 0 0 40px rgba(239,68,68,0.50), 0 0 68px rgba(239,68,68,0.28); }
+        0%,100% { box-shadow: 0 12px 30px rgba(0,0,0,0.31), 0 0 26px rgba(239,68,68,0.34), 0 0 48px rgba(239,68,68,0.18); }
+        50% { box-shadow: 0 12px 30px rgba(0,0,0,0.31), 0 0 44px rgba(239,68,68,0.54), 0 0 74px rgba(239,68,68,0.30); }
       }
       @media (max-width: 640px) {
         #jom-auto-refresh-badge { width: calc(100vw - 20px); right: 10px; bottom: 10px; }
@@ -207,17 +206,15 @@
       </div>
       <div id="jom-detail-wrap">
         <div class="jom-body">
-          <div class="jom-card"><div class="jom-label">Source file</div><div class="jom-value" id="jom-source-file">—</div></div>
           <div class="jom-card"><div class="jom-label">Next refresh</div><div class="jom-value" id="jom-countdown">10:00</div></div>
-          <div class="jom-card"><div class="jom-label">Source status</div><div class="jom-value" id="jom-source-status">Checking…</div></div>
-          <div class="jom-card"><div class="jom-label">Last backend run</div><div class="jom-value" id="jom-last-backend">—</div></div>
+          <div class="jom-card"><div class="jom-label">Health</div><div class="jom-value" id="jom-source-status">Healthy</div></div>
         </div>
         <div class="jom-insights" id="jom-insights"></div>
         <div class="jom-actions">
           <button class="jom-btn" id="jom-toggle-refresh" type="button">Pause refresh</button>
           <button class="jom-btn" id="jom-refresh-now" type="button">Refresh now</button>
         </div>
-        <div class="jom-footer" id="jom-footer-text">Backend refresh target: every 600 seconds.</div>
+        <div class="jom-footer" id="jom-footer-text">Auto-refresh armed for a full page reload every 600 seconds.</div>
       </div>`;
     document.body.appendChild(badge);
     return badge;
@@ -259,18 +256,22 @@
   }
 
   function inferHealth(data) {
-    if (state.sourceError) return { level: 'critical', label: 'Source error', insights: ['Source-state error detected'] };
+    if (state.sourceError) return { level:'critical', label:'Source error', insights:['Source-state error detected'] };
     const criticalSites = Array.isArray(data?.critical_sites) ? data.critical_sites.length : 0;
     const warningSites = Array.isArray(data?.warning_sites) ? data.warning_sites.length : 0;
+    const estate = data?.estate || {};
     const summary = data?.intelligence_summary || data?.intelligence || {};
     const topRisks = Array.isArray(summary?.top_risks) ? summary.top_risks : [];
     const insights = [];
+    if ((estate.managed_disabled_accounts || 0) > 0) insights.push(`${estate.managed_disabled_accounts} disabled accounts`);
+    if ((estate.mfa_disabled_accounts || 0) > 0) insights.push(`${estate.mfa_disabled_accounts} MFA disabled`);
+    if ((estate.not_in_userbase_count || 0) > 0) insights.push(`${estate.not_in_userbase_count} not in userbase`);
     if (criticalSites > 0) insights.push(`${criticalSites} critical site${criticalSites === 1 ? '' : 's'}`);
     if (warningSites > 0) insights.push(`${warningSites} warning site${warningSites === 1 ? '' : 's'}`);
     if (topRisks.length > 0) insights.push(`${topRisks.length} intelligence risk${topRisks.length === 1 ? '' : 's'}`);
-    if (criticalSites > 0) return { level: 'critical', label: 'Critical attention', insights };
-    if (warningSites > 0 || topRisks.length > 0) return { level: 'warning', label: 'Warning attention', insights };
-    return { level: 'healthy', label: 'Healthy', insights: insights.length ? insights : ['No active runtime alerts'] };
+    if ((estate.managed_disabled_accounts || 0) > 0 || criticalSites > 0) return { level:'critical', label:'Critical attention', insights };
+    if ((estate.mfa_disabled_accounts || 0) > 0 || (estate.not_in_userbase_count || 0) > 0 || warningSites > 0 || topRisks.length > 0) return { level:'warning', label:'Warning attention', insights };
+    return { level:'healthy', label:'Healthy', insights: insights.length ? insights : ['No active runtime alerts'] };
   }
 
   function updateInsights() {
@@ -278,7 +279,7 @@
     if (!wrap) return;
     wrap.innerHTML = '';
     const items = state.insights && state.insights.length ? state.insights : [`State: ${state.healthLabel}`];
-    for (const item of items.slice(0,4)) {
+    for (const item of items.slice(0,3)) {
       const pill = document.createElement('span');
       pill.className = 'jom-pill';
       pill.textContent = item;
@@ -287,18 +288,14 @@
   }
 
   function updateBadge() {
-    const sourceFile = document.getElementById('jom-source-file');
     const sourceStatus = document.getElementById('jom-source-status');
-    const lastBackend = document.getElementById('jom-last-backend');
     const countdown = document.getElementById('jom-countdown');
     const runtimeMode = document.getElementById('jom-runtime-mode');
     const footer = document.getElementById('jom-footer-text');
     const toggleBtn = document.getElementById('jom-toggle-refresh');
-    if (!sourceFile || !sourceStatus || !lastBackend || !countdown || !runtimeMode || !footer || !toggleBtn) return;
+    if (!sourceStatus || !countdown || !runtimeMode || !footer || !toggleBtn) return;
     runtimeMode.textContent = asText(state.sourceMode, 'runtime');
-    sourceFile.textContent = asText(state.sourceFile, '—');
-    sourceStatus.textContent = state.sourceError ? `Error: ${state.sourceError}` : `Sites: ${asText(state.sitesCount, '—')} • ${state.healthLabel}`;
-    lastBackend.textContent = asText(state.lastBackendRun, state.lastCheck || '—');
+    sourceStatus.textContent = state.sourceError ? `Error` : state.healthLabel;
     countdown.textContent = formatCountdown(state.countdown);
     toggleBtn.textContent = isPaused() ? 'Resume refresh' : 'Pause refresh';
     footer.textContent = isPaused() ? 'Auto-refresh paused in this browser. Backend loop can keep running.' : 'Auto-refresh armed for a full page reload every 600 seconds.';
@@ -309,10 +306,9 @@
 
   async function pollSourceState() {
     try {
-      const response = await fetch('/api/source-state', { cache: 'no-store', credentials: 'same-origin' });
+      const response = await fetch('/api/source-state', { cache:'no-store', credentials:'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
-      state.sourceFile = data.source_file || null;
       state.sourceMode = data.source_mode || 'runtime';
       state.sourceError = data.source_error || null;
       state.sitesCount = data.sites_count ?? null;
@@ -320,7 +316,6 @@
       updateBadge();
     } catch (error) {
       state.sourceError = error && error.message ? error.message : String(error);
-      state.lastCheck = nowLocal();
       state.health = 'critical';
       state.healthLabel = 'Source error';
       state.insights = ['Source-state poll failed'];
@@ -330,16 +325,13 @@
 
   async function pollRuntimeData() {
     try {
-      const response = await fetch('/api/data', { cache: 'no-store', credentials: 'same-origin' });
+      const response = await fetch('/api/data', { cache:'no-store', credentials:'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       const inferred = inferHealth(data);
       state.health = inferred.level;
       state.healthLabel = inferred.label;
       state.insights = inferred.insights || [];
-      const estate = data?.estate || {};
-      const latestSnapshot = data?.latest_snapshot_entry || {};
-      state.lastBackendRun = estate.run_timestamp_local || latestSnapshot.snapshot_timestamp || latestSnapshot.created_at_local || state.lastBackendRun;
       updateBadge();
     } catch (error) {
       state.health = 'warning';
@@ -378,9 +370,6 @@
     setInterval(pollRuntimeData, DATA_POLL_SECONDS * 1000);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start, { once: true });
-  } else {
-    start();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once:true });
+  else start();
 })();
