@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import json
 import os
 import secrets
@@ -14,10 +13,10 @@ BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR / ".env"
 TOKEN_PATH = BASE_DIR / "tokens.json"
 STATE_PATH = BASE_DIR / ".auth_state.json"
-
 DEFAULT_AUTH_URL = "https://auth.atlassian.com/authorize"
 DEFAULT_TOKEN_URL = "https://auth.atlassian.com/oauth/token"
 ACCESSIBLE_RESOURCES_URL = "https://api.atlassian.com/oauth/token/accessible-resources"
+ADMIN_ORGS_URL = "https://api.atlassian.com/admin/v1/orgs"
 AUDIENCE = "api.atlassian.com"
 
 
@@ -56,9 +55,22 @@ def get_config() -> Dict[str, str]:
     }
 
 
+def get_admin_api_key(required: bool = False) -> str:
+    value = os.getenv("ATLASSIAN_ADMIN_API_KEY", "").strip()
+    if required and not value:
+        raise RuntimeError("Missing ATLASSIAN_ADMIN_API_KEY in .env. Create an Atlassian admin API key and add it to your .env file.")
+    return value
+
+
+def get_admin_org_id(required: bool = False) -> str:
+    value = os.getenv("ATLASSIAN_ADMIN_ORG_ID", "").strip()
+    if required and not value:
+        raise RuntimeError("Missing ATLASSIAN_ADMIN_ORG_ID in .env. Add your Atlassian organization ID.")
+    return value
+
+
 def _save_json(path: Path, data: Dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-
 
 
 def _load_json(path: Path) -> Dict[str, Any]:
@@ -70,7 +82,6 @@ def _load_json(path: Path) -> Dict[str, Any]:
         return {}
 
 
-
 def save_token_data(token_data: Dict[str, Any]) -> Dict[str, Any]:
     token_data = dict(token_data or {})
     expires_in = int(token_data.get("expires_in", 3600) or 3600)
@@ -80,17 +91,14 @@ def save_token_data(token_data: Dict[str, Any]) -> Dict[str, Any]:
     return token_data
 
 
-
 def load_token_data() -> Dict[str, Any]:
     return _load_json(TOKEN_PATH)
-
 
 
 def token_is_expired(token_data: Optional[Dict[str, Any]] = None) -> bool:
     token_data = token_data or load_token_data()
     expires_at = int(token_data.get("expires_at_epoch", 0) or 0)
     return not expires_at or int(time.time()) >= expires_at
-
 
 
 def _http_json(url: str, method: str = "GET", headers: Optional[Dict[str, str]] = None, payload: Optional[Dict[str, Any]] = None) -> Any:
@@ -111,18 +119,15 @@ def _http_json(url: str, method: str = "GET", headers: Optional[Dict[str, str]] 
         raise RuntimeError(f"Network error calling {url}: {exc}") from exc
 
 
-
 def _save_state(state: str) -> None:
     _save_json(STATE_PATH, {"state": state, "saved_at_epoch": int(time.time())})
-
 
 
 def _load_state() -> str:
     return _load_json(STATE_PATH).get("state", "")
 
 
-
-def build_authorization_url(open_browser_hint: bool = False) -> str:
+def build_authorization_url() -> str:
     config = get_config()
     state = secrets.token_urlsafe(24)
     _save_state(state)
@@ -136,7 +141,6 @@ def build_authorization_url(open_browser_hint: bool = False) -> str:
         "prompt": "consent",
     }
     return f"{config['auth_url']}?{urllib.parse.urlencode(params)}"
-
 
 
 def _extract_code_and_state(user_input: str) -> Dict[str, str]:
@@ -153,14 +157,12 @@ def _extract_code_and_state(user_input: str) -> Dict[str, str]:
     return {"code": text, "state": ""}
 
 
-
 def exchange_code_for_token(code: str, state: str = "") -> Dict[str, Any]:
     if not code:
         raise RuntimeError("Authorization code is empty.")
     saved_state = _load_state()
     if state and saved_state and state != saved_state:
         raise RuntimeError("Returned state does not match saved auth state.")
-
     config = get_config()
     payload = {
         "grant_type": "authorization_code",
@@ -171,7 +173,6 @@ def exchange_code_for_token(code: str, state: str = "") -> Dict[str, Any]:
     }
     token_data = _http_json(config["token_url"], method="POST", payload=payload)
     return save_token_data(token_data)
-
 
 
 def refresh_access_token() -> Dict[str, Any]:
@@ -192,7 +193,6 @@ def refresh_access_token() -> Dict[str, Any]:
     return save_token_data(refreshed)
 
 
-
 def get_valid_access_token() -> str:
     token_data = load_token_data()
     access_token = token_data.get("access_token", "")
@@ -201,7 +201,6 @@ def get_valid_access_token() -> str:
     if token_is_expired(token_data):
         token_data = refresh_access_token()
     return token_data.get("access_token", "")
-
 
 
 def get_accessible_resources(access_token: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -214,7 +213,6 @@ def get_accessible_resources(access_token: Optional[str] = None) -> List[Dict[st
     return resources if isinstance(resources, list) else []
 
 
-
 def get_accessible_jira_resources(access_token: Optional[str] = None) -> List[Dict[str, Any]]:
     resources = get_accessible_resources(access_token=access_token)
     jira_like = []
@@ -225,6 +223,25 @@ def get_accessible_jira_resources(access_token: Optional[str] = None) -> List[Di
             jira_like.append(item)
     return jira_like
 
+
+def get_admin_headers() -> Dict[str, str]:
+    api_key = get_admin_api_key(required=True)
+    return {
+        "Authorization": f"Bearer {api_key}",
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
+
+
+def get_admin_orgs() -> List[Dict[str, Any]]:
+    headers = get_admin_headers()
+    response = _http_json(ADMIN_ORGS_URL, headers=headers)
+    data = response.get("data") if isinstance(response, dict) else None
+    if isinstance(data, list):
+        return data
+    if isinstance(response, list):
+        return response
+    return []
 
 
 def print_resources(resources: List[Dict[str, Any]]) -> None:
@@ -239,6 +256,15 @@ def print_resources(resources: List[Dict[str, Any]]) -> None:
         scopes = item.get('scopes', []) or []
         print(f"    scopes: {', '.join(str(s) for s in scopes)}")
 
+
+def print_orgs(orgs: List[Dict[str, Any]]) -> None:
+    if not orgs:
+        print("No admin organizations were returned.")
+        return
+    print("Admin organizations:")
+    for index, item in enumerate(orgs, start=1):
+        print(f"[{index}] {item.get('name', '') or item.get('attributes', {}).get('name', '')}")
+        print(f"    id: {item.get('id', '')}")
 
 
 def login_interactive() -> None:
@@ -258,7 +284,6 @@ def login_interactive() -> None:
     print_resources(resources)
 
 
-
 def show_token_status() -> None:
     token_data = load_token_data()
     if not token_data:
@@ -269,7 +294,8 @@ def show_token_status() -> None:
     print(f"Access token present: {'Yes' if bool(token_data.get('access_token')) else 'No'}")
     print(f"Refresh token present: {'Yes' if bool(token_data.get('refresh_token')) else 'No'}")
     print(f"Expires at epoch: {token_data.get('expires_at_epoch', '')}")
-
+    print(f"Admin API key present: {'Yes' if bool(get_admin_api_key(required=False)) else 'No'}")
+    print(f"Admin org id present: {'Yes' if bool(get_admin_org_id(required=False)) else 'No'}")
 
 
 def main(argv: List[str]) -> int:
@@ -282,12 +308,17 @@ def main(argv: List[str]) -> int:
             resources = get_accessible_jira_resources()
             print_resources(resources)
             return 0
+        if command == "admin-orgs":
+            orgs = get_admin_orgs()
+            print_orgs(orgs)
+            return 0
         if command == "token":
             show_token_status()
             return 0
         print("Usage:")
         print("  python auth.py login")
         print("  python auth.py resources")
+        print("  python auth.py admin-orgs")
         print("  python auth.py token")
         return 0
     except Exception as exc:
@@ -297,3 +328,27 @@ def main(argv: List[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv))
+# --- ADD THIS BLOCK AT THE VERY BOTTOM OF YOUR EXISTING FILE ---
+
+# ===== COMPATIBILITY WRAPPERS (for main.py) =====
+
+def get_token_status():
+    token_data = load_token_data()
+
+    return {
+        "exists": bool(token_data),
+        "valid": not token_is_expired(token_data) if token_data else False,
+        "has_refresh_token": bool(token_data.get("refresh_token")) if token_data else False,
+        "expires_at": token_data.get("expires_at_epoch") if token_data else None
+    }
+
+
+def run_interactive_oauth_flow():
+    login_interactive()
+    token_data = load_token_data()
+    return token_data.get("access_token")
+
+
+def validate_auth_config():
+    get_config()  # will raise if invalid
+    return True
