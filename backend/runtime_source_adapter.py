@@ -1,14 +1,11 @@
 """
 backend/runtime_source_adapter.py
-Runtime-only source adapter with API-enriched runtime preference.
+UI-mapped runtime source adapter with admin-enriched preference.
 
-Preference order:
-1. latest_run_admin_enriched.json
-2. latest_run.json
-3. latest_run_safe_partial.json
-4. latest_run_admin_enriched_pretty.json
-5. latest_run_pretty.json
-6. wildcard/report variants
+Purpose:
+- Prefer latest_run_admin_enriched.json when present.
+- Lift admin_enrichment metrics into the top-level runtime contract used by web.py.
+- Preserve runtime-only architecture with no CSV truth path.
 """
 from __future__ import annotations
 
@@ -129,6 +126,21 @@ def _normalise_project_rows(raw_rows: Any, site_key: str, site_name: str) -> Lis
     return rows
 
 
+def _admin_users(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+    admin = _safe_dict(payload.get("admin_enrichment"))
+    users = _safe_list(admin.get("users"))
+    return [row for row in users if isinstance(row, dict)]
+
+
+def _admin_summary(payload: Dict[str, Any]) -> Dict[str, Any]:
+    admin = _safe_dict(payload.get("admin_enrichment"))
+    return _safe_dict(admin.get("summary"))
+
+
+def _managed_user_rows(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return [u for u in users if str(u.get("claimStatus", "")).strip().lower() == "managed"]
+
+
 def _normalise_site_record(site: Dict[str, Any]) -> Dict[str, Any]:
     site_key = _derive_site_key(site)
     site_name = _derive_site_name(site, site_key)
@@ -170,6 +182,8 @@ def _build_estate(payload: Dict[str, Any], sites: List[Dict[str, Any]]) -> Dict[
     risk_summary = _safe_dict(payload.get("risk_summary"))
     delta_summary = _safe_dict(payload.get("delta_summary"))
     existing_estate = _safe_dict(payload.get("estate"))
+    admin_summary = _admin_summary(payload)
+
     estate = dict(existing_estate)
     estate.setdefault("total_sites", summary.get("site_count", len(sites)))
     estate.setdefault("total_projects", summary.get("project_count_total"))
@@ -185,10 +199,21 @@ def _build_estate(payload: Dict[str, Any], sites: List[Dict[str, Any]]) -> Dict[
     estate.setdefault("active_users_delta_total", delta_summary.get("active_users_delta_total", 0))
     estate.setdefault("inactive_users_delta_total", delta_summary.get("inactive_users_delta_total", 0))
     estate.setdefault("licensed_users_estimate_delta_total", delta_summary.get("licensed_users_estimate_delta_total", 0))
-    estate.setdefault("total_users", _sum_if_known(sites, "total_users"))
-    estate.setdefault("total_active_users", _sum_if_known(sites, "active_users"))
-    estate.setdefault("total_inactive_users", _sum_if_known(sites, "inactive_users"))
-    estate.setdefault("licensed_users_estimate", _sum_if_known(sites, "licensed_users"))
+
+    # Prefer enriched admin totals when present.
+    if admin_summary:
+        estate["total_users"] = admin_summary.get("org_user_count")
+        estate["total_active_users"] = admin_summary.get("active_user_count")
+        estate["managed_disabled_accounts"] = admin_summary.get("suspended_user_count")
+        estate["org_admin_count"] = admin_summary.get("org_admin_count")
+        estate["mfa_disabled_accounts"] = admin_summary.get("mfa_disabled_user_count")
+        estate["managed_user_count"] = admin_summary.get("managed_user_count")
+    else:
+        estate.setdefault("total_users", _sum_if_known(sites, "total_users"))
+        estate.setdefault("total_active_users", _sum_if_known(sites, "active_users"))
+        estate.setdefault("total_inactive_users", _sum_if_known(sites, "inactive_users"))
+        estate.setdefault("licensed_users_estimate", _sum_if_known(sites, "licensed_users"))
+
     estate.setdefault("run_timestamp_local", payload.get("run_timestamp_local"))
     return estate
 
@@ -228,14 +253,35 @@ def _normalise_payload(payload: Dict[str, Any], source_file: str) -> Dict[str, A
     data = dict(payload)
     raw_sites = _payload_to_sites(payload)
     sites = [_normalise_site_record(site) for site in raw_sites]
+    admin_users = _admin_users(payload)
+    admin_summary = _admin_summary(payload)
+
     data["sites"] = sites
     data["estate"] = _build_estate(payload, sites)
     data["drilldowns"] = _build_runtime_drilldowns(payload, sites)
+    data["admin_enrichment"] = _safe_dict(payload.get("admin_enrichment"))
+
     source_label = f"Runtime payload: {source_file}"
     data.setdefault("users_source_file", source_label)
     data.setdefault("managed_source_file", source_label)
-    data.setdefault("users_row_count", len(_safe_list(payload.get("users"))))
-    data.setdefault("managed_row_count", len(_safe_list(payload.get("managed_accounts"))))
+
+    # Map enriched admin users into the generic runtime counters expected by web.py/api/source-state.
+    data["users_row_count"] = len(admin_users) if admin_users else len(_safe_list(payload.get("users")))
+    data["managed_row_count"] = len(_managed_user_rows(admin_users)) if admin_users else len(_safe_list(payload.get("managed_accounts")))
+
+    if admin_summary:
+        data["users_export_breakdown"] = [
+            {"label": "Total users", "value": admin_summary.get("org_user_count", 0)},
+            {"label": "Managed users", "value": admin_summary.get("managed_user_count", 0)},
+            {"label": "Active users", "value": admin_summary.get("active_user_count", 0)},
+            {"label": "Suspended users", "value": admin_summary.get("suspended_user_count", 0)},
+            {"label": "Org admins", "value": admin_summary.get("org_admin_count", 0)},
+            {"label": "MFA disabled", "value": admin_summary.get("mfa_disabled_user_count", 0)},
+        ]
+    else:
+        data.setdefault("users_export_breakdown", _safe_list(payload.get("users_export_breakdown")))
+
+    data.setdefault("org_product_breakdown", _safe_list(payload.get("org_product_breakdown")))
     data["source_mode"] = "runtime"
     data["source_file"] = source_file
     return data

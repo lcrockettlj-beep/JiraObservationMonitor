@@ -1,0 +1,21 @@
+600-Second Refresh Notes
+=======================
+
+This pack adds BACKEND refresh every 600 seconds.
+
+Recommended run model:
+1. PowerShell window A:
+   powershell -ExecutionPolicy Bypass -File .\run_api_runtime_refresh_600s.ps1
+
+2. PowerShell window B:
+   python web.py
+
+3. Browser:
+   open http://127.0.0.1:5000/
+
+Why this is the safest version first:
+- backend data refreshes every 600 seconds
+- web app always reads the latest runtime JSON on each page load
+- no risky template surgery is required yet
+
+If you want browser auto-refresh later too, that should be a separate small UI-only patch once this backend loop is proven stable.
