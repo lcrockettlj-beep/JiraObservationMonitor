@@ -1,0 +1,441 @@
+JIRA OBSERVATION MONITOR
+JAVASCRIPT PROJECT MANUAL
+=========================
+
+Purpose
+-------
+This manual explains how JavaScript is used in the Jira Observation Monitor project.
+It focuses on the current real JavaScript usage in this codebase.
+
+At the moment JavaScript is intentionally lightweight.
+It is used mainly for:
+- dark/light theme toggling,
+- saving the user’s theme choice,
+- initialising the theme button on each page.
+
+This project does NOT currently depend on a large frontend framework.
+There is no React / Vue / Angular here.
+The current approach is simple, stable, and low-risk.
+
+
+1. WHERE JAVASCRIPT LIVES
+-------------------------
+Current active JS file:
+
+    static/js/theme.js
+
+This is the main JavaScript file presently used by the live application.
+
+Because JavaScript usage is still intentionally small, this file is very important.
+If theme.js breaks, theme switching stops working across all pages.
+
+
+2. WHAT JAVASCRIPT DOES RIGHT NOW
+---------------------------------
+Current responsibilities:
+- read theme preference from localStorage
+- apply the stored theme on page load
+- toggle between dark and light themes
+- update the theme button text
+- attach click handler to the theme button
+
+That is the current core JavaScript layer.
+
+
+3. HOW JAVASCRIPT IS LOADED
+---------------------------
+Pages load theme.js in the <head>.
+Typical pattern:
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+This script must be available before the page calls initToggle(...) later.
+
+At the bottom of the page, templates call:
+
+    <script>
+        window.JOMTheme.initToggle("theme-toggle");
+    </script>
+
+Meaning:
+- theme.js defines window.JOMTheme
+- template tells JS which button to wire up
+
+
+4. THEME.JS OVERVIEW
+--------------------
+The theme system follows a simple pattern:
+
+A. read saved theme from localStorage
+B. apply theme to document root
+C. find theme button by ID
+D. update button text
+E. attach click event
+F. save updated theme back to localStorage
+
+This is a clean, low-complexity pattern.
+
+
+5. KEY JAVASCRIPT CONCEPTS USED HERE
+------------------------------------
+5.1 localStorage
+----------------
+localStorage is used to persist theme choice between page loads.
+
+Typical pattern:
+
+    localStorage.getItem("jom_theme")
+    localStorage.setItem("jom_theme", nextTheme)
+
+Meaning:
+- if user chose light mode, next visit should still be light mode
+- browser remembers the choice locally
+
+
+5.2 document.documentElement
+----------------------------
+The script adds/removes attribute data-theme="light" on the root <html> element.
+
+Typical pattern:
+
+    document.documentElement.setAttribute("data-theme", "light")
+
+or:
+
+    document.documentElement.removeAttribute("data-theme")
+
+This is how JS tells CSS which theme rules to apply.
+
+
+5.3 event listeners
+-------------------
+The toggle button is wired using a click event listener.
+
+Typical pattern:
+
+    button.addEventListener("click", function () {
+        ...
+    })
+
+Meaning:
+- when the user clicks, JS changes theme state
+
+
+5.4 namespacing on window
+-------------------------
+The project exposes the theme helper on the global window object.
+
+Typical pattern:
+
+    window.JOMTheme = {
+        initToggle: function (buttonId) { ... }
+    }
+
+Meaning:
+- templates can safely call window.JOMTheme.initToggle("theme-toggle")
+- there is one known global object for theme behaviour
+
+
+6. CURRENT THEME.JS PATTERN
+---------------------------
+A simplified version of the likely current logic looks like this:
+
+    (function () {
+        function applySavedTheme() {
+            var savedTheme = localStorage.getItem("jom_theme");
+            if (savedTheme === "light") {
+                document.documentElement.setAttribute("data-theme", "light");
+            } else {
+                document.documentElement.removeAttribute("data-theme");
+            }
+        }
+
+        function setButtonLabel(button) {
+            if (!button) return;
+            var isLight = document.documentElement.getAttribute("data-theme") === "light";
+            button.textContent = isLight ? "Dark mode" : "Light mode";
+        }
+
+        function initToggle(buttonId) {
+            applySavedTheme();
+            var button = document.getElementById(buttonId);
+            if (!button) return;
+            setButtonLabel(button);
+            button.addEventListener("click", function () {
+                var isLight = document.documentElement.getAttribute("data-theme") === "light";
+                if (isLight) {
+                    document.documentElement.removeAttribute("data-theme");
+                    localStorage.setItem("jom_theme", "dark");
+                } else {
+                    document.documentElement.setAttribute("data-theme", "light");
+                    localStorage.setItem("jom_theme", "light");
+                }
+                setButtonLabel(button);
+            });
+        }
+
+        window.JOMTheme = {
+            initToggle: initToggle
+        };
+    })();
+
+Important idea:
+JS is intentionally tiny and specific.
+This is good.
+
+
+7. WHAT HTML MUST EXIST FOR JS TO WORK
+--------------------------------------
+For theme.js to work, every page that wants the toggle must have three things:
+
+1. Script include in head:
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+2. Button with correct ID:
+
+    <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
+
+3. Init call near bottom:
+
+    <script>
+        window.JOMTheme.initToggle("theme-toggle");
+    </script>
+
+If any of those are missing, the toggle will fail.
+
+
+8. HOW JS CONNECTS TO CSS
+-------------------------
+The theme logic works only because CSS in app.css uses this selector:
+
+    html[data-theme="light"] { ... }
+
+JS does not repaint components one by one.
+Instead, JS changes one attribute and CSS variables handle the visual change.
+
+This is good design because:
+- simple JS
+- centralised styling behaviour
+- easier maintenance
+
+
+9. HOW JS CONNECTS TO TEMPLATES
+-------------------------------
+Templates are responsible for:
+- loading theme.js
+- creating the button
+- calling initToggle()
+
+JS is responsible for:
+- behaviour after the page is loaded
+
+This means that if theme breaks, the fault may be in:
+- HTML template,
+- JS file,
+- CSS variable layer.
+
+Not every theme issue is a JS issue.
+
+
+10. COMMON JAVASCRIPT MISTAKES IN THIS PROJECT
+----------------------------------------------
+10.1 Wrong button ID
+--------------------
+If template uses:
+
+    id="theme_button"
+
+but JS expects:
+
+    initToggle("theme-toggle")
+
+then button lookup fails and nothing happens.
+
+Rule:
+Keep the ID exact.
+
+
+10.2 Missing init call
+----------------------
+If theme.js loads but page never calls initToggle(...), no event listener is attached.
+
+Symptoms:
+- button visible
+- clicking does nothing
+
+
+10.3 Script include missing
+---------------------------
+If theme.js is not loaded, window.JOMTheme will be undefined.
+
+Symptoms:
+- browser console error
+- init call fails
+- toggle dead
+
+
+10.4 localStorage disabled/unavailable
+--------------------------------------
+Rare but possible in restricted environments.
+
+Symptoms:
+- theme changes for current page but does not persist on reload
+
+
+10.5 Duplicated event binding
+-----------------------------
+If initToggle is called multiple times on the same button without care, one click may appear to toggle twice.
+
+Current project is simple enough that this is unlikely, but future developers should be aware.
+
+
+11. SAFE JAVASCRIPT EDITING RULES
+---------------------------------
+Rule 1:
+Keep JS small and purposeful.
+Do not introduce heavy frontend complexity without good reason.
+
+Rule 2:
+If adding a new interactive feature, confirm whether plain HTML + CSS can solve it first.
+
+Rule 3:
+If editing theme.js, test ALL pages with the toggle:
+- /
+- /estate
+- /reference
+- one /detail/... page
+
+Rule 4:
+If changing button IDs or class names, update templates consistently.
+
+Rule 5:
+Hard refresh browser after JS edits:
+    Ctrl + F5
+
+
+12. HOW TO ADD A NEW SMALL JS FEATURE SAFELY
+--------------------------------------------
+Example safe process:
+
+1. Decide the feature belongs in JS, not just HTML/CSS.
+2. Add it to static/js/theme.js or create a new small JS file if clearly separate.
+3. Keep one global namespace to avoid chaos.
+4. Add required HTML hooks in templates.
+5. Test one page first.
+
+Example future pattern:
+
+    window.JOMUI = {
+        initToggle: ..., 
+        initExpandableCards: function () { ... }
+    }
+
+But only do this when there is real need.
+
+
+13. JAVASCRIPT DEBUGGING WORKFLOW
+---------------------------------
+If theme or another JS behaviour breaks, check in this order:
+
+1. Is the JS file loading?
+2. Is there a browser console error?
+3. Is the button present in the DOM?
+4. Is initToggle being called?
+5. Is the ID correct?
+6. Is localStorage being written?
+7. Is CSS reacting to the root attribute?
+
+Helpful browser checks:
+- DevTools > Console
+- DevTools > Network > JS file status
+- DevTools > Elements > inspect <html> for data-theme attribute
+- DevTools > Application > Local Storage > jom_theme
+
+
+14. QUICK TROUBLESHOOTING CASES
+-------------------------------
+Case A — button missing entirely
+--------------------------------
+Cause:
+- template issue, not JS
+
+Fix:
+- add button markup back into template
+
+
+Case B — button present but click does nothing
+----------------------------------------------
+Cause possibilities:
+- missing theme.js include
+- missing initToggle call
+- wrong button ID
+
+Fix:
+- verify all three pieces
+
+
+Case C — text changes but colours do not
+----------------------------------------
+Cause:
+- JS works, CSS theme layer broken
+
+Fix:
+- inspect app.css and html[data-theme="light"] rules
+
+
+Case D — theme resets on refresh
+--------------------------------
+Cause:
+- localStorage not writing or being overwritten
+
+Fix:
+- inspect browser storage and code path that writes jom_theme
+
+
+15. GIT WORKFLOW FOR JS CHANGES
+-------------------------------
+Recommended:
+
+    git add static/js/theme.js templates/*.html
+    git commit -m "Update theme toggle logic"
+    git push
+
+If JS breaks and you want to revert quickly:
+
+    git checkout -- static/js/theme.js
+
+
+16. WHAT NOT TO DO TOO EARLY
+----------------------------
+Do NOT rush into:
+- adding large JS libraries for tiny behaviour
+- rewriting the app into a SPA
+- introducing complex frontend state management
+- adding many scattered inline scripts in templates
+
+Current approach is good because:
+- low complexity
+- predictable behaviour
+- easier handover
+
+
+17. RECOMMENDED FUTURE JS DIRECTION
+-----------------------------------
+Reasonable future JavaScript growth could include:
+- small UI helpers beyond theme toggle
+- optional page refresh indicators
+- small filter/search helpers for lists
+- snapshot timestamp refresh indicators
+
+Keep it modular and small.
+If JS grows meaningfully, consider:
+- a second lightweight UI script file
+- one small namespace like window.JOMUI
+
+
+18. ONE-PARAGRAPH SUMMARY
+-------------------------
+JavaScript in Jira Observation Monitor is deliberately lightweight and currently focused on theme control only. The main JS file, theme.js, reads and stores theme preference in localStorage, applies a data-theme attribute to the root HTML element, and wires the theme button on each page using window.JOMTheme.initToggle("theme-toggle"). The safest approach for future developers is to keep JavaScript minimal, ensure it stays aligned with the template button IDs and app.css theme selectors, and avoid introducing frontend complexity before it is genuinely needed.
+
+END OF MANUAL

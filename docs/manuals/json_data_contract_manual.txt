@@ -1,0 +1,922 @@
+JIRA OBSERVATION MONITOR
+JSON DATA CONTRACT MANUAL
+=========================
+
+Purpose
+-------
+This manual explains the JSON data contract used by Jira Observation Monitor.
+It is a project-specific guide that explains:
+
+- what the /api/data payload looks like,
+- which top-level keys are expected,
+- what each major object means,
+- which fields power which pages,
+- how drilldowns are structured,
+- how a developer should extend the contract safely,
+- how to troubleshoot missing/incorrect JSON fields.
+
+This is NOT a general JSON tutorial.
+It is a practical contract guide for this project.
+
+
+1. WHAT THE JSON CONTRACT IS
+----------------------------
+The JSON data contract is the unified Python dictionary returned by `_build_data()` in `web.py` and exposed through the route:
+
+    /api/data
+
+This payload is the core contract between:
+- Python backend services,
+- HTML/Jinja templates,
+- drilldown routes,
+- future integrations.
+
+In simple terms:
+
+backend services -> unified Python dict -> /api/data JSON -> templates + detail pages
+
+If the JSON contract changes, templates and drilldowns may break unless they are updated too.
+
+
+2. WHY THIS CONTRACT MATTERS
+----------------------------
+This project is built around a single combined payload.
+That means:
+- homepage uses it,
+- estate page uses it,
+- reference page uses it,
+- detail pages use it,
+- API consumers will use it later.
+
+So this JSON contract is the backbone of the application.
+
+If the contract is wrong, the UI can show:
+- missing counts,
+- empty tables,
+- wrong links,
+- 404 drilldowns,
+- zero values where data should exist.
+
+
+3. CONTRACT SHAPE OVERVIEW
+--------------------------
+At a high level, the payload returned by `/api/data` is expected to look like this conceptually:
+
+    {
+      "estate": {...},
+      "sites": [...],
+      "critical_sites": [...],
+      "warning_sites": [...],
+      "stable_sites": [...],
+      "org_product_breakdown": [...],
+      "users_export_breakdown": [...],
+      "billing_summary": {...},
+      "change_detection": {...},
+      "site_discovery": {...},
+      "project_intelligence": {...},
+      "drilldowns": {...},
+      "users_source_file": "...csv",
+      "managed_source_file": "...csv",
+      "users_row_count": 0,
+      "managed_row_count": 0
+    }
+
+Not every internal field is guaranteed to be present at every stage of the project, but those are the main current contract areas.
+
+
+4. TOP-LEVEL KEYS
+-----------------
+Below are the most important top-level keys currently expected in the unified payload.
+
+4.1 estate
+----------
+Type:
+    object / dictionary
+
+Purpose:
+- holds estate-level summary metrics used by the homepage
+
+Examples of fields that may appear here:
+- managed_disabled_accounts
+- no_tracked_jira_site_access
+- inactive_without_site_access
+- bitbucket_only_no_tracked_jira
+- total_users
+- total_active_users
+- total_inactive_users
+
+Example shape:
+
+    "estate": {
+      "managed_disabled_accounts": 12,
+      "no_tracked_jira_site_access": 21,
+      "inactive_without_site_access": 8,
+      "bitbucket_only_no_tracked_jira": 5
+    }
+
+Important note:
+These are estate-wide figures, not per-site figures.
+
+
+4.2 sites
+---------
+Type:
+    list of objects
+
+Purpose:
+- master list of monitored sites
+- primary source for site cards on Home and Estate pages
+
+Each item in `sites` is a site object containing metrics and status.
+
+Common fields expected per site include:
+- site
+- site_name
+- status
+- tier_status
+- total_users
+- active_users
+- inactive_users
+- licensed_users
+- tier_limit
+- licence_model
+- usage_percent
+- capacity_remaining
+- confluence_users
+- project_count
+- issue_count_total
+- issue_count_unresolved
+- issue_count_updated_last_7d
+- project_count_delta
+- sampled_project_rows
+- reason
+- atlassian_area
+- atlas_users
+- goals_users
+- projects_users
+
+Example conceptual shape:
+
+    {
+      "site": "example-site",
+      "site_name": "Example Site",
+      "status": "warning",
+      "total_users": 120,
+      "active_users": 90,
+      "inactive_users": 30,
+      "licensed_users": 100,
+      "tier_limit": 125,
+      "licence_model": "tiered",
+      "usage_percent": 80,
+      "capacity_remaining": 25,
+      "project_count": 42,
+      "issue_count_total": 10000,
+      "issue_count_unresolved": 718,
+      "issue_count_updated_last_7d": 245,
+      "reason": "Near tier limit",
+      "atlassian_area": "Billing / User access"
+    }
+
+Important note:
+Each site object is enriched over multiple merge steps in Python.
+A developer should not assume all site fields come from one source file.
+
+
+4.3 critical_sites / warning_sites / stable_sites
+-------------------------------------------------
+Type:
+    list of site objects
+
+Purpose:
+- filtered grouped views of the master sites list
+- used by the homepage and estate page for grouped site display
+
+These are usually derived from `sites`, not loaded separately.
+
+Logic conceptually:
+
+    critical_sites = [s for s in sites if s.status == "critical"]
+    warning_sites  = [s for s in sites if s.status == "warning"]
+    stable_sites   = [s for s in sites if s.status == "stable"]
+
+Important note:
+These lists should contain the SAME site object structure as `sites`.
+The difference is grouping only.
+
+
+4.4 org_product_breakdown
+-------------------------
+Type:
+    list of objects
+
+Purpose:
+- powers organisation product reference rows on the Reference page
+
+Expected per item:
+- key
+- label
+- count
+
+Example:
+
+    "org_product_breakdown": [
+      {"key": "Jira", "label": "Jira", "count": 320},
+      {"key": "Confluence", "label": "Confluence", "count": 210}
+    ]
+
+Used by:
+- Reference page
+- potential product drilldowns
+
+
+4.5 users_export_breakdown
+--------------------------
+Type:
+    list of objects
+
+Purpose:
+- powers access breakdown rows on the Reference page
+
+Expected per item:
+- key
+- label
+- count
+
+Example:
+
+    "users_export_breakdown": [
+      {"key": "Jira - example-site", "label": "Jira - example-site", "count": 120},
+      {"key": "Confluence - example-site", "label": "Confluence - example-site", "count": 95}
+    ]
+
+
+4.6 billing_summary
+-------------------
+Type:
+    object / dictionary
+
+Purpose:
+- powers the billing and marketplace summary values on the Reference page
+
+Common expected fields:
+- atlassian_app_entry_count
+- marketplace_app_entry_count
+- unique_jira_entries
+- unique_bitbucket_entries
+- unique_confluence_entries
+- unique_rovo_entries
+
+Example:
+
+    "billing_summary": {
+      "atlassian_app_entry_count": 18,
+      "marketplace_app_entry_count": 9,
+      "unique_jira_entries": 5,
+      "unique_bitbucket_entries": 2,
+      "unique_confluence_entries": 3,
+      "unique_rovo_entries": 1
+    }
+
+
+4.7 change_detection
+--------------------
+Type:
+    object / dictionary
+
+Purpose:
+- powers homepage change cards
+- powers change drilldowns
+- enriches site status/context
+
+Common expected nested keys:
+- summary
+- site_map
+- excluded_sites
+- comparison_changes
+
+`summary` may include:
+- change_count
+- project_delta_total
+- total_users_delta_total
+
+Example conceptual shape:
+
+    "change_detection": {
+      "summary": {
+        "change_count": 6,
+        "project_delta_total": 4,
+        "total_users_delta_total": 11
+      },
+      "site_map": {
+        "example-site": {
+          "project_count_delta": 2,
+          "total_users_delta": 5,
+          "attention_reasons": ["Project growth"]
+        }
+      }
+    }
+
+Important note:
+The exact nested shape can grow over time, but `summary` and `site_map` are key concepts.
+
+
+4.8 site_discovery
+------------------
+Type:
+    object / dictionary
+
+Purpose:
+- powers Estate page registry section
+- powers discovery cards on homepage
+- powers discovery drilldowns
+
+Common expected nested keys:
+- summary
+- tracked_sites
+- excluded_sites
+- all_sites
+- new_site_candidates
+
+`summary` may include:
+- tracked_site_count
+- excluded_site_count
+- discovered_site_count
+- new_site_candidate_count
+
+Example conceptual shape:
+
+    "site_discovery": {
+      "summary": {
+        "tracked_site_count": 3,
+        "excluded_site_count": 2,
+        "discovered_site_count": 5,
+        "new_site_candidate_count": 1
+      }
+    }
+
+
+4.9 project_intelligence
+------------------------
+Type:
+    object / dictionary
+
+Purpose:
+- project-level intelligence beyond simple site card counts
+- powers project summaries and drilldowns
+
+Common expected nested keys:
+- site_map
+- summary
+
+`site_map` often contains a per-site block for project sampling/rows.
+
+Example concept:
+
+    "project_intelligence": {
+      "site_map": {
+        "example-site": {
+          "sampled_project_rows": 12,
+          "project_rows": [...]
+        }
+      }
+    }
+
+
+4.10 drilldowns
+---------------
+Type:
+    object / dictionary
+
+Purpose:
+- master drilldown registry for all detail pages
+- maps detail route keys to row-based datasets
+
+This is one of the most important sections of the entire contract.
+
+Keys inside drilldowns are string identifiers such as:
+- change::summary
+- change::comparison_changes
+- discovery::summary
+- discovery::tracked_sites
+- project::summary
+- product::<key>
+- access::<key>
+- billing::<key>
+- site::<site>
+
+Each drilldown object is expected to include:
+- title
+- reason
+- atlassian_area
+- columns
+- rows
+
+Example shape:
+
+    "drilldowns": {
+      "change::summary": {
+        "title": "Change Summary",
+        "reason": "Latest collector comparison output",
+        "atlassian_area": "Monitoring / Change review",
+        "columns": ["site", "change_type", "detail"],
+        "rows": [
+          {"site": "example-site", "change_type": "project_delta", "detail": "+2 projects"}
+        ]
+      }
+    }
+
+Important note:
+If a drilldown key is missing, `/detail/<key>` will fail with 404.
+
+
+4.11 users_source_file / managed_source_file
+--------------------------------------------
+Type:
+    string or null
+
+Purpose:
+- shows which source CSV files were loaded
+- helps debugging and operator awareness
+
+Examples:
+- export-users (1).csv
+- 2026-06-15T095320Z_managed_accounts.csv
+
+
+4.12 users_row_count / managed_row_count
+----------------------------------------
+Type:
+    integer
+
+Purpose:
+- tells UI how many CSV rows were loaded
+- acts as a basic sanity check for operators and developers
+
+
+5. FORMAL FIELD NOTES FOR SITE OBJECTS
+--------------------------------------
+This section explains common site-level fields more formally.
+
+site
+----
+Type:
+    string
+Meaning:
+    internal site key / slug / identifier used for matching and drilldown URLs
+
+site_name
+---------
+Type:
+    string
+Meaning:
+    human-readable display name for the site
+
+status
+------
+Type:
+    string
+Expected values typically:
+- critical
+- warning
+- stable
+Meaning:
+    display grouping / operational health category
+
+tier_status
+-----------
+Type:
+    string
+Meaning:
+    licensing or capacity state where tier model applies
+
+licence_model
+-------------
+Type:
+    string
+Expected values may include:
+- tiered
+- seat_paid
+Meaning:
+    controls whether tier usage is relevant or not
+
+total_users
+-----------
+Type:
+    integer
+Meaning:
+    total users for that specific site
+
+active_users
+------------
+Type:
+    integer
+Meaning:
+    active Jira users for that specific site
+
+inactive_users
+--------------
+Type:
+    integer
+Meaning:
+    inactive Jira users for that specific site
+
+licensed_users
+--------------
+Type:
+    integer
+Meaning:
+    number of licensed users / licence estimate for that site
+
+tier_limit
+----------
+Type:
+    integer or null
+Meaning:
+    tier ceiling if the site is tier-based
+
+usage_percent
+-------------
+Type:
+    integer/float or null
+Meaning:
+    capacity usage against tier limit
+
+capacity_remaining
+------------------
+Type:
+    integer or null
+Meaning:
+    remaining tier headroom
+
+project_count
+-------------
+Type:
+    integer
+Meaning:
+    project count for the site
+
+issue_count_total
+-----------------
+Type:
+    integer
+Meaning:
+    total issues counted for the site
+
+issue_count_unresolved
+----------------------
+Type:
+    integer
+Meaning:
+    unresolved issues count for the site
+
+issue_count_updated_last_7d
+---------------------------
+Type:
+    integer
+Meaning:
+    issues updated in the last 7 days
+
+project_count_delta
+-------------------
+Type:
+    integer
+Meaning:
+    change in project count compared to previous snapshot/reference
+
+sampled_project_rows
+--------------------
+Type:
+    integer
+Meaning:
+    sample size or count of project rows available for drilldown/sample display
+
+reason
+------
+Type:
+    string
+Meaning:
+    human-readable rationale shown in site card footer
+
+atlassian_area
+--------------
+Type:
+    string
+Meaning:
+    suggested Atlassian operational area for action/investigation
+
+
+6. DRILLDOWN CONTRACT DETAILS
+-----------------------------
+Every drilldown entry should follow one consistent shape.
+
+Recommended contract:
+
+    {
+      "title": "...",
+      "reason": "...",
+      "atlassian_area": "...",
+      "columns": ["col1", "col2"],
+      "rows": [
+        {"col1": "value", "col2": "value"}
+      ]
+    }
+
+Field meanings:
+
+title
+-----
+Type:
+    string
+Purpose:
+    display title for detail page
+
+reason
+------
+Type:
+    string
+Purpose:
+    explains why the drilldown matters
+
+atlassian_area
+--------------
+Type:
+    string
+Purpose:
+    points user towards relevant Atlassian admin area/process
+
+columns
+-------
+Type:
+    list of strings
+Purpose:
+    controls table headers and row field order
+
+rows
+----
+Type:
+    list of objects
+Purpose:
+    actual detail data to render in table
+
+Important rule:
+Keys used in each row object should match the column names expected by the detail template logic.
+
+
+7. PAGE-TO-CONTRACT MAPPING
+---------------------------
+This section explains which page depends on which JSON areas.
+
+Homepage depends heavily on:
+- estate
+- change_detection.summary
+- site_discovery.summary
+- critical_sites
+- warning_sites
+- stable_sites
+- source file names
+- row counts
+
+Estate page depends heavily on:
+- site_discovery.summary
+- site_discovery-related drilldowns
+- grouped site lists
+- project metrics on sites
+- change detection enrichment on sites
+
+Reference page depends heavily on:
+- org_product_breakdown
+- billing_summary
+- users_export_breakdown
+
+Detail page depends entirely on:
+- drilldowns[key]
+
+/api/data shows:
+- full contract for debugging and external validation
+
+
+8. HOW TO EXTEND THE JSON CONTRACT SAFELY
+-----------------------------------------
+Rule 1:
+Add new fields in Python first, not templates first.
+
+Rule 2:
+Confirm the new field appears in `/api/data`.
+
+Rule 3:
+Only then consume it in templates.
+
+Rule 4:
+Avoid renaming existing keys unless all dependent templates and drilldowns are updated.
+
+Rule 5:
+Keep conceptually similar fields grouped under the same object where possible.
+
+Example safe extension:
+
+    data["estate"]["inactive_over_90_days"] = 14
+
+Then in template:
+
+    {{ estate.inactive_over_90_days or 0 }}
+
+
+9. HOW TO ADD A NEW DRILLDOWN TO THE CONTRACT SAFELY
+----------------------------------------------------
+Example safe process:
+
+1. Decide which service module owns it.
+2. Add a new drilldown entry in that service.
+3. Confirm web.py merges that service into the global drilldowns map.
+4. Visit `/api/data` and confirm the key exists.
+5. Add an HTML link using the exact key.
+6. Test `/detail/<key>` directly.
+
+Example concept:
+
+    drilldowns["estate::inactive_over_90_days"] = {
+      "title": "Inactive Over 90 Days",
+      "reason": "Users inactive for more than 90 days",
+      "atlassian_area": "User access review",
+      "columns": ["name", "email", "site"],
+      "rows": [...]
+    }
+
+
+10. COMMON JSON CONTRACT MISTAKES
+---------------------------------
+10.1 Key renamed in Python but not in template
+----------------------------------------------
+Example:
+Python changes:
+    users_export_breakdown -> access_breakdown
+
+Template still uses:
+    users_export_breakdown
+
+Result:
+- template shows empty output or errors
+
+Fix:
+- keep contract names stable
+- or update all templates/routes immediately
+
+
+10.2 Nested structure changed unexpectedly
+------------------------------------------
+Example:
+`change_detection.summary` changed to `change_detection.totals`
+
+Result:
+- homepage cards show zero or missing values
+
+Fix:
+- preserve nested structure when possible
+- if changing it, update every dependent template and drilldown path
+
+
+10.3 Drilldown rows do not match columns
+----------------------------------------
+Example:
+columns = ["site", "email"]
+rows = [{"site_name": "x", "mail": "y"}]
+
+Result:
+- table renders blank cells
+
+Fix:
+- align row keys with column names or detail page expectations
+
+
+10.4 Wrong data type
+--------------------
+Examples:
+- integer expected, string supplied
+- list expected, dict supplied
+- dict expected, list supplied
+
+Result:
+- loops fail
+- counts render strangely
+- template logic behaves unexpectedly
+
+Fix:
+- keep types stable
+- validate shape in Python before returning payload
+
+
+11. BASIC TYPE GUIDELINES
+-------------------------
+Recommended type conventions in this project:
+- counts -> integers
+- status -> strings
+- summaries -> dicts
+- grouped collections -> lists of dicts
+- drilldown registry -> dict of dicts
+- source file names -> strings or null
+- booleans -> actual true/false, not "yes"/"no" strings where possible
+
+Consistent types matter because templates and future consumers expect stable shapes.
+
+
+12. JSON CONTRACT DEBUGGING WORKFLOW
+------------------------------------
+If something on screen looks wrong, use this order:
+
+1. Open `/api/data`
+2. Find the relevant top-level object
+3. Confirm the key exists
+4. Confirm its type is what you expect
+5. Confirm nested keys match template usage
+6. Only then inspect HTML/Jinja
+
+Examples:
+- Homepage card wrong? inspect `estate` first.
+- Estate summary wrong? inspect `site_discovery.summary` first.
+- Change card wrong? inspect `change_detection.summary` first.
+- Detail page 404? inspect `drilldowns` keys first.
+
+
+13. QUICK TROUBLESHOOTING CASES
+-------------------------------
+Case A — homepage card shows 0 when you expect real value
+---------------------------------------------------------
+Likely causes:
+- field missing in `estate`
+- wrong field name in template
+- service not populating it
+
+Fix:
+- inspect `/api/data` -> `estate`
+
+
+Case B — estate page summary boxes are blank
+--------------------------------------------
+Likely causes:
+- `site_discovery.summary` missing
+- nested key mismatch
+
+Fix:
+- inspect `/api/data` -> `site_discovery`
+
+
+Case C — detail page exists but table empty
+-------------------------------------------
+Likely causes:
+- drilldown key exists but rows are empty
+- row filter too aggressive
+
+Fix:
+- inspect `/api/data` -> `drilldowns[key]`
+
+
+Case D — detail page 404
+------------------------
+Likely causes:
+- missing drilldown key in master map
+- link mismatch
+
+Fix:
+- inspect `/api/data` -> `drilldowns`
+
+
+14. VERSIONING THE CONTRACT
+---------------------------
+Right now the contract is informal and defined by Python code, not by a separate schema file.
+
+That is acceptable for current stage, but future improvement could include:
+- a written schema version section,
+- a dedicated JSON schema file,
+- contract tests.
+
+Recommended future convention:
+- do not rename keys casually,
+- add new keys in additive way where possible,
+- treat `/api/data` as a backward-compatibility surface for templates and tools.
+
+
+15. RECOMMENDED FUTURE IMPROVEMENTS
+-----------------------------------
+Potential future contract improvements:
+- formal JSON schema file
+- contract validation tests
+- version number inside payload
+- `generated_at` timestamp at payload root
+- `schema_version` field
+- explicit metadata section
+
+Example future addition:
+
+    "metadata": {
+      "schema_version": "1.0",
+      "generated_at": "2026-06-17T08:00:00Z"
+    }
+
+This would make debugging and handover easier.
+
+
+16. ONE-PARAGRAPH SUMMARY
+-------------------------
+The Jira Observation Monitor JSON data contract is the unified payload assembled by Python and exposed at `/api/data`. It connects the backend service modules to the rendered templates and detail pages. The most important top-level sections are `estate`, `sites`, grouped site lists, `billing_summary`, `change_detection`, `site_discovery`, `project_intelligence`, and `drilldowns`. The safest way to work with this contract is to keep field names stable, extend it additively, validate changes through `/api/data` before touching templates, and treat the drilldowns dictionary as a first-class contract surface for all detail pages.
+
+END OF MANUAL

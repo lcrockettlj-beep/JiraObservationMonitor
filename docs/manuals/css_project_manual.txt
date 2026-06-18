@@ -1,0 +1,571 @@
+JIRA OBSERVATION MONITOR
+CSS PROJECT MANUAL
+==================
+
+Purpose
+-------
+This manual explains how CSS is used in the Jira Observation Monitor project.
+It focuses on the real styling system used in this application.
+
+In this project, CSS is responsible for:
+- the visual theme,
+- layout,
+- spacing,
+- navigation styling,
+- card design,
+- responsive behaviour,
+- table styling,
+- dark/light mode appearance.
+
+
+1. WHERE CSS LIVES
+------------------
+Current active CSS files:
+
+    static/css/app.css
+    static/css/home.css
+    static/css/detail.css
+
+These files are loaded in templates using <link rel="stylesheet"> tags.
+
+
+2. WHAT EACH CSS FILE DOES
+--------------------------
+2.1 app.css
+-----------
+Shared design system.
+Purpose:
+- root theme variables
+- light/dark theme switch variables
+- body background and typography
+- shared page shell
+- hero / panel styles
+- nav styles
+- pills/buttons
+- general layout rules
+
+This is the most important CSS file.
+If app.css breaks, most pages look broken.
+
+
+2.2 home.css
+------------
+Page/component styling for homepage-style layouts.
+Purpose:
+- stat cards
+- action pills
+- breakdown rows
+- site cards
+- metric blocks
+- site grid
+- usage bars
+
+This file styles much of the operational UI seen on Home and Estate style pages.
+
+
+2.3 detail.css
+--------------
+Detail/drilldown table styling.
+Purpose:
+- table layout
+- table spacing
+- overflow management
+- wrapping rules
+- compact detail-page presentation
+
+
+3. CSS ARCHITECTURE IN THIS PROJECT
+-----------------------------------
+The CSS system follows this rough pattern:
+
+A. app.css = shared base system
+B. home.css = operational card/grids layer
+C. detail.css = table/drilldown layer
+
+That means:
+- shared things belong in app.css
+- homepage/site-card things belong in home.css
+- generic drilldown table things belong in detail.css
+
+Rule:
+If a style is reused across multiple pages, put it in app.css.
+If it only applies to site cards or homepage grids, put it in home.css.
+If it only affects the detail table, put it in detail.css.
+
+
+4. THEME VARIABLES
+------------------
+The current UI uses CSS custom properties (variables).
+
+Example pattern in app.css:
+
+    :root {
+        --bg: #0b122b;
+        --panel: rgba(20, 33, 86, 0.84);
+        --panel-solid: #13204b;
+        --border: rgba(69, 155, 227, 0.24);
+        --text: #ffffff;
+        --muted: #b6c3df;
+        --critical: #e14b5a;
+        --warning: #f0b24a;
+        --stable: #2dbe7f;
+        --accent: #459be3;
+    }
+
+Light theme version:
+
+    html[data-theme="light"] {
+        --bg: #eef4ff;
+        --panel: rgba(255, 255, 255, 0.94);
+        ...
+    }
+
+Meaning:
+- dark theme is default
+- light theme is activated when the HTML element gets data-theme="light"
+
+This is why theme.js only needs to add/remove one attribute.
+
+
+5. SHARED LAYOUT STYLES IN app.css
+----------------------------------
+5.1 Page wrapper
+----------------
+Example:
+
+    .page {
+        max-width: 1380px;
+        margin: 0 auto;
+        padding: 24px 20px 48px;
+    }
+
+Purpose:
+- keeps content centred
+- prevents UI from becoming too wide
+- adds outer spacing
+
+
+5.2 Shared shell blocks
+-----------------------
+Example:
+
+    .hero,
+    .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+    }
+
+Meaning:
+- hero and panel use the same visual shell
+- cards/pages maintain a unified look
+
+
+5.3 Typography and base colour
+------------------------------
+Example:
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--text);
+        background: ...;
+    }
+
+This means text colour and overall background are centrally controlled.
+
+
+6. NAV BAR CSS
+--------------
+The current nav styling lives in app.css.
+
+Important classes:
+- .top-nav
+- .top-nav__brand
+- .top-nav__links
+- .top-nav__link
+- .top-nav__link--active
+- .top-nav__actions
+
+Example pattern:
+
+    .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 10px 14px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        flex-wrap: wrap;
+    }
+
+Meaning:
+- brand / links / theme button share one responsive row
+- wrap allows smaller screens to stack content safely
+
+Active page styling comes from:
+
+    .top-nav__link--active {
+        color: var(--text);
+        border-color: rgba(69, 155, 227, 0.45);
+        background: rgba(69,155,227,0.12);
+    }
+
+Rule:
+If nav styling breaks, inspect app.css first, not home.css.
+
+
+7. BUTTONS AND PILLS
+--------------------
+Shared button styles are in app.css.
+
+Example classes:
+- .pill
+- .pill-button
+
+Example pattern:
+
+    .pill-button {
+        margin: 0;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+Meaning:
+- shared token-based pill style
+- used both for links and theme controls
+
+
+8. HOMEPAGE / SITE CARD CSS IN home.css
+---------------------------------------
+home.css is where most operational UI styling lives.
+
+Key class groups include:
+- .stat-card
+- .action-pills
+- .breakdown-list
+- .breakdown-row
+- .site-grid
+- .site-card
+- .site-top
+- .badge
+- .metrics
+- .metric
+- .metric-link
+- .usage-wrap
+- .usage-row
+- .usage-bar
+- .usage-fill
+
+
+8.1 Stat cards
+--------------
+Example:
+
+    .stat-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px;
+        min-height: 112px;
+        display: block;
+    }
+
+Purpose:
+- homepage attention cards
+- clickable summary tiles
+
+
+8.2 Site card layout
+--------------------
+Example:
+
+    .site-card {
+        background: var(--panel-solid);
+        border: 1px solid var(--border);
+        border-left: 5px solid var(--stable);
+        border-radius: 18px;
+        padding: 18px;
+        min-height: 360px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+Meaning:
+- site cards are vertical flex layouts
+- coloured left border indicates severity
+- min-height keeps cards visually aligned
+
+Severity-specific variations:
+- .site-card--critical
+- .site-card--warning
+- .site-card--stable
+
+
+8.3 Metric boxes
+----------------
+Example:
+
+    .metric, .metric-link {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 14px;
+        padding: 12px;
+        display: block;
+    }
+
+Purpose:
+- consistent small metric tiles inside cards
+- both static metric blocks and clickable metric blocks
+
+
+8.4 Usage bars
+--------------
+Example:
+
+    .usage-bar {
+        height: 12px;
+        width: 100%;
+        background: rgba(255,255,255,0.08);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .usage-fill { background: var(--stable); }
+    .usage-fill--warning { background: var(--warning); }
+    .usage-fill--critical { background: var(--critical); }
+
+These are used for licence/tier visual indicators.
+
+
+9. DETAIL TABLE CSS IN detail.css
+---------------------------------
+detail.css styles the reusable detail table page.
+
+Important classes/elements:
+- .panel
+- .table-wrap
+- table
+- th, td
+- td.wrap
+
+Example pattern:
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 14px; text-align: left; vertical-align: top; }
+
+Meaning:
+- lets wide tables scroll horizontally instead of breaking layout
+- keeps drilldown data readable
+
+
+10. RESPONSIVE CSS
+------------------
+The project uses media queries to shift layout on narrower screens.
+
+Example patterns:
+
+    @media (max-width: 1160px) {
+        .grid-4, .site-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 760px) {
+        .grid-4, .site-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+Meaning:
+- desktop => multiple columns
+- smaller screens => fewer columns
+- mobile => one-column stacking
+
+If responsive layout breaks, inspect media queries first.
+
+
+11. HOW CSS CONNECTS TO HTML
+----------------------------
+CSS in this project depends heavily on exact class names.
+
+Examples:
+- .top-nav requires <nav class="top-nav">
+- .site-card requires class="site-card"
+- .badge--critical requires class="badge badge--critical"
+- .metric-link requires class="metric-link"
+
+If HTML class names change but CSS is not updated, styling disappears.
+
+Rule:
+Never casually rename a class unless you update BOTH the HTML and the CSS.
+
+
+12. HOW CSS CONNECTS TO JS
+--------------------------
+The theme system depends on CSS variables and a selector:
+
+    html[data-theme="light"]
+
+theme.js changes the HTML root attribute.
+CSS then switches variables.
+
+This means:
+- theme.js does not directly recolour elements
+- CSS handles all appearance changes via variables
+
+This is a good system because it keeps the theme logic simple.
+
+
+13. COMMON CSS MISTAKES IN THIS PROJECT
+---------------------------------------
+13.1 Broken selector syntax
+---------------------------
+A bad selector can break large parts of the stylesheet.
+Example of a past type of problem:
+- invalid first selector
+- missing brace
+- malformed block
+
+Symptoms:
+- page renders as plain HTML
+- only some styles apply
+- nav breaks suddenly
+
+Fix:
+- inspect CSS carefully
+- find missing { or }
+- compare to last working version
+
+
+13.2 Putting shared rules in wrong file
+---------------------------------------
+Problem:
+- nav styling added to home.css instead of app.css
+- then reference/detail pages don’t inherit it
+
+Rule:
+If multiple pages need it, put it in app.css.
+
+
+13.3 Overwriting existing classes accidentally
+----------------------------------------------
+Problem:
+- duplicate class defined later with conflicting values
+
+Example:
+Two .top-nav blocks with different layout settings can cause confusion.
+
+Rule:
+Check for duplicates before adding a new rule.
+
+
+13.4 Using fixed sizes too aggressively
+---------------------------------------
+If heights/widths are too rigid, cards can overflow or compress badly.
+
+Safe approach:
+- prefer min-height over fixed height
+- use grid/flex layouts consistently
+- test with real data lengths
+
+
+14. SAFE CSS EDITING RULES
+--------------------------
+Rule 1:
+Edit one CSS file at a time.
+
+Rule 2:
+If only shared layout is broken, inspect app.css first.
+
+Rule 3:
+If only site cards are broken, inspect home.css first.
+
+Rule 4:
+If only drilldown table is broken, inspect detail.css first.
+
+Rule 5:
+After changing CSS, always hard refresh browser:
+    Ctrl + F5
+
+Rule 6:
+Do not rewrite lots of CSS without testing page by page.
+
+
+15. HOW TO ADD A NEW SHARED CLASS SAFELY
+----------------------------------------
+Example safe process:
+
+1. Decide if it is shared or page-specific.
+2. Add the class to the correct CSS file.
+3. Apply it in one template only first.
+4. Refresh and verify.
+5. Then reuse it elsewhere if safe.
+
+Example:
+Adding a new shared toolbar block:
+
+CSS in app.css:
+
+    .toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+HTML in template:
+
+    <div class="toolbar">
+        ...
+    </div>
+
+
+16. CSS DEBUGGING WORKFLOW
+--------------------------
+If a page looks wrong, check in this order:
+
+1. Is app.css loading?
+2. Is the correct page CSS loading?
+3. Did the HTML class name change?
+4. Is there a broken selector or missing brace?
+5. Is browser cache serving old CSS?
+6. Is a media query overriding expected layout?
+
+Helpful browser checks:
+- DevTools > Network > CSS files
+- DevTools > Elements > computed styles
+
+
+17. QUICK CSS RECOVERY CHECKLIST
+--------------------------------
+If CSS appears broken:
+
+1. Open the page and confirm which visual areas are broken.
+2. Decide if the issue is shared (app.css), operational/home/site-card (home.css), or detail table (detail.css).
+3. Compare against last working Git state if needed.
+4. Hard refresh browser.
+5. Revert the single CSS file if necessary.
+
+Useful Git commands:
+
+    git checkout -- static/css/app.css
+    git checkout -- static/css/home.css
+    git checkout -- static/css/detail.css
+
+
+18. ONE-PARAGRAPH SUMMARY
+-------------------------
+CSS in Jira Observation Monitor acts as the design system and layout engine for the whole UI. app.css controls shared theme, shell, nav, and base behaviours; home.css controls cards, site grids, and operational surfaces; detail.css controls the drilldown table view. Because the project relies heavily on exact class names, the safest way to work with CSS here is to keep shared styles in app.css, component/page styles in the appropriate file, avoid casual class renames, and always test with a hard browser refresh after edits.
+
+END OF MANUAL

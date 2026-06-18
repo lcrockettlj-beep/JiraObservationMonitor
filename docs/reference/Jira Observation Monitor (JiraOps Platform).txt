@@ -1,0 +1,410 @@
+# 🧠 Jira Observation Monitor (JiraOps Platform)
+
+## 🔷 Overview
+
+The **Jira Observation Monitor** is a **read-only operational observability platform** for Atlassian/Jira environments.
+
+It provides:
+
+* estate-wide visibility
+* site-level intelligence
+* user/permission insights
+* change detection
+* drill-down exploration
+
+The platform acts as a **live operational console**, enabling administrators to:
+
+* quickly detect risk or anomalies
+* understand usage and structure
+* navigate to actionable areas in Atlassian
+
+***
+
+# 🎯 Core Purpose
+
+The platform solves a key gap:
+
+> Atlassian does not provide a single pane of glass for **cross-site operational intelligence and risk visibility**
+
+This system provides:
+
+* **centralised monitoring**
+* **real-time summarisation**
+* **drilldown intelligence**
+* **action-driven insights**
+
+***
+
+# 🧱 Platform Architecture
+
+## 🔹 Backend (Python / Flask)
+
+* `web.py` → controller + routes + data assembly
+* modular intelligence services:
+  * `estate_metrics.py`
+  * `project_counts.py`
+  * `change_detection.py`
+  * `site_discovery.py`
+  * `billing_catalog.py`
+
+### Responsibilities
+
+* ingest CSV + JSON exports
+* build unified data model
+* calculate metrics + summaries
+* provide drilldown datasets
+* render templates
+
+***
+
+## 🔹 Frontend (Templates + Static)
+
+* Jinja templates (`templates/`)
+* CSS split:
+  * `app.css` → shared design system
+  * `home.css` → homepage layout
+  * `detail.css` → drilldown tables
+* JS:
+  * `theme.js` → dark/light mode
+
+***
+
+## 🔹 Data Sources
+
+### Current
+
+* Managed accounts export (CSV)
+* Users export (CSV)
+* Operational snapshot (`latest_run.json`)
+
+### Design note
+
+System is built to support:
+
+* additional Jira sites
+* future APIs/webhooks
+* snapshot comparisons
+
+***
+
+# 🧭 Application Structure (Pages)
+
+## 🏠 Homepage – Operational Console
+
+Primary command center.
+
+### Focus
+
+* “What needs attention right now”
+* “What changed”
+* “What should I look at next”
+
+### Key features:
+
+* ✅ Needs Attention cards
+* ✅ Change & Discovery insights
+* ✅ Site Health breakdown (Critical / Warning / Stable)
+* ✅ Quick navigation to drilldowns
+
+***
+
+## 🏢 Estate Page – Registry & Monitoring
+
+Dedicated **estate overview and discovery layer**.
+
+### Focus
+
+* full Jira estate visibility
+* tracking vs excluded sites
+* site lifecycle awareness
+
+### Key features:
+
+* ✅ tracked / excluded / discovered sites
+* ✅ discovery candidates
+* ✅ operational drilldowns
+* ✅ full site cards with metrics:
+  * users
+  * projects
+  * issues
+  * activity
+  * licensing
+
+***
+
+## 📚 Reference Page – Product & Billing Intelligence
+
+Dedicated **reference intelligence layer**.
+
+### Focus
+
+* product usage
+* billing data
+* user access distribution
+
+### Key features:
+
+* ✅ organisation product breakdown
+* ✅ billing / marketplace coverage
+* ✅ access breakdown (Jira, Confluence, etc.)
+* ✅ drilldowns into each dataset
+
+***
+
+## 🔍 Detail Pages – Drilldown Engine
+
+Dynamic route:
+
+```text
+/detail/<key>
+```
+
+### Purpose
+
+Turn any metric into:
+
+* a **clickable list**
+* a **sortable table**
+* a **deep inspection view**
+
+### Features:
+
+* ✅ sortable columns
+* ✅ dynamic datasets
+* ✅ reusable structure
+* ✅ consistent look across all domains
+
+***
+
+# 📊 Intelligence Layers
+
+## 1️⃣ Estate Intelligence
+
+From `estate_metrics.py`
+
+Tracks:
+
+* user states (active/inactive)
+* access gaps
+* product usage
+* license distribution
+
+### Examples:
+
+* disabled accounts
+* users without site access
+* inactive users with no usage
+
+***
+
+## 2️⃣ Project Intelligence
+
+From `project_counts.py`
+
+Tracks:
+
+* project counts per site
+* sampling coverage
+* change movement
+
+### Purpose:
+
+→ detect:
+
+* project growth/decline
+* abandoned estates
+* imbalanced usage
+
+***
+
+## 3️⃣ Change Detection
+
+From `change_detection.py`
+
+Compares snapshots:
+
+### Outputs:
+
+* total change count
+* user delta
+* project delta
+* site attention flags
+
+### Purpose:
+
+→ identify:
+
+* sudden growth or drop
+* structural changes
+* anomalies over time
+
+***
+
+## 4️⃣ Site Discovery
+
+From `site_discovery.py`
+
+Builds:
+
+* tracked sites
+* excluded sites
+* discovered estate
+
+### Purpose:
+
+→ maintain **accurate estate registry**
+
+***
+
+## 5️⃣ Billing & Reference Intelligence
+
+From `billing_catalog.py`
+
+Tracks:
+
+* Atlassian apps
+* marketplace apps
+* product access coverage
+
+### Purpose:
+
+→ align:
+
+* cost vs usage
+* licensing footprint
+* product exposure
+
+***
+
+# 🚨 Monitoring & Alert Strategy
+
+The platform uses **implicit alerting**, not email/alerts yet.
+
+## Current alerting model:
+
+### Visual prioritisation:
+
+* **Critical**
+* **Warning**
+* **Stable**
+
+### Signal sources:
+
+* user inactivity
+* license utilisation
+* zero activity sites
+* change spikes
+* access anomalies
+
+***
+
+## “Needs Attention” Cards
+
+This is your **top-level alert system**
+
+Examples:
+
+* Managed Disabled Accounts
+* No Tracked Jira Access
+* Inactive Users Without Access
+* Bitbucket-only users
+* Excluded Sites
+
+👉 These are **action-first signals**
+(not noise, not metrics)
+
+***
+
+# 🎨 UX / Design Principles
+
+You’ve already done something very important here:
+
+## ✅ Operational clarity over noise
+
+* minimal badges
+* clear hierarchy
+* no redundant “healthy” signals
+
+## ✅ Drilldown-first design
+
+Everything is clickable  
+Everything leads to evidence
+
+## ✅ Consistent navigation
+
+* Home / Estate / Reference
+* shared nav bar
+* persistent theme toggle
+
+## ✅ Dark/light mode
+
+* user preference stored
+* applied across all pages
+
+***
+
+# 🔐 Access Model
+
+* fully **read-only**
+* no modification capability
+* safe for stakeholders
+
+***
+
+# 🚀 What You Have Built (Reality Check)
+
+This is not a “practice app”.
+
+This is:
+
+## ✅ A real internal platform
+
+* supports operational decision making
+* usable by Jira admins
+* scalable to more sites
+
+## ✅ A foundation for:
+
+* central Atlassian observability
+* audit capability
+* governance tools
+
+## ✅ Already enterprise-aligned
+
+* modular backend
+* separated UI layers
+* extensible data model
+
+***
+
+# 🔮 Future Direction (natural evolution)
+
+You’re now set up for:
+
+## 🔹 Phase 3
+
+* shared template components (nav partial)
+* snapshot history + trends
+
+## 🔹 Phase 4
+
+* webhook ingestion
+* live change alerts
+
+## 🔹 Phase 5
+
+* risk scoring engine
+* automation insights
+
+## 🔹 Phase 6
+
+* AI summarisation layer
+* recommendations engine
+
+***
+
+# 🧾 One-Line Summary
+
+> The Jira Observation Monitor is a modular, read-only operational intelligence platform providing estate-wide visibility, change detection, and actionable insights across a multi-site Atlassian environment.
+
+

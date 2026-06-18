@@ -1,0 +1,359 @@
+LIVE API INGESTION PACK - IMPLEMENTATION PLAN
+=============================================
+
+Goal
+----
+Move the Jira Observation Monitor away from CSV-driven runtime logic and make live API collector output + snapshots the single source of truth for the UI.
+
+Scope of this pack
+------------------
+This plan covers Step 0 to Step 3:
+- Step 0: prep and guardrails
+- Step 1: auth foundation
+- Step 2: Jira API client and collector contract
+- Step 3: web layer refactor to latest_run.json + snapshots
+
+Step 4 (Admin API capability) is intentionally left as the next phase.
+
+Current project files observed
+------------------------------
+Based on the shared project tree, the project already contains:
+- auth.py
+- jira_client.py
+- data_collector.py
+- estate_metrics.py
+- reporting.py
+- monitoring.py
+- trends.py
+- snapshots.py
+- project_counts.py
+- web.py
+- templates/*.html
+- static/css/*.css
+- latest_run.json
+
+TARGET ARCHITECTURE
+-------------------
+Atlassian OAuth 3LO
+    -> auth.py
+    -> jira_client.py
+    -> data_collector.py
+    -> latest_run.json + snapshots + reports
+    -> web.py
+    -> templates + CSS
+
+END STATE PRINCIPLES
+--------------------
+1. web.py must not calculate truth from CSV files.
+2. latest_run.json becomes the primary operational contract for the UI.
+3. snapshots remain the basis for trend and change intelligence.
+4. data collection and normalization happen before Flask page render.
+5. failures in one site should not take down the whole monitor.
+6. CSV files become optional fallback inputs only, not runtime truth.
+
+STEP 0 - PREP AND GUARDRAILS
+----------------------------
+Objective:
+Freeze the source-of-truth rules before refactoring the live loader.
+
+Actions:
+1. Keep latest_run.json as the truth contract that web.py reads.
+2. Keep snapshots.py as the snapshot storage engine.
+3. Keep current templates unless backend requirements force a contract change.
+4. Stop adding new CSV-derived homepage logic.
+5. Keep one command to refresh live data:
+       python data_collector.py
+   or
+       python main.py
+   depending on your actual collector entry point.
+
+Deliverables:
+- Documented contract decision: UI reads collector output, not CSVs.
+- Backup commit before changing auth/client/collector/web.
+
+Acceptance checks:
+- Team (you) can state exactly where live truth comes from.
+- No new UI metrics are added from CSV parsing.
+
+STEP 1 - AUTH FOUNDATION
+------------------------
+Objective:
+Make auth.py the only place responsible for obtaining and refreshing live Atlassian access.
+
+Files to touch:
+- auth.py
+- tokens.json
+- .env
+
+Target responsibilities for auth.py:
+1. Load OAuth client config from .env
+2. Build the Atlassian authorization URL
+3. Exchange authorization code for token
+4. Refresh access token when expired
+5. Save token state safely to tokens.json
+6. Provide helper function:
+       get_valid_access_token()
+7. Provide helper function:
+       get_accessible_resources()
+
+Recommended .env values:
+- ATLASSIAN_CLIENT_ID
+- ATLASSIAN_CLIENT_SECRET
+- ATLASSIAN_REDIRECT_URI
+- ATLASSIAN_SCOPES
+- ATLASSIAN_AUTH_URL
+- ATLASSIAN_TOKEN_URL
+
+Practical output of Step 1:
+- A single valid access token can be reused by jira_client.py
+- auth.py returns current accessible resources (cloud IDs / site URLs / names)
+
+Acceptance checks:
+- You can sign in once and persist the token
+- Token refresh works without manual editing
+- A helper returns accessible Jira resources successfully
+
+STEP 2 - JIRA API CLIENT + COLLECTOR CONTRACT
+---------------------------------------------
+Objective:
+Turn jira_client.py and data_collector.py into the live backbone of the monitor.
+
+Files to touch:
+- jira_client.py
+- data_collector.py
+- intelligence.py
+- reporting.py
+- monitoring.py
+- project_counts.py (only if needed for normalization)
+
+A. jira_client.py responsibilities
+----------------------------------
+1. Wrap all Atlassian product API calls in one client class or helper module
+2. Handle base URL composition using cloud ID
+3. Handle retries, timeouts, and rate-limit-friendly behaviour
+4. Normalize request execution into one helper:
+       request_jira(cloud_id, method, path, params=None, json=None)
+5. Provide endpoint helpers for:
+   - accessible resources / site discovery
+   - server info
+   - myself
+   - my permissions
+   - project search
+   - unresolved issue count
+   - all issue count / safe fallback query
+   - updated last 7d count
+   - users search / user visibility-friendly calls
+   - application roles where permitted
+   - audit records where permitted
+
+B. data_collector.py responsibilities
+-------------------------------------
+1. Ask auth.py for valid token
+2. Ask auth.py or jira_client.py for accessible resources
+3. Filter the resources to the monitored scope
+4. For each site, collect the live metrics
+5. Build one normalized site payload per site
+6. Build estate-level summary totals
+7. Build delta + change + trend-ready metadata
+8. Save latest_run.json and latest_run_pretty.json
+9. Save snapshot via snapshots.py
+10. Trigger reports if required
+
+C. latest_run.json required sections
+------------------------------------
+The collector should always populate:
+- run_timestamp_local
+- raw_collection_summary
+- summary
+- risk_summary
+- delta_summary
+- sites
+- comparison
+- historical_trends
+- snapshot_files
+- report_files
+- ui_contract (optional but helpful)
+
+D. Site payload minimum schema
+------------------------------
+Each site record should always contain at least:
+- name
+- url
+- cloud_id
+- collected_at_utc
+- collection_duration_seconds
+- project_count
+- issue_count_total
+- issue_count_unresolved
+- issue_count_updated_last_7d
+- user_summary.total_users
+- user_summary.active_users
+- user_summary.inactive_users
+- permission_limited_checks
+- status
+- risk_score
+- status_reasons
+- audit_status
+- licence_status
+- snapshot_baseline
+- project_count_delta
+- total_users_delta
+- active_users_delta
+- inactive_users_delta
+- growth_status
+
+E. Collector design rules
+-------------------------
+1. One site failing must not fail the whole collector.
+2. Record failure details in endpoint_summary / endpoint_results.
+3. Preserve permission-limited outcomes as first-class signals.
+4. Do not fabricate missing data; leave missing values explicit.
+5. Write files even when one site partially fails.
+
+Acceptance checks:
+- Running the collector produces a fresh latest_run.json
+- latest_run.json has all required sections every time
+- Site cards can be built from latest_run.json alone
+- No homepage truth depends on CSV parsing anymore
+
+STEP 3 - WEB LAYER REFACTOR
+---------------------------
+Objective:
+Make web.py a read-only presenter of collector output instead of a CSV calculator.
+
+Files to touch:
+- web.py
+- estate_metrics.py (only if some logic must move out of CSV mode)
+- ui/* if contract helpers are needed later
+
+A. Remove runtime CSV dependence from web.py
+-------------------------------------------
+Current pattern to remove:
+- _load_csv_rows(...)
+- direct build_estate_metrics(users_rows, managed_rows) during page render
+
+Replace with:
+1. load_latest_run_json()
+2. normalize pages from latest_run.json + snapshots + drilldowns
+3. keep sort/filter logic in Flask only for rendered rows
+
+B. web.py target responsibilities
+---------------------------------
+1. Load latest_run.json once per request (or cache briefly)
+2. Load snapshot metadata and trend drilldowns
+3. Load change drilldowns, project drilldowns, discovery drilldowns
+4. Expose template context only from normalized collector data
+5. Preserve read-only UI model
+
+C. Data sources web.py should use
+---------------------------------
+Primary:
+- latest_run.json
+Secondary:
+- snapshots/latest_snapshot.json
+- snapshots/snapshot_index.json
+Fallback only if explicitly planned:
+- CSV inputs (temporary and clearly flagged)
+
+D. Trend logic rule
+-------------------
+To avoid split truth, trends.py should:
+1. Prefer snapshots on disk for real trend history
+2. If snapshot files are unavailable, optionally fall back to latest_run.json historical_trends
+3. Expose consistent drilldowns so the homepage and detail pages agree
+
+Acceptance checks:
+- Home page loads with no CSV files required
+- Estate page loads with no CSV files required
+- Reference page loads with no CSV files required
+- Trend Watch matches the same trend totals shown in detail pages
+- /api/data reflects latest_run.json as the main contract
+
+STEP 3.5 - CSV RETIREMENT STRATEGY
+----------------------------------
+Objective:
+Move away safely without breaking useful current metrics.
+
+Phase-out model:
+1. Keep CSV files in the repo temporarily only for comparison testing
+2. Add a feature flag if needed:
+       DATA_SOURCE_MODE=collector
+   or
+       DATA_SOURCE_MODE=csv_fallback
+3. Default to collector once parity is reached
+4. Remove CSV homepage dependency first
+5. Remove CSV estate/reference dependency next
+6. Keep CSV import only as emergency/manual backfill if absolutely necessary
+
+Acceptance checks:
+- The monitor produces the same or better counts from collector output
+- CSVs are no longer required to run the homepage
+
+IMPLEMENTATION ORDER
+--------------------
+Recommended actual build order:
+1. auth.py
+2. jira_client.py
+3. data_collector.py
+4. reporting.py / monitoring.py adjustments
+5. trends.py fallback alignment if needed
+6. web.py refactor to latest_run.json
+7. final parity test against current pages
+8. remove CSV requirement from documentation/runbook
+
+TEST PLAN
+---------
+After each step:
+
+Auth tests:
+- get token
+- refresh token
+- list accessible resources
+
+Collector tests:
+- produce fresh latest_run.json
+- produce snapshots/latest_snapshot.json
+- produce snapshots/snapshot_index.json
+- handle one broken site without full failure
+
+Web tests:
+- /
+- /estate
+- /reference
+- /detail/change::summary
+- /detail/trend::summary
+- /detail/trend::sites
+- /detail/trend::risk_risers
+- /api/data
+
+PARITY CHECKLIST
+----------------
+Before deleting CSV runtime logic, validate these against live collector output:
+- total users
+- active users
+- inactive users
+- no tracked site access
+- disabled accounts (if still CSV/admin fallback)
+- site project counts
+- unresolved issue counts
+- change summary counts
+- trend summary counts
+
+WHAT TO BUILD NEXT AFTER THIS PACK
+----------------------------------
+Once Step 0 to Step 3 are complete, the next phase is:
+    Step 4 - Admin API capability
+
+That phase should add:
+- org-level live user listing
+- managed account truth
+- account disable/suspend state
+- org-wide last-active data
+- directory-aware managed user metrics
+
+FINAL RULE
+----------
+UI should never be the place where truth is created.
+Collector builds truth.
+Snapshots preserve history.
+web.py presents truth.

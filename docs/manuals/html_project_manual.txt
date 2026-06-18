@@ -1,0 +1,486 @@
+JIRA OBSERVATION MONITOR
+HTML PROJECT MANUAL
+===================
+
+Purpose
+-------
+This manual explains how HTML is used in the Jira Observation Monitor project.
+It focuses on the real template structure in this project, not generic HTML theory.
+
+In this project, HTML is used for:
+- page structure,
+- navigation,
+- cards and panels,
+- drilldown table layout,
+- wiring CSS and JavaScript into pages,
+- connecting Jinja server-side data into the visible UI.
+
+
+1. WHERE HTML LIVES
+-------------------
+The main HTML files live in:
+
+    templates/
+
+Current important templates:
+- templates/home.html
+- templates/estate.html
+- templates/reference.html
+- templates/detail_list.html
+
+These files are Flask/Jinja templates, which means they are HTML with embedded Jinja expressions.
+
+
+2. HOW HTML IS RENDERED
+-----------------------
+Flask renders templates using render_template(...).
+Example pattern from the project:
+
+    return render_template("home.html", **_common_template_data(data))
+
+Meaning:
+- Python builds the data first
+- HTML template receives values from Python
+- browser receives final rendered HTML
+
+The templates should not be responsible for heavy logic.
+They should present data that Python has already prepared.
+
+
+3. KEY PAGE STRUCTURE PATTERN
+-----------------------------
+Most pages follow this pattern:
+
+A. <!doctype html>
+B. <html>
+C. <head>
+   - meta tags
+   - CSS links
+   - theme.js script
+D. <body>
+E. <div class="page">
+F. top nav
+G. hero / header section
+H. content sections
+I. theme init script at bottom
+J. </body></html>
+
+Example structural skeleton:
+
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>...</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    </head>
+    <body>
+    <div class="page">
+        ...
+    </div>
+    <script>
+        window.JOMTheme.initToggle("theme-toggle");
+    </script>
+    </body>
+    </html>
+
+
+4. SHARED NAVIGATION HTML
+-------------------------
+The current project uses a shared nav structure repeated across pages.
+
+Pattern:
+
+    <nav class="top-nav">
+        <div class="top-nav__brand">Jira Observation Monitor</div>
+        <div class="top-nav__links">
+            <a href="/" class="top-nav__link">Home</a>
+            <a href="/estate" class="top-nav__link">Estate</a>
+            <a href="/reference" class="top-nav__link">Reference</a>
+        </div>
+        <div class="top-nav__actions">
+            <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
+        </div>
+    </nav>
+
+Important rules:
+- keep the button in top-nav__actions
+- keep links in top-nav__links
+- active page should use top-nav__link--active
+- do not place stray closing tags after the nav
+
+Common mistake:
+Putting the theme button inside the links row can distort layout.
+
+
+5. HERO / HEADER AREA PATTERN
+-----------------------------
+Most pages after the nav use a hero block.
+
+Typical structure:
+
+    <section class="hero">
+        <div class="hero__top">
+            <div>
+                <h1>Page Title</h1>
+                <p>Page summary text.</p>
+            </div>
+            <div class="hero__meta">
+                <div class="pill">Some metadata</div>
+            </div>
+        </div>
+    </section>
+
+Purpose:
+- page title
+- summary text
+- metadata pills
+- top-of-page context
+
+Not every page must use the exact same text, but the structure should stay consistent if you want consistent styling.
+
+
+6. HOMEPAGE HTML PATTERNS
+-------------------------
+Current homepage template includes:
+- needs attention cards
+- change & discovery section
+- site health sections
+- repeated site card macro
+
+
+6.1 Card pattern
+----------------
+Homepage cards often use anchors as card wrappers:
+
+    <a href="/detail/managed_disabled_accounts" class="stat-card">
+        <div class="label">Managed Disabled Accounts</div>
+        <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
+        <div class="note">Disabled managed accounts ready for inspection</div>
+    </a>
+
+Meaning:
+- whole card is clickable
+- label = heading
+- value = number
+- note = explanatory text
+
+
+6.2 Action pills
+----------------
+Small navigation actions use pill links:
+
+    <div class="action-pills">
+        <a href="/estate" class="pill">Open estate registry page</a>
+        <a href="/reference" class="pill">Open reference page</a>
+    </div>
+
+
+6.3 Site cards
+--------------
+Site cards are repeated blocks with metrics.
+They include:
+- site name
+- status badge
+- actions
+- metrics grid
+- operational chips
+- rationale / usage area
+
+Because site cards are large and repeated, keep their HTML structure stable and only change one part at a time.
+
+
+7. ESTATE PAGE HTML PATTERNS
+----------------------------
+The estate page contains:
+- nav
+- hero
+- estate registry overview cards
+- discovery actions
+- estate monitoring actions
+- site card groups
+
+Example estate card pattern:
+
+    <a href="/detail/discovery::tracked_sites" class="estate-card">
+        <div class="estate-title">Tracked Sites</div>
+        <div class="estate-value">{{ discovery_summary.tracked_site_count if discovery_summary else 0 }}</div>
+        <div class="estate-sub">Operationally monitored Jira sites in current scope</div>
+    </a>
+
+Purpose:
+- turns summary numbers into direct drilldown links
+
+
+8. REFERENCE PAGE HTML PATTERNS
+-------------------------------
+The reference page contains:
+- nav
+- hero
+- reference grids
+- breakdown rows
+
+Example reference row:
+
+    <a href="/detail/billing::jira_entries" class="reference-row">
+        <div class="reference-label">Jira billing entries</div>
+        <div class="reference-value">{{ billing_summary.unique_jira_entries or 0 }}</div>
+    </a>
+
+Reference rows should stay simple and readable.
+They are presentational, not complex logic blocks.
+
+
+9. DETAIL PAGE HTML PATTERN
+---------------------------
+The detail page is generic and table-driven.
+
+Core structure:
+- nav
+- hero
+- panel
+- section header
+- table if rows exist
+- empty state if not
+
+Table pattern:
+
+    <table>
+        <thead>
+            <tr>
+                {% for col in columns %}
+                    <th>...</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                {% for col in columns %}
+                    <td>{{ row.get(col, '') }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+This page should remain generic so all drilldowns can reuse it.
+
+
+10. HOW JINJA APPEARS INSIDE HTML
+---------------------------------
+These templates are not plain HTML only.
+They include Jinja patterns such as:
+
+10.1 Variable output
+--------------------
+
+    {{ value }}
+
+Example:
+
+    <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
+
+10.2 Conditionals
+-----------------
+
+    {% if rows %}
+        ...
+    {% else %}
+        ...
+    {% endif %}
+
+10.3 Loops
+----------
+
+    {% for row in rows %}
+        ...
+    {% endfor %}
+
+10.4 Macro reuse
+----------------
+The homepage/estate page can use macros for repeated blocks such as site cards.
+
+If a developer is editing HTML in this project, they must remember that some "HTML problems" are actually Jinja problems.
+
+
+11. HTML + CSS RELATIONSHIP
+---------------------------
+HTML class names are tightly tied to CSS files.
+
+Examples:
+- top-nav -> styled in app.css
+- hero -> styled in app.css
+- stat-card -> styled in home.css
+- site-card -> styled in home.css
+- table-wrap -> styled in detail.css
+
+If an HTML class name changes but CSS is not updated, the UI may visually break.
+
+Example risk:
+Changing:
+    class="site-card"
+into:
+    class="sitepanel"
+
+will remove all site card styling unless CSS is also updated.
+
+Rule:
+Do not rename classes casually.
+
+
+12. HTML + JS RELATIONSHIP
+--------------------------
+The theme toggle depends on exact HTML markup.
+
+Required button:
+
+    <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
+
+Required bottom script:
+
+    <script>
+        window.JOMTheme.initToggle("theme-toggle");
+    </script>
+
+If the button id changes or the init call is removed, the theme breaks.
+
+
+13. COMMON HTML MISTAKES IN THIS PROJECT
+----------------------------------------
+13.1 Broken closing tags
+------------------------
+Example problems:
+- extra </section>
+- missing </div>
+- broken nesting order
+
+Symptoms:
+- content spills into wrong section
+- nav layout breaks
+- cards appear outside panels
+
+Fix:
+- compare indentation
+- check nesting carefully
+- use one small change at a time
+
+
+13.2 Missing template file
+--------------------------
+If Flask says TemplateNotFound, HTML file may be:
+- missing,
+- wrongly named,
+- not in templates/
+
+Example:
+Flask expects:
+    templates/estate.html
+not:
+    estate_page.html
+unless web.py is changed to match.
+
+
+13.3 Wrong href values
+----------------------
+If a link exists in HTML but returns 404, it may be:
+- wrong route,
+- wrong drilldown key,
+- stale URL from a previous build.
+
+Check links carefully.
+
+
+13.4 Missing CSS/JS includes
+----------------------------
+If app.css or theme.js is not linked, the page can appear broken even if the HTML is correct.
+
+Always check the <head> section first.
+
+
+14. SAFE HTML EDITING RULES
+---------------------------
+Rule 1:
+Edit one template at a time.
+
+Rule 2:
+If changing layout, do not also change data wiring in the same pass.
+
+Rule 3:
+Test the page immediately after saving.
+
+Rule 4:
+If changing links, test every changed link.
+
+Rule 5:
+Keep nav markup consistent across pages unless intentionally refactoring all pages together.
+
+
+15. HOW TO ADD A NEW HTML PAGE SAFELY
+-------------------------------------
+Example safe process:
+
+1. Create a new file in templates/:
+
+    templates/my_new_page.html
+
+2. Use the shared page structure:
+- head with CSS/JS includes
+- page wrapper
+- top nav
+- hero
+- content sections
+- theme init script
+
+3. Add matching route in web.py:
+
+    @app.route("/my-new-page")
+    def my_new_page():
+        data = _build_data()
+        return render_template("my_new_page.html", **_common_template_data(data))
+
+4. Add a nav/action link if needed.
+
+5. Test /my-new-page directly.
+
+
+16. HTML DEBUGGING WORKFLOW
+---------------------------
+If a page looks wrong, check in this order:
+
+1. Does Flask load the correct template?
+2. Are the CSS links present?
+3. Is theme.js loaded?
+4. Are closing tags correct?
+5. Did a class name change?
+6. Did a Jinja block break the HTML structure?
+7. Does the page source in browser show expected rendered HTML?
+
+
+17. QUICK HTML RECOVERY CHECKLIST
+---------------------------------
+If HTML/templates break:
+
+1. Check template exists in templates/
+2. Confirm web.py render_template name matches file name
+3. Check <head> includes app.css and page CSS
+4. Check theme button and init call if theme is expected
+5. Look for stray closing tags
+6. Revert the template if necessary using Git
+
+Useful commands:
+
+    git checkout -- templates/home.html
+    git checkout -- templates/estate.html
+    git checkout -- templates/reference.html
+    git checkout -- templates/detail_list.html
+
+
+18. ONE-PARAGRAPH SUMMARY
+-------------------------
+HTML in Jira Observation Monitor provides the visible page structure for the operational console, estate page, reference page, and generic detail drilldowns. The templates are server-rendered using Flask and Jinja, which means HTML must stay aligned with Python-provided data structures, CSS class names, and theme JavaScript wiring. The safest way to work with HTML in this project is to keep markup consistent, avoid casual class renames, make small isolated edits, and test every page immediately after any structural change.
+
+END OF MANUAL

@@ -1,0 +1,24 @@
+Jira Observation Monitor — Full Updated Documentation + Mechanics Pack (June 2026)
+
+Included core governance documents:
+- JOM_Master_Governance_Delivery_Handover_Pack_v2.docx
+- JOM_Manager_Stakeholder_Brief_v2.docx
+- JOM_Mechanics_Manuals_Appendix_v2.docx
+
+Included source manuals / companion texts (original text files preserved):
+- python_project_manual.txt
+- html_project_manual.txt
+- css_project_manual.txt
+- javascript_project_manual.txt
+- json_data_contract_manual.txt
+- manuals_index.txt
+- developer handover.txt
+- file structure.txt
+- GLI Atlassian Operational Intellige guide.txt
+- Jira Observation Monitor (JiraOps Platform).txt
+- live_api_ingestion_pack_plan.txt
+
+Purpose:
+- Governance + delivery justification for management
+- Handover / continuity pack for successor engineers
+- Lower-level mechanics manuals for project-specific technology and file understanding
