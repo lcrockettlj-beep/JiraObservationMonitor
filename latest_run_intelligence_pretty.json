@@ -4012,7 +4012,11 @@
     "managed_user_count": 61,
     "human_user_count": 61,
     "app_account_count": 39,
-    "not_in_userbase_count": 0
+    "not_in_userbase_count": 0,
+    "runtime_critical_alert_count": 0,
+    "runtime_warning_alert_count": 0,
+    "runtime_site_critical_count": 0,
+    "runtime_site_warning_count": 0
   },
   "admin_enrichment": {
     "collected_at_utc": "2026-06-18T16:48:14Z",
@@ -6885,6 +6889,408 @@
         "lastActive"
       ],
       "rows": []
+    },
+    "intelligence::summary": {
+      "title": "Intelligence Summary",
+      "reason": "Operational intelligence derived from runtime estate, admin enrichment, and alert-rule outputs.",
+      "atlassian_area": "Operational intelligence",
+      "columns": [
+        "estate_risk_score",
+        "top_intelligence_risks_count",
+        "sites_with_risks_count",
+        "operational_posture",
+        "analysed_sites_count",
+        "critical_count",
+        "warning_count"
+      ],
+      "rows": [
+        {
+          "estate_risk_score": 52,
+          "top_intelligence_risks_count": 10,
+          "sites_with_risks_count": 6,
+          "operational_posture": "Warning",
+          "analysed_sites_count": 6,
+          "critical_count": 0,
+          "warning_count": 13
+        }
+      ]
+    },
+    "intelligence::watchlist": {
+      "title": "Intelligence Watchlist",
+      "reason": "Current intelligence watchlist derived from alert signals and runtime heuristics.",
+      "atlassian_area": "Operational intelligence",
+      "columns": [
+        "severity",
+        "scope",
+        "site_name",
+        "title",
+        "reason",
+        "value"
+      ],
+      "rows": [
+        {
+          "severity": "warning",
+          "scope": "estate",
+          "title": "High app-account ratio",
+          "reason": "App/service identities are unusually high relative to human accounts.",
+          "value": 39,
+          "site_name": "",
+          "site_key": ""
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gaminglabs-team-h2pbpmis",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gaminglabs-team-h2pbpmis",
+          "site_key": "gaminglabs-team-h2pbpmis"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gaminglabs-team-h2pbpmis",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gaminglabs-team-h2pbpmis",
+          "site_key": "gaminglabs-team-h2pbpmis"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gaminglabs-team-tsyfo716",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gaminglabs-team-tsyfo716",
+          "site_key": "gaminglabs-team-tsyfo716"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gaminglabs-team-tsyfo716",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gaminglabs-team-tsyfo716",
+          "site_key": "gaminglabs-team-tsyfo716"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-delivery-tm",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-delivery-tm",
+          "site_key": "gli-delivery-tm"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-delivery-tm",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-delivery-tm",
+          "site_key": "gli-delivery-tm"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-global-technology",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-global-technology",
+          "site_key": "gli-global-technology"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-global-technology",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-global-technology",
+          "site_key": "gli-global-technology"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-it-project",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-it-project",
+          "site_key": "gli-it-project"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-it-project",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-it-project",
+          "site_key": "gli-it-project"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-usa",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-usa",
+          "site_key": "gli-usa"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-usa",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-usa",
+          "site_key": "gli-usa"
+        }
+      ]
     }
-  }
+  },
+  "runtime_alerts": {
+    "generated_at_utc": "2026-06-18T16:48:14Z",
+    "rules": {
+      "unresolved_warning_threshold": 25,
+      "unresolved_critical_threshold": 100,
+      "managed_disabled_critical": 1,
+      "mfa_disabled_warning": 1,
+      "not_in_userbase_warning": 1,
+      "zero_sites_critical": true,
+      "zero_users_warning": true
+    },
+    "summary": {
+      "critical_count": 0,
+      "warning_count": 0,
+      "info_count": 0,
+      "site_critical_count": 0,
+      "site_warning_count": 0
+    },
+    "critical": [],
+    "warning": [],
+    "info": [],
+    "critical_sites": [],
+    "warning_sites": [],
+    "top_risks": []
+  },
+  "critical_sites": [],
+  "warning_sites": [],
+  "intelligence_summary": {
+    "estate_risk_score": 52,
+    "top_intelligence_risks_count": 10,
+    "sites_with_risks_count": 6,
+    "operational_posture": "Warning",
+    "analysed_sites_count": 6,
+    "top_risks": [
+      {
+        "severity": "warning",
+        "scope": "estate",
+        "title": "High app-account ratio",
+        "reason": "App/service identities are unusually high relative to human accounts.",
+        "value": 39,
+        "site_name": "",
+        "site_key": ""
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gaminglabs-team-h2pbpmis",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gaminglabs-team-h2pbpmis",
+        "site_key": "gaminglabs-team-h2pbpmis"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gaminglabs-team-h2pbpmis",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gaminglabs-team-h2pbpmis",
+        "site_key": "gaminglabs-team-h2pbpmis"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gaminglabs-team-tsyfo716",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gaminglabs-team-tsyfo716",
+        "site_key": "gaminglabs-team-tsyfo716"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gaminglabs-team-tsyfo716",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gaminglabs-team-tsyfo716",
+        "site_key": "gaminglabs-team-tsyfo716"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gli-delivery-tm",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gli-delivery-tm",
+        "site_key": "gli-delivery-tm"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gli-delivery-tm",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gli-delivery-tm",
+        "site_key": "gli-delivery-tm"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gli-global-technology",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gli-global-technology",
+        "site_key": "gli-global-technology"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gli-global-technology",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gli-global-technology",
+        "site_key": "gli-global-technology"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gli-it-project",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gli-it-project",
+        "site_key": "gli-it-project"
+      }
+    ]
+  },
+  "intelligence_watchlist": [
+    {
+      "severity": "warning",
+      "scope": "estate",
+      "title": "High app-account ratio",
+      "reason": "App/service identities are unusually high relative to human accounts.",
+      "value": 39,
+      "site_name": "",
+      "site_key": ""
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gaminglabs-team-h2pbpmis",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gaminglabs-team-h2pbpmis",
+      "site_key": "gaminglabs-team-h2pbpmis"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gaminglabs-team-h2pbpmis",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gaminglabs-team-h2pbpmis",
+      "site_key": "gaminglabs-team-h2pbpmis"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gaminglabs-team-tsyfo716",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gaminglabs-team-tsyfo716",
+      "site_key": "gaminglabs-team-tsyfo716"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gaminglabs-team-tsyfo716",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gaminglabs-team-tsyfo716",
+      "site_key": "gaminglabs-team-tsyfo716"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-delivery-tm",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-delivery-tm",
+      "site_key": "gli-delivery-tm"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-delivery-tm",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-delivery-tm",
+      "site_key": "gli-delivery-tm"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-global-technology",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-global-technology",
+      "site_key": "gli-global-technology"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-global-technology",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-global-technology",
+      "site_key": "gli-global-technology"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-it-project",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-it-project",
+      "site_key": "gli-it-project"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-it-project",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-it-project",
+      "site_key": "gli-it-project"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-usa",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-usa",
+      "site_key": "gli-usa"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-usa",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-usa",
+      "site_key": "gli-usa"
+    }
+  ]
 }
