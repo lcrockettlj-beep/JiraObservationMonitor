@@ -1,7 +1,7 @@
 {
-  "run_timestamp_local": "2026-06-18 15:57:48",
+  "run_timestamp_local": "2026-06-18 16:08:09",
   "raw_collection_summary": {
-    "collected_at_utc": "2026-06-18T14:57:48Z",
+    "collected_at_utc": "2026-06-18T15:08:09Z",
     "accessible_resource_count": 6,
     "monitored_site_count": 6,
     "legacy_ignored_site_names_present_in_env": [],
@@ -60,8 +60,8 @@
       "name": "gaminglabs-team-h2pbpmis",
       "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
       "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-      "collected_at_utc": "2026-06-18T14:57:52Z",
-      "collection_duration_seconds": 2.436,
+      "collected_at_utc": "2026-06-18T15:08:12Z",
+      "collection_duration_seconds": 2.354,
       "project_count": 1,
       "project_rows": [
         {
@@ -120,7 +120,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.26,
+          "elapsed_seconds": 0.309,
           "data": {
             "baseUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
             "displayUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
@@ -136,7 +136,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-17T12:15:32.000+0200",
-            "serverTime": "2026-06-18T16:57:50.438+0200",
+            "serverTime": "2026-06-18T17:08:10.914+0200",
             "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -149,7 +149,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.248,
+          "elapsed_seconds": 0.266,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -180,7 +180,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.381,
+          "elapsed_seconds": 0.37,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -208,7 +208,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.449,
+          "elapsed_seconds": 0.267,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -236,7 +236,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.422,
+          "elapsed_seconds": 0.302,
           "data": {
             "total": 0
           },
@@ -245,7 +245,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.341,
+          "elapsed_seconds": 0.537,
           "data": {
             "total": 0
           },
@@ -254,7 +254,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.333,
+          "elapsed_seconds": 0.301,
           "data": {
             "total": 0
           },
@@ -267,8 +267,8 @@
       "name": "gaminglabs-team-tsyfo716",
       "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
       "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
-      "collected_at_utc": "2026-06-18T14:57:55Z",
-      "collection_duration_seconds": 2.79,
+      "collected_at_utc": "2026-06-18T15:08:15Z",
+      "collection_duration_seconds": 2.492,
       "project_count": 2,
       "project_rows": [
         {
@@ -333,7 +333,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.277,
+          "elapsed_seconds": 0.309,
           "data": {
             "baseUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
             "displayUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
@@ -349,7 +349,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-17T12:15:32.000+0200",
-            "serverTime": "2026-06-18T16:57:52.894+0200",
+            "serverTime": "2026-06-18T17:08:13.260+0200",
             "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -362,7 +362,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.291,
+          "elapsed_seconds": 0.256,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -393,7 +393,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.396,
+          "elapsed_seconds": 0.37,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -421,7 +421,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.327,
+          "elapsed_seconds": 0.315,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -469,7 +469,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.628,
+          "elapsed_seconds": 0.505,
           "data": {
             "total": 0
           },
@@ -478,7 +478,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.538,
+          "elapsed_seconds": 0.442,
           "data": {
             "total": 0
           },
@@ -487,7 +487,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.33,
+          "elapsed_seconds": 0.292,
           "data": {
             "total": 0
           },
@@ -500,8 +500,8 @@
       "name": "gli-delivery-tm",
       "url": "https://gli-delivery-tm.atlassian.net",
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "collected_at_utc": "2026-06-18T14:58:08Z",
-      "collection_duration_seconds": 2.979,
+      "collected_at_utc": "2026-06-18T15:08:26Z",
+      "collection_duration_seconds": 2.44,
       "project_count": 22,
       "project_rows": [
         {
@@ -686,7 +686,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.325,
+          "elapsed_seconds": 0.283,
           "data": {
             "baseUrl": "https://gli-delivery-tm.atlassian.net",
             "displayUrl": "https://gli-delivery-tm.atlassian.net",
@@ -702,7 +702,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-17T06:15:32.000-0400",
-            "serverTime": "2026-06-18T10:58:05.995-0400",
+            "serverTime": "2026-06-18T11:08:24.044-0400",
             "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "GLI Test Management",
             "defaultLocale": {
@@ -715,7 +715,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.288,
+          "elapsed_seconds": 0.252,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -746,7 +746,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.542,
+          "elapsed_seconds": 0.315,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -774,7 +774,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.296,
+          "elapsed_seconds": 0.288,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -1328,7 +1328,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.646,
+          "elapsed_seconds": 0.34,
           "data": {
             "total": 0
           },
@@ -1337,7 +1337,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.481,
+          "elapsed_seconds": 0.491,
           "data": {
             "total": 0
           },
@@ -1346,7 +1346,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.4,
+          "elapsed_seconds": 0.468,
           "data": {
             "total": 0
           },
@@ -1359,8 +1359,8 @@
       "name": "gli-global-technology",
       "url": "https://gli-global-technology.atlassian.net",
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "collected_at_utc": "2026-06-18T14:57:57Z",
-      "collection_duration_seconds": 2.292,
+      "collected_at_utc": "2026-06-18T15:08:17Z",
+      "collection_duration_seconds": 1.861,
       "project_count": 8,
       "project_rows": [
         {
@@ -1461,7 +1461,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.265,
+          "elapsed_seconds": 0.207,
           "data": {
             "baseUrl": "https://gli-global-technology.atlassian.net",
             "displayUrl": "https://gli-global-technology.atlassian.net",
@@ -1477,7 +1477,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-17T11:15:32.000+0100",
-            "serverTime": "2026-06-18T15:57:55.681+0100",
+            "serverTime": "2026-06-18T16:08:15.667+0100",
             "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -1490,7 +1490,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.283,
+          "elapsed_seconds": 0.204,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -1521,7 +1521,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.271,
+          "elapsed_seconds": 0.242,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -1549,7 +1549,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.261,
+          "elapsed_seconds": 0.243,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -1731,7 +1731,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.451,
+          "elapsed_seconds": 0.351,
           "data": {
             "total": 0
           },
@@ -1740,7 +1740,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.363,
+          "elapsed_seconds": 0.321,
           "data": {
             "total": 0
           },
@@ -1749,7 +1749,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.395,
+          "elapsed_seconds": 0.291,
           "data": {
             "total": 0
           },
@@ -1762,8 +1762,8 @@
       "name": "gli-it-project",
       "url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "collected_at_utc": "2026-06-18T14:58:05Z",
-      "collection_duration_seconds": 2.818,
+      "collected_at_utc": "2026-06-18T15:08:23Z",
+      "collection_duration_seconds": 2.993,
       "project_count": 55,
       "project_rows": [
         {
@@ -1966,7 +1966,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.266,
+          "elapsed_seconds": 0.344,
           "data": {
             "baseUrl": "https://gli-it-project.atlassian.net",
             "displayUrl": "https://gli-it-project.atlassian.net",
@@ -1982,7 +1982,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-17T11:15:32.000+0100",
-            "serverTime": "2026-06-18T15:58:03.117+0100",
+            "serverTime": "2026-06-18T16:08:21.116+0100",
             "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "GLI Global IT Project Management",
             "defaultLocale": {
@@ -1995,7 +1995,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.253,
+          "elapsed_seconds": 0.299,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -2026,7 +2026,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.53,
+          "elapsed_seconds": 0.288,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -2054,7 +2054,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.632,
+          "elapsed_seconds": 0.669,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -3340,7 +3340,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.366,
+          "elapsed_seconds": 0.406,
           "data": {
             "total": 0
           },
@@ -3349,7 +3349,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.362,
+          "elapsed_seconds": 0.604,
           "data": {
             "total": 0
           },
@@ -3358,7 +3358,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.405,
+          "elapsed_seconds": 0.38,
           "data": {
             "total": 0
           },
@@ -3371,8 +3371,8 @@
       "name": "gli-usa",
       "url": "https://gli-usa.atlassian.net",
       "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "collected_at_utc": "2026-06-18T14:58:02Z",
-      "collection_duration_seconds": 5.143,
+      "collected_at_utc": "2026-06-18T15:08:20Z",
+      "collection_duration_seconds": 3.453,
       "project_count": 1,
       "project_rows": [
         {
@@ -3431,7 +3431,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.79,
+          "elapsed_seconds": 0.447,
           "data": {
             "baseUrl": "https://gli-usa.atlassian.net",
             "displayUrl": "https://gli-usa.atlassian.net",
@@ -3447,7 +3447,7 @@
             "deploymentType": "Cloud",
             "buildNumber": 100291,
             "buildDate": "2026-06-17T03:15:32.000-0700",
-            "serverTime": "2026-06-18T07:57:58.437-0700",
+            "serverTime": "2026-06-18T08:08:17.707-0700",
             "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
@@ -3460,7 +3460,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.748,
+          "elapsed_seconds": 0.333,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -3491,7 +3491,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 1.024,
+          "elapsed_seconds": 0.51,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -3519,7 +3519,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.826,
+          "elapsed_seconds": 0.446,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -3545,7 +3545,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.537,
+          "elapsed_seconds": 0.465,
           "data": {
             "total": 0
           },
@@ -3554,7 +3554,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.42,
+          "elapsed_seconds": 0.49,
           "data": {
             "total": 0
           },
@@ -3563,7 +3563,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.795,
+          "elapsed_seconds": 0.76,
           "data": {
             "total": 0
           },
@@ -3582,7 +3582,7 @@
   },
   "historical_trends": {
     "has_history": true,
-    "lookback_snapshots": 8,
+    "lookback_snapshots": 9,
     "site_trends": [
       {
         "site_key": "gaminglabs-team-h2pbpmis",
@@ -3590,7 +3590,7 @@
         "name": "gaminglabs-team-h2pbpmis",
         "current_status": "stable",
         "current_risk_score": 1,
-        "snapshot_count": 8,
+        "snapshot_count": 9,
         "trend_score": 2,
         "trend_signals": [
           "recurring_issue_risk_signals",
@@ -3598,7 +3598,7 @@
         ],
         "status_streak": {
           "status": "stable",
-          "length": 8
+          "length": 9
         },
         "unresolved_trend": {
           "field": "issue_count_unresolved",
@@ -3630,8 +3630,8 @@
         "collection_time_trend": {
           "field": "collection_duration_seconds",
           "first": 4.399,
-          "latest": 2.436,
-          "delta": -1.963,
+          "latest": 2.354,
+          "delta": -2.045,
           "direction": "down",
           "max": 4.399,
           "min": 2.311
@@ -3641,13 +3641,13 @@
         "recurring_issue_signals": [
           {
             "name": "no_recent_issue_updates_detected",
-            "count": 8
+            "count": 9
           }
         ],
         "recurring_operational_signals": [
           {
             "name": "optional_scope_notes_present",
-            "count": 8
+            "count": 9
           }
         ]
       },
@@ -3657,7 +3657,7 @@
         "name": "gaminglabs-team-tsyfo716",
         "current_status": "stable",
         "current_risk_score": 1,
-        "snapshot_count": 8,
+        "snapshot_count": 9,
         "trend_score": 2,
         "trend_signals": [
           "recurring_issue_risk_signals",
@@ -3665,7 +3665,7 @@
         ],
         "status_streak": {
           "status": "stable",
-          "length": 8
+          "length": 9
         },
         "unresolved_trend": {
           "field": "issue_count_unresolved",
@@ -3697,8 +3697,8 @@
         "collection_time_trend": {
           "field": "collection_duration_seconds",
           "first": 4.797,
-          "latest": 2.79,
-          "delta": -2.007,
+          "latest": 2.492,
+          "delta": -2.305,
           "direction": "down",
           "max": 4.797,
           "min": 2.118
@@ -3708,13 +3708,13 @@
         "recurring_issue_signals": [
           {
             "name": "no_recent_issue_updates_detected",
-            "count": 8
+            "count": 9
           }
         ],
         "recurring_operational_signals": [
           {
             "name": "optional_scope_notes_present",
-            "count": 8
+            "count": 9
           }
         ]
       },
@@ -3724,7 +3724,7 @@
         "name": "gli-delivery-tm",
         "current_status": "stable",
         "current_risk_score": 1,
-        "snapshot_count": 8,
+        "snapshot_count": 9,
         "trend_score": 2,
         "trend_signals": [
           "recurring_issue_risk_signals",
@@ -3732,7 +3732,7 @@
         ],
         "status_streak": {
           "status": "stable",
-          "length": 8
+          "length": 9
         },
         "unresolved_trend": {
           "field": "issue_count_unresolved",
@@ -3764,9 +3764,9 @@
         "collection_time_trend": {
           "field": "collection_duration_seconds",
           "first": 2.722,
-          "latest": 2.979,
-          "delta": 0.257,
-          "direction": "up",
+          "latest": 2.44,
+          "delta": -0.282,
+          "direction": "down",
           "max": 3.338,
           "min": 2.338
         },
@@ -3775,13 +3775,13 @@
         "recurring_issue_signals": [
           {
             "name": "no_recent_issue_updates_detected",
-            "count": 8
+            "count": 9
           }
         ],
         "recurring_operational_signals": [
           {
             "name": "optional_scope_notes_present",
-            "count": 8
+            "count": 9
           }
         ]
       },
@@ -3791,7 +3791,7 @@
         "name": "gli-global-technology",
         "current_status": "stable",
         "current_risk_score": 1,
-        "snapshot_count": 8,
+        "snapshot_count": 9,
         "trend_score": 2,
         "trend_signals": [
           "recurring_issue_risk_signals",
@@ -3799,7 +3799,7 @@
         ],
         "status_streak": {
           "status": "stable",
-          "length": 8
+          "length": 9
         },
         "unresolved_trend": {
           "field": "issue_count_unresolved",
@@ -3831,8 +3831,8 @@
         "collection_time_trend": {
           "field": "collection_duration_seconds",
           "first": 3.837,
-          "latest": 2.292,
-          "delta": -1.545,
+          "latest": 1.861,
+          "delta": -1.976,
           "direction": "down",
           "max": 3.837,
           "min": 1.86
@@ -3842,13 +3842,13 @@
         "recurring_issue_signals": [
           {
             "name": "no_recent_issue_updates_detected",
-            "count": 8
+            "count": 9
           }
         ],
         "recurring_operational_signals": [
           {
             "name": "optional_scope_notes_present",
-            "count": 8
+            "count": 9
           }
         ]
       },
@@ -3858,7 +3858,7 @@
         "name": "gli-it-project",
         "current_status": "stable",
         "current_risk_score": 1,
-        "snapshot_count": 8,
+        "snapshot_count": 9,
         "trend_score": 2,
         "trend_signals": [
           "recurring_issue_risk_signals",
@@ -3866,7 +3866,7 @@
         ],
         "status_streak": {
           "status": "stable",
-          "length": 8
+          "length": 9
         },
         "unresolved_trend": {
           "field": "issue_count_unresolved",
@@ -3898,8 +3898,8 @@
         "collection_time_trend": {
           "field": "collection_duration_seconds",
           "first": 3.164,
-          "latest": 2.818,
-          "delta": -0.346,
+          "latest": 2.993,
+          "delta": -0.171,
           "direction": "down",
           "max": 4.902,
           "min": 2.469
@@ -3909,13 +3909,13 @@
         "recurring_issue_signals": [
           {
             "name": "no_recent_issue_updates_detected",
-            "count": 8
+            "count": 9
           }
         ],
         "recurring_operational_signals": [
           {
             "name": "optional_scope_notes_present",
-            "count": 8
+            "count": 9
           }
         ]
       },
@@ -3925,7 +3925,7 @@
         "name": "gli-usa",
         "current_status": "stable",
         "current_risk_score": 1,
-        "snapshot_count": 8,
+        "snapshot_count": 9,
         "trend_score": 2,
         "trend_signals": [
           "recurring_issue_risk_signals",
@@ -3933,7 +3933,7 @@
         ],
         "status_streak": {
           "status": "stable",
-          "length": 8
+          "length": 9
         },
         "unresolved_trend": {
           "field": "issue_count_unresolved",
@@ -3965,9 +3965,9 @@
         "collection_time_trend": {
           "field": "collection_duration_seconds",
           "first": 4.863,
-          "latest": 5.143,
-          "delta": 0.28,
-          "direction": "up",
+          "latest": 3.453,
+          "delta": -1.41,
+          "direction": "down",
           "max": 5.215,
           "min": 2.983
         },
@@ -3976,13 +3976,13 @@
         "recurring_issue_signals": [
           {
             "name": "no_recent_issue_updates_detected",
-            "count": 8
+            "count": 9
           }
         ],
         "recurring_operational_signals": [
           {
             "name": "optional_scope_notes_present",
-            "count": 8
+            "count": 9
           }
         ]
       }
@@ -3997,7 +3997,7 @@
   },
   "snapshot_files": [
     {
-      "snapshot_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-18_15-58-08.json",
+      "snapshot_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-18_16-08-26.json",
       "latest_snapshot_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\latest_snapshot.json",
       "snapshot_index_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_index.json"
     }
@@ -4015,7 +4015,7 @@
     "not_in_userbase_count": 0
   },
   "admin_enrichment": {
-    "collected_at_utc": "2026-06-18T14:58:09Z",
+    "collected_at_utc": "2026-06-18T15:08:26Z",
     "org_id": "b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
     "collection_meta": {
       "pages_collected": 1,
