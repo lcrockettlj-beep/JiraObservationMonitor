@@ -4012,7 +4012,11 @@
     "managed_user_count": 61,
     "human_user_count": 61,
     "app_account_count": 39,
-    "not_in_userbase_count": 0
+    "not_in_userbase_count": 0,
+    "runtime_critical_alert_count": 0,
+    "runtime_warning_alert_count": 0,
+    "runtime_site_critical_count": 0,
+    "runtime_site_warning_count": 0
   },
   "admin_enrichment": {
     "collected_at_utc": "2026-06-18T15:39:21Z",
@@ -6885,6 +6889,43 @@
         "lastActive"
       ],
       "rows": []
+    }
+  },
+  "runtime_alerts": {
+    "generated_at_utc": "2026-06-18T15:43:21Z",
+    "rules": {
+      "unresolved_warning_threshold": 25,
+      "unresolved_critical_threshold": 100,
+      "managed_disabled_critical": 1,
+      "mfa_disabled_warning": 1,
+      "not_in_userbase_warning": 1,
+      "zero_sites_critical": true,
+      "zero_users_warning": true
+    },
+    "summary": {
+      "critical_count": 0,
+      "warning_count": 0,
+      "info_count": 0,
+      "site_critical_count": 0,
+      "site_warning_count": 0
+    },
+    "critical": [],
+    "warning": [],
+    "info": [],
+    "critical_sites": [],
+    "warning_sites": [],
+    "top_risks": []
+  },
+  "critical_sites": [],
+  "warning_sites": [],
+  "intelligence_summary": {
+    "top_risks": [],
+    "runtime_alert_summary": {
+      "critical_count": 0,
+      "warning_count": 0,
+      "info_count": 0,
+      "site_critical_count": 0,
+      "site_warning_count": 0
     }
   }
 }

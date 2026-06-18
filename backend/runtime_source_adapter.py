@@ -1,12 +1,13 @@
 """
 backend/runtime_source_adapter.py
-Admin row-shape mapping patch.
+Alert-aware runtime source adapter.
 
-Adds fallback managed-row mapping for admin_enrichment payloads that expose:
-- accountType
-- accountStatus
-- statusInUserbase
-but not claimStatus.
+Preference order:
+1. latest_run_alerted.json
+2. latest_run_admin_enriched.json
+3. latest_run.json
+4. latest_run_safe_partial.json
+5. pretty/report variants
 """
 from __future__ import annotations
 
@@ -17,9 +18,11 @@ import json
 import re
 
 RUNTIME_CANDIDATE_GROUPS = [
+    ["latest_run_alerted.json", "reports/latest_run_alerted.json"],
     ["latest_run_admin_enriched.json", "reports/latest_run_admin_enriched.json"],
     ["latest_run.json", "reports/latest_run.json"],
     ["latest_run_safe_partial.json", "reports/latest_run_safe_partial.json"],
+    ["latest_run_alerted_pretty.json", "reports/latest_run_alerted_pretty.json"],
     ["latest_run_admin_enriched_pretty.json", "reports/latest_run_admin_enriched_pretty.json"],
     ["latest_run_pretty.json", "reports/latest_run_pretty.json"],
     ["latest_run*.json", "reports/latest_run*.json"],
@@ -91,9 +94,9 @@ def _derive_site_name(site: Dict[str, Any], site_key: str) -> str:
 
 def _payload_to_sites(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
     if isinstance(payload.get("sites"), list):
-        return [item for item in payload.get("sites", []) if isinstance(item, dict)]
+        return [row for row in payload.get("sites", []) if isinstance(row, dict)]
     if isinstance(payload.get("site_summaries"), list):
-        return [item for item in payload.get("site_summaries", []) if isinstance(item, dict)]
+        return [row for row in payload.get("site_summaries", []) if isinstance(row, dict)]
     site_map = payload.get("site_map")
     if isinstance(site_map, dict):
         rows: List[Dict[str, Any]] = []
@@ -107,7 +110,7 @@ def _payload_to_sites(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         return rows
     collector_sites = payload.get("collector_sites")
     if isinstance(collector_sites, list):
-        return [item for item in collector_sites if isinstance(item, dict)]
+        return [row for row in collector_sites if isinstance(row, dict)]
     return []
 
 
@@ -163,7 +166,7 @@ def _normalise_site_record(site: Dict[str, Any]) -> Dict[str, Any]:
     normalised["project_sample"] = project_rows
     normalised["sampled_project_rows"] = len(project_rows)
     normalised["project_sample_available"] = bool(project_rows)
-    normalised["total_users"] = user_summary.get("total_users")
+    normalised["total_users"] = _safe_dict(site.get("user_summary")).get("total_users")
     normalised["active_users"] = user_summary.get("active_users")
     normalised["inactive_users"] = user_summary.get("inactive_users")
     normalised["licensed_users"] = licence_summary.get("licensed_users_estimate")
@@ -190,6 +193,7 @@ def _build_estate(payload: Dict[str, Any], sites: List[Dict[str, Any]]) -> Dict[
     delta_summary = _safe_dict(payload.get("delta_summary"))
     existing_estate = _safe_dict(payload.get("estate"))
     admin_summary = _admin_summary(payload)
+    alert_summary = _safe_dict(_safe_dict(payload.get("runtime_alerts")).get("summary"))
     estate = dict(existing_estate)
     estate.setdefault("total_sites", summary.get("site_count", len(sites)))
     estate.setdefault("total_projects", summary.get("project_count_total"))
@@ -217,6 +221,10 @@ def _build_estate(payload: Dict[str, Any], sites: List[Dict[str, Any]]) -> Dict[
         estate["not_in_userbase_count"] = admin_summary.get("not_in_userbase_count")
     else:
         estate.setdefault("total_users", _sum_if_known(sites, "total_users"))
+    estate["runtime_critical_alert_count"] = alert_summary.get("critical_count", 0)
+    estate["runtime_warning_alert_count"] = alert_summary.get("warning_count", 0)
+    estate["runtime_site_critical_count"] = alert_summary.get("site_critical_count", 0)
+    estate["runtime_site_warning_count"] = alert_summary.get("site_warning_count", 0)
     estate.setdefault("run_timestamp_local", payload.get("run_timestamp_local"))
     return estate
 
@@ -239,16 +247,29 @@ def _build_runtime_drilldowns(payload: Dict[str, Any], sites: List[Dict[str, Any
             "reason": site.get("reason"),
         })
     if site_rows:
-        drilldowns.setdefault(
-            "site::summary",
-            {
-                "title": "Monitored Site Summary",
-                "reason": "This summary reflects the latest runtime collector payload across the monitored Jira estate.",
-                "atlassian_area": "Jira operational monitoring",
-                "columns": ["site_name", "site_key", "status", "project_count", "issue_count_total", "issue_count_unresolved", "issue_count_updated_last_7d", "total_users", "active_users", "inactive_users", "reason"],
-                "rows": site_rows,
-            },
-        )
+        drilldowns.setdefault("site::summary", {
+            "title": "Monitored Site Summary",
+            "reason": "This summary reflects the latest runtime collector payload across the monitored Jira estate.",
+            "atlassian_area": "Jira operational monitoring",
+            "columns": ["site_name", "site_key", "status", "project_count", "issue_count_total", "issue_count_unresolved", "issue_count_updated_last_7d", "total_users", "active_users", "inactive_users", "reason"],
+            "rows": site_rows,
+        })
+    runtime_alerts = _safe_dict(payload.get("runtime_alerts"))
+    if runtime_alerts:
+        drilldowns["alert::critical"] = {
+            "title": "Critical Runtime Alerts",
+            "reason": "Critical alerts derived from runtime alert rules.",
+            "atlassian_area": "Operational alerting",
+            "columns": ["severity", "scope", "site_name", "title", "reason", "value"],
+            "rows": _safe_list(runtime_alerts.get("critical")),
+        }
+        drilldowns["alert::warning"] = {
+            "title": "Warning Runtime Alerts",
+            "reason": "Warning alerts derived from runtime alert rules.",
+            "atlassian_area": "Operational alerting",
+            "columns": ["severity", "scope", "site_name", "title", "reason", "value"],
+            "rows": _safe_list(runtime_alerts.get("warning")),
+        }
     return drilldowns
 
 
@@ -262,6 +283,11 @@ def _normalise_payload(payload: Dict[str, Any], source_file: str) -> Dict[str, A
     data["estate"] = _build_estate(payload, sites)
     data["drilldowns"] = _build_runtime_drilldowns(payload, sites)
     data["admin_enrichment"] = _safe_dict(payload.get("admin_enrichment"))
+    data["runtime_alerts"] = _safe_dict(payload.get("runtime_alerts"))
+    data["critical_sites"] = _safe_list(payload.get("critical_sites"))
+    data["warning_sites"] = _safe_list(payload.get("warning_sites"))
+    intelligence_summary = _safe_dict(payload.get("intelligence_summary"))
+    data["intelligence_summary"] = intelligence_summary
     source_label = f"Runtime payload: {source_file}"
     data.setdefault("users_source_file", source_label)
     data.setdefault("managed_source_file", source_label)
