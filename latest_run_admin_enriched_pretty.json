@@ -4002,5 +4002,728 @@
       "snapshot_index_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_index.json"
     }
   ],
-  "report_files": []
+  "report_files": [],
+  "estate": {
+    "total_users": 100,
+    "total_active_users": 100,
+    "managed_disabled_accounts": 0,
+    "org_admin_count": 0,
+    "mfa_disabled_accounts": 0,
+    "managed_user_count": 0
+  },
+  "admin_enrichment": {
+    "collected_at_utc": "2026-06-18T14:03:58Z",
+    "org_id": "b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+    "collection_meta": {
+      "pages_collected": 1,
+      "rows_collected": 100,
+      "limit": 100,
+      "max_pages": 100
+    },
+    "summary": {
+      "org_user_count": 100,
+      "managed_user_count": 0,
+      "active_user_count": 100,
+      "suspended_user_count": 0,
+      "org_admin_count": 0,
+      "mfa_disabled_user_count": 0
+    },
+    "users": [
+      {
+        "accountId": "557058:03dda04d-391e-41ad-baa9-f7d28994695b",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:0867a421-a9ee-4659-801a-bc0ee4a4487e",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:0e422967-609b-44b6-a414-2e9e2234117e",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:205f5205-4f26-48ff-85fe-22c22f46f04e",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:214cdd6a-ff93-4d8b-838b-62dfcf1a2a71",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:2292e5ff-1dbd-4a31-8a44-4e066d28264c",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:4253fc48-cab4-4928-94fb-8974d8e5f77b",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:4c73fb68-9d2f-4fa9-aa05-825947a73306",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:5ad427cb-ee2d-4d54-892b-a4a0531990ec",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:7a80202a-6bba-4d09-bb81-002d0355d377",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:7fa9052b-e30b-4ebf-aa57-caaed9511cab",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:950f9f5b-3d6d-4e1d-954a-21367ae9ac75",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:af546d80-a2b0-4844-91bc-bea782420c57",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:c6ec4742-681f-4743-bde1-2d3d8e055b6a",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:cbc04d7b-be84-46eb-90e4-e567aa5332c6",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:cecb512b-0bb7-4b6e-9fe7-5d36b42cca94",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:d6b5955a-e193-41e1-b051-79cdb0755d68",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:f7c0a677-cb62-4990-81f2-7a684c278256",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5a4a17ae647216291d9915f7",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5a9d73cd7cbc742a5c1deda0",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5a9d73f0c164262a8392ae11",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5aeb1ccf91bc312e6a4ac202",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b1539719595132534bc28a4",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b6c7b3afbc68529c6c47967",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b70c8b80fd0ac05d389f5e9",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b7c44319e14d92a56be45d8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b95d5f04d21642beb810cae",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5bfed450d9499e1a8fbcb936",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c5a0adbadc28b6e6e9708eb",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c6145a82cdb124474b3dda9",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867a42bd78bf5ae58d1726",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867a5b3bee527de33cbb92",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867aca88f9ec6ae0afabcf",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867ae45db2976adad4515f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867b171330837ea2b105de",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867b46ee8793790affe42f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867b68f63c96739fd921e6",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c86958ba329a40b8555bdc0",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8695953270066642713cca",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8696b05db2976adad45256",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8699380c61c37ea81dcea8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c86995186c36970e81298b1",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8699979d7fc173a5952b64",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c98b2d038f7806371d15a16",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5ca66d1849d4611664b24d60",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5cb4ae0e4b97ab11a18e00c7",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5cf112d31552030f1e3a5905",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d0be82b3e70a70bcff12a57",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d13ed74b7ebec0c5dbc7de3",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d387eaef8be2f0c20bb7d8f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d42dad4f764920da7cccbd3",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d53f3cbc6b9320d9ea5bdc2",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d9afe0010f4800c341a2bba",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d9b2860cd50b80dcea8a5b7",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5dd64082af96bc0efbe55103",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5df79618336e9e0cad168e00",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e3d91953f647d0c99d826ee",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e43dda0924db10e74b74306",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e4a9b3c5a495e0c91a80043",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e9441a27a2ea00c152d6071",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5ec6cd2c3434a20c34a883c8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5efae59e3683cd0bc1040fa3",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5fab40f2e61f15007052cc1c",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5fd215d3fee793007526d32d",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "6035864ce2020c0070b5285b",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60dc3c2a22c0920071aa2e86",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60dc69db1613d50069d35c5a",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60e41471c0db53006aa8e93d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60e5a86a471e61006a4c51fd",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "611e4466c2f3a50069fcd78f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "6125f72b24912a0069ed9904",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61659125198b4f0068dd01d6",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "616701a307ac3c0068913946",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "6168c27e2f6aed00683dcd6d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "616f249f26a5400071229784",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "617bf56025f3130070f41d83",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61a4f0a36d002b006bc29dde",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61df7f1ae67ea2006b42bda9",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61f3c908875fc100705a2ba9",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "621e03d5a12450006886adae",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "621fca7f49c90000701f5cf5",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "62962f2d2eafc9006eebc736",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "630db2cd9796033b256bc349",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "630e318ab433b060db555ea1",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63735807fde064eda2ec1d04",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63a22fb348b367d78a14c15b",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63d8e047fb75f8568f5ee9cd",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63dcd8eb790148a180951d19",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63f46627e2c4c692c9777a54",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63fdcbee81de11a1adf93df8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "640f54de2cee496759e9ca64",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "712020:007ef253-f976-47aa-94a9-2fd3afbaf580",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "712020:009c1a4f-fe24-4818-9229-ff8c41309725",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "712020:010d377b-fb5f-4c7d-ac6b-d18f458f2b1f",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      }
+    ],
+    "last_active_enabled": false,
+    "last_active_user_cap": 25
+  },
+  "drilldowns": {
+    "admin::summary": {
+      "title": "Admin API Enrichment Summary",
+      "reason": "Estate-level Atlassian Administration user-management metrics retrieved from the Atlassian admin APIs.",
+      "atlassian_area": "Atlassian Administration → Directory / Managed Accounts",
+      "columns": [
+        "org_user_count",
+        "managed_user_count",
+        "active_user_count",
+        "suspended_user_count",
+        "org_admin_count",
+        "mfa_disabled_user_count"
+      ],
+      "rows": [
+        {
+          "org_user_count": 100,
+          "managed_user_count": 0,
+          "active_user_count": 100,
+          "suspended_user_count": 0,
+          "org_admin_count": 0,
+          "mfa_disabled_user_count": 0
+        }
+      ]
+    },
+    "admin::managed_accounts": {
+      "title": "Managed Accounts",
+      "reason": "Managed Atlassian accounts returned by the organization user-admin APIs.",
+      "atlassian_area": "Atlassian Administration → Managed Accounts",
+      "columns": [
+        "accountId",
+        "name",
+        "email",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": []
+    },
+    "admin::suspended_accounts": {
+      "title": "Suspended / Disabled Accounts",
+      "reason": "Accounts with suspended, inactive, or disabled account status returned by the admin APIs.",
+      "atlassian_area": "Atlassian Administration → Directory / Managed Accounts",
+      "columns": [
+        "accountId",
+        "name",
+        "email",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": []
+    },
+    "admin::org_admins": {
+      "title": "Organization Admins",
+      "reason": "Accounts carrying the Atlassian organization admin platform role.",
+      "atlassian_area": "Atlassian Administration → Organization settings",
+      "columns": [
+        "accountId",
+        "name",
+        "email",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": []
+    },
+    "admin::mfa_disabled": {
+      "title": "MFA Disabled Accounts",
+      "reason": "Accounts where MFA is reported as disabled by the admin APIs.",
+      "atlassian_area": "Atlassian Administration → Security / Authentication policies",
+      "columns": [
+        "accountId",
+        "name",
+        "email",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": []
+    }
+  }
 }
