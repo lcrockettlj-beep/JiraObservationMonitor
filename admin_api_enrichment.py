@@ -49,6 +49,10 @@ def _row_claim_status(user: Dict[str, Any]) -> str:
     return str(user.get("claimStatus") or "").strip().lower()
 
 
+def _row_account_type(user: Dict[str, Any]) -> str:
+    return str(user.get("accountType") or "").strip().lower()
+
+
 def _has_org_admin_role(user: Dict[str, Any]) -> bool:
     roles = user.get("platformRoles") or []
     if not isinstance(roles, list):
@@ -65,84 +69,172 @@ def _flatten_last_active(user: Dict[str, Any]) -> str:
     return ""
 
 
+def _claim_status_available(users: List[Dict[str, Any]]) -> bool:
+    return any(str(u.get("claimStatus", "")).strip() for u in users if isinstance(u, dict))
+
+
+def _platform_roles_available(users: List[Dict[str, Any]]) -> bool:
+    return any(isinstance(u.get("platformRoles"), list) and u.get("platformRoles") for u in users if isinstance(u, dict))
+
+
+def _mfa_available(users: List[Dict[str, Any]]) -> bool:
+    return any("mfaEnabled" in u for u in users if isinstance(u, dict))
+
+
+def _managed_like_rows(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    if _claim_status_available(users):
+        return [u for u in users if _row_claim_status(u) == "managed"]
+    # Fallback for current row-shape: treat human Atlassian accounts as the best available managed-like population.
+    return [u for u in users if _row_account_type(u) == "atlassian"]
+
+
+def _human_rows(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return [u for u in users if _row_account_type(u) == "atlassian"]
+
+
+def _app_rows(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return [u for u in users if _row_account_type(u) == "app"]
+
+
+def _status_in_userbase_false_rows(users: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return [u for u in users if u.get("statusInUserbase") is False]
+
+
 def _summary_metrics(users: List[Dict[str, Any]]) -> Dict[str, int]:
-    managed = [u for u in users if _row_claim_status(u) == "managed"]
-    active = [u for u in users if _row_status(u) in {"active", "enabled"}]
-    suspended = [u for u in users if _row_status(u) in {"inactive", "suspended", "disabled"}]
-    org_admins = [u for u in users if _has_org_admin_role(u)]
-    mfa_disabled = [u for u in users if u.get("mfaEnabled") is False]
+    managed_like = _managed_like_rows(users)
+    human_rows = _human_rows(users)
+    app_rows = _app_rows(users)
+    active_rows = [u for u in users if _row_status(u) in {"active", "enabled"}]
+    suspended_rows = [u for u in users if _row_status(u) in {"inactive", "suspended", "disabled"}]
+    org_admin_rows = [u for u in users if _has_org_admin_role(u)]
+    mfa_disabled_rows = [u for u in users if u.get("mfaEnabled") is False]
     return {
         "org_user_count": len(users),
-        "managed_user_count": len(managed),
-        "active_user_count": len(active),
-        "suspended_user_count": len(suspended),
-        "org_admin_count": len(org_admins),
-        "mfa_disabled_user_count": len(mfa_disabled),
+        "managed_user_count": len(managed_like),
+        "human_user_count": len(human_rows),
+        "app_account_count": len(app_rows),
+        "active_user_count": len(active_rows),
+        "suspended_user_count": len(suspended_rows),
+        "org_admin_count": len(org_admin_rows),
+        "mfa_disabled_user_count": len(mfa_disabled_rows),
+        "not_in_userbase_count": len(_status_in_userbase_false_rows(users)),
     }
 
 
 def _table_row(user: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "accountId": user.get("accountId", ""),
-        "name": user.get("name", ""),
-        "email": user.get("email", ""),
+        "accountType": user.get("accountType", ""),
         "claimStatus": user.get("claimStatus", ""),
         "status": user.get("status", ""),
         "accountStatus": user.get("accountStatus", ""),
+        "statusInUserbase": user.get("statusInUserbase", ""),
+        "name": user.get("name", ""),
+        "email": user.get("email", ""),
         "mfaEnabled": user.get("mfaEnabled", ""),
         "orgAdmin": "Yes" if _has_org_admin_role(user) else "No",
         "lastActive": _flatten_last_active(user),
     }
 
 
+def _info_row(message: str) -> List[Dict[str, Any]]:
+    return [{"note": message}]
+
+
 def _build_admin_drilldowns(users: List[Dict[str, Any]], summary: Dict[str, int]) -> Dict[str, Any]:
-    managed_rows = [_table_row(u) for u in users if _row_claim_status(u) == "managed"]
+    managed_like_rows = [_table_row(u) for u in _managed_like_rows(users)]
     suspended_rows = [_table_row(u) for u in users if _row_status(u) in {"inactive", "suspended", "disabled"}]
     org_admin_rows = [_table_row(u) for u in users if _has_org_admin_role(u)]
     mfa_disabled_rows = [_table_row(u) for u in users if u.get("mfaEnabled") is False]
+    human_rows = [_table_row(u) for u in _human_rows(users)]
+    app_rows = [_table_row(u) for u in _app_rows(users)]
+    not_in_userbase_rows = [_table_row(u) for u in _status_in_userbase_false_rows(users)]
     summary_rows = [{
         "org_user_count": summary.get("org_user_count", 0),
         "managed_user_count": summary.get("managed_user_count", 0),
+        "human_user_count": summary.get("human_user_count", 0),
+        "app_account_count": summary.get("app_account_count", 0),
         "active_user_count": summary.get("active_user_count", 0),
         "suspended_user_count": summary.get("suspended_user_count", 0),
         "org_admin_count": summary.get("org_admin_count", 0),
         "mfa_disabled_user_count": summary.get("mfa_disabled_user_count", 0),
+        "not_in_userbase_count": summary.get("not_in_userbase_count", 0),
     }]
+
+    managed_reason = (
+        "Managed Atlassian accounts returned by the organization user-admin APIs."
+        if _claim_status_available(users)
+        else "Current admin user rows do not expose claimStatus. This list is the best-available approximation using human Atlassian accounts (accountType=atlassian)."
+    )
+
+    org_admin_reason = (
+        "Accounts carrying the Atlassian organization admin platform role."
+        if _platform_roles_available(users)
+        else "Current admin user rows do not expose platformRoles, so organization admin identity is not available in this payload."
+    )
+
+    mfa_reason = (
+        "Accounts where MFA is reported as disabled by the admin APIs."
+        if _mfa_available(users)
+        else "Current admin user rows do not expose mfaEnabled, so MFA state is not available in this payload."
+    )
+
     return {
         "admin::summary": {
             "title": "Admin API Enrichment Summary",
             "reason": "Estate-level Atlassian Administration user-management metrics retrieved from the Atlassian admin APIs.",
             "atlassian_area": "Atlassian Administration → Directory / Managed Accounts",
-            "columns": ["org_user_count", "managed_user_count", "active_user_count", "suspended_user_count", "org_admin_count", "mfa_disabled_user_count"],
+            "columns": ["org_user_count", "managed_user_count", "human_user_count", "app_account_count", "active_user_count", "suspended_user_count", "org_admin_count", "mfa_disabled_user_count", "not_in_userbase_count"],
             "rows": summary_rows,
         },
         "admin::managed_accounts": {
-            "title": "Managed Accounts",
-            "reason": "Managed Atlassian accounts returned by the organization user-admin APIs.",
+            "title": "Managed / Human Accounts",
+            "reason": managed_reason,
             "atlassian_area": "Atlassian Administration → Managed Accounts",
-            "columns": ["accountId", "name", "email", "claimStatus", "status", "accountStatus", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": managed_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
+            "rows": managed_like_rows,
+        },
+        "admin::human_accounts": {
+            "title": "Human Atlassian Accounts",
+            "reason": "Human Atlassian user accounts derived from accountType=atlassian in the admin payload.",
+            "atlassian_area": "Atlassian Administration → Directory",
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
+            "rows": human_rows,
+        },
+        "admin::app_accounts": {
+            "title": "App Accounts",
+            "reason": "App/service identities derived from accountType=app in the admin payload.",
+            "atlassian_area": "Atlassian Administration → Directory",
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
+            "rows": app_rows,
         },
         "admin::suspended_accounts": {
             "title": "Suspended / Disabled Accounts",
-            "reason": "Accounts with suspended, inactive, or disabled account status returned by the admin APIs.",
+            "reason": "Accounts with suspended, inactive, or disabled accountStatus returned by the admin APIs.",
             "atlassian_area": "Atlassian Administration → Directory / Managed Accounts",
-            "columns": ["accountId", "name", "email", "claimStatus", "status", "accountStatus", "mfaEnabled", "orgAdmin", "lastActive"],
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
             "rows": suspended_rows,
         },
         "admin::org_admins": {
             "title": "Organization Admins",
-            "reason": "Accounts carrying the Atlassian organization admin platform role.",
+            "reason": org_admin_reason,
             "atlassian_area": "Atlassian Administration → Organization settings",
-            "columns": ["accountId", "name", "email", "claimStatus", "status", "accountStatus", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": org_admin_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"] if org_admin_rows else ["note"],
+            "rows": org_admin_rows if org_admin_rows else _info_row(org_admin_reason),
         },
         "admin::mfa_disabled": {
             "title": "MFA Disabled Accounts",
-            "reason": "Accounts where MFA is reported as disabled by the admin APIs.",
+            "reason": mfa_reason,
             "atlassian_area": "Atlassian Administration → Security / Authentication policies",
-            "columns": ["accountId", "name", "email", "claimStatus", "status", "accountStatus", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": mfa_disabled_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"] if mfa_disabled_rows else ["note"],
+            "rows": mfa_disabled_rows if mfa_disabled_rows else _info_row(mfa_reason),
+        },
+        "admin::not_in_userbase": {
+            "title": "Accounts Not In Userbase",
+            "reason": "Accounts where statusInUserbase is false in the admin payload.",
+            "atlassian_area": "Atlassian Administration → Directory",
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
+            "rows": not_in_userbase_rows,
         },
     }
 
@@ -173,6 +265,9 @@ def enrich_runtime_payload(runtime_path: Path, output_path: Path, output_pretty_
         "org_admin_count": summary.get("org_admin_count"),
         "mfa_disabled_accounts": summary.get("mfa_disabled_user_count"),
         "managed_user_count": summary.get("managed_user_count"),
+        "human_user_count": summary.get("human_user_count"),
+        "app_account_count": summary.get("app_account_count"),
+        "not_in_userbase_count": summary.get("not_in_userbase_count"),
     })
     payload["estate"] = estate
     payload["admin_enrichment"] = admin_enrichment
@@ -187,7 +282,7 @@ def enrich_runtime_payload(runtime_path: Path, output_path: Path, output_pretty_
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Enrich latest_run.json with Atlassian Admin API data.")
+    parser = argparse.ArgumentParser(description="Enrich latest_run.json with Atlassian Admin API data using current admin row-shape.")
     parser.add_argument("--runtime-file", default=str(DEFAULT_RUNTIME_FILE))
     parser.add_argument("--output-file", default=str(DEFAULT_OUTPUT_FILE))
     parser.add_argument("--output-pretty-file", default=str(DEFAULT_OUTPUT_PRETTY_FILE))
@@ -203,12 +298,12 @@ def main() -> int:
             last_active_max_users=max(0, int(args.last_active_max_users)),
         )
         summary = _safe_dict(_safe_dict(payload.get("admin_enrichment")).get("summary"))
-        print("Admin API enrichment complete.")
+        print("Admin row-shape enrichment patch complete.")
         print(f"Org users: {summary.get('org_user_count', 0)}")
-        print(f"Managed users: {summary.get('managed_user_count', 0)}")
+        print(f"Managed-like users: {summary.get('managed_user_count', 0)}")
+        print(f"Human users: {summary.get('human_user_count', 0)}")
+        print(f"App accounts: {summary.get('app_account_count', 0)}")
         print(f"Suspended users: {summary.get('suspended_user_count', 0)}")
-        print(f"Org admins: {summary.get('org_admin_count', 0)}")
-        print(f"MFA disabled: {summary.get('mfa_disabled_user_count', 0)}")
         return 0
     except Exception as exc:
         print(f"ERROR: {exc}")
