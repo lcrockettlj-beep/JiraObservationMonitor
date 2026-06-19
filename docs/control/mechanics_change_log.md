@@ -335,3 +335,23 @@ System achieved:
 
 Status: Platform now self-operates. No human triggering required.
 Sprint 9 Step 1: DONE
+
+## 2026-06-19 10:45 — Sprint 9 Step 2 COMPLETE: Anchor Snapshots
+
+System achieved:
+- snapshot_controller.py rewritten with anchor window logic
+- Morning anchor window: 07:55-08:05 (guaranteed daily snapshot)
+- Evening anchor window: 19:55-20:05 (guaranteed daily snapshot)
+- Daily uniqueness: only 1 morning + 1 evening anchor per day
+- Anchor snapshots PROTECTED from retention pruning
+- Retention limit (20) applies only to regular snapshots
+- Throttle bypassed during anchor windows
+- Filename suffix _anchor_morning / _anchor_evening for easy identification
+
+Why this matters:
+- Audit guarantee: a known-state snapshot exists for every working day
+- Compliance: defensible record of estate state at start + end of day
+- Trend analysis: anchored data points at consistent intervals
+
+Status: Snapshot strategy upgraded from throttled to audit-grade.
+Sprint 9 Step 2: DONE
