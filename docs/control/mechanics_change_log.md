@@ -637,3 +637,28 @@ Safety contract verified:
 
 Status: Block 4 sealed. Multi-user scaffolding in place. Phase 2 transition cost reduced.
 Block 5 (working POC demo) deferred. Strategic documentation pack already complete.
+
+## 2026-06-19 14:45 — Block 5 COMPLETE: Phase 2 POC Demo
+
+System achieved:
+
+POC demo (in-memory only):
+- scripts/poc_demo.py: walkthrough of Phase 2 authentication flow
+- scripts/test_multi_user_poc.ps1: PowerShell wrapper for clean execution
+- Simulates User A (allow-listed) and User B (not allow-listed) flows
+- Uses in-memory mocks — no Entra ID contact, no Atlassian contact,
+  no file writes, no feature flag changes, no Phase 1 impact
+
+Safety verified:
+- python config/feature_flags.py reports Phase 1 baseline
+- Flask /api/source-state returns source_mode: runtime
+- All multi_user flags remain False
+- POC modifies nothing persistent
+
+Manager conversation value:
+- Provides 30-second live demo of the Phase 2 narrative
+- Backs up the conversation script with executable evidence
+- Demonstrates that the dormant scaffolding architecture is plausible
+
+Status: Block 5 sealed. Phase 2 blueprint + scaffolding + POC all complete.
+Option A session (full plan) is now complete.
