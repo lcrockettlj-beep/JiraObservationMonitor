@@ -25,7 +25,7 @@
     <section class="hero">
         <div class="hero__top">
             <div>
-                <div style="margin-bottom:10px;"><a href="/" class="text-link">â† Back to homepage</a></div>
+                <div style="margin-bottom:10px;"><a href="/" class="text-link">&larr; Back to homepage</a></div>
                 <h1>{{ title }}</h1>
                 <p>Why it stands out: {{ reason }}</p>
                 <p style="margin-top:8px;">Go to Atlassian: {{ atlassian_area }}</p>
@@ -47,7 +47,7 @@
                         {% for col in columns %}
                             {% set is_current = (sort_key == col) %}
                             {% set next_order = 'desc' if (is_current and sort_order != 'desc') else 'asc' %}
-                            <th><a href="?sort={{ col|urlencode }}&order={{ next_order }}">{{ col.replace('_', ' ') }}{% if is_current %}<span>{{ 'â†“' if sort_order == 'desc' else 'â†‘' }}</span>{% endif %}</a></th>
+                            <th><a href="?sort={{ col|urlencode }}&order={{ next_order }}">{{ col.replace('_', ' ') }}{% if is_current %}<span>{{ '&darr;' if sort_order == 'desc' else '&uarr;' }}</span>{% endif %}</a></th>
                         {% endfor %}
                     </tr>
                 </thead>

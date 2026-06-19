@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -88,10 +88,10 @@
                     </div>
                 </div>
                 <div class="delta-grid">
-                    <div class="delta-chip"><span>Total users Î”</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Projects Î”</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Risk Î”</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Unresolved Î”</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Total users &Delta;</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Projects &Delta;</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Risk &Delta;</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Unresolved &Delta;</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
                 </div>
                 <div class="chip-list">
                     {% if site.permission_limited_checks %}
