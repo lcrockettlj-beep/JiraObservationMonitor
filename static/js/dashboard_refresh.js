@@ -16,6 +16,10 @@
     insights: [],
     criticalSites: 0,
     warningSites: 0,
+    lastSyncTime: null,
+    lastSyncAgeSeconds: null,
+    autoSyncActive: false,
+    anchorsToday: { morning: false, evening: false },
     counts: {
       users: null,
       managed: null,
@@ -41,6 +45,17 @@
   function isCollapsed() { return localStorage.getItem(STORAGE_KEY_COLLAPSED) === '1'; }
   function setCollapsed(value) { localStorage.setItem(STORAGE_KEY_COLLAPSED, value ? '1' : '0'); }
   function nowLocal() { return new Date().toLocaleString(); }
+
+  function formatAge(seconds) {
+    if (seconds === null || seconds === undefined) return 'never';
+    if (seconds < 60) return `${seconds}s ago`;
+    const mins = Math.floor(seconds / 60);
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+}
 
   function ensureStyles() {
     if (document.getElementById('jom-runtime-alert-styles')) return;
@@ -312,6 +327,10 @@
       state.sourceMode = data.source_mode || 'runtime';
       state.sourceError = data.source_error || null;
       state.sitesCount = data.sites_count ?? null;
+      state.lastSyncTime = data.last_sync_time || null;                             // ← NEW
+      state.lastSyncAgeSeconds = data.last_sync_age_seconds ?? null;                // ← NEW
+      state.autoSyncActive = data.auto_sync_active === true;                        // ← NEW
+      state.anchorsToday = data.anchors_today || { morning: false, evening: false };// ← NEW
       state.lastCheck = nowLocal();
       updateBadge();
     } catch (error) {

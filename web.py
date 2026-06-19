@@ -1,5 +1,9 @@
 from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
+
+from datetime import datetime
+import os
+
 from datetime import datetime
 from billing_catalog import get_billing_catalog
 from project_counts import (
@@ -475,11 +479,80 @@ def detail(key: str):
         sort_order=order,
     )
 
+# ============================================================
+# Sprint 9 Step 3 — Automation status helpers
+# ============================================================
+
+SYNC_LOG_FILE = Path(__file__).resolve().parent / "docs" / "control" / "logs" / "scheduled_sync.log"
+SNAPSHOTS_DIR = Path(__file__).resolve().parent / "snapshots"
+AUTO_SYNC_FRESHNESS_SECONDS = 15 * 60  # 15 minutes
+
+
+def _get_last_sync_info():
+    """
+    Returns metadata about the last automated sync run.
+
+    Reads the mtime of the scheduled_sync.log file written by
+    run_sync_for_scheduler.cmd. If the file exists and was modified
+    within AUTO_SYNC_FRESHNESS_SECONDS, the auto sync is considered
+    active.
+    """
+    if not SYNC_LOG_FILE.exists():
+        return {
+            "last_sync_time": None,
+            "last_sync_age_seconds": None,
+            "auto_sync_active": False,
+        }
+
+    try:
+        mtime = SYNC_LOG_FILE.stat().st_mtime
+        last_dt = datetime.fromtimestamp(mtime)
+        age_seconds = int((datetime.now() - last_dt).total_seconds())
+        return {
+            "last_sync_time": last_dt.isoformat(timespec="seconds"),
+            "last_sync_age_seconds": age_seconds,
+            "auto_sync_active": age_seconds < AUTO_SYNC_FRESHNESS_SECONDS,
+        }
+    except Exception:
+        return {
+            "last_sync_time": None,
+            "last_sync_age_seconds": None,
+            "auto_sync_active": False,
+        }
+
+
+def _get_anchors_today():
+    """
+    Returns which daily anchor snapshots exist for today.
+
+    Checks the snapshots directory for files matching:
+      snapshot_YYYY-MM-DD_*_anchor_morning.json
+      snapshot_YYYY-MM-DD_*_anchor_evening.json
+    """
+    if not SNAPSHOTS_DIR.exists():
+        return {"morning": False, "evening": False}
+
+    today_prefix = datetime.now().strftime("%Y-%m-%d")
+
+    morning_pattern = f"snapshot_{today_prefix}_*_anchor_morning.json"
+    evening_pattern = f"snapshot_{today_prefix}_*_anchor_evening.json"
+
+    has_morning = len(list(SNAPSHOTS_DIR.glob(morning_pattern))) > 0
+    has_evening = len(list(SNAPSHOTS_DIR.glob(evening_pattern))) > 0
+
+    return {
+        "morning": has_morning,
+        "evening": has_evening,
+    }
 
 @app.route("/api/source-state")
 def api_source_state():
     data = _build_data()
+    sync_info = _get_last_sync_info()
+    anchors_today = _get_anchors_today()
+
     return jsonify({
+        # Existing fields (unchanged)
         "source_mode": data.get("source_mode", "runtime"),
         "source_file": data.get("source_file"),
         "users_source_file": data.get("users_source_file"),
@@ -488,6 +561,12 @@ def api_source_state():
         "managed_row_count": data.get("managed_row_count", 0),
         "sites_count": len(data.get("sites", [])),
         "source_error": data.get("source_error"),
+
+        # Sprint 9 Step 3 — Automation status fields
+        "last_sync_time": sync_info["last_sync_time"],
+        "last_sync_age_seconds": sync_info["last_sync_age_seconds"],
+        "auto_sync_active": sync_info["auto_sync_active"],
+        "anchors_today": anchors_today,
     })
 
 
