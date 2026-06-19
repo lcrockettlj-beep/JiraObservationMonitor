@@ -596,3 +596,44 @@ Phase 2 transition cost reduced through dormant code documentation.
 
 Block 5 (working POC demo) deferred — strategic documentation pack is sufficient
 for the senior management conversation without it.
+
+## 2026-06-19 14:25 — Block 4 COMPLETE: Multi-User Scaffolding Sealed
+
+System achieved:
+
+Block 4 Batch A - Feature flag system:
+- config/feature_flags.py: 6 flags defined, all default OFF
+- config/__init__.py: package marker
+- Diagnostic 'python config/feature_flags.py' confirms Phase 1 baseline
+
+Block 4 Batch B - Package marker + template:
+- auth_multi_user/__init__.py: __status__ = 'dormant'
+- auth_multi_user/README.md: scaffolding intent documented
+- users.example.json: allow-list template (never loaded in Phase 1)
+
+Block 4 Batch C - SSO handler skeleton:
+- auth_multi_user/sso_handler.py: 7 dormant functions
+- Dormant guard verified: 'python -m auth_multi_user.sso_handler' shows PHASE 1 BASELINE CONFIRMED
+
+Block 4 Batch D - Allow-list + audit log skeletons:
+- auth_multi_user/user_allowlist.py: 6 dormant functions
+- auth_multi_user/access_audit.py: 4 dormant functions
+- Both guards verified working
+
+Block 4 Batch E - Architecture documentation:
+- docs/architecture/MULTI_USER_ARCHITECTURE.md (8914 bytes)
+- docs/architecture/SSO_INTEGRATION_PLAN.md (9240 bytes)
+
+Naming decision:
+- Folder is auth_multi_user/ (underscore) not auth/multi_user/ (slash)
+- Reason: auth.py exists as a file in project root, namespace collision
+- Documentation references auth/multi_user as intent; implementation is auth_multi_user
+
+Safety contract verified:
+- All 17 dormant functions raise RuntimeError if called in Phase 1
+- Feature flag is_enabled('multi_user.enabled') returns False (Phase 1 baseline)
+- Phase 1 platform unaffected throughout: scheduler still firing, Flask still healthy
+- No imports of auth_multi_user.* anywhere in Phase 1 code path
+
+Status: Block 4 sealed. Multi-user scaffolding in place. Phase 2 transition cost reduced.
+Block 5 (working POC demo) deferred. Strategic documentation pack already complete.
