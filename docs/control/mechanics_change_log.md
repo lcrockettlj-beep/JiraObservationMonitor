@@ -417,3 +417,24 @@ Future improvement (Sprint 9.5 candidate):
 - Would restore git-tracked audit trail for the contract itself
 
 Status: Repo cleanliness restored. Sprint 9 work resumes.
+
+## 2026-06-19 11:30 — Sprint 9 Step 3 COMPLETE: Live Automation Widget
+
+System achieved:
+- 3 new cards in Live Runtime widget showing automation status:
+  * Last sync (formatted as "Xm ago")
+  * Auto sync indicator (green ? Active / amber ?? Stale)
+  * Today's anchor status (??? morning, ???/? evening)
+- Widget polls /api/source-state every 60 seconds
+- formatAge() helper for relative time formatting
+- CSS border-top visually separates automation status from main metrics
+- Verified live: Last sync 5m ago, Auto sync Active, Morning anchor confirmed
+
+Why this matters:
+- Operators see automation health at a glance
+- Stakeholders can verify platform is self-running without checking logs
+- Drift in automation becomes immediately visible (stale sync, missing anchor)
+- Audit-ready visual proof of platform discipline
+
+Status: Sprint 9 Step 3 DONE.
+Sprint 9 (Automation Layer) FULLY COMPLETE.
