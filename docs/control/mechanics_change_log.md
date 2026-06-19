@@ -355,3 +355,24 @@ Why this matters:
 
 Status: Snapshot strategy upgraded from throttled to audit-grade.
 Sprint 9 Step 2: DONE
+
+## 2026-06-19 10:43 — Sprint 9 Step 2 VERIFIED LIVE
+
+Live anchor test executed and recorded:
+- Temporarily widened morning anchor window to 10:40-10:50
+- Ran snapshot_controller.py manually
+- Result: snapshot_2026-06-19_10-43-34_anchor_morning.json created
+- Re-ran controller: correctly reported 'today already has anchor, skipping'
+- Reverted window times back to 07:55-08:05
+- Anchor file size: 224 KB (full intelligence payload preserved)
+
+Evidence committed to repo:
+- snapshots\snapshot_2026-06-19_10-43-34_anchor_morning.json
+
+Proof points:
+- Anchor creation logic: WORKS
+- Daily uniqueness protection: WORKS
+- File naming convention: CORRECT
+- Retention protection for anchors: ACTIVE (code-level)
+
+Status: Sprint 9 Step 2 fully proven in production.
