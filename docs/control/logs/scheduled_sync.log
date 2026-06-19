@@ -1,0 +1,183 @@
+ 
+============================================================ 
+Sync run started: 19/06/2026 10:11:05.86 
+============================================================ 
+Traceback (most recent call last):
+  File "C:\Users\Luke_C\Desktop\JiraObservationMonitor\scripts\sync_runtime.py", line 47, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Luke_C\Desktop\JiraObservationMonitor\scripts\sync_runtime.py", line 29, in main
+    print("\U0001f501 SYNC RUNTIME WORKFLOW")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Luke_C\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f501' in position 0: character maps to <undefined>
+Sync run finished: 19/06/2026 10:11:06.10 
+ 
+ 
+============================================================ 
+Sync run started: 19/06/2026 10:11:53.68 
+============================================================ 
+Traceback (most recent call last):
+  File "C:\Users\Luke_C\Desktop\JiraObservationMonitor\scripts\sync_runtime.py", line 47, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Luke_C\Desktop\JiraObservationMonitor\scripts\sync_runtime.py", line 29, in main
+    print("\U0001f501 SYNC RUNTIME WORKFLOW")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Luke_C\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f501' in position 0: character maps to <undefined>
+Sync run finished: 19/06/2026 10:11:53.92 
+ 
+ 
+============================================================ 
+Sync run started: 19/06/2026 10:14:50.60 
+============================================================ 
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-19 10:14:51
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1904
+🔢 Snapshot fields: 1904
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-19_10-14-51.json
+📁 Stored: 15/20
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 19/06/2026 10:14:51.69 
+ 
+ 
+============================================================ 
+Sync run started: 19/06/2026 10:20:37.54 
+============================================================ 
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-19 10:20:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1904
+🔢 Snapshot fields: 1904
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-19_10-20-38.json
+📁 Stored: 17/20
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 19/06/2026 10:20:38.66 
+ 
+
+============================================================
+Sync run started: 19/06/2026 10:25:07.95
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-19 10:25:08
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1904
+🔢 Snapshot fields: 1904
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-19_10-25-08.json
+📁 Stored: 18/20
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 19/06/2026 10:25:09.06
+
+============================================================
+Sync run started: 19/06/2026 10:30:37.58
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-19 10:30:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1904
+🔢 Snapshot fields: 1904
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-19_10-30-38.json
+📁 Stored: 19/20
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 19/06/2026 10:30:38.72 (exit code: 0)
+
+
+============================================================
+Sync run started: 19/06/2026 10:30:50.63
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-19 10:30:51
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1904
+🔢 Snapshot fields: 1904
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-19_10-30-51.json
+📁 Stored: 20/20
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 19/06/2026 10:30:51.76 (exit code: 0)
+
