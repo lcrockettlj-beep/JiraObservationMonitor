@@ -29,3 +29,9 @@ Thumbs.db
 # Test / cache
 .pytest_cache/
 instance/
+
+# Sprint 9 — Runtime contract snapshot (regenerated on every sync)
+docs/control/runtime_contract_snapshot.json
+
+# Sprint 9 — Scheduled task log (rotates frequently)
+docs/control/logs/
