@@ -311,3 +311,14 @@ System verified healthy:
 - Documentation tree: all 7 folders verified
 
 Audit conclusion: Platform stable. Ready for Sprint 9 (Automation Layer).
+
+## 2026-06-19 10:30 — Sprint 9 Step 1 Hardening Complete
+
+System achieved:
+- check_scheduled_sync.ps1 rewritten in ASCII-only (no encoding issues)
+- run_sync_for_scheduler.cmd now propagates Python exit code
+- Task Scheduler LastTaskResult now reflects actual sync result
+- view_sync_log.ps1 helper added for UTF-8 log reading
+- Multiple successful automated runs confirmed (10:14, 10:20, 10:25)
+
+Status: Automation chain fully verified and self-reporting.
