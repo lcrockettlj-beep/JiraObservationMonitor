@@ -396,3 +396,24 @@ System achieved:
 
 Status: Data pipeline complete. Visual rendering next.
 Sprint 9 Step 3 Part 1: DONE
+
+## 2026-06-19 11:10 — Architecture Decision: Snapshot File Not Tracked
+
+Decision:
+- docs/control/runtime_contract_snapshot.json moved to .gitignore
+- docs/control/logs/scheduled_sync.log moved to .gitignore
+- Files still exist locally for validator + audit
+
+Rationale:
+- These files are regenerated on every sync (every 10 minutes)
+- Each sync overwrites them with current runtime state
+- Committing them creates 200KB+ of noise per sync (~30MB/day)
+- File contents represent CURRENT state, not SCHEMA contract
+- A true schema validator should compare field STRUCTURE not VALUES
+
+Future improvement (Sprint 9.5 candidate):
+- Refactor validator to use a schema-only snapshot (~5KB)
+- Schema snapshot would change only when actual contract evolves
+- Would restore git-tracked audit trail for the contract itself
+
+Status: Repo cleanliness restored. Sprint 9 work resumes.
