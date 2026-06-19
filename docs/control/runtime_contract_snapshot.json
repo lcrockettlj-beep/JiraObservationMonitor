@@ -6191,34 +6191,6 @@
             "rows": [
                 {
                     "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.643,
-                    "created_at_local": "2026-06-18 18:12:38",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-12-38",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.783,
-                    "created_at_local": "2026-06-18 18:22:51",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-22-51",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
                     "collection_duration_seconds": 1.761,
                     "created_at_local": "2026-06-18 18:33:06",
                     "failed_api_checks": 0,
@@ -6266,34 +6238,6 @@
             ],
             "reason": "Snapshot-by-snapshot operational history for this monitored Jira site.",
             "rows": [
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.811,
-                    "created_at_local": "2026-06-18 18:12:38",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-12-38",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.856,
-                    "created_at_local": "2026-06-18 18:22:51",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-22-51",
-                    "status": "stable"
-                },
                 {
                     "blocking_failed_checks": "",
                     "collection_duration_seconds": 1.871,
@@ -6345,34 +6289,6 @@
             "rows": [
                 {
                     "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.896,
-                    "created_at_local": "2026-06-18 18:12:38",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-12-38",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.878,
-                    "created_at_local": "2026-06-18 18:22:51",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-22-51",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
                     "collection_duration_seconds": 1.963,
                     "created_at_local": "2026-06-18 18:33:06",
                     "failed_api_checks": 0,
@@ -6420,34 +6336,6 @@
             ],
             "reason": "Snapshot-by-snapshot operational history for this monitored Jira site.",
             "rows": [
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.471,
-                    "created_at_local": "2026-06-18 18:12:38",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-12-38",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.5,
-                    "created_at_local": "2026-06-18 18:22:51",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-22-51",
-                    "status": "stable"
-                },
                 {
                     "blocking_failed_checks": "",
                     "collection_duration_seconds": 1.618,
@@ -6499,34 +6387,6 @@
             "rows": [
                 {
                     "blocking_failed_checks": "",
-                    "collection_duration_seconds": 2.094,
-                    "created_at_local": "2026-06-18 18:12:38",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-12-38",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 1.921,
-                    "created_at_local": "2026-06-18 18:22:51",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-22-51",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
                     "collection_duration_seconds": 1.879,
                     "created_at_local": "2026-06-18 18:33:06",
                     "failed_api_checks": 0,
@@ -6574,34 +6434,6 @@
             ],
             "reason": "Snapshot-by-snapshot operational history for this monitored Jira site.",
             "rows": [
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 3.879,
-                    "created_at_local": "2026-06-18 18:12:38",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-12-38",
-                    "status": "stable"
-                },
-                {
-                    "blocking_failed_checks": "",
-                    "collection_duration_seconds": 2.861,
-                    "created_at_local": "2026-06-18 18:22:51",
-                    "failed_api_checks": 0,
-                    "issue_count_total": 0,
-                    "issue_count_unresolved": 0,
-                    "issue_count_updated_last_7d": 0,
-                    "operational_risk_signals": "optional_scope_notes_present",
-                    "permission_limited_checks": "",
-                    "risk_score": 1,
-                    "snapshot_timestamp": "2026-06-18_18-22-51",
-                    "status": "stable"
-                },
                 {
                     "blocking_failed_checks": "",
                     "collection_duration_seconds": 4.218,
@@ -6654,7 +6486,7 @@
             "reason": "This list shows current trend pressure by monitored site using snapshot history, risk direction, recurring permission issues, and recurring operational signals.",
             "rows": [
                 {
-                    "collection_time_delta": 0.155,
+                    "collection_time_delta": 0.037,
                     "current_status": "stable",
                     "failed_api_delta": 0.0,
                     "recurring_blocking_failures": "",
@@ -6663,14 +6495,14 @@
                     "risk_delta": 0.0,
                     "site_key": "gaminglabs-team-h2pbpmis",
                     "site_name": "gaminglabs-team-h2pbpmis",
-                    "snapshot_count": 4,
-                    "status_streak": "stable:4",
+                    "snapshot_count": 2,
+                    "status_streak": "stable:2",
                     "trend_score": 2,
                     "trend_signals": "recurring_issue_risk_signals, recurring_operational_signals",
                     "unresolved_delta": 0.0
                 },
                 {
-                    "collection_time_delta": 0.04,
+                    "collection_time_delta": -0.02,
                     "current_status": "stable",
                     "failed_api_delta": 0.0,
                     "recurring_blocking_failures": "",
@@ -6679,14 +6511,14 @@
                     "risk_delta": 0.0,
                     "site_key": "gaminglabs-team-tsyfo716",
                     "site_name": "gaminglabs-team-tsyfo716",
-                    "snapshot_count": 4,
-                    "status_streak": "stable:4",
+                    "snapshot_count": 2,
+                    "status_streak": "stable:2",
                     "trend_score": 2,
                     "trend_signals": "recurring_issue_risk_signals, recurring_operational_signals",
                     "unresolved_delta": 0.0
                 },
                 {
-                    "collection_time_delta": -0.064,
+                    "collection_time_delta": -0.131,
                     "current_status": "stable",
                     "failed_api_delta": 0.0,
                     "recurring_blocking_failures": "",
@@ -6695,14 +6527,14 @@
                     "risk_delta": 0.0,
                     "site_key": "gli-delivery-tm",
                     "site_name": "gli-delivery-tm",
-                    "snapshot_count": 4,
-                    "status_streak": "stable:4",
+                    "snapshot_count": 2,
+                    "status_streak": "stable:2",
                     "trend_score": 2,
                     "trend_signals": "recurring_issue_risk_signals, recurring_operational_signals",
                     "unresolved_delta": 0.0
                 },
                 {
-                    "collection_time_delta": -0.004,
+                    "collection_time_delta": -0.151,
                     "current_status": "stable",
                     "failed_api_delta": 0.0,
                     "recurring_blocking_failures": "",
@@ -6711,14 +6543,14 @@
                     "risk_delta": 0.0,
                     "site_key": "gli-global-technology",
                     "site_name": "gli-global-technology",
-                    "snapshot_count": 4,
-                    "status_streak": "stable:4",
+                    "snapshot_count": 2,
+                    "status_streak": "stable:2",
                     "trend_score": 2,
                     "trend_signals": "recurring_issue_risk_signals, recurring_operational_signals",
                     "unresolved_delta": 0.0
                 },
                 {
-                    "collection_time_delta": 0.197,
+                    "collection_time_delta": 0.412,
                     "current_status": "stable",
                     "failed_api_delta": 0.0,
                     "recurring_blocking_failures": "",
@@ -6727,14 +6559,14 @@
                     "risk_delta": 0.0,
                     "site_key": "gli-it-project",
                     "site_name": "gli-it-project",
-                    "snapshot_count": 4,
-                    "status_streak": "stable:4",
+                    "snapshot_count": 2,
+                    "status_streak": "stable:2",
                     "trend_score": 2,
                     "trend_signals": "recurring_issue_risk_signals, recurring_operational_signals",
                     "unresolved_delta": 0.0
                 },
                 {
-                    "collection_time_delta": -1.358,
+                    "collection_time_delta": -1.697,
                     "current_status": "stable",
                     "failed_api_delta": 0.0,
                     "recurring_blocking_failures": "",
@@ -6743,8 +6575,8 @@
                     "risk_delta": 0.0,
                     "site_key": "gli-usa",
                     "site_name": "gli-usa",
-                    "snapshot_count": 4,
-                    "status_streak": "stable:4",
+                    "snapshot_count": 2,
+                    "status_streak": "stable:2",
                     "trend_score": 2,
                     "trend_signals": "recurring_issue_risk_signals, recurring_operational_signals",
                     "unresolved_delta": 0.0
@@ -6825,13 +6657,13 @@
             {
                 "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
                 "collection_time_trend": {
-                    "delta": 0.155,
+                    "delta": 0.037,
                     "direction": "up",
                     "field": "collection_duration_seconds",
-                    "first": 1.643,
+                    "first": 1.761,
                     "latest": 1.798,
                     "max": 1.798,
-                    "min": 1.643
+                    "min": 1.761
                 },
                 "current_risk_score": 1,
                 "current_status": "stable",
@@ -6848,13 +6680,13 @@
                 "recurring_blocking_failures": [],
                 "recurring_issue_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "no_recent_issue_updates_detected"
                     }
                 ],
                 "recurring_operational_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "optional_scope_notes_present"
                     }
                 ],
@@ -6869,9 +6701,9 @@
                     "min": 1.0
                 },
                 "site_key": "gaminglabs-team-h2pbpmis",
-                "snapshot_count": 4,
+                "snapshot_count": 2,
                 "status_streak": {
-                    "length": 4,
+                    "length": 2,
                     "status": "stable"
                 },
                 "trend_score": 2,
@@ -6892,13 +6724,13 @@
             {
                 "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
                 "collection_time_trend": {
-                    "delta": 0.04,
-                    "direction": "up",
+                    "delta": -0.02,
+                    "direction": "down",
                     "field": "collection_duration_seconds",
-                    "first": 1.811,
+                    "first": 1.871,
                     "latest": 1.851,
                     "max": 1.871,
-                    "min": 1.811
+                    "min": 1.851
                 },
                 "current_risk_score": 1,
                 "current_status": "stable",
@@ -6915,13 +6747,13 @@
                 "recurring_blocking_failures": [],
                 "recurring_issue_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "no_recent_issue_updates_detected"
                     }
                 ],
                 "recurring_operational_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "optional_scope_notes_present"
                     }
                 ],
@@ -6936,9 +6768,9 @@
                     "min": 1.0
                 },
                 "site_key": "gaminglabs-team-tsyfo716",
-                "snapshot_count": 4,
+                "snapshot_count": 2,
                 "status_streak": {
-                    "length": 4,
+                    "length": 2,
                     "status": "stable"
                 },
                 "trend_score": 2,
@@ -6959,10 +6791,10 @@
             {
                 "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
                 "collection_time_trend": {
-                    "delta": -0.064,
+                    "delta": -0.131,
                     "direction": "down",
                     "field": "collection_duration_seconds",
-                    "first": 1.896,
+                    "first": 1.963,
                     "latest": 1.832,
                     "max": 1.963,
                     "min": 1.832
@@ -6982,13 +6814,13 @@
                 "recurring_blocking_failures": [],
                 "recurring_issue_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "no_recent_issue_updates_detected"
                     }
                 ],
                 "recurring_operational_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "optional_scope_notes_present"
                     }
                 ],
@@ -7003,9 +6835,9 @@
                     "min": 1.0
                 },
                 "site_key": "gli-delivery-tm",
-                "snapshot_count": 4,
+                "snapshot_count": 2,
                 "status_streak": {
-                    "length": 4,
+                    "length": 2,
                     "status": "stable"
                 },
                 "trend_score": 2,
@@ -7026,10 +6858,10 @@
             {
                 "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
                 "collection_time_trend": {
-                    "delta": -0.004,
+                    "delta": -0.151,
                     "direction": "down",
                     "field": "collection_duration_seconds",
-                    "first": 1.471,
+                    "first": 1.618,
                     "latest": 1.467,
                     "max": 1.618,
                     "min": 1.467
@@ -7049,13 +6881,13 @@
                 "recurring_blocking_failures": [],
                 "recurring_issue_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "no_recent_issue_updates_detected"
                     }
                 ],
                 "recurring_operational_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "optional_scope_notes_present"
                     }
                 ],
@@ -7070,9 +6902,9 @@
                     "min": 1.0
                 },
                 "site_key": "gli-global-technology",
-                "snapshot_count": 4,
+                "snapshot_count": 2,
                 "status_streak": {
-                    "length": 4,
+                    "length": 2,
                     "status": "stable"
                 },
                 "trend_score": 2,
@@ -7093,10 +6925,10 @@
             {
                 "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
                 "collection_time_trend": {
-                    "delta": 0.197,
+                    "delta": 0.412,
                     "direction": "up",
                     "field": "collection_duration_seconds",
-                    "first": 2.094,
+                    "first": 1.879,
                     "latest": 2.291,
                     "max": 2.291,
                     "min": 1.879
@@ -7116,13 +6948,13 @@
                 "recurring_blocking_failures": [],
                 "recurring_issue_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "no_recent_issue_updates_detected"
                     }
                 ],
                 "recurring_operational_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "optional_scope_notes_present"
                     }
                 ],
@@ -7137,9 +6969,9 @@
                     "min": 1.0
                 },
                 "site_key": "gli-it-project",
-                "snapshot_count": 4,
+                "snapshot_count": 2,
                 "status_streak": {
-                    "length": 4,
+                    "length": 2,
                     "status": "stable"
                 },
                 "trend_score": 2,
@@ -7160,10 +6992,10 @@
             {
                 "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
                 "collection_time_trend": {
-                    "delta": -1.358,
+                    "delta": -1.697,
                     "direction": "down",
                     "field": "collection_duration_seconds",
-                    "first": 3.879,
+                    "first": 4.218,
                     "latest": 2.521,
                     "max": 4.218,
                     "min": 2.521
@@ -7183,13 +7015,13 @@
                 "recurring_blocking_failures": [],
                 "recurring_issue_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "no_recent_issue_updates_detected"
                     }
                 ],
                 "recurring_operational_signals": [
                     {
-                        "count": 4,
+                        "count": 2,
                         "name": "optional_scope_notes_present"
                     }
                 ],
@@ -7204,9 +7036,9 @@
                     "min": 1.0
                 },
                 "site_key": "gli-usa",
-                "snapshot_count": 4,
+                "snapshot_count": 2,
                 "status_streak": {
-                    "length": 4,
+                    "length": 2,
                     "status": "stable"
                 },
                 "trend_score": 2,
@@ -16776,11 +16608,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": 0.155,
+            "historical_collection_time_delta": 0.037,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -17052,11 +16884,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": 0.04,
+            "historical_collection_time_delta": -0.02,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -17862,11 +17694,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": -0.064,
+            "historical_collection_time_delta": -0.131,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -18789,11 +18621,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": -0.004,
+            "historical_collection_time_delta": -0.151,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -20484,11 +20316,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": 0.197,
+            "historical_collection_time_delta": 0.412,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -21324,11 +21156,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": -1.358,
+            "historical_collection_time_delta": -1.697,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -21700,11 +21532,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": 0.155,
+            "historical_collection_time_delta": 0.037,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -21976,11 +21808,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": 0.04,
+            "historical_collection_time_delta": -0.02,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -22786,11 +22618,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": -0.064,
+            "historical_collection_time_delta": -0.131,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -23713,11 +23545,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": -0.004,
+            "historical_collection_time_delta": -0.151,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -25408,11 +25240,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": 0.197,
+            "historical_collection_time_delta": 0.412,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [
@@ -26248,11 +26080,11 @@
             },
             "failed_api_checks": 0,
             "growth_status": "stable",
-            "historical_collection_time_delta": -1.358,
+            "historical_collection_time_delta": -1.697,
             "historical_failed_api_delta": 0.0,
             "historical_risk_delta": 0.0,
-            "historical_snapshot_count": 4,
-            "historical_status_streak_length": 4,
+            "historical_snapshot_count": 2,
+            "historical_status_streak_length": 2,
             "historical_status_streak_status": "stable",
             "historical_trend_score": 2,
             "historical_trend_signals": [

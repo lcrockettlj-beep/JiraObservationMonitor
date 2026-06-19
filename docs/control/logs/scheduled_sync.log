@@ -181,3 +181,34 @@ Sync run started: 19/06/2026 10:30:50.63
 ✅ Sync complete — runtime + docs + snapshots aligned
 Sync run finished: 19/06/2026 10:30:51.76 (exit code: 0)
 
+
+============================================================
+Sync run started: 19/06/2026 10:40:37.60
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-19 10:40:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1904
+🔢 Snapshot fields: 1904
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-19_10-40-38.json
+📁 Stored: 21/20 regular + 0 anchor(s)
+♻️  Pruned old snapshot: snapshot_2026-06-18_18-22-51.json
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 19/06/2026 10:40:38.84 (exit code: 0)
+
