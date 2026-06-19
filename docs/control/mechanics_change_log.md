@@ -376,3 +376,23 @@ Proof points:
 - Retention protection for anchors: ACTIVE (code-level)
 
 Status: Sprint 9 Step 2 fully proven in production.
+
+## 2026-06-19 11:00 — Sprint 9 Step 3 Part 1: Data Pipeline Active
+
+System achieved:
+- web.py /api/source-state extended with 4 new fields:
+  * last_sync_time (ISO timestamp)
+  * last_sync_age_seconds (int)
+  * auto_sync_active (bool)
+  * anchors_today (dict with morning/evening keys)
+- Helper functions added:
+  * _get_last_sync_info() reads scheduled_sync.log mtime
+  * _get_anchors_today() scans snapshots folder for daily anchors
+- dashboard_refresh.js extended:
+  * 4 new state object fields
+  * pollSourceState() captures new API fields
+  * formatAge() helper for "X ago" formatting
+- DevTools console verified: all 4 fields received correctly
+
+Status: Data pipeline complete. Visual rendering next.
+Sprint 9 Step 3 Part 1: DONE
