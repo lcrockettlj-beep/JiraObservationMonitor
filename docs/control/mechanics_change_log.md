@@ -528,3 +528,26 @@ Both documents now in docs\governance\.
 
 Status: Block 3 of 5 complete. Strategic communication materials ready.
 Next: Block 4 (Multi-user scaffolding modules)
+
+## 2026-06-19 12:50 — Naming Decision: auth_multi_user (not auth.multi_user)
+
+Issue:
+- Phase 2 scaffolding was originally planned as auth/multi_user/ subpackage
+- auth.py exists as a FILE in project root
+- Python cannot have both auth.py (file) and auth/ (folder) — namespace collision
+- Result: scaffolding folder named auth_multi_user/ (underscore) instead
+
+Documentation reference:
+- Master Governance Pack v3 Section 12.7 references auth/multi_user/* paths
+- Security Posture v2 Section 27 references auth/multi_user/* paths
+- Sprint Deliverables v2 Section 11 references auth/multi_user/* paths
+- All three documents describe the intent; actual implementation uses auth_multi_user/
+
+Decision:
+- Use auth_multi_user/ as the actual folder name
+- Leave existing documentation as-is (describes intent, not exact path)
+- If Phase 2 sprint A wants to refactor auth.py into a package, the scaffolding
+  can be moved to auth/multi_user/ at that time
+- This is a cosmetic / naming variation only, not an architectural change
+
+Status: Batch B complete. Scaffolding package importable as auth_multi_user.
