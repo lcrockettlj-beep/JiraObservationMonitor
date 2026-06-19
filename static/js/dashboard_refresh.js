@@ -191,6 +191,11 @@
         color: #dce3ef;
         font-size: 11px;
       }
+	#jom-auto-refresh-badge .jom-automation-status {
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-top: 10px;
+        padding-top: 10px;
+      }
       #jom-auto-refresh-badge .jom-hidden { display: none !important; }
       @keyframes jomPanelPulseWarn {
         0%,100% { box-shadow: 0 12px 28px rgba(0,0,0,0.29), 0 0 22px rgba(245,158,11,0.28), 0 0 40px rgba(245,158,11,0.14); }
@@ -225,6 +230,11 @@
           <div class="jom-card"><div class="jom-label">Health</div><div class="jom-value" id="jom-source-status">Healthy</div></div>
         </div>
         <div class="jom-insights" id="jom-insights"></div>
+	<div class="jom-body jom-automation-status">
+          	<div class="jom-card"><div class="jom-label">Last sync</div><div class="jom-value" id="jom-last-sync">—</div></div>
+          	<div class="jom-card"><div class="jom-label">Auto sync</div><div class="jom-value" id="jom-auto-status">—</div></div>
+          	<div class="jom-card"><div class="jom-label">Today</div><div class="jom-value" id="jom-anchors-today">—</div></div>
+        </div>
         <div class="jom-actions">
           <button class="jom-btn" id="jom-toggle-refresh" type="button">Pause refresh</button>
           <button class="jom-btn" id="jom-refresh-now" type="button">Refresh now</button>
@@ -317,6 +327,24 @@
     setHealthClass();
     updateInsights();
     applyCollapsedState();
+// Sprint 9 Step 3 — Automation status rendering
+    const lastSyncEl = document.getElementById('jom-last-sync');
+    if (lastSyncEl) {
+      lastSyncEl.textContent = formatAge(state.lastSyncAgeSeconds);
+    }
+
+    const autoStatusEl = document.getElementById('jom-auto-status');
+    if (autoStatusEl) {
+      autoStatusEl.textContent = state.autoSyncActive ? '✅ Active' : '⚠️ Stale';
+      autoStatusEl.style.color = state.autoSyncActive ? '#22c55e' : '#f59e0b';
+    }
+
+    const anchorsEl = document.getElementById('jom-anchors-today');
+    if (anchorsEl) {
+      const morning = state.anchorsToday.morning ? '🌅⚓' : '🌅⏳';
+      const evening = state.anchorsToday.evening ? '🌇⚓' : '🌇⏳';
+      anchorsEl.textContent = morning + '  ' + evening;
+    }
   }
 
   async function pollSourceState() {
