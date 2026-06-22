@@ -1,8 +1,8 @@
-# ============================================================
+﻿# ============================================================
 # health_check.ps1 - JOM Quick Smoke Test
 # ============================================================
 #
-# Runs 14 health checks across the full JOM platform.
+# Runs 12 health checks across the full JOM platform.
 # Designed to run in under 30 seconds and give clear pass/fail
 # results for each layer of the system.
 #
@@ -21,7 +21,7 @@ $ProjectRoot = "C:\Users\Luke_C\Desktop\JiraObservationMonitor"
 Set-Location $ProjectRoot
 
 $ErrorActionPreference = "Continue"
-$Total = 14
+$Total = 12
 $Passed = 0
 $Failed = 0
 $Warnings = 0
@@ -77,66 +77,9 @@ function Test-Warning {
         Write-Host "       -> $Suggestion" -ForegroundColor Yellow
     }
     $script:Warnings++
-    $script:Passed++
+    $script:Passed++   # warnings still count as overall pass
 }
 
-function Get-BackupManifestSummary {
-    param([string]$Root)
-
-    $manifestPath = Join-Path $Root "backups\latest_runtime\latest_manifest.json"
-    if (-not (Test-Path $manifestPath)) {
-        return $null
-    }
-
-    try {
-        $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
-    }
-    catch {
-        return [PSCustomObject]@{
-            path = $manifestPath
-            exists = $true
-            parse_ok = $false
-            error = $_.Exception.Message
-        }
-    }
-
-    $created = $null
-    $ageSeconds = $null
-    try {
-        $created = [datetime]::Parse($manifest.created_at_local)
-        $ageSeconds = [math]::Round(((Get-Date) - $created).TotalSeconds, 0)
-    }
-    catch {}
-
-    return [PSCustomObject]@{
-        path = $manifestPath
-        exists = $true
-        parse_ok = $true
-        created_at_local = $manifest.created_at_local
-        age_seconds = $ageSeconds
-        copied_count = [int]($manifest.copied_count)
-        missing_count = [int]($manifest.missing_count)
-        current_dir = [string]$manifest.current_dir
-        history_dir = [string]$manifest.history_dir
-        missing_files = @($manifest.missing_files)
-    }
-}
-
-function Get-ExpectedBackupFileNames {
-    return @(
-        "latest_run.json",
-        "latest_run_pretty.json",
-        "latest_run_safe_partial.json",
-        "latest_run_admin_enriched.json",
-        "latest_run_admin_enriched_pretty.json",
-        "latest_run_alerted.json",
-        "latest_run_alerted_pretty.json",
-        "latest_run_intelligence.json",
-        "latest_run_intelligence_pretty.json",
-        "latest_snapshot.json",
-        "snapshot_index.json"
-    )
-}
 
 # ============================================================
 # START
@@ -150,6 +93,7 @@ Write-Banner "JOM Health Check - $stamp"
 try {
     $branch = git rev-parse --abbrev-ref HEAD 2>$null
     $status = git status --porcelain 2>$null
+    $behindAhead = git rev-list --left-right --count origin/main...HEAD 2>$null
     if ($branch -ne "main") {
         Test-Result 1 "Git state" $false "Not on main branch (on: $branch)" "git checkout main"
     } elseif ($status) {
@@ -171,9 +115,7 @@ $criticalFiles = @(
     "alert_rules_engine.py",
     "intelligence_rules_engine.py",
     "config\feature_flags.py",
-    "scripts\sync_runtime.py",
-    "scripts\backup_runtime_chain.py",
-    "scripts\restore_runtime_from_backup.ps1"
+    "scripts\sync_runtime.py"
 )
 $missing = @()
 foreach ($f in $criticalFiles) {
@@ -290,7 +232,7 @@ try {
         $nextRun = $info.NextRunTime.ToString("HH:mm")
         Test-Result 8 "Scheduled task" $true "Ready, LastResult=0, next run $nextRun"
     } elseif ($info.LastTaskResult -ne 0) {
-        Test-Result 8 "Scheduled task" $false "LastResult=$($info.LastTaskResult)" "Check docs\control\logs\scheduled_sync.log for errors"
+        Test-Result 8 "Scheduled task" $false "LastResult=$($info.LastTaskResult)" "Check scripts\scheduled_sync.log for errors"
     } else {
         Test-Result 8 "Scheduled task" $false "State=$($task.State)" "Check Task Scheduler"
     }
@@ -334,47 +276,7 @@ if ($morningAnchor -and $eveningAnchor) {
 }
 
 # ------------------------------------------------------------
-# Check 11: Backup manifest freshness
-# ------------------------------------------------------------
-$backupSummary = Get-BackupManifestSummary -Root $ProjectRoot
-$script:backupSummary = $backupSummary
-if (-not $backupSummary) {
-    Test-Result 11 "Backup manifest" $false "latest_manifest.json not found" "Run python scripts\backup_runtime_chain.py or scripts\sync_runtime.py"
-} elseif (-not $backupSummary.parse_ok) {
-    Test-Result 11 "Backup manifest" $false "Manifest unreadable: $($backupSummary.error)" "Inspect backups\latest_runtime\latest_manifest.json"
-} elseif ($null -eq $backupSummary.age_seconds) {
-    Test-Warning 11 "Backup manifest" "Manifest found but backup timestamp could not be parsed" "Inspect created_at_local in latest_manifest.json"
-} elseif ($backupSummary.age_seconds -le 1200) {
-    Test-Result 11 "Backup manifest" $true "Latest backup age $($backupSummary.age_seconds)s"
-} elseif ($backupSummary.age_seconds -le 3600) {
-    Test-Warning 11 "Backup manifest" "Latest backup age $($backupSummary.age_seconds)s (stale)" "Confirm scheduled sync is still running"
-} else {
-    Test-Result 11 "Backup manifest" $false "Latest backup age $($backupSummary.age_seconds)s (too old)" "Run scripts\sync_runtime.py and inspect backup helper"
-}
-
-# ------------------------------------------------------------
-# Check 12: Backup coverage
-# ------------------------------------------------------------
-$expectedBackupFiles = Get-ExpectedBackupFileNames
-$currentBackupDir = Join-Path $ProjectRoot "backups\latest_runtime\current"
-$missingBackupMembers = @()
-foreach ($name in $expectedBackupFiles) {
-    if (-not (Test-Path (Join-Path $currentBackupDir $name))) {
-        $missingBackupMembers += $name
-    }
-}
-if (-not (Test-Path $currentBackupDir)) {
-    Test-Result 12 "Backup coverage" $false "Current backup directory missing" "Run python scripts\backup_runtime_chain.py"
-} elseif ($missingBackupMembers.Count -eq 0) {
-    Test-Result 12 "Backup coverage" $true "All $($expectedBackupFiles.Count) backup members present"
-} elseif ($missingBackupMembers.Count -le 2) {
-    Test-Warning 12 "Backup coverage" "Partial coverage - missing: $($missingBackupMembers -join ', ')" "Check whether pretty runtime layers are expected in this environment"
-} else {
-    Test-Result 12 "Backup coverage" $false "Too many backup members missing: $($missingBackupMembers -join ', ')" "Investigate backup_runtime_chain.py outputs"
-}
-
-# ------------------------------------------------------------
-# Check 13: Secrets protection
+# Check 11: Secrets protection
 # ------------------------------------------------------------
 $secrets = @(".env", "tokens.json", ".auth_state.json")
 $exposed = @()
@@ -387,13 +289,13 @@ foreach ($s in $secrets) {
     }
 }
 if ($exposed.Count -eq 0) {
-    Test-Result 13 "Secrets protection" $true "All $($secrets.Count) secrets gitignored"
+    Test-Result 11 "Secrets protection" $true "All $($secrets.Count) secrets gitignored"
 } else {
-    Test-Result 13 "Secrets protection" $false "Not gitignored: $($exposed -join ', ')" "Add to .gitignore immediately"
+    Test-Result 11 "Secrets protection" $false "Not gitignored: $($exposed -join ', ')" "Add to .gitignore immediately"
 }
 
 # ------------------------------------------------------------
-# Check 14: Governance pack present
+# Check 12: Governance pack present
 # ------------------------------------------------------------
 $governanceFiles = @(
     "docs\governance\JOM_Master_Governance_Delivery_Handover_Pack_v3.docx",
@@ -412,9 +314,9 @@ foreach ($g in $governanceFiles) {
     }
 }
 if ($missingGov.Count -eq 0) {
-    Test-Result 14 "Governance pack" $true "$($governanceFiles.Count) governance files present"
+    Test-Result 12 "Governance pack" $true "$($governanceFiles.Count) governance files present"
 } else {
-    Test-Result 14 "Governance pack" $false "Missing: $($missingGov.Count) of $($governanceFiles.Count)" "Check $($missingGov[0])"
+    Test-Result 12 "Governance pack" $false "Missing: $($missingGov.Count) of $($governanceFiles.Count)" "Check $($missingGov[0])"
 }
 
 # ============================================================
@@ -434,6 +336,7 @@ if ($Failed -eq 0) {
 Write-Host ("=" * 65) -ForegroundColor Cyan
 Write-Host ""
 
+# Exit with appropriate code
 if ($Failed -eq 0) {
     exit 0
 } else {
