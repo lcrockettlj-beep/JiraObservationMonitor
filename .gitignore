@@ -52,3 +52,19 @@ reports/sprint10_phase2_audit_*.txt
 reports/sprint11_phase1_release_audit.txt
 reports/review_*.txt
 
+
+latest_run_admin_enriched.json
+latest_run_admin_enriched_pretty.json
+latest_run_alerted.json
+latest_run_alerted_pretty.json
+latest_run_intelligence.json
+latest_run_intelligence_pretty.json
+latest_run_safe_partial.json
+backups/
+__pycache__/
+*.pyc
+reports/runtime_restore_*.txt
+reports/sprint10_phase2_audit_*.txt
+reports/sprint11_phase1_release_audit.txt
+reports/review_*.txt
+
