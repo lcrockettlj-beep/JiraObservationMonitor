@@ -186,13 +186,18 @@
 /* WARNING — subtle glow */
 .site-card--warning {
     border-left-color: var(--warning);
-    box-shadow: 0 0 12px rgba(240, 178, 74, 0.35);
+    box-shadow:
+        0 0 16px rgba(240, 178, 74, 0.40),
+        inset 0 0 10px rgba(240, 178, 74, 0.05);
+
 }
 
 /* CRITICAL — stronger glow + pulse */
 .site-card--critical {
     border-left-color: var(--critical);
-    box-shadow: 0 0 16px rgba(225, 75, 90, 0.5);
+    box-shadow:
+        0 0 22px rgba(225, 75, 90, 0.55),
+        inset 0 0 12px rgba(225, 75, 90, 0.08);
     animation: criticalPulse 2.4s ease-in-out infinite;
 }
 

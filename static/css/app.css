@@ -75,7 +75,10 @@ a {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 20px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+    box-shadow: 
+        0 18px 40px rgba(0, 0, 0, 0.28),
+        0 0 30px rgba(69,155,227,0.08);
+
 }
 
 .hero {
@@ -112,9 +115,9 @@ a {
     margin: 0 0 8px 8px;
     padding: 8px 12px;
     border-radius: 999px;
-    background: rgba(255,255,255,0.04);
+    background: rgba(69,155,227,0.08);
     border: 1px solid var(--border);
-    color: var(--muted);
+    color: var(--text);
     font-size: 13px;
 }
 
@@ -173,9 +176,10 @@ a {
 
 .value {
     font-size: 34px;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
 }
 
 .note {
