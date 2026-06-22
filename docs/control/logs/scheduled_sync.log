@@ -2793,3 +2793,23 @@ Sync run started: 22/06/2026 15:20:37.93
 ✅ Sync complete — runtime + docs + snapshots aligned
 Sync run finished: 22/06/2026 15:20:40.64 (exit code: 0)
 
+
+============================================================
+Sync run started: 22/06/2026 15:30:39.00
+============================================================
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+⚠️ Skipped — Flask app is not running
+➡️ Start it: python web.py
+Sync run finished: 22/06/2026 15:30:48.66 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 15:40:37.54
+============================================================
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+⚠️ Skipped — Flask app is not running
+➡️ Start it: python web.py
+Sync run finished: 22/06/2026 15:40:39.87 (exit code: 0)
+
