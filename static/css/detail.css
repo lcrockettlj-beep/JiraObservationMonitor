@@ -1,17 +1,5 @@
 .hero p {
-    max-width: 920px;
-}
-
-.hero__meta {
-    min-width: 220px;
-}
-
-.panel {
-    padding: 18px;
-}
-
-.table-wrap {
-    border-radius: 18px;
+    max border-radius: 18px;    max-width: 920px;
     overflow: hidden;
     border: 1px solid var(--border);
 }
@@ -69,3 +57,15 @@ td.wrap {
     white-space: normal;
     word-break: break-word;
 }
+
+}
+
+.hero__meta {
+    min-width: 220px;
+}
+
+.panel {
+    padding: 18px;
+}
+
+.table-wrap {
