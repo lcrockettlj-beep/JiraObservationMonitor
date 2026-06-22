@@ -1,0 +1,24 @@
+JOM v1.0 Capability Tracker (Current State)
+
+COMPLETED
+- Runtime JSON pipeline
+- Snapshot system + anchors
+- Backup + restore system
+- Health check validation
+- Drilldown engine
+- Site intelligence layers
+- Alert + intelligence engines
+
+PARTIAL
+- Backup = partial coverage (pretty files)
+- UI = stable but basic polish
+
+NOT INCLUDED IN V1.0 (INTENTIONAL)
+- Full UI overhaul
+- Multi-user SSO (dormant)
+- Advanced analytics / AI
+
+NEXT PHASE (v1.1)
+- UI enhancement (cyberpunk mission control)
+- usability improvements
+- extended drilldown UX

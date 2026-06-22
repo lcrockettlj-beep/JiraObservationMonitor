@@ -131,11 +131,9 @@
 
             </div>
             <div class="hero__meta meta-pills">
-                
-                <span class="pill">User records: {{ users_row_count or 0 }}</span>
-                <span class="pill">Managed accounts: {{ managed_row_count or 0 }}</span>
-                <span class="pill">History snapshots: {{ trend_lookback or 0 }}</span>
-
+                <span class="pill">Users rows: {{ users_row_count or 0 }}</span>
+                <span class="pill">Managed rows: {{ managed_row_count or 0 }}</span>
+                <span class="pill">Snapshot history depth: {{ trend_lookback or 0 }}</span>
             </div>
         </div>
     </section>
@@ -146,11 +144,11 @@
             {{ latest_snapshot_timestamp }}
         </div>
         <div class="source-strip__item">
-            <strong>Sites in scope:</strong>
+            <strong>Sites monitored:</strong>
             {{ discovery_summary.tracked_site_count or 0 }}
         </div>
         <div class="source-strip__item">
-            <strong>Sites analysed:</strong>
+            <strong>Intelligence coverage:</strong>
             {{ intelligence_site_total or 0 }} analysed site(s)
         </div>
     </section>
@@ -170,7 +168,7 @@
             <a href="/detail/intelligence::summary" class="stat-card stat-card--link intelligence-card">
                 <div class="label">Estate Risk Score</div>
                 <div class="value">{{ estate_risk_score or 0 }}</div>
-                <div class="note">Overall estate status: <strong>{{ estate_risk_category or 'Healthy' }}</strong>.</div>
+                <div class="note">Current intelligence estate category: <strong>{{ estate_risk_category or 'Healthy' }}</strong>.</div>
             </a>
             <a href="/detail/intelligence::summary" class="stat-card stat-card--link intelligence-card">
                 <div class="label">Top Intelligence Risks</div>
@@ -180,7 +178,7 @@
             <a href="/detail/intelligence::summary" class="stat-card stat-card--link intelligence-card">
                 <div class="label">Sites With Risks</div>
                 <div class="value">{{ intelligence_risk_site_total }}</div>
-                <div class="note">Sites with at least one active intelligence finding and a details available.</div>
+                <div class="note">Sites with at least one active intelligence finding and a drilldown-ready payload.</div>
             </a>
             <div class="stat-card intelligence-card intelligence-card--status intelligence-card--{{ (estate_risk_category or 'Healthy')|lower }}">
                 <div class="label">Operational Posture</div>

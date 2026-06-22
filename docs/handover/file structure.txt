@@ -1,263 +1,42 @@
-PS C:\Users\Luke_C\Desktop\JiraObservationMonitor> tree /F
-Folder PATH listing for volume OS
-Volume serial number is D28E-96FA
-C:.
-│   .auth_state.json
-│   .env
-│   .gitignore
-│   2026-06-15T095320Z_managed_accounts.csv
-│   auth.py
-│   automation_audit.py
-│   backend_contract.py
-│   billing_catalog.py
-│   change_detection.py
-│   data_collector.py
-│   estate_metrics.py
-│   export-users (1).csv
-│   intelligence.py
-│   intelligence_engine.py
-│   jira_client.py
-│   latest_run.json
-│   latest_run_pretty.json
-│   latest_run_safe_partial.json
-│   main.py
-│   monitoring.py
-│   project_counts.py
-│   reporting.py
-│   requirements.txt
-│   setup_project.ps1
-│   site_discovery.py
-│   snapshots.py
-│   tier_engine.py
-│   tokens.json
-│   trends.py
-│   user_license.py
-│   web.py
-│   __init__.py
-│
-├───backend
-│   │   intelligence_runtime.py
-│   │   runtime_source_adapter.py
-│   │
-│   └───__pycache__
-│           intelligence_engine.cpython-314.pyc
-│           intelligence_runtime.cpython-314.pyc
-│           runtime_source_adapter.cpython-314.pyc
-│
-├───reports
-│   │   latest_audit_automation.csv
-│   │   latest_backend_contract.json
-│   │   latest_changes.csv
-│   │   latest_delta_summary.csv
-│   │   latest_excluded_sites.csv
-│   │   latest_permission_checker.csv
-│   │   latest_permission_issues.csv
-│   │   latest_sites.csv
-│   │   latest_snapshot_deltas.csv
-│   │   latest_summary.json
-│   │   latest_summary.md
-│   │   latest_summary.txt
-│   │   latest_user_licence.csv
-│   │
-│   ├───2026-06-11
-│   │       audit_automation_2026-06-11_14-15-01.csv
-│   │       audit_automation_2026-06-11_14-41-27.csv
-│   │       audit_automation_2026-06-11_14-42-05.csv
-│   │       audit_automation_2026-06-11_14-49-45.csv
-│   │       audit_automation_2026-06-11_14-53-37.csv
-│   │       audit_automation_2026-06-11_15-49-49.csv
-│   │       audit_automation_2026-06-11_16-15-10.csv
-│   │       audit_automation_2026-06-11_16-43-32.csv
-│   │       audit_automation_2026-06-11_16-43-44.csv
-│   │       backend_contract_2026-06-11_16-43-32.json
-│   │       backend_contract_2026-06-11_16-43-44.json
-│   │       changes_2026-06-11_13-18-17.csv
-│   │       changes_2026-06-11_13-28-38.csv
-│   │       changes_2026-06-11_13-33-08.csv
-│   │       changes_2026-06-11_13-37-53.csv
-│   │       changes_2026-06-11_13-41-56.csv
-│   │       changes_2026-06-11_13-51-39.csv
-│   │       changes_2026-06-11_14-15-01.csv
-│   │       changes_2026-06-11_14-41-27.csv
-│   │       changes_2026-06-11_14-42-05.csv
-│   │       changes_2026-06-11_14-49-45.csv
-│   │       changes_2026-06-11_14-53-37.csv
-│   │       changes_2026-06-11_15-49-49.csv
-│   │       changes_2026-06-11_16-15-10.csv
-│   │       changes_2026-06-11_16-43-32.csv
-│   │       changes_2026-06-11_16-43-44.csv
-│   │       delta_summary_2026-06-11_16-43-32.csv
-│   │       delta_summary_2026-06-11_16-43-44.csv
-│   │       excluded_sites_2026-06-11_13-51-39.csv
-│   │       excluded_sites_2026-06-11_14-15-01.csv
-│   │       excluded_sites_2026-06-11_14-41-27.csv
-│   │       excluded_sites_2026-06-11_14-42-05.csv
-│   │       excluded_sites_2026-06-11_14-49-45.csv
-│   │       excluded_sites_2026-06-11_14-53-37.csv
-│   │       excluded_sites_2026-06-11_15-49-49.csv
-│   │       excluded_sites_2026-06-11_16-15-10.csv
-│   │       excluded_sites_2026-06-11_16-43-32.csv
-│   │       excluded_sites_2026-06-11_16-43-44.csv
-│   │       permission_checker_2026-06-11_13-51-39.csv
-│   │       permission_checker_2026-06-11_14-15-01.csv
-│   │       permission_checker_2026-06-11_14-41-27.csv
-│   │       permission_checker_2026-06-11_14-42-05.csv
-│   │       permission_checker_2026-06-11_14-49-45.csv
-│   │       permission_checker_2026-06-11_14-53-37.csv
-│   │       permission_checker_2026-06-11_15-49-49.csv
-│   │       permission_checker_2026-06-11_16-15-10.csv
-│   │       permission_checker_2026-06-11_16-43-32.csv
-│   │       permission_checker_2026-06-11_16-43-44.csv
-│   │       permission_issues_2026-06-11_13-51-39.csv
-│   │       permission_issues_2026-06-11_14-15-01.csv
-│   │       permission_issues_2026-06-11_14-41-27.csv
-│   │       permission_issues_2026-06-11_14-42-05.csv
-│   │       permission_issues_2026-06-11_14-49-45.csv
-│   │       permission_issues_2026-06-11_14-53-37.csv
-│   │       permission_issues_2026-06-11_15-49-49.csv
-│   │       permission_issues_2026-06-11_16-15-10.csv
-│   │       permission_issues_2026-06-11_16-43-32.csv
-│   │       permission_issues_2026-06-11_16-43-44.csv
-│   │       sites_2026-06-11_13-18-17.csv
-│   │       sites_2026-06-11_13-28-38.csv
-│   │       sites_2026-06-11_13-33-08.csv
-│   │       sites_2026-06-11_13-37-53.csv
-│   │       sites_2026-06-11_13-41-56.csv
-│   │       sites_2026-06-11_13-51-39.csv
-│   │       sites_2026-06-11_14-15-01.csv
-│   │       sites_2026-06-11_14-41-27.csv
-│   │       sites_2026-06-11_14-42-05.csv
-│   │       sites_2026-06-11_14-49-45.csv
-│   │       sites_2026-06-11_14-53-37.csv
-│   │       sites_2026-06-11_15-49-49.csv
-│   │       sites_2026-06-11_16-15-10.csv
-│   │       sites_2026-06-11_16-43-32.csv
-│   │       sites_2026-06-11_16-43-44.csv
-│   │       snapshot_deltas_2026-06-11_15-49-49.csv
-│   │       snapshot_deltas_2026-06-11_16-15-10.csv
-│   │       summary_2026-06-11_11-51-48.json
-│   │       summary_2026-06-11_11-51-48.txt
-│   │       summary_2026-06-11_12-17-41.json
-│   │       summary_2026-06-11_12-17-41.txt
-│   │       summary_2026-06-11_12-28-24.json
-│   │       summary_2026-06-11_12-28-24.txt
-│   │       summary_2026-06-11_12-32-38.json
-│   │       summary_2026-06-11_12-32-38.txt
-│   │       summary_2026-06-11_12-41-51.json
-│   │       summary_2026-06-11_12-41-51.txt
-│   │       summary_2026-06-11_13-00-08.json
-│   │       summary_2026-06-11_13-00-08.txt
-│   │       summary_2026-06-11_13-08-35.json
-│   │       summary_2026-06-11_13-08-35.txt
-│   │       summary_2026-06-11_13-18-17.json
-│   │       summary_2026-06-11_13-18-17.md
-│   │       summary_2026-06-11_13-18-17.txt
-│   │       summary_2026-06-11_13-28-38.json
-│   │       summary_2026-06-11_13-28-38.md
-│   │       summary_2026-06-11_13-28-38.txt
-│   │       summary_2026-06-11_13-33-08.json
-│   │       summary_2026-06-11_13-33-08.md
-│   │       summary_2026-06-11_13-33-08.txt
-│   │       summary_2026-06-11_13-37-53.json
-│   │       summary_2026-06-11_13-37-53.md
-│   │       summary_2026-06-11_13-37-53.txt
-│   │       summary_2026-06-11_13-41-56.json
-│   │       summary_2026-06-11_13-41-56.md
-│   │       summary_2026-06-11_13-41-56.txt
-│   │       summary_2026-06-11_13-51-39.json
-│   │       summary_2026-06-11_13-51-39.md
-│   │       summary_2026-06-11_13-51-39.txt
-│   │       summary_2026-06-11_14-15-01.json
-│   │       summary_2026-06-11_14-15-01.md
-│   │       summary_2026-06-11_14-15-01.txt
-│   │       summary_2026-06-11_14-41-27.json
-│   │       summary_2026-06-11_14-41-27.md
-│   │       summary_2026-06-11_14-41-27.txt
-│   │       summary_2026-06-11_14-42-05.json
-│   │       summary_2026-06-11_14-42-05.md
-│   │       summary_2026-06-11_14-42-05.txt
-│   │       summary_2026-06-11_14-49-45.json
-│   │       summary_2026-06-11_14-49-45.md
-│   │       summary_2026-06-11_14-49-45.txt
-│   │       summary_2026-06-11_14-53-37.json
-│   │       summary_2026-06-11_14-53-37.md
-│   │       summary_2026-06-11_14-53-37.txt
-│   │       summary_2026-06-11_15-44-03.json
-│   │       summary_2026-06-11_15-44-03.txt
-│   │       summary_2026-06-11_15-49-49.json
-│   │       summary_2026-06-11_15-49-49.md
-│   │       summary_2026-06-11_15-49-49.txt
-│   │       summary_2026-06-11_16-15-10.json
-│   │       summary_2026-06-11_16-15-10.md
-│   │       summary_2026-06-11_16-15-10.txt
-│   │       summary_2026-06-11_16-43-32.json
-│   │       summary_2026-06-11_16-43-32.md
-│   │       summary_2026-06-11_16-43-32.txt
-│   │       summary_2026-06-11_16-43-44.json
-│   │       summary_2026-06-11_16-43-44.md
-│   │       summary_2026-06-11_16-43-44.txt
-│   │       user_licence_2026-06-11_14-15-01.csv
-│   │       user_licence_2026-06-11_14-41-27.csv
-│   │       user_licence_2026-06-11_14-42-05.csv
-│   │       user_licence_2026-06-11_14-49-45.csv
-│   │       user_licence_2026-06-11_14-53-37.csv
-│   │       user_licence_2026-06-11_15-49-49.csv
-│   │       user_licence_2026-06-11_16-15-10.csv
-│   │       user_licence_2026-06-11_16-43-32.csv
-│   │       user_licence_2026-06-11_16-43-44.csv
-│   │
-│   └───2026-06-12
-│           audit_automation_2026-06-12_08-58-35.csv
-│           backend_contract_2026-06-12_08-58-35.json
-│           changes_2026-06-12_08-58-35.csv
-│           delta_summary_2026-06-12_08-58-35.csv
-│           excluded_sites_2026-06-12_08-58-35.csv
-│           permission_checker_2026-06-12_08-58-35.csv
-│           permission_issues_2026-06-12_08-58-35.csv
-│           sites_2026-06-12_08-58-35.csv
-│           summary_2026-06-12_08-58-35.json
-│           summary_2026-06-12_08-58-35.md
-│           summary_2026-06-12_08-58-35.txt
-│           user_licence_2026-06-12_08-58-35.csv
-│
-├───snapshots
-│       latest_snapshot.json
-│       snapshot_2026-06-17_11-48-10.json
-│       snapshot_2026-06-17_12-11-45.json
-│       snapshot_2026-06-17_12-25-20.json
-│       snapshot_2026-06-17_12-42-18.json
-│       snapshot_2026-06-17_12-54-05.json
-│       snapshot_index.json
-│
-├───static
-│   ├───css
-│   │       app.css
-│   │       detail.css
-│   │       home.css
-│   │
-│   └───js
-│           theme.js
-│
-├───templates
-│       detail_list.html
-│       estate.html
-│       home.html
-│       reference.html
-│
-├───ui
-│       ui_mapper.py
-│       ui_status.py
-│       view_models.py
-│       __init__.py
-│
-└───__pycache__
-        billing_catalog.cpython-314.pyc
-        change_detection.cpython-314.pyc
-        estate_metrics.cpython-314.pyc
-        intelligence_engine.cpython-314.pyc
-        project_counts.cpython-314.pyc
-        site_discovery.cpython-314.pyc
-        snapshots.cpython-314.pyc
-        tier_engine.cpython-314.pyc
-        trends.cpython-314.pyc
-        user_license.cpython-314.pyc
+JOM v1.0 File Structure
+
+Core:
+- web.py
+- main.py
+- requirements.txt
+
+Runtime:
+- latest_run*.json
+- latest_snapshot.json
+
+Snapshots:
+- snapshots\*
+
+Backups:
+- backups\latest_runtime\current
+- backups\latest_runtime\history
+
+Scripts:
+- scripts\sync_runtime.py
+- scripts\backup_runtime_chain.py
+- scripts\restore_runtime_from_backup.ps1
+- scripts\health_check.ps1
+- scripts\jom_health_check.ps1
+
+Templates:
+- templates\home.html
+- templates\estate.html
+- templates\reference.html
+- templates\detail_list.html
+
+Static:
+- static\css\app.css
+- static\css\home.css
+- static\css\detail.css
+- static\js\theme.js
+- static\js\dashboard_refresh.js
+
+Docs:
+- docs\control
+- docs\handover
+- docs\manuals
