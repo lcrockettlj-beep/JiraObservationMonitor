@@ -123,16 +123,28 @@
     border-width: 1px;
 }
 
+/* Sprint 8 - extend visual hierarchy to intelligence cards */
+
 .intelligence-card--healthy {
     border-color: rgba(45, 190, 127, 0.28);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
 }
 
 .intelligence-card--warning {
-    border-color: rgba(240, 178, 74, 0.28);
+    border-color: rgba(240, 178, 74, 0.38);
+    box-shadow: 0 0 12px rgba(240, 178, 74, 0.30);
 }
 
 .intelligence-card--critical {
-    border-color: rgba(225, 75, 90, 0.28);
+    border-color: rgba(225, 75, 90, 0.40);
+    box-shadow: 0 0 16px rgba(225, 75, 90, 0.45);
+    animation: intelligencePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes intelligencePulse {
+    0%   { box-shadow: 0 0 10px rgba(225, 75, 90, 0.30); }
+    50%  { box-shadow: 0 0 22px rgba(225, 75, 90, 0.58); }
+    100% { box-shadow: 0 0 10px rgba(225, 75, 90, 0.30); }
 }
 
 .trend-card {
