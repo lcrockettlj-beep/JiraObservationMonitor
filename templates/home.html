@@ -151,7 +151,7 @@
         </div>
         <div class="source-strip__item">
             <strong>Sites analysed:</strong>
-            {{ intelligence_site_total or 0 }} analysed site(s)
+            {{ intelligence_site_total or 0 }}
         </div>
     </section>
 
@@ -180,7 +180,7 @@
             <a href="/detail/intelligence::summary" class="stat-card stat-card--link intelligence-card">
                 <div class="label">Sites With Risks</div>
                 <div class="value">{{ intelligence_risk_site_total }}</div>
-                <div class="note">Sites with at least one active intelligence finding and a details available.</div>
+                <div class="note">Sites with at least one active intelligence finding and details available.</div>
             </a>
             <div class="stat-card intelligence-card intelligence-card--status intelligence-card--{{ (estate_risk_category or 'Healthy')|lower }}">
                 <div class="label">Operational Posture</div>

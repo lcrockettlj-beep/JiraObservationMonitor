@@ -44,8 +44,9 @@
 
 .meta-pills {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .source-strip {
@@ -59,7 +60,7 @@
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 12px 14px;
+    padding: 10px 14px;
     color: var(--muted);
     font-size: 13px;
 }
@@ -174,8 +175,8 @@
     padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    min-height: 360px;
+    gap: 16px;
+    min-height: 380px;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
@@ -278,12 +279,14 @@
     gap: 10px;
 }
 
+
 .metric-box {
     background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px;
-    padding: 12px;
+    padding: 13px;
 }
+
 
 .metric-label {
     font-size: 13px;
@@ -311,17 +314,19 @@
     gap: 10px;
 }
 
+
 .delta-chip {
     background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px;
-    padding: 10px 12px;
+    padding: 9px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 8px;
     font-size: 13px;
 }
+
 
 .delta-chip span {
     color: var(--muted);
