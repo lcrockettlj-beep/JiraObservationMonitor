@@ -311,6 +311,49 @@ html[data-theme="light"] .top-nav__logo {
     }
 }
 
+.panel {
+    padding: 20px;
+}
+
+.section__header {
+    margin-bottom: 12px;
+}
+
+.grid-4 {
+    gap: 16px;
+}
+
+.pill,
+.pill-button {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
+.pill {
+    background: rgba(255,255,255,0.05);
+}
+
+.pill:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.empty,
+.empty-state {
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed rgba(255,255,255,0.08);
+}
+
+.hero__top {
+    margin-bottom: 20px;
+}
+
+.hero__meta {
+    gap: 10px;
+}
+
 /* Sprint 8 - dark mode text visibility fix */
 html:not([data-theme="light"]) h1,
 html:not([data-theme="light"]) h2,
