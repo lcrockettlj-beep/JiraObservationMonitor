@@ -100,6 +100,20 @@ def _status_in_userbase_false_rows(users: List[Dict[str, Any]]) -> List[Dict[str
     return [u for u in users if u.get("statusInUserbase") is False]
 
 
+def _zero_summary() -> Dict[str, int]:
+    return {
+        "org_user_count": 0,
+        "managed_user_count": 0,
+        "human_user_count": 0,
+        "app_account_count": 0,
+        "active_user_count": 0,
+        "suspended_user_count": 0,
+        "org_admin_count": 0,
+        "mfa_disabled_user_count": 0,
+        "not_in_userbase_count": 0,
+    }
+
+
 def _summary_metrics(users: List[Dict[str, Any]]) -> Dict[str, int]:
     managed_like = _managed_like_rows(users)
     human_rows = _human_rows(users)
@@ -141,7 +155,7 @@ def _info_row(message: str) -> List[Dict[str, Any]]:
     return [{"note": message}]
 
 
-def _build_admin_drilldowns(users: List[Dict[str, Any]], summary: Dict[str, int]) -> Dict[str, Any]:
+def _build_admin_drilldowns(users: List[Dict[str, Any]], summary: Dict[str, int], failure_reason: str = "") -> Dict[str, Any]:
     managed_like_rows = [_table_row(u) for u in _managed_like_rows(users)]
     suspended_rows = [_table_row(u) for u in users if _row_status(u) in {"inactive", "suspended", "disabled"}]
     org_admin_rows = [_table_row(u) for u in users if _has_org_admin_role(u)]
@@ -179,6 +193,11 @@ def _build_admin_drilldowns(users: List[Dict[str, Any]], summary: Dict[str, int]
         else "Current admin user rows do not expose mfaEnabled, so MFA state is not available in this payload."
     )
 
+    if failure_reason:
+        managed_reason = f"Admin enrichment degraded. {failure_reason}"
+        org_admin_reason = f"Admin enrichment degraded. {failure_reason}"
+        mfa_reason = f"Admin enrichment degraded. {failure_reason}"
+
     return {
         "admin::summary": {
             "title": "Admin API Enrichment Summary",
@@ -191,29 +210,29 @@ def _build_admin_drilldowns(users: List[Dict[str, Any]], summary: Dict[str, int]
             "title": "Managed / Human Accounts",
             "reason": managed_reason,
             "atlassian_area": "Atlassian Administration → Managed Accounts",
-            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": managed_like_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"] if managed_like_rows else ["note"],
+            "rows": managed_like_rows if managed_like_rows else _info_row(managed_reason),
         },
         "admin::human_accounts": {
             "title": "Human Atlassian Accounts",
-            "reason": "Human Atlassian user accounts derived from accountType=atlassian in the admin payload.",
+            "reason": "Human Atlassian user accounts derived from accountType=atlassian in the admin payload." if not failure_reason else f"Admin enrichment degraded. {failure_reason}",
             "atlassian_area": "Atlassian Administration → Directory",
-            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": human_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"] if human_rows else ["note"],
+            "rows": human_rows if human_rows else _info_row("No human admin rows available." if not failure_reason else f"Admin enrichment degraded. {failure_reason}"),
         },
         "admin::app_accounts": {
             "title": "App Accounts",
-            "reason": "App/service identities derived from accountType=app in the admin payload.",
+            "reason": "App/service identities derived from accountType=app in the admin payload." if not failure_reason else f"Admin enrichment degraded. {failure_reason}",
             "atlassian_area": "Atlassian Administration → Directory",
-            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": app_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"] if app_rows else ["note"],
+            "rows": app_rows if app_rows else _info_row("No app account rows available." if not failure_reason else f"Admin enrichment degraded. {failure_reason}"),
         },
         "admin::suspended_accounts": {
             "title": "Suspended / Disabled Accounts",
-            "reason": "Accounts with suspended, inactive, or disabled accountStatus returned by the admin APIs.",
+            "reason": "Accounts with suspended, inactive, or disabled accountStatus returned by the admin APIs." if not failure_reason else f"Admin enrichment degraded. {failure_reason}",
             "atlassian_area": "Atlassian Administration → Directory / Managed Accounts",
-            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": suspended_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"] if suspended_rows else ["note"],
+            "rows": suspended_rows if suspended_rows else _info_row("No suspended account rows available." if not failure_reason else f"Admin enrichment degraded. {failure_reason}"),
         },
         "admin::org_admins": {
             "title": "Organization Admins",
@@ -231,30 +250,88 @@ def _build_admin_drilldowns(users: List[Dict[str, Any]], summary: Dict[str, int]
         },
         "admin::not_in_userbase": {
             "title": "Accounts Not In Userbase",
-            "reason": "Accounts where statusInUserbase is false in the admin payload.",
+            "reason": "Accounts where statusInUserbase is false in the admin payload." if not failure_reason else f"Admin enrichment degraded. {failure_reason}",
             "atlassian_area": "Atlassian Administration → Directory",
-            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"],
-            "rows": not_in_userbase_rows,
+            "columns": ["accountId", "accountType", "claimStatus", "status", "accountStatus", "statusInUserbase", "name", "email", "mfaEnabled", "orgAdmin", "lastActive"] if not_in_userbase_rows else ["note"],
+            "rows": not_in_userbase_rows if not_in_userbase_rows else _info_row("No statusInUserbase=false rows available." if not failure_reason else f"Admin enrichment degraded. {failure_reason}"),
         },
+    }
+
+
+def _build_degraded_admin_enrichment(error_message: str, include_last_active: bool, last_active_max_users: int, org_id: str = "") -> Dict[str, Any]:
+    return {
+        "collected_at_utc": _iso_now(),
+        "org_id": org_id,
+        "collection_meta": {
+            "pages_collected": 0,
+            "rows_collected": 0,
+            "limit": 100,
+            "max_pages": 100,
+            "degraded": True,
+            "collection_ok": False,
+        },
+        "summary": _zero_summary(),
+        "users": [],
+        "last_active_enabled": bool(include_last_active),
+        "last_active_user_cap": int(last_active_max_users),
+        "collection_ok": False,
+        "degraded": True,
+        "error": str(error_message),
     }
 
 
 def enrich_runtime_payload(runtime_path: Path, output_path: Path, output_pretty_path: Path, include_last_active: bool = False, last_active_max_users: int = 25) -> Dict[str, Any]:
     payload = _load_json(runtime_path)
-    org_id = resolve_org_id()
-    users, collection_meta = collect_org_users(org_id=org_id, limit=100, max_pages=100, sleep_seconds=0.0)
-    if include_last_active and last_active_max_users > 0:
-        users = enrich_users_with_last_active(org_id=org_id, users=users, max_users=last_active_max_users, sleep_seconds=0.1)
+
+    org_id = ""
+    users: List[Dict[str, Any]] = []
+    collection_meta: Dict[str, Any] = {
+        "pages_collected": 0,
+        "rows_collected": 0,
+        "limit": 100,
+        "max_pages": 100,
+        "degraded": False,
+        "collection_ok": True,
+    }
+    admin_error = ""
+    admin_collection_ok = True
+
+    try:
+        org_id = resolve_org_id()
+        users, collection_meta = collect_org_users(org_id=org_id, limit=100, max_pages=100, sleep_seconds=0.0)
+        if include_last_active and last_active_max_users > 0:
+            users = enrich_users_with_last_active(org_id=org_id, users=users, max_users=last_active_max_users, sleep_seconds=0.1)
+    except Exception as exc:
+        admin_collection_ok = False
+        admin_error = str(exc)
+        admin_enrichment = _build_degraded_admin_enrichment(
+            error_message=admin_error,
+            include_last_active=bool(include_last_active),
+            last_active_max_users=int(last_active_max_users),
+            org_id=org_id,
+        )
+        payload["admin_enrichment"] = admin_enrichment
+
+        drilldowns = _safe_dict(payload.get("drilldowns"))
+        drilldowns.update(_build_admin_drilldowns([], _zero_summary(), failure_reason=admin_error))
+        payload["drilldowns"] = drilldowns
+
+        _save_json(output_path, payload, indent=None)
+        _save_json(output_pretty_path, payload, indent=2)
+        return payload
 
     summary = _summary_metrics(users)
     admin_enrichment = {
         "collected_at_utc": _iso_now(),
         "org_id": org_id,
-        "collection_meta": collection_meta,
+        "collection_meta": {**collection_meta, "degraded": False, "collection_ok": True},
         "summary": summary,
         "users": users,
         "last_active_enabled": bool(include_last_active),
         "last_active_user_cap": int(last_active_max_users),
+        "collection_ok": admin_collection_ok,
+        "degraded": not admin_collection_ok,
+        "error": admin_error,
     }
 
     estate = _safe_dict(payload.get("estate"))
@@ -297,7 +374,13 @@ def main() -> int:
             include_last_active=bool(args.include_last_active),
             last_active_max_users=max(0, int(args.last_active_max_users)),
         )
-        summary = _safe_dict(_safe_dict(payload.get("admin_enrichment")).get("summary"))
+        admin_section = _safe_dict(payload.get("admin_enrichment"))
+        summary = _safe_dict(admin_section.get("summary"))
+        if admin_section.get("collection_ok") is False:
+            print("Admin enrichment completed in degraded mode.")
+            print(f"Reason: {admin_section.get('error', 'Unknown admin enrichment failure')}")
+            return 0
+
         print("Admin row-shape enrichment patch complete.")
         print(f"Org users: {summary.get('org_user_count', 0)}")
         print(f"Managed-like users: {summary.get('managed_user_count', 0)}")
