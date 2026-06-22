@@ -1,0 +1,18 @@
+
+=== Update — Sprint 10/11 Resilience Enhancements ===
+
+- Introduced runtime-chain backup system:
+  - protects operational state across runs
+- Introduced controlled restore tooling:
+  - operator-driven
+  - preview mode prevents accidental overwrite
+- Health system now surfaces recovery readiness:
+  - backup freshness
+  - coverage completeness
+  - restore capability state
+
+Security Impact:
+- Reduced risk of runtime data loss
+- Improved auditability
+- Improved recovery confidence
+
