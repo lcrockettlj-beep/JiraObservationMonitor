@@ -4,6 +4,7 @@
   const DATA_POLL_SECONDS = 60;
   const STORAGE_KEY_PAUSED = 'jom.autoRefreshPaused';
   const STORAGE_KEY_COLLAPSED = 'jom.autoRefreshCollapsed';
+
   const state = {
     countdown: REFRESH_SECONDS,
     sourceMode: 'runtime',
@@ -44,6 +45,7 @@
   function isCollapsed() { return localStorage.getItem(STORAGE_KEY_COLLAPSED) === '1'; }
   function setCollapsed(value) { localStorage.setItem(STORAGE_KEY_COLLAPSED, value ? '1' : '0'); }
   function nowLocal() { return new Date().toLocaleString(); }
+
   function formatAge(seconds) {
     if (seconds === null || seconds === undefined) return 'never';
     if (seconds < 60) return `${seconds}s ago`;
@@ -53,7 +55,7 @@
     if (hours < 24) return `${hours}h ago`;
     const days = Math.floor(hours / 24);
     return `${days}d ago`;
-  }
+}
 
   function ensureStyles() {
     if (document.getElementById('jom-runtime-alert-styles')) return;
@@ -189,7 +191,7 @@
         color: #dce3ef;
         font-size: 11px;
       }
-      #jom-auto-refresh-badge .jom-automation-status {
+	#jom-auto-refresh-badge .jom-automation-status {
         border-top: 1px solid rgba(255,255,255,0.08);
         margin-top: 10px;
         padding-top: 10px;
@@ -228,10 +230,10 @@
           <div class="jom-card"><div class="jom-label">Health</div><div class="jom-value" id="jom-source-status">Healthy</div></div>
         </div>
         <div class="jom-insights" id="jom-insights"></div>
-        <div class="jom-body jom-automation-status">
-          <div class="jom-card"><div class="jom-label">Last sync</div><div class="jom-value" id="jom-last-sync">—</div></div>
-          <div class="jom-card"><div class="jom-label">Auto sync</div><div class="jom-value" id="jom-auto-status">—</div></div>
-          <div class="jom-card"><div class="jom-label">Today</div><div class="jom-value" id="jom-anchors-today">—</div></div>
+	<div class="jom-body jom-automation-status">
+          	<div class="jom-card"><div class="jom-label">Last sync</div><div class="jom-value" id="jom-last-sync">—</div></div>
+          	<div class="jom-card"><div class="jom-label">Auto sync</div><div class="jom-value" id="jom-auto-status">—</div></div>
+          	<div class="jom-card"><div class="jom-label">Today</div><div class="jom-value" id="jom-anchors-today">—</div></div>
         </div>
         <div class="jom-actions">
           <button class="jom-btn" id="jom-toggle-refresh" type="button">Pause refresh</button>
@@ -279,7 +281,7 @@
   }
 
   function inferHealth(data) {
-    if (state.sourceError) return { level: 'critical', label: 'Source error', insights: ['Source-state error detected'] };
+    if (state.sourceError) return { level:'critical', label:'Source error', insights:['Source-state error detected'] };
     const criticalSites = Array.isArray(data?.critical_sites) ? data.critical_sites.length : 0;
     const warningSites = Array.isArray(data?.warning_sites) ? data.warning_sites.length : 0;
     const estate = data?.estate || {};
@@ -292,9 +294,9 @@
     if (criticalSites > 0) insights.push(`${criticalSites} critical site${criticalSites === 1 ? '' : 's'}`);
     if (warningSites > 0) insights.push(`${warningSites} warning site${warningSites === 1 ? '' : 's'}`);
     if (topRisks.length > 0) insights.push(`${topRisks.length} intelligence risk${topRisks.length === 1 ? '' : 's'}`);
-    if ((estate.managed_disabled_accounts || 0) > 0 || criticalSites > 0) return { level: 'critical', label: 'Critical attention', insights };
-    if ((estate.mfa_disabled_accounts || 0) > 0 || (estate.not_in_userbase_count || 0) > 0 || warningSites > 0 || topRisks.length > 0) return { level: 'warning', label: 'Warning attention', insights };
-    return { level: 'healthy', label: 'Healthy', insights: insights.length ? insights : ['No active runtime alerts'] };
+    if ((estate.managed_disabled_accounts || 0) > 0 || criticalSites > 0) return { level:'critical', label:'Critical attention', insights };
+    if ((estate.mfa_disabled_accounts || 0) > 0 || (estate.not_in_userbase_count || 0) > 0 || warningSites > 0 || topRisks.length > 0) return { level:'warning', label:'Warning attention', insights };
+    return { level:'healthy', label:'Healthy', insights: insights.length ? insights : ['No active runtime alerts'] };
   }
 
   function updateInsights() {
@@ -302,7 +304,7 @@
     if (!wrap) return;
     wrap.innerHTML = '';
     const items = state.insights && state.insights.length ? state.insights : [`State: ${state.healthLabel}`];
-    for (const item of items.slice(0, 3)) {
+    for (const item of items.slice(0,3)) {
       const pill = document.createElement('span');
       pill.className = 'jom-pill';
       pill.textContent = item;
@@ -318,23 +320,25 @@
     const toggleBtn = document.getElementById('jom-toggle-refresh');
     if (!sourceStatus || !countdown || !runtimeMode || !footer || !toggleBtn) return;
     runtimeMode.textContent = asText(state.sourceMode, 'runtime');
-    sourceStatus.textContent = state.sourceError ? 'Error' : state.healthLabel;
+    sourceStatus.textContent = state.sourceError ? `Error` : state.healthLabel;
     countdown.textContent = formatCountdown(state.countdown);
     toggleBtn.textContent = isPaused() ? 'Resume refresh' : 'Pause refresh';
     footer.textContent = isPaused() ? 'Auto-refresh paused in this browser. Backend loop can keep running.' : 'Auto-refresh armed for a full page reload every 600 seconds.';
     setHealthClass();
     updateInsights();
     applyCollapsedState();
-
+// Sprint 9 Step 3 — Automation status rendering
     const lastSyncEl = document.getElementById('jom-last-sync');
     if (lastSyncEl) {
       lastSyncEl.textContent = formatAge(state.lastSyncAgeSeconds);
     }
+
     const autoStatusEl = document.getElementById('jom-auto-status');
     if (autoStatusEl) {
       autoStatusEl.textContent = state.autoSyncActive ? '✅ Active' : '⚠️ Stale';
       autoStatusEl.style.color = state.autoSyncActive ? '#22c55e' : '#f59e0b';
     }
+
     const anchorsEl = document.getElementById('jom-anchors-today');
     if (anchorsEl) {
       const morning = state.anchorsToday.morning ? '🌅⚓' : '🌅⏳';
@@ -345,16 +349,16 @@
 
   async function pollSourceState() {
     try {
-      const response = await fetch('/api/source-state', { cache: 'no-store', credentials: 'same-origin' });
+      const response = await fetch('/api/source-state', { cache:'no-store', credentials:'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       state.sourceMode = data.source_mode || 'runtime';
       state.sourceError = data.source_error || null;
       state.sitesCount = data.sites_count ?? null;
-      state.lastSyncTime = data.last_sync_time || null;
-      state.lastSyncAgeSeconds = data.last_sync_age_seconds ?? null;
-      state.autoSyncActive = data.auto_sync_active === true;
-      state.anchorsToday = data.anchors_today || { morning: false, evening: false };
+      state.lastSyncTime = data.last_sync_time || null;                             // ← NEW
+      state.lastSyncAgeSeconds = data.last_sync_age_seconds ?? null;                // ← NEW
+      state.autoSyncActive = data.auto_sync_active === true;                        // ← NEW
+      state.anchorsToday = data.anchors_today || { morning: false, evening: false };// ← NEW
       state.lastCheck = nowLocal();
       updateBadge();
     } catch (error) {
@@ -368,7 +372,7 @@
 
   async function pollRuntimeData() {
     try {
-      const response = await fetch('/api/data', { cache: 'no-store', credentials: 'same-origin' });
+      const response = await fetch('/api/data', { cache:'no-store', credentials:'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       const inferred = inferHealth(data);
@@ -413,6 +417,6 @@
     setInterval(pollRuntimeData, DATA_POLL_SECONDS * 1000);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once:true });
   else start();
 })();

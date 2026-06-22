@@ -2247,3 +2247,288 @@ Sync run started: 22/06/2026 13:10:37.84
 ✅ Sync complete — runtime + docs + snapshots aligned
 Sync run finished: 22/06/2026 13:10:38.79 (exit code: 0)
 
+
+============================================================
+Sync run started: 22/06/2026 13:20:37.84
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 13:20:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1750
+
+⚠️ NEW FIELDS DETECTED:
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.atlassian_area
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.columns[]
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.reason
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].blocking_failed_checks
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].collection_duration_seconds
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].created_at_local
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].failed_api_checks
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].issue_count_total
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].issue_count_unresolved
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].issue_count_updated_last_7d
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].operational_risk_signals
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].permission_limited_checks
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].risk_score
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].snapshot_timestamp
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.rows[].status
+  + drilldowns.trend::site::gaminglabs-team-h2pbpmis.title
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.atlassian_area
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.columns[]
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.reason
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].blocking_failed_checks
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].collection_duration_seconds
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].created_at_local
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].failed_api_checks
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].issue_count_total
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].issue_count_unresolved
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].issue_count_updated_last_7d
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].operational_risk_signals
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].permission_limited_checks
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].risk_score
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].snapshot_timestamp
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.rows[].status
+  + drilldowns.trend::site::gaminglabs-team-tsyfo716.title
+  + drilldowns.trend::site::gli-delivery-tm.atlassian_area
+  + drilldowns.trend::site::gli-delivery-tm.columns[]
+  + drilldowns.trend::site::gli-delivery-tm.reason
+  + drilldowns.trend::site::gli-delivery-tm.rows[].blocking_failed_checks
+  + drilldowns.trend::site::gli-delivery-tm.rows[].collection_duration_seconds
+  + drilldowns.trend::site::gli-delivery-tm.rows[].created_at_local
+  + drilldowns.trend::site::gli-delivery-tm.rows[].failed_api_checks
+  + drilldowns.trend::site::gli-delivery-tm.rows[].issue_count_total
+  + drilldowns.trend::site::gli-delivery-tm.rows[].issue_count_unresolved
+  + drilldowns.trend::site::gli-delivery-tm.rows[].issue_count_updated_last_7d
+  + drilldowns.trend::site::gli-delivery-tm.rows[].operational_risk_signals
+  + drilldowns.trend::site::gli-delivery-tm.rows[].permission_limited_checks
+  + drilldowns.trend::site::gli-delivery-tm.rows[].risk_score
+  + drilldowns.trend::site::gli-delivery-tm.rows[].snapshot_timestamp
+  + drilldowns.trend::site::gli-delivery-tm.rows[].status
+  + drilldowns.trend::site::gli-delivery-tm.title
+  + drilldowns.trend::site::gli-global-technology.atlassian_area
+  + drilldowns.trend::site::gli-global-technology.columns[]
+  + drilldowns.trend::site::gli-global-technology.reason
+  + drilldowns.trend::site::gli-global-technology.rows[].blocking_failed_checks
+  + drilldowns.trend::site::gli-global-technology.rows[].collection_duration_seconds
+  + drilldowns.trend::site::gli-global-technology.rows[].created_at_local
+  + drilldowns.trend::site::gli-global-technology.rows[].failed_api_checks
+  + drilldowns.trend::site::gli-global-technology.rows[].issue_count_total
+  + drilldowns.trend::site::gli-global-technology.rows[].issue_count_unresolved
+  + drilldowns.trend::site::gli-global-technology.rows[].issue_count_updated_last_7d
+  + drilldowns.trend::site::gli-global-technology.rows[].operational_risk_signals
+  + drilldowns.trend::site::gli-global-technology.rows[].permission_limited_checks
+  + drilldowns.trend::site::gli-global-technology.rows[].risk_score
+  + drilldowns.trend::site::gli-global-technology.rows[].snapshot_timestamp
+  + drilldowns.trend::site::gli-global-technology.rows[].status
+  + drilldowns.trend::site::gli-global-technology.title
+  + drilldowns.trend::site::gli-it-project.atlassian_area
+  + drilldowns.trend::site::gli-it-project.columns[]
+  + drilldowns.trend::site::gli-it-project.reason
+  + drilldowns.trend::site::gli-it-project.rows[].blocking_failed_checks
+  + drilldowns.trend::site::gli-it-project.rows[].collection_duration_seconds
+  + drilldowns.trend::site::gli-it-project.rows[].created_at_local
+  + drilldowns.trend::site::gli-it-project.rows[].failed_api_checks
+  + drilldowns.trend::site::gli-it-project.rows[].issue_count_total
+  + drilldowns.trend::site::gli-it-project.rows[].issue_count_unresolved
+  + drilldowns.trend::site::gli-it-project.rows[].issue_count_updated_last_7d
+  + drilldowns.trend::site::gli-it-project.rows[].operational_risk_signals
+  + drilldowns.trend::site::gli-it-project.rows[].permission_limited_checks
+  + drilldowns.trend::site::gli-it-project.rows[].risk_score
+  + drilldowns.trend::site::gli-it-project.rows[].snapshot_timestamp
+  + drilldowns.trend::site::gli-it-project.rows[].status
+  + drilldowns.trend::site::gli-it-project.title
+  + drilldowns.trend::site::gli-usa.atlassian_area
+  + drilldowns.trend::site::gli-usa.columns[]
+  + drilldowns.trend::site::gli-usa.reason
+  + drilldowns.trend::site::gli-usa.rows[].blocking_failed_checks
+  + drilldowns.trend::site::gli-usa.rows[].collection_duration_seconds
+  + drilldowns.trend::site::gli-usa.rows[].created_at_local
+  + drilldowns.trend::site::gli-usa.rows[].failed_api_checks
+  + drilldowns.trend::site::gli-usa.rows[].issue_count_total
+  + drilldowns.trend::site::gli-usa.rows[].issue_count_unresolved
+  + drilldowns.trend::site::gli-usa.rows[].issue_count_updated_last_7d
+  + drilldowns.trend::site::gli-usa.rows[].operational_risk_signals
+  + drilldowns.trend::site::gli-usa.rows[].permission_limited_checks
+  + drilldowns.trend::site::gli-usa.rows[].risk_score
+  + drilldowns.trend::site::gli-usa.rows[].snapshot_timestamp
+  + drilldowns.trend::site::gli-usa.rows[].status
+  + drilldowns.trend::site::gli-usa.title
+  + drilldowns.trend::sites.rows[].collection_time_delta
+  + drilldowns.trend::sites.rows[].current_status
+  + drilldowns.trend::sites.rows[].failed_api_delta
+  + drilldowns.trend::sites.rows[].recurring_blocking_failures
+  + drilldowns.trend::sites.rows[].recurring_operational_signals
+  + drilldowns.trend::sites.rows[].recurring_permission_limits
+  + drilldowns.trend::sites.rows[].risk_delta
+  + drilldowns.trend::sites.rows[].site_key
+  + drilldowns.trend::sites.rows[].site_name
+  + drilldowns.trend::sites.rows[].snapshot_count
+  + drilldowns.trend::sites.rows[].status_streak
+  + drilldowns.trend::sites.rows[].trend_score
+  + drilldowns.trend::sites.rows[].trend_signals
+  + drilldowns.trend::sites.rows[].unresolved_delta
+  + historical_trends.site_trends[].cloud_id
+  + historical_trends.site_trends[].collection_time_trend.delta
+  + historical_trends.site_trends[].collection_time_trend.direction
+  + historical_trends.site_trends[].collection_time_trend.field
+  + historical_trends.site_trends[].collection_time_trend.first
+  + historical_trends.site_trends[].collection_time_trend.latest
+  + historical_trends.site_trends[].collection_time_trend.max
+  + historical_trends.site_trends[].collection_time_trend.min
+  + historical_trends.site_trends[].current_risk_score
+  + historical_trends.site_trends[].current_status
+  + historical_trends.site_trends[].failed_api_trend.delta
+  + historical_trends.site_trends[].failed_api_trend.direction
+  + historical_trends.site_trends[].failed_api_trend.field
+  + historical_trends.site_trends[].failed_api_trend.first
+  + historical_trends.site_trends[].failed_api_trend.latest
+  + historical_trends.site_trends[].failed_api_trend.max
+  + historical_trends.site_trends[].failed_api_trend.min
+  + historical_trends.site_trends[].name
+  + historical_trends.site_trends[].recurring_issue_signals[].count
+  + historical_trends.site_trends[].recurring_issue_signals[].name
+  + historical_trends.site_trends[].recurring_operational_signals[].count
+  + historical_trends.site_trends[].recurring_operational_signals[].name
+  + historical_trends.site_trends[].risk_trend.delta
+  + historical_trends.site_trends[].risk_trend.direction
+  + historical_trends.site_trends[].risk_trend.field
+  + historical_trends.site_trends[].risk_trend.first
+  + historical_trends.site_trends[].risk_trend.latest
+  + historical_trends.site_trends[].risk_trend.max
+  + historical_trends.site_trends[].risk_trend.min
+  + historical_trends.site_trends[].site_key
+  + historical_trends.site_trends[].snapshot_count
+  + historical_trends.site_trends[].status_streak.length
+  + historical_trends.site_trends[].status_streak.status
+  + historical_trends.site_trends[].trend_score
+  + historical_trends.site_trends[].trend_signals[]
+  + historical_trends.site_trends[].unresolved_trend.delta
+  + historical_trends.site_trends[].unresolved_trend.direction
+  + historical_trends.site_trends[].unresolved_trend.field
+  + historical_trends.site_trends[].unresolved_trend.first
+  + historical_trends.site_trends[].unresolved_trend.latest
+  + historical_trends.site_trends[].unresolved_trend.max
+  + historical_trends.site_trends[].unresolved_trend.min
+  + latest_snapshot_entry.critical_count
+  + latest_snapshot_entry.healthy_count
+  + latest_snapshot_entry.site_count
+  + latest_snapshot_entry.total_risk_score
+  + latest_snapshot_entry.warning_count
+  + sites[].historical_trend_signals[]
+  + snapshot_index.snapshots[].critical_count
+  + snapshot_index.snapshots[].healthy_count
+  + snapshot_index.snapshots[].site_count
+  + snapshot_index.snapshots[].total_risk_score
+  + snapshot_index.snapshots[].warning_count
+  + stable_sites[].historical_trend_signals[]
+
+📌 ACTION REQUIRED:
+- Update mechanics_change_log.md
+- Update JSON contract manual if needed
+- Take new runtime snapshot if change is intentional
+🛰 Auto Change Tracker
+⚠️ Change detected → Logged (164 added, 0 removed)
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 13:20:40.37 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 13:30:37.85
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 13:30:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 13:30:40.58 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 13:40:37.85
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 13:40:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 13:40:40.32 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 13:50:37.87
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 13:50:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 13:50:40.31 (exit code: 0)
+
