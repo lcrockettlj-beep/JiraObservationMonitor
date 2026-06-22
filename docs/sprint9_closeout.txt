@@ -1,0 +1,19 @@
+@"
+## Sprint 9 Close-Out Note
+
+Sprint 9 completed with runtime anchor monitoring and self-heal controls now stabilised.
+
+Root cause investigation confirmed the primary fault was not in the UI layer, but in daily anchor generation. The break was traced to scripts\snapshot_controller.py, where anchor creation only occurred inside narrow morning/evening time windows, meaning a missed run left the day without a valid anchor snapshot.
+
+Missed-anchor recovery was implemented in the snapshot controller so that required daily anchors can now be backfilled later in the same day rather than being permanently missed.
+
+Startup self-heal capability was added and verified in web.py, allowing missing due anchors to be corrected automatically when the service starts.
+
+Operational outcome:
+- restored morning/evening anchor state visibility in the runtime badge
+- same-day catch-up creation for missed daily anchors
+- startup self-heal protection for anchor recovery on service launch
+- retained separation of concerns between frontend rendering, API state reporting, and snapshot creation logic
+
+Sprint 9 is considered functionally complete pending final evening-path observation in live time.
+"@ | Add-Content .\docs\control\Sprint9_Closeout.md
