@@ -17,14 +17,15 @@
     {% set trend_has_history = historical_trends.get("has_history") if historical_trends else False %}
     {% set trend_lookback = historical_trends.get("lookback_snapshots", 0) if historical_trends else 0 %}
     {% set snapshot_meta = latest_snapshot.get("snapshot_meta", {}) if latest_snapshot else {} %}
+    
+    {% set snapshot_meta = latest_snapshot.get("snapshot_meta", {}) if latest_snapshot else {} %}
     {% set latest_snapshot_timestamp =
         snapshot_meta.get("snapshot_timestamp")
+        or latest_snapshot_entry.get("created_at_local")
         or latest_snapshot_entry.get("snapshot_timestamp")
-        or latest_snapshot_entry.get("collected_at")
-        or latest_snapshot.get("snapshot_timestamp")
-        or latest_snapshot.get("collected_at")
         or 'Not available'
     %}
+
     {% set intelligence_site_total = intelligence_sites|length if intelligence_sites else 0 %}
     {% set intelligence_risk_site_total = sites_with_risks|length if sites_with_risks else 0 %}
     {% set intelligence_risk_total = intelligence_top_risks|length if intelligence_top_risks else 0 %}
