@@ -350,9 +350,15 @@ html[data-theme="light"] .top-nav__logo {
     margin-bottom: 20px;
 }
 
+
 .hero__meta {
+    text-align: right;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
+
 
 /* Sprint 8 - dark mode text visibility fix */
 html:not([data-theme="light"]) h1,
