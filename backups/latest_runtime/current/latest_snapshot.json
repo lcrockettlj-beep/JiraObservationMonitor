@@ -1,8 +1,58 @@
 {
-  "snapshot_meta": {
-    "snapshot_timestamp": "2026-06-22_16-19-29",
-    "created_at_local": "2026-06-22 16:19:29",
-    "source": "data_collector.py (safe mode patch 2.4)"
+  "run_timestamp_local": "2026-06-18 18:43:07",
+  "raw_collection_summary": {
+    "collected_at_utc": "2026-06-18T17:43:07Z",
+    "accessible_resource_count": 6,
+    "monitored_site_count": 6,
+    "legacy_ignored_site_names_present_in_env": [],
+    "monitor_only_site_names": [],
+    "note": "Safe mode patch 2.4 monitors the whole accessible estate by default. Legacy ignored site names are recorded but not automatically excluded.",
+    "required_scopes": [
+      "read:jira-user",
+      "read:jira-work"
+    ],
+    "optional_scopes": [
+      "read:jira-project"
+    ],
+    "permissions_query": "BROWSE_PROJECTS",
+    "search_max_results": 1,
+    "project_sample_limit": 25,
+    "safe_mode": true,
+    "safe_mode_features": {
+      "sequential_site_processing": true,
+      "progress_logging": true,
+      "partial_file_written": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\latest_run_safe_partial.json",
+      "audit_checks_enabled": false,
+      "application_role_checks_enabled": false,
+      "per_project_issue_loops": false,
+      "search_endpoint": "/rest/api/3/search/jql",
+      "mypermissions_fixed": true,
+      "search_max_results_fixed": true,
+      "bounded_total_issue_queries": true,
+      "full_project_key_set_used_for_queries": true,
+      "sampled_project_rows_for_display_only": true
+    },
+    "collector": "data_collector.py (safe mode patch 2.4)"
+  },
+  "summary": {
+    "site_count": 6,
+    "project_count_total": 89,
+    "issue_count_total": 0,
+    "issue_count_unresolved_total": 0,
+    "issue_count_updated_last_7d_total": 0
+  },
+  "risk_summary": {
+    "stable_site_count": 6,
+    "warning_site_count": 0,
+    "critical_site_count": 0,
+    "permission_limited_site_count": 0
+  },
+  "delta_summary": {
+    "project_delta_total": 0,
+    "total_users_delta_total": 0,
+    "active_users_delta_total": 0,
+    "inactive_users_delta_total": 0,
+    "licensed_users_estimate_delta_total": 0
   },
   "sites": [
     {
@@ -10,8 +60,8 @@
       "name": "gaminglabs-team-h2pbpmis",
       "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
       "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-      "collected_at_utc": "2026-06-22T15:19:10Z",
-      "collection_duration_seconds": 4.628,
+      "collected_at_utc": "2026-06-18T17:43:10Z",
+      "collection_duration_seconds": 1.798,
       "project_count": 1,
       "project_rows": [
         {
@@ -70,7 +120,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.768,
+          "elapsed_seconds": 0.198,
           "data": {
             "baseUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
             "displayUrl": "https://gaminglabs-team-h2pbpmis.atlassian.net",
@@ -84,10 +134,10 @@
               0
             ],
             "deploymentType": "Cloud",
-            "buildNumber": 100292,
-            "buildDate": "2026-06-20T21:45:55.000+0200",
-            "serverTime": "2026-06-22T17:19:06.354+0200",
-            "scmInfo": "3ea93a1d85cd7416992751f3ed24cf30001f4e06",
+            "buildNumber": 100291,
+            "buildDate": "2026-06-17T12:15:32.000+0200",
+            "serverTime": "2026-06-18T19:43:08.971+0200",
+            "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
               "locale": "en_US"
@@ -99,7 +149,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.497,
+          "elapsed_seconds": 0.185,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -130,7 +180,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.971,
+          "elapsed_seconds": 0.396,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -158,7 +208,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.485,
+          "elapsed_seconds": 0.244,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -186,7 +236,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.75,
+          "elapsed_seconds": 0.302,
           "data": {
             "total": 0
           },
@@ -195,7 +245,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.573,
+          "elapsed_seconds": 0.256,
           "data": {
             "total": 0
           },
@@ -204,7 +254,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.584,
+          "elapsed_seconds": 0.214,
           "data": {
             "total": 0
           },
@@ -217,8 +267,8 @@
       "name": "gaminglabs-team-tsyfo716",
       "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
       "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
-      "collected_at_utc": "2026-06-22T15:19:14Z",
-      "collection_duration_seconds": 4.679,
+      "collected_at_utc": "2026-06-18T17:43:12Z",
+      "collection_duration_seconds": 1.851,
       "project_count": 2,
       "project_rows": [
         {
@@ -283,7 +333,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.996,
+          "elapsed_seconds": 0.27,
           "data": {
             "baseUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
             "displayUrl": "https://gaminglabs-team-tsyfo716.atlassian.net",
@@ -297,10 +347,10 @@
               0
             ],
             "deploymentType": "Cloud",
-            "buildNumber": 100292,
-            "buildDate": "2026-06-20T21:45:55.000+0200",
-            "serverTime": "2026-06-22T17:19:11.151+0200",
-            "scmInfo": "3ea93a1d85cd7416992751f3ed24cf30001f4e06",
+            "buildNumber": 100291,
+            "buildDate": "2026-06-17T12:15:32.000+0200",
+            "serverTime": "2026-06-18T19:43:10.843+0200",
+            "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
               "locale": "en_US"
@@ -312,7 +362,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.392,
+          "elapsed_seconds": 0.174,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/981786d5-9529-4957-bab0-fdc505ccb9b6/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -343,7 +393,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.77,
+          "elapsed_seconds": 0.317,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -371,7 +421,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.442,
+          "elapsed_seconds": 0.278,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -419,7 +469,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.787,
+          "elapsed_seconds": 0.257,
           "data": {
             "total": 0
           },
@@ -428,7 +478,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.688,
+          "elapsed_seconds": 0.238,
           "data": {
             "total": 0
           },
@@ -437,7 +487,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.603,
+          "elapsed_seconds": 0.314,
           "data": {
             "total": 0
           },
@@ -450,8 +500,8 @@
       "name": "gli-delivery-tm",
       "url": "https://gli-delivery-tm.atlassian.net",
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "collected_at_utc": "2026-06-22T15:19:29Z",
-      "collection_duration_seconds": 2.504,
+      "collected_at_utc": "2026-06-18T17:43:20Z",
+      "collection_duration_seconds": 1.832,
       "project_count": 22,
       "project_rows": [
         {
@@ -636,7 +686,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.303,
+          "elapsed_seconds": 0.207,
           "data": {
             "baseUrl": "https://gli-delivery-tm.atlassian.net",
             "displayUrl": "https://gli-delivery-tm.atlassian.net",
@@ -650,10 +700,10 @@
               0
             ],
             "deploymentType": "Cloud",
-            "buildNumber": 100292,
-            "buildDate": "2026-06-20T15:45:55.000-0400",
-            "serverTime": "2026-06-22T11:19:26.872-0400",
-            "scmInfo": "3ea93a1d85cd7416992751f3ed24cf30001f4e06",
+            "buildNumber": 100291,
+            "buildDate": "2026-06-17T06:15:32.000-0400",
+            "serverTime": "2026-06-18T13:43:18.921-0400",
+            "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "GLI Test Management",
             "defaultLocale": {
               "locale": "en_US"
@@ -665,7 +715,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.227,
+          "elapsed_seconds": 0.187,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/de2de731-c6ae-4e15-a2cf-92d976f0fb7c/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -696,7 +746,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.314,
+          "elapsed_seconds": 0.217,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -724,7 +774,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.324,
+          "elapsed_seconds": 0.243,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -1278,7 +1328,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.59,
+          "elapsed_seconds": 0.343,
           "data": {
             "total": 0
           },
@@ -1287,7 +1337,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.393,
+          "elapsed_seconds": 0.344,
           "data": {
             "total": 0
           },
@@ -1296,7 +1346,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.35,
+          "elapsed_seconds": 0.288,
           "data": {
             "total": 0
           },
@@ -1309,8 +1359,8 @@
       "name": "gli-global-technology",
       "url": "https://gli-global-technology.atlassian.net",
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "collected_at_utc": "2026-06-22T15:19:18Z",
-      "collection_duration_seconds": 3.935,
+      "collected_at_utc": "2026-06-18T17:43:13Z",
+      "collection_duration_seconds": 1.467,
       "project_count": 8,
       "project_rows": [
         {
@@ -1411,7 +1461,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.428,
+          "elapsed_seconds": 0.18,
           "data": {
             "baseUrl": "https://gli-global-technology.atlassian.net",
             "displayUrl": "https://gli-global-technology.atlassian.net",
@@ -1425,10 +1475,10 @@
               0
             ],
             "deploymentType": "Cloud",
-            "buildNumber": 100292,
-            "buildDate": "2026-06-20T20:45:55.000+0100",
-            "serverTime": "2026-06-22T16:19:15.360+0100",
-            "scmInfo": "3ea93a1d85cd7416992751f3ed24cf30001f4e06",
+            "buildNumber": 100291,
+            "buildDate": "2026-06-17T11:15:32.000+0100",
+            "serverTime": "2026-06-18T18:43:12.611+0100",
+            "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
               "locale": "en_GB"
@@ -1440,7 +1490,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.305,
+          "elapsed_seconds": 0.171,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/aaa90a93-f0af-47ba-98d6-47829cc032b7/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -1471,7 +1521,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.316,
+          "elapsed_seconds": 0.211,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -1499,7 +1549,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.324,
+          "elapsed_seconds": 0.169,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -1681,7 +1731,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.542,
+          "elapsed_seconds": 0.251,
           "data": {
             "total": 0
           },
@@ -1690,7 +1740,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 1.484,
+          "elapsed_seconds": 0.257,
           "data": {
             "total": 0
           },
@@ -1699,7 +1749,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.533,
+          "elapsed_seconds": 0.226,
           "data": {
             "total": 0
           },
@@ -1712,8 +1762,8 @@
       "name": "gli-it-project",
       "url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "collected_at_utc": "2026-06-22T15:19:26Z",
-      "collection_duration_seconds": 2.699,
+      "collected_at_utc": "2026-06-18T17:43:18Z",
+      "collection_duration_seconds": 2.291,
       "project_count": 55,
       "project_rows": [
         {
@@ -1916,7 +1966,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.286,
+          "elapsed_seconds": 0.226,
           "data": {
             "baseUrl": "https://gli-it-project.atlassian.net",
             "displayUrl": "https://gli-it-project.atlassian.net",
@@ -1930,10 +1980,10 @@
               0
             ],
             "deploymentType": "Cloud",
-            "buildNumber": 100292,
-            "buildDate": "2026-06-20T20:45:55.000+0100",
-            "serverTime": "2026-06-22T16:19:24.152+0100",
-            "scmInfo": "3ea93a1d85cd7416992751f3ed24cf30001f4e06",
+            "buildNumber": 100291,
+            "buildDate": "2026-06-17T11:15:32.000+0100",
+            "serverTime": "2026-06-18T18:43:16.650+0100",
+            "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "GLI Global IT Project Management",
             "defaultLocale": {
               "locale": "en_GB"
@@ -1945,7 +1995,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.219,
+          "elapsed_seconds": 0.192,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d4b3adb4-bd39-435e-bd65-f29db2b11a37/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -1976,7 +2026,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.311,
+          "elapsed_seconds": 0.247,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -2004,7 +2054,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.647,
+          "elapsed_seconds": 0.558,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -3290,7 +3340,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.466,
+          "elapsed_seconds": 0.481,
           "data": {
             "total": 0
           },
@@ -3299,7 +3349,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.357,
+          "elapsed_seconds": 0.345,
           "data": {
             "total": 0
           },
@@ -3308,7 +3358,7 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.411,
+          "elapsed_seconds": 0.239,
           "data": {
             "total": 0
           },
@@ -3321,8 +3371,8 @@
       "name": "gli-usa",
       "url": "https://gli-usa.atlassian.net",
       "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "collected_at_utc": "2026-06-22T15:19:23Z",
-      "collection_duration_seconds": 4.987,
+      "collected_at_utc": "2026-06-18T17:43:16Z",
+      "collection_duration_seconds": 2.521,
       "project_count": 1,
       "project_rows": [
         {
@@ -3381,7 +3431,7 @@
         "server_info": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.87,
+          "elapsed_seconds": 0.36,
           "data": {
             "baseUrl": "https://gli-usa.atlassian.net",
             "displayUrl": "https://gli-usa.atlassian.net",
@@ -3395,10 +3445,10 @@
               0
             ],
             "deploymentType": "Cloud",
-            "buildNumber": 100292,
-            "buildDate": "2026-06-20T12:45:55.000-0700",
-            "serverTime": "2026-06-22T08:19:19.665-0700",
-            "scmInfo": "3ea93a1d85cd7416992751f3ed24cf30001f4e06",
+            "buildNumber": 100291,
+            "buildDate": "2026-06-17T03:15:32.000-0700",
+            "serverTime": "2026-06-18T10:43:14.201-0700",
+            "scmInfo": "985e388fc5ef01b54915d4c3cb53a2dd563e0a6b",
             "serverTitle": "Jira",
             "defaultLocale": {
               "locale": "en_US"
@@ -3410,7 +3460,7 @@
         "myself": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.486,
+          "elapsed_seconds": 0.294,
           "data": {
             "self": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/user?accountId=712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
             "accountId": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
@@ -3441,7 +3491,7 @@
         "my_permissions": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.749,
+          "elapsed_seconds": 0.418,
           "data": {
             "permissions": {
               "BROWSE_PROJECTS": {
@@ -3469,7 +3519,7 @@
         "projects": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.595,
+          "elapsed_seconds": 0.369,
           "data": [
             {
               "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
@@ -3495,7 +3545,7 @@
         "issue_total_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 1.155,
+          "elapsed_seconds": 0.391,
           "data": {
             "total": 0
           },
@@ -3504,7 +3554,7 @@
         "issue_unresolved_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.585,
+          "elapsed_seconds": 0.349,
           "data": {
             "total": 0
           },
@@ -3513,13 +3563,3734 @@
         "issue_updated_last_7d_count": {
           "ok": true,
           "status_code": 200,
-          "elapsed_seconds": 0.547,
+          "elapsed_seconds": 0.337,
           "data": {
             "total": 0
           },
           "url": "https://api.atlassian.com/ex/jira/d13cd0f5-823d-4a16-9952-a15f6bdf9018/rest/api/3/search/jql?jql=project+%3D+%22D1%22+AND+updated+%3E%3D+-7d&maxResults=1&fields=none&validateQuery=strict"
         }
       }
+    }
+  ],
+  "comparison": {
+    "has_previous_snapshot": true,
+    "change_count": 0,
+    "info_change_count": 0,
+    "warning_change_count": 0,
+    "critical_change_count": 0,
+    "changes": []
+  },
+  "historical_trends": {
+    "has_history": true,
+    "lookback_snapshots": 10,
+    "site_trends": [
+      {
+        "site_key": "gaminglabs-team-h2pbpmis",
+        "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
+        "name": "gaminglabs-team-h2pbpmis",
+        "current_status": "stable",
+        "current_risk_score": 1,
+        "snapshot_count": 10,
+        "trend_score": 2,
+        "trend_signals": [
+          "recurring_issue_risk_signals",
+          "recurring_operational_signals"
+        ],
+        "status_streak": {
+          "status": "stable",
+          "length": 10
+        },
+        "unresolved_trend": {
+          "field": "issue_count_unresolved",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "risk_trend": {
+          "field": "risk_score",
+          "first": 1.0,
+          "latest": 1.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 1.0,
+          "min": 1.0
+        },
+        "failed_api_trend": {
+          "field": "failed_api_checks",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "collection_time_trend": {
+          "field": "collection_duration_seconds",
+          "first": 2.202,
+          "latest": 1.798,
+          "delta": -0.404,
+          "direction": "down",
+          "max": 2.306,
+          "min": 1.494
+        },
+        "recurring_blocking_failures": [],
+        "recurring_permission_limits": [],
+        "recurring_issue_signals": [
+          {
+            "name": "no_recent_issue_updates_detected",
+            "count": 10
+          }
+        ],
+        "recurring_operational_signals": [
+          {
+            "name": "optional_scope_notes_present",
+            "count": 10
+          }
+        ]
+      },
+      {
+        "site_key": "gaminglabs-team-tsyfo716",
+        "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
+        "name": "gaminglabs-team-tsyfo716",
+        "current_status": "stable",
+        "current_risk_score": 1,
+        "snapshot_count": 10,
+        "trend_score": 2,
+        "trend_signals": [
+          "recurring_issue_risk_signals",
+          "recurring_operational_signals"
+        ],
+        "status_streak": {
+          "status": "stable",
+          "length": 10
+        },
+        "unresolved_trend": {
+          "field": "issue_count_unresolved",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "risk_trend": {
+          "field": "risk_score",
+          "first": 1.0,
+          "latest": 1.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 1.0,
+          "min": 1.0
+        },
+        "failed_api_trend": {
+          "field": "failed_api_checks",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "collection_time_trend": {
+          "field": "collection_duration_seconds",
+          "first": 2.229,
+          "latest": 1.851,
+          "delta": -0.378,
+          "direction": "down",
+          "max": 2.367,
+          "min": 1.811
+        },
+        "recurring_blocking_failures": [],
+        "recurring_permission_limits": [],
+        "recurring_issue_signals": [
+          {
+            "name": "no_recent_issue_updates_detected",
+            "count": 10
+          }
+        ],
+        "recurring_operational_signals": [
+          {
+            "name": "optional_scope_notes_present",
+            "count": 10
+          }
+        ]
+      },
+      {
+        "site_key": "gli-delivery-tm",
+        "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+        "name": "gli-delivery-tm",
+        "current_status": "stable",
+        "current_risk_score": 1,
+        "snapshot_count": 10,
+        "trend_score": 2,
+        "trend_signals": [
+          "recurring_issue_risk_signals",
+          "recurring_operational_signals"
+        ],
+        "status_streak": {
+          "status": "stable",
+          "length": 10
+        },
+        "unresolved_trend": {
+          "field": "issue_count_unresolved",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "risk_trend": {
+          "field": "risk_score",
+          "first": 1.0,
+          "latest": 1.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 1.0,
+          "min": 1.0
+        },
+        "failed_api_trend": {
+          "field": "failed_api_checks",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "collection_time_trend": {
+          "field": "collection_duration_seconds",
+          "first": 2.189,
+          "latest": 1.832,
+          "delta": -0.357,
+          "direction": "down",
+          "max": 2.678,
+          "min": 1.832
+        },
+        "recurring_blocking_failures": [],
+        "recurring_permission_limits": [],
+        "recurring_issue_signals": [
+          {
+            "name": "no_recent_issue_updates_detected",
+            "count": 10
+          }
+        ],
+        "recurring_operational_signals": [
+          {
+            "name": "optional_scope_notes_present",
+            "count": 10
+          }
+        ]
+      },
+      {
+        "site_key": "gli-global-technology",
+        "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+        "name": "gli-global-technology",
+        "current_status": "stable",
+        "current_risk_score": 1,
+        "snapshot_count": 10,
+        "trend_score": 2,
+        "trend_signals": [
+          "recurring_issue_risk_signals",
+          "recurring_operational_signals"
+        ],
+        "status_streak": {
+          "status": "stable",
+          "length": 10
+        },
+        "unresolved_trend": {
+          "field": "issue_count_unresolved",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "risk_trend": {
+          "field": "risk_score",
+          "first": 1.0,
+          "latest": 1.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 1.0,
+          "min": 1.0
+        },
+        "failed_api_trend": {
+          "field": "failed_api_checks",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "collection_time_trend": {
+          "field": "collection_duration_seconds",
+          "first": 1.948,
+          "latest": 1.467,
+          "delta": -0.481,
+          "direction": "down",
+          "max": 2.019,
+          "min": 1.467
+        },
+        "recurring_blocking_failures": [],
+        "recurring_permission_limits": [],
+        "recurring_issue_signals": [
+          {
+            "name": "no_recent_issue_updates_detected",
+            "count": 10
+          }
+        ],
+        "recurring_operational_signals": [
+          {
+            "name": "optional_scope_notes_present",
+            "count": 10
+          }
+        ]
+      },
+      {
+        "site_key": "gli-it-project",
+        "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+        "name": "gli-it-project",
+        "current_status": "stable",
+        "current_risk_score": 1,
+        "snapshot_count": 10,
+        "trend_score": 2,
+        "trend_signals": [
+          "recurring_issue_risk_signals",
+          "recurring_operational_signals"
+        ],
+        "status_streak": {
+          "status": "stable",
+          "length": 10
+        },
+        "unresolved_trend": {
+          "field": "issue_count_unresolved",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "risk_trend": {
+          "field": "risk_score",
+          "first": 1.0,
+          "latest": 1.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 1.0,
+          "min": 1.0
+        },
+        "failed_api_trend": {
+          "field": "failed_api_checks",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "collection_time_trend": {
+          "field": "collection_duration_seconds",
+          "first": 2.501,
+          "latest": 2.291,
+          "delta": -0.21,
+          "direction": "down",
+          "max": 2.501,
+          "min": 1.879
+        },
+        "recurring_blocking_failures": [],
+        "recurring_permission_limits": [],
+        "recurring_issue_signals": [
+          {
+            "name": "no_recent_issue_updates_detected",
+            "count": 10
+          }
+        ],
+        "recurring_operational_signals": [
+          {
+            "name": "optional_scope_notes_present",
+            "count": 10
+          }
+        ]
+      },
+      {
+        "site_key": "gli-usa",
+        "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+        "name": "gli-usa",
+        "current_status": "stable",
+        "current_risk_score": 1,
+        "snapshot_count": 10,
+        "trend_score": 2,
+        "trend_signals": [
+          "recurring_issue_risk_signals",
+          "recurring_operational_signals"
+        ],
+        "status_streak": {
+          "status": "stable",
+          "length": 10
+        },
+        "unresolved_trend": {
+          "field": "issue_count_unresolved",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "risk_trend": {
+          "field": "risk_score",
+          "first": 1.0,
+          "latest": 1.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 1.0,
+          "min": 1.0
+        },
+        "failed_api_trend": {
+          "field": "failed_api_checks",
+          "first": 0.0,
+          "latest": 0.0,
+          "delta": 0.0,
+          "direction": "stable",
+          "max": 0.0,
+          "min": 0.0
+        },
+        "collection_time_trend": {
+          "field": "collection_duration_seconds",
+          "first": 4.931,
+          "latest": 2.521,
+          "delta": -2.41,
+          "direction": "down",
+          "max": 5.998,
+          "min": 2.521
+        },
+        "recurring_blocking_failures": [],
+        "recurring_permission_limits": [],
+        "recurring_issue_signals": [
+          {
+            "name": "no_recent_issue_updates_detected",
+            "count": 10
+          }
+        ],
+        "recurring_operational_signals": [
+          {
+            "name": "optional_scope_notes_present",
+            "count": 10
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "site_count": 6,
+      "warning_or_critical_streak_sites": 0,
+      "rising_unresolved_sites": 0,
+      "rising_risk_sites": 0,
+      "recurring_blocking_failure_sites": 0
+    }
+  },
+  "snapshot_files": [
+    {
+      "snapshot_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-18_18-43-20.json",
+      "latest_snapshot_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\latest_snapshot.json",
+      "snapshot_index_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_index.json"
+    }
+  ],
+  "report_files": [],
+  "estate": {
+    "total_users": 100,
+    "total_active_users": 100,
+    "managed_disabled_accounts": 0,
+    "org_admin_count": 0,
+    "mfa_disabled_accounts": 0,
+    "managed_user_count": 61,
+    "human_user_count": 61,
+    "app_account_count": 39,
+    "not_in_userbase_count": 0,
+    "runtime_critical_alert_count": 0,
+    "runtime_warning_alert_count": 0,
+    "runtime_site_critical_count": 0,
+    "runtime_site_warning_count": 0
+  },
+  "admin_enrichment": {
+    "collected_at_utc": "2026-06-18T17:43:20Z",
+    "org_id": "b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+    "collection_meta": {
+      "pages_collected": 1,
+      "rows_collected": 100,
+      "limit": 100,
+      "max_pages": 100
+    },
+    "summary": {
+      "org_user_count": 100,
+      "managed_user_count": 61,
+      "human_user_count": 61,
+      "app_account_count": 39,
+      "active_user_count": 100,
+      "suspended_user_count": 0,
+      "org_admin_count": 0,
+      "mfa_disabled_user_count": 0,
+      "not_in_userbase_count": 0
+    },
+    "users": [
+      {
+        "accountId": "557058:03dda04d-391e-41ad-baa9-f7d28994695b",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:0867a421-a9ee-4659-801a-bc0ee4a4487e",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:0e422967-609b-44b6-a414-2e9e2234117e",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:205f5205-4f26-48ff-85fe-22c22f46f04e",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:214cdd6a-ff93-4d8b-838b-62dfcf1a2a71",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:2292e5ff-1dbd-4a31-8a44-4e066d28264c",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:4253fc48-cab4-4928-94fb-8974d8e5f77b",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:4c73fb68-9d2f-4fa9-aa05-825947a73306",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:5ad427cb-ee2d-4d54-892b-a4a0531990ec",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:7a80202a-6bba-4d09-bb81-002d0355d377",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:7fa9052b-e30b-4ebf-aa57-caaed9511cab",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:950f9f5b-3d6d-4e1d-954a-21367ae9ac75",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:af546d80-a2b0-4844-91bc-bea782420c57",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:c6ec4742-681f-4743-bde1-2d3d8e055b6a",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:cbc04d7b-be84-46eb-90e4-e567aa5332c6",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:cecb512b-0bb7-4b6e-9fe7-5d36b42cca94",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:d6b5955a-e193-41e1-b051-79cdb0755d68",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "557058:f7c0a677-cb62-4990-81f2-7a684c278256",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5a4a17ae647216291d9915f7",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5a9d73cd7cbc742a5c1deda0",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5a9d73f0c164262a8392ae11",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5aeb1ccf91bc312e6a4ac202",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b1539719595132534bc28a4",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b6c7b3afbc68529c6c47967",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b70c8b80fd0ac05d389f5e9",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b7c44319e14d92a56be45d8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5b95d5f04d21642beb810cae",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5bfed450d9499e1a8fbcb936",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c5a0adbadc28b6e6e9708eb",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c6145a82cdb124474b3dda9",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867a42bd78bf5ae58d1726",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867a5b3bee527de33cbb92",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867aca88f9ec6ae0afabcf",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867ae45db2976adad4515f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867b171330837ea2b105de",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867b46ee8793790affe42f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c867b68f63c96739fd921e6",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c86958ba329a40b8555bdc0",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8695953270066642713cca",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8696b05db2976adad45256",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8699380c61c37ea81dcea8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c86995186c36970e81298b1",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c8699979d7fc173a5952b64",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5c98b2d038f7806371d15a16",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5ca66d1849d4611664b24d60",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5cb4ae0e4b97ab11a18e00c7",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5cf112d31552030f1e3a5905",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d0be82b3e70a70bcff12a57",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d13ed74b7ebec0c5dbc7de3",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d387eaef8be2f0c20bb7d8f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d42dad4f764920da7cccbd3",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d53f3cbc6b9320d9ea5bdc2",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d9afe0010f4800c341a2bba",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5d9b2860cd50b80dcea8a5b7",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5dd64082af96bc0efbe55103",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5df79618336e9e0cad168e00",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e3d91953f647d0c99d826ee",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e43dda0924db10e74b74306",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e4a9b3c5a495e0c91a80043",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5e9441a27a2ea00c152d6071",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5ec6cd2c3434a20c34a883c8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5efae59e3683cd0bc1040fa3",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5fab40f2e61f15007052cc1c",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "5fd215d3fee793007526d32d",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "6035864ce2020c0070b5285b",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60dc3c2a22c0920071aa2e86",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60dc69db1613d50069d35c5a",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60e41471c0db53006aa8e93d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "60e5a86a471e61006a4c51fd",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "611e4466c2f3a50069fcd78f",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "6125f72b24912a0069ed9904",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61659125198b4f0068dd01d6",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "616701a307ac3c0068913946",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "6168c27e2f6aed00683dcd6d",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "616f249f26a5400071229784",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "617bf56025f3130070f41d83",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61a4f0a36d002b006bc29dde",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61df7f1ae67ea2006b42bda9",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "61f3c908875fc100705a2ba9",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "621e03d5a12450006886adae",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "621fca7f49c90000701f5cf5",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "62962f2d2eafc9006eebc736",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "630db2cd9796033b256bc349",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "630e318ab433b060db555ea1",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63735807fde064eda2ec1d04",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63a22fb348b367d78a14c15b",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63d8e047fb75f8568f5ee9cd",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63dcd8eb790148a180951d19",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63f46627e2c4c692c9777a54",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "63fdcbee81de11a1adf93df8",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "640f54de2cee496759e9ca64",
+        "accountType": "atlassian",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "712020:007ef253-f976-47aa-94a9-2fd3afbaf580",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "712020:009c1a4f-fe24-4818-9229-ff8c41309725",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      },
+      {
+        "accountId": "712020:010d377b-fb5f-4c7d-ac6b-d18f458f2b1f",
+        "accountType": "app",
+        "accountStatus": "active",
+        "statusInUserbase": true
+      }
+    ],
+    "last_active_enabled": false,
+    "last_active_user_cap": 25
+  },
+  "drilldowns": {
+    "admin::summary": {
+      "title": "Admin API Enrichment Summary",
+      "reason": "Estate-level Atlassian Administration user-management metrics retrieved from the Atlassian admin APIs.",
+      "atlassian_area": "Atlassian Administration → Directory / Managed Accounts",
+      "columns": [
+        "org_user_count",
+        "managed_user_count",
+        "human_user_count",
+        "app_account_count",
+        "active_user_count",
+        "suspended_user_count",
+        "org_admin_count",
+        "mfa_disabled_user_count",
+        "not_in_userbase_count"
+      ],
+      "rows": [
+        {
+          "org_user_count": 100,
+          "managed_user_count": 61,
+          "human_user_count": 61,
+          "app_account_count": 39,
+          "active_user_count": 100,
+          "suspended_user_count": 0,
+          "org_admin_count": 0,
+          "mfa_disabled_user_count": 0,
+          "not_in_userbase_count": 0
+        }
+      ]
+    },
+    "admin::managed_accounts": {
+      "title": "Managed / Human Accounts",
+      "reason": "Current admin user rows do not expose claimStatus. This list is the best-available approximation using human Atlassian accounts (accountType=atlassian).",
+      "atlassian_area": "Atlassian Administration → Managed Accounts",
+      "columns": [
+        "accountId",
+        "accountType",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "statusInUserbase",
+        "name",
+        "email",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": [
+        {
+          "accountId": "557058:03dda04d-391e-41ad-baa9-f7d28994695b",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:0e422967-609b-44b6-a414-2e9e2234117e",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:205f5205-4f26-48ff-85fe-22c22f46f04e",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:4253fc48-cab4-4928-94fb-8974d8e5f77b",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:4c73fb68-9d2f-4fa9-aa05-825947a73306",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:5ad427cb-ee2d-4d54-892b-a4a0531990ec",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:7a80202a-6bba-4d09-bb81-002d0355d377",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:7fa9052b-e30b-4ebf-aa57-caaed9511cab",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:af546d80-a2b0-4844-91bc-bea782420c57",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:c6ec4742-681f-4743-bde1-2d3d8e055b6a",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:cecb512b-0bb7-4b6e-9fe7-5d36b42cca94",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:f7c0a677-cb62-4990-81f2-7a684c278256",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5a9d73cd7cbc742a5c1deda0",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5a9d73f0c164262a8392ae11",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5aeb1ccf91bc312e6a4ac202",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5b1539719595132534bc28a4",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5b7c44319e14d92a56be45d8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867a42bd78bf5ae58d1726",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867a5b3bee527de33cbb92",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867aca88f9ec6ae0afabcf",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867ae45db2976adad4515f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867b171330837ea2b105de",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867b46ee8793790affe42f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867b68f63c96739fd921e6",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c86958ba329a40b8555bdc0",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8695953270066642713cca",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8696b05db2976adad45256",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8699380c61c37ea81dcea8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c86995186c36970e81298b1",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8699979d7fc173a5952b64",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c98b2d038f7806371d15a16",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d13ed74b7ebec0c5dbc7de3",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d387eaef8be2f0c20bb7d8f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d42dad4f764920da7cccbd3",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5df79618336e9e0cad168e00",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5e3d91953f647d0c99d826ee",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5ec6cd2c3434a20c34a883c8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "60dc3c2a22c0920071aa2e86",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "60dc69db1613d50069d35c5a",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "60e41471c0db53006aa8e93d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "611e4466c2f3a50069fcd78f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61659125198b4f0068dd01d6",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "616701a307ac3c0068913946",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "6168c27e2f6aed00683dcd6d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61a4f0a36d002b006bc29dde",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61df7f1ae67ea2006b42bda9",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61f3c908875fc100705a2ba9",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "621e03d5a12450006886adae",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "621fca7f49c90000701f5cf5",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "62962f2d2eafc9006eebc736",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "630e318ab433b060db555ea1",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63735807fde064eda2ec1d04",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63d8e047fb75f8568f5ee9cd",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63dcd8eb790148a180951d19",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63fdcbee81de11a1adf93df8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "640f54de2cee496759e9ca64",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        }
+      ]
+    },
+    "admin::human_accounts": {
+      "title": "Human Atlassian Accounts",
+      "reason": "Human Atlassian user accounts derived from accountType=atlassian in the admin payload.",
+      "atlassian_area": "Atlassian Administration → Directory",
+      "columns": [
+        "accountId",
+        "accountType",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "statusInUserbase",
+        "name",
+        "email",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": [
+        {
+          "accountId": "557058:03dda04d-391e-41ad-baa9-f7d28994695b",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:0e422967-609b-44b6-a414-2e9e2234117e",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:205f5205-4f26-48ff-85fe-22c22f46f04e",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:4253fc48-cab4-4928-94fb-8974d8e5f77b",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:4c73fb68-9d2f-4fa9-aa05-825947a73306",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:5ad427cb-ee2d-4d54-892b-a4a0531990ec",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:7a80202a-6bba-4d09-bb81-002d0355d377",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:7fa9052b-e30b-4ebf-aa57-caaed9511cab",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:af546d80-a2b0-4844-91bc-bea782420c57",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:c6ec4742-681f-4743-bde1-2d3d8e055b6a",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:cecb512b-0bb7-4b6e-9fe7-5d36b42cca94",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:f7c0a677-cb62-4990-81f2-7a684c278256",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5a9d73cd7cbc742a5c1deda0",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5a9d73f0c164262a8392ae11",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5aeb1ccf91bc312e6a4ac202",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5b1539719595132534bc28a4",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5b7c44319e14d92a56be45d8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867a42bd78bf5ae58d1726",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867a5b3bee527de33cbb92",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867aca88f9ec6ae0afabcf",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867ae45db2976adad4515f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867b171330837ea2b105de",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867b46ee8793790affe42f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c867b68f63c96739fd921e6",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c86958ba329a40b8555bdc0",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8695953270066642713cca",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8696b05db2976adad45256",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8699380c61c37ea81dcea8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c86995186c36970e81298b1",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c8699979d7fc173a5952b64",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c98b2d038f7806371d15a16",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d13ed74b7ebec0c5dbc7de3",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d387eaef8be2f0c20bb7d8f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d42dad4f764920da7cccbd3",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5df79618336e9e0cad168e00",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5e3d91953f647d0c99d826ee",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5ec6cd2c3434a20c34a883c8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "60dc3c2a22c0920071aa2e86",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "60dc69db1613d50069d35c5a",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "60e41471c0db53006aa8e93d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "611e4466c2f3a50069fcd78f",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61659125198b4f0068dd01d6",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "616701a307ac3c0068913946",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "6168c27e2f6aed00683dcd6d",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61a4f0a36d002b006bc29dde",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61df7f1ae67ea2006b42bda9",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "61f3c908875fc100705a2ba9",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "621e03d5a12450006886adae",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "621fca7f49c90000701f5cf5",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "62962f2d2eafc9006eebc736",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "630e318ab433b060db555ea1",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63735807fde064eda2ec1d04",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63d8e047fb75f8568f5ee9cd",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63dcd8eb790148a180951d19",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63fdcbee81de11a1adf93df8",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "640f54de2cee496759e9ca64",
+          "accountType": "atlassian",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        }
+      ]
+    },
+    "admin::app_accounts": {
+      "title": "App Accounts",
+      "reason": "App/service identities derived from accountType=app in the admin payload.",
+      "atlassian_area": "Atlassian Administration → Directory",
+      "columns": [
+        "accountId",
+        "accountType",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "statusInUserbase",
+        "name",
+        "email",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": [
+        {
+          "accountId": "557058:0867a421-a9ee-4659-801a-bc0ee4a4487e",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:214cdd6a-ff93-4d8b-838b-62dfcf1a2a71",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:2292e5ff-1dbd-4a31-8a44-4e066d28264c",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:950f9f5b-3d6d-4e1d-954a-21367ae9ac75",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:cbc04d7b-be84-46eb-90e4-e567aa5332c6",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:d6b5955a-e193-41e1-b051-79cdb0755d68",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5a4a17ae647216291d9915f7",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5b6c7b3afbc68529c6c47967",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5b70c8b80fd0ac05d389f5e9",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5b95d5f04d21642beb810cae",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5bfed450d9499e1a8fbcb936",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c5a0adbadc28b6e6e9708eb",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5c6145a82cdb124474b3dda9",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5ca66d1849d4611664b24d60",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5cb4ae0e4b97ab11a18e00c7",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5cf112d31552030f1e3a5905",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d0be82b3e70a70bcff12a57",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d53f3cbc6b9320d9ea5bdc2",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d9afe0010f4800c341a2bba",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5d9b2860cd50b80dcea8a5b7",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5dd64082af96bc0efbe55103",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5e43dda0924db10e74b74306",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5e4a9b3c5a495e0c91a80043",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5e9441a27a2ea00c152d6071",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5efae59e3683cd0bc1040fa3",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5fab40f2e61f15007052cc1c",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "5fd215d3fee793007526d32d",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "6035864ce2020c0070b5285b",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "60e5a86a471e61006a4c51fd",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "6125f72b24912a0069ed9904",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "616f249f26a5400071229784",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "617bf56025f3130070f41d83",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "630db2cd9796033b256bc349",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63a22fb348b367d78a14c15b",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "63f46627e2c4c692c9777a54",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "712020:007ef253-f976-47aa-94a9-2fd3afbaf580",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "712020:009c1a4f-fe24-4818-9229-ff8c41309725",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        },
+        {
+          "accountId": "712020:010d377b-fb5f-4c7d-ac6b-d18f458f2b1f",
+          "accountType": "app",
+          "claimStatus": "",
+          "status": "",
+          "accountStatus": "active",
+          "statusInUserbase": true,
+          "name": "",
+          "email": "",
+          "mfaEnabled": "",
+          "orgAdmin": "No",
+          "lastActive": ""
+        }
+      ]
+    },
+    "admin::suspended_accounts": {
+      "title": "Suspended / Disabled Accounts",
+      "reason": "Accounts with suspended, inactive, or disabled accountStatus returned by the admin APIs.",
+      "atlassian_area": "Atlassian Administration → Directory / Managed Accounts",
+      "columns": [
+        "accountId",
+        "accountType",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "statusInUserbase",
+        "name",
+        "email",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": []
+    },
+    "admin::org_admins": {
+      "title": "Organization Admins",
+      "reason": "Current admin user rows do not expose platformRoles, so organization admin identity is not available in this payload.",
+      "atlassian_area": "Atlassian Administration → Organization settings",
+      "columns": [
+        "note"
+      ],
+      "rows": [
+        {
+          "note": "Current admin user rows do not expose platformRoles, so organization admin identity is not available in this payload."
+        }
+      ]
+    },
+    "admin::mfa_disabled": {
+      "title": "MFA Disabled Accounts",
+      "reason": "Current admin user rows do not expose mfaEnabled, so MFA state is not available in this payload.",
+      "atlassian_area": "Atlassian Administration → Security / Authentication policies",
+      "columns": [
+        "note"
+      ],
+      "rows": [
+        {
+          "note": "Current admin user rows do not expose mfaEnabled, so MFA state is not available in this payload."
+        }
+      ]
+    },
+    "admin::not_in_userbase": {
+      "title": "Accounts Not In Userbase",
+      "reason": "Accounts where statusInUserbase is false in the admin payload.",
+      "atlassian_area": "Atlassian Administration → Directory",
+      "columns": [
+        "accountId",
+        "accountType",
+        "claimStatus",
+        "status",
+        "accountStatus",
+        "statusInUserbase",
+        "name",
+        "email",
+        "mfaEnabled",
+        "orgAdmin",
+        "lastActive"
+      ],
+      "rows": []
+    },
+    "intelligence::summary": {
+      "title": "Intelligence Summary",
+      "reason": "Operational intelligence derived from runtime estate, admin enrichment, and alert-rule outputs.",
+      "atlassian_area": "Operational intelligence",
+      "columns": [
+        "estate_risk_score",
+        "top_intelligence_risks_count",
+        "sites_with_risks_count",
+        "operational_posture",
+        "analysed_sites_count",
+        "critical_count",
+        "warning_count"
+      ],
+      "rows": [
+        {
+          "estate_risk_score": 52,
+          "top_intelligence_risks_count": 10,
+          "sites_with_risks_count": 6,
+          "operational_posture": "Warning",
+          "analysed_sites_count": 6,
+          "critical_count": 0,
+          "warning_count": 13
+        }
+      ]
+    },
+    "intelligence::watchlist": {
+      "title": "Intelligence Watchlist",
+      "reason": "Current intelligence watchlist derived from alert signals and runtime heuristics.",
+      "atlassian_area": "Operational intelligence",
+      "columns": [
+        "severity",
+        "scope",
+        "site_name",
+        "title",
+        "reason",
+        "value"
+      ],
+      "rows": [
+        {
+          "severity": "warning",
+          "scope": "estate",
+          "title": "High app-account ratio",
+          "reason": "App/service identities are unusually high relative to human accounts.",
+          "value": 39,
+          "site_name": "",
+          "site_key": ""
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gaminglabs-team-h2pbpmis",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gaminglabs-team-h2pbpmis",
+          "site_key": "gaminglabs-team-h2pbpmis"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gaminglabs-team-h2pbpmis",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gaminglabs-team-h2pbpmis",
+          "site_key": "gaminglabs-team-h2pbpmis"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gaminglabs-team-tsyfo716",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gaminglabs-team-tsyfo716",
+          "site_key": "gaminglabs-team-tsyfo716"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gaminglabs-team-tsyfo716",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gaminglabs-team-tsyfo716",
+          "site_key": "gaminglabs-team-tsyfo716"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-delivery-tm",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-delivery-tm",
+          "site_key": "gli-delivery-tm"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-delivery-tm",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-delivery-tm",
+          "site_key": "gli-delivery-tm"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-global-technology",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-global-technology",
+          "site_key": "gli-global-technology"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-global-technology",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-global-technology",
+          "site_key": "gli-global-technology"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-it-project",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-it-project",
+          "site_key": "gli-it-project"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-it-project",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-it-project",
+          "site_key": "gli-it-project"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No recent activity: gli-usa",
+          "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+          "value": 0,
+          "site_name": "gli-usa",
+          "site_key": "gli-usa"
+        },
+        {
+          "severity": "warning",
+          "scope": "site",
+          "title": "No site user total: gli-usa",
+          "reason": "Site has tracked projects but user totals are missing or zero.",
+          "value": null,
+          "site_name": "gli-usa",
+          "site_key": "gli-usa"
+        }
+      ]
+    }
+  },
+  "runtime_alerts": {
+    "generated_at_utc": "2026-06-18T17:43:20Z",
+    "rules": {
+      "unresolved_warning_threshold": 25,
+      "unresolved_critical_threshold": 100,
+      "managed_disabled_critical": 1,
+      "mfa_disabled_warning": 1,
+      "not_in_userbase_warning": 1,
+      "zero_sites_critical": true,
+      "zero_users_warning": true
+    },
+    "summary": {
+      "critical_count": 0,
+      "warning_count": 0,
+      "info_count": 0,
+      "site_critical_count": 0,
+      "site_warning_count": 0
+    },
+    "critical": [],
+    "warning": [],
+    "info": [],
+    "critical_sites": [],
+    "warning_sites": [],
+    "top_risks": []
+  },
+  "critical_sites": [],
+  "warning_sites": [],
+  "intelligence_summary": {
+    "estate_risk_score": 52,
+    "top_intelligence_risks_count": 10,
+    "sites_with_risks_count": 6,
+    "operational_posture": "Warning",
+    "analysed_sites_count": 6,
+    "top_risks": [
+      {
+        "severity": "warning",
+        "scope": "estate",
+        "title": "High app-account ratio",
+        "reason": "App/service identities are unusually high relative to human accounts.",
+        "value": 39,
+        "site_name": "",
+        "site_key": ""
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gaminglabs-team-h2pbpmis",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gaminglabs-team-h2pbpmis",
+        "site_key": "gaminglabs-team-h2pbpmis"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gaminglabs-team-h2pbpmis",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gaminglabs-team-h2pbpmis",
+        "site_key": "gaminglabs-team-h2pbpmis"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gaminglabs-team-tsyfo716",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gaminglabs-team-tsyfo716",
+        "site_key": "gaminglabs-team-tsyfo716"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gaminglabs-team-tsyfo716",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gaminglabs-team-tsyfo716",
+        "site_key": "gaminglabs-team-tsyfo716"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gli-delivery-tm",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gli-delivery-tm",
+        "site_key": "gli-delivery-tm"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gli-delivery-tm",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gli-delivery-tm",
+        "site_key": "gli-delivery-tm"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gli-global-technology",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gli-global-technology",
+        "site_key": "gli-global-technology"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No site user total: gli-global-technology",
+        "reason": "Site has tracked projects but user totals are missing or zero.",
+        "value": null,
+        "site_name": "gli-global-technology",
+        "site_key": "gli-global-technology"
+      },
+      {
+        "severity": "warning",
+        "scope": "site",
+        "title": "No recent activity: gli-it-project",
+        "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+        "value": 0,
+        "site_name": "gli-it-project",
+        "site_key": "gli-it-project"
+      }
+    ]
+  },
+  "intelligence_watchlist": [
+    {
+      "severity": "warning",
+      "scope": "estate",
+      "title": "High app-account ratio",
+      "reason": "App/service identities are unusually high relative to human accounts.",
+      "value": 39,
+      "site_name": "",
+      "site_key": ""
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gaminglabs-team-h2pbpmis",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gaminglabs-team-h2pbpmis",
+      "site_key": "gaminglabs-team-h2pbpmis"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gaminglabs-team-h2pbpmis",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gaminglabs-team-h2pbpmis",
+      "site_key": "gaminglabs-team-h2pbpmis"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gaminglabs-team-tsyfo716",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gaminglabs-team-tsyfo716",
+      "site_key": "gaminglabs-team-tsyfo716"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gaminglabs-team-tsyfo716",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gaminglabs-team-tsyfo716",
+      "site_key": "gaminglabs-team-tsyfo716"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-delivery-tm",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-delivery-tm",
+      "site_key": "gli-delivery-tm"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-delivery-tm",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-delivery-tm",
+      "site_key": "gli-delivery-tm"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-global-technology",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-global-technology",
+      "site_key": "gli-global-technology"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-global-technology",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-global-technology",
+      "site_key": "gli-global-technology"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-it-project",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-it-project",
+      "site_key": "gli-it-project"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-it-project",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-it-project",
+      "site_key": "gli-it-project"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No recent activity: gli-usa",
+      "reason": "Tracked projects exist but no recent issue updates were detected in the last 7 days.",
+      "value": 0,
+      "site_name": "gli-usa",
+      "site_key": "gli-usa"
+    },
+    {
+      "severity": "warning",
+      "scope": "site",
+      "title": "No site user total: gli-usa",
+      "reason": "Site has tracked projects but user totals are missing or zero.",
+      "value": null,
+      "site_name": "gli-usa",
+      "site_key": "gli-usa"
     }
   ]
 }

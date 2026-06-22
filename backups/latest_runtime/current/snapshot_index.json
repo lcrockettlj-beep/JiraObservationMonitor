@@ -11,16 +11,6 @@
       "total_risk_score": 0
     },
     {
-      "created_at_local": "2026-06-22 10:10:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_10-10-38.json",
-      "snapshot_timestamp": "2026-06-22_10-10-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
       "created_at_local": "2026-06-22 10:20:38",
       "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_10-20-38.json",
       "snapshot_timestamp": "2026-06-22_10-20-38",
@@ -214,6 +204,16 @@
       "created_at_local": "2026-06-22 16:19:29",
       "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_16-19-29.json",
       "snapshot_timestamp": "2026-06-22_16-19-29",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-22 20:00:39",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_20-00-39_anchor_evening.json",
+      "snapshot_timestamp": "2026-06-22_20-00-39",
       "site_count": 0,
       "healthy_count": 0,
       "warning_count": 0,
