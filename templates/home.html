@@ -114,8 +114,13 @@
     <section class="hero">
         <div class="hero__top">
             <div>
-                <h1>Operational Home</h1>
-                <p>Read-only visibility across the monitored Jira estate with change detection, discovery, project intelligence, and snapshot-backed trend signals.</p>
+                
+                <h1>Operational Overview</h1>
+                <p>
+                Live view of GLI's Atlassian estate — showing site health, user activity, and
+                emerging risks. All data is read-only and refreshed automatically.
+                </p>
+
             </div>
             <div class="hero__meta meta-pills">
                 <span class="pill">Users rows: {{ users_row_count or 0 }}</span>
@@ -144,7 +149,7 @@
         <div class="section-header">
             <div>
                 <h2>Operational Intelligence</h2>
-                <p>Risk summaries generated from the intelligence engine and linked into your existing detail drilldowns.</p>
+                <p>Key risk indicators across your sites, highlighting areas that may require attention.</p>
             </div>
             <div class="section-header__actions">
                 <a href="/detail/intelligence::summary" class="pill">Intelligence summary</a>
@@ -178,7 +183,7 @@
         <div class="section-header">
             <div>
                 <h2>Intelligence Watchlist</h2>
-                <p>Sites currently carrying intelligence findings, ordered from the backend watchlist.</p>
+                <p>Sites currently flagged with risk indicators, prioritised for review.</p>
             </div>
             <div class="section-header__actions">
                 <a href="/detail/intelligence::summary" class="pill">View all intelligence risks</a>
@@ -252,7 +257,7 @@
         <div class="section-header">
             <div>
                 <h2>Needs Attention</h2>
-                <p>Estate-wide counts that may require review in Atlassian administration.</p>
+                <p>Key account and access issues that may require action in Atlassian.</p>
             </div>
         </div>
         <div class="grid-4 stat-grid">
@@ -282,7 +287,7 @@
         <div class="section-header">
             <div>
                 <h2>Change & Discovery</h2>
-                <p>Current collector comparison output and site discovery posture.</p>
+                <p>Recent changes and newly discovered sites across the monitored estate.</p>
             </div>
             <div class="section-header__actions">
                 <a href="/detail/change::summary" class="pill">Change summary</a>
@@ -316,7 +321,7 @@
         <div class="section-header">
             <div>
                 <h2>Trend Watch</h2>
-                <p>Homepage trend cards fed by snapshot history and historical analysis.</p>
+                <p>Trends over time showing changes in site health, risk, and activity levels.</p>
             </div>
             <div class="section-header__actions">
                 <a href="/detail/trend::summary" class="pill">Trend summary</a>
@@ -353,9 +358,9 @@
         </div>
         {% endif %}
     </section>
-    {{ site_section('Critical Sites', 'Immediate attention group based on current backend status.', critical_sites, 'critical') }}
-    {{ site_section('Warning Sites', 'Watchlist group where monitoring signals show caution.', warning_sites, 'warning') }}
-    {{ site_section('Stable Sites', 'Operationally stable sites still visible for monitoring and drilldown.', stable_sites, 'stable') }}
+    {{ site_section('Critical Sites', 'Sites requiring immediate attention based on current status.', critical_sites, 'critical') }}
+    {{ site_section('Warning Sites', 'Sites showing early warning signs or potential risk.', warning_sites, 'warning') }}
+    {{ site_section('Stable Sites', 'Sites operating normally and within expected limits.', stable_sites, 'stable') }}
 </div>
 <script>
     window.JOMTheme.initToggle("theme-toggle");
