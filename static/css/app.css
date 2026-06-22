@@ -21,7 +21,6 @@
     --gli-blue-bright: #0d6efd;
 }
 
-
 html[data-theme="light"] {
     --bg: #eef4ff;
     --panel: rgba(255, 255, 255, 0.98);
@@ -35,12 +34,9 @@ html[data-theme="light"] {
     --accent: #2e79c7;
 }
 
-
-
-    {
-     box-sizing: border-box;
+* {
+    box-sizing: border-box;
 }
-
 
 html, body {
     min-height: 100%;
@@ -71,7 +67,6 @@ html[data-theme="light"] .top-nav {
         0 0 14px rgba(46, 121, 199, 0.08);
 }
 
-
 a {
     color: inherit;
     text-decoration: none;
@@ -88,10 +83,9 @@ a {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 20px;
-    box-shadow: 
+    box-shadow:
         0 18px 40px rgba(0, 0, 0, 0.28),
         0 0 30px rgba(69,155,227,0.08);
-
 }
 
 .hero {
@@ -99,10 +93,6 @@ a {
     box-shadow:
         0 20px 45px rgba(0,0,0,0.30),
         0 0 40px rgba(69,155,227,0.12);
-}
-
-
-.hero {
     padding: 22px;
     margin-bottom: 20px;
 }
@@ -113,6 +103,7 @@ a {
     align-items: flex-start;
     gap: 16px;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .hero h1 {
@@ -129,17 +120,28 @@ a {
 .hero__meta {
     text-align: right;
     min-width: 220px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 .pill {
     display: inline-block;
     margin: 0;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 999px;
     background: rgba(69,155,227,0.08);
     border: 1px solid var(--border);
     color: var(--text);
-    font-size: 13px;
+    font-size: 12px;
+}
+
+html[data-theme="light"] .pill {
+    background: rgba(46,121,199,0.08);
+    border-color: rgba(46,121,199,0.20);
+    color: var(--text);
 }
 
 .pill:hover {
@@ -150,12 +152,12 @@ a {
 
 .pill-button {
     margin: 0;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 999px;
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--border);
     color: var(--muted);
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
 }
 
@@ -183,7 +185,6 @@ a {
     font-weight: 800;
     letter-spacing: 0.02em;
 }
-
 
 .section__header .count {
     color: var(--muted);
@@ -260,7 +261,6 @@ html[data-theme="light"] .top-nav__logo {
     opacity: 0.92;
 }
 
-
 .top-nav__brand {
     font-size: 14px;
     font-weight: 800;
@@ -268,7 +268,6 @@ html[data-theme="light"] .top-nav__logo {
     letter-spacing: 0.05em;
     white-space: nowrap;
 }
-
 
 .top-nav__links {
     display: flex;
@@ -309,10 +308,84 @@ html[data-theme="light"] .top-nav__logo {
     gap: 8px;
 }
 
+.panel {
+    padding: 20px;
+    margin-bottom: 22px;
+}
+
+.grid-4 {
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.empty,
+.empty-state {
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed rgba(255,255,255,0.08);
+}
+
+a, .clickable {
+    cursor: pointer;
+}
+
+.stat-card:hover,
+.reference-row:hover,
+.breakdown-row:hover,
+.estate-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(69, 155, 227, 0.45);
+}
+
+.metric-link::after,
+.breakdown-row::after {
+    content: "→";
+    margin-left: 6px;
+    opacity: 0.6;
+}
+
+.section-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 680px;
+}
+
+/* Sprint 8 - dark mode text visibility fix */
+html:not([data-theme="light"]) h1,
+html:not([data-theme="light"]) h2,
+html:not([data-theme="light"]) h3,
+html:not([data-theme="light"]) .value,
+html:not([data-theme="light"]) .metric-value,
+html:not([data-theme="light"]) .site-card__title-row h3,
+html:not([data-theme="light"]) .section-header h2,
+html:not([data-theme="light"]) .hero h1,
+html:not([data-theme="light"]) .stat-card .value,
+html:not([data-theme="light"]) .intelligence-card .value,
+html:not([data-theme="light"]) .top-nav__brand {
+    color: #f7fbff !important;
+}
+
+html:not([data-theme="light"]) .label,
+html:not([data-theme="light"]) .note,
+html:not([data-theme="light"]) .metric-note,
+html:not([data-theme="light"]) .metric-label,
+html:not([data-theme="light"]) .site-card__sub,
+html:not([data-theme="light"]) .source-strip__item,
+html:not([data-theme="light"]) .delta-chip span,
+html:not([data-theme="light"]) .pill,
+html:not([data-theme="light"]) .top-nav__link,
+html:not([data-theme="light"]) .pill-button {
+    color: #d6e0f2 !important;
+}
+
 @media (max-width: 760px) {
     .hero__meta {
         text-align: left;
         min-width: 0;
+        justify-content: flex-start;
     }
 
     .pill {
@@ -345,126 +418,3 @@ html[data-theme="light"] .top-nav__logo {
         width: 100%;
     }
 }
-
-.panel {
-    padding: 20px;
-    margin-bottom: 22px;
-}
-
-.section__header {
-    margin-bottom: 12px;
-}
-
-.grid-4 {
-    gap: 16px;
-    margin-top: 10px;
-}
-
-.pill,
-.pill-button {
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 999px;
-}
-
-
-.pill {
-    background: rgba(69,155,227,0.08);
-}
-
-html[data-theme="light"] .pill {
-    background: rgba(46,121,199,0.08);
-    border-color: rgba(46,121,199,0.20);
-    color: var(--text);
-}
-
-.pill:hover {
-    background: rgba(255,255,255,0.08);
-}
-
-.empty,
-.empty-state {
-    padding: 18px;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.03);
-    border: 1px dashed rgba(255,255,255,0.08);
-}
-
-.hero__top {
-    margin-bottom: 20px;
-}
-
-.hero__meta {
-    text-align: right;
-    min-width: 220px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-
-
-a, .clickable {
-    cursor: pointer;
-}
-
-.stat-card:hover,
-.reference-row:hover,
-.breakdown-row:hover,
-.estate-card:hover {
-    transform: translateY(-1px);
-    border-color: rgba(69, 155, 227, 0.45);
-}
-
-
-
-.metric-link::after,
-.breakdown-row::after {
-    content: "→";
-    margin-left: 6px;
-    opacity: 0.6;
-}
-
-
-
-
-.section-header p {
-margin: 0;
-color: var(--muted);
-font-size: 14px;
-line-height: 1.6;
-max-width: 680px;
-}
-
-
-/* Sprint 8 - dark mode text visibility fix */
-html:not([data-theme="light"]) h1,
-html:not([data-theme="light"]) h2,
-html:not([data-theme="light"]) h3,
-html:not([data-theme="light"]) .value,
-html:not([data-theme="light"]) .metric-value,
-html:not([data-theme="light"]) .site-card__title-row h3,
-html:not([data-theme="light"]) .section-header h2,
-html:not([data-theme="light"]) .hero h1,
-html:not([data-theme="light"]) .stat-card .value,
-html:not([data-theme="light"]) .intelligence-card .value,
-html:not([data-theme="light"]) .top-nav__brand {
-    color: #f7fbff !important;
-}
-
-
-html:not([data-theme="light"]) .label,
-html:not([data-theme="light"]) .note,
-html:not([data-theme="light"]) .metric-note,
-html:not([data-theme="light"]) .metric-label,
-html:not([data-theme="light"]) .site-card__sub,
-html:not([data-theme="light"]) .source-strip__item,
-html:not([data-theme="light"]) .delta-chip span,
-html:not([data-theme="light"]) .pill,
-html:not([data-theme="light"]) .top-nav__link,
-html:not([data-theme="light"]) .pill-button {
-color: #d6e0f2 !important;
-}
-
