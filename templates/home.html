@@ -47,10 +47,10 @@
                     </div>
                     <div class="site-card__actions">
                         {% if site_key %}
-                            <a href="/detail/trend::site::{{ site_key }}" class="pill">Trend history</a>
+                            <a href="/detail/trend::site::{{ site_key }}" class="pill">Historical View</a>
                             <a href="/detail/project::site::{{ site_key }}" class="pill">Project sample</a>
                         {% else %}
-                            <span class="pill">Trend history unavailable</span>
+                            <span class="pill">Historical View unavailable</span>
                             <span class="pill">Project sample unavailable</span>
                         {% endif %}
                     </div>
@@ -120,7 +120,7 @@
             <div class="hero__meta meta-pills">
                 <span class="pill">Users rows: {{ users_row_count or 0 }}</span>
                 <span class="pill">Managed rows: {{ managed_row_count or 0 }}</span>
-                <span class="pill">Trend lookback: {{ trend_lookback or 0 }}</span>
+                <span class="pill">Snapshot history depth: {{ trend_lookback or 0 }}</span>
             </div>
         </div>
     </section>
@@ -257,22 +257,22 @@
         </div>
         <div class="grid-4 stat-grid">
             <div class="stat-card">
-                <div class="label">Managed Disabled Accounts</div>
+                <div class="label">Disabled User Accounts</div>
                 <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
                 <div class="note">Managed accounts currently disabled.</div>
             </div>
             <div class="stat-card">
-                <div class="label">No Tracked Jira Site Access</div>
+                <div class="label">Users Without Jira Access</div>
                 <div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div>
                 <div class="note">Accounts without tracked Jira site access in current scope.</div>
             </div>
             <div class="stat-card">
-                <div class="label">Inactive Without Site Access</div>
+                <div class="label">Inactive Users (No Access)</div>
                 <div class="value">{{ estate.inactive_without_site_access or 0 }}</div>
                 <div class="note">Inactive users who appear to have no tracked site access.</div>
             </div>
             <div class="stat-card">
-                <div class="label">Bitbucket Only / No Tracked Jira</div>
+                <div class="label">Bitbucket-only Users</div>
                 <div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div>
                 <div class="note">Users aligned to Bitbucket without tracked Jira presence.</div>
             </div>
@@ -296,7 +296,7 @@
                 <div class="note">Latest collector comparison changes.</div>
             </a>
             <a href="/detail/change::site_attention" class="stat-card stat-card--link">
-                <div class="label">Rising Risk Sites</div>
+                <div class="label">Sites with Increasing Risk</div>
                 <div class="value">{{ change_summary.rising_risk_site_count or 0 }}</div>
                 <div class="note">Sites showing positive historical risk movement.</div>
             </a>
@@ -326,29 +326,29 @@
         {% if trend_has_history %}
         <div class="grid-4 stat-grid trend-card-grid">
             <a href="/detail/trend::summary" class="stat-card stat-card--link trend-card">
-                <div class="label">Snapshots in Lookback</div>
+                <div class="label">Available snapshots</div>
                 <div class="value">{{ trend_lookback or 0 }}</div>
                 <div class="note">Recent snapshots available for historical comparison.</div>
             </a>
             <a href="/detail/trend::risk_risers" class="stat-card stat-card--link trend-card">
-                <div class="label">Rising Risk Sites</div>
+                <div class="label">Sites with Increasing Risk</div>
                 <div class="value">{{ trend_summary.rising_risk_sites or 0 }}</div>
                 <div class="note">Sites with a positive risk trend across snapshot history.</div>
             </a>
             <a href="/detail/trend::sites?sort=trend_score&order=desc" class="stat-card stat-card--link trend-card">
-                <div class="label">Warning / Critical Streaks</div>
+                <div class="label">Sites Repeatedly Flagged</div>
                 <div class="value">{{ trend_summary.warning_or_critical_streak_sites or 0 }}</div>
                 <div class="note">Sites repeatedly remaining under elevated status.</div>
             </a>
             <a href="/detail/trend::sites?sort=unresolved_delta&order=desc" class="stat-card stat-card--link trend-card">
-                <div class="label">Rising Unresolved Sites</div>
+                <div class="label">Sites with Growing Backlog</div>
                 <div class="value">{{ trend_summary.rising_unresolved_sites or 0 }}</div>
                 <div class="note">Sites where unresolved issue backlog is increasing.</div>
             </a>
         </div>
         {% else %}
         <div class="empty-state">
-            <strong>Trend history not available yet.</strong>
+            <strong>Historical View not available yet.</strong>
             <p>Snapshot history needs to exist before historical trend cards can populate on the homepage.</p>
         </div>
         {% endif %}
