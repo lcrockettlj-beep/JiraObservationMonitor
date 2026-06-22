@@ -1,15 +1,17 @@
+
 <nav class="top-nav">
     <a href="/" class="top-nav__brand-wrap" aria-label="GLI home">
         <img src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI" class="top-nav__logo">
-        <span class="top-nav__brand">Jira Observation Monitor</span>
+        <div class="top-nav__brand-block">
+            <span class="top-nav__brand">Jira Observation Monitor</span>
+            <span class="top-nav__subbrand">Observation Command Layer</span>
+        </div>
     </a>
-
     <div class="top-nav__links">
         <a href="/" class="top-nav__link {% if request.path == '/' %}top-nav__link--active{% endif %}">Home</a>
         <a href="/estate" class="top-nav__link {% if request.path == '/estate' %}top-nav__link--active{% endif %}">Estate</a>
         <a href="/reference" class="top-nav__link {% if request.path == '/reference' %}top-nav__link--active{% endif %}">Reference</a>
     </div>
-
     <div class="top-nav__actions">
         <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
     </div>
