@@ -3160,3 +3160,52 @@ Sync run started: 22/06/2026 16:20:37.59
 ✅ Sync complete — runtime + docs + snapshots aligned
 Sync run finished: 22/06/2026 16:20:40.25 (exit code: 0)
 
+
+============================================================
+Sync run started: 22/06/2026 16:30:37.88
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 16:30:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1658
+🔢 Snapshot fields: 1658
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 16:30:40.58 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 16:40:37.88
+============================================================
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+⚠️ Skipped — Flask app is not running
+➡️ Start it: python web.py
+Sync run finished: 22/06/2026 16:40:40.16 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 16:50:37.62
+============================================================
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+⚠️ Skipped — Flask app is not running
+➡️ Start it: python web.py
+Sync run finished: 22/06/2026 16:50:39.93 (exit code: 0)
+
