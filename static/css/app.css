@@ -220,9 +220,11 @@ a {
     margin-bottom: 18px;
     padding: 10px 14px;
     background: var(--panel);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(69,155,227,0.28);
     border-radius: 16px;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.18),
+        0 0 22px rgba(69,155,227,0.10);
     flex-wrap: wrap;
 }
 
@@ -237,7 +239,7 @@ a {
 
 .top-nav__logo {
     display: block;
-    width: 118px;
+    width: 112px;
     height: auto;
     flex: 0 0 auto;
 }
@@ -247,13 +249,15 @@ html[data-theme="light"] .top-nav__logo {
     opacity: 0.92;
 }
 
+
 .top-nav__brand {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text);
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
     white-space: nowrap;
 }
+
 
 .top-nav__links {
     display: flex;
@@ -267,22 +271,25 @@ html[data-theme="light"] .top-nav__logo {
     display: inline-block;
     padding: 8px 12px;
     border-radius: 999px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(69,155,227,0.22);
     color: var(--muted);
     font-size: 13px;
+    transition: all 0.2s ease;
 }
 
 .top-nav__link:hover {
     border-color: rgba(69, 155, 227, 0.45);
-    background: rgba(255,255,255,0.08);
+    background: rgba(69,155,227,0.10);
     color: var(--text);
+    box-shadow: 0 0 12px rgba(69,155,227,0.14);
 }
 
 .top-nav__link--active {
     color: var(--text);
-    border-color: rgba(69, 155, 227, 0.45);
-    background: rgba(69,155,227,0.12);
+    border-color: rgba(69, 155, 227, 0.55);
+    background: rgba(69,155,227,0.16);
+    box-shadow: 0 0 14px rgba(69,155,227,0.18);
 }
 
 .top-nav__actions {
