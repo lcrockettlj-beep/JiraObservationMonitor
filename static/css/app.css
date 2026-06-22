@@ -35,7 +35,7 @@ html[data-theme="light"] {
 }
 
 
-* {
+ {
 box-sizing: border-box;
 }
 
@@ -122,7 +122,7 @@ a {
 
 .pill {
     display: inline-block;
-    margin: 0 0 8px 8px;
+    margin: 0;
     padding: 8px 12px;
     border-radius: 999px;
     background: rgba(69,155,227,0.08);
@@ -377,13 +377,17 @@ html[data-theme="light"] .top-nav__logo {
 }
 
 
+
 .hero__meta {
     text-align: right;
     min-width: 220px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 10px;
 }
+
 
 a, .clickable {
     cursor: pointer;
@@ -398,11 +402,14 @@ a, .clickable {
 }
 
 
+
 .metric-link::after,
-.breakdown-row::after→";.breakdown-row::after {
-margin-left: 6px;
-opacity: 0.6;
+.breakdown-row::after {
+    content: "→";
+    margin-left: 6px;
+    opacity: 0.6;
 }
+
 
 
 
