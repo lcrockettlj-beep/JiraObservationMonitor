@@ -829,3 +829,17 @@ Option A session (full plan) is now complete.
 - + snapshot_index.snapshots[].total_risk_score
 - + snapshot_index.snapshots[].warning_count
 - + stable_sites[].historical_trend_signals[]
+
+## 2026-06-22 - Sprint 9 Close-Out
+
+- Restored runtime Today anchor icon behaviour
+- Added same-day catch-up creation for missed daily anchors
+- Added startup self-heal handling for missing due anchors
+- Hardened startup path against Flask debug reload noise
+
+### Outcome
+Sprint 9 runtime anchor monitoring, catch-up recovery, and startup self-heal are now operational. Morning and evening anchor state is correctly surfaced through the runtime Today indicator, with backend recovery in place if a daily anchor is missed.
+
+
+- 2026-06-22: Sprint 9 closed out - restored anchor icon behaviour, added missed-anchor catch-up, and hardened startup self-heal.
+
