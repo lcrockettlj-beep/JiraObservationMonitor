@@ -1,4 +1,4 @@
-/* FULL HOMEPAGE CSS REPLACEMENT WITH TREND WATCH + INTELLIGENCE */
+/* Homepage dashboard layer */
 .grid-4 {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -7,33 +7,6 @@
 
 .stat-grid {
     margin-top: 14px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 14px;
-    flex-wrap: wrap;
-}
-
-.section-header h2,
-.hero h1,
-.site-card__title-row h3 {
-    font-weight: 700;
-    letter-spacing: 0.01em;
-}
-
-.section-header h2 {
-    margin: 0 0 6px;
-    font-size: 20px;
-}
-
-.section-header p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.5;
 }
 
 .section-header__actions {
@@ -63,6 +36,7 @@
     padding: 10px 14px;
     color: var(--muted);
     font-size: 13px;
+    backdrop-filter: blur(12px);
 }
 
 .stat-card {
@@ -74,31 +48,27 @@
     border-radius: 18px;
     padding: 18px;
     min-height: 118px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.14);
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.14),
+        0 0 16px rgba(69, 155, 227, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    inset: auto -30px -30px auto;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(69, 155, 227, 0.12) 0%, rgba(69, 155, 227, 0) 72%);
+    pointer-events: none;
 }
 
 .stat-card--link:hover {
     border-color: rgba(69, 155, 227, 0.45);
     transform: translateY(-1px);
-}
-
-.label {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 12px;
-}
-
-.value {
-    font-size: 30px;
-    line-height: 1;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.note {
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.55;
 }
 
 .intelligence-panel,
@@ -133,7 +103,6 @@
     border-width: 1px;
 }
 
-/* Sprint 8 - extend visual hierarchy to intelligence cards */
 .intelligence-card--healthy {
     border-color: rgba(45, 190, 127, 0.28);
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
@@ -178,22 +147,33 @@
     gap: 16px;
     min-height: 380px;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.site-card::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 auto;
+    width: 180px;
+    height: 120px;
+    background:
+        radial-gradient(circle at 70% 60%, rgba(69, 155, 227, 0.12), transparent 45%),
+        radial-gradient(circle at 45% 65%, rgba(139, 92, 246, 0.10), transparent 34%);
+    pointer-events: none;
 }
 
 .site-card:hover {
     transform: translateY(-2px);
 }
 
-/* WARNING — subtle glow */
 .site-card--warning {
     border-left-color: var(--warning);
     box-shadow:
         0 0 16px rgba(240, 178, 74, 0.40),
         inset 0 0 10px rgba(240, 178, 74, 0.05);
-
 }
 
-/* CRITICAL — stronger glow + pulse */
 .site-card--critical {
     border-left-color: var(--critical);
     box-shadow:
@@ -279,14 +259,13 @@
     gap: 10px;
 }
 
-
 .metric-box {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 14px;
     padding: 13px;
+    backdrop-filter: blur(8px);
 }
-
 
 .metric-label {
     font-size: 13px;
@@ -314,10 +293,9 @@
     gap: 10px;
 }
 
-
 .delta-chip {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 14px;
     padding: 9px 12px;
     display: flex;
@@ -326,7 +304,6 @@
     gap: 8px;
     font-size: 13px;
 }
-
 
 .delta-chip span {
     color: var(--muted);
@@ -348,27 +325,22 @@
 }
 
 .chip--muted {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--muted);
 }
 
 .chip--accent {
-    background: rgba(69,155,227,0.14);
+    background: linear-gradient(
+        135deg,
+        rgba(69, 155, 227, 0.14),
+        rgba(139, 92, 246, 0.12)
+    );
     color: var(--accent);
 }
 
 .chip--warning {
-    background: rgba(240,178,74,0.14);
+    background: rgba(240, 178, 74, 0.14);
     color: var(--warning);
-}
-
-.empty-state {
-    margin-top: 14px;
-    padding: 18px;
-    border-radius: 16px;
-    border: 1px dashed var(--border);
-    color: var(--muted);
-    background: rgba(255,255,255,0.02);
 }
 
 @media (max-width: 1160px) {
