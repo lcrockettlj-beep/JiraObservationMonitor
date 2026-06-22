@@ -55,7 +55,7 @@
         right: 18px;
         bottom: 18px;
         z-index: 9999;
-        width: 308px;
+        width: 292px;
         max-width: calc(100vw - 24px);
         border: 1px solid rgba(90,194,255,0.26);
         border-radius: 22px;
@@ -249,11 +249,10 @@
       <div id="jom-detail-wrap">
         <div class="jom-body">
           <div class="jom-card"><div class="jom-label">Next refresh</div><div class="jom-value" id="jom-countdown">10:00</div></div>
-          <div class="jom-card"><div class="jom-label">Health</div><div class="jom-value" id="jom-source-status">Healthy</div></div>
+          <div class="jom-card"><div class="jom-label">Last sync</div><div class="jom-value" id="jom-last-sync">—</div></div>
         </div>
         <div class="jom-insights" id="jom-insights"></div>
         <div class="jom-body jom-automation-status">
-          <div class="jom-card"><div class="jom-label">Last sync</div><div class="jom-value" id="jom-last-sync">—</div></div>
           <div class="jom-card"><div class="jom-label">Auto sync</div><div class="jom-value" id="jom-auto-status">—</div></div>
           <div class="jom-card"><div class="jom-label">Today</div><div class="jom-value" id="jom-anchors-today">—</div></div>
         </div>
@@ -318,14 +317,19 @@
     if (topRisks.length > 0) insights.push(`${topRisks.length} intelligence risk${topRisks.length === 1 ? '' : 's'}`);
     if ((estate.managed_disabled_accounts || 0) > 0 || criticalSites > 0) return { level: 'critical', label: 'Critical attention', insights };
     if ((estate.mfa_disabled_accounts || 0) > 0 || (estate.not_in_userbase_count || 0) > 0 || warningSites > 0 || topRisks.length > 0) return { level: 'warning', label: 'Warning attention', insights };
-    return { level: 'healthy', label: 'Healthy', insights: insights.length ? insights : ['No active runtime alerts'] };
+    return { level: 'healthy', label: 'Healthy', insights: insights.length ? insights : [] };
   }
 
   function updateInsights() {
     const wrap = document.getElementById('jom-insights');
     if (!wrap) return;
     wrap.innerHTML = '';
-    const items = state.insights && state.insights.length ? state.insights : [`State: ${state.healthLabel}`];
+    const items = state.insights && state.insights.length ? state.insights : [];
+    if (!items.length) {
+      wrap.style.display = 'none';
+      return;
+    }
+    wrap.style.display = 'flex';
     for (const item of items.slice(0, 3)) {
       const pill = document.createElement('span');
       pill.className = 'jom-pill';
@@ -334,21 +338,30 @@
     }
   }
 
+  function updateHeroTelemetry() {
+    const nextRefresh = document.getElementById('hero-next-refresh');
+    const lastSync = document.getElementById('hero-last-sync');
+    const autoSync = document.getElementById('hero-auto-sync');
+    if (nextRefresh) nextRefresh.textContent = formatCountdown(state.countdown);
+    if (lastSync) lastSync.textContent = formatAge(state.lastSyncAgeSeconds);
+    if (autoSync) autoSync.textContent = state.autoSyncActive ? 'Active' : 'Stale';
+  }
+
   function updateBadge() {
     const sourceStatus = document.getElementById('jom-source-status');
     const countdown = document.getElementById('jom-countdown');
     const runtimeMode = document.getElementById('jom-runtime-mode');
     const footer = document.getElementById('jom-footer-text');
     const toggleBtn = document.getElementById('jom-toggle-refresh');
-    if (!sourceStatus || !countdown || !runtimeMode || !footer || !toggleBtn) return;
+    if (!countdown || !runtimeMode || !footer || !toggleBtn) return;
     runtimeMode.textContent = asText(state.sourceMode, 'runtime');
-    sourceStatus.textContent = state.sourceError ? 'Error' : state.healthLabel;
     countdown.textContent = formatCountdown(state.countdown);
     toggleBtn.textContent = isPaused() ? 'Resume refresh' : 'Pause refresh';
     footer.textContent = isPaused() ? 'Auto-refresh paused in this browser. Backend loop can keep running.' : 'Auto-refresh armed for a full page reload every 600 seconds.';
     setHealthClass();
     updateInsights();
     applyCollapsedState();
+    updateHeroTelemetry();
 
     const lastSyncEl = document.getElementById('jom-last-sync');
     if (lastSyncEl) lastSyncEl.textContent = formatAge(state.lastSyncAgeSeconds);

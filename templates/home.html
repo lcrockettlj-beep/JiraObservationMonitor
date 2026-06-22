@@ -146,20 +146,19 @@
                     <div class="command-core__center">
                         <span class="command-core__label">Operational posture</span>
                         <strong class="command-core__value">{{ estate_risk_category or 'Healthy' }}</strong>
-                        <span class="command-core__score">Risk score {{ estate_risk_score or 0 }}</span>
                     </div>
                     <div class="command-core__legend">
                         <div class="command-core__chip">
-                            <div class="command-core__chip-label">Global scope</div>
-                            <div class="command-core__chip-value">Compliance-grade observation</div>
+                            <div class="command-core__chip-label">Next refresh</div>
+                            <div class="command-core__chip-value" id="hero-next-refresh">10:00</div>
                         </div>
                         <div class="command-core__chip">
-                            <div class="command-core__chip-label">Integrity mode</div>
-                            <div class="command-core__chip-value">Read-only telemetry</div>
+                            <div class="command-core__chip-label">Last sync</div>
+                            <div class="command-core__chip-value" id="hero-last-sync">—</div>
                         </div>
                         <div class="command-core__chip">
-                            <div class="command-core__chip-label">Estate focus</div>
-                            <div class="command-core__chip-value">Operational precision</div>
+                            <div class="command-core__chip-label">Auto sync</div>
+                            <div class="command-core__chip-value" id="hero-auto-sync">—</div>
                         </div>
                     </div>
                 </div>
