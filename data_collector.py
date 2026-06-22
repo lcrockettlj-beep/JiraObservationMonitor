@@ -57,7 +57,7 @@ def _site_key_from_name(name: str) -> str:
 
 
 def _escape_project_key(value: str) -> str:
-    return str(value or "").replace('"', '\\"')
+    return str(value or "").replace('"', '\"')
 
 
 
@@ -392,6 +392,59 @@ def _collect_site(resource: Dict[str, Any], client: JiraApiClient, previous_site
 
 
 
+def _build_collector_exception_site(resource: Dict[str, Any], exc: Exception, first_snapshot: bool) -> Dict[str, Any]:
+    site_name = resource.get("name", "")
+    return {
+        "site_key": _site_key_from_name(site_name),
+        "name": site_name,
+        "url": resource.get("url", ""),
+        "cloud_id": resource.get("id", ""),
+        "collected_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "collection_duration_seconds": 0,
+        "project_count": 0,
+        "project_rows": [],
+        "project_key_count_used_for_queries": 0,
+        "issue_count_total": 0,
+        "issue_count_unresolved": 0,
+        "issue_count_updated_last_7d": 0,
+        "project_count_delta": 0,
+        "total_users_delta": 0,
+        "active_users_delta": 0,
+        "inactive_users_delta": 0,
+        "issue_count_total_delta": 0,
+        "issue_count_unresolved_delta": 0,
+        "user_summary": {
+            "total_users": None,
+            "active_users": None,
+            "inactive_users": None,
+            "source": "Collector exception before user enrichment",
+        },
+        "licence_summary": {
+            "licensed_users_estimate": None,
+            "source": "Collector exception before licence enrichment",
+        },
+        "risk_score": 8,
+        "issue_risk_score": 0,
+        "operational_risk_score": 8,
+        "status": "critical",
+        "status_reasons": [f"Collector exception: {exc}"],
+        "scope_notes": [],
+        "growth_status": "unknown",
+        "permission_limited_checks": ["collector_exception"],
+        "blocking_failed_checks": ["collector_exception"],
+        "issue_risk_signals": [],
+        "operational_risk_signals": ["collector_exception"],
+        "failed_api_checks": 1,
+        "audit_status": "collector_exception",
+        "audit_api_access": False,
+        "licence_status": "collector_exception",
+        "licence_api_access": False,
+        "snapshot_baseline": first_snapshot,
+        "endpoint_results": {"collector_exception": str(exc)},
+    }
+
+
+
 def _build_comparison(current_sites: List[Dict[str, Any]], previous_site_map: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
     changes: List[Dict[str, Any]] = []
     for site in current_sites:
@@ -443,6 +496,90 @@ def _build_comparison(current_sites: List[Dict[str, Any]], previous_site_map: Di
 
 
 
+def _build_degraded_latest_run(run_timestamp_local: str, collected_at_utc: str, error_message: str) -> Dict[str, Any]:
+    return {
+        "run_timestamp_local": run_timestamp_local,
+        "raw_collection_summary": {
+            "collected_at_utc": collected_at_utc,
+            "accessible_resource_count": 0,
+            "monitored_site_count": 0,
+            "legacy_ignored_site_names_present_in_env": LEGACY_IGNORED_SITE_NAMES,
+            "monitor_only_site_names": MONITOR_ONLY_SITE_NAMES,
+            "note": "Collector entered degraded mode before site processing started.",
+            "required_scopes": REQUIRED_SCOPES,
+            "optional_scopes": OPTIONAL_SCOPES,
+            "permissions_query": PERMISSIONS_QUERY,
+            "search_max_results": SEARCH_MAX_RESULTS,
+            "project_sample_limit": PROJECT_SAMPLE_LIMIT,
+            "safe_mode": True,
+            "safe_mode_features": {
+                "sequential_site_processing": True,
+                "progress_logging": True,
+                "partial_file_written": str(PARTIAL_RUN_PATH),
+                "audit_checks_enabled": ENABLE_AUDIT_CHECKS,
+                "application_role_checks_enabled": ENABLE_APPLICATION_ROLE_CHECKS,
+                "per_project_issue_loops": False,
+                "search_endpoint": "/rest/api/3/search/jql",
+                "mypermissions_fixed": True,
+                "search_max_results_fixed": True,
+                "bounded_total_issue_queries": True,
+                "full_project_key_set_used_for_queries": True,
+                "sampled_project_rows_for_display_only": True,
+            },
+            "collector": "data_collector.py (safe mode patch 2.4)",
+            "collection_ok": False,
+            "degraded": True,
+            "error": str(error_message),
+        },
+        "summary": {
+            "site_count": 0,
+            "project_count_total": 0,
+            "issue_count_total": 0,
+            "issue_count_unresolved_total": 0,
+            "issue_count_updated_last_7d_total": 0,
+        },
+        "risk_summary": {
+            "stable_site_count": 0,
+            "warning_site_count": 0,
+            "critical_site_count": 0,
+            "permission_limited_site_count": 0,
+            "collector_exception_site_count": 0,
+        },
+        "delta_summary": {
+            "project_delta_total": 0,
+            "total_users_delta_total": 0,
+            "active_users_delta_total": 0,
+            "inactive_users_delta_total": 0,
+            "licensed_users_estimate_delta_total": 0,
+        },
+        "sites": [],
+        "comparison": {
+            "has_previous_snapshot": False,
+            "change_count": 0,
+            "info_change_count": 0,
+            "warning_change_count": 0,
+            "critical_change_count": 0,
+            "changes": [],
+        },
+        "historical_trends": {
+            "has_history": False,
+            "lookback_snapshots": 0,
+            "site_trends": [],
+            "summary": {
+                "site_count": 0,
+                "warning_or_critical_streak_sites": 0,
+                "rising_unresolved_sites": 0,
+                "rising_risk_sites": 0,
+                "recurring_blocking_failure_sites": 0,
+            },
+            "error": "Collector did not reach trend analysis because startup failed.",
+        },
+        "snapshot_files": [],
+        "report_files": [],
+    }
+
+
+
 def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
     run_timestamp_local, collected_at_utc = _now_strings()
     resources = client.list_accessible_resources()
@@ -461,60 +598,15 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
     first_snapshot = not bool(previous_site_map)
 
     site_results: List[Dict[str, Any]] = []
+    collector_exception_sites = 0
     for index, resource in enumerate(monitored_resources, start=1):
         site_name = resource.get("name", "")
         _print(f"[{index}/{len(monitored_resources)}] Collecting site: {site_name}")
         try:
             site_record = _collect_site(resource, client, previous_site_map, first_snapshot)
         except Exception as exc:
-            site_record = {
-                "site_key": _site_key_from_name(site_name),
-                "name": site_name,
-                "url": resource.get("url", ""),
-                "cloud_id": resource.get("id", ""),
-                "collected_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "collection_duration_seconds": 0,
-                "project_count": 0,
-                "project_rows": [],
-                "project_key_count_used_for_queries": 0,
-                "issue_count_total": 0,
-                "issue_count_unresolved": 0,
-                "issue_count_updated_last_7d": 0,
-                "project_count_delta": 0,
-                "total_users_delta": 0,
-                "active_users_delta": 0,
-                "inactive_users_delta": 0,
-                "issue_count_total_delta": 0,
-                "issue_count_unresolved_delta": 0,
-                "user_summary": {
-                    "total_users": None,
-                    "active_users": None,
-                    "inactive_users": None,
-                    "source": "Collector exception before user enrichment",
-                },
-                "licence_summary": {
-                    "licensed_users_estimate": None,
-                    "source": "Collector exception before licence enrichment",
-                },
-                "risk_score": 8,
-                "issue_risk_score": 0,
-                "operational_risk_score": 8,
-                "status": "critical",
-                "status_reasons": [f"Collector exception: {exc}"],
-                "scope_notes": [],
-                "growth_status": "unknown",
-                "permission_limited_checks": ["collector_exception"],
-                "blocking_failed_checks": ["collector_exception"],
-                "issue_risk_signals": [],
-                "operational_risk_signals": ["collector_exception"],
-                "failed_api_checks": 1,
-                "audit_status": "collector_exception",
-                "audit_api_access": False,
-                "licence_status": "collector_exception",
-                "licence_api_access": False,
-                "snapshot_baseline": first_snapshot,
-                "endpoint_results": {"collector_exception": str(exc)},
-            }
+            collector_exception_sites += 1
+            site_record = _build_collector_exception_site(resource, exc, first_snapshot)
         site_results.append(site_record)
         _save_partial(run_timestamp_local, collected_at_utc, site_results, resources)
         _print(f"Completed site: {site_name} | projects={site_record.get('project_count', 0)} | query_keys={site_record.get('project_key_count_used_for_queries', 0)} | issues={site_record.get('issue_count_total', 0)} | unresolved={site_record.get('issue_count_unresolved', 0)} | status={site_record.get('status', '')}")
@@ -534,6 +626,7 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
         "warning_site_count": len([site for site in site_results if site.get("status") == "warning"]),
         "critical_site_count": len([site for site in site_results if site.get("status") == "critical"]),
         "permission_limited_site_count": len([site for site in site_results if site.get("permission_limited_checks")]),
+        "collector_exception_site_count": collector_exception_sites,
     }
 
     delta_summary = {
@@ -576,6 +669,9 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
                 "sampled_project_rows_for_display_only": True,
             },
             "collector": "data_collector.py (safe mode patch 2.4)",
+            "collection_ok": True,
+            "degraded": collector_exception_sites > 0,
+            "collector_exception_site_count": collector_exception_sites,
         },
         "summary": summary,
         "risk_summary": risk_summary,
@@ -613,9 +709,24 @@ def _build_latest_run(client: JiraApiClient) -> Dict[str, Any]:
 
 def main() -> int:
     _print("Starting Step 2.4 Safe Mode patch live Jira collector...")
-    access_token = get_valid_access_token()
-    client = JiraApiClient(access_token=access_token)
-    latest_run = _build_latest_run(client)
+    try:
+        access_token = get_valid_access_token()
+        client = JiraApiClient(access_token=access_token)
+        latest_run = _build_latest_run(client)
+    except Exception as exc:
+        run_timestamp_local, collected_at_utc = _now_strings()
+        latest_run = _build_degraded_latest_run(run_timestamp_local, collected_at_utc, str(exc))
+        _safe_json_write(LATEST_RUN_PATH, latest_run, pretty=False)
+        _safe_json_write(LATEST_RUN_PRETTY_PATH, latest_run, pretty=True)
+        _print("Step 2.4 Safe Mode patch live Jira collector completed in degraded mode.")
+        _print(f"Reason: {exc}")
+        _print(f"latest_run.json: {LATEST_RUN_PATH}")
+        _print(f"latest_run_pretty.json: {LATEST_RUN_PRETTY_PATH}")
+        _print(f"latest_run_safe_partial.json: {PARTIAL_RUN_PATH}")
+        _print(f"latest_snapshot.json: {LATEST_SNAPSHOT_PATH}")
+        _print(f"snapshot_index.json: {SNAPSHOT_INDEX_PATH}")
+        return 0
+
     _safe_json_write(LATEST_RUN_PATH, latest_run, pretty=False)
     _safe_json_write(LATEST_RUN_PRETTY_PATH, latest_run, pretty=True)
 
@@ -624,6 +735,7 @@ def main() -> int:
     _print(f"Projects total: {latest_run.get('summary', {}).get('project_count_total', 0)}")
     _print(f"Issues total: {latest_run.get('summary', {}).get('issue_count_total', 0)}")
     _print(f"Unresolved total: {latest_run.get('summary', {}).get('issue_count_unresolved_total', 0)}")
+    _print(f"Collector exception sites: {latest_run.get('risk_summary', {}).get('collector_exception_site_count', 0)}")
     _print(f"latest_run.json: {LATEST_RUN_PATH}")
     _print(f"latest_run_pretty.json: {LATEST_RUN_PRETTY_PATH}")
     _print(f"latest_run_safe_partial.json: {PARTIAL_RUN_PATH}")
