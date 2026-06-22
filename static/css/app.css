@@ -5,17 +5,20 @@
     font-style: normal;
     font-display: swap;
 }
+
 :root {
-    --bg: #0b122b;
-    --panel: rgba(20, 33, 86, 0.84);
+    --bg: #071127;
+    --panel: rgba(20, 33, 86, 0.90);
     --panel-solid: #13204b;
     --border: rgba(69, 155, 227, 0.24);
-    --text: #ffffff;
-    --muted: #b6c3df;
+    --text: #f7fbff;
+    --muted: #d6e0f2;
     --critical: #e14b5a;
     --warning: #f0b24a;
     --stable: #2dbe7f;
     --accent: #459be3;
+    --gli-blue: #009;
+    --gli-blue-bright: #0d6efd;
 }
 
 html[data-theme="light"] {
@@ -35,9 +38,13 @@ html[data-theme="light"] {
     box-sizing: border-box;
 }
 
+html, body {
+    min-height: 100%;
+}
+
 body {
     margin: 0;
-    font-family:ventor", "Segoe UI", Arial, Helvetica, sans-serif;
+    font-family: "TeXGyreAdventor", "Segoe UI", Arial, Helvetica, sans-serif;
     color: var(--text);
     background:
         radial-gradient(circle at top left, rgba(69,155,227,0.15), transparent 28%),
@@ -202,13 +209,6 @@ a {
     flex-wrap: wrap;
 }
 
-.top-nav__brand {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 0.03em;
-    white-space: nowrap;
-}
 .top-nav__brand-wrap {
     display: flex;
     align-items: center;
@@ -227,9 +227,8 @@ a {
 
 html[data-theme="light"] .top-nav__logo {
     filter: brightness(0) saturate(100%);
-    opacity: 0.9;
+    opacity: 0.92;
 }
-
 
 .top-nav__brand {
     font-size: 14px;
@@ -290,7 +289,8 @@ html[data-theme="light"] .top-nav__logo {
         flex-direction: column;
         align-items: flex-start;
     }
-.top-nav__brand-wrap {
+
+    .top-nav__brand-wrap {
         width: 100%;
     }
 
@@ -309,4 +309,33 @@ html[data-theme="light"] .top-nav__logo {
     .top-nav__actions {
         width: 100%;
     }
+}
+
+/* Sprint 8 - dark mode text visibility fix */
+html:not([data-theme="light"]) h1,
+html:not([data-theme="light"]) h2,
+html:not([data-theme="light"]) h3,
+html:not([data-theme="light"]) .value,
+html:not([data-theme="light"]) .metric-value,
+html:not([data-theme="light"]) .site-card__title-row h3,
+html:not([data-theme="light"]) .section-header h2,
+html:not([data-theme="light"]) .hero h1,
+html:not([data-theme="light"]) .stat-card .value,
+html:not([data-theme="light"]) .intelligence-card .value,
+html:not([data-theme="light"]) .top-nav__brand {
+    color: #f7fbff !important;
+}
+
+html:not([data-theme="light"]) .label,
+html:not([data-theme="light"]) .note,
+html:not([data-theme="light"]) .metric-note,
+html:not([data-theme="light"]) .metric-label,
+html:not([data-theme="light"]) .site-card__sub,
+html:not([data-theme="light"]) .section-header p,
+html:not([data-theme="light"]) .source-strip__item,
+html:not([data-theme="light"]) .delta-chip span,
+html:not([data-theme="light"]) .pill,
+html:not([data-theme="light"]) .top-nav__link,
+html:not([data-theme="light"]) .pill-button {
+    color: #d6e0f2 !important;
 }

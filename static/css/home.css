@@ -17,6 +17,13 @@
     flex-wrap: wrap;
 }
 
+.section-header h2,
+.hero h1,
+.site-card__title-row h3 {
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
 .section-header h2 {
     margin: 0 0 6px;
     font-size: 20px;
@@ -25,6 +32,8 @@
 .section-header p {
     margin: 0;
     color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .section-header__actions {
@@ -87,8 +96,8 @@
 
 .note {
     color: var(--muted);
-    font-size: 13px;
-    line-height: 1.45;
+    font-size: 14px;
+    line-height: 1.55;
 }
 
 .intelligence-panel,
@@ -124,7 +133,6 @@
 }
 
 /* Sprint 8 - extend visual hierarchy to intelligence cards */
-
 .intelligence-card--healthy {
     border-color: rgba(45, 190, 127, 0.28);
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
@@ -168,44 +176,30 @@
     flex-direction: column;
     gap: 14px;
     min-height: 360px;
-}
-/* === Sprint 8: Visual Hierarchy Enhancement === */
-
-/* Base transition */
-.site-card {
     transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Hover effect */
 .site-card:hover {
     transform: translateY(-2px);
 }
 
 /* WARNING — subtle glow */
 .site-card--warning {
+    border-left-color: var(--warning);
     box-shadow: 0 0 12px rgba(240, 178, 74, 0.35);
 }
 
 /* CRITICAL — stronger glow + pulse */
 .site-card--critical {
+    border-left-color: var(--critical);
     box-shadow: 0 0 16px rgba(225, 75, 90, 0.5);
     animation: criticalPulse 2.4s ease-in-out infinite;
 }
 
-/* Pulse animation */
 @keyframes criticalPulse {
     0%   { box-shadow: 0 0 10px rgba(225, 75, 90, 0.35); }
     50%  { box-shadow: 0 0 22px rgba(225, 75, 90, 0.65); }
     100% { box-shadow: 0 0 10px rgba(225, 75, 90, 0.35); }
-}
-
-
-.site-card--critical {
-    border-left-color: var(--critical);
-}
-
-.site-card--warning {
-    border-left-color: var(--warning);
 }
 
 .site-card--stable,
@@ -236,7 +230,8 @@
 .site-card__sub {
     margin: 8px 0 0;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .site-card__actions {
@@ -286,9 +281,10 @@
 }
 
 .metric-label {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--muted);
     margin-bottom: 10px;
+    font-weight: 600;
 }
 
 .metric-value {
@@ -299,8 +295,9 @@
 }
 
 .metric-note {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--muted);
+    line-height: 1.45;
 }
 
 .delta-grid {
