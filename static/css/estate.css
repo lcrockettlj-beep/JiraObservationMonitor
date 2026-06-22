@@ -1,0 +1,109 @@
+.estate-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.estate-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+    display: block;
+}
+
+.estate-card:hover {
+    border-color: rgba(69,155,227,0.45);
+    background: rgba(255,255,255,0.06);
+}
+
+.estate-title {
+    font-size: 14px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+}
+
+.estate-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.estate-sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.estate-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.estate-panel {
+    padding: 18px;
+}
+
+.hero__back {
+    margin-bottom: 10px;
+}
+
+.metric-inline-note {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.site-flags {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 11px;
+}
+
+.status-pill {
+    padding: 4px 8px;
+    border-radius: 999px;
+}
+
+.status-pill--good {
+    background: rgba(45,190,127,0.15);
+    border: 1px solid rgba(45,190,127,0.4);
+}
+
+.status-pill--warning {
+    background: rgba(240,178,74,0.15);
+    border: 1px solid rgba(240,178,74,0.4);
+}
+
+.status-pill--critical {
+    background: rgba(225,75,90,0.15);
+    border: 1px solid rgba(225,75,90,0.4);
+}
+
+.usage-row--spaced {
+    margin-top: 8px;
+}
+
+@media (max-width: 1160px) {
+    .estate-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .estate-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .estate-grid {
+        grid-template-columns: 1fr;
+    }
+}

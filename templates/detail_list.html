@@ -15,14 +15,14 @@
     <section class="hero">
         <div class="hero__top">
             <div>
-                <div style="margin-bottom:10px;"><a href="/" class="text-link">&larr; Back to homepage</a></div>
+                <div class="hero__back"><a href="/" class="text-link">&larr; Back to operational overview</a></div>
                 <h1>{{ title }}</h1>
-                <p>Why it stands out: {{ reason }}</p>
-                <p style="margin-top:8px;">Go to Atlassian: {{ atlassian_area }}</p>
+                <p>Reason for this view: {{ reason }}</p>
+                <p class="detail-context">Where to look in Atlassian: {{ atlassian_area }}</p>
             </div>
             <div class="hero__meta">
                 <div class="pill">{{ rows|length }} record(s)</div>
-                <div class="pill">Sort by clicking a column heading</div>
+                <div class="pill">Click a column heading to sort</div>
             </div>
         </div>
     </section>
@@ -54,14 +54,13 @@
             </table>
         </div>
         {% else %}
-        <div class="empty">No records are currently available for this drilldown.</div>
+        <div class="empty">No records are currently available for this view.</div>
         {% endif %}
     </section>
 </div>
 <script>
     window.JOMTheme.initToggle("theme-toggle");
 </script>
-  <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
-
