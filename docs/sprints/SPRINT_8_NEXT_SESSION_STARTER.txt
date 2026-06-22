@@ -1,14 +1,5 @@
 SPRINT 8 NEXT SESSION STARTER
 =============================
-
-1. Backup current estate/reference/detail templates.
-2. Replace them with the cleaned versions from the Sprint 8 pack.
-3. Add estate.css and reference.css into static/css/.
-4. Verify /estate, /reference, and a detail page all return HTTP 200.
-5. Commit the Sprint 8 Pillar 3C milestone.
-
-Verification commands:
-Invoke-WebRequest http://127.0.0.1:5000/estate -TimeoutSec 5 -UseBasicParsing | Select-Object StatusCode
-Invoke-WebRequest http://127.0.0.1:5000/reference -TimeoutSec 5 -UseBasicParsing | Select-Object StatusCode
-Invoke-WebRequest http://127.0.0.1:5000/detail/change::summary -TimeoutSec 5 -UseBasicParsing | Select-Object StatusCode
-Invoke-RestMethod http://127.0.0.1:5000/api/source-state -TimeoutSec 5 | Select-Object source_mode, auto_sync_active
+1. Verify /estate, /reference, and a detail page all return HTTP 200.
+2. Check theme toggle on each page.
+3. Commit the Sprint 8 Pillar 3C milestone.

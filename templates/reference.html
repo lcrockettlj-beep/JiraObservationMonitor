@@ -12,7 +12,6 @@
 <body>
 <div class="page">
     {% include "_nav.html" %}
-
     <section class="hero">
         <div class="hero__top">
             <div>
@@ -26,21 +25,15 @@
             </div>
         </div>
     </section>
-
     <div class="reference-grid">
         <div class="reference-panel">
             <div class="section__header"><h2>Products in use</h2><div class="count">Select a product to inspect users</div></div>
             {% if org_product_breakdown %}
-            <div class="reference-list">
-                {% for item in org_product_breakdown %}
-                <a href="/detail/product::{{ item.key }}" class="reference-row"><div class="reference-label">{{ item.label }}</div><div class="reference-value">{{ item.count }}</div></a>
-                {% endfor %}
-            </div>
+            <div class="reference-list">{% for item in org_product_breakdown %}<a href="/detail/product::{{ item.key }}" class="reference-row"><div class="reference-label">{{ item.label }}</div><div class="reference-value">{{ item.count }}</div></a>{% endfor %}</div>
             {% else %}
             <div class="empty">No product breakdown is currently available.</div>
             {% endif %}
         </div>
-
         <div class="reference-panel">
             <div class="section__header"><h2>Billing & marketplace coverage</h2><div class="count">Select an area to inspect app entries</div></div>
             <div class="reference-list">
@@ -53,17 +46,10 @@
             </div>
         </div>
     </div>
-
     <section class="section">
         <div class="section__header"><h2>User access breakdown</h2><div class="count">Select an access area to inspect users</div></div>
         {% if users_export_breakdown %}
-        <div class="panel reference-panel-inline">
-            <div class="breakdown-list">
-                {% for item in users_export_breakdown %}
-                <a href="/detail/access::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>
-                {% endfor %}
-            </div>
-        </div>
+        <div class="panel reference-panel-inline"><div class="breakdown-list">{% for item in users_export_breakdown %}<a href="/detail/access::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>{% endfor %}</div></div>
         {% else %}
         <div class="empty">No user access breakdown is currently available.</div>
         {% endif %}
