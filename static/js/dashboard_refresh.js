@@ -52,21 +52,21 @@
     style.textContent = `
       #jom-auto-refresh-badge {
         position: fixed;
-        right: 16px;
-        bottom: 16px;
+        right: 18px;
+        bottom: 18px;
         z-index: 9999;
-        width: 292px;
+        width: 308px;
         max-width: calc(100vw - 24px);
-        border: 1px solid rgba(83,182,255,0.26);
-        border-radius: 20px;
-        background: linear-gradient(180deg, rgba(10,20,48,0.94), rgba(8,17,40,0.92));
+        border: 1px solid rgba(90,194,255,0.26);
+        border-radius: 22px;
+        background: linear-gradient(180deg, rgba(8,17,40,0.96), rgba(6,12,31,0.94));
         color: #eef5ff;
-        backdrop-filter: blur(22px);
+        backdrop-filter: blur(24px);
         box-shadow:
-          0 18px 40px rgba(0,0,0,0.42),
-          0 0 24px rgba(83,182,255,0.12),
-          inset 0 1px 0 rgba(255,255,255,0.05);
-        font: 12px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+          0 22px 48px rgba(0,0,0,0.48),
+          0 0 28px rgba(90,194,255,0.12),
+          inset 0 1px 0 rgba(255,255,255,0.06);
+        font: 12px/1.36 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         overflow: hidden;
         transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
       }
@@ -75,29 +75,23 @@
         color: #13233d;
         border-color: rgba(46,121,199,0.24);
         box-shadow:
-          0 20px 38px rgba(15,23,42,0.14),
+          0 22px 42px rgba(15,23,42,0.14),
           0 0 18px rgba(46,121,199,0.10),
-          inset 0 1px 0 rgba(255,255,255,0.96);
+          inset 0 1px 0 rgba(255,255,255,0.98);
       }
       #jom-auto-refresh-badge * { box-sizing: border-box; }
-      #jom-auto-refresh-badge.jom-healthy {
-        border-color: rgba(57,218,149,0.34);
-      }
+      #jom-auto-refresh-badge.jom-healthy { border-color: rgba(60,225,156,0.34); }
       #jom-auto-refresh-badge.jom-warning {
-        border-color: rgba(255,190,89,0.40);
-        box-shadow:
-          0 18px 40px rgba(0,0,0,0.44),
-          0 0 34px rgba(255,190,89,0.20);
+        border-color: rgba(255,190,86,0.40);
+        box-shadow: 0 22px 48px rgba(0,0,0,0.50), 0 0 34px rgba(255,190,86,0.20);
       }
       #jom-auto-refresh-badge.jom-critical {
-        border-color: rgba(255,100,130,0.44);
-        box-shadow:
-          0 18px 40px rgba(0,0,0,0.46),
-          0 0 38px rgba(255,100,130,0.24);
+        border-color: rgba(255,95,122,0.44);
+        box-shadow: 0 22px 48px rgba(0,0,0,0.52), 0 0 38px rgba(255,95,122,0.24);
       }
       #jom-auto-refresh-badge.jom-collapsed {
         width: auto;
-        min-width: 188px;
+        min-width: 200px;
       }
       #jom-auto-refresh-badge .jom-head {
         display: flex;
@@ -106,7 +100,7 @@
         gap: 8px;
         padding: 12px 12px 10px;
         border-bottom: 1px solid rgba(255,255,255,0.05);
-        background: linear-gradient(90deg, rgba(83,182,255,0.10), rgba(139,92,246,0.06));
+        background: linear-gradient(90deg, rgba(90,194,255,0.10), rgba(139,92,246,0.06));
       }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-head {
         border-bottom-color: rgba(46,121,199,0.10);
@@ -128,23 +122,21 @@
         text-transform: uppercase;
         margin-top: 2px;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-subtitle {
-        color: #6a7d96;
-      }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-subtitle { color: #6a7d96; }
       #jom-auto-refresh-badge .jom-dot {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background: #39da95;
-        box-shadow: 0 0 0 3px rgba(57,218,149,0.24), 0 0 10px rgba(57,218,149,0.28);
+        background: #3ce19c;
+        box-shadow: 0 0 0 3px rgba(60,225,156,0.24), 0 0 10px rgba(60,225,156,0.30);
       }
       #jom-auto-refresh-badge .jom-dot.warn {
-        background: #ffbe59;
-        box-shadow: 0 0 0 3px rgba(255,190,89,0.26), 0 0 12px rgba(255,190,89,0.30);
+        background: #ffbe56;
+        box-shadow: 0 0 0 3px rgba(255,190,86,0.26), 0 0 12px rgba(255,190,86,0.30);
       }
       #jom-auto-refresh-badge .jom-dot.error {
-        background: #ff6482;
-        box-shadow: 0 0 0 3px rgba(255,100,130,0.28), 0 0 14px rgba(255,100,130,0.34);
+        background: #ff5f7a;
+        box-shadow: 0 0 0 3px rgba(255,95,122,0.28), 0 0 14px rgba(255,95,122,0.34);
       }
       #jom-auto-refresh-badge .jom-meta {
         display: flex;
@@ -152,25 +144,21 @@
         gap: 6px;
         color: #aeb8c9;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-meta {
-        color: #5d6d85;
-      }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-meta { color: #5d6d85; }
       #jom-auto-refresh-badge .jom-mini-btn,
       #jom-auto-refresh-badge .jom-btn {
         appearance: none;
-        border: 1px solid rgba(83,182,255,0.20);
+        border: 1px solid rgba(90,194,255,0.20);
         background: rgba(255,255,255,0.04);
         color: inherit;
         cursor: pointer;
         font: inherit;
       }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-mini-btn,
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-btn {
-        background: rgba(46,121,199,0.05);
-      }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-btn { background: rgba(46,121,199,0.05); }
       #jom-auto-refresh-badge .jom-mini-btn { border-radius: 10px; padding: 4px 7px; }
       #jom-auto-refresh-badge .jom-mini-btn:hover,
-      #jom-auto-refresh-badge .jom-btn:hover { background: rgba(83,182,255,0.10); }
+      #jom-auto-refresh-badge .jom-btn:hover { background: rgba(90,194,255,0.10); }
       #jom-auto-refresh-badge .jom-body {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -178,15 +166,13 @@
         padding: 0 12px 10px;
       }
       #jom-auto-refresh-badge .jom-card {
-        border: 1px solid rgba(83,182,255,0.14);
+        border: 1px solid rgba(90,194,255,0.14);
         border-radius: 12px;
         padding: 9px 10px;
         background: rgba(255,255,255,0.03);
         min-height: 58px;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-card {
-        background: rgba(255,255,255,0.76);
-      }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-card { background: rgba(255,255,255,0.76); }
       #jom-auto-refresh-badge .jom-label {
         color: #98a5bb;
         font-size: 10px;
@@ -194,9 +180,7 @@
         letter-spacing: 0.48px;
         margin-bottom: 4px;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-label {
-        color: #6b7a94;
-      }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-label { color: #6b7a94; }
       #jom-auto-refresh-badge .jom-value {
         font-weight: 800;
         word-break: break-word;
@@ -212,9 +196,7 @@
         color: #96a2b8;
         font-size: 11px;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-footer {
-        color: #5d6d85;
-      }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-footer { color: #5d6d85; }
       #jom-auto-refresh-badge .jom-insights {
         display: flex;
         flex-wrap: wrap;
@@ -225,7 +207,7 @@
         border-radius: 999px;
         padding: 4px 8px;
         background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(83,182,255,0.14);
+        border: 1px solid rgba(90,194,255,0.14);
         color: inherit;
         font-size: 11px;
       }
@@ -260,7 +242,7 @@
       <div class="jom-head">
         <div>
           <div class="jom-title"><span class="jom-dot" id="jom-refresh-dot"></span><span>Live Runtime</span></div>
-          <span class="jom-subtitle">Command Telemetry</span>
+          <span class="jom-subtitle">Compliance telemetry</span>
         </div>
         <div class="jom-meta"><span id="jom-runtime-mode">runtime</span><button class="jom-mini-btn" id="jom-toggle-collapse" type="button">Collapse</button></div>
       </div>
@@ -369,14 +351,14 @@
     applyCollapsedState();
 
     const lastSyncEl = document.getElementById('jom-last-sync');
-    if (lastSyncEl) {
-      lastSyncEl.textContent = formatAge(state.lastSyncAgeSeconds);
-    }
+    if (lastSyncEl) lastSyncEl.textContent = formatAge(state.lastSyncAgeSeconds);
+
     const autoStatusEl = document.getElementById('jom-auto-status');
     if (autoStatusEl) {
       autoStatusEl.textContent = state.autoSyncActive ? '✅ Active' : '⚠️ Stale';
-      autoStatusEl.style.color = state.autoSyncActive ? '#39da95' : '#ffbe59';
+      autoStatusEl.style.color = state.autoSyncActive ? '#3ce19c' : '#ffbe56';
     }
+
     const anchorsEl = document.getElementById('jom-anchors-today');
     if (anchorsEl) {
       const morning = state.anchorsToday.morning ? '🌅⚓' : '🌅⏳';
@@ -429,10 +411,7 @@
   function tick() {
     if (!isPaused()) {
       state.countdown = Math.max(0, state.countdown - 1);
-      if (state.countdown === 0) {
-        refreshNow();
-        return;
-      }
+      if (state.countdown === 0) { refreshNow(); return; }
     }
     updateBadge();
   }
