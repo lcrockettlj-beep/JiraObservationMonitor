@@ -316,12 +316,15 @@ html[data-theme="light"] .command-core {
 .command-core__chip {
     border-radius: 12px;
     padding: 10px 12px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(90,194,255,0.14);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid transparent;
+    box-shadow: none;
 }
+
 html[data-theme="light"] .command-core__chip {
-    background: rgba(255,255,255,0.74);
-    border-color: rgba(46,121,199,0.14);
+    background: rgba(255,255,255,0.36);
+    border: 1px solid transparent;
+    box-shadow: none;
 }
 .command-core__chip-label {
     color: var(--muted);
@@ -330,7 +333,48 @@ html[data-theme="light"] .command-core__chip {
     text-transform: uppercase;
     margin-bottom: 4px;
 }
-.command-core__chip-value { font-weight: 700; font-size: 12px; }
+.command-core__chip-value {
+    position: relative;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.command-core__chip-value::after {
+    content: "";
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    margin-left: 8px;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-shadow: 0 0 14px rgba(90,194,255,0.28);
+}
+
+#hero-next-refresh.command-core__chip-value::after {
+    background: var(--accent-pink);
+    box-shadow: 0 0 14px rgba(255,60,172,0.34);
+}
+
+#hero-next-refresh.command-core__chip-value::after {
+    animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+    0%   { box-shadow: 0 0 6px rgba(255,60,172,0.2); }
+    50%  { box-shadow: 0 0 18px rgba(255,60,172,0.5); }
+    100% { box-shadow: 0 0 6px rgba(255,60,172,0.2); }
+}
+
+
+#hero-last-sync.command-core__chip-value::after {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 14px rgba(0,229,255,0.30);
+}
+
+#hero-auto-sync.command-core__chip-value::after {
+    background: var(--accent-green);
+    box-shadow: 0 0 14px rgba(60,225,156,0.34);
+}
 
 @keyframes commandSpin {
     from { transform: translate(-50%, -50%) rotate(0deg); }
