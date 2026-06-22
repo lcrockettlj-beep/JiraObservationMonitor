@@ -96,6 +96,22 @@ def today_anchor_exists(label: str) -> bool:
     matches = list(SNAPSHOT_DIR.glob(pattern))
     return len(matches) > 0
 
+def due_anchor_labels() -> list[str]:
+    """
+    Return any anchors that should exist by now but do not.
+    This preserves the live anchor window behaviour and adds
+    same-day catch-up if the window was missed.
+    """
+    current = now().time()
+    due = []
+
+    if current >= MORNING_ANCHOR_START and not today_anchor_exists("morning"):
+        due.append("morning")
+
+    if current >= EVENING_ANCHOR_START and not today_anchor_exists("evening"):
+        due.append("evening")
+
+    return due
 
 def write_snapshot(suffix: str = "") -> Path:
     """Copy the runtime file into the snapshot directory with an optional suffix."""
@@ -156,6 +172,8 @@ def enforce_retention():
         except Exception as exc:
             print(f"⚠️  Could not prune {path.name}: {exc}")
 
+
+
 # ============================================================
 # Main logic
 # ============================================================
@@ -170,10 +188,8 @@ def main():
 
     due_anchors = due_anchor_labels()
     if due_anchors:
-        created = []
         for anchor_label in due_anchors:
             target = write_snapshot(suffix=f"_anchor_{anchor_label}")
-            created.append((anchor_label, target.name))
             print(f"⚓ Anchor snapshot created ({anchor_label}): {target.name}")
         regular_count = sum(1 for p in list_existing_snapshots() if "_anchor_" not in p.name)
         anchor_count = sum(1 for p in list_existing_snapshots() if "_anchor_" in p.name)
@@ -199,6 +215,7 @@ def main():
     print(f"📊 Stored: {regular_count}/{RETENTION_LIMIT} regular + {anchor_count} anchor(s)")
 
     enforce_retention()
+
 
 
 if __name__ == "__main__":
