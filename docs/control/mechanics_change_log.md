@@ -843,3 +843,13 @@ Sprint 9 runtime anchor monitoring, catch-up recovery, and startup self-heal are
 
 - 2026-06-22: Sprint 9 closed out - restored anchor icon behaviour, added missed-anchor catch-up, and hardened startup self-heal.
 
+
+## Sprint 9 Complete - 2026-06-22 14:51
+- Fixed missed morning/evening anchor issue via catch-up logic
+- Implemented startup self-heal for anchor creation
+- Stabilised /api/source-state for UI binding
+- Corrected homepage snapshot timestamp binding
+- Ensured anchor snapshots persist under retention policy
+- Cleaned repository (bak, pycache, temp artifacts)
+- Validated runtime sync + badge accuracy
+

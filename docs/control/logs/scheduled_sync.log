@@ -2706,3 +2706,90 @@ Sync run started: 22/06/2026 14:50:37.91
 ✅ Sync complete — runtime + docs + snapshots aligned
 Sync run finished: 22/06/2026 14:50:40.97 (exit code: 0)
 
+
+============================================================
+Sync run started: 22/06/2026 15:00:37.89
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 15:00:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 15:00:40.51 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 15:10:37.90
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 15:10:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 15:10:40.51 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 15:20:37.93
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 15:20:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 15:20:40.64 (exit code: 0)
+
