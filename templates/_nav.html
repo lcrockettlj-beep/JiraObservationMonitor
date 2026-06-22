@@ -1,10 +1,13 @@
 <nav class="top-nav">
-    <div class="top-nav__brand">Jira Observation Monitor</div>
+    <a href="/" class="top-nav__brand-wrap" aria-label="GLI home">
+        <img src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI" class="top-nav__logo">
+        <span class="top-nav__brand">Jira Observation Monitor</span>
+    </a>
 
     <div class="top-nav__links">
-        <a href="/" class="top-nav__link top-nav__link--active">Home</a>
-        <a href="/estate" class="top-nav__link">Estate</a>
-        <a href="/reference" class="top-nav__link">Reference</a>
+        <a href="/" class="top-nav__link {% if request.path == '/' %}top-nav__link--active{% endif %}">Home</a>
+        <a href="/estate" class="top-nav__link {% if request.path == '/estate' %}top-nav__link--active{% endif %}">Estate</a>
+        <a href="/reference" class="top-nav__link {% if request.path == '/reference' %}top-nav__link--active{% endif %}">Reference</a>
     </div>
 
     <div class="top-nav__actions">

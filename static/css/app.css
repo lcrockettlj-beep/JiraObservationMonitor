@@ -202,6 +202,29 @@ a {
     letter-spacing: 0.03em;
     white-space: nowrap;
 }
+.top-nav__brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+}
+
+.top-nav__logo {
+    display: block;
+    width: 118px;
+    height: auto;
+    flex: 0 0 auto;
+}
+
+.top-nav__brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
 
 .top-nav__links {
     display: flex;
@@ -253,6 +276,17 @@ a {
     .top-nav {
         flex-direction: column;
         align-items: flex-start;
+    }
+.top-nav__brand-wrap {
+        width: 100%;
+    }
+
+    .top-nav__logo {
+        width: 92px;
+    }
+
+    .top-nav__brand {
+        white-space: normal;
     }
 
     .top-nav__links {
