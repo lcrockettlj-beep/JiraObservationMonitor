@@ -4,22 +4,23 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='repla
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 """
-Snapshot Controller — JOM Sprint 9 Step 2
-==========================================
+Snapshot Controller — JOM Sprint 9 Step 3
+========================================
 Throttled snapshot creation with daily anchor guarantees.
 
 Rules:
   - Normal snapshots: minimum 10 minutes between snapshots
-  - Anchor windows: ALWAYS create a snapshot, regardless of throttle
+  - Anchor windows: create immediately during the window
       * Morning anchor: 07:55 - 08:05
       * Evening anchor: 19:55 - 20:05
+  - Catch-up guarantee: if a window was missed but the day has passed the
+    anchor cut-off and that anchor does not yet exist, create it on the next run
   - Anchors are tagged with _anchor_morning or _anchor_evening suffix
   - Daily anchor uniqueness: only ONE morning anchor and ONE evening
-    anchor are created per day (re-runs in the window are no-ops)
-  - Retention: rolling 20 snapshots maximum
+    anchor are created per day (re-runs are no-ops)
+  - Retention: rolling 20 snapshots maximum for regular snapshots only
 """
 
-import json
 import shutil
 from datetime import datetime, time, timedelta
 from pathlib import Path
@@ -39,7 +40,6 @@ MORNING_ANCHOR_START = time(7, 55)
 MORNING_ANCHOR_END   = time(8, 5)
 EVENING_ANCHOR_START = time(19, 55)
 EVENING_ANCHOR_END   = time(20, 5)
-
 
 # ============================================================
 # Helpers
@@ -107,6 +107,34 @@ def write_snapshot(suffix: str = "") -> Path:
     return target
 
 
+def due_anchor_labels() -> list[str]:
+    """
+    Determine which anchors are due right now.
+
+    Behaviour:
+      - During an anchor window: create that anchor immediately if missing.
+      - After an anchor window: backfill the anchor later in the same day if missing.
+    """
+    current = now().time()
+    due: list[str] = []
+
+    morning_due = (
+        (in_window(current, MORNING_ANCHOR_START, MORNING_ANCHOR_END) or current > MORNING_ANCHOR_END)
+        and not today_anchor_exists("morning")
+    )
+    if morning_due:
+        due.append("morning")
+
+    evening_due = (
+        (in_window(current, EVENING_ANCHOR_START, EVENING_ANCHOR_END) or current > EVENING_ANCHOR_END)
+        and not today_anchor_exists("evening")
+    )
+    if evening_due:
+        due.append("evening")
+
+    return due
+
+
 def enforce_retention():
     """
     Apply rolling retention.
@@ -128,7 +156,6 @@ def enforce_retention():
         except Exception as exc:
             print(f"⚠️  Could not prune {path.name}: {exc}")
 
-
 # ============================================================
 # Main logic
 # ============================================================
@@ -141,23 +168,22 @@ def main():
         print("   Skipping snapshot.")
         return
 
-    in_anchor, anchor_label = anchor_window_status()
-
-    # === Path 1: Anchor window ===
-    if in_anchor:
-        if today_anchor_exists(anchor_label):
-            print(f"⚓ Anchor window active ({anchor_label}), but today's anchor already exists. Skipping.")
-        else:
+    due_anchors = due_anchor_labels()
+    if due_anchors:
+        created = []
+        for anchor_label in due_anchors:
             target = write_snapshot(suffix=f"_anchor_{anchor_label}")
+            created.append((anchor_label, target.name))
             print(f"⚓ Anchor snapshot created ({anchor_label}): {target.name}")
+        regular_count = sum(1 for p in list_existing_snapshots() if "_anchor_" not in p.name)
+        anchor_count = sum(1 for p in list_existing_snapshots() if "_anchor_" in p.name)
+        print(f"📊 Stored: {regular_count}/{RETENTION_LIMIT} regular + {anchor_count} anchor(s)")
         enforce_retention()
         return
 
-    # === Path 2: Normal throttled path ===
     elapsed = time_since_last_regular_snapshot()
 
     if elapsed is None:
-        # No previous regular snapshot — always create one
         target = write_snapshot()
         print(f"✅ Snapshot created: {target.name}")
     elif elapsed < timedelta(minutes=THROTTLE_MINUTES):
@@ -168,10 +194,9 @@ def main():
         target = write_snapshot()
         print(f"✅ Snapshot created: {target.name}")
 
-    # Always show count + apply retention
     regular_count = sum(1 for p in list_existing_snapshots() if "_anchor_" not in p.name)
-    anchor_count  = sum(1 for p in list_existing_snapshots() if "_anchor_" in p.name)
-    print(f"📁 Stored: {regular_count}/{RETENTION_LIMIT} regular + {anchor_count} anchor(s)")
+    anchor_count = sum(1 for p in list_existing_snapshots() if "_anchor_" in p.name)
+    print(f"📊 Stored: {regular_count}/{RETENTION_LIMIT} regular + {anchor_count} anchor(s)")
 
     enforce_retention()
 
