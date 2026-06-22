@@ -218,6 +218,12 @@ a {
     flex: 0 0 auto;
 }
 
+html[data-theme="light"] .top-nav__logo {
+    filter: brightness(0) saturate(100%);
+    opacity: 0.9;
+}
+
+
 .top-nav__brand {
     font-size: 14px;
     font-weight: 700;
