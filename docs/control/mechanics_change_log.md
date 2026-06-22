@@ -1119,3 +1119,31 @@ Sprint 9 runtime anchor monitoring, catch-up recovery, and startup self-heal are
 - - latest_snapshot.summary.issue_count_updated_last_7d_total
 - - latest_snapshot.summary.project_count_total
 - - latest_snapshot.summary.site_count
+
+## 2026-06-22 — Sprint 10 Phase 2 (Backup + Visibility)
+
+### Step 1 — Runtime Backup + Restore
+- Added scripts\backup_runtime_chain.py to persist latest runtime chain and snapshot state
+- Integrated backup execution into scripts\sync_runtime.py post-success
+- Introduced scripts\restore_runtime_from_backup.ps1 with safe preview mode and reporting
+- Established backup structure:
+  - ackups\latest_runtime\current
+  - ackups\latest_runtime\history\<timestamp>
+
+### Step 2 — Backup Visibility + Health Integration
+- Extended health_check.ps1:
+  - Backup manifest freshness check
+  - Backup coverage validation
+- Extended jom_health_check.ps1:
+  - Backup readiness (eady | partial_ok | stale)
+  - Backup age / copied / missing metrics
+  - Missing backup file reporting
+- Current state:
+  - Backup readiness: partial_ok
+  - Missing: pretty runtime outputs (non-critical)
+
+### Notes
+- Backup chain protects operational runtime continuity
+- Restore remains operator-driven, non-automatic
+- Visibility ensures auditability and operational confidence
+
