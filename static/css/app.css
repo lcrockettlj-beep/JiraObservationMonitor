@@ -34,9 +34,11 @@ html[data-theme="light"] {
     --accent: #2e79c7;
 }
 
+
 * {
-    box-sizing: border-box;
+box-sizing: border-box;
 }
+
 
 html, body {
     min-height: 100%;
@@ -67,7 +69,7 @@ a {
 .page {
     max-width: 1380px;
     margin: 0 auto;
-    padding: 24px 20px 48px;
+    padding: 28px 20px 60px;
 }
 
 .hero,
@@ -80,6 +82,14 @@ a {
         0 0 30px rgba(69,155,227,0.08);
 
 }
+
+.hero {
+    border: 1px solid rgba(69,155,227,0.35);
+    box-shadow:
+        0 20px 45px rgba(0,0,0,0.30),
+        0 0 40px rgba(69,155,227,0.12);
+}
+
 
 .hero {
     padding: 22px;
@@ -159,7 +169,10 @@ a {
 .section__header h2 {
     margin: 0;
     font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
 }
+
 
 .section__header .count {
     color: var(--muted);
@@ -317,6 +330,7 @@ html[data-theme="light"] .top-nav__logo {
 
 .panel {
     padding: 20px;
+    margin-bottom: 22px;
 }
 
 .section__header {
@@ -325,6 +339,7 @@ html[data-theme="light"] .top-nav__logo {
 
 .grid-4 {
     gap: 16px;
+    margin-top: 10px;
 }
 
 .pill,
@@ -375,13 +390,22 @@ a, .clickable {
     border-color: rgba(69, 155, 227, 0.45);
 }
 
+
 .metric-link::after,
-.breakdown-row::after {
-    content: "→";
-    margin-left: 6px;
-    opacity: 0.6;
+.breakdown-row::after→";.breakdown-row::after {
+margin-left: 6px;
+opacity: 0.6;
 }
 
+
+
+.section-header p {
+margin: 0;
+color: var(--muted);
+font-size: 14px;
+line-height: 1.6;
+max-width: 680px;
+}
 
 
 /* Sprint 8 - dark mode text visibility fix */
@@ -399,16 +423,17 @@ html:not([data-theme="light"]) .top-nav__brand {
     color: #f7fbff !important;
 }
 
+
 html:not([data-theme="light"]) .label,
 html:not([data-theme="light"]) .note,
 html:not([data-theme="light"]) .metric-note,
 html:not([data-theme="light"]) .metric-label,
 html:not([data-theme="light"]) .site-card__sub,
-html:not([data-theme="light"]) .section-header p,
 html:not([data-theme="light"]) .source-strip__item,
 html:not([data-theme="light"]) .delta-chip span,
 html:not([data-theme="light"]) .pill,
 html:not([data-theme="light"]) .top-nav__link,
 html:not([data-theme="light"]) .pill-button {
-    color: #d6e0f2 !important;
+color: #d6e0f2 !important;
 }
+
