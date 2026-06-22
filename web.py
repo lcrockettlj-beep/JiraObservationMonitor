@@ -18,6 +18,7 @@ from trends import analyze_historical_trends, build_trend_drilldowns
 from intelligence_engine import enrich_estate
 from backend.intelligence_runtime import attach_intelligence_safe, enrich_context_with_intelligence
 from backend.runtime_source_adapter import load_preferred_source_payload
+from scripts.snapshot_controller import main as snapshot_controller_main
 
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(
@@ -56,6 +57,21 @@ def _parse_possible_datetime(value):
         except ValueError:
             continue
     return None
+    
+_STARTUP_SELF_HEAL_DONE = False
+
+def run_startup_self_heal():
+    global _STARTUP_SELF_HEAL_DONE
+    if _STARTUP_SELF_HEAL_DONE:
+        return
+
+    try:
+        print("🛠 Startup self-heal: checking snapshot anchors")
+        snapshot_controller_main()
+    except Exception as exc:
+        print(f"⚠️ Startup self-heal failed: {exc}")
+    finally:
+        _STARTUP_SELF_HEAL_DONE = True
 
 
 def _is_last_seen_field(sort_key):
@@ -576,4 +592,6 @@ def api_data():
 
 
 if __name__ == "__main__":
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or not app.debug:
+        run_startup_self_heal()
     app.run(debug=True, host="127.0.0.1", port=5000)
