@@ -124,11 +124,22 @@
             </div>
         </div>
     </section>
+   
     <section class="source-strip">
-        <div class="source-strip__item"><strong>Users source:</strong> {{ users_source_file or 'Not found' }}</div>
-        <div class="source-strip__item"><strong>Managed source:</strong> {{ managed_source_file or 'Not found' }}</div>
-        <div class="source-strip__item"><strong>Latest snapshot:</strong> {{ snapshot_meta.snapshot_timestamp or 'Not available' }}</div>
+        <div class="source-strip__item">
+            <strong>Last verified snapshot:</strong>
+            {{ snapshot_meta.snapshot_timestamp or 'Not available' }}
+        </div>
+        <div class="source-strip__item">
+            <strong>Sites monitored:</strong>
+            {{ discovery_summary.tracked_site_count or 0 }}
+        </div>
+        <div class="source-strip__item">
+            <strong>Intelligence coverage:</strong>
+            {{ intelligence_site_total or 0 }} analysed site(s)
+        </div>
     </section>
+
     <section class="panel intelligence-panel">
         <div class="section-header">
             <div>
