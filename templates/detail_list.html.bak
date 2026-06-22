@@ -1,0 +1,67 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ title or "Detail" }} - Jira Observation Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
+</head>
+<body>
+<div class="page">
+    {% include "_nav.html" %}
+
+    <section class="hero">
+        <div class="hero__top">
+            <div>
+                <div style="margin-bottom:10px;"><a href="/" class="text-link">&larr; Back to homepage</a></div>
+                <h1>{{ title }}</h1>
+                <p>Why it stands out: {{ reason }}</p>
+                <p style="margin-top:8px;">Go to Atlassian: {{ atlassian_area }}</p>
+            </div>
+            <div class="hero__meta">
+                <div class="pill">{{ rows|length }} record(s)</div>
+                <div class="pill">Sort by clicking a column heading</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="section__header"><h2>{{ title }}</h2><div class="count">{{ detail_key }}</div></div>
+        {% if rows %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                            {% set is_current = (sort_key == col) %}
+                            {% set next_order = 'desc' if (is_current and sort_order != 'desc') else 'asc' %}
+                            <th><a href="?sort={{ col|urlencode }}&order={{ next_order }}">{{ col.replace('_', ' ') }}{% if is_current %}<span>{{ '&darr;' if sort_order == 'desc' else '&uarr;' }}</span>{% endif %}</a></th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        {% for col in columns %}
+                            {% set value = row.get(col, '') %}
+                            <td class="{{ 'wrap' if (value|string)|length > 60 else '' }}">{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty">No records are currently available for this drilldown.</div>
+        {% endif %}
+    </section>
+</div>
+<script>
+    window.JOMTheme.initToggle("theme-toggle");
+</script>
+  <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
+</body>
+</html>
+
