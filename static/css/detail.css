@@ -69,3 +69,7 @@ td.wrap {
 }
 
 .table-wrap {
+
+.detail-context::before {
+    content: "📍 ";
+}

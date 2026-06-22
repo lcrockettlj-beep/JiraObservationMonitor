@@ -2030,3 +2030,65 @@ Sync run started: 22/06/2026 12:00:37.77
 ✅ Sync complete — runtime + docs + snapshots aligned
 Sync run finished: 22/06/2026 12:00:38.72 (exit code: 0)
 
+
+============================================================
+Sync run started: 22/06/2026 12:10:37.80
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 12:10:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1750
+🔢 Snapshot fields: 1750
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-22_12-10-38.json
+📁 Stored: 21/20 regular + 1 anchor(s)
+♻️  Pruned old snapshot: snapshot_2026-06-22_08-50-38.json
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 12:10:38.75 (exit code: 0)
+
+
+============================================================
+Sync run started: 22/06/2026 12:20:37.80
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-22 12:20:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1750
+🔢 Snapshot fields: 1750
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+✅ Snapshot created: snapshot_2026-06-22_12-20-38.json
+📁 Stored: 21/20 regular + 1 anchor(s)
+♻️  Pruned old snapshot: snapshot_2026-06-22_09-00-38.json
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+✅ Snapshot updated
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots aligned
+Sync run finished: 22/06/2026 12:20:38.75 (exit code: 0)
+

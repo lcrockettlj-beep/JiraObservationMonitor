@@ -359,6 +359,26 @@ html[data-theme="light"] .top-nav__logo {
     gap: 10px;
 }
 
+a, .clickable {
+    cursor: pointer;
+}
+
+.stat-card:hover,
+.reference-row:hover,
+.breakdown-row:hover,
+.estate-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(69, 155, 227, 0.45);
+}
+
+.metric-link::after,
+.breakdown-row::after {
+    content: "→";
+    margin-left: 6px;
+    opacity: 0.6;
+}
+
+
 
 /* Sprint 8 - dark mode text visibility fix */
 html:not([data-theme="light"]) h1,
