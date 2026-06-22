@@ -1,4 +1,0 @@
-site_name,project_count_delta,total_users_delta,active_users_delta,inactive_users_delta,licensed_users_estimate_delta,issue_count_total_delta,issue_count_unresolved_delta,growth_status,snapshot_baseline
-gli-delivery-tm,0,0,0,0,0,0,0,stable,False
-gli-it-project,0,0,0,0,0,0,0,stable,False
-gli-global-technology,0,0,0,0,0,0,0,stable,False

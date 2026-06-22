@@ -1,4 +1,0 @@
-name,status,risk_score,project_count,project_count_delta,issue_count_total,issue_count_total_delta,issue_count_unresolved,issue_count_unresolved_delta,issue_count_updated_last_7d,growth_status,licence_status,licence_api_access,audit_status,audit_api_access,collection_duration_seconds
-gli-delivery-tm,healthy,3,22,0,1,0,1,0,1,stable,permission_limited,False,permission_limited,False,4.1329
-gli-it-project,healthy,3,55,0,1,0,1,0,1,stable,permission_limited,False,permission_limited,False,4.4832
-gli-global-technology,healthy,0,8,0,1,0,1,0,1,stable,available,True,available,True,4.5982
