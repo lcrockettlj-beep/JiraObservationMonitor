@@ -18,7 +18,8 @@ from trends import analyze_historical_trends, build_trend_drilldowns
 from intelligence_engine import enrich_estate
 from backend.intelligence_runtime import attach_intelligence_safe, enrich_context_with_intelligence
 from backend.runtime_source_adapter import load_preferred_source_payload
-from scripts.snapshot_controller import main as snapshot_controller_main
+from scripts.snapshot_controller import startup_self_heal as snapshot_startup_self_heal
+
 
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(
@@ -66,8 +67,7 @@ def run_startup_self_heal():
         return
 
     try:
-        print("🛠 Startup self-heal: checking snapshot anchors")
-        snapshot_controller_main()
+        snapshot_startup_self_heal()
     except Exception as exc:
         print(f"⚠️ Startup self-heal failed: {exc}")
     finally:
@@ -591,7 +591,9 @@ def api_data():
     return jsonify(_build_data())
 
 
+
 if __name__ == "__main__":
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or not app.debug:
+    DEBUG_MODE = True
+    if not DEBUG_MODE or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_startup_self_heal()
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    app.run(debug=DEBUG_MODE, host="127.0.0.1", port=5000)

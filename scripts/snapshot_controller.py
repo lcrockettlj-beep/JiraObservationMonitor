@@ -172,6 +172,27 @@ def enforce_retention():
         except Exception as exc:
             print(f"⚠️  Could not prune {path.name}: {exc}")
 
+def startup_self_heal() -> bool:
+    """
+    Anchor-only startup self-heal.
+    Returns True if one or more missing due anchors were created.
+    """
+    due_anchors = due_anchor_labels()
+
+    if not due_anchors:
+        print("🛠 Startup self-heal: no due anchors missing")
+        return False
+
+    for anchor_label in due_anchors:
+        target = write_snapshot(suffix=f"_anchor_{anchor_label}")
+        print(f"⚓ Startup self-heal created ({anchor_label}): {target.name}")
+
+    regular_count = sum(1 for p in list_existing_snapshots() if "_anchor_" not in p.name)
+    anchor_count = sum(1 for p in list_existing_snapshots() if "_anchor_" in p.name)
+    print(f"📊 Stored: {regular_count}/{RETENTION_LIMIT} regular + {anchor_count} anchor(s)")
+
+    enforce_retention()
+    return True
 
 
 # ============================================================
