@@ -157,6 +157,36 @@
     gap: 14px;
     min-height: 360px;
 }
+/* === Sprint 8: Visual Hierarchy Enhancement === */
+
+/* Base transition */
+.site-card {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+.site-card:hover {
+    transform: translateY(-2px);
+}
+
+/* WARNING — subtle glow */
+.site-card--warning {
+    box-shadow: 0 0 12px rgba(240, 178, 74, 0.35);
+}
+
+/* CRITICAL — stronger glow + pulse */
+.site-card--critical {
+    box-shadow: 0 0 16px rgba(225, 75, 90, 0.5);
+    animation: criticalPulse 2.4s ease-in-out infinite;
+}
+
+/* Pulse animation */
+@keyframes criticalPulse {
+    0%   { box-shadow: 0 0 10px rgba(225, 75, 90, 0.35); }
+    50%  { box-shadow: 0 0 22px rgba(225, 75, 90, 0.65); }
+    100% { box-shadow: 0 0 10px rgba(225, 75, 90, 0.35); }
+}
+
 
 .site-card--critical {
     border-left-color: var(--critical);
