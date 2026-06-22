@@ -15,9 +15,13 @@
         <div class="hero__top">
             <div>
                 <div class="hero__back"><a href="/" class="text-link">&larr; Back to operational overview</a></div>
-                <h1>{{ title }}</h1>
+                
+		<h1>{{ title }}</h1>
+		<p>Detailed operational view showing records for this selection.</p>
+               
                 <p>Reason for this view: {{ reason }}</p>
                 <p class="detail-context">Where to look in Atlassian: {{ atlassian_area }}</p>
+
             </div>
             <div class="hero__meta">
                 <div class="pill">{{ rows|length }} record(s)</div>
