@@ -1,3 +1,10 @@
+@font-face {
+    font-family: "TeXGyreAdventor";
+    src: url("/static/fonts/texgyreadventor-regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
 :root {
     --bg: #0b122b;
     --panel: rgba(20, 33, 86, 0.84);
@@ -30,7 +37,7 @@ html[data-theme="light"] {
 
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:ventor", "Segoe UI", Arial, Helvetica, sans-serif;
     color: var(--text);
     background:
         radial-gradient(circle at top left, rgba(69,155,227,0.15), transparent 28%),
