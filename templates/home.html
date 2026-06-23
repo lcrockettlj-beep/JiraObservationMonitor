@@ -40,6 +40,39 @@
         <div class="site-grid">
             {% for site in sites %}
             {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
+
+            {% if badge_class == 'stable' %}
+            <article class="site-card site-card--{{ badge_class }} site-card--compact signal-border">
+                <div class="site-card__top">
+                    <div>
+                        <div class="site-card__title-row">
+                            <h3>{{ site.site_name or site.site or 'Site' }}</h3>
+                            <span class="badge badge--{{ badge_class }}">{{ site.status or badge_class }}</span>
+                        </div>
+                        <p class="site-card__sub">{{ site.reason or "No immediate issues detected" }}</p>
+                    </div>
+                    <div class="site-card__actions">
+                        {% if site_key %}
+                            <a href="/detail/trend::site::{{ site_key }}" class="pill">Historical View</a>
+                            <a href="/detail/project::site::{{ site_key }}" class="pill">Project sample</a>
+                        {% else %}
+                            <span class="pill">Historical View unavailable</span>
+                            <span class="pill">Project sample unavailable</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="chip-list">
+                    {% if site.historical_trend_signals %}
+                        {% for item in site.historical_trend_signals[:2] %}
+                            <span class="chip chip--accent">{{ item }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="chip chip--accent">No material operational signals</span>
+                    {% endif %}
+                </div>
+            </article>
+
+            {% else %}
             <article class="site-card site-card--{{ badge_class }} signal-border {% if badge_class == 'critical' %}signal-border--critical{% elif badge_class == 'warning' %}signal-border--warning{% endif %}">
                 <div class="site-card__top">
                     <div>
@@ -100,6 +133,8 @@
                     {% endif %}
                 </div>
             </article>
+            {% endif %}
+
             {% endfor %}
         </div>
         {% else %}
@@ -240,6 +275,7 @@
     <div id="stable-sites"></div>
     {{ site_section('Stable Sites', 'Sites operating normally and within expected limits.', stable_sites, 'stable') }}
 </div>
+
 <script>
     window.JOMTheme.initToggle("theme-toggle");
 </script>
