@@ -511,3 +511,102 @@ html[data-theme="light"] .site-card {
         padding: 16px;
     }
 }
+/* Final Home polish */
+
+.panel {
+    margin-bottom: 12px;
+    padding: 16px;
+}
+
+.section-block {
+    margin-top: 10px;
+}
+
+.section-header {
+    margin-bottom: 8px;
+}
+
+.section-header h2 {
+    font-size: 18px;
+}
+
+.section-header p {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.empty-state {
+    padding: 10px 14px;
+    border-radius: 14px;
+}
+
+.empty-state strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.site-grid {
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.site-card--compact {
+    min-height: 164px;
+    padding: 12px;
+    gap: 8px;
+}
+
+.site-card--compact .site-card__title-row h3 {
+    font-size: 16px;
+}
+
+.site-card--compact .site-card__sub {
+    margin-top: 3px;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.site-card--compact .site-card__actions {
+    gap: 6px;
+}
+
+.site-card--compact .pill {
+    padding: 5px 9px;
+    font-size: 11px;
+}
+
+.site-card--compact .chip-list {
+    gap: 5px;
+}
+
+.site-card--compact .chip {
+    padding: 4px 8px;
+    font-size: 10px;
+}
+
+.status-grid {
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.status-tile {
+    min-height: 108px;
+    padding: 12px;
+}
+
+.status-tile__value {
+    font-size: 30px;
+    margin-bottom: 6px;
+}
+
+.status-tile__note {
+    font-size: 11px;
+    line-height: 1.35;
+}
