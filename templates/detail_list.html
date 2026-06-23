@@ -12,7 +12,6 @@
 <body>
 <div class="page">
     {% include "_nav.html" %}
-
     {% set detail_path = request.path if request else '' %}
     {% set page_title = title or heading or 'Detail View' %}
     {% set page_subtitle = subtitle or description or 'Operational drill-down with direct actions and guidance.' %}
@@ -49,13 +48,12 @@
                     <p>Use this guidance to move from observation to action inside Atlassian.</p>
                 </div>
             </div>
-
             {% if 'billing::' in detail_path %}
             <div class="guidance-card guidance-card--admin">
                 <div class="guidance-title">Billing and subscription follow-up</div>
                 <div class="guidance-copy">Use Atlassian Administration billing to inspect subscriptions, invoices, billing roles, payment methods, and plan changes.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Billing</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration â†’ Billing</strong></div>
                     <div class="guidance-row"><span>Use for</span><strong>Subscriptions, invoices, billing admins, payment details</strong></div>
                 </div>
                 <div class="guidance-actions">
@@ -68,20 +66,18 @@
                 <div class="guidance-title">User access and account follow-up</div>
                 <div class="guidance-copy">Review managed accounts, suspended users, product access, and access assignments from Atlassian Administration.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Directory → Users</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration â†’ Directory â†’ Users</strong></div>
                     <div class="guidance-row"><span>Use for</span><strong>Suspended users, managed accounts, product access changes</strong></div>
                 </div>
-                <div class="guidance-actions">
-                    <a href="https://admin.atlassian.com/" class="pill" target="_blank" rel="noopener noreferrer">Open admin</a>
-                </div>
+                <div class="guidance-actions"><a href="https://admin.atlassian.com/" class="pill" target="_blank" rel="noopener noreferrer">Open admin</a></div>
             </div>
             {% elif 'change::' in detail_path %}
             <div class="guidance-card guidance-card--critical">
                 <div class="guidance-title">Audit and change investigation</div>
                 <div class="guidance-copy">Use Jira audit logs and automation audit logs to confirm who changed what, when, and whether flows succeeded or failed.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Jira Settings → System → Audit Log</strong></div>
-                    <div class="guidance-row"><span>Automation</span><strong>Administration → System → Automation rules → Audit log</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Jira Settings â†’ System â†’ Audit Log</strong></div>
+                    <div class="guidance-row"><span>Automation</span><strong>Administration â†’ System â†’ Automation rules â†’ Audit log</strong></div>
                 </div>
                 <div class="guidance-actions">
                     <a href="https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications/" class="pill" target="_blank" rel="noopener noreferrer">Audit log guide</a>
@@ -97,10 +93,7 @@
                     <div class="guidance-row"><span>Site use</span><strong>Inspect changes, users, projects, and findings</strong></div>
                     <div class="guidance-row"><span>Admin use</span><strong>Handle billing, managed accounts, and configuration tasks</strong></div>
                 </div>
-                <div class="guidance-actions">
-                    <a href="/estate" class="pill">Open estate</a>
-                    <a href="/reference" class="pill">Open admin</a>
-                </div>
+                <div class="guidance-actions"><a href="/estate" class="pill">Open estate</a><a href="/reference" class="pill">Open admin</a></div>
             </div>
             {% endif %}
         </div>
@@ -133,37 +126,21 @@
                 <h2>Operational Records</h2>
                 <p>Detailed records for this drill-down. Use the action guidance first, then review rows for confirmation.</p>
             </div>
-            <div class="section-header__actions">
-                <span class="pill">{{ total_count or 0 }} rows</span>
-            </div>
+            <div class="section-header__actions"><span class="pill">{{ total_count or 0 }} rows</span></div>
         </div>
-
         {% if has_records %}
             {% if records[0].items is defined %}
             <div class="detail-record-list">
                 {% for row in records %}
-                <article class="detail-record-card">
-                    <div class="detail-record-grid">
-                        {% for key, value in row.items() %}
-                            {% if loop.index <= 8 %}
-                            <div class="detail-record-field">
-                                <div class="detail-record-label">{{ key|replace('_', ' ')|title }}</div>
-                                <div class="detail-record-value">{{ value }}</div>
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </article>
+                <article class="detail-record-card"><div class="detail-record-grid">
+                    {% for key, value in row.items() %}{% if loop.index <= 8 %}
+                    <div class="detail-record-field"><div class="detail-record-label">{{ key|replace('_', ' ')|title }}</div><div class="detail-record-value">{{ value }}</div></div>
+                    {% endif %}{% endfor %}
+                </div></article>
                 {% endfor %}
             </div>
             {% else %}
-            <div class="detail-record-list">
-                {% for row in records %}
-                <article class="detail-record-card">
-                    <div class="detail-record-value">{{ row }}</div>
-                </article>
-                {% endfor %}
-            </div>
+            <div class="detail-record-list">{% for row in records %}<article class="detail-record-card"><div class="detail-record-value">{{ row }}</div></article>{% endfor %}</div>
             {% endif %}
         {% else %}
         <div class="empty-state">
@@ -173,9 +150,7 @@
         {% endif %}
     </section>
 </div>
-<script>
-    window.JOMTheme.initToggle("theme-toggle");
-</script>
+<script>window.JOMTheme.initToggle("theme-toggle");</script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>

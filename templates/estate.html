@@ -66,8 +66,7 @@
                 <span class="status-badge status-badge--{{ status_class }}">{{ (site.status or status_class)|upper }}</span>
             </div>
             <div class="priority-cell priority-cell--risk">
-                <strong>{{ risk_value }}</strong>
-                <span class="risk-badge risk-badge--{{ band }}">{{ band|upper }}</span>
+                <span class="risk-badge risk-badge--{{ band }}">{{ band|upper }} RISK</span>
             </div>
             <div class="priority-cell priority-cell--change">
                 <span class="change-badge change-badge--{{ change_class }}">{{ change_label }}</span>
@@ -101,7 +100,7 @@
             </div>
             <div class="watchlist-side">
                 <span class="status-badge status-badge--{{ status_class }}">{{ (site.status or status_class)|upper }}</span>
-                <span class="risk-badge risk-badge--{{ band }}">Risk {{ risk_value }}</span>
+                <span class="risk-badge risk-badge--{{ band }}">{{ band|upper }} RISK</span>
                 {% if site_key %}
                     <a href="/detail/site::{{ site_key }}" class="pill">Open site</a>
                 {% endif %}
@@ -207,12 +206,8 @@
             </div>
             {% if critical_total or warning_total %}
             <div class="watchlist-list">
-                {% for site in critical_sites or [] %}
-                    {{ watchlist_row(site, 'critical') }}
-                {% endfor %}
-                {% for site in warning_sites or [] %}
-                    {{ watchlist_row(site, 'warning') }}
-                {% endfor %}
+                {% for site in critical_sites or [] %}{{ watchlist_row(site, 'critical') }}{% endfor %}
+                {% for site in warning_sites or [] %}{{ watchlist_row(site, 'warning') }}{% endfor %}
             </div>
             {% else %}
             <div class="empty-state">
