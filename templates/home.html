@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -134,7 +133,7 @@
                 </div>
             </div>
             <div class="hero__core-wrap">
-                <div class="command-core">
+                <div class="command-core command-core--{{ (estate_risk_category or 'Healthy')|lower }}" id="hero-command-core" data-default-state="{{ (estate_risk_category or 'Healthy')|lower }}">
                     <div class="command-core__canvas">
                         <div class="command-core__beam"></div>
                         <div class="command-core__ring"></div>
@@ -145,7 +144,8 @@
                     </div>
                     <div class="command-core__center">
                         <span class="command-core__label">Operational posture</span>
-                        <strong class="command-core__value">{{ estate_risk_category or 'Healthy' }}</strong>
+                        <strong class="command-core__value" id="hero-core-state">{{ estate_risk_category or 'Healthy' }}</strong>
+                        <span class="command-core__subvalue" id="hero-core-substate">Read-only telemetry</span>
                     </div>
                     <div class="command-core__legend">
                         <div class="command-core__chip">
@@ -181,7 +181,7 @@
         </div>
     </section>
 
-    <section class="panel intelligence-panel command-panel command-panel--intelligence">
+    <section class="panel intelligence-panel command-panel">
         <div class="section-header">
             <div>
                 <h2>Operational Intelligence</h2>
@@ -208,10 +208,10 @@
                 <div class="value">{{ intelligence_risk_site_total }}</div>
                 <div class="note">Sites with at least one active intelligence finding and details available.</div>
             </a>
-            <div class="stat-card intelligence-card intelligence-card--status intelligence-card--{{ (estate_risk_category or 'Healthy')|lower }}">
+            <div class="stat-card intelligence-card intelligence-card--status intelligence-card--{{ (estate_risk_category or 'Healthy')|lower }}" id="operational-posture-card">
                 <div class="label">Operational Posture</div>
-                <div class="value">{{ estate_risk_category or 'Healthy' }}</div>
-                <div class="note">Read-only intelligence state based on inactive users, unmanaged accounts, orphaned projects, app usage, and capacity checks.</div>
+                <div class="value" id="operational-posture-value">{{ estate_risk_category or 'Healthy' }}</div>
+                <div class="note" id="operational-posture-note">Read-only intelligence state based on inactive users, unmanaged accounts, orphaned projects, app usage, and capacity checks.</div>
             </div>
         </div>
     </section>

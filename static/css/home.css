@@ -1,6 +1,4 @@
-
 /* Homepage dashboard layer */
-
 .command-panel {
     position: relative;
 }
@@ -29,6 +27,11 @@
 
 .command-panel--trend::after {
     background: linear-gradient(90deg, rgba(139,92,246,0.88), rgba(255,60,172,0.66));
+}
+
+.command-panel--critical::after {
+    background: linear-gradient(90deg, rgba(255,95,122,0.96), rgba(255,190,86,0.56));
+    box-shadow: 0 0 18px rgba(255,95,122,0.24);
 }
 
 .section-header__actions {

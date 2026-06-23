@@ -1,10 +1,10 @@
-
 (() => {
   const REFRESH_SECONDS = 600;
   const STATUS_POLL_SECONDS = 60;
   const DATA_POLL_SECONDS = 60;
   const STORAGE_KEY_PAUSED = 'jom.autoRefreshPaused';
   const STORAGE_KEY_COLLAPSED = 'jom.autoRefreshCollapsed';
+
   const state = {
     countdown: REFRESH_SECONDS,
     sourceMode: 'runtime',
@@ -62,10 +62,7 @@
         background: linear-gradient(180deg, rgba(8,17,40,0.96), rgba(6,12,31,0.94));
         color: #eef5ff;
         backdrop-filter: blur(24px);
-        box-shadow:
-          0 22px 48px rgba(0,0,0,0.48),
-          0 0 28px rgba(90,194,255,0.12),
-          inset 0 1px 0 rgba(255,255,255,0.06);
+        box-shadow: 0 22px 48px rgba(0,0,0,0.48), 0 0 28px rgba(90,194,255,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
         font: 12px/1.36 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         overflow: hidden;
         transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
@@ -74,10 +71,7 @@
         background: rgba(255,255,255,0.96);
         color: #13233d;
         border-color: rgba(46,121,199,0.24);
-        box-shadow:
-          0 22px 42px rgba(15,23,42,0.14),
-          0 0 18px rgba(46,121,199,0.10),
-          inset 0 1px 0 rgba(255,255,255,0.98);
+        box-shadow: 0 22px 42px rgba(15,23,42,0.14), 0 0 18px rgba(46,121,199,0.10), inset 0 1px 0 rgba(255,255,255,0.98);
       }
       #jom-auto-refresh-badge * { box-sizing: border-box; }
       #jom-auto-refresh-badge.jom-healthy { border-color: rgba(60,225,156,0.34); }
@@ -216,9 +210,7 @@
         margin-top: 10px;
         padding-top: 10px;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-automation-status {
-        border-top-color: rgba(46,121,199,0.10);
-      }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-automation-status { border-top-color: rgba(46,121,199,0.10); }
       #jom-auto-refresh-badge .jom-hidden { display: none !important; }
       @media (max-width: 640px) {
         #jom-auto-refresh-badge {
@@ -338,6 +330,45 @@
     }
   }
 
+  function applyCommandCoreState(level, label) {
+    const core = document.getElementById('hero-command-core');
+    const stateValue = document.getElementById('hero-core-state');
+    const subValue = document.getElementById('hero-core-substate');
+    const postureValue = document.getElementById('operational-posture-value');
+    const postureCard = document.getElementById('operational-posture-card');
+    const postureNote = document.getElementById('operational-posture-note');
+    if (core) {
+      core.classList.remove('command-core--healthy', 'command-core--warning', 'command-core--critical');
+      core.classList.add(`command-core--${level}`);
+    }
+    if (stateValue) stateValue.textContent = label;
+    if (subValue) {
+      subValue.textContent = level === 'critical'
+        ? 'Immediate operator attention'
+        : level === 'warning'
+          ? 'Watchlist conditions detected'
+          : 'Read-only telemetry';
+    }
+    if (postureValue) {
+      postureValue.textContent = level === 'critical'
+        ? 'Priority review'
+        : level === 'warning'
+          ? 'Watch conditions'
+          : 'Operating within expected limits';
+    }
+    if (postureCard) {
+      postureCard.classList.remove('intelligence-card--healthy', 'intelligence-card--warning', 'intelligence-card--critical');
+      postureCard.classList.add(`intelligence-card--${level}`);
+    }
+    if (postureNote) {
+      postureNote.textContent = level === 'critical'
+        ? 'High-priority signals are present across monitored users, projects, or site activity and should be reviewed first.'
+        : level === 'warning'
+          ? 'Elevated signals are present. Review intelligence findings and watchlist sites for developing issues.'
+          : 'Core telemetry is stable across inactive users, unmanaged accounts, orphaned projects, app usage, and capacity checks.';
+    }
+  }
+
   function updateHeroTelemetry() {
     const nextRefresh = document.getElementById('hero-next-refresh');
     const lastSync = document.getElementById('hero-last-sync');
@@ -348,7 +379,6 @@
   }
 
   function updateBadge() {
-    const sourceStatus = document.getElementById('jom-source-status');
     const countdown = document.getElementById('jom-countdown');
     const runtimeMode = document.getElementById('jom-runtime-mode');
     const footer = document.getElementById('jom-footer-text');
@@ -357,11 +387,14 @@
     runtimeMode.textContent = asText(state.sourceMode, 'runtime');
     countdown.textContent = formatCountdown(state.countdown);
     toggleBtn.textContent = isPaused() ? 'Resume refresh' : 'Pause refresh';
-    footer.textContent = isPaused() ? 'Auto-refresh paused in this browser. Backend loop can keep running.' : 'Auto-refresh armed for a full page reload every 600 seconds.';
+    footer.textContent = isPaused()
+      ? 'Auto-refresh paused in this browser. Backend loop can keep running.'
+      : 'Auto-refresh armed for a full page reload every 600 seconds.';
     setHealthClass();
     updateInsights();
     applyCollapsedState();
     updateHeroTelemetry();
+    applyCommandCoreState(state.health, state.healthLabel);
 
     const lastSyncEl = document.getElementById('jom-last-sync');
     if (lastSyncEl) lastSyncEl.textContent = formatAge(state.lastSyncAgeSeconds);
@@ -396,7 +429,7 @@
     } catch (error) {
       state.sourceError = error && error.message ? error.message : String(error);
       state.health = 'critical';
-      state.healthLabel = 'Source error';
+      state.healthLabel = 'Critical attention';
       state.insights = ['Source-state poll failed'];
       updateBadge();
     }
@@ -414,7 +447,7 @@
       updateBadge();
     } catch (error) {
       state.health = 'warning';
-      state.healthLabel = 'Runtime check degraded';
+      state.healthLabel = 'Watch conditions';
       state.insights = ['Could not poll /api/data'];
       updateBadge();
     }
