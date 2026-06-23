@@ -12,6 +12,7 @@
 <body>
 <div class="page">
     {% include "_nav.html" %}
+
     {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
     {% set snapshot_meta = latest_snapshot.get("snapshot_meta", {}) if latest_snapshot else {} %}
     {% set latest_snapshot_timestamp =
@@ -25,6 +26,13 @@
     {% set warning_count = warning_sites|length if warning_sites else 0 %}
     {% set stable_count = stable_sites|length if stable_sites else 0 %}
 
+    {% set attention_total =
+        (estate.managed_disabled_accounts or 0)
+        + (estate.no_tracked_jira_site_access or 0)
+        + (estate.inactive_without_site_access or 0)
+        + (estate.bitbucket_only_no_tracked_jira or 0)
+    %}
+
     {% macro site_section(title, subtitle, sites, badge_class) -%}
     <section class="panel section-block command-panel command-panel--{{ badge_class }}">
         <div class="section-header">
@@ -36,6 +44,7 @@
                 <span class="pill">{{ sites|length }} sites</span>
             </div>
         </div>
+
         {% if sites %}
         <div class="site-grid">
             {% for site in sites %}
@@ -61,6 +70,7 @@
                         {% endif %}
                     </div>
                 </div>
+
                 <div class="chip-list">
                     {% if site.historical_trend_signals %}
                         {% for item in site.historical_trend_signals[:2] %}
@@ -92,6 +102,7 @@
                         {% endif %}
                     </div>
                 </div>
+
                 <div class="metric-grid">
                     <div class="metric-box">
                         <div class="metric-label">Users</div>
@@ -114,12 +125,14 @@
                         <div class="metric-note">Snapshots retained</div>
                     </div>
                 </div>
+
                 <div class="delta-grid">
                     <div class="delta-chip"><span>Total users Δ</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
                     <div class="delta-chip"><span>Projects Δ</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
                     <div class="delta-chip"><span>Risk Δ</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
                     <div class="delta-chip"><span>Unresolved Δ</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
                 </div>
+
                 <div class="chip-list">
                     {% if site.attention_reasons %}
                         {% for item in site.attention_reasons[:2] %}
@@ -163,6 +176,7 @@
                     <span class="pill">Last verified snapshot: {{ latest_snapshot_timestamp }}</span>
                 </div>
             </div>
+
             <div class="hero__core-wrap">
                 <div class="command-core command-core--healthy" id="hero-command-core" data-default-state="healthy">
                     <div class="command-core__canvas">
@@ -211,6 +225,33 @@
         </div>
     </section>
 
+    <section class="panel command-panel">
+        <div class="section-header">
+            <div>
+                <h2>Risk Grouping</h2>
+                <p>Current site grouping by operational state.</p>
+            </div>
+        </div>
+        <div class="status-grid">
+            <a href="#critical-sites" class="status-tile status-tile--critical signal-border signal-border--critical">
+                <div class="status-tile__label">Critical</div>
+                <div class="status-tile__value">{{ critical_count }}</div>
+                <div class="status-tile__note">Sites requiring immediate review.</div>
+            </a>
+            <a href="#warning-sites" class="status-tile status-tile--warning signal-border signal-border--warning">
+                <div class="status-tile__label">Warning</div>
+                <div class="status-tile__value">{{ warning_count }}</div>
+                <div class="status-tile__note">Sites showing elevated conditions.</div>
+            </a>
+            <a href="#stable-sites" class="status-tile status-tile--stable signal-border">
+                <div class="status-tile__label">Stable</div>
+                <div class="status-tile__value">{{ stable_count }}</div>
+                <div class="status-tile__note">Sites operating within expected limits.</div>
+            </a>
+        </div>
+    </section>
+
+    {% if attention_total > 0 %}
     <section class="panel command-panel command-panel--attention">
         <div class="section-header">
             <div>
@@ -241,32 +282,7 @@
             </a>
         </div>
     </section>
-
-    <section class="panel command-panel">
-        <div class="section-header">
-            <div>
-                <h2>Risk Grouping</h2>
-                <p>Current site grouping by operational state.</p>
-            </div>
-        </div>
-        <div class="status-grid">
-            <a href="#critical-sites" class="status-tile status-tile--critical signal-border signal-border--critical">
-                <div class="status-tile__label">Critical</div>
-                <div class="status-tile__value">{{ critical_count }}</div>
-                <div class="status-tile__note">Sites requiring immediate review.</div>
-            </a>
-            <a href="#warning-sites" class="status-tile status-tile--warning signal-border signal-border--warning">
-                <div class="status-tile__label">Warning</div>
-                <div class="status-tile__value">{{ warning_count }}</div>
-                <div class="status-tile__note">Sites showing elevated conditions.</div>
-            </a>
-            <a href="#stable-sites" class="status-tile status-tile--stable signal-border">
-                <div class="status-tile__label">Stable</div>
-                <div class="status-tile__value">{{ stable_count }}</div>
-                <div class="status-tile__note">Sites operating within expected limits.</div>
-            </a>
-        </div>
-    </section>
+    {% endif %}
 
     <div id="critical-sites"></div>
     {{ site_section('Critical Sites', 'Sites requiring immediate attention based on current status.', critical_sites, 'critical') }}
