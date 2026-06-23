@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -24,13 +25,13 @@
             <div class="hero__copy">
                 <div>
                     <div class="hero__back"><a href="/estate" class="text-link">&larr; Back to estate overview</a></div>
-                    <div class="hero__eyebrow">Site detail and action intelligence</div>
+                    <div class="hero__eyebrow">Action intelligence view</div>
                     <h1>{{ page_title }}</h1>
                     <p>{{ page_subtitle }}</p>
                 </div>
                 <div class="hero__meta meta-pills">
                     <span class="pill">Records: {{ total_count or 0 }}</span>
-                    <span class="pill">Route: {{ detail_path or 'detail' }}</span>
+                    <span class="pill">Theme modes: active</span>
                 </div>
             </div>
             <div class="detail-hero__actions">
@@ -53,7 +54,7 @@
                 <div class="guidance-title">Billing and subscription follow-up</div>
                 <div class="guidance-copy">Use Atlassian Administration billing to inspect subscriptions, invoices, billing roles, payment methods, and plan changes.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration â†’ Billing</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Billing</strong></div>
                     <div class="guidance-row"><span>Use for</span><strong>Subscriptions, invoices, billing admins, payment details</strong></div>
                 </div>
                 <div class="guidance-actions">
@@ -66,7 +67,7 @@
                 <div class="guidance-title">User access and account follow-up</div>
                 <div class="guidance-copy">Review managed accounts, suspended users, product access, and access assignments from Atlassian Administration.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration â†’ Directory â†’ Users</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Directory → Users</strong></div>
                     <div class="guidance-row"><span>Use for</span><strong>Suspended users, managed accounts, product access changes</strong></div>
                 </div>
                 <div class="guidance-actions"><a href="https://admin.atlassian.com/" class="pill" target="_blank" rel="noopener noreferrer">Open admin</a></div>
@@ -76,8 +77,8 @@
                 <div class="guidance-title">Audit and change investigation</div>
                 <div class="guidance-copy">Use Jira audit logs and automation audit logs to confirm who changed what, when, and whether flows succeeded or failed.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Jira Settings â†’ System â†’ Audit Log</strong></div>
-                    <div class="guidance-row"><span>Automation</span><strong>Administration â†’ System â†’ Automation rules â†’ Audit log</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Jira Settings → System → Audit Log</strong></div>
+                    <div class="guidance-row"><span>Automation</span><strong>Administration → System → Automation rules → Audit log</strong></div>
                 </div>
                 <div class="guidance-actions">
                     <a href="https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications/" class="pill" target="_blank" rel="noopener noreferrer">Audit log guide</a>
@@ -99,33 +100,17 @@
         </div>
 
         <div class="panel detail-panel signal-border">
-            <div class="section-header">
-                <div>
-                    <h2>Operator Summary</h2>
-                    <p>Fast interpretation of the current drill-down before opening the full record list.</p>
-                </div>
-            </div>
+            <div class="section-header"><div><h2>Operator Summary</h2><p>Fast interpretation of the current drill-down before opening the full record list.</p></div></div>
             <div class="detail-stat-grid">
-                <div class="detail-stat-card">
-                    <div class="detail-stat-label">Records</div>
-                    <div class="detail-stat-value">{{ total_count or 0 }}</div>
-                    <div class="detail-stat-note">Rows currently present in this drill-down.</div>
-                </div>
-                <div class="detail-stat-card">
-                    <div class="detail-stat-label">Path</div>
-                    <div class="detail-stat-value detail-stat-value--small">{{ detail_path or '/detail' }}</div>
-                    <div class="detail-stat-note">Current operational drill-down route.</div>
-                </div>
+                <div class="detail-stat-card"><div class="detail-stat-label">Records</div><div class="detail-stat-value">{{ total_count or 0 }}</div><div class="detail-stat-note">Rows currently present in this drill-down.</div></div>
+                <div class="detail-stat-card"><div class="detail-stat-label">Route</div><div class="detail-stat-value detail-stat-value--small">{{ detail_path or '/detail' }}</div><div class="detail-stat-note">Current operational drill-down route.</div></div>
             </div>
         </div>
     </section>
 
     <section class="panel detail-panel signal-border">
         <div class="section-header">
-            <div>
-                <h2>Operational Records</h2>
-                <p>Detailed records for this drill-down. Use the action guidance first, then review rows for confirmation.</p>
-            </div>
+            <div><h2>Operational Records</h2><p>Detailed records for this drill-down. Use the action guidance first, then review rows for confirmation.</p></div>
             <div class="section-header__actions"><span class="pill">{{ total_count or 0 }} rows</span></div>
         </div>
         {% if has_records %}
@@ -143,10 +128,7 @@
             <div class="detail-record-list">{% for row in records %}<article class="detail-record-card"><div class="detail-record-value">{{ row }}</div></article>{% endfor %}</div>
             {% endif %}
         {% else %}
-        <div class="empty-state">
-            <strong>No records are currently available for this drill-down.</strong>
-            <p>This may indicate that the condition is not currently present, the route has no live rows, or the backend has not returned records for the selected scope.</p>
-        </div>
+        <div class="empty-state"><strong>No records are currently available for this drill-down.</strong><p>This may indicate that the condition is not currently present, the route has no live rows, or the backend has not returned records for the selected scope.</p></div>
         {% endif %}
     </section>
 </div>

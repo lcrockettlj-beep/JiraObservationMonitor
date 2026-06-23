@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,24 +32,43 @@
         {%- endif -%}
     {%- endmacro %}
 
-    {% macro priority_row(site, status_class) -%}
-        {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
-        {% set site_name = site.site_name or site.site or 'Site' %}
-        {% set risk_value = site.risk_score or site.historical_trend_score or 0 %}
+    {% macro change_state(site) -%}
         {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}
         {% set risk_delta = site.historical_risk_delta or 0 %}
         {% set unresolved_delta = site.historical_unresolved_delta or 0 %}
         {% set users_delta = site.total_users_delta or 0 %}
-        {% if unresolved_delta > 0 or risk_delta > 0 %}
-            {% set change_label = 'Escalating' %}
-            {% set change_class = 'critical' %}
-        {% elif proj_delta != 0 or users_delta != 0 %}
-            {% set change_label = 'Changed' %}
-            {% set change_class = 'warning' %}
-        {% else %}
-            {% set change_label = 'None' %}
-            {% set change_class = 'stable' %}
-        {% endif %}
+        {%- if unresolved_delta > 0 or risk_delta > 0 -%}critical
+        {%- elif proj_delta != 0 or users_delta != 0 -%}warning
+        {%- else -%}stable
+        {%- endif -%}
+    {%- endmacro %}
+
+    {% macro change_label(site) -%}
+        {% set change_level = change_state(site) %}
+        {%- if change_level == 'critical' -%}Escalating
+        {%- elif change_level == 'warning' -%}Changed
+        {%- else -%}None
+        {%- endif -%}
+    {%- endmacro %}
+
+    {% macro change_note(site) -%}
+        {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}
+        {% set risk_delta = site.historical_risk_delta or 0 %}
+        {% set unresolved_delta = site.historical_unresolved_delta or 0 %}
+        {% set users_delta = site.total_users_delta or 0 %}
+        {%- if unresolved_delta > 0 -%}Unresolved +{{ unresolved_delta }}
+        {%- elif risk_delta > 0 -%}Risk +{{ risk_delta }}
+        {%- elif proj_delta != 0 -%}Projects {{ proj_delta }}
+        {%- elif users_delta != 0 -%}Users {{ users_delta }}
+        {%- else -%}No recent material delta
+        {%- endif -%}
+    {%- endmacro %}
+
+    {% macro priority_row(site, status_class) -%}
+        {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
+        {% set site_name = site.site_name or site.site or 'Site' %}
+        {% set band = risk_band(site.risk_score or site.historical_trend_score or 0) %}
+        {% set change_level = change_state(site) %}
         {% if status_class == 'critical' %}
             {% set action_label = 'Investigate' %}
         {% elif status_class == 'warning' %}
@@ -56,8 +76,7 @@
         {% else %}
             {% set action_label = 'Open' %}
         {% endif %}
-        {% set band = risk_band(risk_value) %}
-        <div class="priority-row priority-row--{{ status_class }}">
+        <div class="priority-row priority-row--{{ status_class }}" data-status="{{ status_class }}" data-risk-band="{{ band }}" data-change-level="{{ change_level }}">
             <div class="priority-cell priority-cell--site">
                 <div class="priority-site">{{ site_name }}</div>
                 <div class="priority-reason">{{ site.reason or 'No significant operational concerns detected.' }}</div>
@@ -69,40 +88,14 @@
                 <span class="risk-badge risk-badge--{{ band }}">{{ band|upper }} RISK</span>
             </div>
             <div class="priority-cell priority-cell--change">
-                <span class="change-badge change-badge--{{ change_class }}">{{ change_label }}</span>
-                <span class="priority-change-note">
-                    {% if unresolved_delta > 0 %}Unresolved +{{ unresolved_delta }}
-                    {% elif risk_delta > 0 %}Risk +{{ risk_delta }}
-                    {% elif proj_delta != 0 %}Projects {{ proj_delta }}
-                    {% elif users_delta != 0 %}Users {{ users_delta }}
-                    {% else %}No recent material delta{% endif %}
-                </span>
+                <span class="change-badge change-badge--{{ change_level }}">{{ change_label(site) }}</span>
+                <span class="priority-change-note">{{ change_note(site) }}</span>
             </div>
             <div class="priority-cell priority-cell--action">
                 {% if site_key %}
                     <a href="/detail/site::{{ site_key }}" class="pill">{{ action_label }}</a>
                 {% else %}
                     <span class="pill">{{ action_label }} unavailable</span>
-                {% endif %}
-            </div>
-        </div>
-    {%- endmacro %}
-
-    {% macro watchlist_row(site, status_class) -%}
-        {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
-        {% set site_name = site.site_name or site.site or 'Site' %}
-        {% set risk_value = site.risk_score or site.historical_trend_score or 0 %}
-        {% set band = risk_band(risk_value) %}
-        <div class="watchlist-row watchlist-row--{{ status_class }}">
-            <div>
-                <div class="watchlist-site">{{ site_name }}</div>
-                <div class="watchlist-reason">{{ site.reason or 'Operational review recommended.' }}</div>
-            </div>
-            <div class="watchlist-side">
-                <span class="status-badge status-badge--{{ status_class }}">{{ (site.status or status_class)|upper }}</span>
-                <span class="risk-badge risk-badge--{{ band }}">{{ band|upper }} RISK</span>
-                {% if site_key %}
-                    <a href="/detail/site::{{ site_key }}" class="pill">Open site</a>
                 {% endif %}
             </div>
         </div>
@@ -116,14 +109,14 @@
                     <div class="hero__eyebrow">Operational portfolio view</div>
                     <h1>Estate Overview</h1>
                     <p>
-                        Estate sits between Home and Site Detail. This page prioritises which sites deserve attention next,
-                        which sites changed recently, and where investigation should start.
+                        Estate sits between Home and Site Detail. Auto-priority now sorts the board, highlights attention rows,
+                        and keeps the most operationally important sites at the top.
                     </p>
                 </div>
                 <div class="hero__meta meta-pills">
                     <span class="pill">Tracked sites: {{ tracked_total or 0 }}</span>
                     <span class="pill">Watchlist: {{ watchlist_total }}</span>
-                    <span class="pill">Sites to review: {{ review_total or 0 }}</span>
+                    <span class="pill">Auto-priority: active</span>
                 </div>
             </div>
             <div class="estate-hero__actions">
@@ -167,123 +160,16 @@
         </div>
     </section>
 
-    <section class="panel estate-panel signal-border">
-        <div class="section-header">
-            <div>
-                <h2>Estate Risk Distribution</h2>
-                <p>Current portfolio posture by operational state.</p>
-            </div>
-        </div>
-        <div class="status-grid">
-            <a href="#estate-watchlist" class="status-tile status-tile--critical signal-border signal-border--critical">
-                <div class="status-tile__label">Critical</div>
-                <div class="status-tile__value">{{ critical_total }}</div>
-                <div class="status-tile__note">Sites needing immediate investigation.</div>
-            </a>
-            <a href="#estate-watchlist" class="status-tile status-tile--warning signal-border signal-border--warning">
-                <div class="status-tile__label">Warning</div>
-                <div class="status-tile__value">{{ warning_total }}</div>
-                <div class="status-tile__note">Sites showing elevated conditions or recent change.</div>
-            </a>
-            <a href="#estate-priority-board" class="status-tile status-tile--stable signal-border">
-                <div class="status-tile__label">Stable</div>
-                <div class="status-tile__value">{{ stable_total }}</div>
-                <div class="status-tile__note">Sites operating within expected limits.</div>
-            </a>
-        </div>
-    </section>
-
-    <section class="estate-split">
-        <div class="panel estate-panel signal-border" id="estate-watchlist">
-            <div class="section-header">
-                <div>
-                    <h2>Estate Watchlist</h2>
-                    <p>Sites that currently deserve investigation or review.</p>
-                </div>
-                <div class="section-header__actions">
-                    <span class="pill">{{ watchlist_total }} flagged</span>
-                </div>
-            </div>
-            {% if critical_total or warning_total %}
-            <div class="watchlist-list">
-                {% for site in critical_sites or [] %}{{ watchlist_row(site, 'critical') }}{% endfor %}
-                {% for site in warning_sites or [] %}{{ watchlist_row(site, 'warning') }}{% endfor %}
-            </div>
-            {% else %}
-            <div class="empty-state">
-                <strong>No sites on the watchlist right now.</strong>
-                <p>The estate currently has no critical or warning site groups requiring immediate review.</p>
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="panel estate-panel signal-border">
-            <div class="section-header">
-                <div>
-                    <h2>Recently Changed Sites</h2>
-                    <p>Sites with material deltas across projects, users, risk, or unresolved work.</p>
-                </div>
-            </div>
-            <div class="watchlist-list watchlist-list--changes">
-                {% set changes_ns = namespace(found=false) %}
-                {% for site in prioritised_sites %}
-                    {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
-                    {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}
-                    {% set risk_delta = site.historical_risk_delta or 0 %}
-                    {% set unresolved_delta = site.historical_unresolved_delta or 0 %}
-                    {% set users_delta = site.total_users_delta or 0 %}
-                    {% if proj_delta != 0 or risk_delta != 0 or unresolved_delta != 0 or users_delta != 0 %}
-                        {% set changes_ns.found = true %}
-                        {% if unresolved_delta > 0 or risk_delta > 0 %}
-                            {% set change_class = 'critical' %}
-                            {% set change_label = 'Escalating' %}
-                        {% elif proj_delta != 0 or users_delta != 0 %}
-                            {% set change_class = 'warning' %}
-                            {% set change_label = 'Changed' %}
-                        {% else %}
-                            {% set change_class = 'stable' %}
-                            {% set change_label = 'Stable' %}
-                        {% endif %}
-                        <div class="watchlist-row watchlist-row--change">
-                            <div>
-                                <div class="watchlist-site">{{ site.site_name or site.site or 'Site' }}</div>
-                                <div class="watchlist-reason">
-                                    {% if unresolved_delta > 0 %}Unresolved issues changed by {{ unresolved_delta }}.
-                                    {% elif risk_delta != 0 %}Risk changed by {{ risk_delta }}.
-                                    {% elif proj_delta != 0 %}Projects changed by {{ proj_delta }}.
-                                    {% else %}Users changed by {{ users_delta }}.{% endif %}
-                                </div>
-                            </div>
-                            <div class="watchlist-side">
-                                <span class="change-badge change-badge--{{ change_class }}">{{ change_label }}</span>
-                                {% if site_key %}
-                                    <a href="/detail/site::{{ site_key }}" class="pill">Review change</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                {% if not changes_ns.found %}
-                <div class="empty-state">
-                    <strong>No material site changes detected.</strong>
-                    <p>No project, user, risk, or unresolved-issue deltas are currently standing out across the estate.</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </section>
-
     <section class="panel estate-panel signal-border" id="estate-priority-board">
         <div class="section-header">
             <div>
                 <h2>Site Prioritisation Board</h2>
-                <p>This portfolio layer answers where to look next, not low-level site metrics.</p>
+                <p>Auto-sorted operational board. The system brings the highest priority sites to the top automatically.</p>
             </div>
             <div class="section-header__actions">
                 <span class="pill">{{ prioritised_sites|length }} sites</span>
             </div>
         </div>
-
         <div class="priority-board">
             <div class="priority-head">
                 <div>Site</div>
@@ -303,6 +189,7 @@
 <script>
     window.JOMTheme.initToggle("theme-toggle");
 </script>
+<script src="{{ url_for('static', filename='js/estate_intelligence.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
