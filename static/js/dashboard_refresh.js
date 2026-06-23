@@ -57,12 +57,12 @@
         z-index: 9999;
         width: 292px;
         max-width: calc(100vw - 24px);
-        border: 1px solid rgba(90,194,255,0.26);
+        border: 1px solid rgba(90,194,255,0.24);
         border-radius: 22px;
         background: linear-gradient(180deg, rgba(8,17,40,0.96), rgba(6,12,31,0.94));
         color: #eef5ff;
         backdrop-filter: blur(24px);
-        box-shadow: 0 22px 48px rgba(0,0,0,0.48), 0 0 28px rgba(90,194,255,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+        box-shadow: 0 22px 48px rgba(0,0,0,0.48), 0 0 24px rgba(90,194,255,0.10), inset 0 1px 0 rgba(255,255,255,0.06);
         font: 12px/1.36 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         overflow: hidden;
         transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
@@ -70,18 +70,18 @@
       html[data-theme="light"] #jom-auto-refresh-badge {
         background: rgba(255,255,255,0.96);
         color: #13233d;
-        border-color: rgba(46,121,199,0.24);
-        box-shadow: 0 22px 42px rgba(15,23,42,0.14), 0 0 18px rgba(46,121,199,0.10), inset 0 1px 0 rgba(255,255,255,0.98);
+        border-color: rgba(46,121,199,0.22);
+        box-shadow: 0 22px 42px rgba(15,23,42,0.14), 0 0 16px rgba(46,121,199,0.08), inset 0 1px 0 rgba(255,255,255,0.98);
       }
       #jom-auto-refresh-badge * { box-sizing: border-box; }
-      #jom-auto-refresh-badge.jom-healthy { border-color: rgba(60,225,156,0.34); }
+      #jom-auto-refresh-badge.jom-healthy { border-color: rgba(60,225,156,0.32); }
       #jom-auto-refresh-badge.jom-warning {
         border-color: rgba(255,190,86,0.40);
-        box-shadow: 0 22px 48px rgba(0,0,0,0.50), 0 0 34px rgba(255,190,86,0.20);
+        box-shadow: 0 22px 48px rgba(0,0,0,0.50), 0 0 30px rgba(255,190,86,0.18);
       }
       #jom-auto-refresh-badge.jom-critical {
         border-color: rgba(255,95,122,0.44);
-        box-shadow: 0 22px 48px rgba(0,0,0,0.52), 0 0 38px rgba(255,95,122,0.24);
+        box-shadow: 0 22px 48px rgba(0,0,0,0.52), 0 0 34px rgba(255,95,122,0.22);
       }
       #jom-auto-refresh-badge.jom-collapsed {
         width: auto;
@@ -142,7 +142,7 @@
       #jom-auto-refresh-badge .jom-mini-btn,
       #jom-auto-refresh-badge .jom-btn {
         appearance: none;
-        border: 1px solid rgba(90,194,255,0.20);
+        border: 1px solid rgba(90,194,255,0.18);
         background: rgba(255,255,255,0.04);
         color: inherit;
         cursor: pointer;
@@ -160,13 +160,13 @@
         padding: 0 12px 10px;
       }
       #jom-auto-refresh-badge .jom-card {
-        border: 1px solid rgba(90,194,255,0.14);
+        border: 1px solid rgba(90,194,255,0.08);
         border-radius: 12px;
         padding: 9px 10px;
-        background: rgba(255,255,255,0.03);
+        background: rgba(255,255,255,0.02);
         min-height: 58px;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-card { background: rgba(255,255,255,0.76); }
+      html[data-theme="light"] #jom-auto-refresh-badge .jom-card { background: rgba(255,255,255,0.70); }
       #jom-auto-refresh-badge .jom-label {
         color: #98a5bb;
         font-size: 10px;
@@ -200,8 +200,8 @@
       #jom-auto-refresh-badge .jom-pill {
         border-radius: 999px;
         padding: 4px 8px;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(90,194,255,0.14);
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(90,194,255,0.10);
         color: inherit;
         font-size: 11px;
       }
@@ -447,7 +447,7 @@
       updateBadge();
     } catch (error) {
       state.health = 'warning';
-      state.healthLabel = 'Watch conditions';
+      state.healthLabel = 'Warning attention';
       state.insights = ['Could not poll /api/data'];
       updateBadge();
     }

@@ -34,6 +34,14 @@
     box-shadow: 0 0 18px rgba(255,95,122,0.24);
 }
 
+.command-panel--primary .section-header h2 {
+    text-shadow: 0 0 12px rgba(90,194,255,0.14);
+}
+
+.command-panel--support {
+    opacity: 0.98;
+}
+
 .section-header__actions {
     display: flex;
     gap: 8px;
