@@ -24,6 +24,13 @@
     {% set watchlist_total = critical_total + warning_total %}
     {% set prioritised_sites = (critical_sites or []) + (warning_sites or []) + (stable_sites or []) %}
 
+    {% macro risk_band(score) -%}
+        {%- if score >= 70 -%}high
+        {%- elif score >= 30 -%}medium
+        {%- else -%}low
+        {%- endif -%}
+    {%- endmacro %}
+
     {% macro priority_row(site, status_class) -%}
         {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
         {% set site_name = site.site_name or site.site or 'Site' %}
@@ -33,11 +40,14 @@
         {% set unresolved_delta = site.historical_unresolved_delta or 0 %}
         {% set users_delta = site.total_users_delta or 0 %}
         {% if unresolved_delta > 0 or risk_delta > 0 %}
-            {% set change_label = '↑↑ Escalating' %}
+            {% set change_label = 'Escalating' %}
+            {% set change_class = 'critical' %}
         {% elif proj_delta != 0 or users_delta != 0 %}
-            {% set change_label = '↑ Changed' %}
+            {% set change_label = 'Changed' %}
+            {% set change_class = 'warning' %}
         {% else %}
-            {% set change_label = '— None' %}
+            {% set change_label = 'None' %}
+            {% set change_class = 'stable' %}
         {% endif %}
         {% if status_class == 'critical' %}
             {% set action_label = 'Investigate' %}
@@ -46,6 +56,7 @@
         {% else %}
             {% set action_label = 'Open' %}
         {% endif %}
+        {% set band = risk_band(risk_value) %}
         <div class="priority-row priority-row--{{ status_class }}">
             <div class="priority-cell priority-cell--site">
                 <div class="priority-site">{{ site_name }}</div>
@@ -56,10 +67,10 @@
             </div>
             <div class="priority-cell priority-cell--risk">
                 <strong>{{ risk_value }}</strong>
-                <span class="priority-risk-note">risk score</span>
+                <span class="risk-badge risk-badge--{{ band }}">{{ band|upper }}</span>
             </div>
             <div class="priority-cell priority-cell--change">
-                <strong>{{ change_label }}</strong>
+                <span class="change-badge change-badge--{{ change_class }}">{{ change_label }}</span>
                 <span class="priority-change-note">
                     {% if unresolved_delta > 0 %}Unresolved +{{ unresolved_delta }}
                     {% elif risk_delta > 0 %}Risk +{{ risk_delta }}
@@ -82,6 +93,7 @@
         {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
         {% set site_name = site.site_name or site.site or 'Site' %}
         {% set risk_value = site.risk_score or site.historical_trend_score or 0 %}
+        {% set band = risk_band(risk_value) %}
         <div class="watchlist-row watchlist-row--{{ status_class }}">
             <div>
                 <div class="watchlist-site">{{ site_name }}</div>
@@ -89,7 +101,7 @@
             </div>
             <div class="watchlist-side">
                 <span class="status-badge status-badge--{{ status_class }}">{{ (site.status or status_class)|upper }}</span>
-                <span class="watchlist-risk">Risk {{ risk_value }}</span>
+                <span class="risk-badge risk-badge--{{ band }}">Risk {{ risk_value }}</span>
                 {% if site_key %}
                     <a href="/detail/site::{{ site_key }}" class="pill">Open site</a>
                 {% endif %}
@@ -227,6 +239,16 @@
                     {% set users_delta = site.total_users_delta or 0 %}
                     {% if proj_delta != 0 or risk_delta != 0 or unresolved_delta != 0 or users_delta != 0 %}
                         {% set changes_ns.found = true %}
+                        {% if unresolved_delta > 0 or risk_delta > 0 %}
+                            {% set change_class = 'critical' %}
+                            {% set change_label = 'Escalating' %}
+                        {% elif proj_delta != 0 or users_delta != 0 %}
+                            {% set change_class = 'warning' %}
+                            {% set change_label = 'Changed' %}
+                        {% else %}
+                            {% set change_class = 'stable' %}
+                            {% set change_label = 'Stable' %}
+                        {% endif %}
                         <div class="watchlist-row watchlist-row--change">
                             <div>
                                 <div class="watchlist-site">{{ site.site_name or site.site or 'Site' }}</div>
@@ -238,6 +260,7 @@
                                 </div>
                             </div>
                             <div class="watchlist-side">
+                                <span class="change-badge change-badge--{{ change_class }}">{{ change_label }}</span>
                                 {% if site_key %}
                                     <a href="/detail/site::{{ site_key }}" class="pill">Review change</a>
                                 {% endif %}
@@ -275,15 +298,9 @@
                 <div>Action</div>
             </div>
             <div class="priority-body">
-                {% for site in critical_sites or [] %}
-                    {{ priority_row(site, 'critical') }}
-                {% endfor %}
-                {% for site in warning_sites or [] %}
-                    {{ priority_row(site, 'warning') }}
-                {% endfor %}
-                {% for site in stable_sites or [] %}
-                    {{ priority_row(site, 'stable') }}
-                {% endfor %}
+                {% for site in critical_sites or [] %}{{ priority_row(site, 'critical') }}{% endfor %}
+                {% for site in warning_sites or [] %}{{ priority_row(site, 'warning') }}{% endfor %}
+                {% for site in stable_sites or [] %}{{ priority_row(site, 'stable') }}{% endfor %}
             </div>
         </div>
     </section>

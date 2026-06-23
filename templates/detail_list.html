@@ -2,43 +2,180 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>{{ title or "Detail" }} - Jira Observation Monitor</title>
+    <title>{{ title or heading or 'Detail View' }} - Jira Observation Monitor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
 </head>
 <body>
 <div class="page">
     {% include "_nav.html" %}
-    <section class="hero">
-        <div class="hero__top">
-            <div>
-                <div class="hero__back"><a href="/" class="text-link">&larr; Back to operational overview</a></div>
-                
-		<h1>{{ title }}</h1>
-		<p>Detailed operational view showing records for this selection.</p>
-               
-                <p>Reason for this view: {{ reason }}</p>
-                <p class="detail-context">Where to look in Atlassian: {{ atlassian_area }}</p>
 
+    {% set detail_path = request.path if request else '' %}
+    {% set page_title = title or heading or 'Detail View' %}
+    {% set page_subtitle = subtitle or description or 'Operational drill-down with direct actions and guidance.' %}
+    {% set records = rows or items or entries or results or data or [] %}
+    {% set total_count = count or record_count or (records|length) %}
+    {% set has_records = records and (records|length > 0) %}
+
+    <section class="hero detail-hero">
+        <div class="hero__top">
+            <div class="hero__copy">
+                <div>
+                    <div class="hero__back"><a href="/estate" class="text-link">&larr; Back to estate overview</a></div>
+                    <div class="hero__eyebrow">Site detail and action intelligence</div>
+                    <h1>{{ page_title }}</h1>
+                    <p>{{ page_subtitle }}</p>
+                </div>
+                <div class="hero__meta meta-pills">
+                    <span class="pill">Records: {{ total_count or 0 }}</span>
+                    <span class="pill">Route: {{ detail_path or 'detail' }}</span>
+                </div>
             </div>
-            <div class="hero__meta">
-                <div class="pill">{{ rows|length }} record(s)</div>
-                <div class="pill">Click a column heading to sort</div>
+            <div class="detail-hero__actions">
+                <a href="/estate" class="detail-hero__orb">Estate</a>
+                <a href="/reference" class="detail-hero__orb">Admin</a>
             </div>
         </div>
     </section>
-    <section class="panel">
-        <div class="section__header"><h2>{{ title }}</h2><div class="count">{{ detail_key }}</div></div>
-        {% if rows %}
-        <div class="table-wrap"><table><thead><tr>{% for col in columns %}{% set is_current = (sort_key == col) %}{% set next_order = 'desc' if (is_current and sort_order != 'desc') else 'asc' %}<th><a href="?sort={{ col|urlencode }}&order={{ next_order }}">{{ col.replace('_', ' ') }}{% if is_current %}<span>{{ '&darr;' if sort_order == 'desc' else '&uarr;' }}</span>{% endif %}</a></th>{% endfor %}</tr></thead><tbody>{% for row in rows %}<tr>{% for col in columns %}{% set value = row.get(col, '') %}<td class="{{ 'wrap' if (value|string)|length > 60 else '' }}">{{ value }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+
+    <section class="detail-split">
+        <div class="panel detail-panel signal-border">
+            <div class="section-header">
+                <div>
+                    <h2>Action Guidance</h2>
+                    <p>Use this guidance to move from observation to action inside Atlassian.</p>
+                </div>
+            </div>
+
+            {% if 'billing::' in detail_path %}
+            <div class="guidance-card guidance-card--admin">
+                <div class="guidance-title">Billing and subscription follow-up</div>
+                <div class="guidance-copy">Use Atlassian Administration billing to inspect subscriptions, invoices, billing roles, payment methods, and plan changes.</div>
+                <div class="guidance-list">
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Billing</strong></div>
+                    <div class="guidance-row"><span>Use for</span><strong>Subscriptions, invoices, billing admins, payment details</strong></div>
+                </div>
+                <div class="guidance-actions">
+                    <a href="https://admin.atlassian.com/billing/" class="pill" target="_blank" rel="noopener noreferrer">Open billing</a>
+                    <a href="https://admin.atlassian.com/" class="pill" target="_blank" rel="noopener noreferrer">Open admin</a>
+                </div>
+            </div>
+            {% elif 'suspended_accounts' in detail_path or 'managed_accounts' in detail_path or 'access::' in detail_path %}
+            <div class="guidance-card guidance-card--warning">
+                <div class="guidance-title">User access and account follow-up</div>
+                <div class="guidance-copy">Review managed accounts, suspended users, product access, and access assignments from Atlassian Administration.</div>
+                <div class="guidance-list">
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Directory → Users</strong></div>
+                    <div class="guidance-row"><span>Use for</span><strong>Suspended users, managed accounts, product access changes</strong></div>
+                </div>
+                <div class="guidance-actions">
+                    <a href="https://admin.atlassian.com/" class="pill" target="_blank" rel="noopener noreferrer">Open admin</a>
+                </div>
+            </div>
+            {% elif 'change::' in detail_path %}
+            <div class="guidance-card guidance-card--critical">
+                <div class="guidance-title">Audit and change investigation</div>
+                <div class="guidance-copy">Use Jira audit logs and automation audit logs to confirm who changed what, when, and whether flows succeeded or failed.</div>
+                <div class="guidance-list">
+                    <div class="guidance-row"><span>Where to fix</span><strong>Jira Settings → System → Audit Log</strong></div>
+                    <div class="guidance-row"><span>Automation</span><strong>Administration → System → Automation rules → Audit log</strong></div>
+                </div>
+                <div class="guidance-actions">
+                    <a href="https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications/" class="pill" target="_blank" rel="noopener noreferrer">Audit log guide</a>
+                    <a href="https://support.atlassian.com/cloud-automation/docs/what-is-the-automation-audit-log/" class="pill" target="_blank" rel="noopener noreferrer">Automation audit guide</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="guidance-card guidance-card--stable">
+                <div class="guidance-title">Investigate from this drill-down</div>
+                <div class="guidance-copy">Use this detail page to confirm the problem, decide if it needs action, and jump into Estate, Site, or Admin views for follow-up.</div>
+                <div class="guidance-list">
+                    <div class="guidance-row"><span>Estate use</span><strong>Prioritise which sites need attention</strong></div>
+                    <div class="guidance-row"><span>Site use</span><strong>Inspect changes, users, projects, and findings</strong></div>
+                    <div class="guidance-row"><span>Admin use</span><strong>Handle billing, managed accounts, and configuration tasks</strong></div>
+                </div>
+                <div class="guidance-actions">
+                    <a href="/estate" class="pill">Open estate</a>
+                    <a href="/reference" class="pill">Open admin</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="panel detail-panel signal-border">
+            <div class="section-header">
+                <div>
+                    <h2>Operator Summary</h2>
+                    <p>Fast interpretation of the current drill-down before opening the full record list.</p>
+                </div>
+            </div>
+            <div class="detail-stat-grid">
+                <div class="detail-stat-card">
+                    <div class="detail-stat-label">Records</div>
+                    <div class="detail-stat-value">{{ total_count or 0 }}</div>
+                    <div class="detail-stat-note">Rows currently present in this drill-down.</div>
+                </div>
+                <div class="detail-stat-card">
+                    <div class="detail-stat-label">Path</div>
+                    <div class="detail-stat-value detail-stat-value--small">{{ detail_path or '/detail' }}</div>
+                    <div class="detail-stat-note">Current operational drill-down route.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel detail-panel signal-border">
+        <div class="section-header">
+            <div>
+                <h2>Operational Records</h2>
+                <p>Detailed records for this drill-down. Use the action guidance first, then review rows for confirmation.</p>
+            </div>
+            <div class="section-header__actions">
+                <span class="pill">{{ total_count or 0 }} rows</span>
+            </div>
+        </div>
+
+        {% if has_records %}
+            {% if records[0].items is defined %}
+            <div class="detail-record-list">
+                {% for row in records %}
+                <article class="detail-record-card">
+                    <div class="detail-record-grid">
+                        {% for key, value in row.items() %}
+                            {% if loop.index <= 8 %}
+                            <div class="detail-record-field">
+                                <div class="detail-record-label">{{ key|replace('_', ' ')|title }}</div>
+                                <div class="detail-record-value">{{ value }}</div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="detail-record-list">
+                {% for row in records %}
+                <article class="detail-record-card">
+                    <div class="detail-record-value">{{ row }}</div>
+                </article>
+                {% endfor %}
+            </div>
+            {% endif %}
         {% else %}
-        <div class="empty">No records are currently available for this view.</div>
+        <div class="empty-state">
+            <strong>No records are currently available for this drill-down.</strong>
+            <p>This may indicate that the condition is not currently present, the route has no live rows, or the backend has not returned records for the selected scope.</p>
+        </div>
         {% endif %}
     </section>
 </div>
-<script>window.JOMTheme.initToggle("theme-toggle");</script>
+<script>
+    window.JOMTheme.initToggle("theme-toggle");
+</script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
