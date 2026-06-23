@@ -637,3 +637,10 @@ html[data-theme="light"] .site-card {
 html[data-theme="light"] .site-grid--stable .site-card--compact {
     background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(247,251,255,0.92));
 }
+/* Phase 2 rollout helpers ----------------------------------------------- */
+.command-panel--attention .stat-card {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.16), 0 0 18px rgba(255,179,0,0.08);
+}
+.site-grid--stable .site-card--compact .badge--stable {
+    box-shadow: 0 0 8px rgba(0,255,136,0.18), 0 0 18px rgba(0,255,136,0.10);
+}

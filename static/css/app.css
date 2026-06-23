@@ -687,3 +687,30 @@ html[data-theme="light"] body {
 html[data-theme="light"] body::before {
     opacity: 0.16;
 }
+/* Phase 2 rollout helpers ----------------------------------------------- */
+.text-link {
+    color: var(--accent);
+}
+.text-link:hover {
+    color: var(--text);
+    text-shadow: 0 0 12px rgba(0,229,255,0.18);
+}
+.breakdown-row.clickable {
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.breakdown-row.clickable:hover {
+    transform: translateY(-1px);
+    border-color: rgba(90,194,255,0.34);
+    box-shadow: 0 0 14px rgba(90,194,255,0.10);
+}
+html[data-theme="future-estate"] {
+    --bg: #071018;
+    --panel: rgba(10, 22, 40, 0.92);
+    --panel-glass: rgba(14, 26, 44, 0.82);
+    --border: rgba(0, 212, 255, 0.16);
+    --border-strong: rgba(0, 212, 255, 0.28);
+    --text: #f7fbff;
+    --muted: #93a8c6;
+    --accent: #00d4ff;
+    --accent-cyan: #00d4ff;
+}
