@@ -29,37 +29,54 @@
     style.textContent = `
       #jom-auto-refresh-badge {
         position: fixed;
-        right: 18px;
-        bottom: 18px;
+        right: 12px;
+        bottom: 12px;
         z-index: 9999;
-        width: 250px;
-        max-width: calc(100vw - 24px);
-        border: 1px solid rgba(90,194,255,0.24);
-        border-radius: 22px;
-        background: linear-gradient(180deg, rgba(8,17,40,0.96), rgba(6,12,31,0.94));
+        width: 220px;
+        max-width: calc(100vw - 20px);
+        border: 1px solid rgba(90,194,255,0.20);
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(8,17,40,0.94), rgba(6,12,31,0.92));
         color: #eef5ff;
-        backdrop-filter: blur(24px);
-        box-shadow: 0 22px 48px rgba(0,0,0,0.48), 0 0 24px rgba(90,194,255,0.10), inset 0 1px 0 rgba(255,255,255,0.06);
-        font: 12px/1.36 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        backdrop-filter: blur(22px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.34), 0 0 16px rgba(90,194,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+        font: 12px/1.34 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         overflow: hidden;
+        opacity: 0.96;
       }
+     
       html[data-theme="light"] #jom-auto-refresh-badge {
-        background: rgba(255,255,255,0.96);
+        background: rgba(255,255,255,0.95);
         color: #13233d;
-        border-color: rgba(46,121,199,0.22);
-        box-shadow: 0 22px 42px rgba(15,23,42,0.14), 0 0 16px rgba(46,121,199,0.08), inset 0 1px 0 rgba(255,255,255,0.98);
+        border-color: rgba(46,121,199,0.18);
+        box-shadow: 0 14px 26px rgba(15,23,42,0.12), 0 0 10px rgba(46,121,199,0.06), inset 0 1px 0 rgba(255,255,255,0.98);
       }
+
       #jom-auto-refresh-badge * { box-sizing: border-box; }
-      #jom-auto-refresh-badge.jom-healthy { border-color: rgba(0,255,136,0.34); }
-      #jom-auto-refresh-badge.jom-warning { border-color: rgba(255,179,0,0.40); box-shadow: 0 22px 48px rgba(0,0,0,0.50), 0 0 30px rgba(255,179,0,0.18); }
-      #jom-auto-refresh-badge.jom-critical { border-color: rgba(255,0,51,0.44); box-shadow: 0 22px 48px rgba(0,0,0,0.52), 0 0 34px rgba(255,0,51,0.22); }
+      
+      #jom-auto-refresh-badge.jom-healthy {
+        border-color: rgba(0,255,136,0.28);
+      }
+
+      #jom-auto-refresh-badge.jom-warning {
+        border-color: rgba(255,179,0,0.34);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.36), 0 0 18px rgba(255,179,0,0.12);
+      }
+
+      #jom-auto-refresh-badge.jom-critical {
+        border-color: rgba(255,0,51,0.38);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.38), 0 0 20px rgba(255,0,51,0.14);
+      }
+
       #jom-auto-refresh-badge.jom-collapsed { width: auto; min-width: 180px; }
+      
       #jom-auto-refresh-badge .jom-head {
         display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
-        padding: 12px 12px 10px;
+        padding: 10px 10px 8px;
         border-bottom: 1px solid rgba(255,255,255,0.05);
-        background: linear-gradient(90deg, rgba(90,194,255,0.10), rgba(139,92,246,0.06));
+        background: linear-gradient(90deg, rgba(90,194,255,0.08), rgba(139,92,246,0.05));
       }
+
       html[data-theme="light"] #jom-auto-refresh-badge .jom-head {
         border-bottom-color: rgba(46,121,199,0.10);
         background: linear-gradient(90deg, rgba(0,229,255,0.08), rgba(139,92,246,0.05));
@@ -88,7 +105,7 @@
       #jom-auto-refresh-badge .jom-pill {
         border-radius: 999px; padding: 4px 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(90,194,255,0.10); color: inherit; font-size: 11px;
       }
-      #jom-auto-refresh-badge .jom-body { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 10px; }
+      #jom-auto-refresh-badge .jom-body { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 0 10px 8px; }
       #jom-auto-refresh-badge .jom-card {
         border: 1px solid rgba(90,194,255,0.08); border-radius: 12px; padding: 9px 10px; background: rgba(255,255,255,0.02); min-height: 58px;
       }
@@ -96,9 +113,10 @@
       #jom-auto-refresh-badge .jom-label { color: #98a5bb; font-size: 10px; text-transform: uppercase; letter-spacing: 0.48px; margin-bottom: 4px; }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-label { color: #6b7a94; }
       #jom-auto-refresh-badge .jom-value { font-weight: 800; word-break: break-word; }
-      #jom-auto-refresh-badge .jom-actions { display: flex; gap: 8px; padding: 0 12px 10px; }
+      #jom-auto-refresh-badge .jom-actions { display: flex; gap: 6px; padding: 0 10px 8px; }
+
       #jom-auto-refresh-badge .jom-btn { border-radius: 10px; padding: 7px 10px; }
-      #jom-auto-refresh-badge .jom-footer { padding: 0 12px 12px; color: #96a2b8; font-size: 11px; }
+      #jom-auto-refresh-badge .jom-footer { padding: 0 10px 10px; color: #96a2b8; font-size: 10px; }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-footer { color: #5d6d85; }
       #jom-auto-refresh-badge .jom-hidden { display: none !important; }
       @media (max-width: 640px) {
@@ -312,7 +330,11 @@
     if (collapseBtn) collapseBtn.addEventListener('click', () => { setCollapsed(!isCollapsed()); applyCollapsedState(); });
   }
 
+  
   function start() {
+    if (localStorage.getItemAPSED) === null) {
+      setCollapsed(true);
+    }
     ensureBadge();
     wireActions();
     updateBadge();
@@ -322,6 +344,7 @@
     setInterval(pollSourceState, STATUS_POLL_SECONDS * 1000);
     setInterval(pollRuntimeData, DATA_POLL_SECONDS * 1000);
   }
+
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
