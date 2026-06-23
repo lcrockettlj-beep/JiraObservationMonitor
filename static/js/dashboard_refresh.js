@@ -13,7 +13,7 @@
     healthLabel: 'STABLE',
     insights: [],
     autoSyncActive: false,
-    anchorsToday: { morning: false, evening: false },
+    anchorsAnchors: { morning: false, evening: false },
   };
 
   function isPaused() { return localStorage.getItem(STORAGE_KEY_PAUSED) === '1'; }
@@ -137,15 +137,15 @@
       <div class="jom-head">
         <div>
           <div class="jom-title"><span class="jom-dot" id="jom-refresh-dot"></span><span>Live Runtime</span></div>
-          <span class="jom-subtitle">Command link</span>
+          <span class="jom-subtitle">State link</span>
         </div>
-        <div class="jom-meta"><span id="jom-runtime-mode">runtime</span><button class="jom-mini-btn" id="jom-toggle-collapse" type="button">Collapse</button></div>
+        <div class="jom-meta"><span id="jom-runtime-mode">live</span><button class="jom-mini-btn" id="jom-toggle-collapse" type="button">Collapse</button></div>
       </div>
       <div id="jom-detail-wrap">
         <div class="jom-insights" id="jom-insights"></div>
         <div class="jom-body">
-          <div class="jom-card"><div class="jom-label">Runtime state</div><div class="jom-value" id="jom-runtime-state">STABLE</div></div>
-          <div class="jom-card"><div class="jom-label">Today</div><div class="jom-value" id="jom-anchors-today">—</div></div>
+          <div class="jom-card"><div class="jom-label">State</div><div class="jom-value" id="jom-runtime-state">STABLE</div></div>
+          <div class="jom-card"><div class="jom-label">Anchors</div><div class="jom-value" id="jom-anchors-today">—</div></div>
         </div>
         <div class="jom-actions">
           <button class="jom-btn" id="jom-toggle-refresh" type="button">Pause refresh</button>
@@ -259,9 +259,9 @@
     const footer = document.getElementById('jom-footer-text');
     const toggleBtn = document.getElementById('jom-toggle-refresh');
     if (!runtimeMode || !footer || !toggleBtn) return;
-    runtimeMode.textContent = asText(state.sourceMode, 'runtime');
+    runtimeMode.textContent = 'live';
     toggleBtn.textContent = isPaused() ? 'Resume refresh' : 'Pause refresh';
-    footer.textContent = isPaused() ? 'Runtime link paused in this browser.' : 'Runtime link active.';
+    footer.textContent = isPaused() ? 'Runtime paused in this browser.' : 'Runtime link active.';
     setHealthClass();
     updateInsights();
     applyCollapsedState();
@@ -269,8 +269,8 @@
 
     const anchorsEl = document.getElementById('jom-anchors-today');
     if (anchorsEl) {
-      const morning = state.anchorsToday.morning ? '🌅⚓' : '🌅⏳';
-      const evening = state.anchorsToday.evening ? '🌇⚓' : '🌇⏳';
+      const morning = state.anchorsAnchors.morning ? '🌅⚓' : '🌅⏳';
+      const evening = state.anchorsAnchors.evening ? '🌇⚓' : '🌇⏳';
       anchorsEl.textContent = morning + '  ' + evening;
     }
   }
@@ -283,7 +283,7 @@
       state.sourceMode = data.source_mode || 'runtime';
       state.sourceError = data.source_error || null;
       state.autoSyncActive = data.auto_sync_active === true;
-      state.anchorsToday = data.anchors_today || { morning: false, evening: false };
+      state.anchorsAnchors = data.anchors_today || { morning: false, evening: false };
       updateBadge();
     } catch (error) {
       state.sourceError = error && error.message ? error.message : String(error);

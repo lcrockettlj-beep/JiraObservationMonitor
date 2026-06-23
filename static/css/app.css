@@ -564,3 +564,126 @@ html:not([data-theme="light"]) .pill-button { color: #d6e0f2 !important; }
     .top-nav__links { margin-left: 0; }
     .top-nav__actions { width: 100%; }
 }
+/* Alive Phase 1 --------------------------------------------------------- */
+:root {
+    --led-green: #00ff88;
+    --led-amber: #ffb300;
+    --led-red: #ff0033;
+    --alive-cyan: #00e5ff;
+    --alive-purple: #8b5cf6;
+}
+
+@keyframes aliveBorderSweep {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes ledHardwarePulse {
+    0%, 100% { opacity: 0.82; filter: saturate(100%); }
+    50%      { opacity: 1; filter: saturate(135%); }
+}
+
+@keyframes stableBreathe {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0), 0 0 0 rgba(0,0,0,0); }
+    50%      { box-shadow: 0 0 14px rgba(0,255,136,0.08), 0 0 28px rgba(0,229,255,0.05); }
+}
+
+.signal-border::after {
+    content: "";
+    position: absolute;
+    inset: -58%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0 332deg,
+        rgba(0,229,255,0.70) 346deg,
+        transparent 360deg
+    );
+    animation: aliveBorderSweep 18s linear infinite;
+    opacity: 0.20;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.signal-border--warning::after {
+    background: conic-gradient(
+        from 0deg,
+        transparent 0 332deg,
+        rgba(255,179,0,0.78) 346deg,
+        transparent 360deg
+    );
+    opacity: 0.28;
+    animation-duration: 15s;
+}
+
+.signal-border--critical::after {
+    background: conic-gradient(
+        from 0deg,
+        transparent 0 332deg,
+        rgba(255,0,51,0.86) 346deg,
+        transparent 360deg
+    );
+    opacity: 0.36;
+    animation-duration: 11s;
+}
+
+.status-tile--stable,
+.badge--stable,
+.command-core--healthy .command-core__value,
+.command-core--healthy .command-core__node {
+    animation: ledHardwarePulse 2.4s ease-in-out infinite;
+}
+
+.status-tile--warning,
+.badge--warning,
+.command-core--warning .command-core__value,
+.command-core--warning .command-core__node {
+    animation: ledHardwarePulse 1.8s ease-in-out infinite;
+}
+
+.status-tile--critical,
+.badge--critical,
+.command-core--critical .command-core__value,
+.command-core--critical .command-core__node {
+    animation: ledHardwarePulse 1.1s ease-in-out infinite;
+}
+
+.badge--stable {
+    background: rgba(0,255,136,0.12);
+    border-color: rgba(0,255,136,0.34);
+    box-shadow:
+        0 0 5px rgba(0,255,136,0.20),
+        0 0 10px rgba(0,255,136,0.18),
+        0 0 18px rgba(0,255,136,0.10);
+}
+
+.badge--warning {
+    box-shadow:
+        0 0 5px rgba(255,179,0,0.20),
+        0 0 10px rgba(255,179,0,0.16),
+        0 0 18px rgba(255,179,0,0.08);
+}
+
+.badge--critical {
+    box-shadow:
+        0 0 5px rgba(255,0,51,0.20),
+        0 0 10px rgba(255,0,51,0.16),
+        0 0 18px rgba(255,0,51,0.08);
+}
+
+html[data-theme="light"] .badge--stable,
+html[data-theme="light"] .badge--warning,
+html[data-theme="light"] .badge--critical {
+    box-shadow: none;
+}
+
+html[data-theme="light"] body {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(0,229,255,0.09), transparent 28%),
+        radial-gradient(circle at 100% 0%, rgba(139,92,246,0.07), transparent 24%),
+        radial-gradient(circle at 92% 90%, rgba(255,60,172,0.06), transparent 22%),
+        linear-gradient(180deg, #f7fbff 0%, #eff5ff 54%, #eef2fb 100%);
+}
+
+html[data-theme="light"] body::before {
+    opacity: 0.16;
+}
