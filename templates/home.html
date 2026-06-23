@@ -46,7 +46,7 @@
         </div>
 
         {% if sites %}
-        <div class="site-grid">
+        <div class="site-grid {% if badge_class == 'stable' %}site-grid--stable{% endif %}">
             {% for site in sites %}
             {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
 
@@ -284,10 +284,16 @@
     </section>
     {% endif %}
 
+    {% if critical_sites %}
     <div id="critical-sites"></div>
     {{ site_section('Critical Sites', 'Sites requiring immediate attention based on current status.', critical_sites, 'critical') }}
+    {% endif %}
+
+    {% if warning_sites %}
     <div id="warning-sites"></div>
     {{ site_section('Warning Sites', 'Sites showing early warning signs or potential risk.', warning_sites, 'warning') }}
+    {% endif %}
+
     <div id="stable-sites"></div>
     {{ site_section('Stable Sites', 'Sites operating normally and within expected limits.', stable_sites, 'stable') }}
 </div>
