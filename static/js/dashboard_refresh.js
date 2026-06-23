@@ -9,41 +9,18 @@
     countdown: REFRESH_SECONDS,
     sourceMode: 'runtime',
     sourceError: null,
-    sitesCount: null,
     health: 'healthy',
-    healthLabel: 'Healthy',
-    lastCheck: null,
+    healthLabel: 'STABLE',
     insights: [],
-    lastSyncTime: null,
-    lastSyncAgeSeconds: null,
     autoSyncActive: false,
     anchorsToday: { morning: false, evening: false },
   };
 
-  function pad(num) { return String(num).padStart(2, '0'); }
-  function formatCountdown(totalSeconds) {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${pad(mins)}:${pad(secs)}`;
-  }
-  function asText(value, fallback = '—') {
-    if (value === null || value === undefined || value === '') return fallback;
-    return String(value);
-  }
   function isPaused() { return localStorage.getItem(STORAGE_KEY_PAUSED) === '1'; }
   function setPaused(value) { localStorage.setItem(STORAGE_KEY_PAUSED, value ? '1' : '0'); }
   function isCollapsed() { return localStorage.getItem(STORAGE_KEY_COLLAPSED) === '1'; }
   function setCollapsed(value) { localStorage.setItem(STORAGE_KEY_COLLAPSED, value ? '1' : '0'); }
-  function formatAge(seconds) {
-    if (seconds === null || seconds === undefined) return 'never';
-    if (seconds < 60) return `${seconds}s ago`;
-    const mins = Math.floor(seconds / 60);
-    if (mins < 60) return `${mins}m ago`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
-  }
+  function asText(value, fallback = '—') { return (value === null || value === undefined || value === '') ? fallback : String(value); }
 
   function ensureStyles() {
     if (document.getElementById('jom-runtime-alert-styles')) return;
@@ -55,7 +32,7 @@
         right: 18px;
         bottom: 18px;
         z-index: 9999;
-        width: 292px;
+        width: 250px;
         max-width: calc(100vw - 24px);
         border: 1px solid rgba(90,194,255,0.24);
         border-radius: 22px;
@@ -65,7 +42,6 @@
         box-shadow: 0 22px 48px rgba(0,0,0,0.48), 0 0 24px rgba(90,194,255,0.10), inset 0 1px 0 rgba(255,255,255,0.06);
         font: 12px/1.36 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         overflow: hidden;
-        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
       }
       html[data-theme="light"] #jom-auto-refresh-badge {
         background: rgba(255,255,255,0.96);
@@ -74,24 +50,12 @@
         box-shadow: 0 22px 42px rgba(15,23,42,0.14), 0 0 16px rgba(46,121,199,0.08), inset 0 1px 0 rgba(255,255,255,0.98);
       }
       #jom-auto-refresh-badge * { box-sizing: border-box; }
-      #jom-auto-refresh-badge.jom-healthy { border-color: rgba(60,225,156,0.32); }
-      #jom-auto-refresh-badge.jom-warning {
-        border-color: rgba(255,190,86,0.40);
-        box-shadow: 0 22px 48px rgba(0,0,0,0.50), 0 0 30px rgba(255,190,86,0.18);
-      }
-      #jom-auto-refresh-badge.jom-critical {
-        border-color: rgba(255,95,122,0.44);
-        box-shadow: 0 22px 48px rgba(0,0,0,0.52), 0 0 34px rgba(255,95,122,0.22);
-      }
-      #jom-auto-refresh-badge.jom-collapsed {
-        width: auto;
-        min-width: 200px;
-      }
+      #jom-auto-refresh-badge.jom-healthy { border-color: rgba(0,255,136,0.34); }
+      #jom-auto-refresh-badge.jom-warning { border-color: rgba(255,179,0,0.40); box-shadow: 0 22px 48px rgba(0,0,0,0.50), 0 0 30px rgba(255,179,0,0.18); }
+      #jom-auto-refresh-badge.jom-critical { border-color: rgba(255,0,51,0.44); box-shadow: 0 22px 48px rgba(0,0,0,0.52), 0 0 34px rgba(255,0,51,0.22); }
+      #jom-auto-refresh-badge.jom-collapsed { width: auto; min-width: 180px; }
       #jom-auto-refresh-badge .jom-head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 8px;
+        display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
         padding: 12px 12px 10px;
         border-bottom: 1px solid rgba(255,255,255,0.05);
         background: linear-gradient(90deg, rgba(90,194,255,0.10), rgba(139,92,246,0.06));
@@ -101,123 +65,44 @@
         background: linear-gradient(90deg, rgba(0,229,255,0.08), rgba(139,92,246,0.05));
       }
       #jom-auto-refresh-badge .jom-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
+        display: flex; align-items: center; gap: 8px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
       }
       #jom-auto-refresh-badge .jom-subtitle {
-        display: block;
-        color: #95a8c8;
-        font-size: 10px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        margin-top: 2px;
+        display: block; color: #95a8c8; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px;
       }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-subtitle { color: #6a7d96; }
       #jom-auto-refresh-badge .jom-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #3ce19c;
-        box-shadow: 0 0 0 3px rgba(60,225,156,0.24), 0 0 10px rgba(60,225,156,0.30);
+        width: 10px; height: 10px; border-radius: 50%; background: #00ff88;
+        box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
       }
-      #jom-auto-refresh-badge .jom-dot.warn {
-        background: #ffbe56;
-        box-shadow: 0 0 0 3px rgba(255,190,86,0.26), 0 0 12px rgba(255,190,86,0.30);
-      }
-      #jom-auto-refresh-badge .jom-dot.error {
-        background: #ff5f7a;
-        box-shadow: 0 0 0 3px rgba(255,95,122,0.28), 0 0 14px rgba(255,95,122,0.34);
-      }
-      #jom-auto-refresh-badge .jom-meta {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #aeb8c9;
-      }
+      #jom-auto-refresh-badge .jom-dot.warn { background: #ffb300; color:#ffb300; }
+      #jom-auto-refresh-badge .jom-dot.error { background: #ff0033; color:#ff0033; }
+      #jom-auto-refresh-badge .jom-meta { display: flex; align-items: center; gap: 6px; color: #aeb8c9; }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-meta { color: #5d6d85; }
-      #jom-auto-refresh-badge .jom-mini-btn,
-      #jom-auto-refresh-badge .jom-btn {
-        appearance: none;
-        border: 1px solid rgba(90,194,255,0.18);
-        background: rgba(255,255,255,0.04);
-        color: inherit;
-        cursor: pointer;
-        font: inherit;
+      #jom-auto-refresh-badge .jom-mini-btn, #jom-auto-refresh-badge .jom-btn {
+        appearance: none; border: 1px solid rgba(90,194,255,0.18); background: rgba(255,255,255,0.04); color: inherit; cursor: pointer; font: inherit;
       }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-mini-btn,
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-btn { background: rgba(46,121,199,0.05); }
       #jom-auto-refresh-badge .jom-mini-btn { border-radius: 10px; padding: 4px 7px; }
-      #jom-auto-refresh-badge .jom-mini-btn:hover,
-      #jom-auto-refresh-badge .jom-btn:hover { background: rgba(90,194,255,0.10); }
-      #jom-auto-refresh-badge .jom-body {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        padding: 0 12px 10px;
+      #jom-auto-refresh-badge .jom-mini-btn:hover, #jom-auto-refresh-badge .jom-btn:hover { background: rgba(90,194,255,0.10); }
+      #jom-auto-refresh-badge .jom-insights { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px 8px; }
+      #jom-auto-refresh-badge .jom-pill {
+        border-radius: 999px; padding: 4px 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(90,194,255,0.10); color: inherit; font-size: 11px;
       }
+      #jom-auto-refresh-badge .jom-body { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 10px; }
       #jom-auto-refresh-badge .jom-card {
-        border: 1px solid rgba(90,194,255,0.08);
-        border-radius: 12px;
-        padding: 9px 10px;
-        background: rgba(255,255,255,0.02);
-        min-height: 58px;
+        border: 1px solid rgba(90,194,255,0.08); border-radius: 12px; padding: 9px 10px; background: rgba(255,255,255,0.02); min-height: 58px;
       }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-card { background: rgba(255,255,255,0.70); }
-      #jom-auto-refresh-badge .jom-label {
-        color: #98a5bb;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.48px;
-        margin-bottom: 4px;
-      }
+      #jom-auto-refresh-badge .jom-label { color: #98a5bb; font-size: 10px; text-transform: uppercase; letter-spacing: 0.48px; margin-bottom: 4px; }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-label { color: #6b7a94; }
-      #jom-auto-refresh-badge .jom-value {
-        font-weight: 800;
-        word-break: break-word;
-      }
-      #jom-auto-refresh-badge .jom-actions {
-        display: flex;
-        gap: 8px;
-        padding: 0 12px 10px;
-      }
+      #jom-auto-refresh-badge .jom-value { font-weight: 800; word-break: break-word; }
+      #jom-auto-refresh-badge .jom-actions { display: flex; gap: 8px; padding: 0 12px 10px; }
       #jom-auto-refresh-badge .jom-btn { border-radius: 10px; padding: 7px 10px; }
-      #jom-auto-refresh-badge .jom-footer {
-        padding: 0 12px 12px;
-        color: #96a2b8;
-        font-size: 11px;
-      }
+      #jom-auto-refresh-badge .jom-footer { padding: 0 12px 12px; color: #96a2b8; font-size: 11px; }
       html[data-theme="light"] #jom-auto-refresh-badge .jom-footer { color: #5d6d85; }
-      #jom-auto-refresh-badge .jom-insights {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        padding: 0 12px 10px;
-      }
-      #jom-auto-refresh-badge .jom-pill {
-        border-radius: 999px;
-        padding: 4px 8px;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(90,194,255,0.10);
-        color: inherit;
-        font-size: 11px;
-      }
-      #jom-auto-refresh-badge .jom-automation-status {
-        border-top: 1px solid rgba(255,255,255,0.05);
-        margin-top: 10px;
-        padding-top: 10px;
-      }
-      html[data-theme="light"] #jom-auto-refresh-badge .jom-automation-status { border-top-color: rgba(46,121,199,0.10); }
       #jom-auto-refresh-badge .jom-hidden { display: none !important; }
       @media (max-width: 640px) {
-        #jom-auto-refresh-badge {
-          width: calc(100vw - 20px);
-          right: 10px;
-          bottom: 10px;
-        }
+        #jom-auto-refresh-badge { width: calc(100vw - 20px); right: 10px; bottom: 10px; }
         #jom-auto-refresh-badge .jom-body { grid-template-columns: 1fr; }
       }
     `;
@@ -234,25 +119,21 @@
       <div class="jom-head">
         <div>
           <div class="jom-title"><span class="jom-dot" id="jom-refresh-dot"></span><span>Live Runtime</span></div>
-          <span class="jom-subtitle">Compliance telemetry</span>
+          <span class="jom-subtitle">Command link</span>
         </div>
         <div class="jom-meta"><span id="jom-runtime-mode">runtime</span><button class="jom-mini-btn" id="jom-toggle-collapse" type="button">Collapse</button></div>
       </div>
       <div id="jom-detail-wrap">
-        <div class="jom-body">
-          <div class="jom-card"><div class="jom-label">Next refresh</div><div class="jom-value" id="jom-countdown">10:00</div></div>
-          <div class="jom-card"><div class="jom-label">Last sync</div><div class="jom-value" id="jom-last-sync">—</div></div>
-        </div>
         <div class="jom-insights" id="jom-insights"></div>
-        <div class="jom-body jom-automation-status">
-          <div class="jom-card"><div class="jom-label">Auto sync</div><div class="jom-value" id="jom-auto-status">—</div></div>
+        <div class="jom-body">
+          <div class="jom-card"><div class="jom-label">Runtime state</div><div class="jom-value" id="jom-runtime-state">STABLE</div></div>
           <div class="jom-card"><div class="jom-label">Today</div><div class="jom-value" id="jom-anchors-today">—</div></div>
         </div>
         <div class="jom-actions">
           <button class="jom-btn" id="jom-toggle-refresh" type="button">Pause refresh</button>
           <button class="jom-btn" id="jom-refresh-now" type="button">Refresh now</button>
         </div>
-        <div class="jom-footer" id="jom-footer-text">Auto-refresh armed for a full page reload every 600 seconds.</div>
+        <div class="jom-footer" id="jom-footer-text">Runtime link active.</div>
       </div>`;
     document.body.appendChild(badge);
     return badge;
@@ -294,7 +175,7 @@
   }
 
   function inferHealth(data) {
-    if (state.sourceError) return { level: 'critical', label: 'Source error', insights: ['Source-state error detected'] };
+    if (state.sourceError) return { level: 'critical', label: 'CRITICAL', insights: ['Source-state error detected'] };
     const criticalSites = Array.isArray(data?.critical_sites) ? data.critical_sites.length : 0;
     const warningSites = Array.isArray(data?.warning_sites) ? data.warning_sites.length : 0;
     const estate = data?.estate || {};
@@ -307,9 +188,9 @@
     if (criticalSites > 0) insights.push(`${criticalSites} critical site${criticalSites === 1 ? '' : 's'}`);
     if (warningSites > 0) insights.push(`${warningSites} warning site${warningSites === 1 ? '' : 's'}`);
     if (topRisks.length > 0) insights.push(`${topRisks.length} intelligence risk${topRisks.length === 1 ? '' : 's'}`);
-    if ((estate.managed_disabled_accounts || 0) > 0 || criticalSites > 0) return { level: 'critical', label: 'Critical attention', insights };
-    if ((estate.mfa_disabled_accounts || 0) > 0 || (estate.not_in_userbase_count || 0) > 0 || warningSites > 0 || topRisks.length > 0) return { level: 'warning', label: 'Warning attention', insights };
-    return { level: 'healthy', label: 'Healthy', insights: insights.length ? insights : [] };
+    if ((estate.managed_disabled_accounts || 0) > 0 || criticalSites > 0) return { level: 'critical', label: 'CRITICAL', insights };
+    if ((estate.mfa_disabled_accounts || 0) > 0 || (estate.not_in_userbase_count || 0) > 0 || warningSites > 0 || topRisks.length > 0) return { level: 'warning', label: 'WARNING', insights };
+    return { level: 'healthy', label: 'STABLE', insights: insights.length ? insights : [] };
   }
 
   function updateInsights() {
@@ -333,77 +214,40 @@
   function applyCommandCoreState(level, label) {
     const core = document.getElementById('hero-command-core');
     const stateValue = document.getElementById('hero-core-state');
-    const subValue = document.getElementById('hero-core-substate');
     const postureValue = document.getElementById('operational-posture-value');
     const postureCard = document.getElementById('operational-posture-card');
-    const postureNote = document.getElementById('operational-posture-note');
+    const runtimeState = document.getElementById('jom-runtime-state');
     if (core) {
       core.classList.remove('command-core--healthy', 'command-core--warning', 'command-core--critical');
       core.classList.add(`command-core--${level}`);
     }
     if (stateValue) stateValue.textContent = label;
-    if (subValue) {
-      subValue.textContent = level === 'critical'
-        ? 'Immediate operator attention'
-        : level === 'warning'
-          ? 'Watchlist conditions detected'
-          : 'Read-only telemetry';
-    }
-    if (postureValue) {
-      postureValue.textContent = level === 'critical'
-        ? 'Priority review'
-        : level === 'warning'
-          ? 'Watch conditions'
-          : 'Operating within expected limits';
-    }
+    if (postureValue) postureValue.textContent = label;
+    if (runtimeState) runtimeState.textContent = label;
     if (postureCard) {
-      postureCard.classList.remove('intelligence-card--healthy', 'intelligence-card--warning', 'intelligence-card--critical');
-      postureCard.classList.add(`intelligence-card--${level}`);
+      postureCard.classList.remove('status-tile--stable', 'status-tile--warning', 'status-tile--critical', 'signal-border--warning', 'signal-border--critical');
+      if (level === 'critical') {
+        postureCard.classList.add('status-tile--critical', 'signal-border--critical');
+      } else if (level === 'warning') {
+        postureCard.classList.add('status-tile--warning', 'signal-border--warning');
+      } else {
+        postureCard.classList.add('status-tile--stable');
+      }
     }
-    if (postureNote) {
-      postureNote.textContent = level === 'critical'
-        ? 'High-priority signals are present across monitored users, projects, or site activity and should be reviewed first.'
-        : level === 'warning'
-          ? 'Elevated signals are present. Review intelligence findings and watchlist sites for developing issues.'
-          : 'Core telemetry is stable across inactive users, unmanaged accounts, orphaned projects, app usage, and capacity checks.';
-    }
-  }
-
-  function updateHeroTelemetry() {
-    const nextRefresh = document.getElementById('hero-next-refresh');
-    const lastSync = document.getElementById('hero-last-sync');
-    const autoSync = document.getElementById('hero-auto-sync');
-    if (nextRefresh) nextRefresh.textContent = formatCountdown(state.countdown);
-    if (lastSync) lastSync.textContent = formatAge(state.lastSyncAgeSeconds);
-    if (autoSync) autoSync.textContent = state.autoSyncActive ? 'Active' : 'Stale';
   }
 
   function updateBadge() {
-    const countdown = document.getElementById('jom-countdown');
     const runtimeMode = document.getElementById('jom-runtime-mode');
     const footer = document.getElementById('jom-footer-text');
     const toggleBtn = document.getElementById('jom-toggle-refresh');
-    if (!countdown || !runtimeMode || !footer || !toggleBtn) return;
+    if (!runtimeMode || !footer || !toggleBtn) return;
     runtimeMode.textContent = asText(state.sourceMode, 'runtime');
-    countdown.textContent = formatCountdown(state.countdown);
     toggleBtn.textContent = isPaused() ? 'Resume refresh' : 'Pause refresh';
-    footer.textContent = isPaused()
-      ? 'Auto-refresh paused in this browser. Backend loop can keep running.'
-      : 'Auto-refresh armed for a full page reload every 600 seconds.';
+    footer.textContent = isPaused() ? 'Runtime link paused in this browser.' : 'Runtime link active.';
     setHealthClass();
     updateInsights();
     applyCollapsedState();
-    updateHeroTelemetry();
     applyCommandCoreState(state.health, state.healthLabel);
-
-    const lastSyncEl = document.getElementById('jom-last-sync');
-    if (lastSyncEl) lastSyncEl.textContent = formatAge(state.lastSyncAgeSeconds);
-
-    const autoStatusEl = document.getElementById('jom-auto-status');
-    if (autoStatusEl) {
-      autoStatusEl.textContent = state.autoSyncActive ? '✅ Active' : '⚠️ Stale';
-      autoStatusEl.style.color = state.autoSyncActive ? '#3ce19c' : '#ffbe56';
-    }
 
     const anchorsEl = document.getElementById('jom-anchors-today');
     if (anchorsEl) {
@@ -420,16 +264,13 @@
       const data = await response.json();
       state.sourceMode = data.source_mode || 'runtime';
       state.sourceError = data.source_error || null;
-      state.sitesCount = data.sites_count ?? null;
-      state.lastSyncTime = data.last_sync_time || null;
-      state.lastSyncAgeSeconds = data.last_sync_age_seconds ?? null;
       state.autoSyncActive = data.auto_sync_active === true;
       state.anchorsToday = data.anchors_today || { morning: false, evening: false };
       updateBadge();
     } catch (error) {
       state.sourceError = error && error.message ? error.message : String(error);
       state.health = 'critical';
-      state.healthLabel = 'Critical attention';
+      state.healthLabel = 'CRITICAL';
       state.insights = ['Source-state poll failed'];
       updateBadge();
     }
@@ -447,7 +288,7 @@
       updateBadge();
     } catch (error) {
       state.health = 'warning';
-      state.healthLabel = 'Warning attention';
+      state.healthLabel = 'WARNING';
       state.insights = ['Could not poll /api/data'];
       updateBadge();
     }
