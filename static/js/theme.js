@@ -1,4 +1,3 @@
-
 (function () {
     var THEMES = [
         { key: 'dark', label: 'Dark core' },
@@ -18,32 +17,25 @@
     function applyTheme(themeName) {
         var root = document.documentElement;
         var theme = normaliseTheme(themeName);
-        if (theme === 'dark') root.removeAttribute('data-theme');
-        else root.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+            root.removeAttribute('data-theme');
+        } else {
+            root.setAttribute('data-theme', theme);
+        }
         try { localStorage.setItem('jom_theme', theme); } catch (e) {}
         return theme;
     }
 
     function getCurrentTheme() {
-        var raw = document.documentElement.getAttribute('data-theme') || 'dark';
-        return normaliseTheme(raw);
+        return normaliseTheme(document.documentElement.getAttribute('data-theme') || 'dark');
     }
 
-    function getThemeLabel(themeName) {
-        for (var i = 0; i < THEMES.length; i += 1) {
-            if (THEMES[i].key === themeName) return THEMES[i].label;
-        }
-        return 'Dark core';
-    }
-
-    function cycleTheme() {
-        var current = getCurrentTheme();
-        var idx = 0;
-        for (var i = 0; i < THEMES.length; i += 1) {
-            if (THEMES[i].key === current) { idx = i; break; }
-        }
-        var next = THEMES[(idx + 1) % THEMES.length].key;
-        return applyTheme(next);
+    function bindSelector(selectEl) {
+        if (!selectEl) return;
+        selectEl.value = getCurrentTheme();
+        selectEl.addEventListener('change', function () {
+            applyTheme(selectEl.value);
+        });
     }
 
     window.JOMTheme = {
@@ -58,17 +50,13 @@
         setTheme: function (themeName) {
             return applyTheme(themeName);
         },
-        initToggle: function (buttonId) {
-            var button = document.getElementById(buttonId || 'theme-toggle');
-            if (!button) return;
-            function refreshLabel() {
-                button.textContent = getThemeLabel(getCurrentTheme());
+        initToggle: function (elementId) {
+            var el = document.getElementById(elementId || 'theme-toggle');
+            if (!el) return;
+            if (el.tagName === 'SELECT') {
+                bindSelector(el);
+                return;
             }
-            button.addEventListener('click', function () {
-                cycleTheme();
-                refreshLabel();
-            });
-            refreshLabel();
         }
     };
 

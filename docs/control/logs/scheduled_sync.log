@@ -5957,3 +5957,203 @@ History backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\lates
 ✅ Sync complete — runtime + docs + snapshots + backup aligned
 Sync run finished: 23/06/2026 16:10:41.58 (exit code: 0)
 
+
+============================================================
+Sync run started: 23/06/2026 16:20:37.55
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-23 16:20:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+📦 Runtime backup complete
+Backup stamp: 2026-06-23_16-20-40
+Copied files: 9
+Missing files: 2
+Current backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\current
+History backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\history\2026-06-23_16-20-40
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+➡️ Validate contract
+➡️ Change tracker
+➡️ Snapshot controller
+➡️ Snapshot runtime contract
+✅ Snapshot updated
+➡️ Backup runtime chain
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots + backup aligned
+Sync run finished: 23/06/2026 16:20:40.33 (exit code: 0)
+
+
+============================================================
+Sync run started: 23/06/2026 16:30:37.65
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-23 16:30:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+📦 Runtime backup complete
+Backup stamp: 2026-06-23_16-30-42
+Copied files: 9
+Missing files: 2
+Current backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\current
+History backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\history\2026-06-23_16-30-42
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+➡️ Validate contract
+➡️ Change tracker
+➡️ Snapshot controller
+➡️ Snapshot runtime contract
+✅ Snapshot updated
+➡️ Backup runtime chain
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots + backup aligned
+Sync run finished: 23/06/2026 16:30:42.39 (exit code: 0)
+
+
+============================================================
+Sync run started: 23/06/2026 16:40:37.67
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-23 16:40:39
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+📦 Runtime backup complete
+Backup stamp: 2026-06-23_16-40-41
+Copied files: 9
+Missing files: 2
+Current backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\current
+History backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\history\2026-06-23_16-40-41
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+➡️ Validate contract
+➡️ Change tracker
+➡️ Snapshot controller
+➡️ Snapshot runtime contract
+✅ Snapshot updated
+➡️ Backup runtime chain
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots + backup aligned
+Sync run finished: 23/06/2026 16:40:41.41 (exit code: 0)
+
+
+============================================================
+Sync run started: 23/06/2026 16:50:37.61
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-23 16:50:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+📦 Runtime backup complete
+Backup stamp: 2026-06-23_16-50-41
+Copied files: 9
+Missing files: 2
+Current backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\current
+History backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\history\2026-06-23_16-50-41
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+➡️ Validate contract
+➡️ Change tracker
+➡️ Snapshot controller
+➡️ Snapshot runtime contract
+✅ Snapshot updated
+➡️ Backup runtime chain
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots + backup aligned
+Sync run finished: 23/06/2026 16:50:41.29 (exit code: 0)
+
+
+============================================================
+Sync run started: 23/06/2026 17:00:37.57
+============================================================
+🔍 Jira Observation Monitor — Contract Validator
+
+🕒 Validation time: 2026-06-23 17:00:38
+
+📡 Fetching runtime from /api/data ...
+✅ Runtime fetched
+
+📁 Loading snapshot file ...
+✅ Snapshot loaded
+
+🔢 Runtime fields:  1914
+🔢 Snapshot fields: 1914
+
+✅ NO STRUCTURE CHANGES DETECTED
+🛰 Auto Change Tracker
+✅ No structural changes
+📦 Snapshot Controller
+⏳ Skipped (too soon — last regular snapshot was 0 min ago)
+📦 Runtime backup complete
+Backup stamp: 2026-06-23_17-00-40
+Copied files: 9
+Missing files: 2
+Current backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\current
+History backup dir: C:\Users\Luke_C\Desktop\JiraObservationMonitor\backups\latest_runtime\history\2026-06-23_17-00-40
+🔁 SYNC RUNTIME WORKFLOW
+----------------------------------------
+➡️ Validate contract
+➡️ Change tracker
+➡️ Snapshot controller
+➡️ Snapshot runtime contract
+✅ Snapshot updated
+➡️ Backup runtime chain
+----------------------------------------
+✅ Sync complete — runtime + docs + snapshots + backup aligned
+Sync run finished: 23/06/2026 17:00:40.87 (exit code: 0)
+

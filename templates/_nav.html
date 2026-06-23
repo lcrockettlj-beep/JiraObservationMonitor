@@ -12,6 +12,15 @@
         <a href="/reference" class="top-nav__link {% if request.path == '/reference' %}top-nav__link--active{% endif %}">Admin</a>
     </div>
     <div class="top-nav__actions">
-        <button id="theme-toggle" class="pill-button" type="button">Light mode</button>
+        <label class="theme-select-wrap" for="theme-toggle">
+            <span class="theme-select__label">Theme</span>
+            <select id="theme-toggle" class="theme-select" aria-label="Select theme mode">
+                <option value="dark">Dark core</option>
+                <option value="cyber">Cyber mode</option>
+                <option value="enterprise">Enterprise mode</option>
+                <option value="noc">NOC mode</option>
+                <option value="light">Light mode</option>
+            </select>
+        </label>
     </div>
 </nav>
