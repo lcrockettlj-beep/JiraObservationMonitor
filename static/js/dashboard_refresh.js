@@ -330,11 +330,7 @@
     if (collapseBtn) collapseBtn.addEventListener('click', () => { setCollapsed(!isCollapsed()); applyCollapsedState(); });
   }
 
-  
   function start() {
-    if (localStorage.getItemAPSED) === null) {
-      setCollapsed(true);
-    }
     ensureBadge();
     wireActions();
     updateBadge();
@@ -344,7 +340,6 @@
     setInterval(pollSourceState, STATUS_POLL_SECONDS * 1000);
     setInterval(pollRuntimeData, DATA_POLL_SECONDS * 1000);
   }
-
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
