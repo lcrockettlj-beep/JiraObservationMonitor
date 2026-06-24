@@ -1,0 +1,215 @@
+﻿{
+    "summary":  {
+                    "project_root":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor",
+                    "generated_at":  "2026-06-24 18:51:08",
+                    "total_findings":  24,
+                    "unique_legacy_targets":  [
+                                                  "/detail/access::{{",
+                                                  "/detail/admin::managed_accounts",
+                                                  "/detail/admin::suspended_accounts",
+                                                  "/detail/billing::atlassian_apps",
+                                                  "/detail/billing::bitbucket_entries",
+                                                  "/detail/billing::confluence_entries",
+                                                  "/detail/billing::jira_entries",
+                                                  "/detail/billing::marketplace_apps",
+                                                  "/detail/billing::rovo_entries",
+                                                  "/detail/discovery::all_sites",
+                                                  "/detail/discovery::excluded_sites",
+                                                  "/detail/discovery::new_site_candidates",
+                                                  "/detail/discovery::summary",
+                                                  "/detail/discovery::tracked_sites",
+                                                  "/detail/product::{{",
+                                                  "/detail/project::site::{{",
+                                                  "/detail/project::summary",
+                                                  "/detail/site::",
+                                                  "/detail/trend::site::{{"
+                                              ],
+                    "counts_by_classification":  {
+                                                     "legacy_site_link":  1,
+                                                     "legacy_discovery_link":  6,
+                                                     "legacy_detail_link":  17
+                                                 },
+                    "route_checks":  {
+                                         "site_route_registered":  true,
+                                         "detail_route_registered":  true,
+                                         "estate_renders":  true,
+                                         "site_renders":  false,
+                                         "api_data_route_registered":  true
+                                     }
+                },
+    "findings":  [
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\js\\site_navigation_bind.js",
+                         "line":  79,
+                         "match":  "/detail/site::",
+                         "classification":  "legacy-site-link",
+                         "line_text":  "var primaryLink = actionCell.querySelector(\u0027.priority-open-site, a[href^=\"/detail/site::\"], a[href^=\"/site/\"]\u0027);"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\estate.html",
+                         "line":  124,
+                         "match":  "/detail/discovery::summary",
+                         "classification":  "legacy-discovery-link",
+                         "line_text":  "\u003ca href=\"/detail/discovery::summary\" class=\"estate-hero__orb estate-hero__orb--wide\"\u003eDiscovery summary\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\estate.html",
+                         "line":  136,
+                         "match":  "/detail/discovery::summary",
+                         "classification":  "legacy-discovery-link",
+                         "line_text":  "\u003ca href=\"/detail/discovery::summary\" class=\"pill\"\u003eOpen full discovery summary\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\estate.html",
+                         "line":  140,
+                         "match":  "/detail/discovery::tracked_sites",
+                         "classification":  "legacy-discovery-link",
+                         "line_text":  "\u003ca href=\"/detail/discovery::tracked_sites\" class=\"estate-card signal-border\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\estate.html",
+                         "line":  145,
+                         "match":  "/detail/discovery::excluded_sites",
+                         "classification":  "legacy-discovery-link",
+                         "line_text":  "\u003ca href=\"/detail/discovery::excluded_sites\" class=\"estate-card signal-border\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\estate.html",
+                         "line":  150,
+                         "match":  "/detail/discovery::all_sites",
+                         "classification":  "legacy-discovery-link",
+                         "line_text":  "\u003ca href=\"/detail/discovery::all_sites\" class=\"estate-card signal-border\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\estate.html",
+                         "line":  155,
+                         "match":  "/detail/discovery::new_site_candidates",
+                         "classification":  "legacy-discovery-link",
+                         "line_text":  "\u003ca href=\"/detail/discovery::new_site_candidates\" class=\"estate-card signal-border\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  78,
+                         "match":  "/detail/trend::site::{{",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/trend::site::{{ site_key }}\" class=\"pill\"\u003eHistorical View\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  79,
+                         "match":  "/detail/project::site::{{",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/project::site::{{ site_key }}\" class=\"pill\"\u003eProject sample\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  108,
+                         "match":  "/detail/trend::site::{{",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/trend::site::{{ site_key }}\" class=\"pill\"\u003eHistorical View\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  109,
+                         "match":  "/detail/project::site::{{",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/project::site::{{ site_key }}\" class=\"pill\"\u003eProject sample\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  424,
+                         "match":  "/detail/admin::suspended_accounts",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/admin::suspended_accounts\" class=\"stat-card stat-card--link signal-border signal-border--warning\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  429,
+                         "match":  "/detail/admin::managed_accounts",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/admin::managed_accounts\" class=\"stat-card stat-card--link signal-border signal-border--warning\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  434,
+                         "match":  "/detail/admin::suspended_accounts",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/admin::suspended_accounts\" class=\"stat-card stat-card--link signal-border signal-border--warning\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\home.html",
+                         "line":  439,
+                         "match":  "/detail/billing::bitbucket_entries",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/billing::bitbucket_entries\" class=\"stat-card stat-card--link signal-border signal-border--warning\"\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  24,
+                         "match":  "/detail/project::summary",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003cdiv class=\"pill\"\u003e\u003ca href=\"/detail/project::summary\"\u003eProject summary\u003c/a\u003e\u003c/div\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  32,
+                         "match":  "/detail/product::{{",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003cdiv class=\"reference-list\"\u003e{% for item in org_product_breakdown %}\u003ca href=\"/detail/product::{{ item.key }}\" class=\"reference-row\"\u003e\u003cdiv class=\"reference-label\"\u003e{{ item.label }}\u003c/div\u003e\u003cdiv class=\"reference-value\"\u003e{{ item.count }}\u003c/div\u003e\u003c/a\u003e{% endfor %}\u003c/div\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  40,
+                         "match":  "/detail/billing::atlassian_apps",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/billing::atlassian_apps\" class=\"reference-row\"\u003e\u003cdiv class=\"reference-label\"\u003eAtlassian app entries\u003c/div\u003e\u003cdiv class=\"reference-value\"\u003e{{ billing_summary.atlassian_app_entry_count or 0 }}\u003c/div\u003e\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  41,
+                         "match":  "/detail/billing::marketplace_apps",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/billing::marketplace_apps\" class=\"reference-row\"\u003e\u003cdiv class=\"reference-label\"\u003eMarketplace app entries\u003c/div\u003e\u003cdiv class=\"reference-value\"\u003e{{ billing_summary.marketplace_app_entry_count or 0 }}\u003c/div\u003e\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  42,
+                         "match":  "/detail/billing::jira_entries",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/billing::jira_entries\" class=\"reference-row\"\u003e\u003cdiv class=\"reference-label\"\u003eJira billing entries\u003c/div\u003e\u003cdiv class=\"reference-value\"\u003e{{ billing_summary.unique_jira_entries or 0 }}\u003c/div\u003e\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  43,
+                         "match":  "/detail/billing::bitbucket_entries",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/billing::bitbucket_entries\" class=\"reference-row\"\u003e\u003cdiv class=\"reference-label\"\u003eBitbucket billing entries\u003c/div\u003e\u003cdiv class=\"reference-value\"\u003e{{ billing_summary.unique_bitbucket_entries or 0 }}\u003c/div\u003e\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  44,
+                         "match":  "/detail/billing::confluence_entries",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/billing::confluence_entries\" class=\"reference-row\"\u003e\u003cdiv class=\"reference-label\"\u003eConfluence billing entries\u003c/div\u003e\u003cdiv class=\"reference-value\"\u003e{{ billing_summary.unique_confluence_entries or 0 }}\u003c/div\u003e\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  45,
+                         "match":  "/detail/billing::rovo_entries",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003ca href=\"/detail/billing::rovo_entries\" class=\"reference-row\"\u003e\u003cdiv class=\"reference-label\"\u003eRovo billing entries\u003c/div\u003e\u003cdiv class=\"reference-value\"\u003e{{ billing_summary.unique_rovo_entries or 0 }}\u003c/div\u003e\u003c/a\u003e"
+                     },
+                     {
+                         "file":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\templates\\reference.html",
+                         "line":  52,
+                         "match":  "/detail/access::{{",
+                         "classification":  "legacy-detail-link",
+                         "line_text":  "\u003cdiv class=\"panel reference-panel-inline signal-border\"\u003e\u003cdiv class=\"breakdown-list\"\u003e{% for item in users_export_breakdown %}\u003ca href=\"/detail/access::{{ item.key }}\" class=\"breakdown-row clickable\"\u003e\u003cdiv class=\"breakdown-row__label\"\u003e{{ item.label }}\u003c/div\u003e\u003cdiv class=\"breakdown-row__value\"\u003e{{ item.count }}\u003c/div\u003e\u003c/a\u003e{% endfor %}\u003c/div\u003e\u003c/div\u003e"
+                     }
+                 ],
+    "recommendations":  [
+                            "Legacy site links still exist. Rewire /detail/site::... to /site/\u003csite_key\u003e.",
+                            "Discovery detail links exist. Classify each one as keep, rewire, or hide before removal.",
+                            "Other legacy detail links exist. Review manually before changing operator-facing navigation."
+                        ]
+}

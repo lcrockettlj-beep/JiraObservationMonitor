@@ -1,0 +1,99 @@
+﻿LEGACY DETAIL LINK AUDIT REPORT
+================================
+
+Project root : C:\Users\Luke_C\Desktop\JiraObservationMonitor
+Generated at : 2026-06-24 18:51:08
+Total findings : 24
+
+Route checks
+-----------
+- site_route_registered: True
+- detail_route_registered: True
+- estate_renders: True
+- site_renders: False
+- api_data_route_registered: True
+
+Counts by classification
+------------------------
+- legacy_site_link: 1
+- legacy_discovery_link: 6
+- legacy_detail_link: 17
+
+Unique legacy targets
+---------------------
+- /detail/access::{{
+- /detail/admin::managed_accounts
+- /detail/admin::suspended_accounts
+- /detail/billing::atlassian_apps
+- /detail/billing::bitbucket_entries
+- /detail/billing::confluence_entries
+- /detail/billing::jira_entries
+- /detail/billing::marketplace_apps
+- /detail/billing::rovo_entries
+- /detail/discovery::all_sites
+- /detail/discovery::excluded_sites
+- /detail/discovery::new_site_candidates
+- /detail/discovery::summary
+- /detail/discovery::tracked_sites
+- /detail/product::{{
+- /detail/project::site::{{
+- /detail/project::summary
+- /detail/site::
+- /detail/trend::site::{{
+
+Findings
+--------
+- [legacy-site-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\static\js\site_navigation_bind.js:79 -> /detail/site::
+  var primaryLink = actionCell.querySelector('.priority-open-site, a[href^="/detail/site::"], a[href^="/site/"]');
+- [legacy-discovery-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\estate.html:124 -> /detail/discovery::summary
+  <a href="/detail/discovery::summary" class="estate-hero__orb estate-hero__orb--wide">Discovery summary</a>
+- [legacy-discovery-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\estate.html:136 -> /detail/discovery::summary
+  <a href="/detail/discovery::summary" class="pill">Open full discovery summary</a>
+- [legacy-discovery-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\estate.html:140 -> /detail/discovery::tracked_sites
+  <a href="/detail/discovery::tracked_sites" class="estate-card signal-border">
+- [legacy-discovery-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\estate.html:145 -> /detail/discovery::excluded_sites
+  <a href="/detail/discovery::excluded_sites" class="estate-card signal-border">
+- [legacy-discovery-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\estate.html:150 -> /detail/discovery::all_sites
+  <a href="/detail/discovery::all_sites" class="estate-card signal-border">
+- [legacy-discovery-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\estate.html:155 -> /detail/discovery::new_site_candidates
+  <a href="/detail/discovery::new_site_candidates" class="estate-card signal-border">
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:78 -> /detail/trend::site::{{
+  <a href="/detail/trend::site::{{ site_key }}" class="pill">Historical View</a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:79 -> /detail/project::site::{{
+  <a href="/detail/project::site::{{ site_key }}" class="pill">Project sample</a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:108 -> /detail/trend::site::{{
+  <a href="/detail/trend::site::{{ site_key }}" class="pill">Historical View</a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:109 -> /detail/project::site::{{
+  <a href="/detail/project::site::{{ site_key }}" class="pill">Project sample</a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:424 -> /detail/admin::suspended_accounts
+  <a href="/detail/admin::suspended_accounts" class="stat-card stat-card--link signal-border signal-border--warning">
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:429 -> /detail/admin::managed_accounts
+  <a href="/detail/admin::managed_accounts" class="stat-card stat-card--link signal-border signal-border--warning">
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:434 -> /detail/admin::suspended_accounts
+  <a href="/detail/admin::suspended_accounts" class="stat-card stat-card--link signal-border signal-border--warning">
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\home.html:439 -> /detail/billing::bitbucket_entries
+  <a href="/detail/billing::bitbucket_entries" class="stat-card stat-card--link signal-border signal-border--warning">
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:24 -> /detail/project::summary
+  <div class="pill"><a href="/detail/project::summary">Project summary</a></div>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:32 -> /detail/product::{{
+  <div class="reference-list">{% for item in org_product_breakdown %}<a href="/detail/product::{{ item.key }}" class="reference-row"><div class="reference-label">{{ item.label }}</div><div class="reference-value">{{ item.count }}</div></a>{% endfor %}</div>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:40 -> /detail/billing::atlassian_apps
+  <a href="/detail/billing::atlassian_apps" class="reference-row"><div class="reference-label">Atlassian app entries</div><div class="reference-value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div></a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:41 -> /detail/billing::marketplace_apps
+  <a href="/detail/billing::marketplace_apps" class="reference-row"><div class="reference-label">Marketplace app entries</div><div class="reference-value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div></a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:42 -> /detail/billing::jira_entries
+  <a href="/detail/billing::jira_entries" class="reference-row"><div class="reference-label">Jira billing entries</div><div class="reference-value">{{ billing_summary.unique_jira_entries or 0 }}</div></a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:43 -> /detail/billing::bitbucket_entries
+  <a href="/detail/billing::bitbucket_entries" class="reference-row"><div class="reference-label">Bitbucket billing entries</div><div class="reference-value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div></a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:44 -> /detail/billing::confluence_entries
+  <a href="/detail/billing::confluence_entries" class="reference-row"><div class="reference-label">Confluence billing entries</div><div class="reference-value">{{ billing_summary.unique_confluence_entries or 0 }}</div></a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:45 -> /detail/billing::rovo_entries
+  <a href="/detail/billing::rovo_entries" class="reference-row"><div class="reference-label">Rovo billing entries</div><div class="reference-value">{{ billing_summary.unique_rovo_entries or 0 }}</div></a>
+- [legacy-detail-link] C:\Users\Luke_C\Desktop\JiraObservationMonitor\templates\reference.html:52 -> /detail/access::{{
+  <div class="panel reference-panel-inline signal-border"><div class="breakdown-list">{% for item in users_export_breakdown %}<a href="/detail/access::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>{% endfor %}</div></div>
+
+Recommendations
+---------------
+- Legacy site links still exist. Rewire /detail/site::... to /site/<site_key>.
+- Discovery detail links exist. Classify each one as keep, rewire, or hide before removal.
+- Other legacy detail links exist. Review manually before changing operator-facing navigation.
