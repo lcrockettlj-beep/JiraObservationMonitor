@@ -49,7 +49,6 @@
         inset 0 1px 0 rgba(255,255,255,0.08);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
-    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 
 .site-hero__orb:hover {
@@ -85,14 +84,17 @@
     -webkit-backdrop-filter: blur(24px);
 }
 
-.site-stat-grid {
+.site-stat-grid,
+.site-guardrail-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
 .site-stat-card,
-.site-project-card {
+.site-project-card,
+.site-endpoint-card,
+.site-guardrail-card {
     position: relative;
     border-radius: 18px;
     padding: 16px;
@@ -111,7 +113,8 @@
 }
 
 .site-stat-label,
-.site-project-label {
+.site-project-label,
+.site-endpoint-label {
     color: var(--muted);
     font-size: 11px;
     letter-spacing: 0.12em;
@@ -134,7 +137,8 @@
 }
 
 .site-stat-note,
-.site-project-meta {
+.site-project-meta,
+.site-guardrail-card p {
     color: var(--muted);
     font-size: 12px;
     line-height: 1.45;
@@ -183,6 +187,36 @@
     min-height: 88px;
 }
 
+.site-endpoint-list {
+    display: grid;
+    gap: 12px;
+}
+
+.site-endpoint-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.site-endpoint-name,
+.site-guardrail-title {
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.site-endpoint-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.site-endpoint-value {
+    font-size: 14px;
+    line-height: 1.45;
+}
+
 /* Theme-specific refinement */
 html[data-mode="atlassian"] .site-panel,
 html[data-theme="atlassian"] .site-panel,
@@ -190,6 +224,10 @@ html[data-mode="atlassian"] .site-stat-card,
 html[data-theme="atlassian"] .site-stat-card,
 html[data-mode="atlassian"] .site-project-card,
 html[data-theme="atlassian"] .site-project-card,
+html[data-mode="atlassian"] .site-endpoint-card,
+html[data-theme="atlassian"] .site-endpoint-card,
+html[data-mode="atlassian"] .site-guardrail-card,
+html[data-theme="atlassian"] .site-guardrail-card,
 html[data-mode="atlassian"] .site-hero__orb,
 html[data-theme="atlassian"] .site-hero__orb,
 html[data-mode="light"] .site-panel,
@@ -198,6 +236,10 @@ html[data-mode="light"] .site-stat-card,
 html[data-theme="light"] .site-stat-card,
 html[data-mode="light"] .site-project-card,
 html[data-theme="light"] .site-project-card,
+html[data-mode="light"] .site-endpoint-card,
+html[data-theme="light"] .site-endpoint-card,
+html[data-mode="light"] .site-guardrail-card,
+html[data-theme="light"] .site-guardrail-card,
 html[data-mode="light"] .site-hero__orb,
 html[data-theme="light"] .site-hero__orb {
     background:
@@ -227,6 +269,10 @@ html[data-mode="atlassian"] .site-project-label,
 html[data-theme="atlassian"] .site-project-label,
 html[data-mode="atlassian"] .site-status-row span,
 html[data-theme="atlassian"] .site-status-row span,
+html[data-mode="atlassian"] .site-endpoint-label,
+html[data-theme="atlassian"] .site-endpoint-label,
+html[data-mode="atlassian"] .site-guardrail-card p,
+html[data-theme="atlassian"] .site-guardrail-card p,
 html[data-mode="light"] .site-stat-note,
 html[data-theme="light"] .site-stat-note,
 html[data-mode="light"] .site-project-meta,
@@ -236,7 +282,11 @@ html[data-theme="light"] .site-stat-label,
 html[data-mode="light"] .site-project-label,
 html[data-theme="light"] .site-project-label,
 html[data-mode="light"] .site-status-row span,
-html[data-theme="light"] .site-status-row span {
+html[data-theme="light"] .site-status-row span,
+html[data-mode="light"] .site-endpoint-label,
+html[data-theme="light"] .site-endpoint-label,
+html[data-mode="light"] .site-guardrail-card p,
+html[data-theme="light"] .site-guardrail-card p {
     color: #5E6C84;
 }
 
@@ -257,10 +307,13 @@ html[data-theme="light"] .site-status-row span {
 
 @media (max-width: 760px) {
     .site-stat-grid,
-    .site-project-grid {
+    .site-project-grid,
+    .site-guardrail-grid,
+    .site-endpoint-grid {
         grid-template-columns: 1fr;
     }
-    .site-status-row {
+    .site-status-row,
+    .site-endpoint-top {
         flex-direction: column;
         align-items: flex-start;
     }

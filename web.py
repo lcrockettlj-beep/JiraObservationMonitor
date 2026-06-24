@@ -69,7 +69,7 @@ def run_startup_self_heal():
     try:
         snapshot_startup_self_heal()
     except Exception as exc:
-        print(f"âš ï¸ Startup self-heal failed: {exc}")
+        print(f"Ã¢Å¡Â Ã¯Â¸Â Startup self-heal failed: {exc}")
     finally:
         _STARTUP_SELF_HEAL_DONE = True
 
@@ -327,12 +327,12 @@ def _normalise_detail_key_from_action(action):
 
 def _intelligence_atlassian_area(risk_type):
     mapping = {
-        "inactive_users": "Atlassian Administration â†’ Directory / Product Access",
-        "unmanaged_accounts": "Atlassian Administration â†’ Managed Accounts",
-        "orphaned_projects": "Jira Administration â†’ Projects",
-        "unused_apps": "Atlassian Administration â†’ Connected Apps",
-        "tier_capacity": "Atlassian Administration â†’ Billing / Subscription",
-        "seat_capacity": "Atlassian Administration â†’ Billing / Subscription",
+        "inactive_users": "Atlassian Administration Ã¢â€ â€™ Directory / Product Access",
+        "unmanaged_accounts": "Atlassian Administration Ã¢â€ â€™ Managed Accounts",
+        "orphaned_projects": "Jira Administration Ã¢â€ â€™ Projects",
+        "unused_apps": "Atlassian Administration Ã¢â€ â€™ Connected Apps",
+        "tier_capacity": "Atlassian Administration Ã¢â€ â€™ Billing / Subscription",
+        "seat_capacity": "Atlassian Administration Ã¢â€ â€™ Billing / Subscription",
     }
     return mapping.get(risk_type, "Atlassian Administration")
 
@@ -356,7 +356,7 @@ def _build_intelligence_drilldowns(data):
             rows = [row for row in items if isinstance(row, dict)]
             columns = _derive_intelligence_columns(rows)
             risk_type = risk.get("type", "risk")
-            title = f"{site_name} â€” {_prettify_label(risk_type)}"
+            title = f"{site_name} Ã¢â‚¬â€ {_prettify_label(risk_type)}"
             reason = risk.get("reason") or f"Operational intelligence detected {_prettify_label(risk_type).lower()}."
             if not rows:
                 rows = [{
@@ -478,6 +478,27 @@ def _as_clean_list(value):
     return []
 
 
+def _endpoint_state_label(payload):
+    if not isinstance(payload, dict):
+        return "Unavailable"
+    if payload.get("skipped"):
+        return "Skipped"
+    if payload.get("ok") is True:
+        return "OK"
+    if payload.get("ok") is False:
+        return "Failed"
+    return "Unknown"
+
+
+def _format_elapsed(value):
+    if value in (None, ""):
+        return "â€”"
+    try:
+        return f"{float(value):.3f}s"
+    except Exception:
+        return str(value)
+
+
 def _build_site_page_view(data, site_key):
     data = data if isinstance(data, dict) else {}
     sites = data.get("sites", []) if isinstance(data.get("sites"), list) else []
@@ -489,32 +510,78 @@ def _build_site_page_view(data, site_key):
     if not isinstance(project_rows, list):
         project_rows = []
 
+    user_summary = site.get("user_summary") if isinstance(site.get("user_summary"), dict) else {}
+    licence_summary = site.get("licence_summary") if isinstance(site.get("licence_summary"), dict) else {}
+
     has_user_data = any(
-        site.get(field) is not None
+        user_summary.get(field) is not None or site.get(field) is not None
         for field in ["total_users", "active_users", "inactive_users"]
     )
-    user_summary = site.get("user_summary") if isinstance(site.get("user_summary"), dict) else {}
-    if not has_user_data and user_summary:
-        has_user_data = any(
-            user_summary.get(field) is not None
-            for field in ["total_users", "active_users", "inactive_users"]
-        )
-
     has_license_data = any(
-        site.get(field) is not None
-        for field in ["licensed_users", "licensed_users_estimate", "remaining_seats"]
+        licence_summary.get(field) is not None or site.get(field) is not None
+        for field in ["licensed_users_estimate", "remaining_seats", "number_of_seats", "licensed_users"]
     )
-    licence_summary = site.get("licence_summary") if isinstance(site.get("licence_summary"), dict) else {}
-    if not has_license_data and licence_summary:
-        has_license_data = any(
-            licence_summary.get(field) is not None
-            for field in ["licensed_users_estimate", "remaining_seats", "number_of_seats"]
-        )
-
     has_issue_data = any(
         site.get(field) is not None
         for field in ["issue_count_total", "issue_count_unresolved", "issue_count_updated_last_7d"]
     )
+
+    endpoint_results = site.get("endpoint_results") if isinstance(site.get("endpoint_results"), dict) else {}
+    endpoint_priority = [
+        "server_info",
+        "myself",
+        "my_permissions",
+        "projects",
+        "issue_total_count",
+        "issue_unresolved_count",
+        "issue_updated_last_7d_count",
+        "application_roles",
+        "audit_records",
+    ]
+    endpoint_rows = []
+    for key_name in endpoint_priority:
+        payload = endpoint_results.get(key_name)
+        if payload is None:
+            continue
+        endpoint_rows.append({
+            "name": key_name.replace("_", " ").title(),
+            "state": _endpoint_state_label(payload),
+            "status_code": payload.get("status_code") if isinstance(payload, dict) and payload.get("status_code") is not None else "â€”",
+            "elapsed": _format_elapsed(payload.get("elapsed_seconds") if isinstance(payload, dict) else None),
+        })
+
+    breakdown_rows = [
+        {"label": "Project sample", "value": "Available" if project_rows else "No sample rows returned"},
+        {"label": "User totals", "value": "Available" if has_user_data else "Hidden until admin enrichment is trustworthy"},
+        {"label": "Licence metrics", "value": "Available" if has_license_data else "Hidden until licence enrichment is restored"},
+        {"label": "Issue totals", "value": "Visible with caution" if has_issue_data else "Unavailable"},
+        {"label": "Audit coverage", "value": str(site.get("audit_status") or "Not available")},
+        {"label": "Source mode", "value": str(data.get("source_mode") or "runtime")},
+    ]
+
+    trend_rows = []
+    for item in _as_clean_list(site.get("status_reasons")):
+        trend_rows.append({"text": item, "kind": "chip chip--accent"})
+    for item in _as_clean_list(site.get("scope_notes")):
+        trend_rows.append({"text": item, "kind": "chip chip--warning"})
+    for item in _as_clean_list(site.get("operational_risk_signals")):
+        trend_rows.append({"text": item, "kind": "chip chip--accent"})
+    for item in _as_clean_list(site.get("issue_risk_signals")):
+        trend_rows.append({"text": item, "kind": "chip chip--warning"})
+    for item in _as_clean_list(site.get("attention_reasons")):
+        trend_rows.append({"text": item, "kind": "chip chip--warning"})
+    for item in _as_clean_list(site.get("historical_trend_signals")):
+        trend_rows.append({"text": item, "kind": "chip chip--accent"})
+    if site.get("historical_status_streak_status"):
+        trend_rows.append({
+            "text": f"Status streak: {site.get('historical_status_streak_status')} ({site.get('historical_status_streak_length') or 0})",
+            "kind": "chip chip--accent",
+        })
+    if site.get("historical_snapshot_count") is not None:
+        trend_rows.append({
+            "text": f"Snapshots: {site.get('historical_snapshot_count') or 0}",
+            "kind": "chip chip--accent",
+        })
 
     return {
         "site": site,
@@ -522,13 +589,11 @@ def _build_site_page_view(data, site_key):
         "site_key": site.get("site") or site.get("site_key") or site_key,
         "site_status": str(site.get("status") or "unknown").upper(),
         "site_url": site.get("url") or site.get("site_url") or site.get("base_url"),
-        "project_rows": project_rows,
-        "status_reasons": _as_clean_list(site.get("status_reasons")),
-        "scope_notes": _as_clean_list(site.get("scope_notes")),
-        "operational_risk_signals": _as_clean_list(site.get("operational_risk_signals")),
-        "issue_risk_signals": _as_clean_list(site.get("issue_risk_signals")),
-        "attention_reasons": _as_clean_list(site.get("attention_reasons")),
-        "historical_trend_signals": _as_clean_list(site.get("historical_trend_signals")),
+        "site_source_file": data.get("source_file"),
+        "project_rows": project_rows[:18],
+        "endpoint_rows": endpoint_rows,
+        "data_quality_breakdown": breakdown_rows,
+        "trend_rows": trend_rows,
         "has_user_data": has_user_data,
         "has_license_data": has_license_data,
         "has_issue_data": has_issue_data,
@@ -589,7 +654,7 @@ def detail(key: str):
     )
 
 # ============================================================
-# Sprint 9 Step 3 â€” Automation status helpers
+# Sprint 9 Step 3 Ã¢â‚¬â€ Automation status helpers
 # ============================================================
 
 SYNC_LOG_FILE = Path(__file__).resolve().parent / "docs" / "control" / "logs" / "scheduled_sync.log"
@@ -671,7 +736,7 @@ def api_source_state():
         "sites_count": len(data.get("sites", [])),
         "source_error": data.get("source_error"),
 
-        # Sprint 9 Step 3 â€” Automation status fields
+        # Sprint 9 Step 3 Ã¢â‚¬â€ Automation status fields
         "last_sync_time": sync_info["last_sync_time"],
         "last_sync_age_seconds": sync_info["last_sync_age_seconds"],
         "auto_sync_active": sync_info["auto_sync_active"],
