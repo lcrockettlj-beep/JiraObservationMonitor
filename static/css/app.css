@@ -546,3 +546,142 @@ html[data-mode="noc"], html[data-theme="noc"] {
     --mode-shell-focus: rgba(103,194,164,0.12);
 }
 /* === Theme Identity Stage 2.2 App Readability Lift END === */
+
+/* === Atlassian Mode Conversion START === */
+html[data-mode="atlassian"],
+html[data-theme="atlassian"],
+html[data-mode="light"],
+html[data-theme="light"] {
+    --bg: #F7F8F9;
+    --panel: rgba(255, 255, 255, 0.94);
+    --panel-glass: rgba(255, 255, 255, 0.90);
+    --border: rgba(9, 30, 66, 0.12);
+    --border-strong: rgba(9, 30, 66, 0.18);
+    --text: #172B4D;
+    --muted: #5E6C84;
+    --critical: #FF5630;
+    --warning: #FF9F00;
+    --stable: #36B37E;
+    --accent: #0C66E4;
+    --accent-cyan: #1D7AFC;
+    --accent-purple: #6554C0;
+    --accent-pink: #BF63F3;
+    --shadow-soft: 0 10px 24px rgba(9, 30, 66, 0.10);
+    --shadow-glow: 0 0 0 rgba(0,0,0,0);
+    --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.98);
+    --grid-line: rgba(9, 30, 66, 0.020);
+    --scan-line: rgba(9, 30, 66, 0.00);
+    --mode-name: "Atlassian mode";
+    --mode-shell-topline: rgba(12,102,228,0.30);
+    --mode-shell-underline: rgba(101,84,192,0.18);
+    --mode-brand-glow: rgba(12,102,228,0.08);
+    --mode-body-background:
+      radial-gradient(circle at 0% 0%, rgba(29,122,252,0.08), transparent 28%),
+      radial-gradient(circle at 100% 0%, rgba(101,84,192,0.06), transparent 22%),
+      linear-gradient(180deg, #F7F8F9 0%, #F1F2F4 54%, #EBECF0 100%);
+    --mode-card-surface: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,251,252,0.95));
+    --mode-card-surface-alt: linear-gradient(180deg, rgba(252,253,255,0.98), rgba(244,245,247,0.94));
+    --mode-card-edge: rgba(9,30,66,0.12);
+    --mode-panel-topline: rgba(12,102,228,0.32);
+    --mode-panel-secondary: rgba(101,84,192,0.18);
+    --mode-dropdown-surface: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,245,247,0.94));
+    --mode-dropdown-option-bg: #FFFFFF;
+    --mode-dropdown-option-fg: #172B4D;
+    --mode-dropdown-arrow: #5E6C84;
+    --mode-chip-accent-surface: linear-gradient(135deg, rgba(12,102,228,0.12), rgba(101,84,192,0.08));
+    --mode-chip-accent-fg: #0C66E4;
+    --mode-shell-focus: rgba(12,102,228,0.10);
+    --mode-hero-radial-a: rgba(29,122,252,0.08);
+    --mode-hero-radial-b: rgba(101,84,192,0.06);
+    --mode-hero-radial-c: rgba(54,179,126,0.06);
+}
+
+html[data-mode="atlassian"] body,
+html[data-theme="atlassian"] body,
+html[data-mode="light"] body,
+html[data-theme="light"] body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html[data-mode="atlassian"] .top-nav,
+html[data-theme="atlassian"] .top-nav,
+html[data-mode="light"] .top-nav,
+html[data-theme="light"] .top-nav,
+html[data-mode="atlassian"] .hero,
+html[data-theme="atlassian"] .hero,
+html[data-mode="light"] .hero,
+html[data-theme="light"] .hero,
+html[data-mode="atlassian"] .panel,
+html[data-theme="atlassian"] .panel,
+html[data-mode="light"] .panel,
+html[data-theme="light"] .panel {
+    box-shadow: 0 8px 20px rgba(9,30,66,0.08), inset 0 1px 0 rgba(255,255,255,0.96);
+}
+
+html[data-mode="atlassian"] .top-nav__link,
+html[data-theme="atlassian"] .top-nav__link,
+html[data-mode="light"] .top-nav__link,
+html[data-theme="light"] .top-nav__link {
+    background: rgba(255,255,255,0.78);
+    border-color: rgba(9,30,66,0.10);
+    color: #44546F;
+}
+
+html[data-mode="atlassian"] .top-nav__link:hover,
+html[data-theme="atlassian"] .top-nav__link:hover,
+html[data-mode="light"] .top-nav__link:hover,
+html[data-theme="light"] .top-nav__link:hover {
+    background: rgba(222,235,255,0.72);
+    color: #0C66E4;
+    box-shadow: none;
+}
+
+html[data-mode="atlassian"] .top-nav__link--active,
+html[data-theme="atlassian"] .top-nav__link--active,
+html[data-mode="light"] .top-nav__link--active,
+html[data-theme="light"] .top-nav__link--active {
+    background: rgba(222,235,255,0.90);
+    border-color: rgba(12,102,228,0.26);
+    color: #0C66E4;
+    box-shadow: none;
+}
+
+html[data-mode="atlassian"] .pill,
+html[data-theme="atlassian"] .pill,
+html[data-mode="light"] .pill,
+html[data-theme="light"] .pill {
+    background: rgba(222,235,255,0.72);
+    border-color: rgba(12,102,228,0.16);
+    color: #0C66E4;
+    box-shadow: none;
+}
+
+html[data-mode="atlassian"] .theme-select,
+html[data-theme="atlassian"] .theme-select,
+html[data-mode="light"] .theme-select,
+html[data-theme="light"] .theme-select {
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,245,247,0.94));
+    color: #172B4D !important;
+    border-color: rgba(9,30,66,0.14);
+    box-shadow: none;
+}
+
+html[data-mode="atlassian"] .theme-select option,
+html[data-theme="atlassian"] .theme-select option,
+html[data-mode="light"] .theme-select option,
+html[data-theme="light"] .theme-select option {
+    color: #172B4D !important;
+    background: #FFFFFF !important;
+}
+
+html[data-mode="atlassian"] .theme-select__label,
+html[data-theme="atlassian"] .theme-select__label,
+html[data-mode="light"] .theme-select__label,
+html[data-theme="light"] .theme-select__label,
+html[data-mode="atlassian"] .theme-select-wrap::after,
+html[data-theme="atlassian"] .theme-select-wrap::after,
+html[data-mode="light"] .theme-select-wrap::after,
+html[data-theme="light"] .theme-select-wrap::after {
+    color: #5E6C84;
+}
+/* === Atlassian Mode Conversion END === */

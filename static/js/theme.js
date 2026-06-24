@@ -4,10 +4,11 @@
         { key: 'cyber', label: 'Cyber mode' },
         { key: 'enterprise', label: 'Enterprise mode' },
         { key: 'noc', label: 'NOC mode' },
-        { key: 'light', label: 'Light mode' }
+        { key: 'atlassian', label: 'Atlassian mode' }
     ];
 
     function normaliseTheme(value) {
+        if (value === 'light') return 'atlassian';
         for (var i = 0; i < THEMES.length; i += 1) {
             if (THEMES[i].key === value) return value;
         }
@@ -28,7 +29,7 @@
         var theme = normaliseTheme(themeName);
 
         root.setAttribute('data-mode', theme);
-        root.style.colorScheme = theme === 'light' ? 'light' : 'dark';
+        root.style.colorScheme = theme === 'atlassian' ? 'light' : 'dark';
 
         if (theme === 'dark') {
             root.removeAttribute('data-theme');

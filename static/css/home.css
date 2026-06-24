@@ -940,13 +940,13 @@ html[data-mode="noc"] .site-card::before {
 /* === Theme Identity Stage 2.4 Character Pass END === */
 /* === Stage 2.5 NOC Signal Separation Fix === */
 
-/* 1. Background Ã¢â€ â€™ neutral dark */
+/* 1. Background ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ neutral dark */
 html[data-mode="noc"] body,
 html[data-mode="noc"] .page {
     background: #080A0B !important;
 }
 
-/* 2. Cards Ã¢â€ â€™ neutral slate (NOT green) */
+/* 2. Cards ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ neutral slate (NOT green) */
 html[data-mode="noc"] .identity-panel,
 html[data-mode="noc"] .site-card,
 html[data-mode="noc"] .stat-card,
@@ -957,7 +957,7 @@ html[data-mode="noc"] .home-priority-section {
     border: 1px solid rgba(120, 160, 140, 0.12);
 }
 
-/* 3. Stable Ã¢â€ â€™ neon green (signal only) */
+/* 3. Stable ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ neon green (signal only) */
 html[data-mode="noc"] .badge--stable {
     background: rgba(0,255,102,0.08);
     border: 1px solid #00FF66;
@@ -967,7 +967,7 @@ html[data-mode="noc"] .badge--stable {
         0 0 10px rgba(0,255,102,0.4);
 }
 
-/* 4. Warning Ã¢â€ â€™ real amber */
+/* 4. Warning ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ real amber */
 html[data-mode="noc"] .status-tile--warning,
 html[data-mode="noc"] .badge--warning {
     color: #FF9F00;
@@ -975,7 +975,7 @@ html[data-mode="noc"] .badge--warning {
     box-shadow: 0 0 10px rgba(255,159,0,0.25);
 }
 
-/* 5. Critical Ã¢â€ â€™ alert red */
+/* 5. Critical ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ alert red */
 html[data-mode="noc"] .status-tile--critical,
 html[data-mode="noc"] .badge--critical {
     color: #FF3B30;
@@ -1181,3 +1181,208 @@ html[data-mode="noc"] .site-card::before {
     opacity: 0.14 !important;
 }
 /* === Theme Identity Stage 2.7b NOC Environment Anchor END === */
+
+/* === Atlassian Mode Home Conversion START === */
+html[data-mode="atlassian"] .hero__meta--core,
+html[data-theme="atlassian"] .hero__meta--core,
+html[data-mode="light"] .hero__meta--core,
+html[data-theme="light"] .hero__meta--core {
+    display: flex;
+}
+
+html[data-mode="atlassian"] .mode-context--core,
+html[data-theme="atlassian"] .mode-context--core,
+html[data-mode="light"] .mode-context--core,
+html[data-theme="light"] .mode-context--core {
+    display: block;
+}
+
+html[data-mode="atlassian"] .mode-core--core,
+html[data-theme="atlassian"] .mode-core--core,
+html[data-mode="light"] .mode-core--core,
+html[data-theme="light"] .mode-core--core {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+html[data-mode="atlassian"] .home-hero,
+html[data-theme="atlassian"] .home-hero,
+html[data-mode="light"] .home-hero,
+html[data-theme="light"] .home-hero {
+    min-height: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,245,247,0.94));
+}
+
+html[data-mode="atlassian"] .home-hero__top,
+html[data-theme="atlassian"] .home-hero__top,
+html[data-mode="light"] .home-hero__top,
+html[data-theme="light"] .home-hero__top {
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 340px);
+    gap: 18px;
+}
+
+html[data-mode="atlassian"] .home-hero__copy,
+html[data-theme="atlassian"] .home-hero__copy,
+html[data-mode="light"] .home-hero__copy,
+html[data-theme="light"] .home-hero__copy {
+    gap: 10px;
+}
+
+html[data-mode="atlassian"] .hero__core-wrap,
+html[data-theme="atlassian"] .hero__core-wrap,
+html[data-mode="light"] .hero__core-wrap,
+html[data-theme="light"] .hero__core-wrap {
+    min-height: 180px;
+}
+
+html[data-mode="atlassian"] .command-core,
+html[data-theme="atlassian"] .command-core,
+html[data-mode="light"] .command-core,
+html[data-theme="light"] .command-core {
+    min-height: 180px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,245,247,0.93));
+    border-color: rgba(9,30,66,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.98), 0 6px 18px rgba(9,30,66,0.08);
+}
+
+html[data-mode="atlassian"] .command-core__beam,
+html[data-theme="atlassian"] .command-core__beam,
+html[data-mode="light"] .command-core__beam,
+html[data-theme="light"] .command-core__beam {
+    opacity: 0.42;
+}
+
+html[data-mode="atlassian"] .command-core__value,
+html[data-theme="atlassian"] .command-core__value,
+html[data-mode="light"] .command-core__value,
+html[data-theme="light"] .command-core__value {
+    color: #172B4D;
+}
+
+html[data-mode="atlassian"] .stat-card,
+html[data-theme="atlassian"] .stat-card,
+html[data-mode="light"] .stat-card,
+html[data-theme="light"] .stat-card,
+html[data-mode="atlassian"] .status-tile,
+html[data-theme="atlassian"] .status-tile,
+html[data-mode="light"] .status-tile,
+html[data-theme="light"] .status-tile,
+html[data-mode="atlassian"] .site-card,
+html[data-theme="atlassian"] .site-card,
+html[data-mode="light"] .site-card,
+html[data-theme="light"] .site-card,
+html[data-mode="atlassian"] .metric-box,
+html[data-theme="atlassian"] .metric-box,
+html[data-mode="light"] .metric-box,
+html[data-theme="light"] .metric-box,
+html[data-mode="atlassian"] .delta-chip,
+html[data-theme="atlassian"] .delta-chip,
+html[data-mode="light"] .delta-chip,
+html[data-theme="light"] .delta-chip {
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,245,247,0.94));
+    border-color: rgba(9,30,66,0.10);
+    box-shadow: 0 6px 16px rgba(9,30,66,0.08);
+}
+
+html[data-mode="atlassian"] .status-tile--critical,
+html[data-theme="atlassian"] .status-tile--critical,
+html[data-mode="light"] .status-tile--critical,
+html[data-theme="light"] .status-tile--critical {
+    border-color: rgba(255,86,48,0.22);
+    box-shadow: 0 0 0 rgba(0,0,0,0), 0 6px 16px rgba(9,30,66,0.08);
+}
+
+html[data-mode="atlassian"] .status-tile--warning,
+html[data-theme="atlassian"] .status-tile--warning,
+html[data-mode="light"] .status-tile--warning,
+html[data-theme="light"] .status-tile--warning {
+    border-color: rgba(255,159,0,0.24);
+    box-shadow: 0 0 0 rgba(0,0,0,0), 0 6px 16px rgba(9,30,66,0.08);
+}
+
+html[data-mode="atlassian"] .status-tile--stable,
+html[data-theme="atlassian"] .status-tile--stable,
+html[data-mode="light"] .status-tile--stable,
+html[data-theme="light"] .status-tile--stable {
+    border-color: rgba(54,179,126,0.22);
+    box-shadow: 0 0 0 rgba(0,0,0,0), 0 6px 16px rgba(9,30,66,0.08);
+}
+
+html[data-mode="atlassian"] .badge--stable,
+html[data-theme="atlassian"] .badge--stable,
+html[data-mode="light"] .badge--stable,
+html[data-theme="light"] .badge--stable {
+    background: rgba(227,252,239,0.9);
+    color: #216E4E;
+    border-color: rgba(54,179,126,0.22);
+    box-shadow: none;
+}
+
+html[data-mode="atlassian"] .badge--warning,
+html[data-theme="atlassian"] .badge--warning,
+html[data-mode="light"] .badge--warning,
+html[data-theme="light"] .badge--warning {
+    background: rgba(255,244,229,0.92);
+    color: #A54800;
+    border-color: rgba(255,159,0,0.22);
+    box-shadow: none;
+}
+
+html[data-mode="atlassian"] .badge--critical,
+html[data-theme="atlassian"] .badge--critical,
+html[data-mode="light"] .badge--critical,
+html[data-theme="light"] .badge--critical {
+    background: rgba(255,235,230,0.92);
+    color: #C9372C;
+    border-color: rgba(255,86,48,0.22);
+    box-shadow: none;
+}
+
+html[data-mode="atlassian"] .chip--accent,
+html[data-theme="atlassian"] .chip--accent,
+html[data-mode="light"] .chip--accent,
+html[data-theme="light"] .chip--accent {
+    background: rgba(222,235,255,0.78);
+    color: #0C66E4;
+}
+
+html[data-mode="atlassian"] .site-card::after,
+html[data-theme="atlassian"] .site-card::after,
+html[data-mode="light"] .site-card::after,
+html[data-theme="light"] .site-card::after {
+    background: linear-gradient(135deg, transparent 0%, rgba(12,102,228,0.10) 58%, transparent 100%);
+    opacity: 0.68;
+}
+
+html[data-mode="atlassian"] .home-hero p,
+html[data-theme="atlassian"] .home-hero p,
+html[data-mode="light"] .home-hero p,
+html[data-theme="light"] .home-hero p,
+html[data-mode="atlassian"] .section-header p,
+html[data-theme="atlassian"] .section-header p,
+html[data-mode="light"] .section-header p,
+html[data-theme="light"] .section-header p,
+html[data-mode="atlassian"] .site-card__sub,
+html[data-theme="atlassian"] .site-card__sub,
+html[data-mode="light"] .site-card__sub,
+html[data-theme="light"] .site-card__sub,
+html[data-mode="atlassian"] .note,
+html[data-theme="atlassian"] .note,
+html[data-mode="light"] .note,
+html[data-theme="light"] .note,
+html[data-mode="atlassian"] .metric-note,
+html[data-theme="atlassian"] .metric-note,
+html[data-mode="light"] .metric-note,
+html[data-theme="light"] .metric-note,
+html[data-mode="atlassian"] .delta-chip span,
+html[data-theme="atlassian"] .delta-chip span,
+html[data-mode="light"] .delta-chip span,
+html[data-theme="light"] .delta-chip span,
+html[data-mode="atlassian"] .status-tile__note,
+html[data-theme="atlassian"] .status-tile__note,
+html[data-mode="light"] .status-tile__note,
+html[data-theme="light"] .status-tile__note {
+    color: #5E6C84;
+}
+/* === Atlassian Mode Home Conversion END === */
