@@ -74,7 +74,7 @@
         {% elif status_class == 'warning' %}
             {% set action_label = 'Review' %}
         {% else %}
-            {% set action_label = 'Open' %}
+            {% set action_label = 'Open site' %}
         {% endif %}
         <div class="priority-row priority-row--{{ status_class }}" data-status="{{ status_class }}" data-risk-band="{{ band }}" data-change-level="{{ change_level }}">
             <div class="priority-cell priority-cell--site">
@@ -93,7 +93,7 @@
             </div>
             <div class="priority-cell priority-cell--action">
                 {% if site_key %}
-                    <a href="/detail/site::{{ site_key }}" class="pill">{{ action_label }}</a>
+                    <a href="/site/{{ site_key }}" class="pill">{{ action_label }}</a>
                 {% else %}
                     <span class="pill">{{ action_label }} unavailable</span>
                 {% endif %}
@@ -193,3 +193,4 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
