@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -21,7 +21,38 @@
             </div>
             <div class="hero__meta">
                 <div class="pill"><a href="/estate">Open estate view</a></div>
-                <div class="pill"><a href="/detail/project::summary">Project summary</a></div>
+                <div id="admin-trust-surface" class="admin-trust-surface signal-border">
+    <div class="admin-trust-surface__eyebrow">Admin trust surface</div>
+    <h2 class="admin-trust-surface__title">Trusted operational views and caution areas</h2>
+    <p class="admin-trust-surface__lede">Admin remains read-only and operator-led. Billing, product, and access drilldowns stay available as supporting views. Managed-account and licence-confidence signals remain intentionally cautious until enrichment confidence is restored.</p>
+    <div class="admin-trust-grid">
+        <div class="admin-trust-card admin-trust-card--trusted signal-border">
+            <div class="admin-trust-card__title">Trusted now</div>
+            <ul class="admin-trust-card__list">
+                <li>Billing drilldowns remain available for read-only review.</li>
+                <li>Product breakdowns remain available while the Admin-native surface is planned.</li>
+                <li>Access breakdowns remain available for operator support checks.</li>
+            </ul>
+        </div>
+        <div class="admin-trust-card admin-trust-card--caution signal-border">
+            <div class="admin-trust-card__title">Handle with caution</div>
+            <ul class="admin-trust-card__list">
+                <li>Managed-account totals should not be treated as complete entitlement truth yet.</li>
+                <li>Licence confidence remains soft-scoped until enrichment confidence is formally restored.</li>
+                <li>Use Admin for operational awareness, not final entitlement decisions.</li>
+            </ul>
+        </div>
+        <div class="admin-trust-card admin-trust-card--transition signal-border">
+            <div class="admin-trust-card__title">Under review</div>
+            <ul class="admin-trust-card__list">
+                <li>Project summary is a candidate for a future Admin-native panel.</li>
+                <li>The implementation route remains <code>/reference</code> while the operator label stays <strong>Admin</strong>.</li>
+                <li>Legacy detail routes remain in place only where they still provide useful supporting drilldowns.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="pill"><a href="/detail/project::summary" class="reference-pill--review">Project summary (under review)</a></div>
             </div>
         </div>
     </section>
@@ -29,7 +60,8 @@
         <div class="reference-panel signal-border">
             <div class="section__header"><h2>Products in use</h2><div class="count">Select a product to inspect users</div></div>
             {% if org_product_breakdown %}
-            <div class="reference-list">{% for item in org_product_breakdown %}<a href="/detail/product::{{ item.key }}" class="reference-row"><div class="reference-label">{{ item.label }}</div><div class="reference-value">{{ item.count }}</div></a>{% endfor %}</div>
+            <div class="reference-section-note reference-section-note--trusted">Product drilldowns remain available while the Admin-native product surface is being planned.</div>
+<div class="reference-list">{% for item in org_product_breakdown %}<a href="/detail/product::{{ item.key }}" class="reference-row"><div class="reference-label">{{ item.label }}</div><div class="reference-value">{{ item.count }}</div></a>{% endfor %}</div>
             {% else %}
             <div class="empty">No product breakdown is currently available.</div>
             {% endif %}
@@ -37,7 +69,8 @@
         <div class="reference-panel signal-border">
             <div class="section__header"><h2>Billing & marketplace coverage</h2><div class="count">Select an area to inspect app entries</div></div>
             <div class="reference-list">
-                <a href="/detail/billing::atlassian_apps" class="reference-row"><div class="reference-label">Atlassian app entries</div><div class="reference-value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div></a>
+                <div class="reference-section-note reference-section-note--trusted">Billing drilldowns remain available as valid supporting views during the current read-only Admin phase.</div>
+<a href="/detail/billing::atlassian_apps" class="reference-row"><div class="reference-label">Atlassian app entries</div><div class="reference-value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div></a>
                 <a href="/detail/billing::marketplace_apps" class="reference-row"><div class="reference-label">Marketplace app entries</div><div class="reference-value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div></a>
                 <a href="/detail/billing::jira_entries" class="reference-row"><div class="reference-label">Jira billing entries</div><div class="reference-value">{{ billing_summary.unique_jira_entries or 0 }}</div></a>
                 <a href="/detail/billing::bitbucket_entries" class="reference-row"><div class="reference-label">Bitbucket billing entries</div><div class="reference-value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div></a>
@@ -49,7 +82,8 @@
     <section class="section">
         <div class="section__header"><h2>Admin access breakdown</h2><div class="count">Select an access area to inspect users</div></div>
         {% if users_export_breakdown %}
-        <div class="panel reference-panel-inline signal-border"><div class="breakdown-list">{% for item in users_export_breakdown %}<a href="/detail/access::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>{% endfor %}</div></div>
+        <div class="reference-section-note reference-section-note--transition">Access drilldowns remain available for operator support, but any totals tied to enrichment should still be treated cautiously.</div>
+<div class="panel reference-panel-inline signal-border"><div class="breakdown-list">{% for item in users_export_breakdown %}<a href="/detail/access::{{ item.key }}" class="breakdown-row clickable"><div class="breakdown-row__label">{{ item.label }}</div><div class="breakdown-row__value">{{ item.count }}</div></a>{% endfor %}</div></div>
         {% else %}
         <div class="empty">No user access breakdown is currently available.</div>
         {% endif %}

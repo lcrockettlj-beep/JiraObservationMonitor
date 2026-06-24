@@ -1,4 +1,4 @@
-.reference-grid {
+﻿.reference-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
@@ -91,3 +91,113 @@ html[data-theme="light"] .reference-panel {
 .reference-value {
     text-shadow: 0 0 8px rgba(0,229,255,0.16);
 }
+
+/* Admin trust surface pack */
+.admin-trust-surface {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 1.25rem;
+  padding: 1.2rem;
+  border-radius: 20px;
+  background: rgba(7, 17, 44, 0.78);
+}
+
+.admin-trust-surface__eyebrow {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(112, 201, 255, 0.9);
+}
+
+.admin-trust-surface__title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.admin-trust-surface__lede {
+  margin: 0;
+  color: rgba(218, 232, 255, 0.82);
+  line-height: 1.55;
+}
+
+.admin-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.admin-trust-card {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.95rem 1rem;
+  border-radius: 16px;
+  background: rgba(11, 25, 61, 0.82);
+}
+
+.admin-trust-card__title {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.admin-trust-card__list {
+  margin: 0;
+  padding-left: 1rem;
+  color: rgba(220, 233, 255, 0.82);
+  line-height: 1.48;
+}
+
+.admin-trust-card--trusted {
+  border-color: rgba(112, 245, 191, 0.35);
+}
+
+.admin-trust-card--caution {
+  border-color: rgba(255, 193, 94, 0.35);
+}
+
+.admin-trust-card--transition {
+  border-color: rgba(112, 201, 255, 0.35);
+}
+
+.reference-section-note {
+  margin: 0 0 0.65rem;
+  padding: 0.72rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(10, 23, 57, 0.72);
+  color: rgba(220, 233, 255, 0.8);
+  line-height: 1.45;
+}
+
+.reference-section-note--trusted {
+  border: 1px solid rgba(112, 245, 191, 0.22);
+}
+
+.reference-section-note--transition {
+  border: 1px solid rgba(112, 201, 255, 0.22);
+}
+
+.reference-pill--review {
+  position: relative;
+}
+
+.reference-pill--review::after {
+  content: 'candidate';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.55rem;
+  padding: 0.1rem 0.42rem;
+  border-radius: 999px;
+  border: 1px solid rgba(112, 201, 255, 0.3);
+  color: rgba(201, 230, 255, 0.9);
+  background: rgba(11, 25, 61, 0.78);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 980px) {
+  .admin-trust-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
