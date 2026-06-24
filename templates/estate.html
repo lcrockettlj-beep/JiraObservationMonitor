@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 <head>
@@ -76,7 +76,7 @@
         {% else %}
             {% set action_label = 'Open site' %}
         {% endif %}
-        <div class="priority-row priority-row--{{ status_class }}" data-status="{{ status_class }}" data-risk-band="{{ band }}" data-change-level="{{ change_level }}">
+        <div class="priority-row priority-row--{{ status_class }}" data-status="{{ status_class }}" data-risk-band="{{ band }}" data-change-level="{{ change_level }}" data-site-key="{{ site_key }}" data-site-name="{{ site_name }}">
             <div class="priority-cell priority-cell--site">
                 <div class="priority-site">{{ site_name }}</div>
                 <div class="priority-reason">{{ site.reason or 'No significant operational concerns detected.' }}</div>
@@ -93,7 +93,7 @@
             </div>
             <div class="priority-cell priority-cell--action">
                 {% if site_key %}
-                    <a href="/site/{{ site_key }}" class="pill">{{ action_label }}</a>
+                    <a href="/site/{{ site_key }}" class="pill priority-open-site">{{ action_label }}</a>
                 {% else %}
                     <span class="pill">{{ action_label }} unavailable</span>
                 {% endif %}
@@ -190,7 +190,9 @@
     window.JOMTheme.initToggle("theme-toggle");
 </script>
 <script src="{{ url_for('static', filename='js/estate_intelligence.js') }}"></script>
+<script src="{{ url_for('static', filename='js/site_navigation_bind.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 

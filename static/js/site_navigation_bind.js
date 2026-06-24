@@ -1,102 +1,144 @@
-(function () {
-  const PATH_OK = window.location && window.location.pathname === '/estate';
-  if (!PATH_OK) return;
-
+﻿(function () {
   function normalise(value) {
-    return String(value || '').trim().toLowerCase();
+    return String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/^site::/, '')
+      .replace(/^\/+|\/+$/g, '');
   }
 
-  function safeSlug(value) {
-    return String(value || '').trim();
-  }
-
-  function ensureActionsHost(card) {
-    let host = card.querySelector('.jom-site-nav-links');
-    if (host) return host;
-    host = document.createElement('div');
-    host.className = 'jom-site-nav-links';
-    host.style.display = 'flex';
-    host.style.flexWrap = 'wrap';
-    host.style.gap = '8px';
-    host.style.marginTop = '12px';
-    card.appendChild(host);
-    return host;
-  }
-
-  function buildAnchor(href, text) {
-    const a = document.createElement('a');
-    a.href = href;
-    a.className = 'pill';
-    a.textContent = text;
-    return a;
-  }
-
-  function matchCardToSite(card, sites) {
-    const text = normalise(card.innerText || card.textContent || '');
-    if (!text) return null;
-    for (const site of sites) {
-      const candidates = [
-        site.site,
-        site.site_key,
-        site.site_name,
-        site.name,
-        site.url,
-      ].map(normalise).filter(Boolean);
-      if (candidates.some(c => text.includes(c))) {
-        return site;
+  function firstNonEmpty() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      var value = arguments[i];
+      if (value !== undefined && value !== null && String(value).trim() !== '') {
+        return String(value).trim();
       }
     }
-    return null;
+    return '';
   }
 
-  async function run() {
-    try {
-      const res = await fetch('/api/data', { credentials: 'same-origin' });
-      if (!res.ok) return;
-      const payload = await res.json();
-      const sites = Array.isArray(payload.sites) ? payload.sites : [];
-      if (!sites.length) return;
+  function pickSiteUrl(site) {
+    return firstNonEmpty(
+      site.url,
+      site.site_url,
+      site.base_url,
+      site.baseUrl,
+      site.instance_url,
+      site.instanceUrl,
+      site.browse_url,
+      site.browseUrl,
+      site.self
+    );
+  }
 
-      const selectors = [
-        '.estate-site-card',
-        '.estate-card',
-        '.site-card',
-        '.signal-border',
-        '.panel',
-        'article',
-      ];
-      const cards = Array.from(document.querySelectorAll(selectors.join(',')));
-      if (!cards.length) return;
+  function pickSiteKey(site) {
+    return firstNonEmpty(site.site, site.site_key, site.cloud_id, site.site_name, site.name, site.key);
+  }
 
-      cards.forEach((card) => {
-        if (card.querySelector('[data-jom-site-link="true"]')) return;
-        const site = matchCardToSite(card, sites);
-        if (!site) return;
-        const key = safeSlug(site.site || site.site_key || site.cloud_id);
-        if (!key) return;
+  function ensureAtlassianLink(container, site) {
+    var siteUrl = pickSiteUrl(site);
+    if (!siteUrl || container.querySelector('.priority-open-atlassian')) {
+      return;
+    }
+    var link = document.createElement('a');
+    link.className = 'pill priority-open-atlassian';
+    link.href = siteUrl;
+    link.target = '_blank';
+    link.rel = 'noreferrer noopener';
+    link.textContent = 'Open Atlassian';
+    link.style.marginLeft = '0.5rem';
+    container.appendChild(link);
+  }
 
-        const host = ensureActionsHost(card);
-        if (!host.querySelector(`[href="/site/${CSS.escape(key)}"]`)) {
-          const siteLink = buildAnchor(`/site/${encodeURIComponent(key)}`, 'Open site');
-          siteLink.setAttribute('data-jom-site-link', 'true');
-          host.appendChild(siteLink);
+  function rewireRow(row, siteMap) {
+    var siteKey = normalise(row.getAttribute('data-site-key'));
+    var siteName = normalise(row.getAttribute('data-site-name'));
+    if (!siteKey) {
+      var siteCell = row.querySelector('.priority-site');
+      siteKey = normalise(siteCell ? siteCell.textContent : '');
+    }
+
+    var site = siteMap[siteKey] || siteMap[siteName] || null;
+    if (!site && siteKey) {
+      var keys = Object.keys(siteMap);
+      for (var i = 0; i < keys.length; i += 1) {
+        var candidate = siteMap[keys[i]];
+        if (normalise(candidate.site_name) === siteKey || normalise(candidate.name) === siteKey) {
+          site = candidate;
+          break;
         }
-        if (site.url && !host.querySelector(`[href="${site.url}"]`)) {
-          const ext = buildAnchor(site.url, 'Open Atlassian');
-          ext.target = '_blank';
-          ext.rel = 'noopener noreferrer';
-          ext.setAttribute('data-jom-site-link', 'true');
-          host.appendChild(ext);
+      }
+    }
+
+    var liveSiteKey = pickSiteKey(site || {}) || siteKey || siteName;
+    var actionCell = row.querySelector('.priority-cell--action');
+    if (!actionCell || !liveSiteKey) {
+      return;
+    }
+
+    var primaryLink = actionCell.querySelector('.priority-open-site, a[href^="/detail/site::"], a[href^="/site/"]');
+    if (primaryLink) {
+      primaryLink.href = '/site/' + encodeURIComponent(liveSiteKey);
+      primaryLink.textContent = primaryLink.textContent.replace(/^Open$/i, 'Open site');
+      if (!primaryLink.classList.contains('priority-open-site')) {
+        primaryLink.classList.add('priority-open-site');
+      }
+    }
+
+    if (site) {
+      ensureAtlassianLink(actionCell, site);
+    }
+  }
+
+  function buildSiteMap(payload) {
+    var data = payload || {};
+    var sites = Array.isArray(data.sites) ? data.sites : [];
+    var map = {};
+    sites.forEach(function (site) {
+      var variants = [site.site, site.site_key, site.cloud_id, site.site_name, site.name, site.key];
+      variants.forEach(function (value) {
+        var key = normalise(value);
+        if (key && !map[key]) {
+          map[key] = site;
         }
       });
-    } catch (err) {
-      console.warn('JOM site navigation bind skipped:', err);
+    });
+    return map;
+  }
+
+  function init() {
+    if (!window.location || window.location.pathname !== '/estate') {
+      return;
     }
+
+    var rows = document.querySelectorAll('.priority-row');
+    if (!rows.length) {
+      return;
+    }
+
+    fetch('/api/data', { credentials: 'same-origin' })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error('Unable to load /api/data');
+        }
+        return response.json();
+      })
+      .then(function (payload) {
+        var siteMap = buildSiteMap(payload);
+        rows.forEach(function (row) {
+          rewireRow(row, siteMap);
+        });
+      })
+      .catch(function () {
+        rows.forEach(function (row) {
+          rewireRow(row, {});
+        });
+      });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run, { once: true });
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    run();
+    init();
   }
 })();
