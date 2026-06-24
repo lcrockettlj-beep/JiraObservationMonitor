@@ -598,3 +598,166 @@ html[data-mode="light"] .site-card::after { opacity:0.58; }
     .identity-panel h2 { font-size:24px; }
     .hero__core-wrap { min-height:180px; }
 }
+
+/* === Theme Identity Stage 2.2 Home Readability Lift START === */
+html[data-mode="cyber"] .home-hero,
+html[data-mode="enterprise"] .home-hero,
+html[data-mode="noc"] .home-hero {
+    background: color-mix(in srgb, var(--panel) 96%, rgba(255,255,255,0.02));
+}
+
+html[data-mode="cyber"] .home-hero p,
+html[data-mode="enterprise"] .home-hero p,
+html[data-mode="noc"] .home-hero p,
+html[data-mode="cyber"] .identity-panel__intro,
+html[data-mode="enterprise"] .identity-panel__intro,
+html[data-mode="noc"] .identity-panel__intro,
+html[data-mode="cyber"] .section-header p,
+html[data-mode="enterprise"] .section-header p,
+html[data-mode="noc"] .section-header p,
+html[data-mode="cyber"] .site-card__sub,
+html[data-mode="enterprise"] .site-card__sub,
+html[data-mode="noc"] .site-card__sub,
+html[data-mode="cyber"] .note,
+html[data-mode="enterprise"] .note,
+html[data-mode="noc"] .note,
+html[data-mode="cyber"] .metric-note,
+html[data-mode="enterprise"] .metric-note,
+html[data-mode="noc"] .metric-note,
+html[data-mode="cyber"] .delta-chip span,
+html[data-mode="enterprise"] .delta-chip span,
+html[data-mode="noc"] .delta-chip span,
+html[data-mode="cyber"] .identity-stat-note,
+html[data-mode="enterprise"] .identity-stat-note,
+html[data-mode="noc"] .identity-stat-note,
+html[data-mode="cyber"] .status-tile__note,
+html[data-mode="enterprise"] .status-tile__note,
+html[data-mode="noc"] .status-tile__note {
+    color: color-mix(in srgb, var(--text) 82%, var(--muted) 18%);
+}
+
+html[data-mode="cyber"] .identity-panel,
+html[data-mode="enterprise"] .identity-panel,
+html[data-mode="noc"] .identity-panel,
+html[data-mode="cyber"] .stat-card,
+html[data-mode="enterprise"] .stat-card,
+html[data-mode="noc"] .stat-card,
+html[data-mode="cyber"] .status-tile,
+html[data-mode="enterprise"] .status-tile,
+html[data-mode="noc"] .status-tile,
+html[data-mode="cyber"] .site-card,
+html[data-mode="enterprise"] .site-card,
+html[data-mode="noc"] .site-card {
+    border-color: color-mix(in srgb, var(--mode-card-edge) 100%, rgba(255,255,255,0.06));
+}
+
+html[data-mode="cyber"] .identity-panel,
+html[data-mode="cyber"] .mode-context--cyber,
+html[data-mode="cyber"] .home-priority-section,
+html[data-mode="cyber"] .home-data-section,
+html[data-mode="enterprise"] .identity-panel,
+html[data-mode="enterprise"] .mode-context--enterprise,
+html[data-mode="enterprise"] .home-priority-section,
+html[data-mode="enterprise"] .home-data-section,
+html[data-mode="noc"] .identity-panel,
+html[data-mode="noc"] .mode-context--noc,
+html[data-mode="noc"] .home-priority-section,
+html[data-mode="noc"] .home-data-section {
+    box-shadow: 0 16px 28px rgba(0,0,0,0.14), 0 0 14px color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+html[data-mode="cyber"] .identity-panel h2,
+html[data-mode="enterprise"] .identity-panel h2,
+html[data-mode="noc"] .identity-panel h2 {
+    color: color-mix(in srgb, var(--text) 96%, white 4%);
+}
+
+html[data-mode="cyber"] .identity-stat-value,
+html[data-mode="enterprise"] .identity-stat-value,
+html[data-mode="noc"] .identity-stat-value,
+html[data-mode="cyber"] .metric-value,
+html[data-mode="enterprise"] .metric-value,
+html[data-mode="noc"] .metric-value,
+html[data-mode="cyber"] .value,
+html[data-mode="enterprise"] .value,
+html[data-mode="noc"] .value {
+    text-shadow: none;
+}
+
+html[data-mode="enterprise"] .identity-panel--enterprise {
+    background: linear-gradient(180deg, rgba(22,34,50,0.96), rgba(20,30,45,0.92));
+}
+
+html[data-mode="cyber"] .identity-panel--cyber {
+    background: linear-gradient(180deg, rgba(16,28,64,0.96), rgba(19,33,76,0.92));
+}
+
+html[data-mode="noc"] .identity-panel--noc {
+    background: linear-gradient(180deg, rgba(14,32,23,0.97), rgba(17,31,23,0.93));
+}
+
+html[data-mode="cyber"] .home-priority-section,
+html[data-mode="noc"] .home-priority-section,
+html[data-mode="enterprise"] .home-priority-section {
+    opacity: 1;
+}
+
+html[data-mode="cyber"] .home-identity-band,
+html[data-mode="enterprise"] .home-identity-band,
+html[data-mode="noc"] .home-identity-band {
+    margin-top: 8px;
+}
+/* === Theme Identity Stage 2.2 Home Readability Lift END === */
+/* === Stage 2.3 Enterprise Fix === */
+html[data-mode="enterprise"] .home-hero {
+    background: linear-gradient(180deg, #15202c, #1c2736);
+}
+
+html[data-mode="enterprise"] .identity-panel {
+    background: linear-gradient(180deg, rgba(40, 55, 75, 0.95), rgba(28, 40, 58, 0.92));
+    border: 1px solid rgba(160, 190, 220, 0.15);
+}
+
+html[data-mode="enterprise"] .stat-card,
+html[data-mode="enterprise"] .site-card,
+html[data-mode="enterprise"] .status-tile {
+    background: linear-gradient(180deg, rgba(34, 48, 68, 0.96), rgba(26, 36, 52, 0.94));
+}
+
+html[data-mode="enterprise"] .identity-stat-value,
+html[data-mode="enterprise"] h2,
+html[data-mode="enterprise"] h3 {
+    color: #e6edf5;
+}
+
+
+/* === Stage 2.3 NOC Fix === */
+html[data-mode="noc"] .home-hero {
+    background: linear-gradient(180deg, #0e1c16, #14251d);
+}
+
+html[data-mode="noc"] .identity-panel {
+    background: linear-gradient(180deg, rgba(22, 48, 34, 0.96), rgba(16, 36, 26, 0.94));
+    border: 1px solid rgba(100, 220, 160, 0.18);
+}
+
+html[data-mode="noc"] .stat-card,
+html[data-mode="noc"] .site-card,
+html[data-mode="noc"] .status-tile {
+    background: linear-gradient(180deg, rgba(20, 44, 30, 0.96), rgba(14, 32, 24, 0.94));
+}
+
+html[data-mode="noc"] .identity-stat-value,
+html[data-mode="noc"] h2,
+html[data-mode="noc"] h3 {
+    color: #d6f5e4;
+}
+
+
+/* === Global readability boost (non-cyber modes only) === */
+html[data-mode="enterprise"] p,
+html[data-mode="noc"] p,
+html[data-mode="enterprise"] .note,
+html[data-mode="noc"] .note {
+    color: #cfd8e3;
+}

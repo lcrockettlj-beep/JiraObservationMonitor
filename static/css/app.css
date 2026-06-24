@@ -504,3 +504,45 @@ a { color: inherit; text-decoration: none; }
     .theme-select { width:100%; }
     .hero h1 { font-size:24px; }
 }
+
+/* === Theme Identity Stage 2.2 App Readability Lift START === */
+html[data-mode="cyber"], html[data-theme="cyber"] {
+    --panel: rgba(14, 22, 52, 0.96);
+    --panel-glass: rgba(20, 30, 70, 0.88);
+    --muted: #c5d5ea;
+    --mode-body-background:
+      radial-gradient(circle at 6% 0%, rgba(0,229,255,0.16), transparent 26%),
+      radial-gradient(circle at 100% 0%, rgba(255,77,178,0.12), transparent 26%),
+      radial-gradient(circle at 90% 84%, rgba(160,110,255,0.10), transparent 24%),
+      linear-gradient(180deg, #071022 0%, #0b1530 46%, #070b14 100%);
+    --mode-card-surface: linear-gradient(180deg, rgba(15,24,56,0.97), rgba(18,30,70,0.93));
+    --mode-card-surface-alt: linear-gradient(180deg, rgba(18,30,70,0.93), rgba(14,22,52,0.86));
+    --mode-shell-focus: rgba(0,229,255,0.16);
+}
+
+html[data-mode="enterprise"], html[data-theme="enterprise"] {
+    --panel: rgba(18, 28, 42, 0.96);
+    --panel-glass: rgba(24, 36, 54, 0.90);
+    --muted: #c2cedd;
+    --mode-body-background:
+      radial-gradient(circle at 0% 0%, rgba(126,162,208,0.08), transparent 26%),
+      radial-gradient(circle at 100% 0%, rgba(185,135,178,0.05), transparent 24%),
+      linear-gradient(180deg, #0d1522 0%, #162130 48%, #0f1723 100%);
+    --mode-card-surface: linear-gradient(180deg, rgba(24,36,54,0.97), rgba(20,30,45,0.94));
+    --mode-card-surface-alt: linear-gradient(180deg, rgba(22,34,50,0.95), rgba(18,28,42,0.88));
+    --mode-shell-focus: rgba(126,162,208,0.12);
+}
+
+html[data-mode="noc"], html[data-theme="noc"] {
+    --panel: rgba(12, 24, 18, 0.96);
+    --panel-glass: rgba(18, 32, 24, 0.90);
+    --muted: #c2d2c3;
+    --mode-body-background:
+      radial-gradient(circle at 0% 0%, rgba(103,194,164,0.08), transparent 26%),
+      radial-gradient(circle at 100% 0%, rgba(207,163,62,0.06), transparent 24%),
+      linear-gradient(180deg, #08110d 0%, #102018 48%, #0a130f 100%);
+    --mode-card-surface: linear-gradient(180deg, rgba(13,31,22,0.97), rgba(15,28,21,0.93));
+    --mode-card-surface-alt: linear-gradient(180deg, rgba(16,34,24,0.94), rgba(11,24,18,0.88));
+    --mode-shell-focus: rgba(103,194,164,0.12);
+}
+/* === Theme Identity Stage 2.2 App Readability Lift END === */
