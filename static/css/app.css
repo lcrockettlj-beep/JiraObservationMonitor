@@ -471,7 +471,7 @@ html[data-theme="noc"] body {
 }
 
 .theme-select-wrap::after {
-    content: "ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â¾";
+    content: "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“Ãƒâ€šÃ‚Â¾";
     position: absolute;
     right: 12px;
     top: 50%;
@@ -661,7 +661,7 @@ html[data-theme="noc"] body {
 }
 
 .theme-select-wrap::after {
-    content: "â–¾";
+    content: "Ã¢â€“Â¾";
     position: absolute;
     right: 12px;
     top: 50%;
@@ -702,3 +702,104 @@ html[data-theme="noc"] .theme-select option {
     background-color: #111827;
 }
 /* === Theme Mode Fit Fix END === */
+
+/* === Theme Dropdown Visibility Fix START === */
+.theme-select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.theme-select__label {
+    position: absolute;
+    left: 12px;
+    top: 7px;
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--muted);
+    pointer-events: none;
+    opacity: 0.95;
+    z-index: 1;
+}
+
+.theme-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: none !important;
+    min-width: 176px;
+    height: 42px;
+    padding: 18px 38px 8px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(90,194,255,0.22);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+      linear-gradient(135deg, rgba(90,194,255,0.08), rgba(139,92,246,0.04));
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(90,194,255,0.08);
+}
+
+.theme-select::-ms-expand {
+    display: none;
+}
+
+.theme-select-wrap::after {
+    content: ">";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-46%) rotate(90deg);
+    color: var(--muted);
+    pointer-events: none;
+    font-size: 11px;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.theme-select:hover,
+.theme-select:focus {
+    border-color: var(--border-strong);
+    outline: none;
+    box-shadow: 0 0 16px rgba(90,194,255,0.12);
+}
+
+.theme-select option {
+    color: #f5fbff !important;
+    background: #0b1430 !important;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+html[data-theme="cyber"] .theme-select option {
+    color: #f7fbff !important;
+    background: #08112a !important;
+}
+
+html[data-theme="enterprise"] .theme-select option {
+    color: #f3f7fb !important;
+    background: #141d2b !important;
+}
+
+html[data-theme="noc"] .theme-select option {
+    color: #f1f7f1 !important;
+    background: #0e1713 !important;
+}
+
+html[data-theme="light"] .theme-select {
+    background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(247,249,252,0.92));
+    color: #1b2434 !important;
+}
+
+html[data-theme="light"] .theme-select option {
+    color: #1b2434 !important;
+    background: #ffffff !important;
+}
+
+html[data-theme="light"] .theme-select__label,
+html[data-theme="light"] .theme-select-wrap::after {
+    color: #61728c;
+}
+/* === Theme Dropdown Visibility Fix END === */
