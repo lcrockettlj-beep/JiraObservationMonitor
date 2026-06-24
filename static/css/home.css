@@ -938,3 +938,246 @@ html[data-mode="noc"] .site-card::before {
     opacity: 0.32;
 }
 /* === Theme Identity Stage 2.4 Character Pass END === */
+/* === Stage 2.5 NOC Signal Separation Fix === */
+
+/* 1. Background Ã¢â€ â€™ neutral dark */
+html[data-mode="noc"] body,
+html[data-mode="noc"] .page {
+    background: #080A0B !important;
+}
+
+/* 2. Cards Ã¢â€ â€™ neutral slate (NOT green) */
+html[data-mode="noc"] .identity-panel,
+html[data-mode="noc"] .site-card,
+html[data-mode="noc"] .stat-card,
+html[data-mode="noc"] .status-tile,
+html[data-mode="noc"] .home-priority-section {
+    background: rgba(25, 32, 38, 0.4) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(120, 160, 140, 0.12);
+}
+
+/* 3. Stable Ã¢â€ â€™ neon green (signal only) */
+html[data-mode="noc"] .badge--stable {
+    background: rgba(0,255,102,0.08);
+    border: 1px solid #00FF66;
+    color: #00FF66;
+    box-shadow:
+        0 0 4px rgba(0,255,102,0.6),
+        0 0 10px rgba(0,255,102,0.4);
+}
+
+/* 4. Warning Ã¢â€ â€™ real amber */
+html[data-mode="noc"] .status-tile--warning,
+html[data-mode="noc"] .badge--warning {
+    color: #FF9F00;
+    border-color: rgba(255,159,0,0.4);
+    box-shadow: 0 0 10px rgba(255,159,0,0.25);
+}
+
+/* 5. Critical Ã¢â€ â€™ alert red */
+html[data-mode="noc"] .status-tile--critical,
+html[data-mode="noc"] .badge--critical {
+    color: #FF3B30;
+    border-color: rgba(255,59,48,0.5);
+    box-shadow: 0 0 12px rgba(255,59,48,0.3);
+}
+
+/* 6. Kill green wash from hero */
+
+/* 7. Enhance signal lines subtly */
+html[data-mode="noc"] .site-card::before {
+    opacity: 0.08;
+}
+/* === Stage 2.5 Hero Density Fix === */
+
+html[data-mode="dark"] .home-hero,
+html[data-mode="light"] .home-hero {
+    padding: 14px !important;
+}
+
+html[data-mode="dark"] .home-hero__top,
+html[data-mode="light"] .home-hero__top {
+    gap: 12px;
+}
+
+html[data-mode="dark"] .hero__core-wrap,
+html[data-mode="light"] .hero__core-wrap {
+    min-height: 170px;
+}
+
+html[data-mode="dark"] .command-core,
+html[data-mode="light"] .command-core {
+    min-height: 170px;
+}
+/* === Stage 2.6 NOC Ambient Lift === */
+
+/* 1. Add subtle ambient light to whole page */
+html[data-mode="noc"] body {
+    background:
+        radial-gradient(circle at 20% 10%, rgba(0,255,150,0.05), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255,159,0,0.04), transparent 40%),
+        linear-gradient(180deg, #0b1114, #080A0B) !important;
+}
+
+
+/* 2. Lift cards slightly off the darkness */
+html[data-mode="noc"] .site-card,
+html[data-mode="noc"] .stat-card,
+html[data-mode="noc"] .status-tile,
+html[data-mode="noc"] .identity-panel {
+    background: linear-gradient(
+        180deg,
+        rgba(32, 42, 48, 0.55),
+        rgba(20, 28, 32, 0.45)
+    ) !important;
+
+    border: 1px solid rgba(120, 160, 140, 0.18);
+
+    box-shadow:
+        0 10px 20px rgba(0,0,0,0.25),
+        0 0 15px rgba(0,255,102,0.05);
+}
+
+
+/* 3. Slight text brightness boost */
+html[data-mode="noc"] .site-card__sub,
+html[data-mode="noc"] .note,
+html[data-mode="noc"] p {
+    color: rgba(220, 240, 230, 0.9);
+}
+
+
+/* 4. Soften the pitch-black effect */
+html[data-mode="noc"] .home-hero {
+    background:
+        linear-gradient(180deg, rgba(14, 22, 26, 0.95), #080A0B) !important;
+}
+
+
+/* 5. Add faint separation glow under sections */
+html[data-mode="noc"] .home-priority-section,
+html[data-mode="noc"] .home-data-section {
+    box-shadow:
+        0 20px 40px rgba(0,0,0,0.3),
+        0 0 20px rgba(0,255,102,0.04);
+}
+
+/* === Theme Identity Stage 2.7 NOC Environment Anchor START === */
+html[data-mode="noc"] body {
+    background:
+        radial-gradient(circle at 15% 10%, rgba(0,255,150,0.08), transparent 35%),
+        radial-gradient(circle at 85% 20%, rgba(255,159,0,0.06), transparent 35%),
+        radial-gradient(circle at 50% 100%, rgba(0,0,0,0.6), transparent 60%),
+        linear-gradient(180deg, #0b1114, #090c0f) !important;
+}
+
+html[data-mode="noc"] .page {
+    background: linear-gradient(
+        180deg,
+        rgba(20, 28, 32, 0.65),
+        rgba(12, 18, 22, 0.75)
+    );
+}
+
+html[data-mode="noc"] .home-hero {
+    background:
+        linear-gradient(180deg, rgba(18, 28, 34, 0.75), rgba(10, 16, 20, 0.85)) !important;
+}
+
+html[data-mode="noc"] .site-card,
+html[data-mode="noc"] .stat-card,
+html[data-mode="noc"] .status-tile,
+html[data-mode="noc"] .identity-panel {
+    background: linear-gradient(
+        180deg,
+        rgba(35, 48, 54, 0.55),
+        rgba(22, 30, 34, 0.45)
+    ) !important;
+    border: 1px solid rgba(120,160,140,0.18);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 8px 18px rgba(0,0,0,0.35),
+        0 0 12px rgba(0,255,102,0.05);
+}
+
+html[data-mode="noc"] .home-priority-section::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -20px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(0,255,102,0.06), transparent 70%);
+    pointer-events: none;
+    opacity: 0.6;
+}
+/* === Theme Identity Stage 2.7 NOC Environment Anchor END === */
+
+/* === Theme Identity Stage 2.7b NOC Environment Anchor START === */
+html[data-mode="noc"] body {
+    background:
+        radial-gradient(circle at 14% 12%, rgba(0,255,150,0.10), transparent 30%),
+        radial-gradient(circle at 86% 18%, rgba(204,255,0,0.08), transparent 26%),
+        radial-gradient(circle at 50% 50%, rgba(12,24,20,0.38), transparent 58%),
+        linear-gradient(180deg, #0d1415 0%, #0b1112 48%, #0a0f10 100%) !important;
+}
+
+html[data-mode="noc"] .page {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+html[data-mode="noc"] .top-nav,
+html[data-mode="noc"] .home-hero,
+html[data-mode="noc"] .mode-context--noc,
+html[data-mode="noc"] .home-priority-section,
+html[data-mode="noc"] .home-data-section,
+html[data-mode="noc"] .site-card,
+html[data-mode="noc"] .stat-card,
+html[data-mode="noc"] .status-tile,
+html[data-mode="noc"] .identity-panel {
+    background: linear-gradient(180deg, rgba(23,34,37,0.76), rgba(15,22,24,0.72)) !important;
+}
+
+html[data-mode="noc"] .top-nav,
+html[data-mode="noc"] .home-hero,
+html[data-mode="noc"] .mode-context--noc,
+html[data-mode="noc"] .home-priority-section,
+html[data-mode="noc"] .home-data-section {
+    box-shadow:
+        0 18px 34px rgba(0,0,0,0.22),
+        0 0 22px rgba(0,255,102,0.04),
+        inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+html[data-mode="noc"] .top-nav {
+    border-color: rgba(103,194,164,0.18) !important;
+}
+
+html[data-mode="noc"] .home-hero {
+    border-color: rgba(103,194,164,0.16) !important;
+}
+
+html[data-mode="noc"] .site-card,
+html[data-mode="noc"] .stat-card,
+html[data-mode="noc"] .status-tile,
+html[data-mode="noc"] .identity-panel {
+    border: 1px solid rgba(103,194,164,0.16) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 8px 18px rgba(0,0,0,0.26),
+        0 0 12px rgba(0,255,102,0.04) !important;
+}
+
+html[data-mode="noc"] .home-hero::before {
+    background:
+        linear-gradient(90deg, rgba(103,194,164,0.08), transparent 42%),
+        radial-gradient(circle at 84% 22%, rgba(103,194,164,0.10), transparent 18%),
+        radial-gradient(circle at 24% 80%, rgba(204,255,0,0.05), transparent 16%) !important;
+}
+
+html[data-mode="noc"] .site-card::before {
+    opacity: 0.14 !important;
+}
+/* === Theme Identity Stage 2.7b NOC Environment Anchor END === */
