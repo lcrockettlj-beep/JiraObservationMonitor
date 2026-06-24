@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ site_title or site_key or 'Site View' }} - Jira Observation Monitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+</head>
+<body>
+<div class="page">
+    {% include "_nav.html" %}
+
+    {% set site_record = site or {} %}
+    {% set safe_project_rows = project_rows or site_record.get('project_rows', []) or site_record.get('project_sample', []) or [] %}
+    {% set safe_status_reasons = status_reasons or site_record.get('status_reasons', []) or [] %}
+    {% set safe_scope_notes = scope_notes or site_record.get('scope_notes', []) or [] %}
+    {% set safe_operational_signals = operational_risk_signals or site_record.get('operational_risk_signals', []) or [] %}
+    {% set safe_issue_signals = issue_risk_signals or site_record.get('issue_risk_signals', []) or [] %}
+    {% set safe_attention = attention_reasons or site_record.get('attention_reasons', []) or [] %}
+    {% set safe_historical_signals = historical_trend_signals or site_record.get('historical_trend_signals', []) or [] %}
+
+    <section class="hero site-hero">
+        <div class="hero__top site-hero__top">
+            <div class="hero__copy">
+                <div>
+                    <div class="hero__back"><a href="/estate" class="text-link">&larr; Back to estate overview</a></div>
+                    <div class="hero__eyebrow">Site operations view</div>
+                    <h1>{{ site_title }}</h1>
+                    <p>
+                        Single-site operational truth view for runtime collection, sampled projects, collection limits,
+                        and trend-linked signals. This page is intentionally scoped to safe fields only.
+                    </p>
+                </div>
+                <div class="hero__meta meta-pills">
+                    <span class="pill">Status: {{ site_status or site_record.get('status', 'Unknown') }}</span>
+                    <span class="pill">Projects: {{ site_record.get('project_count') or 0 }}</span>
+                    <span class="pill">Collected: {{ site_record.get('run_timestamp_local') or site_record.get('collected_at_utc') or site_record.get('last_collected') or 'Not available' }}</span>
+                </div>
+            </div>
+            <div class="site-hero__actions">
+                {% if site_url %}
+                <a href="{{ site_url }}" class="site-hero__orb" target="_blank" rel="noopener noreferrer">Open site</a>
+                {% endif %}
+                <a href="/estate" class="site-hero__orb">Estate</a>
+                <a href="/reference" class="site-hero__orb">Admin</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="site-split">
+        <div class="panel site-panel signal-border">
+            <div class="section-header">
+                <div>
+                    <h2>Operational Overview</h2>
+                    <p>Safe site facts pulled from the live runtime site record.</p>
+                </div>
+            </div>
+            <div class="site-stat-grid">
+                <div class="site-stat-card">
+                    <div class="site-stat-label">Site key</div>
+                    <div class="site-stat-value site-stat-value--small">{{ site_key or site_record.get('site') or site_record.get('site_key') or 'Unknown' }}</div>
+                    <div class="site-stat-note">Primary site identity used by runtime normalisation.</div>
+                </div>
+                <div class="site-stat-card">
+                    <div class="site-stat-label">Projects</div>
+                    <div class="site-stat-value">{{ site_record.get('project_count') or 0 }}</div>
+                    <div class="site-stat-note">Project count currently observed by the runtime collector.</div>
+                </div>
+                <div class="site-stat-card">
+                    <div class="site-stat-label">Growth status</div>
+                    <div class="site-stat-value site-stat-value--small">{{ site_record.get('growth_status') or 'Not available' }}</div>
+                    <div class="site-stat-note">Snapshot comparison state for this site where available.</div>
+                </div>
+                <div class="site-stat-card">
+                    <div class="site-stat-label">Failed API checks</div>
+                    <div class="site-stat-value">{{ site_record.get('failed_api_checks') or 0 }}</div>
+                    <div class="site-stat-note">Collector-side failed endpoint checks recorded for this runtime payload.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel site-panel signal-border">
+            <div class="section-header">
+                <div>
+                    <h2>Collection Confidence</h2>
+                    <p>What this page intentionally shows now, and what still needs enrichment before front-end exposure.</p>
+                </div>
+            </div>
+            <div class="site-status-list">
+                <div class="site-status-row">
+                    <span>Project sample</span>
+                    <strong>{{ 'Available' if safe_project_rows else 'No sample rows returned' }}</strong>
+                </div>
+                <div class="site-status-row">
+                    <span>User totals</span>
+                    <strong>{{ 'Available' if has_user_data else 'Hidden until data source is trustworthy' }}</strong>
+                </div>
+                <div class="site-status-row">
+                    <span>Licence metrics</span>
+                    <strong>{{ 'Available' if has_license_data else 'Hidden until enrichment is restored' }}</strong>
+                </div>
+                <div class="site-status-row">
+                    <span>Issue totals</span>
+                    <strong>{{ 'Visible with caution' if has_issue_data else 'Unavailable' }}</strong>
+                </div>
+                <div class="site-status-row">
+                    <span>Audit coverage</span>
+                    <strong>{{ site_record.get('audit_status') or 'Not available' }}</strong>
+                </div>
+                <div class="site-status-row">
+                    <span>Licence API access</span>
+                    <strong>{{ site_record.get('licence_api_access') if site_record.get('licence_api_access') is not none else 'Not available' }}</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel site-panel signal-border">
+        <div class="section-header">
+            <div>
+                <h2>Project Sample</h2>
+                <p>Sampled project rows from the current runtime payload for this site.</p>
+            </div>
+            <div class="section-header__actions">
+                <span class="pill">{{ safe_project_rows|length }} rows</span>
+            </div>
+        </div>
+        {% if safe_project_rows %}
+        <div class="site-project-grid">
+            {% for project in safe_project_rows %}
+            <article class="site-project-card">
+                <div class="site-project-label">Project key</div>
+                <div class="site-project-value">{{ project.get('key') or project.get('project_key') or 'Unknown' }}</div>
+                <div class="site-project-meta">{{ project.get('name') or project.get('project_name') or 'Unnamed project' }}</div>
+                <div class="site-project-pill-row">
+                    {% if project.get('projectTypeKey') or project.get('project_type') %}
+                    <span class="pill">{{ project.get('projectTypeKey') or project.get('project_type') }}</span>
+                    {% endif %}
+                    {% if project.get('style') %}
+                    <span class="pill">{{ project.get('style') }}</span>
+                    {% endif %}
+                    {% if project.get('simplified') is not none %}
+                    <span class="pill">{{ 'Simplified' if project.get('simplified') else 'Classic' }}</span>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <strong>No sampled projects are currently available for this site.</strong>
+            <p>This can happen when the runtime payload returned no project sample rows for the selected site.</p>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="site-split site-split--signals">
+        <div class="panel site-panel signal-border">
+            <div class="section-header">
+                <div>
+                    <h2>Runtime Signals</h2>
+                    <p>Reasons and runtime context recorded against this site.</p>
+                </div>
+            </div>
+            <div class="site-chip-stack">
+                {% for item in safe_status_reasons %}
+                <span class="chip chip--accent">{{ item }}</span>
+                {% endfor %}
+                {% for item in safe_scope_notes %}
+                <span class="chip chip--warning">{{ item }}</span>
+                {% endfor %}
+                {% for item in safe_operational_signals %}
+                <span class="chip chip--accent">{{ item }}</span>
+                {% endfor %}
+                {% for item in safe_issue_signals %}
+                <span class="chip chip--warning">{{ item }}</span>
+                {% endfor %}
+                {% if not safe_status_reasons and not safe_scope_notes and not safe_operational_signals and not safe_issue_signals %}
+                <div class="empty-state">
+                    <strong>No runtime signals are currently attached.</strong>
+                    <p>This site may simply not have emitted any additional runtime commentary in the current payload.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="panel site-panel signal-border">
+            <div class="section-header">
+                <div>
+                    <h2>Trend & Attention</h2>
+                    <p>Signals that can support future typed drilldowns from the site page.</p>
+                </div>
+            </div>
+            <div class="site-chip-stack">
+                {% for item in safe_attention %}
+                <span class="chip chip--warning">{{ item }}</span>
+                {% endfor %}
+                {% for item in safe_historical_signals %}
+                <span class="chip chip--accent">{{ item }}</span>
+                {% endfor %}
+                {% if site_record.get('historical_status_streak_status') %}
+                <span class="chip chip--accent">Status streak: {{ site_record.get('historical_status_streak_status') }} ({{ site_record.get('historical_status_streak_length') or 0 }})</span>
+                {% endif %}
+                {% if site_record.get('historical_snapshot_count') is not none %}
+                <span class="chip chip--accent">Snapshots: {{ site_record.get('historical_snapshot_count') or 0 }}</span>
+                {% endif %}
+                {% if not safe_attention and not safe_historical_signals and not site_record.get('historical_status_streak_status') %}
+                <div class="empty-state">
+                    <strong>No attention or historical signals are currently surfaced.</strong>
+                    <p>This is safe and expected for sites without merged trend or attention metadata in the active runtime payload.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+<script>window.JOMTheme.initToggle("theme-toggle");</script>
+<script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
+</body>
+</html>

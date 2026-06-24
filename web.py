@@ -69,7 +69,7 @@ def run_startup_self_heal():
     try:
         snapshot_startup_self_heal()
     except Exception as exc:
-        print(f"⚠️ Startup self-heal failed: {exc}")
+        print(f"âš ï¸ Startup self-heal failed: {exc}")
     finally:
         _STARTUP_SELF_HEAL_DONE = True
 
@@ -327,12 +327,12 @@ def _normalise_detail_key_from_action(action):
 
 def _intelligence_atlassian_area(risk_type):
     mapping = {
-        "inactive_users": "Atlassian Administration → Directory / Product Access",
-        "unmanaged_accounts": "Atlassian Administration → Managed Accounts",
-        "orphaned_projects": "Jira Administration → Projects",
-        "unused_apps": "Atlassian Administration → Connected Apps",
-        "tier_capacity": "Atlassian Administration → Billing / Subscription",
-        "seat_capacity": "Atlassian Administration → Billing / Subscription",
+        "inactive_users": "Atlassian Administration â†’ Directory / Product Access",
+        "unmanaged_accounts": "Atlassian Administration â†’ Managed Accounts",
+        "orphaned_projects": "Jira Administration â†’ Projects",
+        "unused_apps": "Atlassian Administration â†’ Connected Apps",
+        "tier_capacity": "Atlassian Administration â†’ Billing / Subscription",
+        "seat_capacity": "Atlassian Administration â†’ Billing / Subscription",
     }
     return mapping.get(risk_type, "Atlassian Administration")
 
@@ -356,7 +356,7 @@ def _build_intelligence_drilldowns(data):
             rows = [row for row in items if isinstance(row, dict)]
             columns = _derive_intelligence_columns(rows)
             risk_type = risk.get("type", "risk")
-            title = f"{site_name} — {_prettify_label(risk_type)}"
+            title = f"{site_name} â€” {_prettify_label(risk_type)}"
             reason = risk.get("reason") or f"Operational intelligence detected {_prettify_label(risk_type).lower()}."
             if not rows:
                 rows = [{
@@ -453,6 +453,87 @@ def _common_template_data(data):
     return enrich_context_with_intelligence(context, data)
 
 
+def _site_matches(site, site_key):
+    if not isinstance(site, dict):
+        return False
+    candidates = [
+        site.get("site"),
+        site.get("site_key"),
+        site.get("cloud_id"),
+        site.get("site_name"),
+        site.get("name"),
+    ]
+    key = str(site_key or "").strip().lower()
+    for candidate in candidates:
+        if candidate is None:
+            continue
+        if str(candidate).strip().lower() == key:
+            return True
+    return False
+
+
+def _as_clean_list(value):
+    if isinstance(value, list):
+        return [item for item in value if item not in (None, "", [])]
+    return []
+
+
+def _build_site_page_view(data, site_key):
+    data = data if isinstance(data, dict) else {}
+    sites = data.get("sites", []) if isinstance(data.get("sites"), list) else []
+    site = next((row for row in sites if _site_matches(row, site_key)), None)
+    if not site:
+        return None
+
+    project_rows = site.get("project_rows") or site.get("project_sample") or []
+    if not isinstance(project_rows, list):
+        project_rows = []
+
+    has_user_data = any(
+        site.get(field) is not None
+        for field in ["total_users", "active_users", "inactive_users"]
+    )
+    user_summary = site.get("user_summary") if isinstance(site.get("user_summary"), dict) else {}
+    if not has_user_data and user_summary:
+        has_user_data = any(
+            user_summary.get(field) is not None
+            for field in ["total_users", "active_users", "inactive_users"]
+        )
+
+    has_license_data = any(
+        site.get(field) is not None
+        for field in ["licensed_users", "licensed_users_estimate", "remaining_seats"]
+    )
+    licence_summary = site.get("licence_summary") if isinstance(site.get("licence_summary"), dict) else {}
+    if not has_license_data and licence_summary:
+        has_license_data = any(
+            licence_summary.get(field) is not None
+            for field in ["licensed_users_estimate", "remaining_seats", "number_of_seats"]
+        )
+
+    has_issue_data = any(
+        site.get(field) is not None
+        for field in ["issue_count_total", "issue_count_unresolved", "issue_count_updated_last_7d"]
+    )
+
+    return {
+        "site": site,
+        "site_title": site.get("site_name") or site.get("name") or site.get("site") or site_key,
+        "site_key": site.get("site") or site.get("site_key") or site_key,
+        "site_status": str(site.get("status") or "unknown").upper(),
+        "site_url": site.get("url") or site.get("site_url") or site.get("base_url"),
+        "project_rows": project_rows,
+        "status_reasons": _as_clean_list(site.get("status_reasons")),
+        "scope_notes": _as_clean_list(site.get("scope_notes")),
+        "operational_risk_signals": _as_clean_list(site.get("operational_risk_signals")),
+        "issue_risk_signals": _as_clean_list(site.get("issue_risk_signals")),
+        "attention_reasons": _as_clean_list(site.get("attention_reasons")),
+        "historical_trend_signals": _as_clean_list(site.get("historical_trend_signals")),
+        "has_user_data": has_user_data,
+        "has_license_data": has_license_data,
+        "has_issue_data": has_issue_data,
+    }
+
 @app.route("/")
 def home():
     data = _build_data()
@@ -470,6 +551,18 @@ def estate_page():
     data = _build_data()
     return render_template("estate.html", **_common_template_data(data))
 
+
+@app.route("/site/<site_key>")
+def site_page(site_key: str):
+    data = _build_data()
+    site_view = _build_site_page_view(data, site_key)
+    if not site_view:
+        abort(404)
+    return render_template(
+        "site.html",
+        **_common_template_data(data),
+        **site_view,
+    )
 
 @app.route("/detail/<path:key>")
 def detail(key: str):
@@ -496,7 +589,7 @@ def detail(key: str):
     )
 
 # ============================================================
-# Sprint 9 Step 3 — Automation status helpers
+# Sprint 9 Step 3 â€” Automation status helpers
 # ============================================================
 
 SYNC_LOG_FILE = Path(__file__).resolve().parent / "docs" / "control" / "logs" / "scheduled_sync.log"
@@ -578,7 +671,7 @@ def api_source_state():
         "sites_count": len(data.get("sites", [])),
         "source_error": data.get("source_error"),
 
-        # Sprint 9 Step 3 — Automation status fields
+        # Sprint 9 Step 3 â€” Automation status fields
         "last_sync_time": sync_info["last_sync_time"],
         "last_sync_age_seconds": sync_info["last_sync_age_seconds"],
         "auto_sync_active": sync_info["auto_sync_active"],
