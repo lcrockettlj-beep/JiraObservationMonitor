@@ -1,0 +1,131 @@
+﻿{
+    "generated_at":  "2026-06-24 19:33:56",
+    "project_root":  "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor",
+    "current_state":  {
+                          "implementation_route":  "/reference",
+                          "operator_label":  "Admin",
+                          "homepage_admin_cards_target_reference":  true,
+                          "detail_drilldowns_still_present_in_reference":  true,
+                          "estate_discovery_links_remaining":  false,
+                          "estate_legacy_site_links_remaining":  false
+                      },
+    "route_checks":  {
+                         "route_reference_registered":  true,
+                         "route_detail_registered":  true,
+                         "route_site_registered":  true,
+                         "route_api_data_registered":  true,
+                         "render_reference_template":  true,
+                         "render_estate_template":  true,
+                         "render_home_template":  true
+                     },
+    "label_checks":  {
+                         "nav_links_reference_route":  true,
+                         "nav_uses_admin_label":  true,
+                         "home_links_reference_route":  true,
+                         "reference_mentions_admin":  true,
+                         "reference_mentions_reference":  true
+                     },
+    "detail_counts":  {
+                          "product_breakdown":  1,
+                          "billing_breakdown":  6,
+                          "access_breakdown":  1,
+                          "project_summary":  1,
+                          "discovery_links_estate":  0,
+                          "legacy_site_links_estate":  0
+                      },
+    "trusted_domains":  [
+                            {
+                                "domain":  "Reference/Admin route strategy",
+                                "status":  "trusted",
+                                "rationale":  "The implementation route /reference is registered and the UI label Admin is already used in navigation."
+                            },
+                            {
+                                "domain":  "Read-only operator model",
+                                "status":  "trusted",
+                                "rationale":  "Current design direction remains read-only, navigational, and operator-first."
+                            },
+                            {
+                                "domain":  "Billing drilldown support",
+                                "status":  "trusted-with-legacy-routing",
+                                "rationale":  "Billing detail links remain present and appear to support valid supporting breakdowns."
+                            },
+                            {
+                                "domain":  "Product breakdown support",
+                                "status":  "trusted-with-legacy-routing",
+                                "rationale":  "Product breakdown links remain in the Admin-labelled page and appear intentionally exposed."
+                            },
+                            {
+                                "domain":  "Access breakdown support",
+                                "status":  "trusted-with-legacy-routing",
+                                "rationale":  "Access drilldowns remain available and align with operator/admin review needs."
+                            }
+                        ],
+    "soft_scoped_domains":  [
+                                {
+                                    "domain":  "Managed account totals",
+                                    "status":  "soft-scoped",
+                                    "reason":  "Visibility may depend on enrichment/trust restoration and should not be oversold in Admin until verified."
+                                },
+                                {
+                                    "domain":  "License entitlement confidence",
+                                    "status":  "soft-scoped",
+                                    "reason":  "License-related metrics should be presented with caution until enrichment confidence is formally restored."
+                                },
+                                {
+                                    "domain":  "Project summary as an Admin-native surface",
+                                    "status":  "candidate",
+                                    "reason":  "Project summary currently exists as a legacy detail drilldown and should be reviewed before redesign."
+                                }
+                            ],
+    "operator_rules":  [
+                           "Admin remains read-only and navigation-led during the stabilisation phase.",
+                           "Operator wording should prioritise clarity over technical terminology.",
+                           "Any metric shown with incomplete trust should explicitly communicate caution or withheld scope.",
+                           "Admin should remain consistent with Home and Estate routing expectations."
+                       ],
+    "blueprint_phases":  [
+                             {
+                                 "phase":  "Phase A â€” Governance baseline",
+                                 "objective":  "Freeze /reference as the implementation route while Admin remains the operator label.",
+                                 "outputs":  [
+                                                 "Document trusted vs soft-scoped Admin domains",
+                                                 "Keep legacy detail drilldowns only where they remain useful",
+                                                 "Avoid route rename during current stabilisation window"
+                                             ]
+                             },
+                             {
+                                 "phase":  "Phase B â€” Admin-native surface planning",
+                                 "objective":  "Define which legacy detail views deserve first-class Admin panels.",
+                                 "outputs":  [
+                                                 "Decide whether project summary becomes Admin-native",
+                                                 "Define billing panel consolidation plan",
+                                                 "Define access panel consolidation plan"
+                                             ]
+                             },
+                             {
+                                 "phase":  "Phase C â€” Trust restoration",
+                                 "objective":  "Only elevate soft-scoped metrics once enrichment and source confidence are proven.",
+                                 "outputs":  [
+                                                 "Formal trust criteria for user/account/licence metrics",
+                                                 "Operator wording guidance for caution states",
+                                                 "Visibility rules for incomplete enrichment"
+                                             ]
+                             },
+                             {
+                                 "phase":  "Phase D â€” Route modernization later",
+                                 "objective":  "Only consider /reference to /admin route changes once the Admin-native page model is mature.",
+                                 "outputs":  [
+                                                 "Route migration checklist",
+                                                 "Backwards-compatibility redirect strategy",
+                                                 "Nav/home wording check after route migration"
+                                             ]
+                             }
+                         ],
+    "immediate_guidance":  [
+                               "Keep /reference as the implementation route for now. The UI is already successfully presenting it as Admin.",
+                               "Do not remove the detail route yet. Reference/Admin still relies on legacy detail drilldowns that appear intentionally useful.",
+                               "Treat billing, product, and access detail links as acceptable transitional drilldowns until a dedicated Admin-native surface is built.",
+                               "Treat project summary as the first likely candidate for a future Admin-native replacement rather than immediate removal.",
+                               "Do not broaden user/licence/admin trust claims until enrichment confidence is explicitly verified."
+                           ]
+}

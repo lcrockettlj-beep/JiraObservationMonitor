@@ -1,0 +1,51 @@
+﻿ADMIN BLUEPRINT PACK
+====================
+
+Generated: 2026-06-24 19:33:56
+Project root: C:\Users\Luke_C\Desktop\JiraObservationMonitor
+
+Current implementation truth
+---------------------------
+Implementation route: /reference
+Operator label: Admin
+Home links to /reference: true
+Reference/Admin uses detail drilldowns: true
+
+Detail counts
+------------
+product_breakdown: 1
+billing_breakdown: 6
+access_breakdown: 1
+project_summary: 1
+discovery_links_estate: 0
+legacy_site_links_estate: 0
+
+Trusted domains
+--------------
+Reference/Admin route strategy [trusted]
+  The implementation route /reference is registered and the UI label Admin is already used in navigation.
+Read-only operator model [trusted]
+  Current design direction remains read-only, navigational, and operator-first.
+Billing drilldown support [trusted-with-legacy-routing]
+  Billing detail links remain present and appear to support valid supporting breakdowns.
+Product breakdown support [trusted-with-legacy-routing]
+  Product breakdown links remain in the Admin-labelled page and appear intentionally exposed.
+Access breakdown support [trusted-with-legacy-routing]
+  Access drilldowns remain available and align with operator/admin review needs.
+
+Soft-scoped domains
+-------------------
+Managed account totals [soft-scoped]
+  Visibility may depend on enrichment/trust restoration and should not be oversold in Admin until verified.
+License entitlement confidence [soft-scoped]
+  License-related metrics should be presented with caution until enrichment confidence is formally restored.
+Project summary as an Admin-native surface [candidate]
+  Project summary currently exists as a legacy detail drilldown and should be reviewed before redesign.
+
+Immediate guidance
+------------------
+- Keep /reference as the implementation route for now. The UI is already successfully presenting it as Admin.
+- Do not remove the detail route yet. Reference/Admin still relies on legacy detail drilldowns that appear intentionally useful.
+- Treat billing, product, and access detail links as acceptable transitional drilldowns until a dedicated Admin-native surface is built.
+- Treat project summary as the first likely candidate for a future Admin-native replacement rather than immediate removal.
+- Do not broaden user/licence/admin trust claims until enrichment confidence is explicitly verified.
