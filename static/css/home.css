@@ -761,3 +761,180 @@ html[data-mode="enterprise"] .note,
 html[data-mode="noc"] .note {
     color: #cfd8e3;
 }
+
+/* === Theme Identity Stage 2.4 Character Pass START === */
+/* 1) Dark core + Light mode hero compaction so they do not feel empty */
+html[data-mode="dark"] .home-hero,
+html:not([data-mode]) .home-hero,
+html[data-mode="light"] .home-hero {
+    min-height: 0;
+}
+
+html[data-mode="dark"] .home-hero__top,
+html:not([data-mode]) .home-hero__top,
+html[data-mode="light"] .home-hero__top {
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 340px);
+    gap: 18px;
+}
+
+html[data-mode="dark"] .home-hero__copy,
+html:not([data-mode]) .home-hero__copy,
+html[data-mode="light"] .home-hero__copy {
+    gap: 10px;
+}
+
+html[data-mode="dark"] .hero__meta--core,
+html:not([data-mode]) .hero__meta--core,
+html[data-mode="light"] .hero__meta--core {
+    margin-top: 6px;
+}
+
+html[data-mode="dark"] .hero__core-wrap,
+html:not([data-mode]) .hero__core-wrap,
+html[data-mode="light"] .hero__core-wrap {
+    min-height: 190px;
+}
+
+html[data-mode="dark"] .command-core,
+html:not([data-mode]) .command-core,
+html[data-mode="light"] .command-core {
+    min-height: 190px;
+}
+
+/* 2) Enterprise needs premium graphite / boardroom character rather than dark-core blue */
+html[data-mode="enterprise"] .home-hero {
+    background: linear-gradient(180deg, rgba(26,34,45,0.98), rgba(23,31,42,0.95));
+}
+
+html[data-mode="enterprise"] .home-hero::before {
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0.025), transparent 42%),
+      radial-gradient(circle at 84% 22%, rgba(255,255,255,0.040), transparent 14%),
+      radial-gradient(circle at 20% 84%, rgba(126,162,208,0.060), transparent 16%);
+}
+
+html[data-mode="enterprise"] .identity-panel--enterprise,
+html[data-mode="enterprise"] .mode-context--enterprise,
+html[data-mode="enterprise"] .home-priority-section,
+html[data-mode="enterprise"] .home-data-section,
+html[data-mode="enterprise"] .site-card,
+html[data-mode="enterprise"] .stat-card,
+html[data-mode="enterprise"] .status-tile {
+    background: linear-gradient(180deg, rgba(39,49,63,0.97), rgba(28,38,50,0.94));
+    border-color: rgba(150, 170, 194, 0.16);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.16), 0 0 8px rgba(126,162,208,0.06);
+}
+
+html[data-mode="enterprise"] .identity-panel--enterprise {
+    background: linear-gradient(180deg, rgba(45,57,74,0.98), rgba(34,45,60,0.94));
+}
+
+html[data-mode="enterprise"] .identity-panel__eyebrow,
+html[data-mode="enterprise"] .label,
+html[data-mode="enterprise"] .status-tile__label,
+html[data-mode="enterprise"] .identity-stat-label {
+    color: #c4cedb;
+}
+
+html[data-mode="enterprise"] .home-hero p,
+html[data-mode="enterprise"] .identity-panel__intro,
+html[data-mode="enterprise"] .section-header p,
+html[data-mode="enterprise"] .site-card__sub,
+html[data-mode="enterprise"] .note,
+html[data-mode="enterprise"] .metric-note,
+html[data-mode="enterprise"] .delta-chip span,
+html[data-mode="enterprise"] .identity-stat-note,
+html[data-mode="enterprise"] .status-tile__note {
+    color: #d7e0ea;
+}
+
+html[data-mode="enterprise"] .command-core {
+    background: linear-gradient(180deg, rgba(37,49,63,0.96), rgba(27,38,50,0.92));
+    border-color: rgba(150, 170, 194, 0.14);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 18px rgba(0,0,0,0.14), 0 0 8px rgba(126,162,208,0.05);
+}
+
+html[data-mode="enterprise"] .top-nav {
+    background: linear-gradient(180deg, rgba(27,37,49,0.97), rgba(24,32,42,0.94));
+}
+
+/* 3) NOC needs layered control-room character and stronger operations contrast */
+html[data-mode="noc"] .home-hero {
+    background: linear-gradient(180deg, rgba(12,28,20,0.98), rgba(13,24,19,0.95));
+}
+
+html[data-mode="noc"] .home-hero::before {
+    background:
+      linear-gradient(90deg, rgba(103,194,164,0.10), transparent 40%),
+      radial-gradient(circle at 84% 22%, rgba(103,194,164,0.12), transparent 18%),
+      radial-gradient(circle at 24% 82%, rgba(207,163,62,0.08), transparent 18%);
+}
+
+html[data-mode="noc"] .identity-panel--noc {
+    background:
+      linear-gradient(180deg, rgba(21,45,31,0.98), rgba(15,31,23,0.95));
+    border-color: rgba(103,194,164,0.20);
+    box-shadow: 0 18px 30px rgba(0,0,0,0.18), 0 0 14px rgba(103,194,164,0.10);
+}
+
+html[data-mode="noc"] .mode-context--noc,
+html[data-mode="noc"] .home-priority-section,
+html[data-mode="noc"] .home-data-section,
+html[data-mode="noc"] .site-card,
+html[data-mode="noc"] .stat-card,
+html[data-mode="noc"] .status-tile {
+    background: linear-gradient(180deg, rgba(17,38,27,0.97), rgba(12,28,20,0.94));
+    border-color: rgba(103,194,164,0.16);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.18), 0 0 14px rgba(103,194,164,0.07);
+}
+
+html[data-mode="noc"] .status-tile--warning {
+    border-color: rgba(207,163,62,0.28);
+    box-shadow: 0 0 18px rgba(207,163,62,0.10), 0 12px 22px rgba(0,0,0,0.16);
+}
+
+html[data-mode="noc"] .status-tile--critical {
+    border-color: rgba(219,96,88,0.28);
+    box-shadow: 0 0 18px rgba(219,96,88,0.12), 0 12px 22px rgba(0,0,0,0.16);
+}
+
+html[data-mode="noc"] .identity-panel__eyebrow,
+html[data-mode="noc"] .label,
+html[data-mode="noc"] .status-tile__label,
+html[data-mode="noc"] .identity-stat-label {
+    color: #c7d9ca;
+}
+
+html[data-mode="noc"] .home-hero p,
+html[data-mode="noc"] .identity-panel__intro,
+html[data-mode="noc"] .section-header p,
+html[data-mode="noc"] .site-card__sub,
+html[data-mode="noc"] .note,
+html[data-mode="noc"] .metric-note,
+html[data-mode="noc"] .delta-chip span,
+html[data-mode="noc"] .identity-stat-note,
+html[data-mode="noc"] .status-tile__note {
+    color: #d9e8db;
+}
+
+html[data-mode="noc"] .noc-live-strip,
+html[data-mode="noc"] .identity-feed-row {
+    gap: 10px;
+}
+
+html[data-mode="noc"] .noc-live-strip .pill,
+html[data-mode="noc"] .identity-feed-row .pill {
+    border-color: rgba(103,194,164,0.32);
+    background: linear-gradient(135deg, rgba(103,194,164,0.14), rgba(149,166,106,0.08));
+    color: #dff5e7;
+}
+
+html[data-mode="noc"] .site-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(180deg, transparent, transparent 14px, rgba(255,255,255,0.012) 15px, transparent 16px);
+    pointer-events: none;
+    opacity: 0.32;
+}
+/* === Theme Identity Stage 2.4 Character Pass END === */
