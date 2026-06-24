@@ -1,4 +1,4 @@
-.hero__back { margin-bottom: 10px; }
+﻿.hero__back { margin-bottom: 10px; }
 .text-link { color: var(--accent); }
 .text-link:hover { color: var(--text); }
 .estate-hero { margin-bottom: 16px; overflow: hidden; }
@@ -68,3 +68,47 @@ html[data-mode="atlassian"] .priority-row, html[data-theme="atlassian"] .priorit
 @media (max-width: 1260px) { .estate-grid--registry { grid-template-columns:repeat(2, minmax(0, 1fr)); } .priority-head, .priority-row { grid-template-columns:minmax(220px, 2fr) minmax(110px, 0.9fr) minmax(120px, 0.9fr) minmax(150px, 1fr) minmax(100px, 0.8fr); } }
 @media (max-width: 1020px) { .estate-hero__actions { justify-content:flex-start; min-height:auto; } .priority-head { display:none; } .priority-row { grid-template-columns:1fr; gap:10px; padding:14px; } .priority-cell--status, .priority-cell--risk, .priority-cell--change, .priority-cell--action { display:flex; align-items:center; justify-content:space-between; gap:10px; } }
 @media (max-width: 760px) { .estate-grid--registry { grid-template-columns:1fr; } .estate-hero__actions { gap:10px; flex-wrap:wrap; } .estate-hero__orb, .estate-hero__orb--wide { width:auto; min-width:120px; height:auto; padding:14px 16px; border-radius:16px; } }
+
+/* Discovery cleanup pack */
+.pill--muted {
+  opacity: 0.9;
+}
+
+.estate-discovery-note {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 16px;
+  background: rgba(6, 18, 44, 0.72);
+}
+
+.estate-discovery-note__title {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.estate-discovery-note__body {
+  color: rgba(218, 232, 255, 0.78);
+  line-height: 1.45;
+}
+
+.estate-card--legacy-paused {
+  position: relative;
+}
+
+.estate-card--legacy-paused::after {
+  content: 'Discovery route under review';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.75rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(103, 190, 255, 0.35);
+  color: rgba(190, 226, 255, 0.92);
+  background: rgba(10, 29, 70, 0.68);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+

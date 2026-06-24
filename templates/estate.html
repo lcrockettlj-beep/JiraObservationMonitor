@@ -121,7 +121,7 @@
             </div>
             <div class="estate-hero__actions">
                 <a href="/reference" class="estate-hero__orb">Admin area</a>
-                <a href="/detail/discovery::summary" class="estate-hero__orb estate-hero__orb--wide">Discovery summary</a>
+                <a href="/estate#discovery-overview" class="estate-hero__orb estate-hero__orb--wide">Discovery overview</a>
             </div>
         </div>
     </section>
@@ -133,26 +133,29 @@
                 <p>Top-level discovery and monitoring coverage for the monitored estate.</p>
             </div>
             <div class="section-header__actions">
-                <a href="/detail/discovery::summary" class="pill">Open full discovery summary</a>
+                <span id="discovery-overview"></span><a href="/estate#discovery-overview" class="pill pill--muted">Discovery overview</a>
             </div>
         </div>
         <div class="estate-grid estate-grid--registry">
-            <a href="/detail/discovery::tracked_sites" class="estate-card signal-border">
+                        <div class="estate-discovery-note signal-border" role="note">
+                <div class="estate-discovery-note__title">Discovery drilldowns are paused</div>
+                <div class="estate-discovery-note__body">The older /detail/discovery routes remain under review. These cards now stay within Estate so operators can keep context while the dedicated discovery surface is rebuilt.</div>
+            </div><a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="tracked_sites">
                 <div class="estate-title">Sites monitored</div>
                 <div class="estate-value">{{ tracked_total or 0 }}</div>
                 <div class="estate-sub">Operational Jira sites currently in scope.</div>
             </a>
-            <a href="/detail/discovery::excluded_sites" class="estate-card signal-border">
+            <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="excluded_sites">
                 <div class="estate-title">Sites excluded</div>
                 <div class="estate-value">{{ excluded_total or 0 }}</div>
                 <div class="estate-sub">Sites identified but currently outside monitoring scope.</div>
             </a>
-            <a href="/detail/discovery::all_sites" class="estate-card signal-border">
+            <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="all_sites">
                 <div class="estate-title">Sites discovered</div>
                 <div class="estate-value">{{ discovered_total or 0 }}</div>
                 <div class="estate-sub">Combined view of tracked and excluded sites.</div>
             </a>
-            <a href="/detail/discovery::new_site_candidates" class="estate-card signal-border">
+            <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="new_site_candidates">
                 <div class="estate-title">Sites to review</div>
                 <div class="estate-value">{{ review_total or 0 }}</div>
                 <div class="estate-sub">Potential new sites needing ownership and scope decisions.</div>
@@ -194,5 +197,6 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 
 
