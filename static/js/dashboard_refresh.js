@@ -20,7 +20,7 @@
   function setPaused(value) { localStorage.setItem(STORAGE_KEY_PAUSED, value ? '1' : '0'); }
   function isCollapsed() { return localStorage.getItem(STORAGE_KEY_COLLAPSED) === '1'; }
   function setCollapsed(value) { localStorage.setItem(STORAGE_KEY_COLLAPSED, value ? '1' : '0'); }
-  function asText(value, fallback = 'â€”') { return (value === null || value === undefined || value === '') ? fallback : String(value); }
+  function asText(value, fallback = 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â') { return (value === null || value === undefined || value === '') ? fallback : String(value); }
 
   function ensureStyles() {
     if (document.getElementById('jom-runtime-alert-styles')) return;
@@ -154,21 +154,26 @@
       html[data-theme="atlassian"] #jom-auto-refresh-badge,
       html[data-mode="light"] #jom-auto-refresh-badge,
       html[data-theme="light"] #jom-auto-refresh-badge {
-        --jom-bg: linear-gradient(180deg, rgba(31,44,72,0.92), rgba(22,34,57,0.90));
-        --jom-border: rgba(12,102,228,0.20);
-        --jom-border-strong: rgba(101,84,192,0.16);
-        --jom-glow: rgba(12,102,228,0.08);
-        --jom-text: #edf3ff;
-        --jom-muted: #c7d4eb;
-        --jom-subtle-bg: rgba(255,255,255,0.04);
-        --jom-card-bg: rgba(255,255,255,0.04);
-        --jom-head-bg: linear-gradient(90deg, rgba(12,102,228,0.12), rgba(101,84,192,0.06));
-        --jom-pill-border: rgba(12,102,228,0.16);
-        --jom-pill-bg: rgba(255,255,255,0.05);
-        --jom-button-bg: rgba(255,255,255,0.04);
+        --jom-bg: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,245,247,0.93));
+        --jom-border: rgba(12,102,228,0.18);
+        --jom-border-strong: rgba(12,102,228,0.26);
+        --jom-glow: rgba(12,102,228,0.06);
+        --jom-text: #172B4D;
+        --jom-muted: #5E6C84;
+        --jom-subtle-bg: rgba(255,255,255,0.72);
+        --jom-card-bg: rgba(255,255,255,0.74);
+        --jom-head-bg: linear-gradient(90deg, rgba(222,235,255,0.92), rgba(244,245,247,0.88));
+        --jom-pill-border: rgba(12,102,228,0.14);
+        --jom-pill-bg: rgba(222,235,255,0.70);
+        --jom-button-bg: rgba(255,255,255,0.78);
         --jom-stable: #36B37E;
         --jom-warning: #FF9F00;
         --jom-critical: #FF5630;
+        border-color: rgba(12,102,228,0.18);
+        box-shadow:
+          0 12px 24px rgba(9,30,66,0.12),
+          0 0 0 rgba(0,0,0,0),
+          inset 0 1px 0 rgba(255,255,255,0.98);
       }
 
       #jom-auto-refresh-badge.jom-healthy {
@@ -307,6 +312,11 @@
         font-weight: 800;
         word-break: break-word;
       }
+      #jom-anchors-today {
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
       #jom-auto-refresh-badge .jom-actions {
         display: flex;
         gap: 6px;
@@ -367,7 +377,7 @@
         <div class="jom-insights" id="jom-insights"></div>
         <div class="jom-body">
           <div class="jom-card"><div class="jom-label">State</div><div class="jom-value" id="jom-runtime-state">STABLE</div></div>
-          <div class="jom-card"><div class="jom-label">Anchors</div><div class="jom-value" id="jom-anchors-today">â€”</div></div>
+          <div class="jom-card"><div class="jom-label">Anchors</div><div class="jom-value" id="jom-anchors-today">ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â</div></div>
         </div>
         <div class="jom-actions">
           <button class="jom-btn" id="jom-toggle-refresh" type="button">Pause refresh</button>
@@ -497,8 +507,12 @@
 
     const anchorsEl = document.getElementById('jom-anchors-today');
     if (anchorsEl) {
-      const morning = state.anchorsAnchors.morning ? 'ðŸŒ…âš“' : 'ðŸŒ…â³';
-      const evening = state.anchorsAnchors.evening ? 'ðŸŒ‡âš“' : 'ðŸŒ‡â³';
+      const sunrise = String.fromCodePoint(0x1F305);
+      const sunset = String.fromCodePoint(0x1F307);
+      const anchor = String.fromCodePoint(0x2693);
+      const hourglass = String.fromCodePoint(0x23F3);
+      const morning = state.anchorsAnchors.morning ? (sunrise + anchor) : (sunrise + hourglass);
+      const evening = state.anchorsAnchors.evening ? (sunset + anchor) : (sunset + hourglass);
       anchorsEl.textContent = morning + '  ' + evening;
     }
   }
