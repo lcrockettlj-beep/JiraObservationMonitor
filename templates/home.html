@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -75,8 +75,8 @@
                     </div>
                     <div class="site-card__actions">
                         {% if site_key %}
-                            <a href="/detail/trend::site::{{ site_key }}" class="pill">Historical View</a>
-                            <a href="/detail/project::site::{{ site_key }}" class="pill">Project sample</a>
+                            <a href="/site/{{ site_key }}#signals-trend" class="pill">Site signals</a>
+                            <a href="/site/{{ site_key }}#project-sample" class="pill">Site projects</a>
                         {% else %}
                             <span class="pill">Historical View unavailable</span>
                             <span class="pill">Project sample unavailable</span>
@@ -105,8 +105,8 @@
                     </div>
                     <div class="site-card__actions">
                         {% if site_key %}
-                            <a href="/detail/trend::site::{{ site_key }}" class="pill">Historical View</a>
-                            <a href="/detail/project::site::{{ site_key }}" class="pill">Project sample</a>
+                            <a href="/site/{{ site_key }}#signals-trend" class="pill">Site signals</a>
+                            <a href="/site/{{ site_key }}#project-sample" class="pill">Site projects</a>
                         {% else %}
                             <span class="pill">Historical View unavailable</span>
                             <span class="pill">Project sample unavailable</span>
@@ -136,10 +136,10 @@
                     </div>
                 </div>
                 <div class="delta-grid">
-                    <div class="delta-chip"><span>Total users Î”</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Projects Î”</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Risk Î”</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Unresolved Î”</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Total users ÃŽâ€</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Projects ÃŽâ€</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Risk ÃŽâ€</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Unresolved ÃŽâ€</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
                 </div>
                 <div class="chip-list">
                     {% if site.attention_reasons %}
@@ -421,22 +421,22 @@
             </div>
         </div>
         <div class="stat-grid">
-            <a href="/detail/admin::suspended_accounts" class="stat-card stat-card--link signal-border signal-border--warning">
+            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning">
                 <div class="label">Disabled User Accounts</div>
                 <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
                 <div class="note">Managed accounts currently disabled.</div>
             </a>
-            <a href="/detail/admin::managed_accounts" class="stat-card stat-card--link signal-border signal-border--warning">
+            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning">
                 <div class="label">Users Without Jira Access</div>
                 <div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div>
                 <div class="note">Accounts without tracked Jira site access in current scope.</div>
             </a>
-            <a href="/detail/admin::suspended_accounts" class="stat-card stat-card--link signal-border signal-border--warning">
+            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning">
                 <div class="label">Inactive Users (No Access)</div>
                 <div class="value">{{ estate.inactive_without_site_access or 0 }}</div>
                 <div class="note">Inactive users who appear to have no tracked site access.</div>
             </a>
-            <a href="/detail/billing::bitbucket_entries" class="stat-card stat-card--link signal-border signal-border--warning">
+            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning">
                 <div class="label">Bitbucket-only Users</div>
                 <div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div>
                 <div class="note">Users aligned to Bitbucket without tracked Jira presence.</div>
@@ -464,3 +464,4 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
