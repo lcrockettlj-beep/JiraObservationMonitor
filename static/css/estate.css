@@ -1,108 +1,70 @@
-
 .hero__back { margin-bottom: 10px; }
 .text-link { color: var(--accent); }
-.text-link:hover { color: var(--text); text-shadow: 0 0 12px rgba(0,229,255,0.18); }
-.estate-hero { margin-bottom: 16px; }
-.estate-hero__actions { display:flex; align-items:center; justify-content:flex-end; gap:12px; min-height:180px; }
-.estate-hero__orb { width:110px; height:110px; display:inline-flex; align-items:center; justify-content:center; text-align:center; border-radius:999px; border:1px solid rgba(90,194,255,0.22); background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); box-shadow:0 0 20px rgba(90,194,255,0.08); color:var(--text); font-size:14px; line-height:1.3; padding:10px; }
-.estate-hero__orb--wide { width:144px; }
-.estate-panel { border-radius:24px; }
+.text-link:hover { color: var(--text); }
+.estate-hero { margin-bottom: 16px; overflow: hidden; }
+.estate-hero__actions { display:flex; align-items:center; justify-content:flex-end; gap:12px; min-height:188px; }
+.estate-hero__orb {
+    width:118px; height:118px; display:inline-flex; align-items:center; justify-content:center; text-align:center;
+    border-radius:999px; text-decoration:none; border:1px solid color-mix(in srgb, var(--mode-card-edge) 94%, rgba(255,255,255,0.12));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--mode-card-surface-alt) 90%, rgba(255,255,255,0.06)), color-mix(in srgb, var(--mode-card-surface) 78%, rgba(255,255,255,0.03))), radial-gradient(circle at 24% 20%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 58%);
+    box-shadow: 0 16px 28px rgba(0,0,0,0.16), 0 0 16px color-mix(in srgb, var(--accent) 8%, transparent), inset 0 1px 0 rgba(255,255,255,0.10);
+    color:var(--text); font-size:14px; line-height:1.3; padding:10px; backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+}
+.estate-hero__orb:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+.estate-hero__orb--wide { width:148px; }
+.estate-panel {
+    border-radius:24px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--mode-card-surface-alt) 88%, rgba(255,255,255,0.04)), color-mix(in srgb, var(--mode-card-surface) 78%, rgba(255,255,255,0.02))), radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 24%);
+    border: 1px solid color-mix(in srgb, var(--mode-card-edge) 90%, rgba(255,255,255,0.10));
+    box-shadow: 0 18px 34px rgba(0,0,0,0.16), 0 0 18px color-mix(in srgb, var(--accent) 8%, transparent), inset 0 1px 0 rgba(255,255,255,0.08);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
 .estate-grid--registry { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:14px; }
-.estate-card { position:relative; display:block; text-decoration:none; color:inherit; background:linear-gradient(180deg, rgba(10,24,58,0.92), rgba(8,18,46,0.88)); border:1px solid rgba(90,194,255,0.22); border-radius:20px; padding:18px; min-height:138px; overflow:hidden; box-shadow:0 14px 28px rgba(0,0,0,0.16), 0 0 16px rgba(90,194,255,0.07); }
-html[data-theme="light"] .estate-card { background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(247,251,255,0.92)); }
-.estate-card::after { content:""; position:absolute; inset:auto -24px -24px auto; width:100px; height:100px; border-radius:50%; background:radial-gradient(circle, rgba(0,229,255,0.12), transparent 70%); pointer-events:none; }
-.estate-card:hover { transform:translateY(-2px); border-color:rgba(90,194,255,0.38); box-shadow:0 18px 32px rgba(0,0,0,0.20), 0 0 24px rgba(90,194,255,0.14); }
+.estate-card {
+    position:relative; display:block; text-decoration:none; color:inherit; border-radius:20px; padding:18px; min-height:138px; overflow:hidden;
+    border:1px solid color-mix(in srgb, var(--mode-card-edge) 92%, rgba(255,255,255,0.10));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--mode-card-surface-alt) 92%, rgba(255,255,255,0.04)), color-mix(in srgb, var(--mode-card-surface) 86%, rgba(255,255,255,0.02))), radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 35%);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.16), 0 0 16px color-mix(in srgb, var(--accent) 7%, transparent), inset 0 1px 0 rgba(255,255,255,0.08);
+    backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.estate-card::after { content:""; position:absolute; inset:auto -24px -24px auto; width:100px; height:100px; border-radius:50%; background:radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%); pointer-events:none; }
+.estate-card:hover { transform:translateY(-2px); border-color:var(--border-strong); box-shadow:0 18px 32px rgba(0,0,0,0.20), 0 0 22px color-mix(in srgb, var(--accent) 12%, transparent), inset 0 1px 0 rgba(255,255,255,0.10); }
 .estate-title { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:10px; }
-.estate-value { font-size:34px; font-weight:800; line-height:1; margin-bottom:8px; text-shadow:0 0 8px rgba(0,229,255,0.18); }
+.estate-value { font-size:34px; font-weight:800; line-height:1; margin-bottom:8px; }
 .estate-sub { font-size:12px; color:var(--muted); line-height:1.45; }
-.priority-board { border:1px solid rgba(90,194,255,0.16); border-radius:18px; overflow:hidden; background:rgba(255,255,255,0.02); }
+.priority-board {
+    border:1px solid color-mix(in srgb, var(--mode-card-edge) 88%, rgba(255,255,255,0.10)); border-radius:20px; overflow:hidden;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--mode-card-surface-alt) 84%, rgba(255,255,255,0.03)), color-mix(in srgb, var(--mode-card-surface) 74%, rgba(255,255,255,0.02))), radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 22%);
+    box-shadow: 0 16px 30px rgba(0,0,0,0.14), 0 0 16px color-mix(in srgb, var(--accent) 7%, transparent), inset 0 1px 0 rgba(255,255,255,0.08);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
 .priority-head, .priority-row { display:grid; grid-template-columns:minmax(280px, 2.2fr) minmax(120px, 0.9fr) minmax(130px, 1fr) minmax(180px, 1.2fr) minmax(110px, 0.8fr); gap:14px; align-items:center; }
-.priority-head { padding:12px 16px; background:rgba(255,255,255,0.04); border-bottom:1px solid rgba(255,255,255,0.06); font-size:11px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; }
-.priority-row { padding:12px 16px; border-top:1px solid rgba(255,255,255,0.04); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.priority-head { padding:12px 16px; background:color-mix(in srgb, var(--mode-card-surface-alt) 76%, rgba(255,255,255,0.08)); border-bottom:1px solid color-mix(in srgb, var(--mode-card-edge) 78%, rgba(255,255,255,0.10)); font-size:11px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; }
+.priority-row { padding:12px 16px; border-top:1px solid color-mix(in srgb, var(--mode-card-edge) 44%, rgba(255,255,255,0.08)); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
 .priority-row:first-child { border-top:none; }
-.priority-row--critical { background:linear-gradient(90deg, rgba(255,0,51,0.05), rgba(255,255,255,0)); }
-.priority-row--warning { background:linear-gradient(90deg, rgba(255,179,0,0.05), rgba(255,255,255,0)); }
-.priority-row--stable { background:linear-gradient(90deg, rgba(0,255,136,0.03), rgba(255,255,255,0)); }
-.priority-row--focus { box-shadow: inset 0 0 0 1px rgba(255,179,0,0.18), 0 0 18px rgba(255,179,0,0.08); }
-.priority-row--alert { box-shadow: inset 0 0 0 1px rgba(255,0,51,0.22), 0 0 24px rgba(255,0,51,0.10); }
+.priority-row--critical { background:linear-gradient(90deg, color-mix(in srgb, var(--critical) 12%, transparent), transparent 48%); }
+.priority-row--warning { background:linear-gradient(90deg, color-mix(in srgb, var(--warning) 10%, transparent), transparent 48%); }
+.priority-row--stable { background:linear-gradient(90deg, color-mix(in srgb, var(--stable) 8%, transparent), transparent 48%); }
+.priority-row--focus { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--warning) 22%, transparent), 0 0 18px color-mix(in srgb, var(--warning) 10%, transparent); }
+.priority-row--alert { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--critical) 24%, transparent), 0 0 24px color-mix(in srgb, var(--critical) 10%, transparent); }
 .priority-site { font-weight:700; font-size:15px; margin-bottom:4px; }
 .priority-reason, .priority-change-note { color:var(--muted); font-size:12px; line-height:1.4; }
-.status-badge, .risk-badge, .change-badge { display:inline-flex; align-items:center; justify-content:center; padding:5px 10px; border-radius:999px; font-size:11px; line-height:1; font-weight:700; letter-spacing:0.08em; border:1px solid transparent; }
-.status-badge--critical, .change-badge--critical { background:rgba(255,0,51,0.16); color:var(--critical); border-color:rgba(255,0,51,0.28); box-shadow:0 0 10px rgba(255,0,51,0.10); }
-.status-badge--warning, .change-badge--warning, .risk-badge--medium { background:rgba(255,179,0,0.16); color:var(--warning); border-color:rgba(255,179,0,0.28); box-shadow:0 0 10px rgba(255,179,0,0.08); }
-.status-badge--stable, .change-badge--stable, .risk-badge--low { background:rgba(0,255,136,0.14); color:var(--stable); border-color:rgba(0,255,136,0.28); box-shadow:0 0 10px rgba(0,255,136,0.08); }
-.risk-badge--high { background:rgba(255,0,51,0.16); color:var(--critical); border-color:rgba(255,0,51,0.28); box-shadow:0 0 10px rgba(255,0,51,0.10); }
-.pill--primary-action { box-shadow:0 0 0 1px rgba(0,229,255,0.22), 0 0 18px rgba(0,229,255,0.18); }
+.status-badge, .risk-badge, .change-badge { display:inline-flex; align-items:center; justify-content:center; padding:5px 10px; border-radius:999px; font-size:11px; line-height:1; font-weight:700; letter-spacing:0.08em; border:1px solid transparent; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.status-badge--critical, .change-badge--critical, .risk-badge--high { background:color-mix(in srgb, var(--critical) 14%, transparent); color:var(--critical); border-color:color-mix(in srgb, var(--critical) 34%, transparent); box-shadow:0 0 12px color-mix(in srgb, var(--critical) 12%, transparent); }
+.status-badge--warning, .change-badge--warning, .risk-badge--medium { background:color-mix(in srgb, var(--warning) 14%, transparent); color:var(--warning); border-color:color-mix(in srgb, var(--warning) 34%, transparent); box-shadow:0 0 12px color-mix(in srgb, var(--warning) 10%, transparent); }
+.status-badge--stable, .change-badge--stable, .risk-badge--low { background:color-mix(in srgb, var(--stable) 12%, transparent); color:var(--stable); border-color:color-mix(in srgb, var(--stable) 30%, transparent); box-shadow:0 0 12px color-mix(in srgb, var(--stable) 10%, transparent); }
+.pill--primary-action { box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent), 0 0 16px color-mix(in srgb, var(--accent) 14%, transparent); }
+html[data-mode="dark"] .estate-card, html:not([data-mode]) .estate-card { background: linear-gradient(180deg, rgba(12,26,67,0.86), rgba(8,18,46,0.82)), radial-gradient(circle at 10% 10%, rgba(90,194,255,0.12), transparent 34%); }
+html[data-mode="cyber"] .estate-card, html[data-theme="cyber"] .estate-card { background: linear-gradient(180deg, rgba(12,20,54,0.88), rgba(9,16,42,0.82)), radial-gradient(circle at 0% 0%, rgba(0,229,255,0.12), transparent 28%), radial-gradient(circle at 100% 0%, rgba(255,77,178,0.08), transparent 24%); box-shadow: 0 16px 30px rgba(0,0,0,0.24), 0 0 18px rgba(0,229,255,0.10), inset 0 1px 0 rgba(255,255,255,0.06); }
+html[data-mode="cyber"] .priority-board, html[data-theme="cyber"] .priority-board, html[data-mode="cyber"] .estate-panel, html[data-theme="cyber"] .estate-panel { background: linear-gradient(180deg, rgba(10,16,42,0.82), rgba(11,18,43,0.74)), radial-gradient(circle at 0% 0%, rgba(0,229,255,0.10), transparent 20%); }
+html[data-mode="enterprise"] .estate-card, html[data-theme="enterprise"] .estate-card { background: linear-gradient(180deg, rgba(39,49,63,0.92), rgba(28,38,50,0.88)), radial-gradient(circle at 0% 0%, rgba(126,162,208,0.08), transparent 24%); border-color: rgba(150,170,194,0.16); box-shadow: 0 14px 28px rgba(0,0,0,0.18), 0 0 12px rgba(126,162,208,0.06), inset 0 1px 0 rgba(255,255,255,0.06); }
+html[data-mode="enterprise"] .estate-panel, html[data-theme="enterprise"] .estate-panel, html[data-mode="enterprise"] .priority-board, html[data-theme="enterprise"] .priority-board { background: linear-gradient(180deg, rgba(32,42,56,0.88), rgba(24,33,44,0.82)), radial-gradient(circle at 0% 0%, rgba(126,162,208,0.06), transparent 20%); border-color: rgba(150,170,194,0.15); }
+html[data-mode="noc"] .estate-card, html[data-theme="noc"] .estate-card { background: linear-gradient(180deg, rgba(24,35,38,0.84), rgba(15,22,24,0.78)), radial-gradient(circle at 0% 0%, rgba(103,194,164,0.10), transparent 24%), radial-gradient(circle at 100% 0%, rgba(204,255,0,0.06), transparent 20%); border-color: rgba(103,194,164,0.16); box-shadow: 0 14px 28px rgba(0,0,0,0.20), 0 0 14px rgba(103,194,164,0.08), inset 0 1px 0 rgba(255,255,255,0.04); }
+html[data-mode="noc"] .estate-panel, html[data-theme="noc"] .estate-panel, html[data-mode="noc"] .priority-board, html[data-theme="noc"] .priority-board { background: linear-gradient(180deg, rgba(23,34,37,0.82), rgba(15,22,24,0.78)), radial-gradient(circle at 0% 0%, rgba(103,194,164,0.08), transparent 20%); border-color: rgba(103,194,164,0.15); }
+html[data-mode="atlassian"] .estate-card, html[data-theme="atlassian"] .estate-card, html[data-mode="light"] .estate-card, html[data-theme="light"] .estate-card { background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,245,247,0.88)), radial-gradient(circle at 0% 0%, rgba(12,102,228,0.08), transparent 24%); border-color: rgba(9,30,66,0.12); box-shadow: 0 10px 22px rgba(9,30,66,0.08), inset 0 1px 0 rgba(255,255,255,0.98); }
+html[data-mode="atlassian"] .estate-panel, html[data-theme="atlassian"] .estate-panel, html[data-mode="atlassian"] .priority-board, html[data-theme="atlassian"] .priority-board, html[data-mode="light"] .estate-panel, html[data-theme="light"] .estate-panel, html[data-mode="light"] .priority-board, html[data-theme="light"] .priority-board { background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,245,247,0.92)), radial-gradient(circle at 0% 0%, rgba(12,102,228,0.06), transparent 18%); border-color: rgba(9,30,66,0.10); box-shadow: 0 10px 22px rgba(9,30,66,0.08), inset 0 1px 0 rgba(255,255,255,0.98); }
+html[data-mode="atlassian"] .priority-head, html[data-theme="atlassian"] .priority-head, html[data-mode="light"] .priority-head, html[data-theme="light"] .priority-head { background: rgba(255,255,255,0.84); border-bottom-color: rgba(9,30,66,0.08); }
+html[data-mode="atlassian"] .priority-row, html[data-theme="atlassian"] .priority-row, html[data-mode="light"] .priority-row, html[data-theme="light"] .priority-row { border-top-color: rgba(9,30,66,0.06); }
 @media (max-width: 1260px) { .estate-grid--registry { grid-template-columns:repeat(2, minmax(0, 1fr)); } .priority-head, .priority-row { grid-template-columns:minmax(220px, 2fr) minmax(110px, 0.9fr) minmax(120px, 0.9fr) minmax(150px, 1fr) minmax(100px, 0.8fr); } }
 @media (max-width: 1020px) { .estate-hero__actions { justify-content:flex-start; min-height:auto; } .priority-head { display:none; } .priority-row { grid-template-columns:1fr; gap:10px; padding:14px; } .priority-cell--status, .priority-cell--risk, .priority-cell--change, .priority-cell--action { display:flex; align-items:center; justify-content:space-between; gap:10px; } }
 @media (max-width: 760px) { .estate-grid--registry { grid-template-columns:1fr; } .estate-hero__actions { gap:10px; flex-wrap:wrap; } .estate-hero__orb, .estate-hero__orb--wide { width:auto; min-width:120px; height:auto; padding:14px 16px; border-radius:16px; } }
-
-/* === Estate Mode Fit Fix START === */
-html[data-theme="light"] .estate-card {
-    background: linear-gradient(180deg, rgba(247,250,252,0.96), rgba(236,242,247,0.92));
-    border-color: rgba(92,122,168,0.16);
-    box-shadow: 0 12px 24px rgba(38,55,77,0.08), 0 0 10px rgba(62,127,209,0.04);
-}
-
-html[data-theme="light"] .priority-board,
-html[data-theme="light"] .watchlist-row,
-html[data-theme="light"] .priority-head {
-    background: rgba(250,252,255,0.80);
-    border-color: rgba(92,122,168,0.14);
-}
-
-html[data-theme="light"] .priority-row {
-    background: rgba(255,255,255,0.32);
-}
-
-html[data-theme="cyber"] .estate-card {
-    background: linear-gradient(180deg, rgba(10,16,42,0.96), rgba(14,20,54,0.92));
-    border-color: rgba(0,229,255,0.18);
-    box-shadow: 0 16px 30px rgba(0,0,0,0.24), 0 0 18px rgba(0,229,255,0.10);
-}
-
-html[data-theme="cyber"] .priority-board,
-html[data-theme="cyber"] .watchlist-row,
-html[data-theme="cyber"] .priority-head {
-    background: rgba(10,16,42,0.70);
-    border-color: rgba(0,229,255,0.14);
-}
-
-html[data-theme="cyber"] .priority-row {
-    background: linear-gradient(90deg, rgba(9,18,49,0.88), rgba(11,18,43,0.64));
-}
-
-html[data-theme="enterprise"] .estate-card {
-    background: linear-gradient(180deg, rgba(18,29,43,0.96), rgba(16,23,34,0.92));
-    border-color: rgba(112,137,168,0.14);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.22), 0 0 14px rgba(118,152,194,0.06);
-}
-
-html[data-theme="enterprise"] .priority-board,
-html[data-theme="enterprise"] .watchlist-row,
-html[data-theme="enterprise"] .priority-head {
-    background: rgba(17,25,37,0.72);
-    border-color: rgba(112,137,168,0.12);
-}
-
-html[data-theme="enterprise"] .priority-row {
-    background: linear-gradient(90deg, rgba(18,27,41,0.88), rgba(15,23,34,0.66));
-}
-
-html[data-theme="noc"] .estate-card {
-    background: linear-gradient(180deg, rgba(9,26,18,0.96), rgba(10,19,15,0.92));
-    border-color: rgba(87,145,110,0.16);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.24), 0 0 16px rgba(103,194,164,0.08);
-}
-
-html[data-theme="noc"] .priority-board,
-html[data-theme="noc"] .watchlist-row,
-html[data-theme="noc"] .priority-head {
-    background: rgba(10,24,18,0.72);
-    border-color: rgba(87,145,110,0.12);
-}
-
-html[data-theme="noc"] .priority-row {
-    background: linear-gradient(90deg, rgba(8,24,17,0.90), rgba(10,20,14,0.68));
-}
-/* === Estate Mode Fit Fix END === */
