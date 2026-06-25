@@ -52,7 +52,54 @@
         </div>
     </div>
 </div>
-<div class="pill"><a href="/detail/project::summary" class="reference-pill--review">Project summary (under review)</a></div>
+<div id="admin-native-summary" class="admin-native-summary signal-border">
+    <div class="admin-native-summary__eyebrow">Admin native summary candidate</div>
+    <div class="admin-native-summary__header">
+        <div>
+            <h2 class="admin-native-summary__title">Operational project summary</h2>
+            <p class="admin-native-summary__lede">This compact Admin-native panel brings the main project summary into the Admin surface for quick read-only review. It complements the older project summary drilldown while that route remains available during transition.</p>
+        </div>
+        <div class="admin-native-summary__actions">
+            <a href="/detail/project::summary" class="pill">Open full project summary</a>
+        </div>
+    </div>
+    <div class="admin-native-summary__grid">
+        <div class="admin-native-summary__card signal-border">
+            <div class="admin-native-summary__label">Projects currently visible</div>
+            <div class="admin-native-summary__value">{{ projects|length if projects is defined else 0 }}</div>
+            <div class="admin-native-summary__note">Live project rows available to the current runtime view.</div>
+        </div>
+        <div class="admin-native-summary__card signal-border">
+            <div class="admin-native-summary__label">Sites currently visible</div>
+            <div class="admin-native-summary__value">{{ sites|length if sites is defined else 0 }}</div>
+            <div class="admin-native-summary__note">Site visibility is based on the current estate payload.</div>
+        </div>
+        <div class="admin-native-summary__card signal-border">
+            <div class="admin-native-summary__label">Billing entries in scope</div>
+            <div class="admin-native-summary__value">{{ (billing_summary.atlassian_app_entry_count or 0) + (billing_summary.marketplace_app_entry_count or 0) }}</div>
+            <div class="admin-native-summary__note">Combined app-entry count for quick read-only awareness.</div>
+        </div>
+    </div>
+    <div class="admin-native-summary__subgrid">
+        <div class="admin-native-summary__panel signal-border">
+            <div class="admin-native-summary__panel-title">What this panel is for</div>
+            <ul class="admin-native-summary__list">
+                <li>Quick operational summary inside Admin without leaving the page.</li>
+                <li>Read-only awareness of projects, sites, and billing coverage.</li>
+                <li>A safe bridge away from relying only on the older project summary drilldown.</li>
+            </ul>
+        </div>
+        <div class="admin-native-summary__panel signal-border">
+            <div class="admin-native-summary__panel-title">What still needs caution</div>
+            <ul class="admin-native-summary__list">
+                <li>Managed-account and licence-confidence truths remain soft-scoped until enrichment confidence is restored.</li>
+                <li>This panel does not replace deeper billing, product, or access breakdown drilldowns yet.</li>
+                <li>Use this panel for operator awareness rather than final entitlement decisions.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="pill"><a href="/detail/project::summary" class="reference-pill--review">Project summary (supporting drilldown)</a></div>
             </div>
         </div>
     </section>
@@ -93,3 +140,4 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
