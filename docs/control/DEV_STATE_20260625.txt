@@ -1,0 +1,17 @@
+STATE SUMMARY — 2026-06-25
+
+- Admin trust surface applied and verified ?
+- Admin native summary candidate applied and verified ?
+- Project summary now presented as supporting drilldown ?
+- Compact Admin-native operational summary added to /reference ?
+- reference.css updated with native summary styling ?
+
+CURRENT POSITION
+- /reference remains the implementation route
+- Admin remains the operator-facing label
+- Billing/product/access drilldowns remain transitional but valid
+- Project summary is now partially native and partially fallback
+
+NEXT LIKELY PHASE
+- Review/Admin-native expansion of summary coverage
+- Decide whether to deepen Admin-native summary or move toward billing/admin consolidation
