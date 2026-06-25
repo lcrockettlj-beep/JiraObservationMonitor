@@ -638,3 +638,51 @@ html[data-theme="light"] .reference-panel {
   }
 }
 
+/* Admin native consolidation pack */
+.admin-native-console {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  background: rgba(8, 18, 46, 0.76);
+}
+
+.admin-native-console__eyebrow {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(112, 201, 255, 0.92);
+}
+
+.admin-native-console__title {
+  margin: 0;
+  font-size: 1.12rem;
+}
+
+.admin-native-console__lede {
+  margin: 0;
+  color: rgba(218, 232, 255, 0.82);
+  line-height: 1.5;
+  max-width: 78ch;
+}
+
+.admin-native-console__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.admin-native-console__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.18rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid rgba(112, 201, 255, 0.28);
+  color: rgba(210, 232, 255, 0.92);
+  background: rgba(10, 23, 57, 0.78);
+  font-size: 0.74rem;
+  letter-spacing: 0.02em;
+}
+

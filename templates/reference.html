@@ -52,12 +52,23 @@
         </div>
     </div>
 </div>
+<div id="admin-native-console" class="admin-native-console signal-border">
+    <div class="admin-native-console__eyebrow">Admin native console</div>
+    <h2 class="admin-native-console__title">Native operator checkpoints</h2>
+    <p class="admin-native-console__lede">Admin now surfaces summary, billing, access, and product checkpoints directly on the page first, while keeping supporting drilldowns available for deeper read-only inspection.</p>
+    <div class="admin-native-console__tags">
+        <span class="admin-native-console__tag">Summary</span>
+        <span class="admin-native-console__tag">Billing</span>
+        <span class="admin-native-console__tag">Access</span>
+        <span class="admin-native-console__tag">Product</span>
+    </div>
+</div>
 <div id="admin-native-summary" class="admin-native-summary signal-border">
     <div class="admin-native-summary__eyebrow">Admin native summary candidate</div>
     <div class="admin-native-summary__header">
         <div>
             <h2 class="admin-native-summary__title">Operational project summary</h2>
-            <p class="admin-native-summary__lede">This compact Admin-native panel brings the main project summary into the Admin surface for quick read-only review. It complements the older project summary drilldown while that route remains available during transition.</p>
+            <p class="admin-native-summary__lede">This compact Admin-native panel brings the main project summary into the Admin surface for quick read-only review while keeping the supporting project drilldown available when deeper inspection is needed.</p>
         </div>
         <div class="admin-native-summary__actions">
             <a href="/detail/project::summary" class="pill">Open supporting project summary</a>
@@ -200,7 +211,7 @@
         <div>
             <div class="admin-native-billing__eyebrow">Admin native billing coverage</div>
             <h2 class="admin-native-billing__title">Billing visibility at a glance</h2>
-            <p class="admin-native-billing__lede">This compact billing panel keeps the most useful coverage counts visible inside Admin so operators can assess footprint quickly before opening a supporting drilldown.</p>
+            <p class="admin-native-billing__lede">This compact billing panel keeps the most useful coverage counts visible inside Admin so operators can assess billing footprint quickly before opening a supporting billing drilldown.</p>
         </div>
         <div class="admin-native-billing__actions">
             <a href="/detail/billing::jira_entries" class="pill">Open Jira billing detail</a>
@@ -258,7 +269,7 @@
         <div>
             <div class="admin-native-access__eyebrow">Admin native access coverage</div>
             <h2 class="admin-native-access__title">Access visibility at a glance</h2>
-            <p class="admin-native-access__lede">This compact access panel keeps the most useful access counts visible inside Admin so operators can assess user-access surface quickly before opening a supporting access drilldown.</p>
+            <p class="admin-native-access__lede">This compact access panel keeps the most useful access counts visible inside Admin so operators can assess access surface quickly before opening a supporting access drilldown.</p>
         </div>
     </div>
     <div class="admin-native-access__grid">
@@ -310,6 +321,7 @@ Admin access breakdown</h2><div class="count">Select an access area to inspect u
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 
 
 
