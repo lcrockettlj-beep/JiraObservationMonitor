@@ -188,6 +188,11 @@ Discovery overview</a>
 
     <section class="panel estate-panel signal-border">
         <div class="section-header">
+            <div class="section-header__actions runtime-metrics-strip-estate" id="runtime-metrics-strip-estate">
+                <span class="pill">Disabled users: <strong id="runtimeDisabledUsersEstate">{{ disabled_users_total if disabled_users_total is defined else 0 }}</strong></span>
+                <span class="pill">Jira licences: <strong id="runtimeJiraUsersEstate">{{ jira_users_total if jira_users_total is defined else 0 }}</strong></span>
+                <span class="pill">Confluence licences: <strong id="runtimeConfluenceUsersEstate">{{ confluence_users_total if confluence_users_total is defined else 0 }}</strong></span>
+            </div>
             <div>
                 <h2>Estate Registry</h2>
                 <p>Top-level discovery and monitoring coverage for the monitored estate.</p>
@@ -314,9 +319,11 @@ Discovery overview</a>
 </script>
 <script src="{{ url_for('static', filename='js/estate_intelligence.js') }}"></script>
 <script src="{{ url_for('static', filename='js/site_navigation_bind.js') }}"></script>
+<script src="{{ url_for('static', filename='js/runtime_template_metrics.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 
 
 

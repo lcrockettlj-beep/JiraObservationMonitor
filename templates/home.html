@@ -291,6 +291,21 @@
             </div>
         </div>
         <div class="stat-grid">
+            <article class="stat-card stat-card--link signal-border runtime-metrics-strip-home" id="runtime-metrics-strip-home">
+                <div class="label">Disabled users</div>
+                <div class="value" id="runtimeDisabledUsersHome">{{ disabled_users_total if disabled_users_total is defined else 0 }}</div>
+                <div class="note">Top-level runtime field from latest runtime payload.</div>
+            </article>
+            <article class="stat-card stat-card--link signal-border runtime-metrics-strip-home">
+                <div class="label">Jira licences</div>
+                <div class="value" id="runtimeJiraUsersHome">{{ jira_users_total if jira_users_total is defined else 0 }}</div>
+                <div class="note">Current runtime-enriched Jira user total.</div>
+            </article>
+            <article class="stat-card stat-card--link signal-border runtime-metrics-strip-home">
+                <div class="label">Confluence licences</div>
+                <div class="value" id="runtimeConfluenceUsersHome">{{ confluence_users_total if confluence_users_total is defined else 0 }}</div>
+                <div class="note">Current runtime-enriched Confluence user total.</div>
+            </article>
             <a href="/estate" class="stat-card stat-card--link signal-border">
                 <div class="label">Sites in Scope</div>
                 <div class="value">{{ tracked_total }}</div>
@@ -421,6 +436,21 @@
             </div>
         </div>
         <div class="stat-grid">
+            <article class="stat-card stat-card--link signal-border runtime-metrics-strip-home" id="runtime-metrics-strip-home">
+                <div class="label">Disabled users</div>
+                <div class="value" id="runtimeDisabledUsersHome">{{ disabled_users_total if disabled_users_total is defined else 0 }}</div>
+                <div class="note">Top-level runtime field from latest runtime payload.</div>
+            </article>
+            <article class="stat-card stat-card--link signal-border runtime-metrics-strip-home">
+                <div class="label">Jira licences</div>
+                <div class="value" id="runtimeJiraUsersHome">{{ jira_users_total if jira_users_total is defined else 0 }}</div>
+                <div class="note">Current runtime-enriched Jira user total.</div>
+            </article>
+            <article class="stat-card stat-card--link signal-border runtime-metrics-strip-home">
+                <div class="label">Confluence licences</div>
+                <div class="value" id="runtimeConfluenceUsersHome">{{ confluence_users_total if confluence_users_total is defined else 0 }}</div>
+                <div class="note">Current runtime-enriched Confluence user total.</div>
+            </article>
             <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning">
                 <div class="label">Disabled User Accounts</div>
                 <div class="value">{{ estate.managed_disabled_accounts or 0 }}</div>
@@ -461,7 +491,9 @@
 <script>
     window.JOMTheme.initToggle("theme-toggle");
 </script>
+<script src="{{ url_for('static', filename='js/runtime_template_metrics.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 

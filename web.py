@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, abort, request
+﻿from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
 
 from datetime import datetime
@@ -69,7 +69,7 @@ def run_startup_self_heal():
     try:
         snapshot_startup_self_heal()
     except Exception as exc:
-        print(f"Ã¢Å¡Â Ã¯Â¸Â Startup self-heal failed: {exc}")
+        print(f"ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Startup self-heal failed: {exc}")
     finally:
         _STARTUP_SELF_HEAL_DONE = True
 
@@ -327,12 +327,12 @@ def _normalise_detail_key_from_action(action):
 
 def _intelligence_atlassian_area(risk_type):
     mapping = {
-        "inactive_users": "Atlassian Administration Ã¢â€ â€™ Directory / Product Access",
-        "unmanaged_accounts": "Atlassian Administration Ã¢â€ â€™ Managed Accounts",
-        "orphaned_projects": "Jira Administration Ã¢â€ â€™ Projects",
-        "unused_apps": "Atlassian Administration Ã¢â€ â€™ Connected Apps",
-        "tier_capacity": "Atlassian Administration Ã¢â€ â€™ Billing / Subscription",
-        "seat_capacity": "Atlassian Administration Ã¢â€ â€™ Billing / Subscription",
+        "inactive_users": "Atlassian Administration ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Directory / Product Access",
+        "unmanaged_accounts": "Atlassian Administration ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Managed Accounts",
+        "orphaned_projects": "Jira Administration ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Projects",
+        "unused_apps": "Atlassian Administration ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Connected Apps",
+        "tier_capacity": "Atlassian Administration ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Billing / Subscription",
+        "seat_capacity": "Atlassian Administration ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Billing / Subscription",
     }
     return mapping.get(risk_type, "Atlassian Administration")
 
@@ -356,7 +356,7 @@ def _build_intelligence_drilldowns(data):
             rows = [row for row in items if isinstance(row, dict)]
             columns = _derive_intelligence_columns(rows)
             risk_type = risk.get("type", "risk")
-            title = f"{site_name} Ã¢â‚¬â€ {_prettify_label(risk_type)}"
+            title = f"{site_name} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â {_prettify_label(risk_type)}"
             reason = risk.get("reason") or f"Operational intelligence detected {_prettify_label(risk_type).lower()}."
             if not rows:
                 rows = [{
@@ -449,6 +449,9 @@ def _common_template_data(data):
         "source_file": data.get("source_file"),
         "source_error": data.get("source_error"),
         "intelligence_summary": data.get("intelligence_summary", {}),
+        "disabled_users_total": data.get("disabled_users_total", 0),
+        "jira_users_total": data.get("jira_users_total", 0),
+        "confluence_users_total": data.get("confluence_users_total", 0),
     }
     return enrich_context_with_intelligence(context, data)
 
@@ -492,7 +495,7 @@ def _endpoint_state_label(payload):
 
 def _format_elapsed(value):
     if value in (None, ""):
-        return "â€”"
+        return "Ã¢â‚¬â€"
     try:
         return f"{float(value):.3f}s"
     except Exception:
@@ -546,7 +549,7 @@ def _build_site_page_view(data, site_key):
         endpoint_rows.append({
             "name": key_name.replace("_", " ").title(),
             "state": _endpoint_state_label(payload),
-            "status_code": payload.get("status_code") if isinstance(payload, dict) and payload.get("status_code") is not None else "â€”",
+            "status_code": payload.get("status_code") if isinstance(payload, dict) and payload.get("status_code") is not None else "Ã¢â‚¬â€",
             "elapsed": _format_elapsed(payload.get("elapsed_seconds") if isinstance(payload, dict) else None),
         })
 
@@ -654,7 +657,7 @@ def detail(key: str):
     )
 
 # ============================================================
-# Sprint 9 Step 3 Ã¢â‚¬â€ Automation status helpers
+# Sprint 9 Step 3 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Automation status helpers
 # ============================================================
 
 SYNC_LOG_FILE = Path(__file__).resolve().parent / "docs" / "control" / "logs" / "scheduled_sync.log"
@@ -736,7 +739,7 @@ def api_source_state():
         "sites_count": len(data.get("sites", [])),
         "source_error": data.get("source_error"),
 
-        # Sprint 9 Step 3 Ã¢â‚¬â€ Automation status fields
+        # Sprint 9 Step 3 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Automation status fields
         "last_sync_time": sync_info["last_sync_time"],
         "last_sync_age_seconds": sync_info["last_sync_age_seconds"],
         "auto_sync_active": sync_info["auto_sync_active"],
@@ -755,4 +758,5 @@ if __name__ == "__main__":
     if not DEBUG_MODE or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_startup_self_heal()
     app.run(debug=DEBUG_MODE, host="127.0.0.1", port=5000)
+
 
