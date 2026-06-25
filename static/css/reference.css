@@ -819,4 +819,152 @@ html[data-theme="light"] .reference-panel {
     justify-content: flex-start;
   }
 }
+/* === Admin theme alignment fix === */
+.reference-panel,
+.reference-panel-inline {
+    background: var(--mode-card-surface-alt) !important;
+    border: 1px solid color-mix(in srgb, var(--mode-card-edge) 90%, rgba(255,255,255,0.10)) !important;
+    box-shadow:
+        0 12px 24px rgba(0,0,0,0.12),
+        0 0 16px color-mix(in srgb, var(--accent) 8%, transparent),
+        inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
 
+.reference-row {
+    background: color-mix(in srgb, var(--mode-card-surface) 88%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--mode-card-edge) 78%, transparent) !important;
+    color: var(--text) !important;
+    box-shadow: none !important;
+}
+
+.reference-row:hover {
+    border-color: var(--border-strong) !important;
+    background: color-mix(in srgb, var(--mode-shell-focus) 78%, transparent) !important;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 10%, transparent) !important;
+}
+
+.reference-label,
+.reference-value,
+.reference-panel h2,
+.reference-panel .count,
+.reference-section-note,
+.empty {
+    color: var(--text) !important;
+    text-shadow: none !important;
+}
+
+.reference-section-note {
+    background: color-mix(in srgb, var(--mode-card-surface) 82%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--mode-card-edge) 72%, transparent) !important;
+}
+
+.reference-section-note--trusted,
+.reference-section-note--transition {
+    border-color: color-mix(in srgb, var(--mode-card-edge) 72%, transparent) !important;
+}
+
+.reference-grid,
+.reference-panel,
+.reference-row,
+.reference-label,
+.reference-value,
+.reference-section-note,
+.reference-panel h2,
+.reference-panel .count {
+    font-family: inherit !important;
+}
+/* === Admin final theme alignment override === */
+
+.reference-grid,
+.reference-panel,
+.reference-panel-inline,
+.reference-row,
+.reference-label,
+.reference-value,
+.reference-section-note,
+.reference-panel h2,
+.reference-panel .count,
+.reference-panel p,
+.empty {
+    font-family: inherit !important;
+    text-shadow: none !important;
+}
+
+.reference-panel,
+.reference-panel-inline {
+    position: relative;
+    background: var(--mode-card-surface-alt) !important;
+    border: 1px solid color-mix(in srgb, var(--mode-card-edge) 90%, rgba(255,255,255,0.10)) !important;
+    border-radius: 20px;
+    box-shadow:
+        0 12px 24px rgba(0,0,0,0.12),
+        0 0 16px color-mix(in srgb, var(--accent) 8%, transparent),
+        inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    overflow: hidden;
+}
+
+.reference-panel::after {
+    content: "";
+    position: absolute;
+    inset: auto -26px -26px auto;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent-purple) 14%, transparent), transparent 70%);
+    pointer-events: none;
+}
+
+.reference-row {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--mode-card-surface) 88%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--mode-card-edge) 78%, transparent) !important;
+    color: var(--text) !important;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    box-shadow: none !important;
+}
+
+.reference-row:hover {
+    transform: translateY(-1px);
+    border-color: var(--border-strong) !important;
+    background: color-mix(in srgb, var(--mode-shell-focus) 78%, transparent) !important;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 10%, transparent) !important;
+}
+
+.reference-label,
+.reference-value,
+.reference-panel h2,
+.reference-panel .count,
+.reference-panel p,
+.reference-section-note,
+.empty {
+    color: var(--text) !important;
+}
+
+.reference-section-note {
+    margin: 0 0 0.65rem;
+    padding: 0.72rem 0.85rem;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--mode-card-surface) 82%, transparent) !important;
+    color: var(--text) !important;
+    border: 1px solid color-mix(in srgb, var(--mode-card-edge) 72%, transparent) !important;
+    line-height: 1.45;
+}
+
+.reference-section-note--trusted,
+.reference-section-note--transition {
+    border-color: color-mix(in srgb, var(--mode-card-edge) 72%, transparent) !important;
+}
+
+.reference-value {
+    font-weight: 700;
+}
