@@ -1,4 +1,3 @@
-﻿
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +12,6 @@
 <body>
 <div class="page">
     {% include "_nav.html" %}
-
     {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
     {% set critical_total = critical_sites|length if critical_sites else 0 %}
     {% set warning_total = warning_sites|length if warning_sites else 0 %}
@@ -24,307 +22,54 @@
     {% set review_total = discovery_summary.new_site_candidate_count if discovery_summary else 0 %}
     {% set watchlist_total = critical_total + warning_total %}
     {% set prioritised_sites = (critical_sites or []) + (warning_sites or []) + (stable_sites or []) %}
-
-    {% macro risk_band(score) -%}
-        {%- if score >= 70 -%}high
-        {%- elif score >= 30 -%}medium
-        {%- else -%}low
-        {%- endif -%}
-    {%- endmacro %}
-
+    {% macro risk_band(score) -%}{%- if score >= 70 -%}high{%- elif score >= 30 -%}medium{%- else -%}low{%- endif -%}{%- endmacro %}
     {% macro change_state(site) -%}
-        {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}
-        {% set risk_delta = site.historical_risk_delta or 0 %}
-        {% set unresolved_delta = site.historical_unresolved_delta or 0 %}
-        {% set users_delta = site.total_users_delta or 0 %}
-        {%- if unresolved_delta > 0 or risk_delta > 0 -%}critical
-        {%- elif proj_delta != 0 or users_delta != 0 -%}warning
-        {%- else -%}stable
-        {%- endif -%}
+        {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}{% set risk_delta = site.historical_risk_delta or 0 %}{% set unresolved_delta = site.historical_unresolved_delta or 0 %}{% set users_delta = site.total_users_delta or 0 %}
+        {%- if unresolved_delta > 0 or risk_delta > 0 -%}critical{%- elif proj_delta != 0 or users_delta != 0 -%}warning{%- else -%}stable{%- endif -%}
     {%- endmacro %}
-
-    {% macro change_label(site) -%}
-        {% set change_level = change_state(site) %}
-        {%- if change_level == 'critical' -%}Escalating
-        {%- elif change_level == 'warning' -%}Changed
-        {%- else -%}None
-        {%- endif -%}
-    {%- endmacro %}
-
+    {% macro change_label(site) -%}{% set change_level = change_state(site) %}{%- if change_level == 'critical' -%}Escalating{%- elif change_level == 'warning' -%}Changed{%- else -%}None{%- endif -%}{%- endmacro %}
     {% macro change_note(site) -%}
-        {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}
-        {% set risk_delta = site.historical_risk_delta or 0 %}
-        {% set unresolved_delta = site.historical_unresolved_delta or 0 %}
-        {% set users_delta = site.total_users_delta or 0 %}
-        {%- if unresolved_delta > 0 -%}Unresolved +{{ unresolved_delta }}
-        {%- elif risk_delta > 0 -%}Risk +{{ risk_delta }}
-        {%- elif proj_delta != 0 -%}Projects {{ proj_delta }}
-        {%- elif users_delta != 0 -%}Users {{ users_delta }}
-        {%- else -%}No recent material delta
-        {%- endif -%}
+        {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}{% set risk_delta = site.historical_risk_delta or 0 %}{% set unresolved_delta = site.historical_unresolved_delta or 0 %}{% set users_delta = site.total_users_delta or 0 %}
+        {%- if unresolved_delta > 0 -%}Unresolved +{{ unresolved_delta }}{%- elif risk_delta > 0 -%}Risk +{{ risk_delta }}{%- elif proj_delta != 0 -%}Projects {{ proj_delta }}{%- elif users_delta != 0 -%}Users {{ users_delta }}{%- else -%}No recent material delta{%- endif -%}
     {%- endmacro %}
-
     {% macro priority_row(site, status_class) -%}
-        {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
-        {% set site_name = site.site_name or site.site or 'Site' %}
-        {% set band = risk_band(site.risk_score or site.historical_trend_score or 0) %}
-        {% set change_level = change_state(site) %}
-        {% if status_class == 'critical' %}
-            {% set action_label = 'Investigate' %}
-        {% elif status_class == 'warning' %}
-            {% set action_label = 'Review' %}
-        {% else %}
-            {% set action_label = 'Open site' %}
-        {% endif %}
+        {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}{% set site_name = site.site_name or site.site or 'Site' %}{% set band = risk_band(site.risk_score or site.historical_trend_score or 0) %}{% set change_level = change_state(site) %}
+        {% if status_class == 'critical' %}{% set action_label = 'Investigate' %}{% elif status_class == 'warning' %}{% set action_label = 'Review' %}{% else %}{% set action_label = 'Open site' %}{% endif %}
         <div class="priority-row priority-row--{{ status_class }}" data-status="{{ status_class }}" data-risk-band="{{ band }}" data-change-level="{{ change_level }}" data-site-key="{{ site_key }}" data-site-name="{{ site_name }}">
-            <div class="priority-cell priority-cell--site">
-                <div class="priority-site">{{ site_name }}</div>
-                <div class="priority-reason">{{ site.reason or 'No significant operational concerns detected.' }}</div>
-            </div>
-            <div class="priority-cell priority-cell--status">
-                <span class="status-badge status-badge--{{ status_class }}">{{ (site.status or status_class)|upper }}</span>
-            </div>
-            <div class="priority-cell priority-cell--risk">
-                <span class="risk-badge risk-badge--{{ band }}">{{ band|upper }} RISK</span>
-            </div>
-            <div class="priority-cell priority-cell--change">
-                <span class="change-badge change-badge--{{ change_level }}">{{ change_label(site) }}</span>
-                <span class="priority-change-note">{{ change_note(site) }}</span>
-            </div>
-            <div class="priority-cell priority-cell--action">
-                {% if site_key %}
-                    <a href="/site/{{ site_key }}" class="pill priority-open-site">{{ action_label }}</a>
-                {% else %}
-                    <span class="pill">{{ action_label }} unavailable</span>
-                {% endif %}
-            </div>
+            <div class="priority-cell priority-cell--site"><div class="priority-site">{{ site_name }}</div><div class="priority-reason">{{ site.reason or 'No significant operational concerns detected.' }}</div></div>
+            <div class="priority-cell priority-cell--status"><span class="status-badge status-badge--{{ status_class }}">{{ (site.status or status_class)|upper }}</span></div>
+            <div class="priority-cell priority-cell--risk"><span class="risk-badge risk-badge--{{ band }}">{{ band|upper }} RISK</span></div>
+            <div class="priority-cell priority-cell--change"><span class="change-badge change-badge--{{ change_level }}">{{ change_label(site) }}</span><span class="priority-change-note">{{ change_note(site) }}</span></div>
+            <div class="priority-cell priority-cell--action">{% if site_key %}<a href="/site/{{ site_key }}" class="pill priority-open-site">{{ action_label }}</a>{% else %}<span class="pill">{{ action_label }} unavailable</span>{% endif %}</div>
         </div>
     {%- endmacro %}
-
     <section class="hero estate-hero">
         <div class="hero__top">
             <div class="hero__copy">
-                <div>
-                    <div class="hero__back"><a href="/" class="text-link">&larr; Back to operational overview</a></div>
-                    <div class="hero__eyebrow">Operational portfolio view</div>
-                    <h1>Estate Overview</h1>
-                    <p>
-                        Estate sits between Home and Site Detail. Auto-priority now sorts the board, highlights attention rows,
-                        and keeps the most operationally important sites at the top.
-                    </p>
-                </div>
-                <div class="hero__meta meta-pills">
-                    <span class="pill">Tracked sites: {{ tracked_total or 0 }}</span>
-                    <span class="pill">Watchlist: {{ watchlist_total }}</span>
-                    <span class="pill">Auto-priority: active</span>
-                </div>
+                <div><div class="hero__back"><a href="/" class="text-link">&larr; Back to operational overview</a></div><div class="hero__eyebrow">Operational portfolio view</div><h1>Estate Overview</h1><p>Estate sits between Home and Site Detail. Auto-priority sorts the board, highlights attention rows, and keeps the most operationally important sites at the top.</p></div>
+                <div class="hero__meta meta-pills"><span class="pill">Tracked sites: {{ tracked_total or 0 }}</span><span class="pill">Watchlist: {{ watchlist_total }}</span><span class="pill">Auto-priority: active</span></div>
             </div>
-            <div class="estate-hero__actions">
-                <a href="/reference" class="estate-hero__orb">Admin area</a>
-                <a href="/estate#discovery-overview" class="estate-hero__orb estate-hero__orb--wide"><div id="estate-native-intelligence" class="estate-native-intelligence signal-border">
-    <div class="estate-native-intelligence__eyebrow">Estate native intelligence</div>
-    <div class="estate-native-intelligence__header">
-        <div>
-            <h2 class="estate-native-intelligence__title">Estate-wide operational cues</h2>
-            <p class="estate-native-intelligence__lede">This intelligence strip brings the most useful estate-level cues into view first so operators can understand current spread, priority, and site health before moving into individual site pages.</p>
-        </div>
-        <div class="estate-native-intelligence__state">
-            {% set critical_count = risk_summary.critical_site_count if risk_summary is defined else 0 %}
-            {% set warning_count = risk_summary.warning_site_count if risk_summary is defined else 0 %}
-            {% if critical_count > 0 %}
-                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--critical">Critical focus</span>
-            {% elif warning_count > 0 %}
-                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--warning">Watchlist active</span>
-            {% else %}
-                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--stable">Stable estate picture</span>
-            {% endif %}
-        </div>
-    </div>
-    <div class="estate-native-intelligence__grid">
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Tracked sites</div>
-            <div class="estate-native-intelligence__value">{{ summary.site_count if summary is defined else (sites|length if sites is defined else 0) }}</div>
-            <div class="estate-native-intelligence__note">Sites currently visible to the estate runtime.</div>
-        </div>
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Projects across estate</div>
-            <div class="estate-native-intelligence__value">{{ summary.project_count_total if summary is defined else 0 }}</div>
-            <div class="estate-native-intelligence__note">Current project footprint spread across the monitored estate.</div>
-        </div>
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Warning sites</div>
-            <div class="estate-native-intelligence__value">{{ risk_summary.warning_site_count if risk_summary is defined else 0 }}</div>
-            <div class="estate-native-intelligence__note">Sites that may need closer operator attention.</div>
-        </div>
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Critical sites</div>
-            <div class="estate-native-intelligence__value">{{ risk_summary.critical_site_count if risk_summary is defined else 0 }}</div>
-            <div class="estate-native-intelligence__note">Sites currently carrying the highest operational priority.</div>
-        </div>
-    </div>
-    <div class="estate-native-intelligence__subgrid">
-        <div class="estate-native-intelligence__panel signal-border">
-            <div class="estate-native-intelligence__panel-title">Priority cues</div>
-            <ul class="estate-native-intelligence__list">
-                <li>Move to critical sites first when any critical count is present.</li>
-                <li>Use warning counts to identify which sites may need a closer operational check next.</li>
-                <li>Use tracked site and project spread to understand estate concentration before drilling in.</li>
-            </ul>
-        </div>
-        <div class="estate-native-intelligence__panel signal-border">
-            <div class="estate-native-intelligence__panel-title">Navigation rule</div>
-            <ul class="estate-native-intelligence__list">
-                <li>Estate remains read-only and navigation-led.</li>
-                <li>Use Open site for the native site surface and Open Atlassian when direct platform access is needed.</li>
-                <li>Use estate signals for prioritisation, not final governance decisions.</li>
-            </ul>
-        </div>
-    </div>
-</div>
-Discovery overview</a>
-            </div>
+            <div class="estate-hero__actions"><a href="/reference" class="estate-hero__orb">Admin area</a><a href="#discovery-overview" class="estate-hero__orb estate-hero__orb--wide">Discovery overview</a></div>
         </div>
     </section>
-
     <section class="panel estate-panel signal-border">
-        <div class="section-header">
-            <div class="section-header__actions runtime-metrics-strip-estate" id="runtime-metrics-strip-estate">
-                <span class="pill">Disabled users: <strong id="runtimeDisabledUsersEstate">{{ disabled_users_total if disabled_users_total is defined else 0 }}</strong></span>
-                <span class="pill">Jira licences: <strong id="runtimeJiraUsersEstate">{{ jira_users_total if jira_users_total is defined else 0 }}</strong></span>
-                <span class="pill">Confluence licences: <strong id="runtimeConfluenceUsersEstate">{{ confluence_users_total if confluence_users_total is defined else 0 }}</strong></span>
-            </div>
-            <div>
-                <h2>Estate Registry</h2>
-                <p>Top-level discovery and monitoring coverage for the monitored estate.</p>
-            </div>
-            <div class="section-header__actions">
-                <span id="discovery-overview"></span><a href="/estate#discovery-overview" class="pill pill--muted"><div id="estate-native-intelligence" class="estate-native-intelligence signal-border">
-    <div class="estate-native-intelligence__eyebrow">Estate native intelligence</div>
-    <div class="estate-native-intelligence__header">
-        <div>
-            <h2 class="estate-native-intelligence__title">Estate-wide operational cues</h2>
-            <p class="estate-native-intelligence__lede">This intelligence strip brings the most useful estate-level cues into view first so operators can understand current spread, priority, and site health before moving into individual site pages.</p>
-        </div>
-        <div class="estate-native-intelligence__state">
-            {% set critical_count = risk_summary.critical_site_count if risk_summary is defined else 0 %}
-            {% set warning_count = risk_summary.warning_site_count if risk_summary is defined else 0 %}
-            {% if critical_count > 0 %}
-                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--critical">Critical focus</span>
-            {% elif warning_count > 0 %}
-                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--warning">Watchlist active</span>
-            {% else %}
-                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--stable">Stable estate picture</span>
-            {% endif %}
-        </div>
-    </div>
-    <div class="estate-native-intelligence__grid">
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Tracked sites</div>
-            <div class="estate-native-intelligence__value">{{ summary.site_count if summary is defined else (sites|length if sites is defined else 0) }}</div>
-            <div class="estate-native-intelligence__note">Sites currently visible to the estate runtime.</div>
-        </div>
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Projects across estate</div>
-            <div class="estate-native-intelligence__value">{{ summary.project_count_total if summary is defined else 0 }}</div>
-            <div class="estate-native-intelligence__note">Current project footprint spread across the monitored estate.</div>
-        </div>
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Warning sites</div>
-            <div class="estate-native-intelligence__value">{{ risk_summary.warning_site_count if risk_summary is defined else 0 }}</div>
-            <div class="estate-native-intelligence__note">Sites that may need closer operator attention.</div>
-        </div>
-        <div class="estate-native-intelligence__card signal-border">
-            <div class="estate-native-intelligence__label">Critical sites</div>
-            <div class="estate-native-intelligence__value">{{ risk_summary.critical_site_count if risk_summary is defined else 0 }}</div>
-            <div class="estate-native-intelligence__note">Sites currently carrying the highest operational priority.</div>
-        </div>
-    </div>
-    <div class="estate-native-intelligence__subgrid">
-        <div class="estate-native-intelligence__panel signal-border">
-            <div class="estate-native-intelligence__panel-title">Priority cues</div>
-            <ul class="estate-native-intelligence__list">
-                <li>Move to critical sites first when any critical count is present.</li>
-                <li>Use warning counts to identify which sites may need a closer operational check next.</li>
-                <li>Use tracked site and project spread to understand estate concentration before drilling in.</li>
-            </ul>
-        </div>
-        <div class="estate-native-intelligence__panel signal-border">
-            <div class="estate-native-intelligence__panel-title">Navigation rule</div>
-            <ul class="estate-native-intelligence__list">
-                <li>Estate remains read-only and navigation-led.</li>
-                <li>Use Open site for the native site surface and Open Atlassian when direct platform access is needed.</li>
-                <li>Use estate signals for prioritisation, not final governance decisions.</li>
-            </ul>
-        </div>
-    </div>
-</div>
-Discovery overview</a>
-            </div>
-        </div>
+        <div class="section-header"><div><h2>Estate Registry</h2><p>Top-level discovery and monitoring coverage for the monitored estate.</p></div><div class="section-header__actions"><span id="discovery-overview"></span><a href="#discovery-overview" class="pill pill--muted">Discovery overview</a></div></div>
         <div class="estate-grid estate-grid--registry">
-                        <div class="estate-discovery-note signal-border" role="note">
-                <div class="estate-discovery-note__title">Discovery drilldowns are paused</div>
-                <div class="estate-discovery-note__body">The older /detail/discovery routes remain under review. These cards now stay within Estate so operators can keep context while the dedicated discovery surface is rebuilt.</div>
-            </div><a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="tracked_sites">
-                <div class="estate-title">Sites monitored</div>
-                <div class="estate-value">{{ tracked_total or 0 }}</div>
-                <div class="estate-sub">Operational Jira sites currently in scope.</div>
-            </a>
-            <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="excluded_sites">
-                <div class="estate-title">Sites excluded</div>
-                <div class="estate-value">{{ excluded_total or 0 }}</div>
-                <div class="estate-sub">Sites identified but currently outside monitoring scope.</div>
-            </a>
-            <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="all_sites">
-                <div class="estate-title">Sites discovered</div>
-                <div class="estate-value">{{ discovered_total or 0 }}</div>
-                <div class="estate-sub">Combined view of tracked and excluded sites.</div>
-            </a>
-            <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="new_site_candidates">
-                <div class="estate-title">Sites to review</div>
-                <div class="estate-value">{{ review_total or 0 }}</div>
-                <div class="estate-sub">Potential new sites needing ownership and scope decisions.</div>
-            </a>
+            <div class="estate-discovery-note signal-border" role="note"><div class="estate-discovery-note__title">Discovery drilldowns are paused</div><div class="estate-discovery-note__body">The older /detail/discovery routes remain under review. These cards now stay within Estate so operators can keep context while the dedicated discovery surface is rebuilt.</div></div>
+            <a href="#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="tracked_sites"><div class="estate-title">Sites monitored</div><div class="estate-value">{{ tracked_total or 0 }}</div><div class="estate-sub">Operational Jira sites currently in scope.</div></a>
+            <a href="#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="excluded_sites"><div class="estate-title">Sites excluded</div><div class="estate-value">{{ excluded_total or 0 }}</div><div class="estate-sub">Sites identified but currently outside monitoring scope.</div></a>
+            <a href="#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="all_sites"><div class="estate-title">Sites discovered</div><div class="estate-value">{{ discovered_total or 0 }}</div><div class="estate-sub">Combined view of tracked and excluded sites.</div></a>
+            <a href="#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="new_site_candidates"><div class="estate-title">Sites to review</div><div class="estate-value">{{ review_total or 0 }}</div><div class="estate-sub">Potential new sites needing ownership and scope decisions.</div></a>
         </div>
     </section>
-
     <section class="panel estate-panel signal-border" id="estate-priority-board">
-        <div class="section-header">
-            <div>
-                <h2>Site Prioritisation Board</h2>
-                <p>Auto-sorted operational board. The system brings the highest priority sites to the top automatically.</p>
-            </div>
-            <div class="section-header__actions">
-                <span class="pill">{{ prioritised_sites|length }} sites</span>
-            </div>
-        </div>
-        <div class="priority-board">
-            <div class="priority-head">
-                <div>Site</div>
-                <div>Status</div>
-                <div>Risk</div>
-                <div>Change</div>
-                <div>Action</div>
-            </div>
-            <div class="priority-body">
-                {% for site in critical_sites or [] %}{{ priority_row(site, 'critical') }}{% endfor %}
-                {% for site in warning_sites or [] %}{{ priority_row(site, 'warning') }}{% endfor %}
-                {% for site in stable_sites or [] %}{{ priority_row(site, 'stable') }}{% endfor %}
-            </div>
-        </div>
+        <div class="section-header"><div><h2>Site Prioritisation Board</h2><p>Auto-sorted operational board. The system brings the highest priority sites to the top automatically.</p></div><div class="section-header__actions"><span class="pill">{{ prioritised_sites|length }} sites</span></div></div>
+        <div class="priority-board"><div class="priority-head"><div>Site</div><div>Status</div><div>Risk</div><div>Change</div><div>Action</div></div><div class="priority-body">{% for site in critical_sites or [] %}{{ priority_row(site, 'critical') }}{% endfor %}{% for site in warning_sites or [] %}{{ priority_row(site, 'warning') }}{% endfor %}{% for site in stable_sites or [] %}{{ priority_row(site, 'stable') }}{% endfor %}</div></div>
     </section>
 </div>
-<script>
-    window.JOMTheme.initToggle("theme-toggle");
-</script>
+<script>window.JOMTheme.initToggle("theme-toggle");</script>
 <script src="{{ url_for('static', filename='js/estate_intelligence.js') }}"></script>
 <script src="{{ url_for('static', filename='js/site_navigation_bind.js') }}"></script>
-<script src="{{ url_for('static', filename='js/runtime_template_metrics.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
-
-
-
-
-
