@@ -121,7 +121,67 @@
             </div>
             <div class="estate-hero__actions">
                 <a href="/reference" class="estate-hero__orb">Admin area</a>
-                <a href="/estate#discovery-overview" class="estate-hero__orb estate-hero__orb--wide">Discovery overview</a>
+                <a href="/estate#discovery-overview" class="estate-hero__orb estate-hero__orb--wide"><div id="estate-native-intelligence" class="estate-native-intelligence signal-border">
+    <div class="estate-native-intelligence__eyebrow">Estate native intelligence</div>
+    <div class="estate-native-intelligence__header">
+        <div>
+            <h2 class="estate-native-intelligence__title">Estate-wide operational cues</h2>
+            <p class="estate-native-intelligence__lede">This intelligence strip brings the most useful estate-level cues into view first so operators can understand current spread, priority, and site health before moving into individual site pages.</p>
+        </div>
+        <div class="estate-native-intelligence__state">
+            {% set critical_count = risk_summary.critical_site_count if risk_summary is defined else 0 %}
+            {% set warning_count = risk_summary.warning_site_count if risk_summary is defined else 0 %}
+            {% if critical_count > 0 %}
+                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--critical">Critical focus</span>
+            {% elif warning_count > 0 %}
+                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--warning">Watchlist active</span>
+            {% else %}
+                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--stable">Stable estate picture</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="estate-native-intelligence__grid">
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Tracked sites</div>
+            <div class="estate-native-intelligence__value">{{ summary.site_count if summary is defined else (sites|length if sites is defined else 0) }}</div>
+            <div class="estate-native-intelligence__note">Sites currently visible to the estate runtime.</div>
+        </div>
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Projects across estate</div>
+            <div class="estate-native-intelligence__value">{{ summary.project_count_total if summary is defined else 0 }}</div>
+            <div class="estate-native-intelligence__note">Current project footprint spread across the monitored estate.</div>
+        </div>
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Warning sites</div>
+            <div class="estate-native-intelligence__value">{{ risk_summary.warning_site_count if risk_summary is defined else 0 }}</div>
+            <div class="estate-native-intelligence__note">Sites that may need closer operator attention.</div>
+        </div>
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Critical sites</div>
+            <div class="estate-native-intelligence__value">{{ risk_summary.critical_site_count if risk_summary is defined else 0 }}</div>
+            <div class="estate-native-intelligence__note">Sites currently carrying the highest operational priority.</div>
+        </div>
+    </div>
+    <div class="estate-native-intelligence__subgrid">
+        <div class="estate-native-intelligence__panel signal-border">
+            <div class="estate-native-intelligence__panel-title">Priority cues</div>
+            <ul class="estate-native-intelligence__list">
+                <li>Move to critical sites first when any critical count is present.</li>
+                <li>Use warning counts to identify which sites may need a closer operational check next.</li>
+                <li>Use tracked site and project spread to understand estate concentration before drilling in.</li>
+            </ul>
+        </div>
+        <div class="estate-native-intelligence__panel signal-border">
+            <div class="estate-native-intelligence__panel-title">Navigation rule</div>
+            <ul class="estate-native-intelligence__list">
+                <li>Estate remains read-only and navigation-led.</li>
+                <li>Use Open site for the native site surface and Open Atlassian when direct platform access is needed.</li>
+                <li>Use estate signals for prioritisation, not final governance decisions.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+Discovery overview</a>
             </div>
         </div>
     </section>
@@ -133,7 +193,67 @@
                 <p>Top-level discovery and monitoring coverage for the monitored estate.</p>
             </div>
             <div class="section-header__actions">
-                <span id="discovery-overview"></span><a href="/estate#discovery-overview" class="pill pill--muted">Discovery overview</a>
+                <span id="discovery-overview"></span><a href="/estate#discovery-overview" class="pill pill--muted"><div id="estate-native-intelligence" class="estate-native-intelligence signal-border">
+    <div class="estate-native-intelligence__eyebrow">Estate native intelligence</div>
+    <div class="estate-native-intelligence__header">
+        <div>
+            <h2 class="estate-native-intelligence__title">Estate-wide operational cues</h2>
+            <p class="estate-native-intelligence__lede">This intelligence strip brings the most useful estate-level cues into view first so operators can understand current spread, priority, and site health before moving into individual site pages.</p>
+        </div>
+        <div class="estate-native-intelligence__state">
+            {% set critical_count = risk_summary.critical_site_count if risk_summary is defined else 0 %}
+            {% set warning_count = risk_summary.warning_site_count if risk_summary is defined else 0 %}
+            {% if critical_count > 0 %}
+                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--critical">Critical focus</span>
+            {% elif warning_count > 0 %}
+                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--warning">Watchlist active</span>
+            {% else %}
+                <span class="estate-native-intelligence__state-pill estate-native-intelligence__state-pill--stable">Stable estate picture</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="estate-native-intelligence__grid">
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Tracked sites</div>
+            <div class="estate-native-intelligence__value">{{ summary.site_count if summary is defined else (sites|length if sites is defined else 0) }}</div>
+            <div class="estate-native-intelligence__note">Sites currently visible to the estate runtime.</div>
+        </div>
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Projects across estate</div>
+            <div class="estate-native-intelligence__value">{{ summary.project_count_total if summary is defined else 0 }}</div>
+            <div class="estate-native-intelligence__note">Current project footprint spread across the monitored estate.</div>
+        </div>
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Warning sites</div>
+            <div class="estate-native-intelligence__value">{{ risk_summary.warning_site_count if risk_summary is defined else 0 }}</div>
+            <div class="estate-native-intelligence__note">Sites that may need closer operator attention.</div>
+        </div>
+        <div class="estate-native-intelligence__card signal-border">
+            <div class="estate-native-intelligence__label">Critical sites</div>
+            <div class="estate-native-intelligence__value">{{ risk_summary.critical_site_count if risk_summary is defined else 0 }}</div>
+            <div class="estate-native-intelligence__note">Sites currently carrying the highest operational priority.</div>
+        </div>
+    </div>
+    <div class="estate-native-intelligence__subgrid">
+        <div class="estate-native-intelligence__panel signal-border">
+            <div class="estate-native-intelligence__panel-title">Priority cues</div>
+            <ul class="estate-native-intelligence__list">
+                <li>Move to critical sites first when any critical count is present.</li>
+                <li>Use warning counts to identify which sites may need a closer operational check next.</li>
+                <li>Use tracked site and project spread to understand estate concentration before drilling in.</li>
+            </ul>
+        </div>
+        <div class="estate-native-intelligence__panel signal-border">
+            <div class="estate-native-intelligence__panel-title">Navigation rule</div>
+            <ul class="estate-native-intelligence__list">
+                <li>Estate remains read-only and navigation-led.</li>
+                <li>Use Open site for the native site surface and Open Atlassian when direct platform access is needed.</li>
+                <li>Use estate signals for prioritisation, not final governance decisions.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+Discovery overview</a>
             </div>
         </div>
         <div class="estate-grid estate-grid--registry">
@@ -197,6 +317,7 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 
 
 
