@@ -134,6 +134,58 @@
             <div class="section__header"><h2>Products in use</h2><div class="count">Select a product to inspect users</div></div>
             {% if org_product_breakdown %}
             <div class="reference-section-note reference-section-note--trusted">Product drilldowns remain available while the Admin-native product surface is being planned.</div>
+<div id="admin-native-product" class="admin-native-product signal-border">
+    <div class="admin-native-product__header">
+        <div>
+            <div class="admin-native-product__eyebrow">Admin native product coverage</div>
+            <h2 class="admin-native-product__title">Product visibility at a glance</h2>
+            <p class="admin-native-product__lede">This compact product panel keeps the most useful product counts visible inside Admin so operators can assess product footprint quickly before opening a supporting product drilldown.</p>
+        </div>
+        <div class="admin-native-product__actions">
+            <a href="/detail/product::jira" class="pill">Open product detail</a>
+        </div>
+    </div>
+    <div class="admin-native-product__grid">
+        <div class="admin-native-product__card signal-border">
+            <div class="admin-native-product__label">Product groups in scope</div>
+            <div class="admin-native-product__value">{{ org_product_breakdown|length if org_product_breakdown is defined else 0 }}</div>
+            <div class="admin-native-product__note">Distinct product rows currently available for operator review.</div>
+        </div>
+        <div class="admin-native-product__card signal-border">
+            <div class="admin-native-product__label">Jira product count</div>
+            <div class="admin-native-product__value">{{ (org_product_breakdown | selectattr('key', 'equalto', 'jira') | list | first).count if org_product_breakdown is defined and (org_product_breakdown | selectattr('key', 'equalto', 'jira') | list | length) > 0 else 0 }}</div>
+            <div class="admin-native-product__note">Current Jira product footprint surfaced in the Admin summary.</div>
+        </div>
+        <div class="admin-native-product__card signal-border">
+            <div class="admin-native-product__label">Confluence product count</div>
+            <div class="admin-native-product__value">{{ (org_product_breakdown | selectattr('key', 'equalto', 'confluence') | list | first).count if org_product_breakdown is defined and (org_product_breakdown | selectattr('key', 'equalto', 'confluence') | list | length) > 0 else 0 }}</div>
+            <div class="admin-native-product__note">Current Confluence footprint visible from the available product breakdown.</div>
+        </div>
+        <div class="admin-native-product__card signal-border">
+            <div class="admin-native-product__label">Bitbucket product count</div>
+            <div class="admin-native-product__value">{{ (org_product_breakdown | selectattr('key', 'equalto', 'bitbucket') | list | first).count if org_product_breakdown is defined and (org_product_breakdown | selectattr('key', 'equalto', 'bitbucket') | list | length) > 0 else 0 }}</div>
+            <div class="admin-native-product__note">Bitbucket footprint available where present in the current product rows.</div>
+        </div>
+    </div>
+    <div class="admin-native-product__subgrid">
+        <div class="admin-native-product__panel signal-border">
+            <div class="admin-native-product__panel-title">What this panel covers</div>
+            <ul class="admin-native-product__list">
+                <li>Quick visibility of product groups and leading product counts inside Admin.</li>
+                <li>A stable native checkpoint before opening deeper product drilldowns.</li>
+                <li>Read-only product awareness aligned with the existing Admin trust rules.</li>
+            </ul>
+        </div>
+        <div class="admin-native-product__panel signal-border">
+            <div class="admin-native-product__panel-title">What still needs caution</div>
+            <ul class="admin-native-product__list">
+                <li>Product visibility remains limited to the currently exposed breakdown rows.</li>
+                <li>Supporting product drilldowns remain valid and should still be used where deeper inspection is needed.</li>
+                <li>This panel is for operational awareness rather than licensing or entitlement decisions.</li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="reference-list">{% for item in org_product_breakdown %}<a href="/detail/product::{{ item.key }}" class="reference-row"><div class="reference-label">{{ item.label }}</div><div class="reference-value">{{ item.count }}</div></a>{% endfor %}</div>
             {% else %}
             <div class="empty">No product breakdown is currently available.</div>
@@ -258,6 +310,7 @@ Admin access breakdown</h2><div class="count">Select an access area to inspect u
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 
 
 
