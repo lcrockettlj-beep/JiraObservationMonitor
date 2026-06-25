@@ -1,17 +1,24 @@
-STATE SUMMARY — 2026-06-25
+STATE SUMMARY — 2026-06-25 CHECKPOINT
 
-- Admin trust surface applied and verified ?
-- Admin native summary candidate applied and verified ?
-- Project summary now presented as supporting drilldown ?
-- Compact Admin-native operational summary added to /reference ?
-- reference.css updated with native summary styling ?
+- Runtime source visibility restored by restoring root runtime payload files.
+- /api/data is again serving live runtime-backed estate, site, and project data.
+- Morning pipeline and anchor verification remain working.
+- Admin native console phase is built and active:
+  - trust surface
+  - native summary
+  - billing coverage
+  - access coverage
+  - product coverage
+  - consolidation
+  - deep intelligence
+- Estate intelligence expansion has been introduced, but wider cross-surface evolution should pause until the latest files are reviewed.
 
-CURRENT POSITION
-- /reference remains the implementation route
-- Admin remains the operator-facing label
-- Billing/product/access drilldowns remain transitional but valid
-- Project summary is now partially native and partially fallback
+CURRENT TRUTH
+- Root runtime files are currently required by the web layer.
+- backups/latest_runtime/current remains the runtime source-of-truth chain.
+- Admin is stable enough to checkpoint.
+- No further broad expansion should be applied until latest files are reviewed.
 
-NEXT LIKELY PHASE
-- Review/Admin-native expansion of summary coverage
-- Decide whether to deepen Admin-native summary or move toward billing/admin consolidation
+NEXT STEP
+- Review latest files shared after this checkpoint.
+- Treat latest files as source of truth for next phase.
