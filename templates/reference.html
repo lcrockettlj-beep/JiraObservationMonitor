@@ -60,7 +60,7 @@
             <p class="admin-native-summary__lede">This compact Admin-native panel brings the main project summary into the Admin surface for quick read-only review. It complements the older project summary drilldown while that route remains available during transition.</p>
         </div>
         <div class="admin-native-summary__actions">
-            <a href="/detail/project::summary" class="pill">Open full project summary</a>
+            <a href="/detail/project::summary" class="pill">Open supporting project summary</a>
         </div>
     </div>
     <div class="admin-native-summary__grid">
@@ -80,12 +80,34 @@
             <div class="admin-native-summary__note">Combined app-entry count for quick read-only awareness.</div>
         </div>
     </div>
+    <div class="admin-native-summary__microgrid">
+        <div class="admin-native-summary__microcard signal-border">
+            <div class="admin-native-summary__micro-label">Product groups in scope</div>
+            <div class="admin-native-summary__micro-value">{{ org_product_breakdown|length if org_product_breakdown is defined else 0 }}</div>
+            <div class="admin-native-summary__micro-note">Distinct product breakdown rows currently exposed inside Admin.</div>
+        </div>
+        <div class="admin-native-summary__microcard signal-border">
+            <div class="admin-native-summary__micro-label">Access breakdown rows</div>
+            <div class="admin-native-summary__micro-value">{{ users_export_breakdown|length if users_export_breakdown is defined else 0 }}</div>
+            <div class="admin-native-summary__micro-note">Operator-facing access rows available for supporting review.</div>
+        </div>
+        <div class="admin-native-summary__microcard signal-border">
+            <div class="admin-native-summary__micro-label">Jira billing entries</div>
+            <div class="admin-native-summary__micro-value">{{ billing_summary.unique_jira_entries or 0 }}</div>
+            <div class="admin-native-summary__micro-note">Read-only Jira billing coverage currently surfaced in Admin.</div>
+        </div>
+        <div class="admin-native-summary__microcard signal-border">
+            <div class="admin-native-summary__micro-label">Confluence billing entries</div>
+            <div class="admin-native-summary__micro-value">{{ billing_summary.unique_confluence_entries or 0 }}</div>
+            <div class="admin-native-summary__micro-note">Confluence billing footprint available through supporting drilldowns.</div>
+        </div>
+    </div>
     <div class="admin-native-summary__subgrid">
         <div class="admin-native-summary__panel signal-border">
             <div class="admin-native-summary__panel-title">What this panel is for</div>
             <ul class="admin-native-summary__list">
                 <li>Quick operational summary inside Admin without leaving the page.</li>
-                <li>Read-only awareness of projects, sites, and billing coverage.</li>
+                <li>Read-only awareness of projects, sites, billing coverage, products, and access scope.</li>
                 <li>A safe bridge away from relying only on the older project summary drilldown.</li>
             </ul>
         </div>
@@ -98,8 +120,12 @@
             </ul>
         </div>
     </div>
+    <div class="admin-native-summary__footer signal-border">
+        <div class="admin-native-summary__footer-title">Transition stance</div>
+        <div class="admin-native-summary__footer-body">The native summary now covers the most important operator checkpoints first. The older project summary remains available as a supporting drilldown while deeper Admin-native replacements are introduced in smaller controlled steps.</div>
+    </div>
 </div>
-<div class="pill"><a href="/detail/project::summary" class="reference-pill--review">Project summary (supporting drilldown)</a></div>
+<div class="pill"><a href="/detail/project::summary" class="reference-pill--review">Project summary (supporting fallback)</a></div>
             </div>
         </div>
     </section>
@@ -140,4 +166,5 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 

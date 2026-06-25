@@ -300,3 +300,56 @@ html[data-theme="light"] .reference-panel {
   }
 }
 
+/* Admin native summary expansion pack */
+.admin-native-summary__microgrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.admin-native-summary__microcard {
+  display: grid;
+  gap: 0.38rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 15px;
+  background: rgba(9, 22, 55, 0.76);
+}
+
+.admin-native-summary__micro-label,
+.admin-native-summary__footer-title {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.admin-native-summary__micro-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-native-summary__micro-note,
+.admin-native-summary__footer-body {
+  color: rgba(220, 233, 255, 0.78);
+  line-height: 1.46;
+}
+
+.admin-native-summary__footer {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.95rem 1rem;
+  border-radius: 16px;
+  background: rgba(10, 23, 57, 0.74);
+}
+
+@media (max-width: 1180px) {
+  .admin-native-summary__microgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .admin-native-summary__microgrid {
+    grid-template-columns: 1fr;
+  }
+}
+
