@@ -82,3 +82,5 @@ docs/control/logs/
 
 # Temp backups
 *.bak_*
+DisabledUsersPack/logs/
+DisabledUsersPack/output/
