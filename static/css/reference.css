@@ -446,3 +446,96 @@ html[data-theme="light"] .reference-panel {
   }
 }
 
+/* Admin native access coverage pack */
+.admin-native-access {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 1.25rem;
+  padding: 1.1rem;
+  border-radius: 20px;
+  background: rgba(8, 18, 46, 0.78);
+}
+
+.admin-native-access__header {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.admin-native-access__eyebrow {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(112, 201, 255, 0.92);
+}
+
+.admin-native-access__title {
+  margin: 0;
+  font-size: 1.14rem;
+}
+
+.admin-native-access__lede {
+  margin: 0.45rem 0 0;
+  color: rgba(218, 232, 255, 0.82);
+  line-height: 1.55;
+  max-width: 72ch;
+}
+
+.admin-native-access__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.admin-native-access__card,
+.admin-native-access__panel {
+  display: grid;
+  gap: 0.42rem;
+  padding: 0.92rem 0.96rem;
+  border-radius: 16px;
+  background: rgba(11, 25, 61, 0.82);
+}
+
+.admin-native-access__label,
+.admin-native-access__panel-title {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.admin-native-access__value {
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-native-access__note,
+.admin-native-access__list {
+  color: rgba(220, 233, 255, 0.8);
+  line-height: 1.48;
+}
+
+.admin-native-access__subgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.admin-native-access__list {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+@media (max-width: 1180px) {
+  .admin-native-access__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .admin-native-access__grid,
+  .admin-native-access__subgrid {
+    grid-template-columns: 1fr;
+  }
+}
+
