@@ -1,0 +1,124 @@
+.estate-trust-panel {
+  margin-top: 12px;
+}
+
+.estate-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.estate-trust-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 18px;
+  min-height: 144px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--mode-card-edge) 92%, rgba(255,255,255,0.10));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--mode-card-surface-alt) 92%, rgba(255,255,255,0.04)),
+      color-mix(in srgb, var(--mode-card-surface) 86%, rgba(255,255,255,0.02))
+    ),
+    radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 36%);
+  box-shadow:
+    0 14px 28px rgba(0,0,0,0.16),
+    0 0 16px color-mix(in srgb, var(--accent) 7%, transparent),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.estate-trust-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -22px -22px auto;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.estate-trust-card__label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+
+.estate-trust-card__value {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.estate-trust-card__value--warning {
+  color: var(--warning);
+}
+
+.estate-trust-card__value--critical {
+  color: var(--critical);
+}
+
+.estate-trust-card__note {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.estate-trust-banner {
+  margin-top: 14px;
+  border-radius: 18px;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--mode-card-edge) 88%, rgba(255,255,255,0.10));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--mode-card-surface-alt) 88%, rgba(255,255,255,0.03)),
+      color-mix(in srgb, var(--mode-card-surface) 80%, rgba(255,255,255,0.02))
+    );
+  box-shadow:
+    0 12px 22px rgba(0,0,0,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.estate-trust-banner__title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+}
+
+.estate-trust-banner__body {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+html[data-mode="cyber"] .estate-trust-panel,
+html[data-theme="cyber"] .estate-trust-panel,
+html[data-mode="enterprise"] .estate-trust-panel,
+html[data-theme="enterprise"] .estate-trust-panel,
+html[data-mode="noc"] .estate-trust-panel,
+html[data-theme="noc"] .estate-trust-panel,
+html[data-mode="atlassian"] .estate-trust-panel,
+html[data-theme="atlassian"] .estate-trust-panel,
+html[data-mode="light"] .estate-trust-panel,
+html[data-theme="light"] .estate-trust-panel {
+  display: none;
+}
+
+@media (max-width: 1260px) {
+  .estate-trust-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .estate-trust-grid {
+    grid-template-columns: 1fr;
+  }
+}

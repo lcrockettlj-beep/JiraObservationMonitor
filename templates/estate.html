@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_trust.css') }}">
 </head>
 <body>
 <div class="page">
@@ -22,6 +23,16 @@
     {% set review_total = discovery_summary.new_site_candidate_count if discovery_summary else 0 %}
     {% set watchlist_total = critical_total + warning_total %}
     {% set prioritised_sites = (critical_sites or []) + (warning_sites or []) + (stable_sites or []) %}
+    {% set trust = namespace(jira_seats=0, seat_sites=0) %}
+    {% for site in prioritised_sites %}
+        {% set licensed_value = site.licensed or site.licensed_users_estimate or site.licensed_users or 0 %}
+        {% if licensed_value %}
+            {% set trust.jira_seats = trust.jira_seats + licensed_value %}
+            {% set trust.seat_sites = trust.seat_sites + 1 %}
+        {% endif %}
+    {% endfor %}
+    {% set trust_total_identities = estate.total_users or users_row_count or total_users_count or 0 %}
+    {% set trust_human_users = estate.managed_user_count or estate.human_user_count or managed_row_count or managed_user_count or 0 %}
     {% macro risk_band(score) -%}{%- if score >= 70 -%}high{%- elif score >= 30 -%}medium{%- else -%}low{%- endif -%}{%- endmacro %}
     {% macro change_state(site) -%}
         {% set proj_delta = site.project_count_delta_live or site.project_count_delta or 0 %}{% set risk_delta = site.historical_risk_delta or 0 %}{% set unresolved_delta = site.historical_unresolved_delta or 0 %}{% set users_delta = site.total_users_delta or 0 %}
@@ -49,9 +60,23 @@
                 <div><div class="hero__back"><a href="/" class="text-link">&larr; Back to operational overview</a></div><div class="hero__eyebrow">Operational portfolio view</div><h1>Estate Overview</h1><p>Estate sits between Home and Site Detail. Auto-priority sorts the board, highlights attention rows, and keeps the most operationally important sites at the top.</p></div>
                 <div class="hero__meta meta-pills"><span class="pill">Tracked sites: {{ tracked_total or 0 }}</span><span class="pill">Watchlist: {{ watchlist_total }}</span><span class="pill">Auto-priority: active</span></div>
             </div>
-            <div class="estate-hero__actions">                <a href="/reference" class="estate-hero__orb">Admin area</a>                <a href="/estate#discovery-overview" class="estate-hero__orb estate-hero__orb--wide">Discovery overview</a>            </div>        </div>    </section>
+            <div class="estate-hero__actions">
+                <a href="/reference" class="estate-hero__orb">Admin area</a>
+                <a href="/estate#discovery-overview" class="estate-hero__orb estate-hero__orb--wide">Discovery overview</a>
+            </div>
+        </div>
+    </section>
     <section class="panel estate-panel signal-border">
-        <div class="section-header">            <div>                <h2>Estate Registry</h2>                <p>Top-level discovery and monitoring coverage for the monitored estate.</p>            </div>            <div class="section-header__actions">                <span id="discovery-overview"></span><a href="/estate#discovery-overview" class="pill pill--muted">Discovery overview</a>            </div>        </div>        <div class="estate-grid estate-grid--registry">
+        <div class="section-header">
+            <div>
+                <h2>Estate Registry</h2>
+                <p>Top-level discovery and monitoring coverage for the monitored estate.</p>
+            </div>
+            <div class="section-header__actions">
+                <span id="discovery-overview"></span><a href="/estate#discovery-overview" class="pill pill--muted">Discovery overview</a>
+            </div>
+        </div>
+        <div class="estate-grid estate-grid--registry">
             <div class="estate-discovery-note signal-border" role="note"><div class="estate-discovery-note__title">Discovery drilldowns are paused</div><div class="estate-discovery-note__body">The older /detail/discovery routes remain under review. These cards now stay within Estate so operators can keep context while the dedicated discovery surface is rebuilt.</div></div>
             <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="tracked_sites"><div class="estate-title">Sites monitored</div><div class="estate-value">{{ tracked_total or 0 }}</div><div class="estate-sub">Operational Jira sites currently in scope.</div></a>
             <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="excluded_sites"><div class="estate-title">Sites excluded</div><div class="estate-value">{{ excluded_total or 0 }}</div><div class="estate-sub">Sites identified but currently outside monitoring scope.</div></a>
@@ -59,6 +84,49 @@
             <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="new_site_candidates"><div class="estate-title">Sites to review</div><div class="estate-value">{{ review_total or 0 }}</div><div class="estate-sub">Potential new sites needing ownership and scope decisions.</div></a>
         </div>
     </section>
+
+    <section class="panel estate-panel estate-trust-panel signal-border" id="estate-trust-intelligence"
+             data-total-identities="{{ trust_total_identities or 0 }}"
+             data-human-users="{{ trust_human_users or 0 }}"
+             data-jira-seats="{{ trust.jira_seats or 0 }}"
+             data-seat-sites="{{ trust.seat_sites or 0 }}">
+        <div class="section-header">
+            <div>
+                <h2>Seat vs User Intelligence</h2>
+                <p>Dark core operational comparison between identity truth and Jira seat usage across the current monitored estate.</p>
+            </div>
+            <div class="section-header__actions">
+                <span class="pill">Dark core validation</span>
+            </div>
+        </div>
+        <div class="estate-trust-grid">
+            <article class="estate-trust-card signal-border">
+                <div class="estate-trust-card__label">Total identities</div>
+                <div class="estate-trust-card__value" id="estate-trust-total-identities">--</div>
+                <div class="estate-trust-card__note">Organisation-level identities currently surfaced by admin enrichment.</div>
+            </article>
+            <article class="estate-trust-card signal-border">
+                <div class="estate-trust-card__label">Human users</div>
+                <div class="estate-trust-card__value" id="estate-trust-human-users">--</div>
+                <div class="estate-trust-card__note">Managed / human identities used as the comparison baseline.</div>
+            </article>
+            <article class="estate-trust-card signal-border">
+                <div class="estate-trust-card__label">Jira seats</div>
+                <div class="estate-trust-card__value" id="estate-trust-jira-seats">--</div>
+                <div class="estate-trust-card__note">Summed seat usage across monitored Jira sites where seat values are currently known.</div>
+            </article>
+            <article class="estate-trust-card signal-border">
+                <div class="estate-trust-card__label">Seat / human ratio</div>
+                <div class="estate-trust-card__value" id="estate-trust-seat-ratio">--</div>
+                <div class="estate-trust-card__note">If above 1.00, multi-site duplication or overlapping Jira access is present.</div>
+            </article>
+        </div>
+        <div class="estate-trust-banner signal-border" id="estate-trust-banner">
+            <div class="estate-trust-banner__title">Operational insight</div>
+            <div class="estate-trust-banner__body" id="estate-trust-insight">Seat comparison is waiting for live values.</div>
+        </div>
+    </section>
+
     <section class="panel estate-panel signal-border" id="estate-priority-board">
         <div class="section-header"><div><h2>Site Prioritisation Board</h2><p>Auto-sorted operational board. The system brings the highest priority sites to the top automatically.</p></div><div class="section-header__actions"><span class="pill">{{ prioritised_sites|length }} sites</span></div></div>
         <div class="priority-board"><div class="priority-head"><div>Site</div><div>Status</div><div>Risk</div><div>Change</div><div>Action</div></div><div class="priority-body">{% for site in critical_sites or [] %}{{ priority_row(site, 'critical') }}{% endfor %}{% for site in warning_sites or [] %}{{ priority_row(site, 'warning') }}{% endfor %}{% for site in stable_sites or [] %}{{ priority_row(site, 'stable') }}{% endfor %}</div></div>
@@ -67,6 +135,7 @@
 <script>window.JOMTheme.initToggle("theme-toggle");</script>
 <script src="{{ url_for('static', filename='js/estate_intelligence.js') }}"></script>
 <script src="{{ url_for('static', filename='js/site_navigation_bind.js') }}"></script>
+<script src="{{ url_for('static', filename='js/estate_trust.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
