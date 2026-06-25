@@ -52,10 +52,71 @@
         </div>
     </div>
 </div>
+<div id="admin-deep-intelligence" class="admin-deep-intelligence signal-border">
+    <div class="admin-deep-intelligence__eyebrow">Admin deep intelligence</div>
+    <div class="admin-deep-intelligence__header">
+        <div>
+            <h2 class="admin-deep-intelligence__title">Operator intelligence cues</h2>
+            <p class="admin-deep-intelligence__lede">This intelligence strip brings the most useful operational cues into Admin first, using the current runtime payload already visible to the platform.</p>
+        </div>
+        <div class="admin-deep-intelligence__state">
+            {% set critical_count = risk_summary.critical_site_count if risk_summary is defined else 0 %}
+            {% set warning_count = risk_summary.warning_site_count if risk_summary is defined else 0 %}
+            {% if critical_count > 0 %}
+                <span class="admin-deep-intelligence__state-pill admin-deep-intelligence__state-pill--critical">Critical focus</span>
+            {% elif warning_count > 0 %}
+                <span class="admin-deep-intelligence__state-pill admin-deep-intelligence__state-pill--warning">Watchlist active</span>
+            {% else %}
+                <span class="admin-deep-intelligence__state-pill admin-deep-intelligence__state-pill--stable">Stable operational picture</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="admin-deep-intelligence__grid">
+        <div class="admin-deep-intelligence__card signal-border">
+            <div class="admin-deep-intelligence__label">Sites visible</div>
+            <div class="admin-deep-intelligence__value">{{ sites|length if sites is defined else 0 }}</div>
+            <div class="admin-deep-intelligence__note">Current estate sites visible to this runtime.</div>
+        </div>
+        <div class="admin-deep-intelligence__card signal-border">
+            <div class="admin-deep-intelligence__label">Projects visible</div>
+            <div class="admin-deep-intelligence__value">{{ summary.project_count_total if summary is defined else (projects|length if projects is defined else 0) }}</div>
+            <div class="admin-deep-intelligence__note">Project footprint currently exposed across the monitored estate.</div>
+        </div>
+        <div class="admin-deep-intelligence__card signal-border">
+            <div class="admin-deep-intelligence__label">Warning sites</div>
+            <div class="admin-deep-intelligence__value">{{ risk_summary.warning_site_count if risk_summary is defined else 0 }}</div>
+            <div class="admin-deep-intelligence__note">Sites that may need closer operator review.</div>
+        </div>
+        <div class="admin-deep-intelligence__card signal-border">
+            <div class="admin-deep-intelligence__label">Critical sites</div>
+            <div class="admin-deep-intelligence__value">{{ risk_summary.critical_site_count if risk_summary is defined else 0 }}</div>
+            <div class="admin-deep-intelligence__note">Sites currently carrying the highest operational priority.</div>
+        </div>
+    </div>
+    <div class="admin-deep-intelligence__subgrid">
+        <div class="admin-deep-intelligence__panel signal-border">
+            <div class="admin-deep-intelligence__panel-title">Priority cues</div>
+            <ul class="admin-deep-intelligence__list">
+                <li>Use Summary first when you need quick estate-wide project and site awareness.</li>
+                <li>Use Billing when the question is product or app-entry footprint.</li>
+                <li>Use Access when the question is user-access surface and supporting user lists.</li>
+                <li>Use Product when the question is product mix and leading product counts.</li>
+            </ul>
+        </div>
+        <div class="admin-deep-intelligence__panel signal-border">
+            <div class="admin-deep-intelligence__panel-title">Read-only rule</div>
+            <ul class="admin-deep-intelligence__list">
+                <li>Admin remains an operator console and does not replace entitlement or governance decisions.</li>
+                <li>When deeper detail is needed, continue into the supporting drilldowns rather than making assumptions from summary cues alone.</li>
+                <li>Counts shown here are only as current as the latest runtime refresh and available enrichment.</li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div id="admin-native-console" class="admin-native-console signal-border">
     <div class="admin-native-console__eyebrow">Admin native console</div>
     <h2 class="admin-native-console__title">Native operator checkpoints</h2>
-    <p class="admin-native-console__lede">Admin now surfaces summary, billing, access, and product checkpoints directly on the page first, while keeping supporting drilldowns available for deeper read-only inspection.</p>
+    <p class="admin-native-console__lede">Admin now surfaces summary, billing, access, and product checkpoints directly on the page first, while keeping supporting drilldowns available whenever deeper read-only inspection is needed.</p>
     <div class="admin-native-console__tags">
         <span class="admin-native-console__tag">Summary</span>
         <span class="admin-native-console__tag">Billing</span>
@@ -321,6 +382,7 @@ Admin access breakdown</h2><div class="count">Select an access area to inspect u
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 
 
 
