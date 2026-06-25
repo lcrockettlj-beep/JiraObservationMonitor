@@ -68,3 +68,17 @@ reports/sprint10_phase2_audit_*.txt
 reports/sprint11_phase1_release_audit.txt
 reports/review_*.txt
 
+# Runtime / snapshots
+latest_run*.json
+snapshots/*.json
+
+# Backup system
+backups/latest_runtime/history/*
+backups/latest_runtime/current/*
+backups/latest_runtime/latest_manifest.json
+
+# Logs
+docs/control/logs/
+
+# Temp backups
+*.bak_*

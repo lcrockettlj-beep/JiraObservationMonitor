@@ -11,96 +11,6 @@
       "total_risk_score": 0
     },
     {
-      "created_at_local": "2026-06-22 10:20:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_10-20-38.json",
-      "snapshot_timestamp": "2026-06-22_10-20-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 10:30:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_10-30-38.json",
-      "snapshot_timestamp": "2026-06-22_10-30-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 10:40:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_10-40-38.json",
-      "snapshot_timestamp": "2026-06-22_10-40-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 10:50:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_10-50-38.json",
-      "snapshot_timestamp": "2026-06-22_10-50-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 11:00:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_11-00-38.json",
-      "snapshot_timestamp": "2026-06-22_11-00-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 11:10:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_11-10-38.json",
-      "snapshot_timestamp": "2026-06-22_11-10-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 11:20:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_11-20-38.json",
-      "snapshot_timestamp": "2026-06-22_11-20-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 11:30:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_11-30-38.json",
-      "snapshot_timestamp": "2026-06-22_11-30-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
-      "created_at_local": "2026-06-22 11:40:38",
-      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_11-40-38.json",
-      "snapshot_timestamp": "2026-06-22_11-40-38",
-      "site_count": 0,
-      "healthy_count": 0,
-      "warning_count": 0,
-      "critical_count": 0,
-      "total_risk_score": 0
-    },
-    {
       "created_at_local": "2026-06-22 11:50:38",
       "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-22_11-50-38.json",
       "snapshot_timestamp": "2026-06-22_11-50-38",
@@ -234,6 +144,106 @@
       "created_at_local": "2026-06-24 08:42:17",
       "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-24_08-42-17_anchor_morning.json",
       "snapshot_timestamp": "2026-06-24_08-42-17",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:15:17",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-15-17.json",
+      "snapshot_timestamp": "2026-06-25_08-15-17",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:19:47",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-19-47.json",
+      "snapshot_timestamp": "2026-06-25_08-19-47",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:21:46",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-21-46.json",
+      "snapshot_timestamp": "2026-06-25_08-21-46",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:24:04",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-24-04.json",
+      "snapshot_timestamp": "2026-06-25_08-24-04",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:26:54",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-26-54.json",
+      "snapshot_timestamp": "2026-06-25_08-26-54",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:27:17",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-27-17.json",
+      "snapshot_timestamp": "2026-06-25_08-27-17",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:29:44",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-29-44.json",
+      "snapshot_timestamp": "2026-06-25_08-29-44",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:36:03",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-36-03.json",
+      "snapshot_timestamp": "2026-06-25_08-36-03",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:42:18",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-42-18_anchor_morning.json",
+      "snapshot_timestamp": "2026-06-25_08-42-18",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-25 08:43:51",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-25_08-43-51.json",
+      "snapshot_timestamp": "2026-06-25_08-43-51",
       "site_count": 0,
       "healthy_count": 0,
       "warning_count": 0,
