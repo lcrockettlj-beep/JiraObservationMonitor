@@ -315,6 +315,54 @@
         <div class="admin-native-billing__footer-body">Use this panel to establish coverage quickly. Supporting billing drilldowns remain available for per-area inspection, while entitlement-sensitive conclusions should still follow the existing cautious Admin rules.</div>
     </div>
 </div>
+<div id="admin-native-billing" class="admin-native-billing signal-border">
+    <div class="admin-native-billing__header">
+        <div>
+            <div class="admin-native-billing__eyebrow">Admin native billing coverage</div>
+            <h2 class="admin-native-billing__title">Billing visibility at a glance</h2>
+            <p class="admin-native-billing__lede">This compact billing panel keeps the most useful coverage counts visible inside Admin so operators can assess footprint quickly before opening a supporting drilldown.</p>
+        </div>
+        <div class="admin-native-billing__actions">
+            <a href="/detail/billing::jira_entries" class="pill">Open Jira billing detail</a>
+        </div>
+    </div>
+    <div class="admin-native-billing__grid">
+        <div class="admin-native-billing__card signal-border">
+            <div class="admin-native-billing__label">Atlassian app entries</div>
+            <div class="admin-native-billing__value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div>
+            <div class="admin-native-billing__note">Current app-entry count visible to the billing summary.</div>
+        </div>
+        <div class="admin-native-billing__card signal-border">
+            <div class="admin-native-billing__label">Marketplace app entries</div>
+            <div class="admin-native-billing__value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div>
+            <div class="admin-native-billing__note">Marketplace footprint currently surfaced for read-only review.</div>
+        </div>
+        <div class="admin-native-billing__card signal-border">
+            <div class="admin-native-billing__label">Jira billing entries</div>
+            <div class="admin-native-billing__value">{{ billing_summary.unique_jira_entries or 0 }}</div>
+            <div class="admin-native-billing__note">Jira billing records currently in scope.</div>
+        </div>
+        <div class="admin-native-billing__card signal-border">
+            <div class="admin-native-billing__label">Bitbucket billing entries</div>
+            <div class="admin-native-billing__value">{{ billing_summary.unique_bitbucket_entries or 0 }}</div>
+            <div class="admin-native-billing__note">Bitbucket billing coverage available through supporting views.</div>
+        </div>
+        <div class="admin-native-billing__card signal-border">
+            <div class="admin-native-billing__label">Confluence billing entries</div>
+            <div class="admin-native-billing__value">{{ billing_summary.unique_confluence_entries or 0 }}</div>
+            <div class="admin-native-billing__note">Confluence coverage held in the current billing summary.</div>
+        </div>
+        <div class="admin-native-billing__card signal-border">
+            <div class="admin-native-billing__label">Rovo billing entries</div>
+            <div class="admin-native-billing__value">{{ billing_summary.unique_rovo_entries or 0 }}</div>
+            <div class="admin-native-billing__note">Rovo billing footprint available for quick operator awareness.</div>
+        </div>
+    </div>
+    <div class="admin-native-billing__footer signal-border">
+        <div class="admin-native-billing__footer-title">Operator guidance</div>
+        <div class="admin-native-billing__footer-body">Use this panel to establish coverage quickly. Supporting billing drilldowns remain available for per-area inspection, while entitlement-sensitive conclusions should still follow the existing cautious Admin rules.</div>
+    </div>
+</div>
 <a href="/detail/billing::atlassian_apps" class="reference-row"><div class="reference-label">Atlassian app entries</div><div class="reference-value">{{ billing_summary.atlassian_app_entry_count or 0 }}</div></a>
                 <a href="/detail/billing::marketplace_apps" class="reference-row"><div class="reference-label">Marketplace app entries</div><div class="reference-value">{{ billing_summary.marketplace_app_entry_count or 0 }}</div></a>
                 <a href="/detail/billing::jira_entries" class="reference-row"><div class="reference-label">Jira billing entries</div><div class="reference-value">{{ billing_summary.unique_jira_entries or 0 }}</div></a>
@@ -369,6 +417,50 @@
         </div>
     </div>
 </div>
+<div id="admin-native-access" class="admin-native-access signal-border">
+    <div class="admin-native-access__header">
+        <div>
+            <div class="admin-native-access__eyebrow">Admin native access coverage</div>
+            <h2 class="admin-native-access__title">Access visibility at a glance</h2>
+            <p class="admin-native-access__lede">This compact access panel keeps the most useful access counts visible inside Admin so operators can assess user-access surface quickly before opening a supporting access drilldown.</p>
+        </div>
+    </div>
+    <div class="admin-native-access__grid">
+        <div class="admin-native-access__card signal-border">
+            <div class="admin-native-access__label">Access breakdown rows</div>
+            <div class="admin-native-access__value">{{ users_export_breakdown|length if users_export_breakdown is defined else 0 }}</div>
+            <div class="admin-native-access__note">Supporting access rows currently available for operator review.</div>
+        </div>
+        <div class="admin-native-access__card signal-border">
+            <div class="admin-native-access__label">Managed-account cards</div>
+            <div class="admin-native-access__value">{{ 2 if users_export_breakdown is defined else 0 }}</div>
+            <div class="admin-native-access__note">Home and Admin read-only views still route account-specific work through supporting drilldowns.</div>
+        </div>
+        <div class="admin-native-access__card signal-border">
+            <div class="admin-native-access__label">Current access confidence</div>
+            <div class="admin-native-access__value">Scoped</div>
+            <div class="admin-native-access__note">Use this panel for visibility and triage, not final entitlement decisions.</div>
+        </div>
+    </div>
+    <div class="admin-native-access__subgrid">
+        <div class="admin-native-access__panel signal-border">
+            <div class="admin-native-access__panel-title">What this panel covers</div>
+            <ul class="admin-native-access__list">
+                <li>Quick visibility of currently exposed access-support rows.</li>
+                <li>A stable starting point for Admin-native access growth without removing supporting drilldowns.</li>
+                <li>Read-only, operator-first awareness that stays aligned with the Admin trust surface.</li>
+            </ul>
+        </div>
+        <div class="admin-native-access__panel signal-border">
+            <div class="admin-native-access__panel-title">What still needs caution</div>
+            <ul class="admin-native-access__list">
+                <li>Managed-account totals and access confidence remain dependent on enrichment quality.</li>
+                <li>Supporting access drilldowns remain valid and should still be used where deeper review is needed.</li>
+                <li>This panel is for operational awareness rather than final access governance decisions.</li>
+            </ul>
+        </div>
+    </div>
+</div>
 Admin access breakdown</h2><div class="count">Select an access area to inspect users</div></div>
         {% if users_export_breakdown %}
         <div class="reference-section-note reference-section-note--transition">Access drilldowns remain available for operator support, but any totals tied to enrichment should still be treated cautiously.</div>
@@ -382,6 +474,8 @@ Admin access breakdown</h2><div class="count">Select an access area to inspect u
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
+
 
 
 
