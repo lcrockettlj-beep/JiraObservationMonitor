@@ -57,9 +57,17 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Ok "Sync complete"
 
-# 4. Check anchor
+# 4. Run snapshot controller / anchor self-heal
+Write-Step "Running snapshot controller"
+python .\scripts\snapshot_controller.py
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Warn "Snapshot controller failed or returned warning state"
+}
+
+# 5. Check anchor
 Write-Step "Waiting briefly for anchor creation"
-Start-Sleep -Seconds 20
+Start-Sleep -Seconds 10
 
 Write-Step "Checking for today's anchor"
 $today = Get-Date -Format "yyyy-MM-dd"
@@ -72,4 +80,5 @@ if ($anchor) {
 }
 
 Write-Step "Morning pipeline complete"
+
 
