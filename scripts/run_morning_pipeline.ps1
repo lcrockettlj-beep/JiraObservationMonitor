@@ -58,6 +58,9 @@ if ($LASTEXITCODE -ne 0) {
 Write-Ok "Sync complete"
 
 # 4. Check anchor
+Write-Step "Waiting briefly for anchor creation"
+Start-Sleep -Seconds 20
+
 Write-Step "Checking for today's anchor"
 $today = Get-Date -Format "yyyy-MM-dd"
 $anchor = Get-ChildItem ".\snapshots\*anchor_morning*" | Where-Object { $_.Name -like "*$today*" }
@@ -65,7 +68,8 @@ $anchor = Get-ChildItem ".\snapshots\*anchor_morning*" | Where-Object { $_.Name 
 if ($anchor) {
     Write-Ok "Morning anchor detected: $($anchor.Name)"
 } else {
-    Write-Warn "No morning anchor found yet (may still trigger)"
+    Write-Warn "No morning anchor found yet after wait"
 }
 
 Write-Step "Morning pipeline complete"
+
