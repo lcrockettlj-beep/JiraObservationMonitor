@@ -173,12 +173,7 @@
                         while keeping the monitored estate data, status grouping, and navigation intact.
                     </p>
                 </div>
-                <div class="hero__meta meta-pills hero__meta--core mode-identity mode-identity--core">
-                    <span class="pill">Sites in scope: {{ tracked_total }}</span>
-                    <span class="pill">User records: {{ users_total }}</span>
-                    <span class="pill">Managed accounts: {{ managed_total }}</span>
-                    <span class="pill">Last verified snapshot: {{ latest_snapshot_timestamp }}</span>
-                </div>
+                
                 <div class="mode-identity mode-identity--cyber">
                     <div class="identity-panel identity-panel--cyber signal-border">
                         <div class="identity-panel__eyebrow">AI command deck</div>
@@ -245,15 +240,7 @@
             </div>
         </div>
     </section>
-    <section class="panel command-panel context-panel mode-context mode-context--core home-identity-band">
-        <div class="section-header"></div>
-        <div class="stat-grid">
-            <a href="/estate" class="stat-card stat-card--link signal-border"><div class="label">Sites in Scope</div><div class="value">{{ tracked_total }}</div><div class="note">Operational sites currently monitored on the home view.</div></a>
-            <a href="/estate" class="stat-card stat-card--link signal-border"><div class="label">Analysed Sites</div><div class="value">{{ intelligence_site_total or 0 }}</div><div class="note">Sites with current intelligence coverage in the latest payload.</div></a>
-            <a href="/estate" class="stat-card stat-card--link signal-border"><div class="label">User Records</div><div class="value">{{ users_total }}</div><div class="note">Current rows in the monitored estate user feed.</div></a>
-            <a href="/estate" class="stat-card stat-card--link signal-border"><div class="label">Managed Accounts</div><div class="value">{{ managed_total }}</div><div class="note">Managed accounts currently known within monitored scope.</div></a>
-        </div>
-    </section>
+    
     <section class="panel command-panel context-panel mode-context mode-context--cyber home-identity-band signal-border">
         <div class="section-header"><div><h2>Signal Lattice</h2><p>Cyber layer framing for estate telemetry, signal density, and matrix-linked command points.</p></div><div class="section-header__actions"><span class="pill">Matrix active</span></div></div>
         <div class="stat-grid cyber-grid">
@@ -309,4 +296,5 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
 
