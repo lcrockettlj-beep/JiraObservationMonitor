@@ -1,0 +1,143 @@
+{
+  "source": "Jira Cloud API /rest/api/3/applicationrole via jira_client.py",
+  "generated_at_utc": "2026-06-26T11:05:07Z",
+  "schema": "jom-estate-product-access-v1",
+  "scope": "all accessible Jira resources returned by Atlassian OAuth accessible-resources",
+  "summary": {
+    "accessible_jira_resource_count": 6,
+    "sites_with_jira_roles": 3,
+    "total_jira_product_user_count": 139,
+    "total_jira_seat_limit": 100150,
+    "total_jira_remaining_seats": 100011,
+    "jira_role_rows": 3,
+    "error_site_count": 3
+  },
+  "sites": [
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "site_name": "gaminglabs-team-h2pbpmis",
+      "site_url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
+      "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
+      "jira_product_user_count": 0,
+      "jira_product_seat_limit": 0,
+      "jira_product_remaining_seats": 0,
+      "jira_role_count": 0,
+      "status": "error"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "site_name": "gaminglabs-team-tsyfo716",
+      "site_url": "https://gaminglabs-team-tsyfo716.atlassian.net",
+      "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
+      "jira_product_user_count": 0,
+      "jira_product_seat_limit": 0,
+      "jira_product_remaining_seats": 0,
+      "jira_role_count": 0,
+      "status": "error"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "jira_product_user_count": 53,
+      "jira_product_seat_limit": 100000,
+      "jira_product_remaining_seats": 99947,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-usa",
+      "site_name": "gli-usa",
+      "site_url": "https://gli-usa.atlassian.net",
+      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+      "jira_product_user_count": 0,
+      "jira_product_seat_limit": 0,
+      "jira_product_remaining_seats": 0,
+      "jira_role_count": 0,
+      "status": "error"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "jira_product_user_count": 58,
+      "jira_product_seat_limit": 100,
+      "jira_product_remaining_seats": 42,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "jira_product_user_count": 28,
+      "jira_product_seat_limit": 50,
+      "jira_product_remaining_seats": 22,
+      "jira_role_count": 1,
+      "status": "ok"
+    }
+  ],
+  "roles": [
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "role_key": "jira-software",
+      "role_name": "Jira Software",
+      "user_count": 53,
+      "seat_limit": 100000,
+      "remaining_seats": 99947,
+      "raw_has_default_groups": true,
+      "raw_platform": false,
+      "raw_selected_by_default": false
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "role_key": "jira-software",
+      "role_name": "Jira Software",
+      "user_count": 58,
+      "seat_limit": 100,
+      "remaining_seats": 42,
+      "raw_has_default_groups": true,
+      "raw_platform": false,
+      "raw_selected_by_default": false
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "role_key": "jira-software",
+      "role_name": "Jira Software",
+      "user_count": 28,
+      "seat_limit": 50,
+      "remaining_seats": 22,
+      "raw_has_default_groups": true,
+      "raw_platform": false,
+      "raw_selected_by_default": false
+    }
+  ],
+  "errors": {
+    "gaminglabs-team-h2pbpmis": [
+      "HTTP 403: {\"errorMessages\":[\"Application access permissions can only be edited or viewed by administrators.\"],\"errors\":{}}"
+    ],
+    "gaminglabs-team-tsyfo716": [
+      "HTTP 403: {\"errorMessages\":[\"Application access permissions can only be edited or viewed by administrators.\"],\"errors\":{}}"
+    ],
+    "gli-usa": [
+      "HTTP 403: {\"errorMessages\":[\"Application access permissions can only be edited or viewed by administrators.\"],\"errors\":{}}"
+    ]
+  },
+  "notes": [
+    "This is product/application role access truth, not /users/search visibility truth.",
+    "This collector scans all Jira resources visible to the current OAuth token.",
+    "Where applicationrole payloads do not expose seat limits, fields are left as 0 rather than guessed."
+  ]
+}
