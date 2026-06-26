@@ -1,0 +1,22 @@
+/* Estate User Footprint Drilldown - Dark Core Only */
+.estate-footprint-panel { margin-top: 12px; }
+.estate-footprint-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
+.estate-footprint-card { position: relative; border-radius: 18px; padding: 16px; min-height: 112px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--mode-card-edge) 90%, rgba(255,255,255,0.10)); background: linear-gradient(180deg, color-mix(in srgb, var(--mode-card-surface-alt) 90%, rgba(255,255,255,0.04)), color-mix(in srgb, var(--mode-card-surface) 84%, rgba(255,255,255,0.02))), radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 38%); box-shadow: 0 12px 24px rgba(0,0,0,0.14), 0 0 14px color-mix(in srgb, var(--accent) 7%, transparent), inset 0 1px 0 rgba(255,255,255,0.08); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); }
+.estate-footprint-card__label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 9px; }
+.estate-footprint-card__value { font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 7px; }
+.estate-footprint-card__note { color: var(--muted); font-size: 12px; line-height: 1.4; }
+.estate-footprint-table-wrap { overflow: hidden; border-radius: 18px; border: 1px solid color-mix(in srgb, var(--mode-card-edge) 88%, rgba(255,255,255,0.10)); background: color-mix(in srgb, var(--mode-card-surface) 86%, transparent); box-shadow: 0 12px 22px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.08); }
+.estate-footprint-table { width: 100%; border-collapse: collapse; }
+.estate-footprint-table th, .estate-footprint-table td { padding: 12px 14px; text-align: left; border-top: 1px solid color-mix(in srgb, var(--mode-card-edge) 42%, rgba(255,255,255,0.08)); font-size: 13px; vertical-align: top; }
+.estate-footprint-table th { border-top: none; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; background: color-mix(in srgb, var(--mode-card-surface-alt) 76%, rgba(255,255,255,0.08)); }
+.estate-footprint-user { font-weight: 700; margin-bottom: 3px; }
+.estate-footprint-email { color: var(--muted); font-size: 12px; }
+.estate-footprint-sites { color: var(--muted); line-height: 1.45; }
+.footprint-badge { display: inline-flex; align-items: center; justify-content: center; padding: 5px 10px; border-radius: 999px; font-size: 11px; line-height: 1; font-weight: 700; letter-spacing: 0.08em; border: 1px solid transparent; }
+.footprint-badge--high { color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); border-color: color-mix(in srgb, var(--critical) 34%, transparent); }
+.footprint-badge--medium { color: var(--warning); background: color-mix(in srgb, var(--warning) 14%, transparent); border-color: color-mix(in srgb, var(--warning) 34%, transparent); }
+.footprint-badge--low { color: var(--stable); background: color-mix(in srgb, var(--stable) 12%, transparent); border-color: color-mix(in srgb, var(--stable) 30%, transparent); }
+.estate-footprint-empty { padding: 16px; color: var(--muted); line-height: 1.5; }
+html[data-mode="cyber"] .estate-footprint-panel, html[data-theme="cyber"] .estate-footprint-panel, html[data-mode="enterprise"] .estate-footprint-panel, html[data-theme="enterprise"] .estate-footprint-panel, html[data-mode="noc"] .estate-footprint-panel, html[data-theme="noc"] .estate-footprint-panel, html[data-mode="atlassian"] .estate-footprint-panel, html[data-theme="atlassian"] .estate-footprint-panel, html[data-mode="light"] .estate-footprint-panel, html[data-theme="light"] .estate-footprint-panel { display: none; }
+@media (max-width: 1260px) { .estate-footprint-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .estate-footprint-summary { grid-template-columns: 1fr; } .estate-footprint-table th:nth-child(2), .estate-footprint-table td:nth-child(2) { display: none; } }

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_trust.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_footprint.css') }}">
 </head>
 <body>
 <div class="page">
@@ -127,6 +128,54 @@
         </div>
     </section>
 
+    
+    <section class="panel estate-panel estate-footprint-panel signal-border" id="estate-user-footprint">
+        <div class="section-header">
+            <div>
+                <h2>User Footprint Drilldown</h2>
+                <p>Shows which human users are driving multi-site Jira seat duplication across the monitored estate.</p>
+            </div>
+            <div class="section-header__actions">
+                <span class="pill">Read-only drilldown</span>
+            </div>
+        </div>
+        <div class="estate-footprint-summary">
+            <article class="estate-footprint-card signal-border">
+                <div class="estate-footprint-card__label">Users analysed</div>
+                <div class="estate-footprint-card__value" id="footprint-users-analysed">--</div>
+                <div class="estate-footprint-card__note">Unique users found in tracked Jira access data.</div>
+            </article>
+            <article class="estate-footprint-card signal-border">
+                <div class="estate-footprint-card__label">Average sites/user</div>
+                <div class="estate-footprint-card__value" id="footprint-average-sites">--</div>
+                <div class="estate-footprint-card__note">Higher values indicate broader multi-site overlap.</div>
+            </article>
+            <article class="estate-footprint-card signal-border">
+                <div class="estate-footprint-card__label">High duplication</div>
+                <div class="estate-footprint-card__value" id="footprint-high-count">--</div>
+                <div class="estate-footprint-card__note">Users with access to 3 or more tracked Jira sites.</div>
+            </article>
+            <article class="estate-footprint-card signal-border">
+                <div class="estate-footprint-card__label">Medium overlap</div>
+                <div class="estate-footprint-card__value" id="footprint-medium-count">--</div>
+                <div class="estate-footprint-card__note">Users with access to 2 tracked Jira sites.</div>
+            </article>
+        </div>
+        <div class="estate-footprint-table-wrap signal-border">
+            <table class="estate-footprint-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Tracked Jira sites</th>
+                        <th>Seat footprint</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody id="estate-footprint-body"></tbody>
+            </table>
+            <div class="estate-footprint-empty" id="estate-footprint-empty" style="display:none;">No user footprint data is available yet. Re-run the footprint builder after the users export or site access drilldowns are present.</div>
+        </div>
+    </section>
     <section class="panel estate-panel signal-border" id="estate-priority-board">
         <div class="section-header"><div><h2>Site Prioritisation Board</h2><p>Auto-sorted operational board. The system brings the highest priority sites to the top automatically.</p></div><div class="section-header__actions"><span class="pill">{{ prioritised_sites|length }} sites</span></div></div>
         <div class="priority-board"><div class="priority-head"><div>Site</div><div>Status</div><div>Risk</div><div>Change</div><div>Action</div></div><div class="priority-body">{% for site in critical_sites or [] %}{{ priority_row(site, 'critical') }}{% endfor %}{% for site in warning_sites or [] %}{{ priority_row(site, 'warning') }}{% endfor %}{% for site in stable_sites or [] %}{{ priority_row(site, 'stable') }}{% endfor %}</div></div>
@@ -137,5 +186,8 @@
 <script src="{{ url_for('static', filename='js/site_navigation_bind.js') }}"></script>
 <script src="{{ url_for('static', filename='js/estate_trust.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
+<script src="{{ url_for('static', filename='js/estate_footprint.js') }}"></script>
 </body>
 </html>
+
+

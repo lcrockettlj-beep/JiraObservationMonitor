@@ -1,0 +1,12 @@
+{
+  "source": "latest_run_admin_enriched_pretty.json",
+  "summary": {
+    "users_analyzed": 0,
+    "total_site_assignments": 0,
+    "average_sites_per_user": 0,
+    "high_duplication_users": 0,
+    "medium_duplication_users": 0,
+    "low_duplication_users": 0
+  },
+  "users": []
+}
