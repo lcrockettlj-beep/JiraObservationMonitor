@@ -1,0 +1,37 @@
+{
+  "schema": "jom-monitored-sites-v2",
+  "updated_at_utc": "2026-06-26T15:10:40Z",
+  "policy": {
+    "home_shows_discovered_sites": true,
+    "estate_requires_monitored_status": true,
+    "approval_triggers_onboarding_queue": true,
+    "new_sites_default_status": "discovered"
+  },
+  "monitored_sites": [
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "status": "monitored",
+      "approved_by": "approved_operational_scope",
+      "approved_at_utc": "2026-06-26T15:10:40Z"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "status": "monitored",
+      "approved_by": "approved_operational_scope",
+      "approved_at_utc": "2026-06-26T15:10:40Z"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "status": "monitored",
+      "approved_by": "approved_operational_scope",
+      "approved_at_utc": "2026-06-26T15:10:40Z"
+    }
+  ],
+  "ignored_sites": []
+}

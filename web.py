@@ -748,11 +748,36 @@ def api_data():
 
 
 
+
+# --- JOM Site Registry / Discovery API ---
+@app.route("/api/site-registry")
+def api_site_registry():
+    from backend.site_registry_runtime import build_registry
+    return jsonify(build_registry(BASE_DIR))
+
+@app.route("/api/site-registry/rebuild", methods=["POST"])
+def api_site_registry_rebuild():
+    from backend.site_registry_runtime import build_registry
+    return jsonify(build_registry(BASE_DIR))
+
+@app.route("/api/site-registry/approve", methods=["POST"])
+def api_site_registry_approve():
+    from backend.site_registry_runtime import approve_site
+    payload = request.get_json(silent=True) or {}
+    return jsonify(approve_site(BASE_DIR, payload, approved_by="jom_admin"))
+
+@app.route("/api/site-registry/ignore", methods=["POST"])
+def api_site_registry_ignore():
+    from backend.site_registry_runtime import ignore_site
+    payload = request.get_json(silent=True) or {}
+    return jsonify(ignore_site(BASE_DIR, payload, ignored_by="jom_admin"))
+# --- End JOM Site Registry / Discovery API ---
 if __name__ == "__main__":
     DEBUG_MODE = True
     if not DEBUG_MODE or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_startup_self_heal()
     app.run(debug=DEBUG_MODE, host="127.0.0.1", port=5000)
+
 
 
 
