@@ -1,5 +1,6 @@
 {
-  "source": "static/data/user_access_source.json",
+  "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\data\\user_access_source_real.csv",
+  "schema": "jom-user-access-source-v1",
   "summary": {
     "users_analyzed": 3,
     "total_site_assignments": 6,
@@ -47,7 +48,8 @@
     }
   ],
   "notes": [
-    "Built from static/data/user_access_source.json.",
-    "High = 3+ sites, Medium = 2 sites, Low = 1 site."
+    "Imported from user access CSV source.",
+    "Headers and cell values are trimmed before processing.",
+    "True access values: User, Yes, True, 1, Active, Enabled, Licensed, Y."
   ]
 }
