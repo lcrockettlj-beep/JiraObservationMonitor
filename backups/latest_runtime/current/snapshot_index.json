@@ -249,6 +249,16 @@
       "warning_count": 0,
       "critical_count": 0,
       "total_risk_score": 0
+    },
+    {
+      "created_at_local": "2026-06-26 08:47:07",
+      "file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_2026-06-26_08-47-07_anchor_morning.json",
+      "snapshot_timestamp": "2026-06-26_08-47-07",
+      "site_count": 0,
+      "healthy_count": 0,
+      "warning_count": 0,
+      "critical_count": 0,
+      "total_risk_score": 0
     }
   ]
 }

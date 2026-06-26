@@ -34,7 +34,6 @@ def get_billing_catalog():
 
     atlassian_rows = [e for e in entries if e["bucket"] == "atlassian"]
     marketplace_rows = [e for e in entries if e["bucket"] == "marketplace"]
-
     jira_rows = [e for e in atlassian_rows if e["app_name"].startswith("Jira")]
     bitbucket_rows = [e for e in atlassian_rows if e["app_name"].startswith("Bitbucket")]
     confluence_rows = [e for e in atlassian_rows if e["app_name"].startswith("Confluence")]

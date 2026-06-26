@@ -1,0 +1,38 @@
+{
+  "source": "billing_catalog.py static billing snapshot",
+  "total_jira_seats": 139,
+  "jira_site_count": 3,
+  "included_sites": [
+    {
+      "app_name": "Jira (gli-delivery-tm)",
+      "site": "https://gli-delivery-tm.atlassian.net",
+      "users": "28 / 50",
+      "used_seats": 28,
+      "plan": "Standard",
+      "billing_cycle": "annual",
+      "next_bill_date": "Nov 08, 2026"
+    },
+    {
+      "app_name": "Jira (gli-global-technology)",
+      "site": "https://gli-global-technology.atlassian.net",
+      "users": "53 / 53",
+      "used_seats": 53,
+      "plan": "Standard",
+      "billing_cycle": "monthly",
+      "next_bill_date": "Jul 03, 2026"
+    },
+    {
+      "app_name": "Jira (gli-it-project)",
+      "site": "https://gli-it-project.atlassian.net",
+      "users": "58 / 100",
+      "used_seats": 58,
+      "plan": "Standard",
+      "billing_cycle": "annual",
+      "next_bill_date": "Aug 28, 2026"
+    }
+  ],
+  "notes": [
+    "This is billing seat / consumption truth, not identity truth.",
+    "Only tracked Jira site rows are included; broad organisation Jira entries are excluded from this Estate comparison."
+  ]
+}
