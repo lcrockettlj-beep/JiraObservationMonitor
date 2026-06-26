@@ -4599,3 +4599,25 @@ Sprint 9 runtime anchor monitoring, catch-up recovery, and startup self-heal are
 - - snapshot_index.snapshots[].total_risk_score
 - - snapshot_index.snapshots[].warning_count
 - - stable_sites[].historical_trend_signals[]
+
+## 2026-06-26 14:00:39 — Auto-detected runtime change
+**Removed fields:**
+- - intelligence.estate.average_site_risk_score
+- - intelligence.estate.estate_risk_score
+- - intelligence.estate.risk_category
+- - intelligence.estate.sites_count
+- - intelligence.generated_at
+- - intelligence_error
+- - intelligence_summary.active_sites
+- - intelligence_summary.inactive_sites
+- - intelligence_summary.total_issues
+- - intelligence_summary.total_projects
+- - intelligence_summary.total_sites
+- - sites[].activity_risk
+- - sites[].activity_status
+- - sites[].intelligence_score
+- - sites[].intelligence_signals[]
+- - stable_sites[].activity_risk
+- - stable_sites[].activity_status
+- - stable_sites[].intelligence_score
+- - stable_sites[].intelligence_signals[]
