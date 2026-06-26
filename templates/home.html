@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -133,10 +133,10 @@
                     </div>
                 </div>
                 <div class="delta-grid">
-                    <div class="delta-chip"><span>Total users Δ</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Projects Δ</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Risk Δ</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Unresolved Δ</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Total users Î”</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Projects Î”</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Risk Î”</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Unresolved Î”</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
                 </div>
                 <div class="chip-list">
                     {% if site.attention_reasons %}
@@ -246,7 +246,7 @@
         </div>
     </section>
     <section class="panel command-panel context-panel mode-context mode-context--core home-identity-band">
-        <div class="section-header"><div><h2>Estate Summary</h2><p>Core estate totals for the current monitored scope.</p></div></div>
+        <div class="section-header"></div>
         <div class="stat-grid">
             <a href="/estate" class="stat-card stat-card--link signal-border"><div class="label">Sites in Scope</div><div class="value">{{ tracked_total }}</div><div class="note">Operational sites currently monitored on the home view.</div></a>
             <a href="/estate" class="stat-card stat-card--link signal-border"><div class="label">Analysed Sites</div><div class="value">{{ intelligence_site_total or 0 }}</div><div class="note">Sites with current intelligence coverage in the latest payload.</div></a>
@@ -309,3 +309,4 @@
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 </body>
 </html>
+
