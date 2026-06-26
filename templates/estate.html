@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_trust.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_footprint.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_product_access_breakdown.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_footprint_guard.css') }}">
 </head>
 <body>
 <div class="page">
@@ -129,6 +131,55 @@
     </section>
 
     
+    
+    <section class="panel estate-panel estate-product-access-panel signal-border" id="estate-product-access-breakdown">
+        <div class="section-header">
+            <div>
+                <h2>Product Access Site Breakdown</h2>
+                <p>Estate-wide Jira product access from API application roles, compared by confirmed site and role count.</p>
+            </div>
+            <div class="section-header__actions">
+                <span class="pill">API product truth</span>
+            </div>
+        </div>
+        <div class="product-access-summary">
+            <article class="product-access-card signal-border">
+                <div class="product-access-card__label">Confirmed product sites</div>
+                <div class="product-access-card__value" id="product-access-site-count">--</div>
+                <div class="product-access-card__note">Accessible Jira resources where product roles were confirmed.</div>
+            </article>
+            <article class="product-access-card signal-border">
+                <div class="product-access-card__label">API product users</div>
+                <div class="product-access-card__value" id="product-access-api-users">--</div>
+                <div class="product-access-card__note">Total Jira product users returned by application roles.</div>
+            </article>
+            <article class="product-access-card signal-border">
+                <div class="product-access-card__label">Visible resources</div>
+                <div class="product-access-card__value" id="product-access-resource-count">--</div>
+                <div class="product-access-card__note">Jira resources visible to current OAuth context.</div>
+            </article>
+            <article class="product-access-card signal-border">
+                <div class="product-access-card__label">Blocked resources</div>
+                <div class="product-access-card__value" id="product-access-error-count">--</div>
+                <div class="product-access-card__note">Visible resources where site admin permissions are not available.</div>
+            </article>
+        </div>
+        <div class="product-access-tables">
+            <div class="product-access-table-wrap signal-border">
+                <table class="product-access-table">
+                    <thead><tr><th>Site</th><th>Product users</th><th>Roles</th><th>Status</th></tr></thead>
+                    <tbody id="estate-product-access-body"></tbody>
+                </table>
+                <div class="product-access-empty" id="estate-product-access-empty" style="display:none;">No estate product access data is available yet.</div>
+            </div>
+            <div class="product-access-table-wrap signal-border">
+                <table class="product-access-table">
+                    <thead><tr><th>Role</th><th>Users</th><th>Limit</th><th>Remaining</th></tr></thead>
+                    <tbody id="estate-product-access-role-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
     <section class="panel estate-panel estate-footprint-panel signal-border" id="estate-user-footprint">
         <div class="section-header">
             <div>
@@ -188,8 +239,11 @@
 <script src="{{ url_for('static', filename='js/estate_product_truth.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
 <script src="{{ url_for('static', filename='js/estate_footprint.js') }}"></script>
+<script src="{{ url_for('static', filename='js/estate_product_access_breakdown.js') }}"></script>
 </body>
 </html>
+
+
 
 
 
