@@ -1,52 +1,52 @@
 {
-  "created_at_local": "2026-06-26 09:10:40",
-  "backup_stamp": "2026-06-26_09-10-40",
+  "created_at_local": "2026-06-26 10:10:40",
+  "backup_stamp": "2026-06-26_10-10-40",
   "project_root": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor",
   "current_dir": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current",
-  "history_dir": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40",
+  "history_dir": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40",
   "copied_count": 7,
   "missing_count": 4,
   "copied_files": [
     {
       "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\latest_run.json",
       "current_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current\\latest_run.json",
-      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40\\latest_run.json",
+      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40\\latest_run.json",
       "size_bytes": "158113"
     },
     {
       "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\latest_run_pretty.json",
       "current_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current\\latest_run_pretty.json",
-      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40\\latest_run_pretty.json",
+      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40\\latest_run_pretty.json",
       "size_bytes": "479129"
     },
     {
       "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\latest_run_safe_partial.json",
       "current_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current\\latest_run_safe_partial.json",
-      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40\\latest_run_safe_partial.json",
+      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40\\latest_run_safe_partial.json",
       "size_bytes": "197149"
     },
     {
       "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\latest_run_admin_enriched.json",
       "current_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current\\latest_run_admin_enriched.json",
-      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40\\latest_run_admin_enriched.json",
+      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40\\latest_run_admin_enriched.json",
       "size_bytes": "224476"
     },
     {
       "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\latest_run_admin_enriched_pretty.json",
       "current_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current\\latest_run_admin_enriched_pretty.json",
-      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40\\latest_run_admin_enriched_pretty.json",
+      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40\\latest_run_admin_enriched_pretty.json",
       "size_bytes": "313526"
     },
     {
       "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\latest_snapshot.json",
       "current_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current\\latest_snapshot.json",
-      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40\\latest_snapshot.json",
+      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40\\latest_snapshot.json",
       "size_bytes": "211000"
     },
     {
       "source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\snapshots\\snapshot_index.json",
       "current_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\current\\snapshot_index.json",
-      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_09-10-40\\snapshot_index.json",
+      "history_target": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\backups\\latest_runtime\\history\\2026-06-26_10-10-40\\snapshot_index.json",
       "size_bytes": "9673"
     }
   ],
