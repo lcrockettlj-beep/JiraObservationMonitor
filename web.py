@@ -15,8 +15,6 @@ from change_detection import load_latest_run_change_detection, build_change_dete
 from site_discovery import load_site_discovery_from_latest_run, build_site_discovery_drilldowns
 from snapshots import load_snapshot_index, get_latest_snapshot_entry, load_latest_snapshot
 from trends import analyze_historical_trends, build_trend_drilldowns
-from intelligence_engine import enrich_estate
-from backend.intelligence_runtime import attach_intelligence_safe, enrich_context_with_intelligence
 from backend.runtime_source_adapter import load_preferred_source_payload
 from scripts.snapshot_controller import startup_self_heal as snapshot_startup_self_heal
 
@@ -215,11 +213,8 @@ def _finalise_data(data, *, source_file=None):
     drilldowns.update(build_site_discovery_drilldowns(site_discovery))
     drilldowns.update(build_trend_drilldowns(lookback=10))
     data["drilldowns"] = drilldowns
-
-    data = attach_intelligence_safe(data)
     data["drilldowns"].update(_build_intelligence_drilldowns(data))
     data["drilldowns"].update(_build_intelligence_summary_drilldown(data))
-    data = enrich_estate(data)
     return data
 
 
@@ -453,7 +448,7 @@ def _common_template_data(data):
         "jira_users_total": data.get("jira_users_total", 0),
         "confluence_users_total": data.get("confluence_users_total", 0),
     }
-    return enrich_context_with_intelligence(context, data)
+    return context
 
 
 def _site_matches(site, site_key):
@@ -758,5 +753,6 @@ if __name__ == "__main__":
     if not DEBUG_MODE or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_startup_self_heal()
     app.run(debug=DEBUG_MODE, host="127.0.0.1", port=5000)
+
 
 
