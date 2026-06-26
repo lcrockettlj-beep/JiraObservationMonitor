@@ -1,0 +1,126 @@
+{
+  "schema": "jom-admin-truth-layer-v2",
+  "generated_at_utc": "2026-06-26T13:09:48Z",
+  "source_policy": {
+    "identity_truth": "Atlassian Admin API enriched runtime payload",
+    "commercial_billing_truth": "static/data/billing_seats.json",
+    "product_count_truth": "static/data/estate_product_access.json from Jira application roles",
+    "named_access_truth": "not active; user-to-site mapping remains hidden until Directory/export source is verified",
+    "excluded_sources": [
+      "Jira /rest/api/3/users/search for named access",
+      "site visibility as a proxy for product access",
+      "legacy CSV named footprint unless validated against Atlassian Directory Apps tab"
+    ]
+  },
+  "summary": {
+    "status": "aligned",
+    "severity": "ok",
+    "interpretation": "API product access users match Atlassian billing seats exactly. Billing and API product-count truth are aligned.",
+    "admin_human_users": 61,
+    "billing_jira_seats": 139,
+    "api_product_users": 139,
+    "api_minus_billing": 0,
+    "api_billing_variance_abs": 0,
+    "billing_to_human_ratio": 2.28,
+    "api_product_to_human_ratio": 2.28,
+    "confirmed_product_site_count": 3,
+    "accessible_jira_resource_count": 6,
+    "blocked_resource_count": 3
+  },
+  "admin_identity": {
+    "org_users": 100,
+    "active_users": 100,
+    "managed_users": 61,
+    "human_users": 61,
+    "app_accounts": 39,
+    "suspended_users": 1,
+    "source_fields": {
+      "human_rows": 61,
+      "managed_rows": 61,
+      "app_rows": 39,
+      "disabled_rows": 1,
+      "admin_summary_present": true,
+      "estate_summary_present": true
+    },
+    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\latest_run_admin_enriched_pretty.json",
+    "payload_available": true
+  },
+  "billing_truth": {
+    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\billing_seats.json",
+    "source": "billing_catalog.py static billing snapshot",
+    "jira_seats": 139,
+    "jira_site_count": 3,
+    "payload_available": true
+  },
+  "product_access_truth": {
+    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\estate_product_access.json",
+    "truth_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\estate_access_truth.json",
+    "api_product_users": 139,
+    "api_product_seat_limit": 100150,
+    "api_product_remaining_seats": 100011,
+    "accessible_jira_resource_count": 6,
+    "confirmed_product_site_count": 3,
+    "blocked_resource_count": 3,
+    "payload_available": true
+  },
+  "confirmed_product_sites": [
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "jira_product_user_count": 58,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "jira_product_user_count": 53,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "jira_product_user_count": 28,
+      "jira_role_count": 1,
+      "status": "ok"
+    }
+  ],
+  "blocked_resources": [
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "site_name": "gaminglabs-team-h2pbpmis",
+      "site_url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
+      "status": "error",
+      "reason": "HTTP 403: {\"errorMessages\":[\"Application access permissions can only be edited or viewed by administrators.\"],\"errors\":{}}"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "site_name": "gaminglabs-team-tsyfo716",
+      "site_url": "https://gaminglabs-team-tsyfo716.atlassian.net",
+      "status": "error",
+      "reason": "HTTP 403: {\"errorMessages\":[\"Application access permissions can only be edited or viewed by administrators.\"],\"errors\":{}}"
+    },
+    {
+      "site_key": "gli-usa",
+      "site_name": "gli-usa",
+      "site_url": "https://gli-usa.atlassian.net",
+      "status": "error",
+      "reason": "HTTP 403: {\"errorMessages\":[\"Application access permissions can only be edited or viewed by administrators.\"],\"errors\":{}}"
+    }
+  ],
+  "controls": {
+    "named_user_footprint_visible": false,
+    "named_user_footprint_guard_reason": "Current verified source supports product counts, not per-user site entitlement. Named-user footprint remains hidden.",
+    "safe_to_show_estate_totals": true,
+    "safe_to_show_named_site_access": false
+  },
+  "next_actions": [
+    "Locate Atlassian Directory export or Admin API source that matches the Directory Apps tab per user.",
+    "Validate a sample of users against Atlassian Directory before re-enabling named footprint.",
+    "Do not use /users/search output as named licence truth."
+  ]
+}
