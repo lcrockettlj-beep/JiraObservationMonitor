@@ -4913,3 +4913,13 @@ Sprint 9 runtime anchor monitoring, catch-up recovery, and startup self-heal are
 - - latest_snapshot.summary.issue_count_updated_last_7d_total
 - - latest_snapshot.summary.project_count_total
 - - latest_snapshot.summary.site_count
+
+## 2026-06-29 10:20:40 — Auto-detected runtime change
+**Removed fields:**
+- - admin_enrichment.users[].last_active_dates.data.added_to_org
+- - admin_enrichment.users[].last_active_dates.data.added_to_org_timestamp
+- - admin_enrichment.users[].last_active_dates.data.product_access[].id
+- - admin_enrichment.users[].last_active_dates.data.product_access[].key
+- - admin_enrichment.users[].last_active_dates.data.product_access[].last_active
+- - admin_enrichment.users[].last_active_dates.data.product_access[].last_active_timestamp
+- - admin_enrichment.users[].last_active_dates.links.next

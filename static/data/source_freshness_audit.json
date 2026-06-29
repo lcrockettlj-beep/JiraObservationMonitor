@@ -1,7 +1,7 @@
 {
   "schema": "jom-source-freshness-audit-v1.1",
-  "generated_at_utc": "2026-06-29T09:08:19.394547Z",
-  "display_generated_at_utc": "2026-06-29 09:08 UTC",
+  "generated_at_utc": "2026-06-29T09:21:13.713262Z",
+  "display_generated_at_utc": "2026-06-29 09:21 UTC",
   "policy": {
     "current_hours": 24,
     "aging_hours": 72,
@@ -9,12 +9,12 @@
     "rule": "No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero."
   },
   "summary": {
-    "overall_state": "ATTENTION",
+    "overall_state": "OK",
     "source_count": 8,
     "counts": {
-      "CURRENT": 4,
-      "AGING": 3,
-      "STALE": 1,
+      "CURRENT": 6,
+      "AGING": 2,
+      "STALE": 0,
       "MISSING": 0,
       "UNKNOWN_TIMESTAMP": 0
     },
@@ -33,10 +33,10 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-06-29T09:08:19Z",
-      "parsed_timestamp_utc": "2026-06-29T09:08:19Z",
-      "display_timestamp_utc": "2026-06-29 09:08 UTC",
-      "age_hours": 0.0,
+      "timestamp_value": "2026-06-29T09:20:41Z",
+      "parsed_timestamp_utc": "2026-06-29T09:20:41Z",
+      "display_timestamp_utc": "2026-06-29 09:20 UTC",
+      "age_hours": 0.01,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -52,12 +52,12 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-06-26T13:09:48Z",
-      "parsed_timestamp_utc": "2026-06-26T13:09:48Z",
-      "display_timestamp_utc": "2026-06-26 13:09 UTC",
-      "age_hours": 67.98,
-      "freshness_state": "AGING",
-      "operator_label": "AGING SNAPSHOT",
+      "timestamp_value": "2026-06-29T09:21:13Z",
+      "parsed_timestamp_utc": "2026-06-29T09:21:13Z",
+      "display_timestamp_utc": "2026-06-29 09:21 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -73,7 +73,7 @@
       "timestamp_value": "2026-06-26T11:05:07Z",
       "parsed_timestamp_utc": "2026-06-26T11:05:07Z",
       "display_timestamp_utc": "2026-06-26 11:05 UTC",
-      "age_hours": 70.05,
+      "age_hours": 70.27,
       "freshness_state": "AGING",
       "operator_label": "AGING SNAPSHOT",
       "error": null
@@ -91,7 +91,7 @@
       "timestamp_value": "2026-06-26T11:05:07Z",
       "parsed_timestamp_utc": "2026-06-26T11:05:07Z",
       "display_timestamp_utc": "2026-06-26 11:05 UTC",
-      "age_hours": 70.05,
+      "age_hours": 70.27,
       "freshness_state": "AGING",
       "operator_label": "AGING SNAPSHOT",
       "error": null
@@ -110,7 +110,7 @@
       "timestamp_value": "2026-06-29T08:41:11.375374Z",
       "parsed_timestamp_utc": "2026-06-29T08:41:11.375374Z",
       "display_timestamp_utc": "2026-06-29 08:41 UTC",
-      "age_hours": 0.45,
+      "age_hours": 0.67,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -125,10 +125,10 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-06-29T09:08:12.789380Z",
-      "parsed_timestamp_utc": "2026-06-29T09:08:12.789380Z",
+      "timestamp_value": "2026-06-29T09:08:19.454165Z",
+      "parsed_timestamp_utc": "2026-06-29T09:08:19.454165Z",
       "display_timestamp_utc": "2026-06-29 09:08 UTC",
-      "age_hours": 0.0,
+      "age_hours": 0.22,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -148,7 +148,7 @@
       "timestamp_value": "2026-06-29T09:04:47Z",
       "parsed_timestamp_utc": "2026-06-29T09:04:47Z",
       "display_timestamp_utc": "2026-06-29 09:04 UTC",
-      "age_hours": 0.06,
+      "age_hours": 0.27,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -166,12 +166,12 @@
         "Site"
       ],
       "timestamp_field": "raw_collection_summary.collected_at_utc",
-      "timestamp_value": "2026-06-25T07:43:36Z",
-      "parsed_timestamp_utc": "2026-06-25T07:43:36Z",
-      "display_timestamp_utc": "2026-06-25 07:43 UTC",
-      "age_hours": 97.41,
-      "freshness_state": "STALE",
-      "operator_label": "STALE SNAPSHOT",
+      "timestamp_value": "2026-06-29T09:04:47Z",
+      "parsed_timestamp_utc": "2026-06-29T09:04:47Z",
+      "display_timestamp_utc": "2026-06-29 09:04 UTC",
+      "age_hours": 0.27,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     }
   ]

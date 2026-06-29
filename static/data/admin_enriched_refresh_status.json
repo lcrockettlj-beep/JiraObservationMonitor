@@ -1,0 +1,103 @@
+{
+  "schema": "jom-admin-enriched-refresh-status-v1",
+  "generated_at_utc": "2026-06-29T09:17:05.114879Z",
+  "overall_status": "manual_required",
+  "before": {
+    "latest_run": {
+      "path": "latest_run.json",
+      "exists": true,
+      "freshness_state": "CURRENT",
+      "age_hours": 0.2,
+      "timestamp": "2026-06-29T09:04:47Z"
+    },
+    "latest_run_admin_enriched": {
+      "path": "latest_run_admin_enriched.json",
+      "exists": true,
+      "freshness_state": "STALE",
+      "age_hours": 97.56,
+      "timestamp": "2026-06-25T07:43:36Z"
+    },
+    "latest_run_admin_enriched_pretty": {
+      "path": "latest_run_admin_enriched_pretty.json",
+      "exists": true,
+      "freshness_state": "STALE",
+      "age_hours": 97.56,
+      "timestamp": "2026-06-25T07:43:36Z"
+    }
+  },
+  "after": {
+    "latest_run": {
+      "path": "latest_run.json",
+      "exists": true,
+      "freshness_state": "CURRENT",
+      "age_hours": 0.21,
+      "timestamp": "2026-06-29T09:04:47Z"
+    },
+    "latest_run_admin_enriched": {
+      "path": "latest_run_admin_enriched.json",
+      "exists": true,
+      "freshness_state": "STALE",
+      "age_hours": 97.56,
+      "timestamp": "2026-06-25T07:43:36Z"
+    },
+    "latest_run_admin_enriched_pretty": {
+      "path": "latest_run_admin_enriched_pretty.json",
+      "exists": true,
+      "freshness_state": "STALE",
+      "age_hours": 97.56,
+      "timestamp": "2026-06-25T07:43:36Z"
+    }
+  },
+  "steps": [
+    {
+      "key": "admin_enriched_refresh",
+      "label": "Admin enriched refresh",
+      "command": null,
+      "exists": false,
+      "started_at_utc": "2026-06-29T09:17:04.925144Z",
+      "finished_at_utc": "2026-06-29T09:17:04.925150Z",
+      "status": "manual_required",
+      "returncode": null,
+      "stdout_tail": "",
+      "stderr_tail": "",
+      "note": "No known admin-enrichment builder script found. The pack will not fake latest_run_admin_enriched.json."
+    },
+    {
+      "key": "admin_truth_v2",
+      "label": "Admin Truth v2 rebuild",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_admin_truth_v2.py",
+      "exists": false,
+      "started_at_utc": "2026-06-29T09:17:04.925171Z",
+      "finished_at_utc": "2026-06-29T09:17:04.925175Z",
+      "status": "missing",
+      "returncode": null,
+      "stdout_tail": "",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_freshness",
+      "label": "Source Freshness rebuild",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:17:04.925200Z",
+      "finished_at_utc": "2026-06-29T09:17:05.023811Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 4,\n    \"AGING\": 3,\n    \"STALE\": 1,\n    \"MISSING\": 0,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_freshness_audit.json\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_reliability",
+      "label": "Source Reliability rebuild",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/source_reliability_audit.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:17:05.023913Z",
+      "finished_at_utc": "2026-06-29T09:17:05.103595Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"issue_count\": 2,\n  \"freshness_overall\": \"ATTENTION\",\n  \"runtime_refresh_overall\": \"ok\",\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_reliability_status.json\n",
+      "stderr_tail": ""
+    }
+  ],
+  "manual_next_action": "Locate or build the admin enrichment collector that refreshes latest_run_admin_enriched.json from current admin/runtime data."
+}
