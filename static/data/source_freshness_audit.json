@@ -1,7 +1,7 @@
 {
   "schema": "jom-source-freshness-audit-v1.1",
-  "generated_at_utc": "2026-06-29T15:05:48.348494Z",
-  "display_generated_at_utc": "2026-06-29 15:05 UTC",
+  "generated_at_utc": "2026-06-29T15:06:56.864405Z",
+  "display_generated_at_utc": "2026-06-29 15:06 UTC",
   "policy": {
     "current_hours": 24,
     "aging_hours": 72,
@@ -36,7 +36,7 @@
       "timestamp_value": "2026-06-29T14:35:31Z",
       "parsed_timestamp_utc": "2026-06-29T14:35:31Z",
       "display_timestamp_utc": "2026-06-29 14:35 UTC",
-      "age_hours": 0.5,
+      "age_hours": 0.52,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -55,7 +55,7 @@
       "timestamp_value": "2026-06-29T09:27:00Z",
       "parsed_timestamp_utc": "2026-06-29T09:27:00Z",
       "display_timestamp_utc": "2026-06-29 09:27 UTC",
-      "age_hours": 5.65,
+      "age_hours": 5.67,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -73,7 +73,7 @@
       "timestamp_value": "2026-06-29T12:39:50Z",
       "parsed_timestamp_utc": "2026-06-29T12:39:50Z",
       "display_timestamp_utc": "2026-06-29 12:39 UTC",
-      "age_hours": 2.43,
+      "age_hours": 2.45,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -91,7 +91,7 @@
       "timestamp_value": "2026-06-29T12:39:50Z",
       "parsed_timestamp_utc": "2026-06-29T12:39:50Z",
       "display_timestamp_utc": "2026-06-29 12:39 UTC",
-      "age_hours": 2.43,
+      "age_hours": 2.45,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -110,7 +110,7 @@
       "timestamp_value": "2026-06-29T08:41:11.375374Z",
       "parsed_timestamp_utc": "2026-06-29T08:41:11.375374Z",
       "display_timestamp_utc": "2026-06-29 08:41 UTC",
-      "age_hours": 6.41,
+      "age_hours": 6.43,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -128,7 +128,7 @@
       "timestamp_value": "2026-06-29T12:33:57.602277Z",
       "parsed_timestamp_utc": "2026-06-29T12:33:57.602277Z",
       "display_timestamp_utc": "2026-06-29 12:33 UTC",
-      "age_hours": 2.53,
+      "age_hours": 2.55,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -148,7 +148,7 @@
       "timestamp_value": "2026-06-29T09:04:47Z",
       "parsed_timestamp_utc": "2026-06-29T09:04:47Z",
       "display_timestamp_utc": "2026-06-29 09:04 UTC",
-      "age_hours": 6.02,
+      "age_hours": 6.04,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -169,7 +169,7 @@
       "timestamp_value": "2026-06-29T09:04:47Z",
       "parsed_timestamp_utc": "2026-06-29T09:04:47Z",
       "display_timestamp_utc": "2026-06-29 09:04 UTC",
-      "age_hours": 6.02,
+      "age_hours": 6.04,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
