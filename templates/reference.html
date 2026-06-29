@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reference.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_registry.css') }}">
+    <script src="/static/js/core_truth_guard.js"></script>
+    <link rel="stylesheet" href="/static/css/truth.css">
 </head>
 <body>
 <div class="page">
@@ -31,7 +33,7 @@
         <div class="site-registry-head">
             <div>
                 <h2>Site Discovery & Monitoring Control</h2>
-                <p>Approve discovered Jira resources into monitoring scope, open the Atlassian site, or ignore resources that should remain outside JOM.</p>
+                <p>Approve discovered Jira resources into monitoring scope, open the Atlassian site, or remove monitored resources back to discovered review.</p>
             </div>
             <div class="site-registry-summary" id="admin-discovery-summary">
                 <span>Monitored <b>--</b></span>
@@ -40,26 +42,15 @@
             </div>
         </div>
         <div class="reference-section-note reference-section-note--transition">
-            Approved = monitoring requested. Pending collector validation = not fully monitored yet. Validated/existing = safe for operational reporting.
+            Approved = monitoring requested. Pending collector validation = not fully monitored yet. Remove from monitoring = return to discovered if discovery signals still see it.
         </div>
         <div class="site-registry-table-wrap">
             <table class="site-registry-table">
-                <thead>
-                    <tr>
-                        <th>Site</th>
-                        <th>URL / Cloud ID</th>
-                        <th>Status</th>
-                        <th>Collector</th>
-                        <th>Signals</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-site-registry-body">
-                    <tr><td colspan="6">Loading site registry...</td></tr>
-                </tbody>
+                <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th><th>Actions</th></tr></thead>
+                <tbody id="admin-site-registry-body"><tr><td colspan="6">Loading site registry...</td></tr></tbody>
             </table>
         </div>
-        <p class="site-registry-note">Approval writes to monitored site configuration and queues collector onboarding. Do not treat a newly approved site as fully monitored until collector validation completes.</p>
+        <p class="site-registry-note">Approval writes to monitored site configuration and queues collector onboarding. Remove from monitoring deletes the monitored approval and onboarding queue entry; if discovery signals still see the site, it appears again as discovered.</p>
     </section>
 
     <div class="reference-grid">
@@ -118,55 +109,31 @@
 (function(){
     function esc(value){return String(value == null ? '' : value).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
     function cls(value){return String(value || 'discovered').toLowerCase().replace(/[^a-z0-9_-]/g,'');}
-    function signalsFor(site){
-        var out=[];
-        if(site.metrics && site.metrics.jira_product_user_count != null) out.push('Product users: ' + site.metrics.jira_product_user_count);
-        if(site.metrics && site.metrics.named_access_count != null) out.push('Named direct: ' + site.metrics.named_access_count);
-        if(site.sources) out.push('Sources: ' + site.sources.join(', '));
-        return out.join(' | ');
-    }
-    function actionButton(site, idx, action, label){
-        if(action === 'approve' && site.classification === 'monitored') return '';
-        if(action === 'ignore' && site.classification === 'ignored') return '';
-        return '<button type="button" data-idx="'+idx+'" data-action="'+action+'">'+label+'</button>';
-    }
+    function signalsFor(site){var out=[]; if(site.metrics && site.metrics.jira_product_user_count != null) out.push('Product users: '+site.metrics.jira_product_user_count); if(site.metrics && site.metrics.named_access_count != null) out.push('Named direct: '+site.metrics.named_access_count); if(site.sources) out.push('Sources: '+site.sources.join(', ')); return out.join(' | ');}
+    function button(site, idx, action, label){return '<button type="button" data-idx="'+idx+'" data-action="'+action+'">'+label+'</button>';}
     function render(data){
         var body=document.getElementById('admin-site-registry-body');
         var summary=document.getElementById('admin-discovery-summary');
         if(!body) return;
-        var sites=Array.isArray(data.sites) ? data.sites : [];
-        var s=data.summary || {};
-        if(summary){
-            summary.innerHTML='<span>Monitored <b>'+esc(s.monitored_count || 0)+'</b></span><span>Discovered <b>'+esc(s.discovered_count || 0)+'</b></span><span>Pending onboarding <b>'+esc(s.pending_onboarding_count || 0)+'</b></span>';
-        }
+        var sites=Array.isArray(data.sites)?data.sites:[]; var s=data.summary||{};
+        if(summary){summary.innerHTML='<span>Monitored <b>'+esc(s.monitored_count||0)+'</b></span><span>Discovered <b>'+esc(s.discovered_count||0)+'</b></span><span>Pending onboarding <b>'+esc(s.pending_onboarding_count||0)+'</b></span>';}
         if(!sites.length){body.innerHTML='<tr><td colspan="6">No registry entries available.</td></tr>'; return;}
         body.innerHTML=sites.map(function(site, idx){
-            var name=esc(site.site_name || site.site_key || site.cloud_id || 'Unknown site');
-            var key=esc(site.site_key || '');
             var url=site.site_url || '';
-            var urlCell=url ? '<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url)+'</a>' : esc(site.cloud_id || 'Unknown');
             var actions='';
             if(url) actions += '<a class="pill" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Open Atlassian</a> ';
-            actions += actionButton(site, idx, 'approve', 'Approve + trigger onboarding');
-            actions += actionButton(site, idx, 'ignore', 'Ignore');
-            return '<tr><td><strong>'+name+'</strong><small>'+key+'</small></td><td>'+urlCell+'</td><td><span class="site-registry-badge site-registry-badge--'+cls(site.classification)+'">'+esc(site.classification || 'discovered')+'</span></td><td>'+esc(site.collector_onboarding_status || '')+'</td><td>'+esc(signalsFor(site))+'</td><td class="site-registry-actions">'+actions+'</td></tr>';
+            if(site.classification === 'monitored') actions += button(site, idx, 'unmonitor', 'Remove from monitoring');
+            else actions += button(site, idx, 'approve', 'Approve + trigger onboarding');
+            var urlCell=url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url)+'</a>':esc(site.cloud_id||'Unknown');
+            return '<tr><td><strong>'+esc(site.site_name||site.site_key||site.cloud_id||'Unknown site')+'</strong><small>'+esc(site.site_key||'')+'</small></td><td>'+urlCell+'</td><td><span class="site-registry-badge site-registry-badge--'+cls(site.classification)+'">'+esc(site.classification||'discovered')+'</span></td><td>'+esc(site.collector_onboarding_status||'')+'</td><td>'+esc(signalsFor(site))+'</td><td class="site-registry-actions">'+actions+'</td></tr>';
         }).join('');
-        Array.prototype.forEach.call(body.querySelectorAll('button[data-action]'), function(button){
-            button.addEventListener('click', function(){
-                var idx=Number(button.getAttribute('data-idx'));
-                var action=button.getAttribute('data-action');
-                button.disabled=true; button.textContent='Working...';
-                fetch('/api/site-registry/' + action, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(sites[idx] || {})})
-                    .then(function(response){ if(!response.ok) throw new Error('Registry action failed'); return response.json(); })
-                    .then(render)
-                    .catch(function(){ button.disabled=false; button.textContent='Failed - retry'; });
-            });
-        });
+        Array.prototype.forEach.call(body.querySelectorAll('button[data-action]'), function(btn){btn.addEventListener('click', function(){var idx=Number(btn.getAttribute('data-idx')); var action=btn.getAttribute('data-action'); btn.disabled=true; btn.textContent='Working...'; fetch('/api/site-registry/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(sites[idx]||{})}).then(function(r){if(!r.ok) throw new Error('failed'); return r.json();}).then(render).catch(function(){btn.disabled=false; btn.textContent='Failed - retry';});});});
     }
-    function load(){fetch('/api/site-registry', {cache:'no-store'}).then(function(r){return r.json();}).then(render).catch(function(){var body=document.getElementById('admin-site-registry-body'); if(body) body.innerHTML='<tr><td colspan="6">Unable to load site registry.</td></tr>';});}
-    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load); else load();
+    function load(){fetch('/api/site-registry',{cache:'no-store'}).then(function(r){return r.json();}).then(render).catch(function(){var body=document.getElementById('admin-site-registry-body'); if(body) body.innerHTML='<tr><td colspan="6">Unable to load site registry.</td></tr>';});}
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', load); else load();
 })();
 </script>
 
 </body>
 </html>
+

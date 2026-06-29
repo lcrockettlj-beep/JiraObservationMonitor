@@ -171,7 +171,6 @@ def _runtime_unavailable_payload(reason, source_file=None):
     }
 
 
-
 # ============================================================
 # JOM registry truth helpers - Home/Estate source-level scope
 # ============================================================
@@ -216,22 +215,14 @@ def _load_registry_truth():
 
 
 def _apply_registry_scope_to_runtime_data(data):
-    """
-    Source-level Home/Estate guardrail.
-
-    Runtime success is not monitoring approval. A site is operational only when
-    site_registry classification == monitored. Discovered sites remain visible
-    through registry context, but are removed from operational site groupings.
-    """
+    """Only registry-monitored sites can appear in Home/Estate operational groupings."""
     registry = _load_registry_truth()
     registry_sites = registry.get("sites", []) if isinstance(registry.get("sites"), list) else []
     monitored_registry_sites = [s for s in registry_sites if s.get("classification") == "monitored"]
     discovered_registry_sites = [s for s in registry_sites if s.get("classification") == "discovered"]
-
     monitored_tokens = set()
     for site in monitored_registry_sites:
         monitored_tokens.update(_registry_tokens_for_site(site))
-
     runtime_sites = data.get("sites", []) if isinstance(data.get("sites"), list) else []
     scoped_sites = []
     for site in runtime_sites:
@@ -239,14 +230,12 @@ def _apply_registry_scope_to_runtime_data(data):
         if site_tokens and site_tokens.intersection(monitored_tokens):
             site["registry_classification"] = "monitored"
             scoped_sites.append(site)
-
     data["sites"] = scoped_sites
     data["site_registry"] = registry
     data["registry_monitored_sites"] = monitored_registry_sites
     data["registry_discovered_sites"] = discovered_registry_sites
     data["registry_summary"] = registry.get("summary", {}) if isinstance(registry.get("summary"), dict) else {}
     return data
-
 def _finalise_data(data, *, source_file=None):
     data = data if isinstance(data, dict) else {}
     data["sites"] = _coerce_sites(data)
@@ -267,8 +256,8 @@ def _finalise_data(data, *, source_file=None):
     historical_trends = analyze_historical_trends(lookback=10)
     data["historical_trends"] = historical_trends
     data["sites"] = _merge_historical_trends(data.get("sites", []), historical_trends)
-
     data = _apply_registry_scope_to_runtime_data(data)
+
     snapshot_index = load_snapshot_index()
     latest_snapshot_entry = get_latest_snapshot_entry()
     latest_snapshot = load_latest_snapshot()
@@ -852,12 +841,20 @@ def api_site_registry_ignore():
     from backend.site_registry_runtime import ignore_site
     payload = request.get_json(silent=True) or {}
     return jsonify(ignore_site(BASE_DIR, payload, ignored_by="jom_admin"))
+
+@app.route("/api/site-registry/unmonitor", methods=["POST"])
+def api_site_registry_unmonitor():
+    from backend.site_registry_runtime import unmonitor_site
+    payload = request.get_json(silent=True) or {}
+    return jsonify(unmonitor_site(BASE_DIR, payload, removed_by="jom_admin"))
+
 # --- End JOM Site Registry / Discovery API ---
 if __name__ == "__main__":
     DEBUG_MODE = True
     if not DEBUG_MODE or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_startup_self_heal()
     app.run(debug=DEBUG_MODE, host="127.0.0.1", port=5000)
+
 
 
 

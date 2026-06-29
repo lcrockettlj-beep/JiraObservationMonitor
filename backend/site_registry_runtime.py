@@ -350,3 +350,44 @@ def ignore_site(project_root: Path, payload: Dict[str, Any], ignored_by: str = "
     config["updated_at_utc"] = now_utc()
     write_json(project_root / MONITORED_CONFIG, config)
     return build_registry(project_root)
+
+def unmonitor_site(project_root: Path, payload: Dict[str, Any], removed_by: str = "jom_admin") -> Dict[str, Any]:
+    """
+    Remove a site from monitored scope without ignoring it.
+
+    If the site is still present in runtime/product/named discovery signals it will
+    reappear as classification == discovered on the next registry build.
+    """
+    config = load_config(project_root)
+    site_url = normalise_url(str(payload.get("site_url") or ""))
+    cloud_id = str(payload.get("cloud_id") or "").strip()
+    site_key = str(payload.get("site_key") or site_key_from_url(site_url) or cloud_id).strip()
+    entry = {
+        "site_key": site_key,
+        "site_name": str(payload.get("site_name") or site_key),
+        "site_url": site_url,
+        "cloud_id": cloud_id,
+    }
+    entry_aliases = set(aliases(entry))
+
+    config["monitored_sites"] = [
+        s for s in config.get("monitored_sites", [])
+        if not entry_aliases.intersection(set(aliases(s)))
+    ]
+    # Deliberately do not add to ignored_sites. The rediscovery path should put
+    # the site back into discovered if runtime/product/named signals still see it.
+    config["updated_at_utc"] = now_utc()
+    write_json(project_root / MONITORED_CONFIG, config)
+
+    queue_path = project_root / ONBOARDING_QUEUE
+    queue = read_json(queue_path, {"schema": "jom-site-onboarding-queue-v1", "requests": []})
+    requests = queue.get("requests") if isinstance(queue.get("requests"), list) else []
+    queue["requests"] = [
+        r for r in requests
+        if not entry_aliases.intersection(set(aliases(r)))
+    ]
+    queue["updated_at_utc"] = now_utc()
+    write_json(queue_path, queue)
+
+    return build_registry(project_root)
+
