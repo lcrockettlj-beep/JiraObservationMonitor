@@ -34,5 +34,7 @@
   "notes": [
     "This is billing seat / consumption truth, not identity truth.",
     "Only tracked Jira site rows are included; broad organisation Jira entries are excluded from this Estate comparison."
-  ]
+  ],
+  "generated_at_utc": "2026-06-29T08:41:11.375374Z",
+  "source_freshness_note": "Timestamp added by Source Freshness Audit v1.1 because file existed without freshness metadata."
 }

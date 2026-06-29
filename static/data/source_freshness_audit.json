@@ -1,6 +1,7 @@
 {
-  "schema": "jom-source-freshness-audit-v1",
-  "generated_at_utc": "2026-06-29T08:35:22.533473Z",
+  "schema": "jom-source-freshness-audit-v1.1",
+  "generated_at_utc": "2026-06-29T08:41:17.450301Z",
+  "display_generated_at_utc": "2026-06-29 08:41 UTC",
   "policy": {
     "current_hours": 24,
     "aging_hours": 72,
@@ -11,12 +12,13 @@
     "overall_state": "ATTENTION",
     "source_count": 8,
     "counts": {
-      "CURRENT": 1,
+      "CURRENT": 2,
       "AGING": 3,
       "STALE": 2,
       "MISSING": 1,
-      "UNKNOWN_TIMESTAMP": 1
-    }
+      "UNKNOWN_TIMESTAMP": 0
+    },
+    "billing_timestamp_added": false
   },
   "sources": [
     {
@@ -31,10 +33,12 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-06-29T08:34:57Z",
-      "parsed_timestamp_utc": "2026-06-29T08:34:57Z",
+      "timestamp_value": "2026-06-29T08:40:55Z",
+      "parsed_timestamp_utc": "2026-06-29T08:40:55Z",
+      "display_timestamp_utc": "2026-06-29 08:40 UTC",
       "age_hours": 0.01,
       "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -50,8 +54,10 @@
       "timestamp_field": "generated_at_utc",
       "timestamp_value": "2026-06-26T13:09:48Z",
       "parsed_timestamp_utc": "2026-06-26T13:09:48Z",
-      "age_hours": 67.43,
+      "display_timestamp_utc": "2026-06-26 13:09 UTC",
+      "age_hours": 67.52,
       "freshness_state": "AGING",
+      "operator_label": "AGING SNAPSHOT",
       "error": null
     },
     {
@@ -66,8 +72,10 @@
       "timestamp_field": "generated_at_utc",
       "timestamp_value": "2026-06-26T11:05:07Z",
       "parsed_timestamp_utc": "2026-06-26T11:05:07Z",
-      "age_hours": 69.5,
+      "display_timestamp_utc": "2026-06-26 11:05 UTC",
+      "age_hours": 69.6,
       "freshness_state": "AGING",
+      "operator_label": "AGING SNAPSHOT",
       "error": null
     },
     {
@@ -82,8 +90,10 @@
       "timestamp_field": "generated_at_utc",
       "timestamp_value": "2026-06-26T11:05:07Z",
       "parsed_timestamp_utc": "2026-06-26T11:05:07Z",
-      "age_hours": 69.5,
+      "display_timestamp_utc": "2026-06-26 11:05 UTC",
+      "age_hours": 69.6,
       "freshness_state": "AGING",
+      "operator_label": "AGING SNAPSHOT",
       "error": null
     },
     {
@@ -96,11 +106,13 @@
         "Estate",
         "Admin"
       ],
-      "timestamp_field": null,
-      "timestamp_value": null,
-      "parsed_timestamp_utc": null,
-      "age_hours": null,
-      "freshness_state": "UNKNOWN_TIMESTAMP",
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-06-29T08:41:11.375374Z",
+      "parsed_timestamp_utc": "2026-06-29T08:41:11.375374Z",
+      "display_timestamp_utc": "2026-06-29 08:41 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -115,8 +127,10 @@
       "timestamp_field": null,
       "timestamp_value": null,
       "parsed_timestamp_utc": null,
+      "display_timestamp_utc": null,
       "age_hours": null,
       "freshness_state": "MISSING",
+      "operator_label": "MISSING SOURCE",
       "error": null
     },
     {
@@ -133,8 +147,10 @@
       "timestamp_field": "raw_collection_summary.collected_at_utc",
       "timestamp_value": "2026-06-25T07:43:36Z",
       "parsed_timestamp_utc": "2026-06-25T07:43:36Z",
-      "age_hours": 96.86,
+      "display_timestamp_utc": "2026-06-25 07:43 UTC",
+      "age_hours": 96.96,
       "freshness_state": "STALE",
+      "operator_label": "STALE SNAPSHOT",
       "error": null
     },
     {
@@ -152,8 +168,10 @@
       "timestamp_field": "raw_collection_summary.collected_at_utc",
       "timestamp_value": "2026-06-25T07:43:36Z",
       "parsed_timestamp_utc": "2026-06-25T07:43:36Z",
-      "age_hours": 96.86,
+      "display_timestamp_utc": "2026-06-25 07:43 UTC",
+      "age_hours": 96.96,
       "freshness_state": "STALE",
+      "operator_label": "STALE SNAPSHOT",
       "error": null
     }
   ]
