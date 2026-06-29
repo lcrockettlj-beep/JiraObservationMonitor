@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 REPORT_JSON = ROOT / "reports" / "project_ownership_map.json"
 REPORT_MD = ROOT / "reports" / "project_ownership_map.md"
 AUDIT_JSON = ROOT / "reports" / "project_alignment_audit.json"

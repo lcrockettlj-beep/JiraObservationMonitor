@@ -4,7 +4,7 @@ import json, subprocess
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT_JSON=ROOT/'reports'/'tree_final_sanity_report.json'
 OUT_MD=ROOT/'reports'/'tree_final_sanity_report.md'
 SKIP={'.git','__pycache__','.venv','venv','node_modules'}

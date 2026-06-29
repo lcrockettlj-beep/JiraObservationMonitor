@@ -4,7 +4,7 @@ import json,re
 from collections import defaultdict,Counter
 from datetime import datetime,timezone
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT_JSON=ROOT/'reports'/'route_static_reference_validation.json'
 OUT_MD=ROOT/'reports'/'route_static_reference_validation.md'
 SKIP={'.git','__pycache__','.venv','venv','node_modules'}
