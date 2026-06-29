@@ -1,0 +1,79 @@
+{
+  "schema": "jom-operational-source-recovery-status-v1",
+  "generated_at_utc": "2026-06-29T09:27:00.672091Z",
+  "overall_status": "ok",
+  "steps": [
+    {
+      "key": "admin_enriched_refresh",
+      "label": "Refresh admin-enriched runtime + admin truth",
+      "script": "scripts/refresh_admin_enriched_chain.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:26:58.429239Z",
+      "finished_at_utc": "2026-06-29T09:26:59.618289Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"overall_status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\admin_enriched_refresh_status.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "product_access_refresh",
+      "label": "Refresh estate product/access truth",
+      "script": "scripts/refresh_product_access_sources.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:26:59.618461Z",
+      "finished_at_utc": "2026-06-29T09:27:00.279516Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"overall_status\": \"failed\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\product_access_refresh_status.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "named_access_recovery_plan",
+      "label": "Build named access recovery plan",
+      "script": "scripts/build_named_access_recovery_plan.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:27:00.279658Z",
+      "finished_at_utc": "2026-06-29T09:27:00.387931Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"safe_to_enable_named_access_ui\": false,\n  \"json\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_recovery_plan.json\",\n  \"report\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_recovery_plan.md\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_freshness",
+      "label": "Rebuild source freshness audit",
+      "script": "scripts/audit_source_freshness.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:27:00.388095Z",
+      "finished_at_utc": "2026-06-29T09:27:00.495699Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"overall_state\": \"OK\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 6,\n    \"AGING\": 2,\n    \"STALE\": 0,\n    \"MISSING\": 0,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_freshness_audit.json\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "user_footprint_guard",
+      "label": "Rebuild guarded user footprint source",
+      "script": "scripts/build_user_footprint_source.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:27:00.495858Z",
+      "finished_at_utc": "2026-06-29T09:27:00.583203Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"source_status\": \"unavailable\",\n  \"safe\": false,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\user_footprint.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_reliability",
+      "label": "Rebuild source reliability status",
+      "script": "scripts/source_reliability_audit.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:27:00.583375Z",
+      "finished_at_utc": "2026-06-29T09:27:00.672047Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"issue_count\": 1,\n  \"freshness_overall\": \"OK\",\n  \"runtime_refresh_overall\": \"ok\",\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_reliability_status.json\n",
+      "stderr_tail": ""
+    }
+  ]
+}

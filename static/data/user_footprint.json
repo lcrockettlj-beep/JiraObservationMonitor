@@ -1,6 +1,6 @@
 {
   "schema": "jom-user-footprint-v1",
-  "generated_at_utc": "2026-06-29T09:21:13.833509Z",
+  "generated_at_utc": "2026-06-29T09:27:00.572482Z",
   "source_status": "unavailable",
   "reason": "Named access source exists but reconciliation says safe_to_enable_named_access_ui=false. Named footprint remains unavailable.",
   "safe_to_show_named_access_ui": false,
