@@ -246,3 +246,74 @@ html[data-mode="atlassian"] .priority-row, html[data-theme="atlassian"] .priorit
   }
 }
 
+
+
+/* === Named Access UI Pack v1 START === */
+.estate-footprint-row--high {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--critical) 13%, transparent), transparent 62%);
+}
+.estate-footprint-row--medium {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--warning) 12%, transparent), transparent 62%);
+}
+.estate-footprint-row--low {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--stable) 7%, transparent), transparent 62%);
+}
+.estate-footprint-site-pill {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0.32rem 0.32rem 0;
+  padding: 0.18rem 0.48rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  background: color-mix(in srgb, var(--mode-card-surface) 86%, transparent);
+  color: var(--text);
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+.estate-footprint-count-stack,
+.estate-footprint-table td:first-child,
+.estate-footprint-table td:last-child {
+  display: grid;
+  gap: 0.22rem;
+}
+.estate-footprint-count-stack strong,
+.estate-footprint-table td:first-child strong {
+  color: var(--text);
+}
+.estate-footprint-count-stack small,
+.estate-footprint-table td:first-child small,
+.estate-footprint-source-note {
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+.estate-footprint-category {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  padding: 0.22rem 0.58rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+.estate-footprint-category--high {
+  color: var(--critical);
+  border-color: color-mix(in srgb, var(--critical) 34%, transparent);
+  background: color-mix(in srgb, var(--critical) 13%, transparent);
+}
+.estate-footprint-category--medium {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 34%, transparent);
+  background: color-mix(in srgb, var(--warning) 13%, transparent);
+}
+.estate-footprint-category--low {
+  color: var(--stable);
+  border-color: color-mix(in srgb, var(--stable) 30%, transparent);
+  background: color-mix(in srgb, var(--stable) 10%, transparent);
+}
+/* === Named Access UI Pack v1 END === */
+

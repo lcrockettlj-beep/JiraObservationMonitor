@@ -15,17 +15,19 @@
           return;
         }
         el.textContent = formatter ? formatter(value) : String(value);
+        el.classList.remove('truth-unavailable');
       }
     };
   }
 
-  function numberOrNull(value) {
-    return truth().safeNumber(value);
+  function esc(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
   }
 
-  function formatNumber(value) {
-    return Number(value).toLocaleString();
-  }
+  function numberOrNull(value) { return truth().safeNumber(value); }
+  function formatNumber(value) { return Number(value).toLocaleString(); }
 
   function setUnavailable(id, label) {
     var el = document.getElementById(id);
@@ -41,6 +43,13 @@
     return 'Unknown';
   }
 
+  function categoryClass(category) {
+    if (category === 'high') return 'estate-footprint-row--high';
+    if (category === 'medium') return 'estate-footprint-row--medium';
+    if (category === 'low') return 'estate-footprint-row--low';
+    return 'estate-footprint-row--unknown';
+  }
+
   function displayText(value, fallback) {
     if (value === null || value === undefined || value === '') return fallback || 'DATA UNAVAILABLE';
     return String(value);
@@ -51,7 +60,6 @@
     setUnavailable('footprint-average-sites');
     setUnavailable('footprint-high-count');
     setUnavailable('footprint-medium-count');
-
     var body = document.getElementById('estate-footprint-body');
     var empty = document.getElementById('estate-footprint-empty');
     if (body) body.innerHTML = '';
@@ -62,12 +70,19 @@
     }
   }
 
+  function siteList(user) {
+    return Array.isArray(user.sites) ? user.sites : [];
+  }
+
+  function sourceList(user) {
+    return Array.isArray(user.access_sources) ? user.access_sources : [];
+  }
+
   function renderRows(users) {
     var body = document.getElementById('estate-footprint-body');
     var empty = document.getElementById('estate-footprint-empty');
     if (!body) return;
     body.innerHTML = '';
-
     if (!Array.isArray(users) || users.length === 0) {
       if (empty) {
         empty.style.display = 'block';
@@ -76,13 +91,17 @@
       }
       return;
     }
-
     if (empty) empty.style.display = 'none';
 
-    users.slice(0, 25).forEach(function (user) {
+    users.slice(0, 117).forEach(function (user) {
       var row = document.createElement('tr');
-      var sites = Array.isArray(user.sites) ? user.sites.join(', ') : 'DATA UNAVAILABLE';
+      row.className = categoryClass(user.category);
+      row.setAttribute('data-account-id', displayText(user.account_id, ''));
+
+      var sites = siteList(user);
+      var sources = sourceList(user);
       var siteCount = numberOrNull(user.site_count);
+      var assignments = numberOrNull(user.product_access_assignments);
 
       var userCell = document.createElement('td');
       var name = document.createElement('strong');
@@ -93,18 +112,40 @@
       userCell.appendChild(email);
 
       var sitesCell = document.createElement('td');
-      sitesCell.textContent = sites;
-
-      var countCell = document.createElement('td');
-      if (siteCount === null) {
-        countCell.textContent = 'DATA UNAVAILABLE';
-        countCell.classList.add('truth-unavailable');
+      if (sites.length) {
+        sites.forEach(function (site) {
+          var pill = document.createElement('span');
+          pill.className = 'estate-footprint-site-pill';
+          pill.textContent = site;
+          sitesCell.appendChild(pill);
+        });
       } else {
-        countCell.textContent = formatNumber(siteCount);
+        sitesCell.textContent = 'DATA UNAVAILABLE';
+        sitesCell.classList.add('truth-unavailable');
       }
 
+      var countCell = document.createElement('td');
+      var countWrap = document.createElement('div');
+      countWrap.className = 'estate-footprint-count-stack';
+      var countStrong = document.createElement('strong');
+      countStrong.textContent = siteCount === null ? 'DATA UNAVAILABLE' : formatNumber(siteCount);
+      var assignmentSmall = document.createElement('small');
+      assignmentSmall.textContent = assignments === null ? 'Assignments unavailable' : formatNumber(assignments) + ' product assignment' + (assignments === 1 ? '' : 's');
+      countWrap.appendChild(countStrong);
+      countWrap.appendChild(assignmentSmall);
+      countCell.appendChild(countWrap);
+
       var categoryCell = document.createElement('td');
-      categoryCell.textContent = categoryLabel(user.category || 'unknown');
+      var categoryBadge = document.createElement('span');
+      categoryBadge.className = 'estate-footprint-category estate-footprint-category--' + (user.category || 'unknown');
+      categoryBadge.textContent = categoryLabel(user.category || 'unknown');
+      categoryCell.appendChild(categoryBadge);
+      if (sources.length) {
+        var sourceSmall = document.createElement('small');
+        sourceSmall.className = 'estate-footprint-source-note';
+        sourceSmall.textContent = 'Source: ' + sources.join(' + ');
+        categoryCell.appendChild(sourceSmall);
+      }
 
       row.appendChild(userCell);
       row.appendChild(sitesCell);
@@ -115,29 +156,21 @@
   }
 
   function render(payload) {
-    if (!payload || !payload.summary) {
-      showPanelUnavailable('DATA UNAVAILABLE - user footprint source missing or invalid.');
+    if (!payload || payload.source_status !== 'generated' || payload.safe_to_show_named_access_ui !== true || !payload.summary) {
+      showPanelUnavailable((payload && payload.reason) || 'DATA UNAVAILABLE - named access is not safe to show.');
       return;
     }
-
     var summary = payload.summary;
-    var usersAnalysed = numberOrNull(summary.users_analyzed);
-    var averageSites = numberOrNull(summary.average_sites_per_user);
-    var highDuplication = numberOrNull(summary.high_duplication_users);
-    var mediumDuplication = numberOrNull(summary.medium_duplication_users);
-
-    truth().applyValue('footprint-users-analysed', usersAnalysed, formatNumber);
-    truth().applyValue('footprint-average-sites', averageSites, function (value) { return Number(value).toFixed(2); });
-    truth().applyValue('footprint-high-count', highDuplication, formatNumber);
-    truth().applyValue('footprint-medium-count', mediumDuplication, formatNumber);
-
+    truth().applyValue('footprint-users-analysed', numberOrNull(summary.users_analyzed), formatNumber);
+    truth().applyValue('footprint-average-sites', numberOrNull(summary.average_sites_per_user), function (value) { return Number(value).toFixed(2); });
+    truth().applyValue('footprint-high-count', numberOrNull(summary.high_duplication_users), formatNumber);
+    truth().applyValue('footprint-medium-count', numberOrNull(summary.medium_duplication_users), formatNumber);
     renderRows(payload.users || []);
   }
 
   function init() {
     var root = document.getElementById('estate-user-footprint');
     if (!root) return;
-
     fetch('/static/data/user_footprint.json', { cache: 'no-store' })
       .then(function (response) {
         if (!response.ok) throw new Error('user_footprint.json unavailable');
