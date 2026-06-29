@@ -1,6 +1,6 @@
 {
   "schema": "jom-monitored-sites-v2",
-  "updated_at_utc": "2026-06-26T15:10:40Z",
+  "updated_at_utc": "2026-06-29T07:45:06Z",
   "policy": {
     "home_shows_discovered_sites": true,
     "estate_requires_monitored_status": true,
@@ -33,5 +33,46 @@
       "approved_at_utc": "2026-06-26T15:10:40Z"
     }
   ],
-  "ignored_sites": []
+  "ignored_sites": [
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "site_name": "gaminglabs-team-h2pbpmis",
+      "site_url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
+      "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
+      "status": "ignored",
+      "ignored_at_utc": "2026-06-29T07:44:59Z",
+      "ignored_by": "jom_admin",
+      "reason": "Manually ignored from JOM monitoring scope"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "site_name": "gaminglabs-team-tsyfo716",
+      "site_url": "https://gaminglabs-team-tsyfo716.atlassian.net",
+      "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
+      "status": "ignored",
+      "ignored_at_utc": "2026-06-29T07:45:02Z",
+      "ignored_by": "jom_admin",
+      "reason": "Manually ignored from JOM monitoring scope"
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "status": "ignored",
+      "ignored_at_utc": "2026-06-29T07:45:04Z",
+      "ignored_by": "jom_admin",
+      "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved."
+    },
+    {
+      "site_key": "gli-usa",
+      "site_name": "gli-usa",
+      "site_url": "https://gli-usa.atlassian.net",
+      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+      "status": "ignored",
+      "ignored_at_utc": "2026-06-29T07:45:06Z",
+      "ignored_by": "jom_admin",
+      "reason": "Manually ignored from JOM monitoring scope"
+    }
+  ]
 }

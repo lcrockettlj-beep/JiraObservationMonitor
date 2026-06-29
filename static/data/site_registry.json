@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-v3-scope-merged",
-  "generated_at_utc": "2026-06-29T07:38:11Z",
+  "generated_at_utc": "2026-06-29T07:46:14Z",
   "policy": {
     "home_shows_discovered_sites": true,
     "estate_requires_monitored_status": true,
@@ -10,8 +10,8 @@
   "summary": {
     "total_sites": 7,
     "monitored_count": 3,
-    "discovered_count": 4,
-    "ignored_count": 0,
+    "discovered_count": 0,
+    "ignored_count": 4,
     "pending_onboarding_count": 0
   },
   "sites": [
@@ -107,8 +107,8 @@
         "https://gaminglabs-team-h2pbpmis.atlassian.net",
         "gaminglabs-team-h2pbpmis"
       ],
-      "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
+      "classification": "ignored",
+      "collector_onboarding_status": "not_required",
       "is_monitored": false,
       "can_approve": true
     },
@@ -129,8 +129,8 @@
         "https://gaminglabs-team-tsyfo716.atlassian.net",
         "gaminglabs-team-tsyfo716"
       ],
-      "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
+      "classification": "ignored",
+      "collector_onboarding_status": "not_required",
       "is_monitored": false,
       "can_approve": true
     },
@@ -151,8 +151,8 @@
         "gli-tracker"
       ],
       "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
-      "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
+      "classification": "ignored",
+      "collector_onboarding_status": "not_required",
       "is_monitored": false,
       "can_approve": true
     },
@@ -173,8 +173,8 @@
         "https://gli-usa.atlassian.net",
         "gli-usa"
       ],
-      "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
+      "classification": "ignored",
+      "collector_onboarding_status": "not_required",
       "is_monitored": false,
       "can_approve": true
     }

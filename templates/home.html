@@ -310,7 +310,7 @@
         {% if registry_discovered_sites %}
         <div class="site-registry-table-wrap">
             <table class="site-registry-table">
-                <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th></tr></thead>
+                <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th><th>Actions</th></tr></thead>
                 <tbody>
                     {% for registry_site in registry_discovered_sites %}
                     <tr>
@@ -319,6 +319,7 @@
                         <td><span class="site-registry-badge site-registry-badge--discovered">Discovered</span></td>
                         <td>{{ registry_site.collector_onboarding_status or 'not_requested' }}</td>
                         <td>{% set signals = [] %}{% if registry_site.metrics and registry_site.metrics.jira_product_user_count is not none %}{% set _ = signals.append('Product users: ' ~ registry_site.metrics.jira_product_user_count) %}{% endif %}{% if registry_site.metrics and registry_site.metrics.named_access_count is not none %}{% set _ = signals.append('Named direct: ' ~ registry_site.metrics.named_access_count) %}{% endif %}{% if registry_site.sources %}{% set _ = signals.append('Sources: ' ~ registry_site.sources|join(', ')) %}{% endif %}{{ signals|join(' | ') }}</td>
+                        <td class="site-registry-actions">{% if registry_site.site_url %}<a class="pill" href="{{ registry_site.site_url }}" target="_blank" rel="noopener noreferrer">Open Atlassian</a>{% endif %}<a class="pill" href="/reference#site-discovery-control">Review in Admin</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -327,7 +328,7 @@
         {% else %}
         <p class="site-registry-note">No discovered Jira resources are waiting for approval.</p>
         {% endif %}
-        <p class="site-registry-note">Approval is controlled from Admin. Approved sites enter pending collector validation before they are trusted as fully monitored.</p>
+        <p class="site-registry-note">Use Review in Admin to approve monitoring or ignore a discovered site. Approved sites enter pending collector validation before they are trusted as fully monitored.</p>
     </section>
 </div>
 <script>window.JOMTheme.initToggle("theme-toggle");</script>
