@@ -1,6 +1,6 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-06-29T11:50:22.409592Z",
+  "generated_at_utc": "2026-06-29T12:27:34.917109Z",
   "overall_status": "attention",
   "summary": {
     "issue_count": 3,

@@ -1,0 +1,98 @@
+{
+  "schema": "jom-group-expansion-recovery-status-v1.2",
+  "generated_at_utc": "2026-06-29T12:27:34.923297Z",
+  "overall_status": "ok",
+  "group_expansion_safe": true,
+  "safe_to_enable_named_access_ui": true,
+  "group_summary": {
+    "group_count": 26,
+    "product_group_count": 26,
+    "member_assignment_count": 338,
+    "mapped_site_count": 3,
+    "error_count": 7
+  },
+  "reconciliation_summary": {
+    "named_unique_users": 117,
+    "named_product_access_assignments": 139,
+    "api_product_users": 139,
+    "billing_jira_seats": 139,
+    "admin_human_users": 61,
+    "named_minus_api_product": 0,
+    "group_expansion_safe": true
+  },
+  "reconciliation_blockers": [],
+  "steps": [
+    {
+      "key": "group_expansion_collector",
+      "label": "Collect group-derived product access with ARI mapping",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/collect_admin_group_expansion.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T12:26:55.688364Z",
+      "finished_at_utc": "2026-06-29T12:27:34.651408Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"source_status\": \"generated\",\n  \"safe\": true,\n  \"groups\": 26,\n  \"member_assignment_count\": 338,\n  \"mapped_site_count\": 3,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\admin_group_expansion.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "named_access_truth_v2",
+      "label": "Rebuild Named Access Truth v2",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_named_access_truth_v2.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T12:27:34.651585Z",
+      "finished_at_utc": "2026-06-29T12:27:34.710218Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"source_status\": \"generated\",\n  \"safe\": false,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\named_access_truth_v2.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "named_access_reconciliation_v2",
+      "label": "Reconcile Named Access Truth v2",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/reconcile_named_access_truth_v2.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T12:27:34.710301Z",
+      "finished_at_utc": "2026-06-29T12:27:34.760978Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"safe\": true,\n  \"status\": \"aligned\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_reconciliation_v2.json\",\n  \"report\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_recovery_implementation.md\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "user_footprint_guard",
+      "label": "Rebuild guarded user footprint",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_user_footprint_source.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T12:27:34.761167Z",
+      "finished_at_utc": "2026-06-29T12:27:34.814867Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"source_status\": \"unavailable\",\n  \"safe\": false,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\user_footprint.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_freshness",
+      "label": "Rebuild source freshness",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T12:27:34.814953Z",
+      "finished_at_utc": "2026-06-29T12:27:34.874660Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 6,\n    \"AGING\": 0,\n    \"STALE\": 2,\n    \"MISSING\": 0,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_freshness_audit.json\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_reliability",
+      "label": "Rebuild source reliability",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/source_reliability_audit.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T12:27:34.874741Z",
+      "finished_at_utc": "2026-06-29T12:27:34.922442Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"issue_count\": 3,\n  \"freshness_overall\": \"ATTENTION\",\n  \"runtime_refresh_overall\": \"ok\",\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_reliability_status.json\n",
+      "stderr_tail": ""
+    }
+  ]
+}

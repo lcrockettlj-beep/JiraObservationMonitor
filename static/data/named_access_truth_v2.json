@@ -1,7 +1,7 @@
 {
   "schema": "jom-named-access-truth-v2",
-  "generated_at_utc": "2026-06-29T11:50:22.138791Z",
-  "source_status": "incomplete",
+  "generated_at_utc": "2026-06-29T12:27:34.703325Z",
+  "source_status": "generated",
   "safe_to_enable_named_access_ui": false,
   "reason": "Named access truth v2 is not safe until direct + group-derived assignments reconcile to billing/API product counts.",
   "sources": {
@@ -10,14 +10,12 @@
     "site_registry": "static\\data\\site_registry.json"
   },
   "summary": {
-    "unique_users": 57,
-    "total_product_access_assignments": 73,
-    "group_expansion_safe": false,
-    "warning_count": 1
+    "unique_users": 117,
+    "total_product_access_assignments": 139,
+    "group_expansion_safe": true,
+    "warning_count": 0
   },
-  "warnings": [
-    "Group-derived access expansion is unavailable or not safe_to_use_for_named_access. Named access truth v2 remains incomplete."
-  ],
+  "warnings": [],
   "users": [
     {
       "account_id": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",
@@ -38,7 +36,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -47,12 +46,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -74,7 +75,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -83,12 +85,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -101,7 +105,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -110,7 +115,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -119,12 +125,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -146,7 +154,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -155,12 +164,50 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
+      "site_count": 3,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        },
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
       ]
     },
     {
@@ -173,7 +220,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -182,12 +230,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -200,7 +250,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -209,12 +260,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -227,7 +280,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -236,12 +290,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -254,7 +310,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -263,12 +320,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -281,7 +340,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -290,12 +350,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -308,7 +370,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -317,12 +380,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -335,7 +400,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -344,12 +410,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -362,7 +430,8 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         },
         {
@@ -371,12 +440,122 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:95c0100d-f959-4342-8ada-fcbbde1184fa",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:b4265525-e011-41b0-a993-d06e6fc91fb1",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:f3b47464-8559-426d-ae85-4dd15cc5ab36",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:f8b747ad-61f7-47d7-b8b5-bdc96a29ce9a",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
       ]
     },
     {
@@ -389,12 +568,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -407,12 +588,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -425,12 +608,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -443,12 +628,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -461,12 +648,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -479,12 +668,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -497,12 +688,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -515,12 +708,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -533,12 +728,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -551,12 +748,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -569,12 +768,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -587,12 +788,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -605,12 +808,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -623,12 +828,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -641,12 +848,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -659,12 +868,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -677,12 +888,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -695,12 +908,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -713,12 +928,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -731,12 +948,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -749,12 +968,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -767,12 +988,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -785,12 +1008,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -803,12 +1028,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -821,12 +1048,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -839,12 +1068,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -857,12 +1088,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -875,12 +1108,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -893,12 +1128,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -911,12 +1148,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -929,12 +1168,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -947,12 +1188,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -965,12 +1208,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -983,12 +1228,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1001,12 +1248,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1019,12 +1268,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1037,12 +1288,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1055,12 +1308,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1073,12 +1328,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1091,12 +1348,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1109,12 +1368,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1127,12 +1388,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1145,12 +1408,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1163,12 +1428,14 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
       ]
     },
     {
@@ -1181,12 +1448,1004 @@
             "jira-software"
           ],
           "sources": [
-            "direct"
+            "direct",
+            "group"
           ]
         }
       ],
       "access_sources": [
-        "direct"
+        "direct",
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:09079bb8-3ffa-49ca-8d82-44d5b8803d25",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:091af781-b284-42eb-aef8-c45ef364e4c8",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:0b972f1a-0e65-4d36-92be-233d13e6d9fb",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:1818f819-69d6-48af-af80-80ed9d6aa968",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:25eab072-55fc-43ec-8604-46f8eae07bb4",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:2a35164b-bddc-4234-a9f0-a1a4a2f38dd4",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:2b2d29a3-f75a-46b8-b2a5-aa627cba18b5",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:2d37241a-cdbc-4754-970d-59a58f845024",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:31a6e2c8-b8aa-447b-8ce1-6d074e475713",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:34715ba4-0832-458f-86ad-4e6770981191",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:3680915e-2163-4460-b067-6a430c97b7ce",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:37c9add3-ae6c-48b9-835e-2704f4e88c50",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:39848a6d-2460-4317-985a-2bdf7b6df869",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:3bfdc65c-8c8d-4df4-ab1a-83bdb873f686",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:3e9f6b9e-3ba9-40d9-87ba-4610d4b9222e",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:424661fd-685e-4f3a-8025-91733ad8297a",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:44d14faa-e9c5-47a1-9044-b4125dc39f62",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:517e85e6-6bee-4b7f-88e0-d0a5cc9803f2",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:52eef3c6-45c7-4c20-83ca-40449c455868",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:54b1509e-0678-4912-8d7f-df224774bf6a",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:573c60d0-ab00-44d9-9760-ca2e10ef35ac",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:5fb6f7a9-916a-4530-a53c-f44424b9c23f",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:60b7ab80-ec73-4c12-a424-c0286a005733",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:6c453bd2-be0d-48ca-85c1-20156926dc2e",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:771bf8e7-280d-4c0d-812f-18a3be7a52e5",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:79b0b4fc-de3d-4876-8e43-99739ff5aa6c",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:7ebaf502-a1b1-453a-9bbc-c0a602d39d38",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:8be0b0b8-d9b0-4f34-b777-041070602b7d",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:9aa1ad13-1d53-4448-9c4d-82aa2a71b7af",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:9cdfb4b2-a8ed-4732-be8a-d1ba41c2e304",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:a10364a6-3af7-4b08-95e6-ab1aa06fd849",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:a2992214-dacd-4f06-a998-0487bb2fff4b",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:a3a2e726-8b4c-4279-8229-24af4ff4e901",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:a3ae965f-a490-484d-afda-0036560a1fe8",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:a4e31cbc-809f-4a74-bdd1-8e9e8406d519",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:a53054f2-911f-4bb9-aecf-868f8aef6fcf",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:a637e624-1e26-4ffc-9acc-5ce93ea8d7c2",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:ad92688b-af26-4d57-b0e0-dd74e35d2c15",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:b0d92f2f-8bf9-494c-988a-2db8b4b6a918",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:b50c4888-42bc-40c4-817b-daea96188c38",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:b7cfccab-c274-42e0-9a6a-adc8f35f6c62",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:b7fcc038-a225-4c0f-97bd-346decea6e00",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:c34981e4-6784-47c1-9a24-437125dabe94",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:c4e1ef45-3025-4dfa-8d58-cb8e3a5755f8",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:c8882688-c37c-431d-ac3d-2416e828c706",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:c9dcb854-cc83-427b-87bc-edd472329170",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:cb410439-a068-4508-bbb3-a79b31a3b5cd",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:cbc1b86c-8a82-4f0c-b15d-73ac1370414f",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:da25c2ce-ed4c-4eea-b392-2d8f4a6a3e7d",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:e1f38c99-d926-4169-a2b0-dc8cb63cbae6",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:ee25c9e9-0009-4093-b52d-e097d3912385",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:ee48ab1a-bd3c-4830-9da7-89960a673638",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:f1a9d02b-dcc1-4448-bb30-1175d7cc174f",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:f2f5142e-b806-477c-8885-de60007ec8ce",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
+      ]
+    },
+    {
+      "account_id": "712020:ff320150-5fd5-49d3-b782-b57debd506d7",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "group"
+          ]
+        }
+      ],
+      "access_sources": [
+        "group"
       ]
     }
   ]
