@@ -1,69 +1,84 @@
 (function () {
-  function number(value) {
-    const parsed = Number(value || 0);
-    return Number.isFinite(parsed) ? parsed : 0;
+  function truth() {
+    return window.TruthGuard || {
+      safeNumber: function (value) {
+        if (value === null || value === undefined || value === '') return null;
+        var parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+      },
+      applyValue: function (id, value, formatter) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (value === null || value === undefined || value === '') {
+          el.textContent = 'DATA UNAVAILABLE';
+          el.classList.add('truth-unavailable');
+          return;
+        }
+        el.textContent = formatter ? formatter(value) : String(value);
+      },
+      applyRatio: function (id, a, b) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (!a || !b || a <= 0) {
+          el.textContent = 'DATA UNAVAILABLE';
+          el.classList.add('truth-unavailable');
+          return;
+        }
+        el.textContent = (b / a).toFixed(2);
+      }
+    };
   }
 
   function formatNumber(value) {
-    return number(value).toLocaleString();
+    return Number(value).toLocaleString();
   }
 
-  function ratioText(humans, seats) {
-    const humanCount = number(humans);
-    const seatCount = number(seats);
-    if (humanCount <= 0 || seatCount <= 0) return '--';
-    return (seatCount / humanCount).toFixed(2);
+  function sourceLine(label) {
+    return '<br><span class="truth-source">Source: ' + label + '</span>';
   }
 
-  function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-  }
+  function statusText(summary) {
+    var guard = truth();
+    var apiUsers = guard.safeNumber(summary.api_product_user_count);
+    var billingSeats = guard.safeNumber(summary.billing_jira_seats);
+    var sitesWithRoles = guard.safeNumber(summary.sites_with_jira_roles);
+    var resources = guard.safeNumber(summary.accessible_jira_resource_count);
 
-  function setSeverityClass(id, humans, seats) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.remove('estate-trust-card__value--warning', 'estate-trust-card__value--critical');
-    const humanCount = number(humans);
-    const seatCount = number(seats);
-    if (humanCount <= 0 || seatCount <= 0) return;
-    const ratio = seatCount / humanCount;
-    if (ratio >= 2) {
-      el.classList.add('estate-trust-card__value--critical');
-    } else if (ratio >= 1.3) {
-      el.classList.add('estate-trust-card__value--warning');
+    if (apiUsers === null || billingSeats === null) {
+      return 'DATA UNAVAILABLE - product/billing comparison source is incomplete.';
     }
+
+    var label = apiUsers === billingSeats ? 'API product access aligned with billing' : 'API product access comparison active';
+    return label + ': ' + formatNumber(apiUsers) + ' API product users, ' + formatNumber(billingSeats) + ' billing seats, ' +
+      (sitesWithRoles === null ? 'DATA UNAVAILABLE' : formatNumber(sitesWithRoles)) + ' of ' +
+      (resources === null ? 'DATA UNAVAILABLE' : formatNumber(resources)) + ' accessible Jira resources confirmed.';
   }
 
   function buildInsight(summary) {
-    const apiUsers = number(summary.api_product_user_count);
-    const humans = number(summary.admin_human_users);
-    const billingSeats = number(summary.billing_jira_seats);
-    const apiRatio = number(summary.api_product_to_human_ratio);
-    const billingRatio = number(summary.billing_to_human_ratio);
-    const resources = number(summary.accessible_jira_resource_count);
-    const sitesWithRoles = number(summary.sites_with_jira_roles);
+    var guard = truth();
+    var apiUsers = guard.safeNumber(summary.api_product_user_count);
+    var humans = guard.safeNumber(summary.admin_human_users);
+    var billingSeats = guard.safeNumber(summary.billing_jira_seats);
+    var resources = guard.safeNumber(summary.accessible_jira_resource_count);
+    var sitesWithRoles = guard.safeNumber(summary.sites_with_jira_roles);
+    var source = 'estate_access_truth.json latest generated snapshot';
 
-    if (apiUsers > 0 && billingSeats > 0 && apiUsers === billingSeats) {
-      return `${formatNumber(humans)} human users are compared against ${formatNumber(billingSeats)} Jira seats. API product access also reports ${formatNumber(apiUsers)} Jira product users, so billing and API product access are aligned at ${billingRatio.toFixed(2)} seats per human. Product access is currently confirmed on ${formatNumber(sitesWithRoles)} of ${formatNumber(resources)} accessible Jira resources.`;
+    if (apiUsers !== null && billingSeats !== null && humans !== null && apiUsers === billingSeats) {
+      var ratio = humans > 0 ? (billingSeats / humans).toFixed(2) : 'DATA UNAVAILABLE';
+      return formatNumber(humans) + ' human users are compared against ' + formatNumber(billingSeats) + ' Jira seats. API product access also reports ' + formatNumber(apiUsers) + ' Jira product users, so billing and API product access are aligned at ' + ratio + ' seats per human. Product access is confirmed on ' + (sitesWithRoles === null ? 'DATA UNAVAILABLE' : formatNumber(sitesWithRoles)) + ' of ' + (resources === null ? 'DATA UNAVAILABLE' : formatNumber(resources)) + ' accessible Jira resources.' + sourceLine(source);
     }
 
-    if (apiUsers > 0 && billingSeats > 0 && apiUsers !== billingSeats) {
-      return `${formatNumber(humans)} human users are compared against ${formatNumber(billingSeats)} billing seats, while API product access reports ${formatNumber(apiUsers)} Jira product users. This indicates a difference between billing and API product-role data that should be reviewed before using product access as final licence truth.`;
+    if (apiUsers !== null && billingSeats !== null && apiUsers !== billingSeats) {
+      return 'API product access reports ' + formatNumber(apiUsers) + ' users while billing reports ' + formatNumber(billingSeats) + ' seats. Review before treating product access as final licence truth.' + sourceLine(source);
     }
 
-    if (billingSeats > 0) {
-      return `${formatNumber(humans)} human users are compared against ${formatNumber(billingSeats)} Jira billing seats (${billingRatio.toFixed(2)} seats per human). API product access is not currently available for the full estate, so billing remains the active licence truth.`;
-    }
-
-    return 'Estate product access truth is not currently available. Billing and API product access values are waiting for source data.';
+    return 'DATA UNAVAILABLE - Estate product access truth is not complete enough to compare billing and API product access.' + sourceLine(source);
   }
 
   function ensureStatusNode(summary) {
-    const root = document.getElementById('estate-trust-intelligence');
+    var root = document.getElementById('estate-trust-intelligence');
     if (!root) return;
-
-    let status = document.getElementById('estate-product-truth-status');
+    var status = document.getElementById('estate-product-truth-status');
     if (!status) {
       status = document.createElement('div');
       status.id = 'estate-product-truth-status';
@@ -77,29 +92,38 @@
       status.style.lineHeight = '1.45';
       root.appendChild(status);
     }
+    status.innerHTML = statusText(summary) + sourceLine('Jira API product roles, latest generated snapshot');
+  }
 
-    const apiUsers = number(summary.api_product_user_count);
-    const billingSeats = number(summary.billing_jira_seats);
-    const sitesWithRoles = number(summary.sites_with_jira_roles);
-    const resources = number(summary.accessible_jira_resource_count);
-    const aligned = apiUsers > 0 && billingSeats > 0 && apiUsers === billingSeats;
-    const label = aligned ? 'API product access aligned with billing' : 'API product access comparison active';
-    status.textContent = `${label}: ${formatNumber(apiUsers)} API product users, ${formatNumber(billingSeats)} billing seats, ${formatNumber(sitesWithRoles)} of ${formatNumber(resources)} accessible Jira resources confirmed.`;
+  function setSeverityClass(id, humans, seats) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('estate-trust-card__value--warning', 'estate-trust-card__value--critical');
+    if (humans === null || seats === null || humans <= 0 || seats <= 0) return;
+    var ratio = seats / humans;
+    if (ratio >= 2) el.classList.add('estate-trust-card__value--critical');
+    else if (ratio >= 1.3) el.classList.add('estate-trust-card__value--warning');
   }
 
   function applyProductTruth(payload) {
-    const summary = payload && payload.summary ? payload.summary : {};
-    const humans = number(summary.admin_human_users);
-    const billingSeats = number(summary.billing_jira_seats);
-    const apiUsers = number(summary.api_product_user_count);
-    const effectiveSeats = billingSeats || apiUsers;
+    var guard = truth();
+    var summary = payload && payload.summary ? payload.summary : null;
+    if (!summary) {
+      ensureStatusNode({});
+      return;
+    }
 
-    if (humans > 0) setText('estate-trust-human-users', formatNumber(humans));
-    if (effectiveSeats > 0) setText('estate-trust-jira-seats', formatNumber(effectiveSeats));
-    if (humans > 0 && effectiveSeats > 0) setText('estate-trust-seat-ratio', ratioText(humans, effectiveSeats));
+    var humans = guard.safeNumber(summary.admin_human_users);
+    var billingSeats = guard.safeNumber(summary.billing_jira_seats);
+    var apiUsers = guard.safeNumber(summary.api_product_user_count);
+    var effectiveSeats = billingSeats !== null ? billingSeats : apiUsers;
 
-    const insight = document.getElementById('estate-trust-insight');
-    if (insight) insight.textContent = buildInsight(summary);
+    guard.applyValue('estate-trust-human-users', humans, formatNumber);
+    guard.applyValue('estate-trust-jira-seats', effectiveSeats, formatNumber);
+    guard.applyRatio('estate-trust-seat-ratio', humans, effectiveSeats);
+
+    var insight = document.getElementById('estate-trust-insight');
+    if (insight) insight.innerHTML = buildInsight(summary);
 
     setSeverityClass('estate-trust-jira-seats', humans, effectiveSeats);
     setSeverityClass('estate-trust-seat-ratio', humans, effectiveSeats);
@@ -107,7 +131,7 @@
   }
 
   function init() {
-    const root = document.getElementById('estate-trust-intelligence');
+    var root = document.getElementById('estate-trust-intelligence');
     if (!root) return;
 
     fetch('/static/data/estate_access_truth.json', { cache: 'no-store' })
@@ -117,13 +141,10 @@
       })
       .then(applyProductTruth)
       .catch(function () {
-        // Leave existing billing binding in place if product truth is not available.
+        applyProductTruth(null);
       });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();

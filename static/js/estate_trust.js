@@ -1,89 +1,124 @@
 (function () {
+  function truth() {
+    return window.TruthGuard || {
+      safeNumber: function (value) {
+        if (value === null || value === undefined || value === '') return null;
+        var parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+      },
+      applyValue: function (id, value, formatter) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (value === null || value === undefined || value === '') {
+          el.textContent = 'DATA UNAVAILABLE';
+          el.classList.add('truth-unavailable');
+          return;
+        }
+        el.textContent = formatter ? formatter(value) : String(value);
+      },
+      applyRatio: function (id, a, b) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (!a || !b || a <= 0) {
+          el.textContent = 'DATA UNAVAILABLE';
+          el.classList.add('truth-unavailable');
+          return;
+        }
+        el.textContent = (b / a).toFixed(2);
+      }
+    };
+  }
+
   function formatNumber(value) {
-    const number = Number(value || 0);
-    if (!Number.isFinite(number)) return '0';
-    return number.toLocaleString();
+    return Number(value).toLocaleString();
   }
 
-  function ratioText(humans, seats) {
-    if (!humans || humans <= 0 || !seats || seats <= 0) return '--';
-    return (seats / humans).toFixed(2);
+  function setSeverityClass(id, humans, seats) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('estate-trust-card__value--warning', 'estate-trust-card__value--critical');
+    if (humans === null || seats === null || humans <= 0 || seats <= 0) return;
+    var ratio = seats / humans;
+    if (ratio >= 2) el.classList.add('estate-trust-card__value--critical');
+    else if (ratio >= 1.3) el.classList.add('estate-trust-card__value--warning');
   }
 
-  function insightText(humans, seats, totalIdentities, seatSites, sourceLabel) {
-    const sourceText = sourceLabel ? ` Source: ${sourceLabel}.` : '';
-    if (!humans || humans <= 0) {
-      return `Human-user identity truth is not currently available, so Estate cannot compare seat usage against the real user baseline.${sourceText}`;
-    }
-    if (!seats || seats <= 0) {
-      return `Jira seat usage is not currently available for the monitored Estate. The trust layer is ready, but the seat comparison is waiting for billing-seat inputs.${sourceText}`;
-    }
-    const ratio = seats / humans;
-    const ratioDisplay = ratio.toFixed(2);
-    const siteText = seatSites && seatSites > 0 ? ` across ${formatNumber(seatSites)} monitored Jira site${seatSites === 1 ? '' : 's'}` : '';
-    const identityText = totalIdentities && totalIdentities > 0 ? ` Estate identity enrichment is currently surfacing ${formatNumber(totalIdentities)} total organisation identities.` : '';
+  function sourceLine(label) {
+    return '<br><span class="truth-source">Source: ' + label + '</span>';
+  }
+
+  function buildInsight(totalIdentities, humanUsers, jiraSeats, seatSites, sourceLabel) {
+    var source = sourceLabel || 'Estate runtime context';
+    if (humanUsers === null) return 'Human-user identity truth is unavailable.' + sourceLine(source);
+    if (jiraSeats === null) return 'Jira seat usage is unavailable for the monitored Estate.' + sourceLine(source);
+    if (humanUsers <= 0) return 'Human-user baseline is zero or unavailable, so seat ratio cannot be trusted.' + sourceLine(source);
+
+    var ratio = jiraSeats / humanUsers;
+    var siteText = seatSites !== null && seatSites > 0 ? ' across ' + formatNumber(seatSites) + ' monitored Jira site' + (seatSites === 1 ? '' : 's') : '';
+    var identityText = totalIdentities !== null ? ' Estate identity enrichment is currently surfacing ' + formatNumber(totalIdentities) + ' total organisation identities.' : '';
+
     if (ratio >= 2) {
-      return `${formatNumber(humans)} human users hold ${formatNumber(seats)} Jira seats${siteText}, creating a ${ratioDisplay} seats-per-human ratio. This indicates high multi-site access duplication and potential licence inefficiency.${identityText}${sourceText}`;
+      return formatNumber(humanUsers) + ' human users hold ' + formatNumber(jiraSeats) + ' Jira seats' + siteText + ', creating a ' + ratio.toFixed(2) + ' seats-per-human ratio. This indicates high multi-site access duplication.' + identityText + sourceLine(source);
     }
     if (ratio >= 1.3) {
-      return `${formatNumber(humans)} human users hold ${formatNumber(seats)} Jira seats${siteText}, creating a ${ratioDisplay} seats-per-human ratio. This indicates moderate multi-site overlap that should be reviewed before expanding licence coverage.${identityText}${sourceText}`;
+      return formatNumber(humanUsers) + ' human users hold ' + formatNumber(jiraSeats) + ' Jira seats' + siteText + ', creating a ' + ratio.toFixed(2) + ' seats-per-human ratio. This indicates moderate multi-site overlap.' + identityText + sourceLine(source);
     }
-    return `${formatNumber(humans)} human users hold ${formatNumber(seats)} Jira seats${siteText}, creating a ${ratioDisplay} seats-per-human ratio. Seat usage is currently close to the human-user baseline.${identityText}${sourceText}`;
-  }
-
-  function applySeverityClass(target, humans, seats) {
-    if (!target) return;
-    target.classList.remove('estate-trust-card__value--warning', 'estate-trust-card__value--critical');
-    if (!humans || humans <= 0 || !seats || seats <= 0) return;
-    const ratio = seats / humans;
-    if (ratio >= 2) target.classList.add('estate-trust-card__value--critical');
-    else if (ratio >= 1.3) target.classList.add('estate-trust-card__value--warning');
+    return formatNumber(humanUsers) + ' human users hold ' + formatNumber(jiraSeats) + ' Jira seats' + siteText + ', creating a ' + ratio.toFixed(2) + ' seats-per-human ratio.' + identityText + sourceLine(source);
   }
 
   function renderEstateTrust(values) {
-    const totalIdentities = Number(values.totalIdentities || 0);
-    const humanUsers = Number(values.humanUsers || 0);
-    const jiraSeats = Number(values.jiraSeats || 0);
-    const seatSites = Number(values.seatSites || 0);
-    const sourceLabel = values.sourceLabel || '';
-    const totalEl = document.getElementById('estate-trust-total-identities');
-    const humanEl = document.getElementById('estate-trust-human-users');
-    const seatsEl = document.getElementById('estate-trust-jira-seats');
-    const ratioEl = document.getElementById('estate-trust-seat-ratio');
-    const insightEl = document.getElementById('estate-trust-insight');
-    if (totalEl) totalEl.textContent = formatNumber(totalIdentities);
-    if (humanEl) humanEl.textContent = formatNumber(humanUsers);
-    if (seatsEl) seatsEl.textContent = jiraSeats === 0 ? '--' : formatNumber(jiraSeats);
-    if (ratioEl) ratioEl.textContent = ratioText(humanUsers, jiraSeats);
-    if (insightEl) insightEl.textContent = insightText(humanUsers, jiraSeats, totalIdentities, seatSites, sourceLabel);
-    applySeverityClass(ratioEl, humanUsers, jiraSeats);
-    applySeverityClass(seatsEl, humanUsers, jiraSeats);
+    var guard = truth();
+    var totalIdentities = guard.safeNumber(values.totalIdentities);
+    var humanUsers = guard.safeNumber(values.humanUsers);
+    var jiraSeats = guard.safeNumber(values.jiraSeats);
+    var seatSites = guard.safeNumber(values.seatSites);
+    var sourceLabel = values.sourceLabel || 'Estate runtime context';
+
+    guard.applyValue('estate-trust-total-identities', totalIdentities, formatNumber);
+    guard.applyValue('estate-trust-human-users', humanUsers, formatNumber);
+    guard.applyValue('estate-trust-jira-seats', jiraSeats, formatNumber);
+    guard.applyRatio('estate-trust-seat-ratio', humanUsers, jiraSeats);
+
+    var insight = document.getElementById('estate-trust-insight');
+    if (insight) insight.innerHTML = buildInsight(totalIdentities, humanUsers, jiraSeats, seatSites, sourceLabel);
+
+    setSeverityClass('estate-trust-jira-seats', humanUsers, jiraSeats);
+    setSeverityClass('estate-trust-seat-ratio', humanUsers, jiraSeats);
   }
 
   function initEstateTrust() {
-    const root = document.getElementById('estate-trust-intelligence');
+    var root = document.getElementById('estate-trust-intelligence');
     if (!root) return;
-    const baseValues = {
-      totalIdentities: Number(root.dataset.totalIdentities || 0),
-      humanUsers: Number(root.dataset.humanUsers || 0),
-      jiraSeats: Number(root.dataset.jiraSeats || 0),
-      seatSites: Number(root.dataset.seatSites || 0),
-      sourceLabel: 'Estate runtime context'
+
+    var baseValues = {
+      totalIdentities: root.dataset.totalIdentities,
+      humanUsers: root.dataset.humanUsers,
+      jiraSeats: root.dataset.jiraSeats,
+      seatSites: root.dataset.seatSites,
+      sourceLabel: 'Estate runtime context from latest collector render'
     };
+
     renderEstateTrust(baseValues);
+
     fetch('/static/data/billing_seats.json', { cache: 'no-store' })
-      .then(function (response) { if (!response.ok) throw new Error('billing_seats.json unavailable'); return response.json(); })
+      .then(function (response) {
+        if (!response.ok) throw new Error('billing_seats.json unavailable');
+        return response.json();
+      })
       .then(function (payload) {
         renderEstateTrust({
           totalIdentities: baseValues.totalIdentities,
           humanUsers: baseValues.humanUsers,
-          jiraSeats: Number(payload.total_jira_seats || 0),
-          seatSites: Number(payload.jira_site_count || 0),
-          sourceLabel: payload.source || 'billing_catalog.py static billing snapshot'
+          jiraSeats: payload.total_jira_seats,
+          seatSites: payload.jira_site_count,
+          sourceLabel: (payload.source || 'billing_seats.json') + ' snapshot'
         });
       })
-      .catch(function () { renderEstateTrust(baseValues); });
+      .catch(function () {
+        renderEstateTrust(baseValues);
+      });
   }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initEstateTrust);
   else initEstateTrust();
 })();
