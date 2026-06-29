@@ -1,0 +1,57 @@
+{
+  "schema": "jom-named-access-recovery-status-v1",
+  "generated_at_utc": "2026-06-29T11:50:22.297991Z",
+  "overall_status": "ok",
+  "safe_to_enable_named_access_ui": false,
+  "reconciliation_status": "blocked",
+  "steps": [
+    {
+      "key": "named_access_truth_v2",
+      "label": "Build Named Access Truth v2",
+      "script": "scripts/build_named_access_truth_v2.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T11:50:22.090713Z",
+      "finished_at_utc": "2026-06-29T11:50:22.144996Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"source_status\": \"incomplete\",\n  \"safe\": false,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\named_access_truth_v2.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "named_access_reconciliation_v2",
+      "label": "Reconcile Named Access Truth v2",
+      "script": "scripts/reconcile_named_access_truth_v2.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T11:50:22.145080Z",
+      "finished_at_utc": "2026-06-29T11:50:22.194350Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"safe\": false,\n  \"status\": \"blocked\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_reconciliation_v2.json\",\n  \"report\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_recovery_implementation.md\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "user_footprint_guard",
+      "label": "Rebuild guarded user footprint source",
+      "script": "scripts/build_user_footprint_source.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T11:50:22.194429Z",
+      "finished_at_utc": "2026-06-29T11:50:22.247419Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"source_status\": \"unavailable\",\n  \"safe\": false,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\static\\\\data\\\\user_footprint.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_reliability",
+      "label": "Rebuild source reliability",
+      "script": "scripts/source_reliability_audit.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T11:50:22.247496Z",
+      "finished_at_utc": "2026-06-29T11:50:22.297441Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"issue_count\": 1,\n  \"freshness_overall\": \"OK\",\n  \"runtime_refresh_overall\": \"ok\",\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_reliability_status.json\n",
+      "stderr_tail": ""
+    }
+  ]
+}

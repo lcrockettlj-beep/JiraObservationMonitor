@@ -1,0 +1,8 @@
+﻿{
+  "schema": "jom-admin-group-expansion-v1",
+  "generated_at_utc": null,
+  "source_status": "unavailable",
+  "safe_to_use_for_named_access": false,
+  "reason": "Group-derived product access expansion has not been collected yet. This file is a guard source, not entitlement truth.",
+  "groups": []
+}

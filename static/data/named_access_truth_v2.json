@@ -1,0 +1,1193 @@
+{
+  "schema": "jom-named-access-truth-v2",
+  "generated_at_utc": "2026-06-29T11:50:22.138791Z",
+  "source_status": "incomplete",
+  "safe_to_enable_named_access_ui": false,
+  "reason": "Named access truth v2 is not safe until direct + group-derived assignments reconcile to billing/API product counts.",
+  "sources": {
+    "direct_named_access": "static\\data\\admin_named_access.json",
+    "group_expansion": "static\\data\\admin_group_expansion.json",
+    "site_registry": "static\\data\\site_registry.json"
+  },
+  "summary": {
+    "unique_users": 57,
+    "total_product_access_assignments": 73,
+    "group_expansion_safe": false,
+    "warning_count": 1
+  },
+  "warnings": [
+    "Group-derived access expansion is unavailable or not safe_to_use_for_named_access. Named access truth v2 remains incomplete."
+  ],
+  "users": [
+    {
+      "account_id": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",
+      "site_count": 3,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:205f5205-4f26-48ff-85fe-22c22f46f04e",
+      "site_count": 3,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5b1539719595132534bc28a4",
+      "site_count": 3,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5d42dad4f764920da7cccbd3",
+      "site_count": 3,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:c6ec4742-681f-4743-bde1-2d3d8e055b6a",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5a9d73cd7cbc742a5c1deda0",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c867a42bd78bf5ae58d1726",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c8696b05db2976adad45256",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5d13ed74b7ebec0c5dbc7de3",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "616701a307ac3c0068913946",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "621fca7f49c90000701f5cf5",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "640f54de2cee496759e9ca64",
+      "site_count": 2,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        },
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:03dda04d-391e-41ad-baa9-f7d28994695b",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:0e422967-609b-44b6-a414-2e9e2234117e",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:4253fc48-cab4-4928-94fb-8974d8e5f77b",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:4c73fb68-9d2f-4fa9-aa05-825947a73306",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:5ad427cb-ee2d-4d54-892b-a4a0531990ec",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:7a80202a-6bba-4d09-bb81-002d0355d377",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:7fa9052b-e30b-4ebf-aa57-caaed9511cab",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:af546d80-a2b0-4844-91bc-bea782420c57",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "557058:f7c0a677-cb62-4990-81f2-7a684c278256",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5a9d73f0c164262a8392ae11",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5aeb1ccf91bc312e6a4ac202",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5b7c44319e14d92a56be45d8",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c867a5b3bee527de33cbb92",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c867aca88f9ec6ae0afabcf",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c867ae45db2976adad4515f",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c867b46ee8793790affe42f",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c867b68f63c96739fd921e6",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c86958ba329a40b8555bdc0",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c8699380c61c37ea81dcea8",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c86995186c36970e81298b1",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c8699979d7fc173a5952b64",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-delivery-tm",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5c98b2d038f7806371d15a16",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5d387eaef8be2f0c20bb7d8f",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5df79618336e9e0cad168e00",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5e3d91953f647d0c99d826ee",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "5ec6cd2c3434a20c34a883c8",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "60dc3c2a22c0920071aa2e86",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "60dc69db1613d50069d35c5a",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "60e41471c0db53006aa8e93d",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "61659125198b4f0068dd01d6",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "6168c27e2f6aed00683dcd6d",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "61a4f0a36d002b006bc29dde",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "61df7f1ae67ea2006b42bda9",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "61f3c908875fc100705a2ba9",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "621e03d5a12450006886adae",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "62962f2d2eafc9006eebc736",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "630e318ab433b060db555ea1",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "63735807fde064eda2ec1d04",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "63d8e047fb75f8568f5ee9cd",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "63dcd8eb790148a180951d19",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-it-project",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    },
+    {
+      "account_id": "63fdcbee81de11a1adf93df8",
+      "site_count": 1,
+      "sites": [
+        {
+          "site_key": "gli-global-technology",
+          "products": [
+            "jira-software"
+          ],
+          "sources": [
+            "direct"
+          ]
+        }
+      ],
+      "access_sources": [
+        "direct"
+      ]
+    }
+  ]
+}
