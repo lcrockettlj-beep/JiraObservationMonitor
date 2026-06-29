@@ -1,25 +1,14 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-06-29T12:33:57.707821Z",
-  "overall_status": "attention",
+  "generated_at_utc": "2026-06-29T12:39:50.705588Z",
+  "overall_status": "ok",
   "summary": {
-    "issue_count": 2,
-    "freshness_overall": "ATTENTION",
+    "issue_count": 0,
+    "freshness_overall": "OK",
     "runtime_refresh_overall": "ok",
     "user_footprint_status": "generated"
   },
-  "issues": [
-    {
-      "source": "Estate Product Access",
-      "state": "STALE SNAPSHOT",
-      "path": "static/data/estate_product_access.json"
-    },
-    {
-      "source": "Estate Access Truth",
-      "state": "STALE SNAPSHOT",
-      "path": "static/data/estate_access_truth.json"
-    }
-  ],
+  "issues": [],
   "inputs": {
     "source_freshness": "static\\data\\source_freshness_audit.json",
     "runtime_refresh": "static\\data\\runtime_refresh_status.json",

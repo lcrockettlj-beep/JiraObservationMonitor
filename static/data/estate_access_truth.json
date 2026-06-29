@@ -1,6 +1,6 @@
 {
   "source": "Derived from estate_product_access.json plus admin/billing summaries where available",
-  "generated_at_utc": "2026-06-26T11:05:07Z",
+  "generated_at_utc": "2026-06-29T12:39:50Z",
   "schema": "jom-estate-access-truth-v1",
   "summary": {
     "api_product_user_count": 139,
