@@ -1,0 +1,19 @@
+.source-reliability-dashboard {
+  margin: 0 auto 20px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.032);
+  border: 1px solid rgba(90,194,255,0.16);
+}
+.source-reliability-dashboard__head { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:10px; }
+.source-reliability-dashboard__head strong { display:block; letter-spacing:.08em; text-transform:uppercase; }
+.source-reliability-dashboard__head span { display:block; color:var(--muted); font-size:12px; margin-top:3px; }
+.source-reliability-dashboard__head b { border-radius:999px; padding:7px 10px; font-size:12px; white-space:nowrap; }
+.source-reliability-dashboard__body { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:8px; }
+.source-reliability-issue { display:flex; justify-content:space-between; gap:12px; padding:10px 12px; border-radius:14px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08); }
+.source-reliability-issue span { font-weight:700; overflow-wrap:anywhere; }
+.source-reliability-issue small { display:block; color:var(--muted); font-weight:500; margin-top:4px; line-height:1.35; }
+.source-reliability-issue b { color:#ffb300; font-size:12px; white-space:nowrap; }
+.source-reliability--ok .source-reliability-dashboard__head b, .source-reliability-issue--ok b { color:#00ff88; background:rgba(0,255,136,.08); }
+.source-reliability--review .source-reliability-dashboard__head b { color:#ffb300; background:rgba(255,179,0,.08); }
+.source-reliability--attention .source-reliability-dashboard__head b { color:#ff4d4f; background:rgba(255,77,79,.08); }

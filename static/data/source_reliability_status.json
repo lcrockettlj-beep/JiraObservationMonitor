@@ -1,0 +1,30 @@
+{
+  "schema": "jom-source-reliability-status-v1.1",
+  "generated_at_utc": "2026-06-29T09:08:19.503814Z",
+  "overall_status": "attention",
+  "summary": {
+    "issue_count": 2,
+    "freshness_overall": "ATTENTION",
+    "runtime_refresh_overall": "ok",
+    "user_footprint_status": "unavailable"
+  },
+  "issues": [
+    {
+      "source": "Latest Admin Enriched Run",
+      "state": "STALE SNAPSHOT",
+      "path": "latest_run_admin_enriched.json"
+    },
+    {
+      "source": "User Footprint",
+      "state": "GUARDED UNAVAILABLE",
+      "path": "static/data/user_footprint.json",
+      "reason": "Named access source exists but reconciliation says safe_to_enable_named_access_ui=false. Named footprint remains unavailable."
+    }
+  ],
+  "inputs": {
+    "source_freshness": "static\\data\\source_freshness_audit.json",
+    "runtime_refresh": "static\\data\\runtime_refresh_status.json",
+    "user_footprint": "static\\data\\user_footprint.json",
+    "site_registry": "static\\data\\site_registry.json"
+  }
+}

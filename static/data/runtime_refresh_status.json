@@ -1,0 +1,58 @@
+{
+  "schema": "jom-runtime-refresh-status-v1.1",
+  "generated_at_utc": "2026-06-29T09:08:19.337113Z",
+  "overall_status": "ok",
+  "run_collector_requested": false,
+  "steps": [
+    {
+      "key": "site_registry",
+      "label": "Site Registry rebuild",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_site_registry.py --project-root .",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:08:19.191385Z",
+      "finished_at_utc": "2026-06-29T09:08:19.277903Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "Site registry generated.\n{\n  \"total_sites\": 7,\n  \"monitored_count\": 3,\n  \"discovered_count\": 4,\n  \"ignored_count\": 0,\n  \"pending_onboarding_count\": 0\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\site_registry.json\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_freshness",
+      "label": "Source Freshness rebuild",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
+      "exists": true,
+      "started_at_utc": "2026-06-29T09:08:19.277976Z",
+      "finished_at_utc": "2026-06-29T09:08:19.333133Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 4,\n    \"AGING\": 3,\n    \"STALE\": 1,\n    \"MISSING\": 0,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_freshness_audit.json\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "runtime_collector",
+      "label": "Runtime collector",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe data_collector.py",
+      "exists": true,
+      "run_requested": false,
+      "status": "ok",
+      "started_at_utc": null,
+      "finished_at_utc": "2026-06-29T09:08:19.337103Z",
+      "returncode": null,
+      "stdout_tail": "",
+      "stderr_tail": "",
+      "note": "Runtime collector not requested, but latest_run.json is CURRENT; treating runtime source as refreshed.",
+      "latest_run_freshness": {
+        "exists": true,
+        "freshness_state": "CURRENT",
+        "age_hours": 0.06,
+        "timestamp": "2026-06-29T09:04:47Z"
+      },
+      "latest_admin_enriched_freshness": {
+        "exists": true,
+        "freshness_state": "STALE",
+        "age_hours": 97.41,
+        "timestamp": "2026-06-25T07:43:36Z"
+      }
+    }
+  ]
+}
