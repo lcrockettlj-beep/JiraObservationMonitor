@@ -13,18 +13,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_product_access_breakdown.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estate_footprint_guard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_truth_v2_binding.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_registry.css') }}">
 </head>
 <body>
 <div class="page">
     {% include "_nav.html" %}
     {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
+    {% set registry_summary = registry_summary or {} %}
+    {% set registry_monitored_total = registry_summary.monitored_count or (registry_monitored_sites|length if registry_monitored_sites else 0) %}
+    {% set registry_discovered_total = registry_summary.discovered_count or (registry_discovered_sites|length if registry_discovered_sites else 0) %}
+    {% set registry_review_total = registry_discovered_total + (registry_summary.pending_onboarding_count or 0) %}
     {% set critical_total = critical_sites|length if critical_sites else 0 %}
     {% set warning_total = warning_sites|length if warning_sites else 0 %}
     {% set stable_total = stable_sites|length if stable_sites else 0 %}
-    {% set tracked_total = discovery_summary.tracked_site_count if discovery_summary else 0 %}
-    {% set excluded_total = discovery_summary.excluded_site_count if discovery_summary else 0 %}
-    {% set discovered_total = discovery_summary.discovered_site_count if discovery_summary else 0 %}
-    {% set review_total = discovery_summary.new_site_candidate_count if discovery_summary else 0 %}
+    {% set tracked_total = registry_monitored_total or (discovery_summary.tracked_site_count if discovery_summary else 0) %}
+    {% set excluded_total = registry_discovered_total or (discovery_summary.excluded_site_count if discovery_summary else 0) %}
+    {% set discovered_total = (registry_monitored_total + registry_discovered_total) if (registry_monitored_total or registry_discovered_total) else (discovery_summary.discovered_site_count if discovery_summary else 0) %}
+    {% set review_total = registry_review_total or (discovery_summary.new_site_candidate_count if discovery_summary else 0) %}
     {% set watchlist_total = critical_total + warning_total %}
     {% set prioritised_sites = (critical_sites or []) + (warning_sites or []) + (stable_sites or []) %}
     {% set trust = namespace(jira_seats=0, seat_sites=0) %}
@@ -66,7 +71,7 @@
             </div>
             <div class="estate-hero__actions">
                 <a href="/reference" class="estate-hero__orb">Admin area</a>
-                <a href="/estate#discovery-overview" class="estate-hero__orb estate-hero__orb--wide">Discovery overview</a>
+                <a href="/reference" class="estate-hero__orb estate-hero__orb--wide">Discovery control</a>
             </div>
         </div>
     </section>
@@ -81,7 +86,7 @@
             </div>
         </div>
         <div class="estate-grid estate-grid--registry">
-            <div class="estate-discovery-note signal-border" role="note"><div class="estate-discovery-note__title">Discovery drilldowns are paused</div><div class="estate-discovery-note__body">The older /detail/discovery routes remain under review. These cards now stay within Estate so operators can keep context while the dedicated discovery surface is rebuilt.</div></div>
+            <div class="estate-discovery-note signal-border" role="note"><div class="estate-discovery-note__title">Discovery control lives in Admin</div><div class="estate-discovery-note__body">Estate shows monitored operational scope only. Discovered resources are visible for summary context here, but approval and onboarding control live in Admin.</div></div>
             <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="tracked_sites"><div class="estate-title">Sites monitored</div><div class="estate-value">{{ tracked_total or 0 }}</div><div class="estate-sub">Operational Jira sites currently in scope.</div></a>
             <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="excluded_sites"><div class="estate-title">Sites excluded</div><div class="estate-value">{{ excluded_total or 0 }}</div><div class="estate-sub">Sites identified but currently outside monitoring scope.</div></a>
             <a href="/estate#discovery-overview" class="estate-card signal-border estate-card--legacy-paused" data-discovery-target="all_sites"><div class="estate-title">Sites discovered</div><div class="estate-value">{{ discovered_total or 0 }}</div><div class="estate-sub">Combined view of tracked and excluded sites.</div></a>
@@ -242,7 +247,6 @@
 <script src="{{ url_for('static', filename='js/estate_footprint.js') }}"></script>
 <script src="{{ url_for('static', filename='js/estate_product_access_breakdown.js') }}"></script>
 <script src="{{ url_for('static', filename='js/admin_truth_v2_binding.js') }}"></script>
-<script src="{{ url_for('static', filename='js/home_estate_scope_guard.js') }}"></script>
 </body>
 </html>
 

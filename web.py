@@ -171,6 +171,82 @@ def _runtime_unavailable_payload(reason, source_file=None):
     }
 
 
+
+# ============================================================
+# JOM registry truth helpers - Home/Estate source-level scope
+# ============================================================
+def _registry_norm(value):
+    text = str(value or "").strip().lower()
+    if text.startswith("https://"):
+        text = text[len("https://"):]
+    if text.startswith("http://"):
+        text = text[len("http://"):]
+    text = text.split("/")[0]
+    if text.endswith(".atlassian.net"):
+        text = text[:-len(".atlassian.net")]
+    return text.rstrip("/")
+
+
+def _registry_tokens_for_site(site):
+    if not isinstance(site, dict):
+        return set()
+    keys = ["site", "site_key", "cloud_id", "site_name", "name", "url", "site_url", "base_url"]
+    tokens = set()
+    for key in keys:
+        value = site.get(key)
+        if value:
+            tokens.add(_registry_norm(value))
+    aliases = site.get("aliases")
+    if isinstance(aliases, list):
+        for alias in aliases:
+            if alias:
+                tokens.add(_registry_norm(alias))
+    return {token for token in tokens if token}
+
+
+def _load_registry_truth():
+    try:
+        from backend.site_registry_runtime import build_registry
+        registry = build_registry(BASE_DIR)
+        if isinstance(registry, dict):
+            return registry
+    except Exception as exc:
+        print(f"JOM registry truth load failed: {exc}")
+    return {"summary": {}, "sites": []}
+
+
+def _apply_registry_scope_to_runtime_data(data):
+    """
+    Source-level Home/Estate guardrail.
+
+    Runtime success is not monitoring approval. A site is operational only when
+    site_registry classification == monitored. Discovered sites remain visible
+    through registry context, but are removed from operational site groupings.
+    """
+    registry = _load_registry_truth()
+    registry_sites = registry.get("sites", []) if isinstance(registry.get("sites"), list) else []
+    monitored_registry_sites = [s for s in registry_sites if s.get("classification") == "monitored"]
+    discovered_registry_sites = [s for s in registry_sites if s.get("classification") == "discovered"]
+
+    monitored_tokens = set()
+    for site in monitored_registry_sites:
+        monitored_tokens.update(_registry_tokens_for_site(site))
+
+    runtime_sites = data.get("sites", []) if isinstance(data.get("sites"), list) else []
+    scoped_sites = []
+    for site in runtime_sites:
+        site_tokens = _registry_tokens_for_site(site)
+        if site_tokens and site_tokens.intersection(monitored_tokens):
+            site["registry_classification"] = "monitored"
+            scoped_sites.append(site)
+
+    data["sites"] = scoped_sites
+    data["site_registry"] = registry
+    data["registry_monitored_sites"] = monitored_registry_sites
+    data["registry_discovered_sites"] = discovered_registry_sites
+    data["registry_summary"] = registry.get("summary", {}) if isinstance(registry.get("summary"), dict) else {}
+    return data
+
 def _finalise_data(data, *, source_file=None):
     data = data if isinstance(data, dict) else {}
     data["sites"] = _coerce_sites(data)
@@ -192,6 +268,7 @@ def _finalise_data(data, *, source_file=None):
     data["historical_trends"] = historical_trends
     data["sites"] = _merge_historical_trends(data.get("sites", []), historical_trends)
 
+    data = _apply_registry_scope_to_runtime_data(data)
     snapshot_index = load_snapshot_index()
     latest_snapshot_entry = get_latest_snapshot_entry()
     latest_snapshot = load_latest_snapshot()
@@ -431,6 +508,10 @@ def _common_template_data(data):
         "billing_summary": data.get("billing_summary", {}),
         "change_detection": data.get("change_detection", {}),
         "site_discovery": data.get("site_discovery", {}),
+        "site_registry": data.get("site_registry", {}),
+        "registry_summary": data.get("registry_summary", {}),
+        "registry_monitored_sites": data.get("registry_monitored_sites", []),
+        "registry_discovered_sites": data.get("registry_discovered_sites", []),
         "project_intelligence": data.get("project_intelligence", {}),
         "historical_trends": data.get("historical_trends", {}),
         "snapshot_index": data.get("snapshot_index", {}),

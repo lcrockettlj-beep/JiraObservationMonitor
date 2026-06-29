@@ -8,11 +8,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tiles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_registry.css') }}">
 </head>
 <body>
 <div class="page">
     {% include "_nav.html" %}
     {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
+    {% set registry_summary = registry_summary or {} %}
+    {% set registry_discovered_total = registry_summary.discovered_count or (registry_discovered_sites|length if registry_discovered_sites else 0) %}
+    {% set registry_monitored_total = registry_summary.monitored_count or (registry_monitored_sites|length if registry_monitored_sites else 0) %}
     {% set snapshot_meta = latest_snapshot.get("snapshot_meta", {}) if latest_snapshot else {} %}
     {% set latest_snapshot_timestamp =
         snapshot_meta.get("snapshot_timestamp")
@@ -24,9 +28,9 @@
     {% set critical_count = critical_sites|length if critical_sites else 0 %}
     {% set warning_count = warning_sites|length if warning_sites else 0 %}
     {% set stable_count = stable_sites|length if stable_sites else 0 %}
-    {% set tracked_total = discovery_summary.tracked_site_count or 0 %}
+    {% set tracked_total = registry_monitored_total or discovery_summary.tracked_site_count or 0 %}
     {% set excluded_total = discovery_summary.excluded_site_count or 0 %}
-    {% set discovered_total = discovery_summary.discovered_site_count or 0 %}
+    {% set discovered_total = (registry_monitored_total + registry_discovered_total) if (registry_monitored_total or registry_discovered_total) else discovery_summary.discovered_site_count or 0 %}
     {% set users_total = users_row_count or 0 %}
     {% set managed_total = managed_row_count or 0 %}
     {% set attention_total =
@@ -291,10 +295,43 @@
     {% if critical_sites %}<div id="critical-sites"></div>{{ site_section('Critical Sites', 'Sites requiring immediate attention based on current status.', critical_sites, 'critical') }}{% endif %}
     {% if warning_sites %}<div id="warning-sites"></div>{{ site_section('Warning Sites', 'Sites showing early warning signs or potential risk.', warning_sites, 'warning') }}{% endif %}
     <div id="stable-sites"></div>{{ site_section('Stable Sites', 'Sites operating normally and within expected limits.', stable_sites, 'stable') }}
+
+    <section class="site-registry-panel site-registry-panel--discovery" id="home-site-discovery-source">
+        <div class="site-registry-head">
+            <div>
+                <h2>Discovered Sites Awaiting Review</h2>
+                <p>These Jira resources were discovered from Atlassian Admin/Billing/runtime signals but are not monitored until approved from Admin.</p>
+            </div>
+            <div class="site-registry-summary">
+                <span>Discovered <b>{{ registry_discovered_sites|length if registry_discovered_sites else 0 }}</b></span>
+                <span>Pending onboarding <b>{{ registry_summary.pending_onboarding_count or 0 }}</b></span>
+            </div>
+        </div>
+        {% if registry_discovered_sites %}
+        <div class="site-registry-table-wrap">
+            <table class="site-registry-table">
+                <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th></tr></thead>
+                <tbody>
+                    {% for registry_site in registry_discovered_sites %}
+                    <tr>
+                        <td><strong>{{ registry_site.site_name or registry_site.site_key or registry_site.cloud_id }}</strong><small>{{ registry_site.site_key or '' }}</small></td>
+                        <td>{{ registry_site.site_url or registry_site.cloud_id or 'Unknown' }}</td>
+                        <td><span class="site-registry-badge site-registry-badge--discovered">Discovered</span></td>
+                        <td>{{ registry_site.collector_onboarding_status or 'not_requested' }}</td>
+                        <td>{% set signals = [] %}{% if registry_site.metrics and registry_site.metrics.jira_product_user_count is not none %}{% set _ = signals.append('Product users: ' ~ registry_site.metrics.jira_product_user_count) %}{% endif %}{% if registry_site.metrics and registry_site.metrics.named_access_count is not none %}{% set _ = signals.append('Named direct: ' ~ registry_site.metrics.named_access_count) %}{% endif %}{% if registry_site.sources %}{% set _ = signals.append('Sources: ' ~ registry_site.sources|join(', ')) %}{% endif %}{{ signals|join(' | ') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="site-registry-note">No discovered Jira resources are waiting for approval.</p>
+        {% endif %}
+        <p class="site-registry-note">Approval is controlled from Admin. Approved sites enter pending collector validation before they are trusted as fully monitored.</p>
+    </section>
 </div>
 <script>window.JOMTheme.initToggle("theme-toggle");</script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
-<script src="{{ url_for('static', filename='js/home_estate_scope_guard.js') }}"></script>
 </body>
 </html>
 
