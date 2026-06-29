@@ -1,0 +1,160 @@
+{
+  "schema": "jom-source-freshness-audit-v1",
+  "generated_at_utc": "2026-06-29T08:35:22.533473Z",
+  "policy": {
+    "current_hours": 24,
+    "aging_hours": 72,
+    "stale_after_hours": 72,
+    "rule": "No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero."
+  },
+  "summary": {
+    "overall_state": "ATTENTION",
+    "source_count": 8,
+    "counts": {
+      "CURRENT": 1,
+      "AGING": 3,
+      "STALE": 2,
+      "MISSING": 1,
+      "UNKNOWN_TIMESTAMP": 1
+    }
+  },
+  "sources": [
+    {
+      "key": "site_registry",
+      "label": "Site Registry",
+      "path": "static/data/site_registry.json",
+      "exists": true,
+      "source_type": "STATIC_SNAPSHOT",
+      "pages": [
+        "Home",
+        "Estate",
+        "Admin"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-06-29T08:34:57Z",
+      "parsed_timestamp_utc": "2026-06-29T08:34:57Z",
+      "age_hours": 0.01,
+      "freshness_state": "CURRENT",
+      "error": null
+    },
+    {
+      "key": "admin_truth_v2",
+      "label": "Admin Truth Layer v2",
+      "path": "static/data/admin_truth_v2.json",
+      "exists": true,
+      "source_type": "STATIC_SNAPSHOT",
+      "pages": [
+        "Estate",
+        "Admin"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-06-26T13:09:48Z",
+      "parsed_timestamp_utc": "2026-06-26T13:09:48Z",
+      "age_hours": 67.43,
+      "freshness_state": "AGING",
+      "error": null
+    },
+    {
+      "key": "estate_product_access",
+      "label": "Estate Product Access",
+      "path": "static/data/estate_product_access.json",
+      "exists": true,
+      "source_type": "STATIC_SNAPSHOT",
+      "pages": [
+        "Estate"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-06-26T11:05:07Z",
+      "parsed_timestamp_utc": "2026-06-26T11:05:07Z",
+      "age_hours": 69.5,
+      "freshness_state": "AGING",
+      "error": null
+    },
+    {
+      "key": "estate_access_truth",
+      "label": "Estate Access Truth",
+      "path": "static/data/estate_access_truth.json",
+      "exists": true,
+      "source_type": "STATIC_SNAPSHOT",
+      "pages": [
+        "Estate"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-06-26T11:05:07Z",
+      "parsed_timestamp_utc": "2026-06-26T11:05:07Z",
+      "age_hours": 69.5,
+      "freshness_state": "AGING",
+      "error": null
+    },
+    {
+      "key": "billing_seats",
+      "label": "Billing Seats",
+      "path": "static/data/billing_seats.json",
+      "exists": true,
+      "source_type": "STATIC_SNAPSHOT",
+      "pages": [
+        "Estate",
+        "Admin"
+      ],
+      "timestamp_field": null,
+      "timestamp_value": null,
+      "parsed_timestamp_utc": null,
+      "age_hours": null,
+      "freshness_state": "UNKNOWN_TIMESTAMP",
+      "error": null
+    },
+    {
+      "key": "user_footprint",
+      "label": "User Footprint",
+      "path": "static/data/user_footprint.json",
+      "exists": false,
+      "source_type": "STATIC_SNAPSHOT",
+      "pages": [
+        "Estate"
+      ],
+      "timestamp_field": null,
+      "timestamp_value": null,
+      "parsed_timestamp_utc": null,
+      "age_hours": null,
+      "freshness_state": "MISSING",
+      "error": null
+    },
+    {
+      "key": "latest_run",
+      "label": "Latest Jira Runtime Run",
+      "path": "latest_run.json",
+      "exists": true,
+      "source_type": "LATEST_RUN",
+      "pages": [
+        "Home",
+        "Estate",
+        "Site"
+      ],
+      "timestamp_field": "raw_collection_summary.collected_at_utc",
+      "timestamp_value": "2026-06-25T07:43:36Z",
+      "parsed_timestamp_utc": "2026-06-25T07:43:36Z",
+      "age_hours": 96.86,
+      "freshness_state": "STALE",
+      "error": null
+    },
+    {
+      "key": "latest_run_admin_enriched",
+      "label": "Latest Admin Enriched Run",
+      "path": "latest_run_admin_enriched.json",
+      "exists": true,
+      "source_type": "LATEST_RUN",
+      "pages": [
+        "Home",
+        "Estate",
+        "Admin",
+        "Site"
+      ],
+      "timestamp_field": "raw_collection_summary.collected_at_utc",
+      "timestamp_value": "2026-06-25T07:43:36Z",
+      "parsed_timestamp_utc": "2026-06-25T07:43:36Z",
+      "age_hours": 96.86,
+      "freshness_state": "STALE",
+      "error": null
+    }
+  ]
+}
