@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from _project_bootstrap import ensure_project_root_on_path
+ensure_project_root_on_path()
+
 import argparse
 import json
 from datetime import datetime, timezone
