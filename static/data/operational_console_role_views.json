@@ -1,0 +1,38 @@
+{
+  "schema": "jom-operational-console-role-views-v1",
+  "generated_at_utc": "2026-06-30T11:11:37Z",
+  "mode": "ui-view-metadata-only-not-auth-enforcement",
+  "roles": {
+    "operator": {
+      "label": "Operator",
+      "visible_panels": [
+        "scheduler",
+        "source_reliability",
+        "runtime_refresh",
+        "site_registry",
+        "user_footprint"
+      ],
+      "default_filter": "all"
+    },
+    "manager": {
+      "label": "Manager",
+      "visible_panels": [
+        "source_reliability",
+        "site_registry",
+        "advisories"
+      ],
+      "default_filter": "summary"
+    },
+    "governance": {
+      "label": "Governance",
+      "visible_panels": [
+        "source_reliability",
+        "advisories",
+        "site_registry",
+        "named_access"
+      ],
+      "default_filter": "review"
+    }
+  },
+  "security_note": "This file only controls UI presentation. It is not authentication or authorization enforcement."
+}

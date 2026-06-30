@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/static/css/source_freshness.css">
     <link rel="stylesheet" href="/static/css/source_reliability_dashboard.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/operational_console_dark.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/operational_console_enhancements.css') }}">
 </head>
 <body>
 <div class="page">
@@ -353,6 +354,7 @@
   <div id="jom-opcon-drilldown" class="jom-opcon-drilldown" hidden></div>
 </section>
 <!-- JOM_OPERATIONAL_CONSOLE_END -->
+  <script defer src="{{ url_for('static', filename='js/operational_console_enhancements.js') }}"></script>
 </body>
 </html>
 
