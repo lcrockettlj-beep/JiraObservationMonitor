@@ -1,5 +1,7 @@
 {
-  "timestamp": "2026-06-30T10:51:11Z",
+  "schema": "jom-operational-console-ui-view-v1",
+  "generated_at_utc": "2026-06-30T11:04:31Z",
+  "source_generated_at_utc": "2026-06-30T10:51:11Z",
   "overall_status": "ok",
   "cards": {
     "scheduler": {
@@ -80,6 +82,9 @@
   "badges": {
     "scheduler_ok": true,
     "reliability_ok": true,
-    "advisory_count": 1
+    "advisory_count": 1,
+    "issue_count": 0,
+    "monitored_site_count": 3,
+    "discovered_site_count": 4
   }
 }

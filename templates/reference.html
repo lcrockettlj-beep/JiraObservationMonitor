@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/static/css/truth.css">
     <link rel="stylesheet" href="/static/css/source_freshness.css">
     <link rel="stylesheet" href="/static/css/source_reliability_dashboard.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/operational_console_dark.css') }}">
 </head>
 <body>
 <div class="page">
@@ -138,6 +139,20 @@
 
 <script src="/static/js/source_freshness_badge.js"></script>
 <script src="/static/js/source_reliability_dashboard.js"></script>
+  <script defer src="{{ url_for('static', filename='js/operational_console_dark.js') }}"></script>
+<!-- JOM_OPERATIONAL_CONSOLE_START -->
+<section id="operational-console-panel" class="jom-operational-console" aria-label="Operational console status">
+  <div class="jom-opcon-header">
+    <div>
+      <p class="jom-opcon-kicker">Operational Console</p>
+      <h2>Runtime Health</h2>
+    </div>
+    <span id="jom-opcon-overall" class="jom-opcon-pill">Loading</span>
+  </div>
+  <div id="jom-opcon-cards" class="jom-opcon-grid"></div>
+  <div id="jom-opcon-drilldown" class="jom-opcon-drilldown" hidden></div>
+</section>
+<!-- JOM_OPERATIONAL_CONSOLE_END -->
 </body>
 </html>
 
