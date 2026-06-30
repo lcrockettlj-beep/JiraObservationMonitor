@@ -1,0 +1,74 @@
+{
+  "schema": "jom.admin_insights.v1",
+  "generated_at_utc": "2026-06-30T19:54:35+00:00",
+  "mode": "backend_only_no_ui",
+  "source_files": {
+    "named_access_truth_v2": "static\\data\\named_access_truth_v2.json",
+    "user_footprint": "static\\data\\user_footprint.json",
+    "source_reliability_status": "static\\data\\source_reliability_status.json",
+    "site_registry": "static\\data\\site_registry.json"
+  },
+  "source_health": {
+    "source_reliability": {
+      "status": "ok",
+      "issue_count": null,
+      "reason": "source reliability file loaded"
+    },
+    "site_registry": {
+      "status": "loaded",
+      "monitored_sites": [
+        "gli-delivery-tm",
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "unmonitored_sites": [
+        "gaminglabs-team-h2pbpmis",
+        "gaminglabs-team-tsyfo716",
+        "gli-tracker",
+        "gli-usa"
+      ]
+    }
+  },
+  "summary": {
+    "critical": 0,
+    "risk": 0,
+    "waste": 0,
+    "drift": 0,
+    "total_issues": 0,
+    "user_records_evaluated": 117
+  },
+  "category_meta": {
+    "disabled_with_access": {
+      "severity": "critical",
+      "title": "Disabled users with access",
+      "description": "Accounts that appear disabled/inactive while still showing product access signals."
+    },
+    "access_without_license_signal": {
+      "severity": "risk",
+      "title": "Access without clear license signal",
+      "description": "Accounts with product access signals and explicit license/billing fields showing no license. Suppressed when source files do not expose license fields."
+    },
+    "licensed_inactive_or_unused": {
+      "severity": "waste",
+      "title": "Licensed inactive or unused users",
+      "description": "Accounts that appear licensed but inactive, stale, or never active."
+    },
+    "source_mismatch_users": {
+      "severity": "drift",
+      "title": "Source mismatch users",
+      "description": "Accounts present in one source but absent from another."
+    }
+  },
+  "categories": {
+    "disabled_with_access": [],
+    "access_without_license_signal": [],
+    "licensed_inactive_or_unused": [],
+    "source_mismatch_users": []
+  },
+  "notes": [
+    "Admin Insight Engine v1 is backend/data only. No UI wiring has been performed.",
+    "Issue detection is intentionally conservative and based only on fields present in the loaded JSON sources.",
+    "If counts are zero, this may mean the environment is healthy or that source files do not yet expose the required signals.",
+    "User-level license risk detection is suppressed unless source records expose explicit license or billing-seat fields."
+  ]
+}
