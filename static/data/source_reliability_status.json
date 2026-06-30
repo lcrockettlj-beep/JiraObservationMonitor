@@ -1,6 +1,6 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-06-30T10:47:57.364493Z",
+  "generated_at_utc": "2026-06-30T11:47:57.422328Z",
   "overall_status": "ok",
   "summary": {
     "issue_count": 0,
@@ -28,7 +28,7 @@
   ],
   "alignment": {
     "runtime_refresh_review_aligned": true,
-    "aligned_at_utc": "2026-06-30T10:47:57Z",
+    "aligned_at_utc": "2026-06-30T11:47:57Z",
     "reason": "Converted expected no-collector-requested runtime refresh review into advisory, not blocking issue.",
     "persistence": "scripts/source_reliability_audit.py invokes app.audits.source_reliability_advisory.align_source_reliability after each audit run."
   }
