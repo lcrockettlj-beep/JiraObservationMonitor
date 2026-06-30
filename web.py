@@ -735,7 +735,7 @@ def _get_last_sync_info():
     Returns metadata about the last automated sync run.
 
     Reads the mtime of the scheduled_sync.log file written by
-    run_sync_for_scheduler.cmd. If the file exists and was modified
+    run_operational_snapshot.py. If the scheduled task exists and was modified
     within AUTO_SYNC_FRESHNESS_SECONDS, the auto sync is considered
     active.
     """
@@ -854,6 +854,7 @@ if __name__ == "__main__":
     if not DEBUG_MODE or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_startup_self_heal()
     app.run(debug=DEBUG_MODE, host="127.0.0.1", port=5000)
+
 
 
 

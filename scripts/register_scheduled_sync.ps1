@@ -1,81 +1,21 @@
-# ============================================================
-# JOM_Sync_Runtime — Scheduled Task Registration
-# ============================================================
-# Registers a Windows Task Scheduler task that runs the
-# sync_runtime.py orchestrator every 60 minutes via a
-# batch wrapper that handles logging.
-# ============================================================
+﻿param(
+    [string]$ProjectRoot = "C:\Users\Luke_C\Desktop\JiraObservationMonitor",
+    [string]$TaskName = "JOM_Sync_Runtime",
+    [int]$IntervalMinutes = 60
+)
 
-$TaskName    = "JOM_Sync_Runtime"
-$ProjectRoot = "C:\Users\Luke_C\Desktop\JiraObservationMonitor"
-$Wrapper     = Join-Path $ProjectRoot "scripts\run_sync_for_scheduler.cmd"
-$LogDir      = Join-Path $ProjectRoot "docs\control\logs"
+$ErrorActionPreference = "Stop"
 
-Write-Host "Registering scheduled task: $TaskName" -ForegroundColor Cyan
-Write-Host "Project root: $ProjectRoot"
-Write-Host "Wrapper:      $Wrapper"
-Write-Host "Log dir:      $LogDir"
-Write-Host ""
+if (-not (Test-Path $ProjectRoot)) { throw "Project root not found: $ProjectRoot" }
+$Python = (Get-Command python -ErrorAction Stop).Source
+$Script = Join-Path $ProjectRoot "scripts\run_operational_snapshot.py"
+if (-not (Test-Path $Script)) { throw "Operational snapshot script not found: $Script" }
 
-if (-not (Test-Path $LogDir)) {
-    New-Item -Path $LogDir -ItemType Directory -Force | Out-Null
-}
+$Action = New-ScheduledTaskAction -Execute $Python -Argument "`"$Script`"" -WorkingDirectory $ProjectRoot
+$Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) -RepetitionDuration (New-TimeSpan -Days 3650)
+$Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
 
-if (-not (Test-Path $Wrapper)) {
-    Write-Host "ERROR: Wrapper not found at $Wrapper" -ForegroundColor Red
-    Write-Host "Create scripts\run_sync_for_scheduler.cmd first."
-    exit 1
-}
-
-# Action — just run the wrapper
-$Action = New-ScheduledTaskAction -Execute $Wrapper
-
-# Trigger — every 60 minutes starting now, runs indefinitely
-$Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) `
-    -RepetitionInterval (New-TimeSpan -Minutes 60)
-
-# Settings — interactive only, skip if running, time-limit hung runs
-$Settings = New-ScheduledTaskSettingsSet `
-    -AllowStartIfOnBatteries `
-    -DontStopIfGoingOnBatteries `
-    -StartWhenAvailable `
-    -ExecutionTimeLimit (New-TimeSpan -Minutes 5) `
-    -MultipleInstances IgnoreNew
-
-# Principal — current user, interactive logon
-$Principal = New-ScheduledTaskPrincipal `
-    -UserId "$env:USERDOMAIN\$env:USERNAME" `
-    -LogonType Interactive `
-    -RunLevel Limited
-
-# Remove existing version of the task if present
-$existing = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
-if ($existing) {
-    Write-Host "Existing task found - removing first..." -ForegroundColor Yellow
-    Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false
-}
-
-# Register
-Register-ScheduledTask `
-    -TaskName $TaskName `
-    -Action $Action `
-    -Trigger $Trigger `
-    -Settings $Settings `
-    -Principal $Principal `
-    -Description "JOM Sync Runtime - runs sync_runtime.py every 60 minutes" | Out-Null
-
-Write-Host ""
-Write-Host "Task registered successfully" -ForegroundColor Green
-Write-Host ""
-Write-Host "Details:"
-Write-Host "   Name:       $TaskName"
-Write-Host "   Runs every: 60 minutes"
-Write-Host "   Runs as:    $env:USERDOMAIN\$env:USERNAME"
-Write-Host "   Wrapper:    $Wrapper"
-Write-Host "   Log dir:    $LogDir"
-Write-Host ""
-Write-Host "To check status: .\scripts\check_scheduled_sync.ps1"
-Write-Host "To remove task:  .\scripts\unregister_scheduled_sync.ps1"
-Write-Host ""
-Write-Host "First run happens within 60 minutes."
-Write-Host "Force immediate run: Start-ScheduledTask -TaskName '$TaskName'"
+$Existing = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
+if ($Existing) { Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false }
+Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Settings $Settings -Description "JOM Operational Snapshot - runs run_operational_snapshot.py every $IntervalMinutes minutes" | Out-Null
+Write-Host "Registered $TaskName -> $Script every $IntervalMinutes minutes" -ForegroundColor Green

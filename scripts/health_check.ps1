@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 # health_check.ps1 - JOM Quick Smoke Test
 # ============================================================
 #
@@ -171,7 +171,7 @@ $criticalFiles = @(
     "alert_rules_engine.py",
     "intelligence_rules_engine.py",
     "config\feature_flags.py",
-    "scripts\sync_runtime.py",
+    "scripts\run_operational_snapshot.py",
     "scripts\backup_runtime_chain.py",
     "scripts\restore_runtime_from_backup.ps1"
 )
@@ -339,7 +339,7 @@ if ($morningAnchor -and $eveningAnchor) {
 $backupSummary = Get-BackupManifestSummary -Root $ProjectRoot
 $script:backupSummary = $backupSummary
 if (-not $backupSummary) {
-    Test-Result 11 "Backup manifest" $false "latest_manifest.json not found" "Run python scripts\backup_runtime_chain.py or scripts\sync_runtime.py"
+    Test-Result 11 "Backup manifest" $false "latest_manifest.json not found" "Run python scripts\backup_runtime_chain.py or scripts\run_operational_snapshot.py"
 } elseif (-not $backupSummary.parse_ok) {
     Test-Result 11 "Backup manifest" $false "Manifest unreadable: $($backupSummary.error)" "Inspect backups\latest_runtime\latest_manifest.json"
 } elseif ($null -eq $backupSummary.age_seconds) {
@@ -349,7 +349,7 @@ if (-not $backupSummary) {
 } elseif ($backupSummary.age_seconds -le 3600) {
     Test-Warning 11 "Backup manifest" "Latest backup age $($backupSummary.age_seconds)s (stale)" "Confirm scheduled sync is still running"
 } else {
-    Test-Result 11 "Backup manifest" $false "Latest backup age $($backupSummary.age_seconds)s (too old)" "Run scripts\sync_runtime.py and inspect backup helper"
+    Test-Result 11 "Backup manifest" $false "Latest backup age $($backupSummary.age_seconds)s (too old)" "Run scripts\run_operational_snapshot.py and inspect backup helper"
 }
 
 # ------------------------------------------------------------
@@ -439,3 +439,4 @@ if ($Failed -eq 0) {
 } else {
     exit 1
 }
+
