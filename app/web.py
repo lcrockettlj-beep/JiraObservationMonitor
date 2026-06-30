@@ -2,6 +2,10 @@ from flask import Flask, jsonify
 import json
 import os
 
+# ✅ Runtime pipelines
+from app.runtime.admin_enriched_chain import run_pipeline as run_snapshot
+from app.runtime.operational_source_recovery import run as run_recovery
+
 app = Flask(__name__)
 
 DATA_PATH = os.path.join("static", "data")
@@ -15,44 +19,76 @@ def load_json(filename):
         return json.load(f)
 
 
-# ✅ Home (sanity check)
+# =========================
+# ✅ ROOT
+# =========================
+
 @app.route("/")
 def home():
     return jsonify({
         "status": "JOM backend running",
-        "services": [
-            "/admin/truth",
-            "/estate/product-access",
-            "/users/footprint",
-            "/registry/sites"
-        ]
+        "actions": {
+            "refresh_full": "/runtime/refresh",
+            "recover_sources": "/runtime/recover"
+        }
     })
 
 
-# ✅ Admin Truth
+# =========================
+# ✅ DATA ENDPOINTS
+# =========================
+
 @app.route("/admin/truth")
 def admin_truth():
     return jsonify(load_json("admin_truth_v2.json"))
 
 
-# ✅ Estate Product Access
 @app.route("/estate/product-access")
 def estate_product_access():
     return jsonify(load_json("estate_product_access.json"))
 
 
-# ✅ User footprint
 @app.route("/users/footprint")
 def user_footprint():
     return jsonify(load_json("user_footprint.json"))
 
 
-# ✅ Site registry
 @app.route("/registry/sites")
 def site_registry():
     return jsonify(load_json("site_registry.json"))
 
 
-# ✅ Run server
+# =========================
+# ✅ LIVE ACTIONS
+# =========================
+
+@app.route("/runtime/refresh")
+def runtime_refresh():
+    run_snapshot()
+    return jsonify({"status": "success", "message": "Full refresh completed"})
+
+
+@app.route("/runtime/recover")
+def runtime_recover():
+    try:
+        run_recovery()
+        return jsonify({"status": "success", "message": "Recovery completed"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+# =========================
+# ✅ HEALTH
+# =========================
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "healthy"})
+
+
+# =========================
+# ✅ RUN SERVER
+# =========================
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
