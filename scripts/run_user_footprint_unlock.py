@@ -1,10 +1,4 @@
-from __future__ import annotations
-
-from _project_bootstrap import ensure_project_root_on_path
-ensure_project_root_on_path()
-
-from app.access.user_footprint_unlock_runner import main
-
+﻿from app.access.user_footprint_unlock_runner import run
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    run()
