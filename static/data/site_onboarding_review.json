@@ -1,0 +1,30 @@
+{
+  "generated_at_utc": "2026-06-30T11:17:07.288276+00:00",
+  "queue": [
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "classification": "discovered",
+      "url": null,
+      "action": "approve_or_ignore"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "classification": "discovered",
+      "url": null,
+      "action": "approve_or_ignore"
+    },
+    {
+      "site_key": "gli-tracker",
+      "classification": "discovered",
+      "url": null,
+      "action": "approve_or_ignore"
+    },
+    {
+      "site_key": "gli-usa",
+      "classification": "discovered",
+      "url": null,
+      "action": "approve_or_ignore"
+    }
+  ],
+  "count": 4
+}
