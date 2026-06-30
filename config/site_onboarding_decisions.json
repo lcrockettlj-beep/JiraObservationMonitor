@@ -1,0 +1,62 @@
+{
+  "schema": "jom-site-onboarding-decisions-v1",
+  "generated_at_utc": "2026-06-30T11:19:36Z",
+  "approved": {
+    "gli-tracker": {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "reason": "approved for monitoring",
+      "actor": "Luke_C",
+      "decided_at_utc": "2026-06-30T11:19:28Z",
+      "site_snapshot": {
+        "classification": "discovered",
+        "is_monitored": false,
+        "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+        "url": "https://gli-tracker.atlassian.net"
+      }
+    }
+  },
+  "ignored": {
+    "gli-usa": {
+      "site_key": "gli-usa",
+      "decision": "ignore",
+      "reason": "not in current monitoring scope",
+      "actor": "Luke_C",
+      "decided_at_utc": "2026-06-30T11:19:36Z",
+      "site_snapshot": {
+        "classification": "discovered",
+        "is_monitored": false,
+        "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+        "url": "https://gli-usa.atlassian.net"
+      }
+    }
+  },
+  "history": [
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "reason": "approved for monitoring",
+      "actor": "Luke_C",
+      "decided_at_utc": "2026-06-30T11:19:28Z",
+      "site_snapshot": {
+        "classification": "discovered",
+        "is_monitored": false,
+        "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+        "url": "https://gli-tracker.atlassian.net"
+      }
+    },
+    {
+      "site_key": "gli-usa",
+      "decision": "ignore",
+      "reason": "not in current monitoring scope",
+      "actor": "Luke_C",
+      "decided_at_utc": "2026-06-30T11:19:36Z",
+      "site_snapshot": {
+        "classification": "discovered",
+        "is_monitored": false,
+        "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+        "url": "https://gli-usa.atlassian.net"
+      }
+    }
+  ]
+}

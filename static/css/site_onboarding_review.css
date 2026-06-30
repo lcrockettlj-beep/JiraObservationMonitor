@@ -1,1 +1,10 @@
-.site-onboarding { padding:10px; }
+.site-onboarding { margin-top: 1rem; padding: 1rem; border-radius: 16px; border: 1px solid rgba(148,163,184,.22); background: rgba(15,23,42,.55); color: #e5e7eb; }
+.site-onboarding-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.site-onboarding-header h2 { margin: 0; }
+.site-onboarding-header span { border: 1px solid rgba(250,204,21,.35); color: #fde68a; border-radius: 999px; padding: .3rem .65rem; }
+.site-onboarding-note { color: #cbd5e1; font-size: .9rem; }
+.site-onboarding-block { margin-top: .85rem; }
+.site-onboarding-table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+.site-onboarding-table th, .site-onboarding-table td { border-bottom: 1px solid rgba(148,163,184,.16); padding: .45rem; text-align: left; vertical-align: top; }
+.site-onboarding-table th { color: #93c5fd; }
+.site-onboarding-table code { white-space: pre-wrap; color: #bfdbfe; }
