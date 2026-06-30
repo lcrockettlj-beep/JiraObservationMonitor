@@ -1,6 +1,6 @@
 {
   "source": "Jira Cloud API /rest/api/3/applicationrole via jira_client.py",
-  "generated_at_utc": "2026-06-29T15:17:26Z",
+  "generated_at_utc": "2026-06-30T08:17:09Z",
   "schema": "jom-estate-product-access-v1",
   "scope": "all accessible Jira resources returned by Atlassian OAuth accessible-resources",
   "summary": {

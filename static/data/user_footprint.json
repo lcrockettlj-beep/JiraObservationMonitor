@@ -1,6 +1,6 @@
 {
   "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-06-29T19:40:12.848310Z",
+  "generated_at_utc": "2026-06-30T08:17:09.554040Z",
   "source_status": "generated",
   "reason": "Named access footprint generated from named_access_truth_v2 after reconciliation_v2 passed safe_to_enable_named_access_ui=true.",
   "safe_to_show_named_access_ui": true,
