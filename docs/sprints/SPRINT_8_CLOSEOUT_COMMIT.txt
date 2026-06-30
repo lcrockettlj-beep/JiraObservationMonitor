@@ -1,7 +1,0 @@
-Suggested commit:
-
-git add docs\sprints\SPRINT_8_CLOSEOUT_SUMMARY.md docs\sprints\SPRINT_8_STAKEHOLDER_SUMMARY.md docs\manuals\SPRINT_8_ENGINEERING_NOTES.md
-
-git commit -m "Sprint 8 close-out: archive frontend alignment outcomes, stakeholder summary, and engineering notes"
-
-git push

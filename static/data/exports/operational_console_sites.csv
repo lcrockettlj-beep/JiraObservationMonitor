@@ -1,8 +1,0 @@
-classification,cloud_id,is_monitored,risk_band,risk_reasons,risk_score,site_key,url
-monitored,de2de731-c6ae-4e15-a2cf-92d976f0fb7c,True,low,[],0,gli-delivery-tm,https://gli-delivery-tm.atlassian.net
-monitored,aaa90a93-f0af-47ba-98d6-47829cc032b7,True,low,[],0,gli-global-technology,https://gli-global-technology.atlassian.net
-monitored,d4b3adb4-bd39-435e-bd65-f29db2b11a37,True,low,[],0,gli-it-project,https://gli-it-project.atlassian.net
-discovered,5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9,False,review,"[""not monitored"", ""monitoring disabled""]",30,gaminglabs-team-h2pbpmis,https://gaminglabs-team-h2pbpmis.atlassian.net
-discovered,981786d5-9529-4957-bab0-fdc505ccb9b6,False,review,"[""not monitored"", ""monitoring disabled""]",30,gaminglabs-team-tsyfo716,https://gaminglabs-team-tsyfo716.atlassian.net
-discovered,5e39f28e-6ff4-44ff-82b7-d0746cee8db5,False,review,"[""not monitored"", ""monitoring disabled""]",30,gli-tracker,https://gli-tracker.atlassian.net
-discovered,d13cd0f5-823d-4a16-9952-a15f6bdf9018,False,review,"[""not monitored"", ""monitoring disabled""]",30,gli-usa,https://gli-usa.atlassian.net

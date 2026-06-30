@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-v3-scope-merged",
-  "generated_at_utc": "2026-06-30T11:16:00Z",
+  "generated_at_utc": "2026-06-30T11:37:58Z",
   "policy": {
     "home_shows_discovered_sites": true,
     "estate_requires_monitored_status": true,

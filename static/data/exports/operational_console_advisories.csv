@@ -1,2 +1,0 @@
-alignment_note,blocking,classification,path,reason,source,state
-Runtime collector was intentionally not requested; latest runtime data freshness remains visible in runtime_refresh_status.json.,False,advisory,static/data/runtime_refresh_status.json,Runtime collector was not requested. Status inferred from latest_run.json freshness.,Runtime Refresh,review

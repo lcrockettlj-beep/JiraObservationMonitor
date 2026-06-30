@@ -1,5 +1,0 @@
-SPRINT 8 NEXT SESSION STARTER
-=============================
-1. Verify /estate, /reference, and a detail page all return HTTP 200.
-2. Check theme toggle on each page.
-3. Commit the Sprint 8 Pillar 3C milestone.
