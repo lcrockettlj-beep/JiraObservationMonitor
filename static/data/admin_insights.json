@@ -1,12 +1,30 @@
 {
   "schema": "jom.admin_insights.v1",
-  "generated_at_utc": "2026-06-30T19:54:35+00:00",
+  "generated_at_utc": "2026-06-30T19:57:57+00:00",
   "mode": "backend_only_no_ui",
   "source_files": {
     "named_access_truth_v2": "static\\data\\named_access_truth_v2.json",
     "user_footprint": "static\\data\\user_footprint.json",
     "source_reliability_status": "static\\data\\source_reliability_status.json",
     "site_registry": "static\\data\\site_registry.json"
+  },
+  "capabilities": {
+    "user_records_evaluated": 117,
+    "access_detection_available": true,
+    "license_detection_available": false,
+    "disabled_detection_available": false,
+    "activity_detection_available": false,
+    "source_mismatch_detection_available": true,
+    "suppressed_categories": {
+      "access_without_license_signal": true,
+      "licensed_inactive_or_unused": true,
+      "disabled_with_access": true
+    },
+    "capability_notes": [
+      "Capability flags are derived from observed fields in named_access_truth_v2.json and user_footprint.json.",
+      "Suppressed categories should not be interpreted as zero confirmed issues.",
+      "A suppressed category means the loaded source schema does not expose enough user-level fields to make that judgement safely."
+    ]
   },
   "source_health": {
     "source_reliability": {
@@ -69,6 +87,7 @@
     "Admin Insight Engine v1 is backend/data only. No UI wiring has been performed.",
     "Issue detection is intentionally conservative and based only on fields present in the loaded JSON sources.",
     "If counts are zero, this may mean the environment is healthy or that source files do not yet expose the required signals.",
-    "User-level license risk detection is suppressed unless source records expose explicit license or billing-seat fields."
+    "User-level license risk detection is suppressed unless source records expose explicit license or billing-seat fields.",
+    "Capability metadata is backend-only and intended to prevent the UI from presenting unavailable checks as clean results."
   ]
 }

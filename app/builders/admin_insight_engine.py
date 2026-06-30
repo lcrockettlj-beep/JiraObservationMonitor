@@ -446,6 +446,109 @@ def extract_registry_summary(site_registry: Any) -> dict[str, Any]:
     }
 
 
+def field_exists_anywhere(records: list[dict[str, Any]], field_names: set[str]) -> bool:
+    wanted = {name.lower() for name in field_names}
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        keys = {str(k).lower() for k in record.keys()}
+        if keys.intersection(wanted):
+            return True
+    return False
+
+
+def build_source_capabilities(users: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    records = list(users.values())
+
+    license_fields = {
+        "licensed",
+        "is_licensed",
+        "isLicensed",
+        "has_license",
+        "hasLicense",
+        "billing_seat",
+        "billingSeat",
+        "seat_consuming",
+        "seatConsuming",
+        "seat_count",
+        "license_count",
+        "licenses",
+        "licensed_products",
+    }
+
+    disabled_fields = {
+        "disabled",
+        "is_disabled",
+        "isDisabled",
+        "active",
+        "is_active",
+        "isActive",
+        "account_active",
+        "status",
+        "account_status",
+        "accountStatus",
+        "state",
+    }
+
+    activity_fields = {
+        "usage_status",
+        "activity_status",
+        "activityStatus",
+        "last_active_status",
+        "days_inactive",
+        "inactive_days",
+        "daysSinceLastActive",
+        "days_since_last_active",
+        "last_active",
+        "lastActive",
+        "last_seen",
+        "lastSeen",
+    }
+
+    access_fields = {
+        "has_product_access",
+        "hasProductAccess",
+        "product_access",
+        "productAccess",
+        "access",
+        "products",
+        "sites",
+        "application_roles",
+        "applicationRoles",
+        "groups",
+        "access_count",
+        "product_access_count",
+        "productAccessCount",
+        "group_count",
+        "groups_count",
+        "site_count",
+        "product_access_assignments",
+    }
+
+    license_available = field_exists_anywhere(records, license_fields)
+    disabled_available = field_exists_anywhere(records, disabled_fields)
+    activity_available = field_exists_anywhere(records, activity_fields)
+    access_available = field_exists_anywhere(records, access_fields)
+
+    return {
+        "user_records_evaluated": len(records),
+        "access_detection_available": access_available,
+        "license_detection_available": license_available,
+        "disabled_detection_available": disabled_available,
+        "activity_detection_available": activity_available,
+        "source_mismatch_detection_available": True,
+        "suppressed_categories": {
+            "access_without_license_signal": not license_available,
+            "licensed_inactive_or_unused": not (license_available and activity_available),
+            "disabled_with_access": not (disabled_available and access_available),
+        },
+        "capability_notes": [
+            "Capability flags are derived from observed fields in named_access_truth_v2.json and user_footprint.json.",
+            "Suppressed categories should not be interpreted as zero confirmed issues.",
+            "A suppressed category means the loaded source schema does not expose enough user-level fields to make that judgement safely.",
+        ],
+    }
+
 def build_insights(
     named_access: Any,
     user_footprint: Any,
@@ -453,6 +556,7 @@ def build_insights(
     site_registry: Any,
 ) -> dict[str, Any]:
     users = build_user_index(named_access, user_footprint)
+    capabilities = build_source_capabilities(users)
 
     categories: dict[str, list[dict[str, Any]]] = {
         "disabled_with_access": [],
@@ -571,6 +675,7 @@ def build_insights(
             "source_reliability_status": str(SOURCE_RELIABILITY_FILE.relative_to(ROOT)),
             "site_registry": str(SITE_REGISTRY_FILE.relative_to(ROOT)),
         },
+        "capabilities": capabilities,
         "source_health": {
             "source_reliability": extract_source_reliability(source_reliability),
             "site_registry": extract_registry_summary(site_registry),
@@ -592,6 +697,7 @@ def build_insights(
             "Issue detection is intentionally conservative and based only on fields present in the loaded JSON sources.",
             "If counts are zero, this may mean the environment is healthy or that source files do not yet expose the required signals.",
             "User-level license risk detection is suppressed unless source records expose explicit license or billing-seat fields.",
+            "Capability metadata is backend-only and intended to prevent the UI from presenting unavailable checks as clean results.",
         ],
     }
 
@@ -626,5 +732,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 
