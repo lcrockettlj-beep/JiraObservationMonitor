@@ -10,7 +10,7 @@ if __name__ == "__main__":
     root = Path(args.project_root).resolve()
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
-    from backend.site_registry_runtime import build_registry, reset_to_approved_scope
+    from app.registry.site_registry_runtime import build_registry, reset_to_approved_scope
     if args.reset_approved_scope:
         reset_to_approved_scope(root)
     registry = build_registry(root)
@@ -26,3 +26,4 @@ except Exception:
         return "pending"
     def is_site_approved(site_key):
         return False
+

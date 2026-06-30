@@ -1,4 +1,4 @@
-﻿from flask import Flask, render_template, jsonify, abort, request
+from flask import Flask, render_template, jsonify, abort, request
 from pathlib import Path
 
 from datetime import datetime
@@ -205,7 +205,7 @@ def _registry_tokens_for_site(site):
 
 def _load_registry_truth():
     try:
-        from backend.site_registry_runtime import build_registry
+        from app.registry.site_registry_runtime import build_registry
         registry = build_registry(BASE_DIR)
         if isinstance(registry, dict):
             return registry
@@ -822,29 +822,29 @@ def api_data():
 # --- JOM Site Registry / Discovery API ---
 @app.route("/api/site-registry")
 def api_site_registry():
-    from backend.site_registry_runtime import build_registry
+    from app.registry.site_registry_runtime import build_registry
     return jsonify(build_registry(BASE_DIR))
 
 @app.route("/api/site-registry/rebuild", methods=["POST"])
 def api_site_registry_rebuild():
-    from backend.site_registry_runtime import build_registry
+    from app.registry.site_registry_runtime import build_registry
     return jsonify(build_registry(BASE_DIR))
 
 @app.route("/api/site-registry/approve", methods=["POST"])
 def api_site_registry_approve():
-    from backend.site_registry_runtime import approve_site
+    from app.registry.site_registry_runtime import approve_site
     payload = request.get_json(silent=True) or {}
     return jsonify(approve_site(BASE_DIR, payload, approved_by="jom_admin"))
 
 @app.route("/api/site-registry/ignore", methods=["POST"])
 def api_site_registry_ignore():
-    from backend.site_registry_runtime import ignore_site
+    from app.registry.site_registry_runtime import ignore_site
     payload = request.get_json(silent=True) or {}
     return jsonify(ignore_site(BASE_DIR, payload, ignored_by="jom_admin"))
 
 @app.route("/api/site-registry/unmonitor", methods=["POST"])
 def api_site_registry_unmonitor():
-    from backend.site_registry_runtime import unmonitor_site
+    from app.registry.site_registry_runtime import unmonitor_site
     payload = request.get_json(silent=True) or {}
     return jsonify(unmonitor_site(BASE_DIR, payload, removed_by="jom_admin"))
 
@@ -854,6 +854,7 @@ if __name__ == "__main__":
     if not DEBUG_MODE or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         run_startup_self_heal()
     app.run(debug=DEBUG_MODE, host="127.0.0.1", port=5000)
+
 
 
 
