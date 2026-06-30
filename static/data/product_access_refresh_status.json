@@ -1,16 +1,16 @@
 {
   "schema": "jom-product-access-refresh-status-v1",
-  "generated_at_utc": "2026-06-29T09:27:00.260649Z",
-  "overall_status": "failed",
+  "generated_at_utc": "2026-06-30T10:17:55.111764Z",
+  "overall_status": "ok",
   "sources": {
     "estate_product_access": {
       "exists": true,
-      "timestamp": "2026-06-26T11:05:07Z",
+      "timestamp": "2026-06-30T10:17:54Z",
       "schema": "jom-estate-product-access-v1"
     },
     "estate_access_truth": {
       "exists": true,
-      "timestamp": "2026-06-26T11:05:07Z",
+      "timestamp": "2026-06-30T10:17:54Z",
       "schema": "jom-estate-access-truth-v1"
     }
   },
@@ -20,20 +20,20 @@
       "label": "Refresh Estate Product Access and Estate Access Truth",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_estate_product_access.py",
       "exists": true,
-      "started_at_utc": "2026-06-29T09:26:59.716352Z",
-      "finished_at_utc": "2026-06-29T09:26:59.869388Z",
-      "status": "failed",
-      "returncode": 1,
-      "stdout_tail": "",
-      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\scripts\\build_estate_product_access.py\", line 9, in <module>\n    from jira_client import JiraApiClient\nModuleNotFoundError: No module named 'jira_client'\n"
+      "started_at_utc": "2026-06-30T10:17:51.151532Z",
+      "finished_at_utc": "2026-06-30T10:17:54.920533Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "Estate product access collected.\n{\n  \"accessible_jira_resource_count\": 6,\n  \"sites_with_jira_roles\": 3,\n  \"total_jira_product_user_count\": 139,\n  \"total_jira_seat_limit\": 100150,\n  \"total_jira_remaining_seats\": 100011,\n  \"jira_role_rows\": 3,\n  \"error_site_count\": 3\n}\nEstate access truth generated.\n{\n  \"api_product_user_count\": 139,\n  \"admin_human_users\": 61,\n  \"billing_jira_seats\": 139,\n  \"api_product_to_human_ratio\": 2.28,\n  \"billing_to_human_ratio\": 2.28,\n  \"accessible_jira_resource_count\": 6,\n  \"sites_with_jira_roles\": 3\n}\nCollection warnings/errors:\n{\n  \"gaminglabs-team-h2pbpmis\": [\n    \"HTTP 403: {\\\"errorMessages\\\":[\\\"Application access permissions can only be edited or viewed by administrators.\\\"],\\\"errors\\\":{}}\"\n  ],\n  \"gaminglabs-team-tsyfo716\": [\n    \"HTTP 403: {\\\"errorMessages\\\":[\\\"Application access permissions can only be edited or viewed by administrators.\\\"],\\\"errors\\\":{}}\"\n  ],\n  \"gli-usa\": [\n    \"HTTP 403: {\\\"errorMessages\\\":[\\\"Application access permissions can only be edited or viewed by administrators.\\\"],\\\"errors\\\":{}}\"\n  ]\n}\n",
+      "stderr_tail": ""
     },
     {
       "key": "admin_truth_v2",
       "label": "Rebuild Admin Truth v2 after product access refresh",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_admin_truth_layer_v2.py",
       "exists": true,
-      "started_at_utc": "2026-06-29T09:26:59.869580Z",
-      "finished_at_utc": "2026-06-29T09:27:00.048800Z",
+      "started_at_utc": "2026-06-30T10:17:54.920629Z",
+      "finished_at_utc": "2026-06-30T10:17:55.007532Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "Admin Truth Layer v2 generated.\n{\n  \"status\": \"aligned\",\n  \"severity\": \"ok\",\n  \"interpretation\": \"API product access users match Atlassian billing seats exactly. Billing and API product-count truth are aligned.\",\n  \"admin_human_users\": 61,\n  \"billing_jira_seats\": 139,\n  \"api_product_users\": 139,\n  \"api_minus_billing\": 0,\n  \"api_billing_variance_abs\": 0,\n  \"billing_to_human_ratio\": 2.28,\n  \"api_product_to_human_ratio\": 2.28,\n  \"confirmed_product_site_count\": 3,\n  \"accessible_jira_resource_count\": 6,\n  \"blocked_resource_count\": 3\n}\nJSON: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\admin_truth_v2.json\nReport: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\admin_truth_v2.md\n",
@@ -44,11 +44,11 @@
       "label": "Rebuild source freshness audit",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
       "exists": true,
-      "started_at_utc": "2026-06-29T09:27:00.049056Z",
-      "finished_at_utc": "2026-06-29T09:27:00.165281Z",
+      "started_at_utc": "2026-06-30T10:17:55.007620Z",
+      "finished_at_utc": "2026-06-30T10:17:55.065059Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"overall_state\": \"OK\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 6,\n    \"AGING\": 2,\n    \"STALE\": 0,\n    \"MISSING\": 0,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_freshness_audit.json\n",
+      "stdout_tail": "{\n  \"overall_state\": \"OK\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 5,\n    \"AGING\": 3,\n    \"STALE\": 0,\n    \"MISSING\": 0,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_freshness_audit.json\n",
       "stderr_tail": ""
     },
     {
@@ -56,11 +56,11 @@
       "label": "Rebuild source reliability status",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/source_reliability_audit.py",
       "exists": true,
-      "started_at_utc": "2026-06-29T09:27:00.165423Z",
-      "finished_at_utc": "2026-06-29T09:27:00.260581Z",
+      "started_at_utc": "2026-06-30T10:17:55.065146Z",
+      "finished_at_utc": "2026-06-30T10:17:55.111745Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"issue_count\": 1,\n  \"freshness_overall\": \"OK\",\n  \"runtime_refresh_overall\": \"ok\",\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_reliability_status.json\n",
+      "stdout_tail": "{\n  \"issue_count\": 1,\n  \"freshness_overall\": \"OK\",\n  \"runtime_refresh_overall\": \"review\",\n  \"user_footprint_status\": \"generated\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\source_reliability_status.json\n",
       "stderr_tail": ""
     }
   ]

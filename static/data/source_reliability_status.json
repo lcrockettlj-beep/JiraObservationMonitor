@@ -1,14 +1,21 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-06-30T08:17:09.664553Z",
-  "overall_status": "ok",
+  "generated_at_utc": "2026-06-30T10:17:55.661473Z",
+  "overall_status": "review",
   "summary": {
-    "issue_count": 0,
+    "issue_count": 1,
     "freshness_overall": "OK",
-    "runtime_refresh_overall": "ok",
+    "runtime_refresh_overall": "review",
     "user_footprint_status": "generated"
   },
-  "issues": [],
+  "issues": [
+    {
+      "source": "Runtime Refresh",
+      "state": "review",
+      "path": "static/data/runtime_refresh_status.json",
+      "reason": "Runtime collector was not requested. Status inferred from latest_run.json freshness."
+    }
+  ],
   "inputs": {
     "source_freshness": "static\\data\\source_freshness_audit.json",
     "runtime_refresh": "static\\data\\runtime_refresh_status.json",
