@@ -44,3 +44,10 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# JOM_SITE_ONBOARDING_CONTROL_V1
+try:
+    from app.registry.site_onboarding_control import load_decisions, normalise_legacy_decisions
+    _jom_onboarding_decisions = normalise_legacy_decisions(load_decisions())
+except Exception:
+    _jom_onboarding_decisions = None

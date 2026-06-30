@@ -17,3 +17,12 @@ if __name__ == "__main__":
     print("Site registry generated.")
     print(json.dumps(registry.get("summary", {}), indent=2))
     print(f"Output: {root / 'static' / 'data' / 'site_registry.json'}")
+
+# JOM_SITE_ONBOARDING_CONTROL_V1
+try:
+    from app.registry.site_onboarding_control import get_site_state, is_site_approved
+except Exception:
+    def get_site_state(site_key):
+        return "pending"
+    def is_site_approved(site_key):
+        return False
