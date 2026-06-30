@@ -1,25 +1,34 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-06-30T10:17:55.661473Z",
-  "overall_status": "review",
+  "generated_at_utc": "2026-06-30T10:22:10.261198Z",
+  "overall_status": "ok",
   "summary": {
-    "issue_count": 1,
+    "issue_count": 0,
     "freshness_overall": "OK",
-    "runtime_refresh_overall": "review",
+    "runtime_refresh_overall": "ok_with_advisory",
     "user_footprint_status": "generated"
   },
-  "issues": [
-    {
-      "source": "Runtime Refresh",
-      "state": "review",
-      "path": "static/data/runtime_refresh_status.json",
-      "reason": "Runtime collector was not requested. Status inferred from latest_run.json freshness."
-    }
-  ],
+  "issues": [],
   "inputs": {
     "source_freshness": "static\\data\\source_freshness_audit.json",
     "runtime_refresh": "static\\data\\runtime_refresh_status.json",
     "user_footprint": "static\\data\\user_footprint.json",
     "site_registry": "static\\data\\site_registry.json"
+  },
+  "advisories": [
+    {
+      "source": "Runtime Refresh",
+      "state": "review",
+      "path": "static/data/runtime_refresh_status.json",
+      "reason": "Runtime collector was not requested. Status inferred from latest_run.json freshness.",
+      "classification": "advisory",
+      "blocking": false,
+      "alignment_note": "Runtime collector was intentionally not requested; latest runtime data freshness remains visible in runtime_refresh_status.json."
+    }
+  ],
+  "alignment": {
+    "runtime_refresh_review_aligned": true,
+    "aligned_at_utc": "2026-06-30T10:22:10Z",
+    "reason": "Converted expected no-collector-requested runtime refresh review into advisory, not blocking issue."
   }
 }
