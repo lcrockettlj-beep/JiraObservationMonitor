@@ -1,6 +1,6 @@
 {
   "schema": "jom-named-access-truth-v2",
-  "generated_at_utc": "2026-06-30T12:47:57.374446Z",
+  "generated_at_utc": "2026-06-30T17:55:31.794088Z",
   "source_status": "generated",
   "safe_to_enable_named_access_ui": false,
   "reason": "Named access truth v2 is not safe until direct + group-derived assignments reconcile to billing/API product counts.",
