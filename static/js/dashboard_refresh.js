@@ -1,4 +1,35 @@
 ﻿/*
+ * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.1.1
+ * Scope: dashboard_refresh.js only
+ * Behaviour: operator endpoints are preflighted first, then existing compatibility routes are used for payload-shape safety.
+ * UI/CSS/templates: unchanged.
+ */
+async function jomDashboardOperatorPreflightV111(kind) {
+  if (!window.JOMOperatorAPI) { return null; }
+  try {
+    if (kind === 'source-state' && typeof window.JOMOperatorAPI.getOperatorSummary === 'function') {
+      return await window.JOMOperatorAPI.getOperatorSummary();
+    }
+    if (kind === 'data' && typeof window.JOMOperatorAPI.getOperatorSurface === 'function') {
+      return await window.JOMOperatorAPI.getOperatorSurface();
+    }
+  } catch (error) {
+    return null;
+  }
+  return null;
+}
+
+async function jomDashboardFetchSourceStateV111(options) {
+  await jomDashboardOperatorPreflightV111('source-state');
+  return fetch('/api/source-state', options);
+}
+
+async function jomDashboardFetchDataV111(options) {
+  await jomDashboardOperatorPreflightV111('data');
+  return fetch('/api/data', options);
+}
+
+/*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1
  * File: static\js\dashboard_refresh.js
  * Target endpoints: /operator/summary + /operator/surface
@@ -527,7 +558,7 @@
 
   async function pollSourceState() {
     try {
-      const response = await fetch('/api/source-state', { cache: 'no-store', credentials: 'same-origin' });
+      const response = await jomDashboardFetchSourceStateV111({ cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       state.sourceMode = data.source_mode || 'runtime';
@@ -546,7 +577,7 @@
 
   async function pollRuntimeData() {
     try {
-      const response = await fetch('/api/data', { cache: 'no-store', credentials: 'same-origin' });
+      const response = await jomDashboardFetchDataV111({ cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       const inferred = inferHealth(data);
@@ -608,3 +639,4 @@ function jomLegacyAdapterMigrationNoteV1() {
     templateChanges: false
   };
 }
+
