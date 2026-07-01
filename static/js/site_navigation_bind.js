@@ -35,7 +35,7 @@ async function jomNavPreflightV12() {
 
 async function jomNavFetchDataV12(opts) {
   await jomNavPreflightV12();
-  return fetch('/api/data', opts);
+  return await jomNavigationPayloadAdapterV1(opts);
 }
 
 /*
