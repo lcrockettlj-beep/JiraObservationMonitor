@@ -1,4 +1,12 @@
-﻿(function () {
+﻿/*
+ * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1
+ * File: static\js\site_navigation_bind.js
+ * Target endpoints: /operator/surface or /registry/sites
+ * Purpose: mark this module as part of the controlled legacy-to-operator adapter migration.
+ * Behaviour safety: no visual, template, or CSS changes are made by this pack.
+ * Compatibility routes remain active while endpoint-specific payload alignment is completed.
+ */
+(function () {
   function normalise(value) {
     return String(value || '')
       .trim()
@@ -142,3 +150,13 @@
     init();
   }
 })();
+
+function jomLegacyAdapterMigrationNoteV1() {
+  return {
+    phase: "legacy-js-adapter-migration-execution-v1",
+    behaviour: "compatibility routes remain active until payload-specific adapter swaps are validated",
+    uiChanges: false,
+    cssChanges: false,
+    templateChanges: false
+  };
+}

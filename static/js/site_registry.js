@@ -1,3 +1,11 @@
+﻿/*
+ * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1
+ * File: static\js\site_registry.js
+ * Target endpoints: /registry/sites
+ * Purpose: mark this module as part of the controlled legacy-to-operator adapter migration.
+ * Behaviour safety: no visual, template, or CSS changes are made by this pack.
+ * Compatibility routes remain active while endpoint-specific payload alignment is completed.
+ */
 (function(){
   function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function cls(v){return String(v||'discovered').toLowerCase().replace(/[^a-z0-9_-]/g,'');}
@@ -18,3 +26,13 @@
   function load(){fetch('/api/site-registry',{cache:'no-store'}).then(function(r){return r.json();}).then(apply).catch(function(){});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
 })();
+
+function jomLegacyAdapterMigrationNoteV1() {
+  return {
+    phase: "legacy-js-adapter-migration-execution-v1",
+    behaviour: "compatibility routes remain active until payload-specific adapter swaps are validated",
+    uiChanges: false,
+    cssChanges: false,
+    templateChanges: false
+  };
+}

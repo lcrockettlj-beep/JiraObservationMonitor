@@ -1,3 +1,11 @@
+﻿/*
+ * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1
+ * File: static\js\estate_product_access_breakdown.js
+ * Target endpoints: /estate/product-access + /registry/sites
+ * Purpose: mark this module as part of the controlled legacy-to-operator adapter migration.
+ * Behaviour safety: no visual, template, or CSS changes are made by this pack.
+ * Compatibility routes remain active while endpoint-specific payload alignment is completed.
+ */
 (function () {
   function number(value) {
     const parsed = Number(value || 0);
@@ -217,3 +225,13 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+
+function jomLegacyAdapterMigrationNoteV1() {
+  return {
+    phase: "legacy-js-adapter-migration-execution-v1",
+    behaviour: "compatibility routes remain active until payload-specific adapter swaps are validated",
+    uiChanges: false,
+    cssChanges: false,
+    templateChanges: false
+  };
+}
