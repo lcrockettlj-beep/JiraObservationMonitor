@@ -1,4 +1,26 @@
 ﻿/*
+ * JOM OPERATOR NAVIGATION PAYLOAD ADAPTER EXECUTION PACK v1
+ * Scope: site_navigation_bind.js data/load path only.
+ * Behaviour: prefer /registry/sites payload, fall back to /api/data.
+ * UI/CSS/templates: unchanged.
+ */
+async function jomNavigationPayloadAdapterV1(options) {
+  try {
+    var response = await fetch('/registry/sites', { cache: 'no-store', credentials: 'same-origin' });
+    if (!response.ok) { throw new Error('registry sites unavailable'); }
+    var registry = await response.json();
+    if (registry && Array.isArray(registry.sites)) {
+      return { sites: registry.sites, site_registry: registry, registry: registry, summary: registry.summary || {} };
+    }
+    throw new Error('registry sites payload shape invalid');
+  } catch (error) {
+    var fallback = await fetch('/api/data', options || { credentials: 'same-origin' });
+    if (!fallback.ok) { throw new Error('legacy /api/data fallback unavailable'); }
+    return await fallback.json();
+  }
+}
+
+/*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.2
  * Scope: site_navigation_bind.js
  * Behaviour: operator preflight + legacy fallback
@@ -142,7 +164,7 @@ async function jomNavFetchDataV12(opts) {
       return;
     }
 
-    jomNavFetchDataV12({ credentials: 'same-origin' })
+    jomNavigationPayloadAdapterV1({ credentials: 'same-origin' })
       .then(function (response) {
         if (!response.ok) {
           throw new Error('Unable to load /api/data');
@@ -178,4 +200,5 @@ function jomLegacyAdapterMigrationNoteV1() {
     templateChanges: false
   };
 }
+
 
