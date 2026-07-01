@@ -310,23 +310,7 @@ def detail_list_context() -> Dict[str, Any]:
 
 @app.route("/")
 def home():
-    return jsonify({
-        "status": "JOM backend running",
-        "mode": "pack_v1_template_route_context_injection",
-        "summary": "/operator/summary",
-        "surface": "/operator/surface",
-        "alerts": "/operator/alerts",
-        "observability": "/operator/observability",
-        "pages": {
-            "home": "/home",
-            "estate": "/estate",
-            "reference": "/reference",
-            "site": "/site",
-            "detail_list": "/detail-list",
-        },
-        "runtime": {"status": "/runtime/status", "history": "/runtime/history", "refresh": "/runtime/refresh", "recover": "/runtime/recover"},
-    })
-
+    return render_template("home.html", **home_context())
 
 @app.route("/admin/truth")
 def admin_truth():
