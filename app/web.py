@@ -1,54 +1,79 @@
-﻿from flask import Flask, jsonify
+﻿from __future__ import annotations
+
+from flask import Flask, jsonify, render_template, send_from_directory
 import json
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any, Dict, List
 
 from app.runtime.admin_enriched_chain import run_pipeline as run_snapshot
 from app.runtime.operational_source_recovery import run_pipeline as run_recovery
 from app.operational.operator_surface import build_alerts, build_operator_surface, build_operator_summary
 
-app = Flask(__name__)
-
 ROOT = Path(__file__).resolve().parents[1]
+app = Flask(
+    __name__,
+    template_folder=str(ROOT / "templates"),
+    static_folder=str(ROOT / "static"),
+    static_url_path="/static",
+)
+
 DATA_PATH = ROOT / "static" / "data"
 RUNTIME_STATUS_PATH = DATA_PATH / "runtime_execution_status.json"
 RUNTIME_HISTORY_PATH = DATA_PATH / "runtime_execution_history.json"
 _runtime_lock = threading.Lock()
 
 
-def now_utc():
+class SafeDict(dict):
+    """Dict that returns safe empty values for missing template attributes."""
+
+    def __getattr__(self, item):
+        return self.get(item, SafeDict())
+
+
+def to_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return SafeDict({key: to_safe(val) for key, val in value.items()})
+    if isinstance(value, list):
+        return [to_safe(item) for item in value]
+    return value
+
+
+def now_utc() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def load_json(filename):
+def load_json(filename: str, default: Any = None) -> Any:
+    if default is None:
+        default = {}
     path = DATA_PATH / filename
     if not path.exists():
-        return {"error": f"{filename} not found"}
-    with open(path, "r", encoding="utf-8-sig") as handle:
-        return json.load(handle)
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception as exc:
+        return {"_load_error": str(exc), "_file": filename}
 
 
-def write_json(path, payload):
+def write_json(path: Path, payload: Any) -> Any:
     DATA_PATH.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     return payload
 
 
-def write_runtime_status(payload):
+def write_runtime_status(payload: Dict[str, Any]) -> Dict[str, Any]:
     return write_json(RUNTIME_STATUS_PATH, payload)
 
 
-def read_runtime_status():
-    if not RUNTIME_STATUS_PATH.exists():
+def read_runtime_status() -> Dict[str, Any]:
+    payload = load_json("runtime_execution_status.json", {})
+    if not isinstance(payload, dict) or not payload:
         return {"state": "idle", "running": False, "source": "runtime_execution_status.json not yet created"}
-    try:
-        return json.loads(RUNTIME_STATUS_PATH.read_text(encoding="utf-8-sig"))
-    except Exception as exc:
-        return {"state": "unknown", "running": False, "last_error": f"Unable to read runtime status: {exc}"}
+    return payload
 
 
-def compact_runtime_status():
+def compact_runtime_status() -> Dict[str, Any]:
     status = read_runtime_status()
     return {
         "state": status.get("state", "unknown"),
@@ -61,17 +86,12 @@ def compact_runtime_status():
     }
 
 
-def read_runtime_history():
-    if not RUNTIME_HISTORY_PATH.exists():
-        return []
-    try:
-        payload = json.loads(RUNTIME_HISTORY_PATH.read_text(encoding="utf-8-sig"))
-        return payload if isinstance(payload, list) else []
-    except Exception:
-        return []
+def read_runtime_history() -> List[Any]:
+    payload = load_json("runtime_execution_history.json", [])
+    return payload if isinstance(payload, list) else []
 
 
-def append_runtime_history(event):
+def append_runtime_history(event: Dict[str, Any]) -> List[Any]:
     history = read_runtime_history()
     history.append(event)
     history = history[-100:]
@@ -79,7 +99,7 @@ def append_runtime_history(event):
     return history
 
 
-def execute_guarded(action_name, runner):
+def execute_guarded(action_name: str, runner):
     acquired = _runtime_lock.acquire(blocking=False)
     if not acquired:
         current = compact_runtime_status()
@@ -90,7 +110,15 @@ def execute_guarded(action_name, runner):
         return jsonify({"status": "busy", "message": "Runtime execution already in progress", "runtime_status": current}), 409
 
     started = now_utc()
-    write_runtime_status({"state": "running", "running": True, "last_action": action_name, "last_started_at_utc": started, "last_finished_at_utc": None, "last_result_status": None, "last_error": None})
+    write_runtime_status({
+        "state": "running",
+        "running": True,
+        "last_action": action_name,
+        "last_started_at_utc": started,
+        "last_finished_at_utc": None,
+        "last_result_status": None,
+        "last_error": None,
+    })
 
     try:
         result = runner()
@@ -98,27 +126,204 @@ def execute_guarded(action_name, runner):
         result_status = "success"
         if isinstance(result, dict):
             result_status = result.get("overall_status") or result.get("status") or "success"
-        status_payload = write_runtime_status({"state": "idle", "running": False, "last_action": action_name, "last_started_at_utc": started, "last_finished_at_utc": finished, "last_result_status": result_status, "last_error": None, "last_result": result})
-        append_runtime_history({"action": action_name, "started_at_utc": started, "finished_at_utc": finished, "status": "success", "result_status": result_status})
+        status_payload = write_runtime_status({
+            "state": "idle",
+            "running": False,
+            "last_action": action_name,
+            "last_started_at_utc": started,
+            "last_finished_at_utc": finished,
+            "last_result_status": result_status,
+            "last_error": None,
+            "last_result": result,
+        })
+        append_runtime_history({
+            "action": action_name,
+            "started_at_utc": started,
+            "finished_at_utc": finished,
+            "status": "success",
+            "result_status": result_status,
+        })
         return jsonify({"status": "success", "message": f"{action_name} executed", "runtime_status": status_payload, "result": result})
     except Exception as exc:
         finished = now_utc()
-        status_payload = write_runtime_status({"state": "failed", "running": False, "last_action": action_name, "last_started_at_utc": started, "last_finished_at_utc": finished, "last_result_status": "failed", "last_error": str(exc)})
-        append_runtime_history({"action": action_name, "started_at_utc": started, "finished_at_utc": finished, "status": "failed", "error": str(exc)})
+        status_payload = write_runtime_status({
+            "state": "failed",
+            "running": False,
+            "last_action": action_name,
+            "last_started_at_utc": started,
+            "last_finished_at_utc": finished,
+            "last_result_status": "failed",
+            "last_error": str(exc),
+        })
+        append_runtime_history({
+            "action": action_name,
+            "started_at_utc": started,
+            "finished_at_utc": finished,
+            "status": "failed",
+            "error": str(exc),
+        })
         return jsonify({"status": "error", "message": str(exc), "runtime_status": status_payload}), 500
     finally:
         _runtime_lock.release()
+
+
+def _translate(value: Any = "") -> str:
+    return str(value)
+
+
+def _registry_parts() -> Dict[str, Any]:
+    registry = load_json("site_registry.json", {})
+    sites = registry.get("sites", []) if isinstance(registry, dict) else []
+    monitored = [site for site in sites if isinstance(site, dict) and site.get("classification") == "monitored"]
+    discovered = [site for site in sites if isinstance(site, dict) and site.get("classification") == "discovered"]
+    summary = registry.get("summary", {}) if isinstance(registry, dict) else {}
+    if not summary:
+        summary = {
+            "site_count": len(sites),
+            "monitored_count": len(monitored),
+            "discovered_count": len(discovered),
+        }
+    return {
+        "registry": registry,
+        "sites": sites,
+        "registry_monitored_sites": monitored,
+        "registry_discovered_sites": discovered,
+        "registry_summary": summary,
+        "site_discovery": discovered,
+    }
+
+
+def _site_parts() -> Dict[str, Any]:
+    parts = _registry_parts()
+    sites = parts.get("sites", [])
+    selected = sites[0] if sites else {}
+    if not isinstance(selected, dict):
+        selected = {}
+    site_key = selected.get("key") or selected.get("site_key") or selected.get("name") or "site"
+    site_title = selected.get("title") or selected.get("name") or site_key
+    site_url = selected.get("url") or selected.get("site_url") or ""
+    site_status = selected.get("status") or selected.get("classification") or "unknown"
+    return {
+        "site": selected,
+        "site_key": site_key,
+        "site_title": site_title,
+        "site_url": site_url,
+        "site_status": site_status,
+        "site_source_file": "site_registry.json",
+        "source_file": "site_registry.json",
+        "project_rows": [],
+        "endpoint_rows": [],
+        "trend_rows": [],
+        "data_quality_breakdown": [],
+    }
+
+
+def base_template_context() -> Dict[str, Any]:
+    operator_summary = build_operator_summary()
+    operator_surface = build_operator_surface()
+    operator_alert_payload = {"count": len(build_alerts()), "alerts": build_alerts()}
+    registry_parts = _registry_parts()
+    admin_truth = load_json("admin_truth_v2.json", {})
+    estate_product_access = load_json("estate_product_access.json", {})
+    user_footprint = load_json("user_footprint.json", {})
+    runtime_status = compact_runtime_status()
+
+    context = {
+        "_": _translate,
+        "operator_summary": operator_summary,
+        "operator_surface": operator_surface,
+        "operator_alerts": operator_alert_payload.get("alerts", []),
+        "runtime_status": runtime_status,
+        "admin_truth": admin_truth,
+        "estate_product_access": estate_product_access,
+        "user_footprint": user_footprint,
+        "site_registry": registry_parts.get("registry", {}),
+        "registry_summary": registry_parts.get("registry_summary", {}),
+        "registry_monitored_sites": registry_parts.get("registry_monitored_sites", []),
+        "registry_discovered_sites": registry_parts.get("registry_discovered_sites", []),
+        "site_discovery": {
+            "summary": registry_parts.get("registry_summary", {}),
+            "sites": registry_parts.get("sites", []),
+            "monitored_sites": registry_parts.get("registry_monitored_sites", []),
+            "discovered_sites": registry_parts.get("registry_discovered_sites", []),
+        },
+        "estate": operator_surface.get("estate", {}) if isinstance(operator_surface, dict) else {},
+        "latest_snapshot": load_json("admin_enriched_refresh_status.json", {}),
+        "latest_snapshot_entry": runtime_status,
+        "latest_snapshot_timestamp": runtime_status.get("last_finished_at_utc"),
+        "critical_sites": [],
+        "warning_sites": build_alerts(),
+        "stable_sites": registry_parts.get("registry_monitored_sites", []),
+        "intelligence_sites": registry_parts.get("sites", []),
+        "managed_row_count": len(registry_parts.get("registry_monitored_sites", [])),
+        "managed_user_count": user_footprint.get("users") if isinstance(user_footprint, dict) else 0,
+        "users_row_count": user_footprint.get("users") if isinstance(user_footprint, dict) else 0,
+        "total_users_count": user_footprint.get("users") if isinstance(user_footprint, dict) else 0,
+        "action_label": "Review",
+    }
+    return to_safe(context)
+
+
+def home_context() -> Dict[str, Any]:
+    return base_template_context()
+
+
+def estate_context() -> Dict[str, Any]:
+    return base_template_context()
+
+
+def reference_context() -> Dict[str, Any]:
+    context = base_template_context()
+    admin_truth = load_json("admin_truth_v2.json", {})
+    context.update(to_safe({
+        "billing_summary": admin_truth,
+        "org_product_breakdown": [],
+        "users_export_breakdown": [],
+    }))
+    return context
+
+
+def site_context() -> Dict[str, Any]:
+    context = base_template_context()
+    context.update(to_safe(_site_parts()))
+    return context
+
+
+def detail_list_context() -> Dict[str, Any]:
+    items: List[Any] = []
+    context = base_template_context()
+    context.update(to_safe({
+        "title": "Detail list",
+        "heading": "Detail list",
+        "subtitle": "Runtime generated detail list",
+        "description": "No detail selection has been provided.",
+        "items": items,
+        "entries": items,
+        "rows": items,
+        "results": items,
+        "data": items,
+        "count": len(items),
+        "record_count": len(items),
+    }))
+    return context
 
 
 @app.route("/")
 def home():
     return jsonify({
         "status": "JOM backend running",
-        "mode": "pack_v1_operator_surface_hardening",
+        "mode": "pack_v1_template_route_context_injection",
         "summary": "/operator/summary",
         "surface": "/operator/surface",
         "alerts": "/operator/alerts",
         "observability": "/operator/observability",
+        "pages": {
+            "home": "/home",
+            "estate": "/estate",
+            "reference": "/reference",
+            "site": "/site",
+            "detail_list": "/detail-list",
+        },
         "runtime": {"status": "/runtime/status", "history": "/runtime/history", "refresh": "/runtime/refresh", "recover": "/runtime/recover"},
     })
 
@@ -191,5 +396,70 @@ def health():
     return jsonify({"status": "healthy" if not runtime.get("running") else "busy", "runtime": runtime, "operator_posture": summary.get("posture"), "alert_summary": summary.get("alert_summary")})
 
 
+@app.route("/home")
+def page_home():
+    return render_template("home.html", **home_context())
+
+
+@app.route("/estate")
+def page_estate():
+    return render_template("estate.html", **estate_context())
+
+
+@app.route("/reference")
+def page_reference():
+    return render_template("reference.html", **reference_context())
+
+
+@app.route("/site")
+def page_site():
+    return render_template("site.html", **site_context())
+
+
+@app.route("/detail-list")
+def page_detail_list():
+    return render_template("detail_list.html", **detail_list_context())
+
+
+
+# ============================================================
+# LEGACY FRONTEND API COMPATIBILITY ROUTES - PACK v1
+# ============================================================
+@app.route("/api/source-state")
+def api_source_state_legacy():
+    return jsonify({
+        "schema": "jom-legacy-source-state-compat-v1",
+        "source_freshness": load_json("source_freshness_audit.json", {}),
+        "source_reliability": load_json("source_reliability_status.json", {}),
+        "runtime_status": compact_runtime_status(),
+        "operator_summary": build_operator_summary(),
+    })
+
+
+@app.route("/api/data")
+def api_data_legacy():
+    return jsonify({
+        "schema": "jom-legacy-data-compat-v1",
+        "operator_surface": build_operator_surface(),
+        "operator_summary": build_operator_summary(),
+        "admin_truth": load_json("admin_truth_v2.json", {}),
+        "estate_product_access": load_json("estate_product_access.json", {}),
+        "user_footprint": load_json("user_footprint.json", {}),
+        "site_registry": load_json("site_registry.json", {}),
+    })
+
+
+@app.route("/api/site-registry")
+def api_site_registry_legacy():
+    return jsonify(load_json("site_registry.json", {}))
+
+
+@app.route("/reports/<path:filename>")
+def reports_file_legacy(filename):
+    reports_root = ROOT / "reports"
+    return send_from_directory(str(reports_root), filename)
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
+

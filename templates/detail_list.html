@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 <head>
@@ -54,7 +54,7 @@
                 <div class="guidance-title">Billing and subscription follow-up</div>
                 <div class="guidance-copy">Use Atlassian Administration billing to inspect subscriptions, invoices, billing roles, payment methods, and plan changes.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Billing</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration â†’ Billing</strong></div>
                     <div class="guidance-row"><span>Use for</span><strong>Subscriptions, invoices, billing admins, payment details</strong></div>
                 </div>
                 <div class="guidance-actions">
@@ -67,7 +67,7 @@
                 <div class="guidance-title">User access and account follow-up</div>
                 <div class="guidance-copy">Review managed accounts, suspended users, product access, and access assignments from Atlassian Administration.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration → Directory → Users</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Atlassian Administration â†’ Directory â†’ Users</strong></div>
                     <div class="guidance-row"><span>Use for</span><strong>Suspended users, managed accounts, product access changes</strong></div>
                 </div>
                 <div class="guidance-actions"><a href="https://admin.atlassian.com/" class="pill" target="_blank" rel="noopener noreferrer">Open admin</a></div>
@@ -77,8 +77,8 @@
                 <div class="guidance-title">Audit and change investigation</div>
                 <div class="guidance-copy">Use Jira audit logs and automation audit logs to confirm who changed what, when, and whether flows succeeded or failed.</div>
                 <div class="guidance-list">
-                    <div class="guidance-row"><span>Where to fix</span><strong>Jira Settings → System → Audit Log</strong></div>
-                    <div class="guidance-row"><span>Automation</span><strong>Administration → System → Automation rules → Audit log</strong></div>
+                    <div class="guidance-row"><span>Where to fix</span><strong>Jira Settings â†’ System â†’ Audit Log</strong></div>
+                    <div class="guidance-row"><span>Automation</span><strong>Administration â†’ System â†’ Automation rules â†’ Audit log</strong></div>
                 </div>
                 <div class="guidance-actions">
                     <a href="https://support.atlassian.com/jira-cloud-administration/docs/audit-activities-in-jira-applications/" class="pill" target="_blank" rel="noopener noreferrer">Audit log guide</a>
@@ -134,5 +134,10 @@
 </div>
 <script>window.JOMTheme.initToggle("theme-toggle");</script>
 <script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
+
+<!-- JOM operator frontend adapters -->
+<script src="/static/js/operator_api.js"></script>
+<script src="/static/js/operator_bindings.js"></script>
 </body>
 </html>
+
