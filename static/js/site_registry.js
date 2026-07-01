@@ -1,4 +1,23 @@
 ﻿/*
+ * JOM OPERATOR REGISTRY PAYLOAD ADAPTER EXECUTION PACK v1
+ * Scope: site_registry.js GET/load path only.
+ * Behaviour: prefer /registry/sites payload, fall back to /api/site-registry.
+ * POST approval/ignore actions remain on /api/site-registry/<action>.
+ * UI/CSS/templates: unchanged.
+ */
+async function jomRegistryPayloadAdapterV1() {
+  try {
+    var response = await fetch('/registry/sites', { cache: 'no-store' });
+    if (!response.ok) { throw new Error('registry sites unavailable'); }
+    return await response.json();
+  } catch (error) {
+    var fallback = await fetch('/api/site-registry', { cache: 'no-store' });
+    if (!fallback.ok) { throw new Error('site registry fallback unavailable'); }
+    return await fallback.json();
+  }
+}
+
+/*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.4
  * Scope: site_registry.js only
  * Behaviour: operator registry/surface preflight first, legacy /api/site-registry fallback remains active.
@@ -46,7 +65,7 @@ async function jomSiteRegistryFetchV14(options) {
   function renderDiscovery(root,items,summary){var html='<div class="site-registry-head"><div><h2>Discovered Sites Awaiting Review</h2><p>These Jira resources were discovered from Atlassian Admin/Billing signals but are not monitored until approved.</p></div><div class="site-registry-summary"><span>Discovered <b>'+esc(items.length)+'</b></span><span>Pending onboarding <b>'+esc(summary.pending_onboarding_count||0)+'</b></span></div></div>';if(!items.length){root.innerHTML=html+'<p class="site-registry-note">No discovered Jira resources are waiting for approval.</p>';return;}html+='<div class="site-registry-table-wrap"><table class="site-registry-table"><thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th></tr></thead><tbody>';items.forEach(function(x){var sig=[];if(x.metrics&&x.metrics.jira_product_user_count!=null)sig.push('Product users: '+x.metrics.jira_product_user_count);if(x.metrics&&x.metrics.named_access_count!=null)sig.push('Named direct: '+x.metrics.named_access_count);if(x.sources)sig.push('Sources: '+x.sources.join(', '));html+='<tr><td><strong>'+esc(x.site_name||x.site_key||x.cloud_id)+'</strong><small>'+esc(x.site_key||'')+'</small></td><td>'+esc(x.site_url||x.cloud_id||'Unknown')+'</td><td><span class="site-registry-badge site-registry-badge--'+cls(x.classification)+'">'+esc(x.classification)+'</span></td><td>'+esc(x.collector_onboarding_status||'not_requested')+'</td><td>'+esc(sig.join(' | '))+'</td></tr>';});root.innerHTML=html+'</tbody></table></div><p class="site-registry-note">Approval is controlled from Admin and creates a collector-onboarding trigger before full monitoring is trusted.</p>';}
   function renderAdmin(root,sites,summary){var html='<div class="site-registry-head"><div><h2>Site Discovery & Monitoring Control</h2><p>Approve discovered Jira resources. Approval also creates a collector-onboarding trigger.</p></div><div class="site-registry-summary"><span>Monitored <b>'+esc(summary.monitored_count||0)+'</b></span><span>Discovered <b>'+esc(summary.discovered_count||0)+'</b></span><span>Pending onboarding <b>'+esc(summary.pending_onboarding_count||0)+'</b></span></div></div><div class="site-registry-table-wrap"><table class="site-registry-table"><thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th><th>Actions</th></tr></thead><tbody>';sites.forEach(function(x,i){var sig=[];if(x.metrics&&x.metrics.jira_product_user_count!=null)sig.push('Product users: '+x.metrics.jira_product_user_count);if(x.metrics&&x.metrics.named_access_count!=null)sig.push('Named direct: '+x.metrics.named_access_count);if(x.sources)sig.push('Sources: '+x.sources.join(', '));html+='<tr><td><strong>'+esc(x.site_name||x.site_key||x.cloud_id)+'</strong><small>'+esc(x.site_key||'')+'</small></td><td>'+esc(x.site_url||x.cloud_id||'Unknown')+'</td><td><span class="site-registry-badge site-registry-badge--'+cls(x.classification)+'">'+esc(x.classification)+'</span></td><td>'+esc(x.collector_onboarding_status||'')+'</td><td>'+esc(sig.join(' | '))+'</td><td class="site-registry-actions">';if(x.classification!=='monitored')html+='<button data-idx="'+i+'" data-action="approve">Approve + trigger onboarding</button>';if(x.classification!=='ignored')html+='<button data-idx="'+i+'" data-action="ignore">Ignore</button>';html+='</td></tr>';});root.innerHTML=html+'</tbody></table></div><p class="site-registry-note">Approval queues collector validation. Do not treat a newly approved site as fully monitored until onboarding status is validated.</p>';Array.prototype.forEach.call(root.querySelectorAll('button[data-action]'),function(btn){btn.addEventListener('click',function(){var idx=Number(btn.getAttribute('data-idx'));var action=btn.getAttribute('data-action');btn.disabled=true;btn.textContent='Working...';post('/api/site-registry/'+action,sites[idx]).then(load).catch(function(){btn.disabled=false;btn.textContent='Failed';});});});}
   function apply(data){var sites=data.sites||[],summary=data.summary||{},m=pageMode();var monitored=sites.filter(function(s){return s.classification==='monitored';});var discovered=sites.filter(function(s){return s.classification==='discovered';});var tokens=[];monitored.forEach(function(s){tokens=tokens.concat(siteTokens(s));});removeOldMounts();if(m==='home'){hideUnmonitoredInSection(findSectionByHeading(['stable','sites']),tokens);renderDiscovery(ensureHomeDiscoveryMount(),discovered,summary);}else if(m==='estate'){hideUnmonitoredInSection(findSectionByHeading(['site','prioritisation'])||findSectionByHeading(['site','prioritization']),tokens);var em=document.getElementById('estate-site-registry-mount');if(em)em.remove();}else if(m==='admin'){renderAdmin(ensureAdminMount(),sites,summary);}}
-  function load(){jomSiteRegistryFetchV14({cache:'no-store'}).then(function(r){return r.json();}).then(apply).catch(function(){});}
+  function load(){jomRegistryPayloadAdapterV1().then(apply).catch(function(){});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
 })();
 
@@ -59,4 +78,5 @@ function jomLegacyAdapterMigrationNoteV1() {
     templateChanges: false
   };
 }
+
 
