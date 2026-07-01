@@ -363,11 +363,20 @@
 <script src="/static/js/operator_bindings.js"></script>
   <script src="{{ url_for('static', filename='js/jom_contract_client.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_home_contract_binding.js') }}" defer></script>
-<section class="jom-contract-targets" data-jom-contract-surface="home" hidden>
-  <span data-jom-client="home-runtime-status"></span>
-  <span data-jom-client="home-source-health"></span>
-  <span data-jom-client="home-alert-count"></span>
-  <pre data-jom-client="home-observability-json"></pre>
+<section class="jom-contract-targets" data-jom-contract-surface="home" aria-label="Home live operational status">
+  <h2>Live operational status</h2>
+  <dl>
+    <dt>Runtime status</dt>
+    <dd data-jom-client="home-runtime-status">Loading...</dd>
+    <dt>Source health</dt>
+    <dd data-jom-client="home-source-health">Loading...</dd>
+    <dt>Alert count</dt>
+    <dd data-jom-client="home-alert-count">Loading...</dd>
+  </dl>
+  <details>
+    <summary>Observability detail</summary>
+    <pre data-jom-client="home-observability-json">Loading...</pre>
+  </details>
 </section>
 </body>
 </html>

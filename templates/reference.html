@@ -164,16 +164,28 @@
   <script src="{{ url_for('static', filename='js/jom_contract_client.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_admin_contract_binding.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_reference_contract_binding.js') }}" defer></script>
-<section class="jom-contract-targets" data-jom-contract-surface="admin-reference" hidden>
-  <span data-jom-client="admin-generated-at"></span>
-  <span data-jom-client="admin-user-count"></span>
-  <span data-jom-client="admin-safe-named-access"></span>
-  <pre data-jom-client="admin-truth-json"></pre>
-  <pre data-jom-client="admin-footprint-json"></pre>
-  <span data-jom-client="reference-site-count"></span>
-  <span data-jom-client="reference-monitored-count"></span>
-  <span data-jom-client="reference-discovered-count"></span>
-  <pre data-jom-client="reference-registry-json"></pre>
+<section class="jom-contract-targets" data-jom-contract-surface="admin-reference" aria-label="Admin and reference live status">
+  <h2>Admin and reference live status</h2>
+  <dl>
+    <dt>Admin generated at</dt>
+    <dd data-jom-client="admin-generated-at">Loading...</dd>
+    <dt>User count</dt>
+    <dd data-jom-client="admin-user-count">Loading...</dd>
+    <dt>Named access safe to show</dt>
+    <dd data-jom-client="admin-safe-named-access">Loading...</dd>
+    <dt>Reference site count</dt>
+    <dd data-jom-client="reference-site-count">Loading...</dd>
+    <dt>Monitored site count</dt>
+    <dd data-jom-client="reference-monitored-count">Loading...</dd>
+    <dt>Discovered site count</dt>
+    <dd data-jom-client="reference-discovered-count">Loading...</dd>
+  </dl>
+  <details>
+    <summary>Admin and reference contract detail</summary>
+    <pre data-jom-client="admin-truth-json">Loading...</pre>
+    <pre data-jom-client="admin-footprint-json">Loading...</pre>
+    <pre data-jom-client="reference-registry-json">Loading...</pre>
+  </details>
 </section>
 </body>
 </html>
