@@ -6,7 +6,7 @@ from pathlib import Path
 
 from app.runtime.admin_enriched_chain import run_pipeline as run_snapshot
 from app.runtime.operational_source_recovery import run_pipeline as run_recovery
-from app.operational.operator_surface import build_alerts, build_operator_surface
+from app.operational.operator_surface import build_alerts, build_operator_surface, build_operator_summary
 
 app = Flask(__name__)
 
@@ -14,7 +14,6 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "static" / "data"
 RUNTIME_STATUS_PATH = DATA_PATH / "runtime_execution_status.json"
 RUNTIME_HISTORY_PATH = DATA_PATH / "runtime_execution_history.json"
-
 _runtime_lock = threading.Lock()
 
 
@@ -42,20 +41,24 @@ def write_runtime_status(payload):
 
 def read_runtime_status():
     if not RUNTIME_STATUS_PATH.exists():
-        return {
-            "state": "idle",
-            "last_action": None,
-            "last_started_at_utc": None,
-            "last_finished_at_utc": None,
-            "last_result_status": None,
-            "last_error": None,
-            "running": False,
-            "source": "runtime_execution_status.json not yet created"
-        }
+        return {"state": "idle", "running": False, "source": "runtime_execution_status.json not yet created"}
     try:
         return json.loads(RUNTIME_STATUS_PATH.read_text(encoding="utf-8-sig"))
     except Exception as exc:
         return {"state": "unknown", "running": False, "last_error": f"Unable to read runtime status: {exc}"}
+
+
+def compact_runtime_status():
+    status = read_runtime_status()
+    return {
+        "state": status.get("state", "unknown"),
+        "running": bool(status.get("running", False)),
+        "last_action": status.get("last_action"),
+        "last_started_at_utc": status.get("last_started_at_utc"),
+        "last_finished_at_utc": status.get("last_finished_at_utc"),
+        "last_result_status": status.get("last_result_status"),
+        "last_error": status.get("last_error"),
+    }
 
 
 def read_runtime_history():
@@ -79,7 +82,7 @@ def append_runtime_history(event):
 def execute_guarded(action_name, runner):
     acquired = _runtime_lock.acquire(blocking=False)
     if not acquired:
-        current = read_runtime_status()
+        current = compact_runtime_status()
         current["state"] = "busy"
         current["running"] = True
         current["rejected_action"] = action_name
@@ -87,15 +90,7 @@ def execute_guarded(action_name, runner):
         return jsonify({"status": "busy", "message": "Runtime execution already in progress", "runtime_status": current}), 409
 
     started = now_utc()
-    write_runtime_status({
-        "state": "running",
-        "running": True,
-        "last_action": action_name,
-        "last_started_at_utc": started,
-        "last_finished_at_utc": None,
-        "last_result_status": None,
-        "last_error": None
-    })
+    write_runtime_status({"state": "running", "running": True, "last_action": action_name, "last_started_at_utc": started, "last_finished_at_utc": None, "last_result_status": None, "last_error": None})
 
     try:
         result = runner()
@@ -103,43 +98,13 @@ def execute_guarded(action_name, runner):
         result_status = "success"
         if isinstance(result, dict):
             result_status = result.get("overall_status") or result.get("status") or "success"
-
-        status_payload = write_runtime_status({
-            "state": "idle",
-            "running": False,
-            "last_action": action_name,
-            "last_started_at_utc": started,
-            "last_finished_at_utc": finished,
-            "last_result_status": result_status,
-            "last_error": None,
-            "last_result": result
-        })
-        append_runtime_history({
-            "action": action_name,
-            "started_at_utc": started,
-            "finished_at_utc": finished,
-            "status": "success",
-            "result_status": result_status
-        })
+        status_payload = write_runtime_status({"state": "idle", "running": False, "last_action": action_name, "last_started_at_utc": started, "last_finished_at_utc": finished, "last_result_status": result_status, "last_error": None, "last_result": result})
+        append_runtime_history({"action": action_name, "started_at_utc": started, "finished_at_utc": finished, "status": "success", "result_status": result_status})
         return jsonify({"status": "success", "message": f"{action_name} executed", "runtime_status": status_payload, "result": result})
     except Exception as exc:
         finished = now_utc()
-        status_payload = write_runtime_status({
-            "state": "failed",
-            "running": False,
-            "last_action": action_name,
-            "last_started_at_utc": started,
-            "last_finished_at_utc": finished,
-            "last_result_status": "failed",
-            "last_error": str(exc)
-        })
-        append_runtime_history({
-            "action": action_name,
-            "started_at_utc": started,
-            "finished_at_utc": finished,
-            "status": "failed",
-            "error": str(exc)
-        })
+        status_payload = write_runtime_status({"state": "failed", "running": False, "last_action": action_name, "last_started_at_utc": started, "last_finished_at_utc": finished, "last_result_status": "failed", "last_error": str(exc)})
+        append_runtime_history({"action": action_name, "started_at_utc": started, "finished_at_utc": finished, "status": "failed", "error": str(exc)})
         return jsonify({"status": "error", "message": str(exc), "runtime_status": status_payload}), 500
     finally:
         _runtime_lock.release()
@@ -149,23 +114,12 @@ def execute_guarded(action_name, runner):
 def home():
     return jsonify({
         "status": "JOM backend running",
-        "mode": "pack_v1_operator_platform_combined",
-        "actions": {
-            "refresh": "/runtime/refresh",
-            "recover": "/runtime/recover",
-            "status": "/runtime/status"
-        },
-        "operator_endpoints": {
-            "surface": "/operator/surface",
-            "alerts": "/operator/alerts",
-            "observability": "/operator/observability"
-        },
-        "data_endpoints": {
-            "admin_truth": "/admin/truth",
-            "estate_product_access": "/estate/product-access",
-            "user_footprint": "/users/footprint",
-            "site_registry": "/registry/sites"
-        }
+        "mode": "pack_v1_operator_surface_hardening",
+        "summary": "/operator/summary",
+        "surface": "/operator/surface",
+        "alerts": "/operator/alerts",
+        "observability": "/operator/observability",
+        "runtime": {"status": "/runtime/status", "history": "/runtime/history", "refresh": "/runtime/refresh", "recover": "/runtime/recover"},
     })
 
 
@@ -191,7 +145,7 @@ def site_registry():
 
 @app.route("/runtime/status")
 def runtime_status():
-    return jsonify(read_runtime_status())
+    return jsonify(compact_runtime_status())
 
 
 @app.route("/runtime/history")
@@ -209,9 +163,15 @@ def runtime_recover():
     return execute_guarded("recover", run_recovery)
 
 
+@app.route("/operator/summary")
+def operator_summary():
+    return jsonify(build_operator_summary())
+
+
 @app.route("/operator/alerts")
 def operator_alerts():
-    return jsonify({"alerts": build_alerts()})
+    alerts = build_alerts()
+    return jsonify({"count": len(alerts), "alerts": alerts})
 
 
 @app.route("/operator/surface")
@@ -221,14 +181,14 @@ def operator_surface():
 
 @app.route("/operator/observability")
 def operator_observability():
-    return jsonify({"runtime_status": read_runtime_status(), "runtime_history": read_runtime_history()})
+    return jsonify({"runtime_status": compact_runtime_status(), "runtime_history": read_runtime_history()})
 
 
 @app.route("/health")
 def health():
-    status = read_runtime_status()
-    surface = build_operator_surface()
-    return jsonify({"status": "healthy" if not status.get("running") else "busy", "runtime": status, "operator_posture": surface.get("posture"), "alert_summary": surface.get("alert_summary")})
+    runtime = compact_runtime_status()
+    summary = build_operator_summary()
+    return jsonify({"status": "healthy" if not runtime.get("running") else "busy", "runtime": runtime, "operator_posture": summary.get("posture"), "alert_summary": summary.get("alert_summary")})
 
 
 if __name__ == "__main__":
