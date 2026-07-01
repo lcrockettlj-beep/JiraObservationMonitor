@@ -87,7 +87,7 @@ async function jomDashboardOperatorPreflightV111(kind) {
 
 async function jomDashboardFetchSourceStateV111(options) {
   await jomDashboardOperatorPreflightV111('source-state');
-  return fetch('/api/source-state', options);
+  return await jomDashboardSourceStateAdapterV1(options);
 }
 
 async function jomDashboardFetchDataV111(options) {
