@@ -20,7 +20,7 @@ async function jomRegistryPayloadAdapterV1() {
 /*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.4
  * Scope: site_registry.js only
- * Behaviour: operator registry/surface preflight first, legacy /api/site-registry fallback remains active.
+ * Behaviour: operator registry/surface preflight first, legacy /registry/sites fallback remains active.
  * UI/CSS/templates: unchanged.
  */
 async function jomSiteRegistryPreflightV14() {
@@ -37,7 +37,7 @@ async function jomSiteRegistryPreflightV14() {
 
 async function jomSiteRegistryFetchV14(options) {
   await jomSiteRegistryPreflightV14();
-  return fetch('/api/site-registry', options || { cache: 'no-store' });
+  return fetch('/registry/sites', options || { cache: 'no-store' });
 }
 
 /*

@@ -1,7 +1,7 @@
 ﻿/*
  * JOM OPERATOR ESTATE PRODUCT ACCESS ADAPTER v1
  * Behaviour: join /estate/product-access + /registry/sites
- * Fallback: /api/site-registry retained
+ * Fallback: /registry/sites retained
  */
 async function jomEstateProductAccessAdapterV1(){
  try{
@@ -12,7 +12,7 @@ async function jomEstateProductAccessAdapterV1(){
   const regJson = await reg.json();
   return { product_access: paJson, registry: regJson, sites: regJson.sites||[] };
  }catch(e){
-  const fallback = await fetch('/api/site-registry',{cache:'no-store'});
+  const fallback = await fetch('/registry/sites',{cache:'no-store'});
   if(!fallback.ok){throw new Error('fallback unavailable');}
   return await fallback.json();
  }
