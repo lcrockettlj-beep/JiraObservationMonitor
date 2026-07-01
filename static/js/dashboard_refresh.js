@@ -1,4 +1,70 @@
 ﻿/*
+ * JOM OPERATOR DASHBOARD PAYLOAD ADAPTER EXECUTION PACK v1
+ * Scope: dashboard_refresh.js source-state and dashboard data path.
+ * Behaviour: prefer operator summary/surface payloads and reshape to current UI-safe object.
+ * Fallback: /api/source-state and /api/data retained.
+ * UI/CSS/templates: unchanged.
+ */
+async function jomDashboardOperatorSummaryPayloadV1() {
+  var response = await fetch('/operator/summary', { cache: 'no-store', credentials: 'same-origin' });
+  if (!response.ok) { throw new Error('operator summary unavailable'); }
+  return await response.json();
+}
+
+async function jomDashboardOperatorSurfacePayloadV1() {
+  var response = await fetch('/operator/surface', { cache: 'no-store', credentials: 'same-origin' });
+  if (!response.ok) { throw new Error('operator surface unavailable'); }
+  return await response.json();
+}
+
+function jomDashboardBuildSourceStateV1(summary, surface) {
+  return {
+    schema: 'jom-dashboard-source-state-adapter-v1',
+    operator_summary: summary || {},
+    runtime_status: (summary && summary.runtime) || (surface && surface.runtime) || {},
+    source_freshness: (surface && surface.sources && surface.sources.freshness) || {},
+    source_reliability: (surface && surface.sources && surface.sources.reliability) || {},
+    operator_surface: surface || {}
+  };
+}
+
+function jomDashboardBuildDataPayloadV1(summary, surface) {
+  return {
+    schema: 'jom-dashboard-data-adapter-v1',
+    operator_summary: summary || {},
+    operator_surface: surface || {},
+    site_registry: (surface && surface.registry) || {},
+    estate: (surface && surface.estate) || {},
+    alerts: (surface && surface.alerts) || (summary && summary.top_alerts) || [],
+    alert_summary: (surface && surface.alert_summary) || (summary && summary.alert_summary) || {},
+    admin: (surface && surface.admin) || {},
+    runtime: (surface && surface.runtime) || (summary && summary.runtime) || {}
+  };
+}
+
+async function jomDashboardSourceStateAdapterV1(options) {
+  try {
+    var summary = await jomDashboardOperatorSummaryPayloadV1();
+    var surface = await jomDashboardOperatorSurfacePayloadV1();
+    var payload = jomDashboardBuildSourceStateV1(summary, surface);
+    return { ok: true, status: 200, json: async function(){ return payload; } };
+  } catch (error) {
+    return fetch('/api/source-state', options);
+  }
+}
+
+async function jomDashboardDataAdapterV1(options) {
+  try {
+    var summary = await jomDashboardOperatorSummaryPayloadV1();
+    var surface = await jomDashboardOperatorSurfacePayloadV1();
+    var payload = jomDashboardBuildDataPayloadV1(summary, surface);
+    return { ok: true, status: 200, json: async function(){ return payload; } };
+  } catch (error) {
+    return fetch('/api/data', options);
+  }
+}
+
+/*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.1.1
  * Scope: dashboard_refresh.js only
  * Behaviour: operator endpoints are preflighted first, then existing compatibility routes are used for payload-shape safety.
@@ -558,7 +624,7 @@ async function jomDashboardFetchDataV111(options) {
 
   async function pollSourceState() {
     try {
-      const response = await jomDashboardFetchSourceStateV111({ cache: 'no-store', credentials: 'same-origin' });
+      const response = await jomDashboardSourceStateAdapterV1({ cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       state.sourceMode = data.source_mode || 'runtime';
@@ -577,7 +643,7 @@ async function jomDashboardFetchDataV111(options) {
 
   async function pollRuntimeData() {
     try {
-      const response = await jomDashboardFetchDataV111({ cache: 'no-store', credentials: 'same-origin' });
+      const response = await jomDashboardDataAdapterV1({ cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       const inferred = inferHealth(data);
@@ -639,4 +705,5 @@ function jomLegacyAdapterMigrationNoteV1() {
     templateChanges: false
   };
 }
+
 

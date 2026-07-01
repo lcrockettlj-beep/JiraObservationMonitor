@@ -1,4 +1,24 @@
 ﻿/*
+ * JOM OPERATOR ESTATE PRODUCT ACCESS ADAPTER v1
+ * Behaviour: join /estate/product-access + /registry/sites
+ * Fallback: /api/site-registry retained
+ */
+async function jomEstateProductAccessAdapterV1(){
+ try{
+  const pa = await fetch('/estate/product-access',{cache:'no-store'});
+  const reg = await fetch('/registry/sites',{cache:'no-store'});
+  if(!pa.ok||!reg.ok){throw new Error('operator endpoints unavailable');}
+  const paJson = await pa.json();
+  const regJson = await reg.json();
+  return { product_access: paJson, registry: regJson, sites: regJson.sites||[] };
+ }catch(e){
+  const fallback = await fetch('/api/site-registry',{cache:'no-store'});
+  if(!fallback.ok){throw new Error('fallback unavailable');}
+  return await fallback.json();
+ }
+}
+
+/*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.3
  * Scope: estate_product_access_breakdown.js
  * Behaviour: operator preflight + legacy fallback
@@ -233,7 +253,7 @@ async function jomEstateFetchV13(url) {
 
     Promise.all([
       fetchJson('/static/data/estate_product_access.json'),
-      jomEstateFetchV13('/api/site-registry').then(r => r.json()).catch(function () { return fetchJson('/static/data/site_registry.json'); })
+      jomEstateProductAccessAdapterV1().then(r => r.json()).catch(function () { return fetchJson('/static/data/site_registry.json'); })
     ])
       .then(function (results) {
         render(buildScopedPayload(results[0] || {}, results[1] || {}));
@@ -256,4 +276,5 @@ function jomLegacyAdapterMigrationNoteV1() {
     templateChanges: false
   };
 }
+
 
