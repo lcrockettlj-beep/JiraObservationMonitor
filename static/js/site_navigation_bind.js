@@ -1,4 +1,22 @@
 ﻿/*
+ * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.2
+ * Scope: site_navigation_bind.js
+ * Behaviour: operator preflight + legacy fallback
+ */
+async function jomNavPreflightV12() {
+  try {
+    if (window.JOMOperatorAPI && typeof window.JOMOperatorAPI.getOperatorSurface === 'function') {
+      await window.JOMOperatorAPI.getOperatorSurface();
+    }
+  } catch(e) { return null; }
+}
+
+async function jomNavFetchDataV12(opts) {
+  await jomNavPreflightV12();
+  return fetch('/api/data', opts);
+}
+
+/*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1
  * File: static\js\site_navigation_bind.js
  * Target endpoints: /operator/surface or /registry/sites
@@ -124,7 +142,7 @@
       return;
     }
 
-    fetch('/api/data', { credentials: 'same-origin' })
+    jomNavFetchDataV12({ credentials: 'same-origin' })
       .then(function (response) {
         if (!response.ok) {
           throw new Error('Unable to load /api/data');
@@ -160,3 +178,4 @@ function jomLegacyAdapterMigrationNoteV1() {
     templateChanges: false
   };
 }
+
