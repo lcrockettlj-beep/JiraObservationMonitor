@@ -164,6 +164,17 @@
   <script src="{{ url_for('static', filename='js/jom_contract_client.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_admin_contract_binding.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_reference_contract_binding.js') }}" defer></script>
+<section class="jom-contract-targets" data-jom-contract-surface="admin-reference" hidden>
+  <span data-jom-client="admin-generated-at"></span>
+  <span data-jom-client="admin-user-count"></span>
+  <span data-jom-client="admin-safe-named-access"></span>
+  <pre data-jom-client="admin-truth-json"></pre>
+  <pre data-jom-client="admin-footprint-json"></pre>
+  <span data-jom-client="reference-site-count"></span>
+  <span data-jom-client="reference-monitored-count"></span>
+  <span data-jom-client="reference-discovered-count"></span>
+  <pre data-jom-client="reference-registry-json"></pre>
+</section>
 </body>
 </html>
 
