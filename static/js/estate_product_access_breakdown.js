@@ -1,4 +1,25 @@
 ﻿/*
+ * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1.3
+ * Scope: estate_product_access_breakdown.js
+ * Behaviour: operator preflight + legacy fallback
+ */
+async function jomEstatePreflightV13() {
+  try {
+    if (window.JOMOperatorAPI && typeof window.JOMOperatorAPI.getOperatorSurface === 'function') {
+      await window.JOMOperatorAPI.getOperatorSurface();
+    }
+    if (window.JOMOperatorAPI && typeof window.JOMOperatorAPI.getEstateProductAccess === 'function') {
+      await window.JOMOperatorAPI.getEstateProductAccess();
+    }
+  } catch(e) { return null; }
+}
+
+async function jomEstateFetchV13(url) {
+  await jomEstatePreflightV13();
+  return fetch(url);
+}
+
+/*
  * JOM LEGACY JS ADAPTER MIGRATION EXECUTION PACK v1
  * File: static\js\estate_product_access_breakdown.js
  * Target endpoints: /estate/product-access + /registry/sites
@@ -212,7 +233,7 @@
 
     Promise.all([
       fetchJson('/static/data/estate_product_access.json'),
-      fetchJson('/api/site-registry').catch(function () { return fetchJson('/static/data/site_registry.json'); })
+      jomEstateFetchV13('/api/site-registry').then(r => r.json()).catch(function () { return fetchJson('/static/data/site_registry.json'); })
     ])
       .then(function (results) {
         render(buildScopedPayload(results[0] || {}, results[1] || {}));
@@ -235,3 +256,4 @@ function jomLegacyAdapterMigrationNoteV1() {
     templateChanges: false
   };
 }
+
