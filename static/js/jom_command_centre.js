@@ -115,3 +115,121 @@
 })();
 /* === Command Centre Visual Polish v1 END === */
 
+/* === Estate Foundation Build v1 START === */
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const safeArray = (value) => Array.isArray(value) ? value : [];
+  const esc = (value) => String(value ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const setText = (id, value) => { const el = $(id); if (el) el.textContent = value === undefined || value === null || value === '' ? '--' : String(value); };
+  async function getJson(path) {
+    const response = await fetch(path, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`${path} returned ${response.status}`);
+    return response.json();
+  }
+  function siteName(site) { return site.site_name || site.site_key || site.key || site.cloud_id || 'Unknown site'; }
+  function siteUrl(site) { return site.site_url || site.url || site.cloud_id || ''; }
+  function classification(site) { return String(site.classification || site.status || 'discovered').toLowerCase(); }
+  function productUsers(site) { return site.metrics?.jira_product_user_count ?? site.jira_product_user_count ?? site.product_users ?? '--'; }
+  function namedAccess(site) { return site.metrics?.named_access_count ?? site.named_access_count ?? '--'; }
+  function signals(site) {
+    const output = [];
+    if (productUsers(site) !== '--') output.push(`Product users: ${productUsers(site)}`);
+    if (namedAccess(site) !== '--') output.push(`Named direct: ${namedAccess(site)}`);
+    if (Array.isArray(site.sources)) output.push(`Sources: ${site.sources.join(', ')}`);
+    return output.join(' | ') || 'No signal details available';
+  }
+  function risk(site) {
+    return classification(site) === 'monitored' ? 'Normal' : 'Review';
+  }
+  function statusBadge(site) {
+    const cls = classification(site);
+    return `<span class="jom-status ${cls === 'monitored' ? 'jom-status--monitored' : ''}">${esc(cls)}</span>`;
+  }
+  function row(site, index) {
+    const cls = classification(site);
+    const isReview = cls !== 'monitored';
+    return `<tr data-index="${index}" data-classification="${esc(cls)}"><td><span class="jom-health-dot ${isReview ? 'jom-health-dot--review' : ''}">${isReview ? 'Review' : 'Normal'}</span></td><td><strong>${esc(siteName(site))}</strong><br><small>${esc(siteUrl(site))}</small></td><td>${esc(productUsers(site))}</td><td>${esc(namedAccess(site))}</td><td>${esc(risk(site))}</td><td>${statusBadge(site)}</td></tr>`;
+  }
+  function renderDetail(site) {
+    setText('estate-detail-title', siteName(site));
+    setText('estate-detail-url', siteUrl(site) || 'No URL available');
+    setText('estate-detail-status', classification(site));
+    setText('estate-detail-products', productUsers(site));
+    setText('estate-detail-users', namedAccess(site));
+    setText('estate-detail-signals', signals(site));
+  }
+  function renderTable(sites) {
+    const body = $('estate-site-body');
+    if (!body) return;
+    const q = ($('estate-search')?.value || '').toLowerCase().trim();
+    const filter = $('estate-filter')?.value || 'all';
+    let visible = sites.slice();
+    if (filter !== 'all') visible = visible.filter(site => classification(site) === filter);
+    if (q) visible = visible.filter(site => [siteName(site), siteUrl(site), classification(site), signals(site)].join(' ').toLowerCase().includes(q));
+    if (!visible.length) {
+      body.innerHTML = '<tr><td colspan="6">No estate sites match the current filter.</td></tr>';
+      return;
+    }
+    body.innerHTML = visible.map((site, idx) => row(site, idx)).join('');
+    body.querySelectorAll('tr[data-index]').forEach((tr, idx) => {
+      tr.addEventListener('click', () => {
+        body.querySelectorAll('tr').forEach(r => r.classList.remove('jom-row-selected'));
+        tr.classList.add('jom-row-selected');
+        renderDetail(visible[idx]);
+      });
+    });
+    renderDetail(visible[0]);
+    const first = body.querySelector('tr[data-index]');
+    if (first) first.classList.add('jom-row-selected');
+  }
+  function extractProductSiteCount(productAccess) {
+    if (Array.isArray(productAccess.sites)) return productAccess.sites.length;
+    if (Array.isArray(productAccess.rows)) return productAccess.rows.length;
+    if (productAccess.summary?.site_count !== undefined) return productAccess.summary.site_count;
+    if (productAccess.site_count !== undefined) return productAccess.site_count;
+    return '--';
+  }
+  function extractFootprintUsers(footprint) {
+    if (Array.isArray(footprint.users)) return footprint.users.length;
+    if (Array.isArray(footprint.rows)) return footprint.rows.length;
+    return footprint.user_count ?? footprint.total_users ?? '--';
+  }
+  async function initEstate() {
+    if (!$('estate-site-body')) return;
+    try {
+      const [registry, productAccess, footprint, alerts] = await Promise.all([
+        getJson('/registry/sites').catch(() => ({})),
+        getJson('/estate/product-access').catch(() => ({})),
+        getJson('/users/footprint').catch(() => ({})),
+        getJson('/operator/alerts').catch(() => ({})),
+      ]);
+      const sites = safeArray(registry.sites);
+      const monitored = sites.filter(site => classification(site) === 'monitored').length;
+      const discovered = sites.length - monitored;
+      const productSiteCount = extractProductSiteCount(productAccess);
+      const usersAnalysed = extractFootprintUsers(footprint);
+      const alertCount = alerts.alert_count ?? alerts.count ?? 0;
+      setText('estate-total-sites', sites.length);
+      setText('estate-monitored-sites', monitored);
+      setText('estate-discovered-sites', discovered);
+      setText('estate-product-sites', productSiteCount);
+      setText('estate-users-analysed', usersAnalysed);
+      setText('estate-alerts', alertCount);
+      setText('estate-state', discovered > 0 || alertCount > 0 ? 'Review' : 'Normal');
+      setText('estate-growth-sites', sites.length);
+      setText('estate-growth-users', usersAnalysed);
+      renderTable(sites);
+      $('estate-search')?.addEventListener('input', () => renderTable(sites));
+      $('estate-filter')?.addEventListener('change', () => renderTable(sites));
+      const json = $('estate-json');
+      if (json) json.textContent = JSON.stringify({ registry_summary: registry.summary || {}, product_access_summary: productAccess.summary || {}, footprint_summary: footprint.summary || {}, alert_count: alertCount }, null, 2);
+    } catch (error) {
+      const body = $('estate-site-body');
+      if (body) body.innerHTML = `<tr><td colspan="6">Estate failed to load: ${esc(error.message)}</td></tr>`;
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initEstate);
+  else initEstate();
+})();
+/* === Estate Foundation Build v1 END === */
+

@@ -178,3 +178,110 @@ body {
 }
 /* === Command Centre Visual Polish v1 END === */
 
+/* === Estate Foundation Build v1 START === */
+.jom-estate-hero .jom-estate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.jom-estate-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.jom-input,
+.jom-select {
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--text);
+  padding: 9px 12px;
+  font: inherit;
+}
+.jom-input {
+  min-width: min(360px, 100%);
+}
+.jom-select {
+  min-width: 150px;
+}
+.jom-input:focus,
+.jom-select:focus {
+  outline: 2px solid rgba(12,102,228,.18);
+  border-color: rgba(12,102,228,.35);
+}
+.jom-estate-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, .8fr);
+  gap: 16px;
+  align-items: start;
+}
+.jom-estate-table tbody tr {
+  cursor: pointer;
+}
+.jom-estate-table tbody tr.jom-row-selected td {
+  background: #DEEBFF;
+}
+.jom-health-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+}
+.jom-health-dot::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 0 3px rgba(54,179,126,.16);
+}
+.jom-health-dot--review::before {
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(255,171,0,.18);
+}
+.jom-site-detail-panel {
+  position: sticky;
+  top: 16px;
+  box-shadow: 0 10px 28px rgba(9,30,66,.08);
+}
+.jom-muted {
+  color: var(--muted);
+  line-height: 1.55;
+}
+.jom-detail-list {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+.jom-detail-list div {
+  display: grid;
+  gap: 4px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.jom-detail-list dt {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .10em;
+}
+.jom-detail-list dd {
+  margin: 0;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+@media(max-width:1200px){
+  .jom-estate-grid { grid-template-columns: 1fr; }
+  .jom-site-detail-panel { position: static; }
+}
+@media(max-width:760px){
+  .jom-estate-toolbar { justify-content: stretch; }
+  .jom-input, .jom-select { width: 100%; }
+  .jom-estate-hero .jom-estate-actions { justify-content: flex-start; }
+}
+/* === Estate Foundation Build v1 END === */
+
