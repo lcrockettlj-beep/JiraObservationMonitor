@@ -6,7 +6,7 @@
     <img src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI" class="jom-brand__logo">
     <span class="jom-brand__text"><strong>Jira Observation Monitor</strong><small>Atlassian Command Centre</small></span>
   </a>
-  <nav class="jom-nav-links">
+  <nav data-jom-operator-nav="v1" class="jom-nav-links">
     <a href="/" class="jom-nav-link {% if request.path == '/' %}jom-nav-link--active{% endif %}">Command Centre</a>
     <a href="/estate" class="jom-nav-link {% if request.path == '/estate' %}jom-nav-link--active{% endif %}">Estate</a>
     <a href="/reference" class="jom-nav-link {% if request.path == '/reference' %}jom-nav-link--active{% endif %}">Admin</a>
