@@ -144,10 +144,10 @@
                     </div>
                 </div>
                 <div class="delta-grid">
-                    <div class="delta-chip"><span>Total users Î”</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Projects Î”</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Risk Î”</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Unresolved Î”</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Total users Delta</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Projects Delta</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Risk Delta</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
+                    <div class="delta-chip"><span>Unresolved Delta</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
                 </div>
                 <div class="chip-list">
                     {% if site.attention_reasons %}
@@ -251,8 +251,23 @@
             </div>
         </div>
     </section>
-    
-    <section class="panel command-panel context-panel mode-context mode-context--cyber home-identity-band signal-border">
+<section class="panel command-panel jom-contract-surface jom-contract-surface--home" data-jom-contract-surface="home" aria-label="Home live operational status">
+  <div class="section-header">
+    <div>
+      <h2>Live Operational Status</h2>
+      <p>Contract-driven runtime, source and alert status surfaced directly from the operator endpoints.</p>
+    </div>
+    <div class="section-header__actions"><span class="pill">Operator contract</span></div>
+  </div>
+  <div class="stat-grid">
+    <article class="stat-card signal-border"><div class="label">Runtime Status</div><div class="value" data-jom-client="home-runtime-status">Loading...</div><div class="note">Current runtime state from the frozen operator summary contract.</div></article>
+    <article class="stat-card signal-border"><div class="label">Source Health</div><div class="value" data-jom-client="home-source-health">Loading...</div><div class="note">Current source health surfaced through the operator summary contract.</div></article>
+    <article class="stat-card signal-border"><div class="label">Alert Count</div><div class="value" data-jom-client="home-alert-count">Loading...</div><div class="note">Current alert total from the operator alert contract.</div></article>
+  </div>
+  <details class="jom-contract-detail"><summary>Observability detail</summary><pre data-jom-client="home-observability-json">Loading...</pre></details>
+</section>
+
+<section class="panel command-panel context-panel mode-context mode-context--cyber home-identity-band signal-border">
         <div class="section-header"><div><h2>Signal Lattice</h2><p>Cyber layer framing for estate telemetry, signal density, and matrix-linked command points.</p></div><div class="section-header__actions"><span class="pill">Matrix active</span></div></div>
         <div class="stat-grid cyber-grid">
             <div class="stat-card cyber-card"><div class="label">Tracked nodes</div><div class="value">{{ cyber_matrix_nodes }}</div><div class="note">Combined sites, intelligence coverage, and managed-account scope.</div></div>
@@ -363,21 +378,6 @@
 <script src="/static/js/operator_bindings.js"></script>
   <script src="{{ url_for('static', filename='js/jom_contract_client.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_home_contract_binding.js') }}" defer></script>
-<section class="jom-contract-targets" data-jom-contract-surface="home" aria-label="Home live operational status">
-  <h2>Live operational status</h2>
-  <dl>
-    <dt>Runtime status</dt>
-    <dd data-jom-client="home-runtime-status">Loading...</dd>
-    <dt>Source health</dt>
-    <dd data-jom-client="home-source-health">Loading...</dd>
-    <dt>Alert count</dt>
-    <dd data-jom-client="home-alert-count">Loading...</dd>
-  </dl>
-  <details>
-    <summary>Observability detail</summary>
-    <pre data-jom-client="home-observability-json">Loading...</pre>
-  </details>
-</section>
 <script src="/static/js/jom_ui_data_presentation_polish.js"></script>
 </body>
 </html>

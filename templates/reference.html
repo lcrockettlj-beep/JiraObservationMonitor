@@ -32,9 +32,20 @@
             </div>
         </div>
     </section>
+<section class="panel reference-panel jom-contract-surface jom-contract-surface--admin signal-border" data-jom-contract-surface="admin-reference" aria-label="Admin and reference live status">
+  <div class="section__header"><h2>Admin Intelligence Summary</h2><div class="count">Operator contract live</div></div>
+  <div class="reference-list">
+    <div class="reference-row"><div class="reference-label">Generated At</div><div class="reference-value" data-jom-client="admin-generated-at">Loading...</div></div>
+    <div class="reference-row"><div class="reference-label">Users Analysed</div><div class="reference-value" data-jom-client="admin-user-count">Loading...</div></div>
+    <div class="reference-row"><div class="reference-label">Named Access Status</div><div class="reference-value" data-jom-client="admin-safe-named-access">Loading...</div></div>
+    <div class="reference-row"><div class="reference-label">Total Sites</div><div class="reference-value" data-jom-client="reference-site-count">Loading...</div></div>
+    <div class="reference-row"><div class="reference-label">Monitored Sites</div><div class="reference-value" data-jom-client="reference-monitored-count">Loading...</div></div>
+    <div class="reference-row"><div class="reference-label">Discovered Sites</div><div class="reference-value" data-jom-client="reference-discovered-count">Loading...</div></div>
+  </div>
+  <details class="jom-contract-detail"><summary>Admin and reference contract detail</summary><pre data-jom-client="admin-truth-json">Loading...</pre><pre data-jom-client="admin-footprint-json">Loading...</pre><pre data-jom-client="reference-registry-json">Loading...</pre></details>
+</section>
 
-
-    <section class="site-registry-panel" id="site-discovery-control">
+<section class="site-registry-panel" id="site-discovery-control">
         <div class="site-registry-head">
             <div>
                 <h2>Site Discovery & Monitoring Control</h2>
@@ -164,29 +175,6 @@
   <script src="{{ url_for('static', filename='js/jom_contract_client.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_admin_contract_binding.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/jom_reference_contract_binding.js') }}" defer></script>
-<section class="jom-contract-targets" data-jom-contract-surface="admin-reference" aria-label="Admin and reference live status">
-  <h2>Admin and reference live status</h2>
-  <dl>
-    <dt>Admin generated at</dt>
-    <dd data-jom-client="admin-generated-at">Loading...</dd>
-    <dt>User count</dt>
-    <dd data-jom-client="admin-user-count">Loading...</dd>
-    <dt>Named access safe to show</dt>
-    <dd data-jom-client="admin-safe-named-access">Loading...</dd>
-    <dt>Reference site count</dt>
-    <dd data-jom-client="reference-site-count">Loading...</dd>
-    <dt>Monitored site count</dt>
-    <dd data-jom-client="reference-monitored-count">Loading...</dd>
-    <dt>Discovered site count</dt>
-    <dd data-jom-client="reference-discovered-count">Loading...</dd>
-  </dl>
-  <details>
-    <summary>Admin and reference contract detail</summary>
-    <pre data-jom-client="admin-truth-json">Loading...</pre>
-    <pre data-jom-client="admin-footprint-json">Loading...</pre>
-    <pre data-jom-client="reference-registry-json">Loading...</pre>
-  </details>
-</section>
 <script src="/static/js/jom_ui_data_presentation_polish.js"></script>
 </body>
 </html>
