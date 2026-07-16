@@ -443,6 +443,12 @@ def reports_file_legacy(filename):
     reports_root = ROOT / "reports"
     return send_from_directory(str(reports_root), filename)
 
+
+
+@app.route('/site/<path:site_key>')
+def site_workspace(site_key):
+    return render_template('site.html', site_key=site_key)
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 

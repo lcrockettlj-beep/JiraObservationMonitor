@@ -1,0 +1,61 @@
+/* JOM Site Workspace v1 */
+.jom-site-workspace { padding-bottom: 48px; }
+.site-hero { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding:24px; border:1px solid #dfe1e6; border-radius:24px; background:#fff; box-shadow:0 12px 34px rgba(9,30,66,.10); margin-bottom:20px; }
+.site-hero h1 { margin:4px 0 8px; font-size:clamp(28px,3vw,44px); color:#172b4d; }
+.eyebrow { margin:0; color:#0c66e4; text-transform:uppercase; letter-spacing:.12em; font-size:12px; font-weight:800; }
+.site-purpose { margin:0; color:#5e6c84; max-width:720px; }
+.site-hero-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+.site-pill { display:inline-flex; align-items:center; border:1px solid #d6e4ff; background:#f8fbff; color:#0052cc; border-radius:999px; padding:8px 12px; font-weight:800; font-size:12px; text-decoration:none; }
+.site-kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:20px; }
+.site-kpi { border:1px solid #dfe1e6; border-radius:18px; background:#fff; padding:16px; box-shadow:0 8px 20px rgba(9,30,66,.08); }
+.site-kpi span { display:block; color:#5e6c84; font-size:11px; text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+.site-kpi strong { color:#172b4d; font-size:24px; }
+.site-grid-two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-bottom:20px; }
+.site-panel { border:1px solid #dfe1e6; border-radius:20px; background:#fff; padding:18px; box-shadow:0 10px 26px rgba(9,30,66,.08); margin-bottom:20px; }
+.site-panel h2 { margin:0 0 14px; color:#172b4d; }
+.site-panel-header { display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
+.site-muted { color:#5e6c84; }
+.site-definition-list { display:grid; gap:12px; margin:0; }
+.site-definition-list div { display:grid; grid-template-columns:140px 1fr; gap:10px; border-bottom:1px solid #f1f2f4; padding-bottom:10px; }
+.site-definition-list dt { color:#5e6c84; font-weight:800; }
+.site-definition-list dd { margin:0; color:#172b4d; word-break:break-word; }
+.site-signal-list { margin:0; padding-left:18px; color:#172b4d; }
+.site-signal-list li { margin:8px 0; }
+.site-table-wrap { overflow-x:auto; }
+.site-table th, .site-table td { text-align:left; padding:10px 12px; border-bottom:1px solid #f1f2f4; }
+.site-table th { color:#5e6c84; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+.site-diagnostics { border:1px solid #dfe1e6; border-radius:18px; background:#fff; padding:14px 18px; margin-bottom:24px; }
+.site-diagnostics pre { white-space:pre-wrap; word-break:break-word; max-height:420px; overflow:auto; background:#f4f5f7; border-radius:14px; padding:14px; }
+@media (max-width: 900px) { .site-hero, .site-grid-two { grid-template-columns:1fr; display:grid; } .site-hero-actions { justify-content:flex-start; } }
+
+/* === Site Workspace Command Centre Alignment v1 START === */
+/* This file now only handles site-specific layout. Global navigation, typography,
+   colours, spacing and sidebar behaviour come from jom_atlassian_command.css. */
+.jom-shell.jom-site-workspace {
+  display: grid;
+  gap: 18px;
+}
+.jom-shell.jom-site-workspace .site-hero,
+.jom-shell.jom-site-workspace .site-panel,
+.jom-shell.jom-site-workspace .site-kpi,
+.jom-shell.jom-site-workspace .site-diagnostics {
+  background: rgba(255,255,255,.94);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.jom-shell.jom-site-workspace .site-hero h1,
+.jom-shell.jom-site-workspace .site-panel h2,
+.jom-shell.jom-site-workspace .site-kpi strong {
+  color: var(--jom-navy, var(--text));
+}
+.jom-shell.jom-site-workspace .site-pill {
+  background: var(--blue-soft);
+  border: 1px solid rgba(12,102,228,.22);
+  color: var(--blue);
+  font-weight: 700;
+}
+#site-users-summary {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* === Site Workspace Command Centre Alignment v1 END === */

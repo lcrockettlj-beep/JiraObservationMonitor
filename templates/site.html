@@ -1,1 +1,78 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Detail - Jira Observation Monitor</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}"></head><body>{% include "_nav.html" %}<main class="jom-shell"><section class="jom-card"><p class="jom-kicker">Detail</p><h1>Detail View</h1><p>This frontend view has been reset. Detail surfaces will be rebuilt after Command Centre, Estate and Admin foundations are accepted.</p></section></main><script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JOM - Site Workspace</title>
+  <link rel="stylesheet" href="/static/css/jom_atlassian_command.css">
+<link rel="stylesheet" href="/static/css/jom_site_workspace_v1.css">
+</head>
+<body data-jom-page="site-workspace" data-site-key="{{ site_key }}">
+  {% include '_nav.html' %}
+  <main class="jom-shell jom-site-workspace">
+    <div class="jom-layout-breadcrumb"><span>JOM</span><span>/</span><span>Estate</span><span>/</span><strong id="site-title-breadcrumb">Site Workspace</strong></div>
+    <section class="site-hero">
+      <div>
+        <p class="eyebrow">Site Workspace</p>
+        <h1 id="site-title">Loading site...</h1>
+        <p id="site-purpose" class="site-purpose">Operational deep-dive for one Atlassian site, sourced from live registry, estate and product-access contracts.</p>
+      </div>
+      <div class="site-hero-actions">
+        <a class="site-pill" href="/estate">Back to Estate</a>
+        <span class="site-pill" id="site-status-pill">Loading</span>
+      </div>
+    </section>
+
+    <section class="site-kpi-grid" aria-label="Site KPIs">
+      <article class="site-kpi"><span>Products</span><strong data-site-field="products">Loading...</strong></article>
+      <article class="site-kpi"><span>Users</span><strong data-site-field="users">Loading...</strong></article>
+      <article class="site-kpi"><span>Access Assignments</span><strong data-site-field="assignments">Loading...</strong></article>
+      <article class="site-kpi"><span>Registry State</span><strong data-site-field="registry-state">Loading...</strong></article>
+      <article class="site-kpi"><span>Risk</span><strong data-site-field="risk">Loading...</strong></article>
+      <article class="site-kpi"><span>Last Seen</span><strong data-site-field="last-seen">Loading...</strong></article>
+    </section>
+
+    <section class="site-grid-two">
+      <article class="site-panel">
+        <h2>Overview</h2>
+        <dl class="site-definition-list">
+          <div><dt>Site key</dt><dd data-site-field="key">Loading...</dd></div>
+          <div><dt>URL</dt><dd data-site-field="url">Loading...</dd></div>
+          <div><dt>Monitored</dt><dd data-site-field="monitored">Loading...</dd></div>
+          <div><dt>Discovery status</dt><dd data-site-field="discovery">Loading...</dd></div>
+        </dl>
+      </article>
+      <article class="site-panel">
+        <h2>Operational Signals</h2>
+        <ul class="site-signal-list" id="site-signal-list">
+          <li>Loading signals...</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="site-panel">
+      <div class="site-panel-header">
+        <h2>Product Access</h2>
+        <span class="site-muted">Source-backed product/access summary</span>
+      </div>
+      <div class="site-table-wrap">
+        <table class="site-table">
+          <thead><tr><th>Product</th><th>Users</th><th>Roles</th><th>Status</th></tr></thead>
+          <tbody id="site-product-access-body"><tr><td colspan="4">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="site-grid-two">
+      <article class="site-panel"><h2>Users</h2><p id="site-users-summary">Loading...</p></article>
+      <article class="site-panel"><h2>Storage / Projects / Automation</h2><p class="site-muted">Reserved for source-backed project, storage and automation signals when available.</p></article>
+    </section>
+
+    <details class="site-diagnostics">
+      <summary>Site JSON diagnostics</summary>
+      <pre id="site-json-diagnostics">Loading...</pre>
+    </details>
+  </main>
+<script src="/static/js/jom_site_workspace_v1.js"></script>
+</body>
+</html>

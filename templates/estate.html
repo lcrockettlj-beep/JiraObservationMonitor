@@ -5,8 +5,6 @@
   <title>Estate - Jira Observation Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
-<link rel="stylesheet" href="/static/css/jom_operator_experience_v1.css">
-<link rel="stylesheet" href="/static/css/jom_layout_shell_v1.css">
 </head>
 <body>
 {% include "_nav.html" %}
@@ -105,11 +103,13 @@
     </div>
     <details class="jom-details"><summary>Show estate JSON detail</summary><pre id="estate-json">Loading...</pre></details>
   </section>
+
+<section class="site-workspace-hint jom-layout-section">
+  <h2>Site Workspaces</h2>
+  <p>Open a site workspace from the Estate table when investigating one Atlassian site. Direct route format: <code>/site/&lt;site-key&gt;</code>.</p>
+</section>
+
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
-
-<script src="/static/js/jom_operator_experience_v1.js"></script>
-
-<script src="/static/js/jom_layout_shell_v1.js"></script>
 </body>
 </html>
