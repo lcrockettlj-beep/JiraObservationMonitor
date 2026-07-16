@@ -125,7 +125,7 @@ async function jomDashboardFetchDataV111(options) {
   function setPaused(value) { localStorage.setItem(STORAGE_KEY_PAUSED, value ? '1' : '0'); }
   function isCollapsed() { return localStorage.getItem(STORAGE_KEY_COLLAPSED) === '1'; }
   function setCollapsed(value) { localStorage.setItem(STORAGE_KEY_COLLAPSED, value ? '1' : '0'); }
-  function asText(value, fallback = 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â') { return (value === null || value === undefined || value === '') ? fallback : String(value); }
+  function asText(value, fallback = 'ÃƒÆ’Ã†'Ãƒâ€šÃ‚¢ÃƒÆ’Ã‚¢Ãƒ¢Ã¢â€š¬Ã…¡Ãƒâ€šÃ‚¬ÃƒÆ’Ã‚¢Ãƒ¢Ã¢â‚¬Å¡Ã‚¬Ãƒâ€šÃ‚') { return (value === null || value === undefined || value === '') ? fallback : String(value); }
 
   function ensureStyles() {
     if (document.getElementById('jom-runtime-alert-styles')) return;
@@ -482,7 +482,7 @@ async function jomDashboardFetchDataV111(options) {
         <div class="jom-insights" id="jom-insights"></div>
         <div class="jom-body">
           <div class="jom-card"><div class="jom-label">State</div><div class="jom-value" id="jom-runtime-state">STABLE</div></div>
-          <div class="jom-card"><div class="jom-label">Anchors</div><div class="jom-value" id="jom-anchors-today">ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â</div></div>
+          <div class="jom-card"><div class="jom-label">Anchors</div><div class="jom-value" id="jom-anchors-today">ÃƒÆ’Ã†'Ãƒâ€šÃ‚¢ÃƒÆ’Ã‚¢Ãƒ¢Ã¢â€š¬Ã…¡Ãƒâ€šÃ‚¬ÃƒÆ’Ã‚¢Ãƒ¢Ã¢â‚¬Å¡Ã‚¬Ãƒâ€šÃ‚</div></div>
         </div>
         <div class="jom-actions">
           <button class="jom-btn" id="jom-toggle-refresh" type="button">Pause refresh</button>
