@@ -233,3 +233,115 @@
 })();
 /* === Estate Foundation Build v1 END === */
 
+/* === Admin Foundation Build v1 START === */
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const safeArray = (value) => Array.isArray(value) ? value : [];
+  const esc = (value) => String(value ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const setText = (id, value) => { const el = $(id); if (el) el.textContent = value === undefined || value === null || value === '' ? '--' : String(value); };
+  async function getJson(path) {
+    const response = await fetch(path, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`${path} returned ${response.status}`);
+    return response.json();
+  }
+  function siteName(site) { return site.site_name || site.site_key || site.key || site.cloud_id || 'Unknown site'; }
+  function siteUrl(site) { return site.site_url || site.url || site.cloud_id || ''; }
+  function classification(site) { return String(site.classification || site.status || 'discovered').toLowerCase(); }
+  function signals(site) {
+    const output = [];
+    if (site.metrics?.jira_product_user_count !== undefined) output.push(`Product users: ${site.metrics.jira_product_user_count}`);
+    if (site.metrics?.named_access_count !== undefined) output.push(`Named direct: ${site.metrics.named_access_count}`);
+    if (Array.isArray(site.sources)) output.push(`Sources: ${site.sources.join(', ')}`);
+    return output.join(' | ') || 'No signal details available';
+  }
+  function statusBadge(site) {
+    const cls = classification(site);
+    return `<span class="jom-status ${cls === 'monitored' ? 'jom-status--monitored' : ''}">${esc(cls)}</span>`;
+  }
+  function actionCell(site) {
+    const url = siteUrl(site);
+    const open = url && /^https?:\/\//i.test(url) ? `<a class="jom-pill jom-pill--link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Open</a>` : '<span class="jom-admin-action-muted">No URL</span>';
+    const note = classification(site) === 'monitored' ? '<span class="jom-admin-action-muted">Monitored</span>' : '<span class="jom-admin-action-muted">Review</span>';
+    return `<div class="jom-admin-action-stack">${open}${note}</div>`;
+  }
+  function row(site, idx) {
+    return `<tr data-index="${idx}" data-classification="${esc(classification(site))}"><td><strong>${esc(siteName(site))}</strong><br><small>${esc(site.site_key || '')}</small></td><td>${esc(siteUrl(site) || site.cloud_id || 'Unknown')}</td><td>${statusBadge(site)}</td><td>${esc(site.collector_onboarding_status || '')}</td><td>${esc(signals(site))}</td><td>${actionCell(site)}</td></tr>`;
+  }
+  function renderDiscovery(sites) {
+    const body = $('admin-discovery-body');
+    if (!body) return;
+    const q = ($('admin-discovery-search')?.value || '').toLowerCase().trim();
+    const filter = $('admin-discovery-filter')?.value || 'all';
+    let visible = sites.slice();
+    if (filter !== 'all') visible = visible.filter(site => classification(site) === filter);
+    if (q) visible = visible.filter(site => [siteName(site), siteUrl(site), classification(site), signals(site), site.collector_onboarding_status || ''].join(' ').toLowerCase().includes(q));
+    if (!visible.length) {
+      body.innerHTML = '<tr><td colspan="6">No registry rows match the current filter.</td></tr>';
+      return;
+    }
+    body.innerHTML = visible.map(row).join('');
+  }
+  function extractAdminUsers(adminTruth, footprint) {
+    return adminTruth.user_count ?? adminTruth.users_analysed ?? adminTruth.summary?.user_count ?? footprint.user_count ?? footprint.total_users ?? (Array.isArray(footprint.users) ? footprint.users.length : Array.isArray(footprint.rows) ? footprint.rows.length : '--');
+  }
+  function namedAccessStatus(adminTruth) {
+    return adminTruth.safe_named_access ?? adminTruth.named_access_status ?? adminTruth.summary?.safe_named_access ?? 'Review';
+  }
+  function runtimeStatus(summary) {
+    const raw = summary.runtime_status ?? summary.status ?? summary.summary?.runtime_status;
+    if (raw) return raw;
+    return /ok|healthy|stable|success/i.test(JSON.stringify(summary)) ? 'OK' : 'Review';
+  }
+  function sourceState(sourceStatePayload) {
+    return sourceStatePayload.status ?? sourceStatePayload.state ?? sourceStatePayload.summary?.status ?? 'Review';
+  }
+  async function initAdmin() {
+    if (!$('admin-discovery-body')) return;
+    try {
+      const [adminTruth, registry, sourceStatePayload, summary, alerts, footprint] = await Promise.all([
+        getJson('/admin/truth').catch(() => ({})),
+        getJson('/api/site-registry').catch(() => getJson('/registry/sites').catch(() => ({}))),
+        getJson('/api/source-state').catch(() => ({})),
+        getJson('/operator/summary').catch(() => ({})),
+        getJson('/operator/alerts').catch(() => ({})),
+        getJson('/users/footprint').catch(() => ({})),
+      ]);
+      const sites = safeArray(registry.sites);
+      const monitored = sites.filter(site => classification(site) === 'monitored').length;
+      const discovered = sites.length - monitored;
+      const users = extractAdminUsers(adminTruth, footprint);
+      const namedStatus = namedAccessStatus(adminTruth);
+      const alertCount = alerts.alert_count ?? alerts.count ?? 0;
+      const runtime = runtimeStatus(summary);
+      const source = sourceState(sourceStatePayload);
+      setText('admin-users-analysed', users);
+      setText('admin-named-access', namedStatus);
+      setText('admin-total-sites', sites.length);
+      setText('admin-monitored-sites', monitored);
+      setText('admin-discovered-sites', discovered);
+      setText('admin-alerts', alertCount);
+      setText('admin-state', discovered > 0 || alertCount > 0 ? 'Review' : 'Normal');
+      setText('admin-card-users', users);
+      setText('admin-card-named-access', namedStatus);
+      setText('admin-card-footprint', Array.isArray(footprint.users) ? `${footprint.users.length} users` : Array.isArray(footprint.rows) ? `${footprint.rows.length} rows` : 'Available');
+      setText('admin-runtime-status', runtime);
+      setText('admin-source-state', source);
+      setText('admin-card-alerts', alertCount);
+      setText('admin-contract-truth', Object.keys(adminTruth || {}).length ? 'Connected' : 'Review');
+      setText('admin-contract-registry', sites.length ? 'Connected' : 'Review');
+      setText('admin-contract-operator', Object.keys(summary || {}).length ? 'Connected' : 'Review');
+      renderDiscovery(sites);
+      $('admin-discovery-search')?.addEventListener('input', () => renderDiscovery(sites));
+      $('admin-discovery-filter')?.addEventListener('change', () => renderDiscovery(sites));
+      const json = $('admin-json');
+      if (json) json.textContent = JSON.stringify({ admin_truth_summary: adminTruth.summary || {}, registry_summary: registry.summary || {}, source_state: sourceStatePayload.summary || sourceStatePayload, runtime_status: runtime, alert_count: alertCount }, null, 2);
+    } catch (error) {
+      const body = $('admin-discovery-body');
+      if (body) body.innerHTML = `<tr><td colspan="6">Admin failed to load: ${esc(error.message)}</td></tr>`;
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAdmin);
+  else initAdmin();
+})();
+/* === Admin Foundation Build v1 END === */
+

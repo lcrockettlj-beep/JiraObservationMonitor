@@ -8,9 +8,109 @@
 </head>
 <body>
 {% include "_nav.html" %}
-<main class="jom-shell">
-  <section class="jom-hero jom-card"><div><p class="jom-kicker">Platform governance and control</p><h1>Admin</h1><p class="jom-lede">Admin will hold discovery control, monitoring approval, platform health, API connections, scheduler state and governance tools.</p></div><a class="jom-pill jom-pill--link" href="/">Open Command Centre</a></section>
-  <section class="jom-card" id="site-discovery-control"><div class="jom-section-head"><div><p class="jom-kicker">Discovery Control</p><h2>Site discovery and monitoring control</h2></div><span class="jom-pill">Live registry</span></div><div class="jom-table-wrap"><table class="jom-table"><thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Signals</th></tr></thead><tbody id="discovery-body"><tr><td colspan="4">Loading registry...</td></tr></tbody></table></div></section>
+<main class="jom-shell jom-admin-shell">
+  <section class="jom-hero jom-card jom-admin-hero">
+    <div>
+      <p class="jom-kicker">Platform governance and control</p>
+      <h1>Admin</h1>
+      <p class="jom-lede">Governance workspace for discovery control, live admin truth, source health, API visibility, runtime status and platform operating controls.</p>
+    </div>
+    <div class="jom-admin-actions">
+      <a class="jom-pill jom-pill--link" href="/">Open Command Centre</a>
+      <a class="jom-pill jom-pill--link" href="/estate">Open Estate</a>
+    </div>
+  </section>
+
+  <section class="jom-status-strip" aria-label="Admin live status">
+    <div><span>Last refresh</span><strong id="jom-last-refresh">Loading</strong></div>
+    <div><span>Admin state</span><strong id="admin-state">Loading</strong></div>
+    <div><span>Environment</span><strong id="jom-command-env">Local Dev</strong></div>
+    <div><span>Build</span><strong id="jom-command-build">Admin v1</strong></div>
+  </section>
+
+  <section class="jom-metric-strip" aria-label="Admin metrics">
+    <article class="jom-metric"><span>Users analysed</span><strong id="admin-users-analysed">--</strong><small>Admin/user truth</small></article>
+    <article class="jom-metric"><span>Named access</span><strong id="admin-named-access">--</strong><small>Safe status</small></article>
+    <article class="jom-metric"><span>Total sites</span><strong id="admin-total-sites">--</strong><small>Registry entries</small></article>
+    <article class="jom-metric"><span>Monitored</span><strong id="admin-monitored-sites">--</strong><small>In scope</small></article>
+    <article class="jom-metric"><span>Discovered</span><strong id="admin-discovered-sites">--</strong><small>Awaiting review</small></article>
+    <article class="jom-metric"><span>Alerts</span><strong id="admin-alerts">--</strong><small>Operator alerts</small></article>
+  </section>
+
+  <section class="jom-card jom-admin-control-panel" id="site-discovery-control">
+    <div class="jom-section-head">
+      <div>
+        <p class="jom-kicker">Discovery Control</p>
+        <h2>Site discovery and monitoring control</h2>
+      </div>
+      <div class="jom-admin-toolbar">
+        <input id="admin-discovery-search" class="jom-input" type="search" placeholder="Search site, URL, status or signal">
+        <select id="admin-discovery-filter" class="jom-select" aria-label="Filter discovery queue">
+          <option value="all">All sites</option>
+          <option value="monitored">Monitored</option>
+          <option value="discovered">Discovered</option>
+        </select>
+      </div>
+    </div>
+    <p class="jom-muted">This foundation is read-only. Approval/write actions can be wired later only where the backend control endpoint is approved and validated.</p>
+    <div class="jom-table-wrap">
+      <table class="jom-table jom-admin-discovery-table" aria-label="Admin site discovery table">
+        <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th><th>Action</th></tr></thead>
+        <tbody id="admin-discovery-body"><tr><td colspan="6">Loading site registry...</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="jom-grid jom-grid--three">
+    <article class="jom-card jom-admin-category-card">
+      <p class="jom-kicker">Administration</p>
+      <h2>Users and access</h2>
+      <dl class="jom-detail-list">
+        <div><dt>Users analysed</dt><dd id="admin-card-users">--</dd></div>
+        <div><dt>Named access status</dt><dd id="admin-card-named-access">--</dd></div>
+        <div><dt>User footprint</dt><dd id="admin-card-footprint">--</dd></div>
+      </dl>
+    </article>
+    <article class="jom-card jom-admin-category-card">
+      <p class="jom-kicker">System Health</p>
+      <h2>Runtime and sources</h2>
+      <dl class="jom-detail-list">
+        <div><dt>Runtime</dt><dd id="admin-runtime-status">--</dd></div>
+        <div><dt>Source state</dt><dd id="admin-source-state">--</dd></div>
+        <div><dt>Alerts</dt><dd id="admin-card-alerts">--</dd></div>
+      </dl>
+    </article>
+    <article class="jom-card jom-admin-category-card">
+      <p class="jom-kicker">API Connections</p>
+      <h2>Live contract status</h2>
+      <dl class="jom-detail-list">
+        <div><dt>Admin truth</dt><dd id="admin-contract-truth">--</dd></div>
+        <div><dt>Registry</dt><dd id="admin-contract-registry">--</dd></div>
+        <div><dt>Operator</dt><dd id="admin-contract-operator">--</dd></div>
+      </dl>
+    </article>
+  </section>
+
+  <section class="jom-grid jom-grid--three">
+    <article class="jom-card">
+      <p class="jom-kicker">Scheduler</p>
+      <h2>Runtime jobs</h2>
+      <p class="jom-muted">Scheduler controls are planned. This panel remains read-only until runtime job status is promoted into the frontend contract.</p>
+      <ul class="jom-brief-list"><li>Discovery cadence: source-backed status pending</li><li>Snapshot cadence: source-backed status pending</li><li>AI scan cadence: source-backed status pending</li></ul>
+    </article>
+    <article class="jom-card">
+      <p class="jom-kicker">Integrations</p>
+      <h2>Connection governance</h2>
+      <p class="jom-muted">Integration cards will list cloud/admin connection state once source-specific status fields are available.</p>
+      <a class="jom-pill jom-pill--link" href="/estate">Review estate signals</a>
+    </article>
+    <article class="jom-card">
+      <p class="jom-kicker">Settings and Logs</p>
+      <h2>Administrative record</h2>
+      <p class="jom-muted">Settings and log views remain planned. No write actions are exposed by this frontend foundation.</p>
+      <details class="jom-details"><summary>Show admin JSON</summary><pre id="admin-json">Loading...</pre></details>
+    </article>
+  </section>
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
 </body>
