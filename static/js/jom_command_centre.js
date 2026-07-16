@@ -344,4 +344,70 @@
   else initAdmin();
 })();
 /* === Admin Foundation Build v1 END === */
-
+/* === Estate to Site Workspace Drilldown v1 START === */
+(() => {
+  function normaliseSiteKey(value) {
+    return String(value || '')
+      .trim()
+      .replace(/^https?:\/\//i, '')
+      .replace(/\.atlassian\.net.*$/i, '')
+      .replace(/\/$/, '')
+      .split('/')[0]
+      .toLowerCase();
+  }
+  function workspaceUrl(siteKey) {
+    return '/site/' + encodeURIComponent(siteKey);
+  }
+  function enhanceDetailPanel() {
+    const detail = document.querySelector('.jom-site-detail-panel');
+    const title = document.getElementById('estate-detail-title');
+    if (!detail || !title) return;
+    let action = document.getElementById('estate-open-site-workspace');
+    if (!action) {
+      action = document.createElement('a');
+      action.id = 'estate-open-site-workspace';
+      action.className = 'jom-pill jom-pill--link jom-site-workspace-panel-link';
+      action.textContent = 'Open site workspace';
+      detail.appendChild(action);
+    }
+    const key = normaliseSiteKey(title.textContent);
+    if (key && key !== 'select' && key !== 'select-a-site') {
+      action.href = workspaceUrl(key);
+      action.style.display = 'inline-flex';
+    } else {
+      action.href = '#';
+      action.style.display = 'none';
+    }
+  }
+  function removeRowWorkspaceLinks() {
+    document.querySelectorAll('.jom-site-workspace-open-link').forEach(link => {
+      const previous = link.previousSibling;
+      if (previous && previous.nodeName === 'BR') previous.remove();
+      link.remove();
+    });
+    document.querySelectorAll('.jom-site-workspace-row').forEach(row => {
+      row.classList.remove('jom-site-workspace-row');
+      row.removeAttribute('role');
+      row.removeAttribute('tabindex');
+      row.removeAttribute('aria-label');
+      delete row.dataset.siteWorkspaceEnhanced;
+    });
+  }
+  function init() {
+    if (!document.getElementById('estate-site-body')) return;
+    removeRowWorkspaceLinks();
+    enhanceDetailPanel();
+    const body = document.getElementById('estate-site-body');
+    const observer = new MutationObserver(() => {
+      removeRowWorkspaceLinks();
+      enhanceDetailPanel();
+    });
+    observer.observe(body, { childList: true, subtree: true });
+    document.addEventListener('click', event => {
+      if (event.target.closest && event.target.closest('#estate-site-body tr')) enhanceDetailPanel();
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+/* === Estate to Site Workspace Drilldown v1 END === */

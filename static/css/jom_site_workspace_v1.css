@@ -59,3 +59,44 @@
   word-break: break-word;
 }
 /* === Site Workspace Command Centre Alignment v1 END === */
+/* === Estate to Site Workspace Drilldown v1 START === */
+.jom-site-workspace-row {
+  cursor: pointer;
+}
+.jom-site-workspace-row:focus {
+  outline: 3px solid rgba(12,102,228,.25);
+  outline-offset: -3px;
+}
+.jom-site-workspace-row:hover td {
+  background: #F4F8FF !important;
+}
+.jom-site-workspace-open-link {
+  display: inline-flex;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue, #0C66E4);
+  text-decoration: none;
+}
+.jom-site-workspace-open-link:hover {
+  text-decoration: underline;
+}
+.jom-site-workspace-panel-link {
+  margin-top: 14px;
+}
+/* === Estate to Site Workspace Drilldown v1 END === */
+
+/* === Estate Drilldown Panel Only v1.1 START === */
+/* Drilldown belongs in the right-hand detail panel only. */
+.jom-site-workspace-open-link {
+  display: none !important;
+}
+#estate-open-site-workspace.jom-site-workspace-panel-link {
+  display: inline-flex;
+  margin-top: 14px;
+}
+/* Keep Estate table behaviour as select/highlight, not direct navigation. */
+.jom-estate-table tbody tr {
+  cursor: pointer;
+}
+/* === Estate Drilldown Panel Only v1.1 END === */
