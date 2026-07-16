@@ -89,3 +89,29 @@
   }
   document.addEventListener('DOMContentLoaded', init);
 })();
+
+/* === Command Centre Visual Polish v1 START === */
+(() => {
+  function pad(n){ return String(n).padStart(2, '0'); }
+  function stamp(){
+    const d = new Date();
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+  function setText(id, value){
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+  function initPolish(){
+    setText('jom-last-refresh', stamp());
+    setText('jom-auto-refresh-state', 'Live');
+    setText('jom-command-env', 'Local Dev');
+    setText('jom-env-label', 'Local Dev');
+    setText('jom-command-build', 'Command Centre v1');
+    setText('jom-build-label', 'Command Centre v1');
+    window.addEventListener('focus', () => setText('jom-last-refresh', stamp()));
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPolish);
+  else initPolish();
+})();
+/* === Command Centre Visual Polish v1 END === */
+

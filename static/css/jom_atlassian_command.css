@@ -1,1 +1,180 @@
 :root{--bg:#F4F5F7;--surface:#fff;--surface-2:#FAFBFC;--text:#172B4D;--muted:#5E6C84;--border:#DFE1E6;--blue:#0C66E4;--blue-soft:#DEEBFF;--green:#36B37E;--amber:#FFAB00;--red:#FF5630;--shadow:0 12px 30px rgba(9,30,66,.10);--radius:18px}*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:radial-gradient(circle at 0 0,rgba(12,102,228,.08),transparent 32%),linear-gradient(180deg,#F4F5F7,#EBECF0);color:var(--text);overflow-x:hidden}.jom-burger{position:fixed;top:18px;left:18px;z-index:80;width:44px;height:44px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.92);box-shadow:var(--shadow);display:none;align-items:center;justify-content:center;gap:4px;flex-direction:column}.jom-burger span{width:18px;height:2px;background:var(--text);border-radius:2px}.jom-side-nav{position:fixed;inset:16px auto 16px 16px;width:260px;background:rgba(255,255,255,.94);border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:18px;z-index:70}.jom-brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none}.jom-brand__logo{width:88px}.jom-brand__text{display:grid;gap:2px}.jom-brand__text strong{font-size:14px}.jom-brand__text small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.jom-nav-links{display:grid;gap:8px}.jom-nav-link{display:flex;align-items:center;padding:10px 12px;border-radius:12px;color:var(--text);text-decoration:none;border:1px solid transparent}.jom-nav-link:hover{background:var(--blue-soft);color:var(--blue)}.jom-nav-link--active{background:var(--blue-soft);border-color:rgba(12,102,228,.25);color:var(--blue);font-weight:700}.jom-nav-meta{margin-top:auto;display:grid;gap:4px;padding:12px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border)}.jom-nav-meta span,.jom-kicker,.jom-metric span,.jom-risk span,.jom-health-card span{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted)}.jom-nav-meta strong{font-size:13px}.jom-nav-backdrop{position:fixed;inset:0;background:rgba(9,30,66,.35);z-index:60}.jom-shell{width:min(1400px,calc(100vw - 320px));margin:16px 24px 60px 300px;display:grid;gap:18px}.jom-card{background:rgba(255,255,255,.94);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}.jom-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,320px);gap:22px;align-items:center}.jom-hero h1{font-size:36px;margin:4px 0 8px}.jom-lede{color:var(--muted);line-height:1.55;margin:0;max-width:860px}.jom-health-card{display:grid;gap:8px;padding:18px;border:1px solid var(--border);border-radius:18px;background:var(--surface-2)}.jom-health-card strong{font-size:38px;line-height:1}.jom-score-bar{height:8px;background:#EBECF0;border-radius:999px;overflow:hidden}.jom-score-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:inherit}.jom-metric-strip,.jom-grid{display:grid;gap:14px}.jom-metric-strip{grid-template-columns:repeat(6,minmax(0,1fr))}.jom-grid--three{grid-template-columns:repeat(3,minmax(0,1fr))}.jom-metric,.jom-risk,.jom-state-card{padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}.jom-metric strong,.jom-risk strong,.jom-state-card strong{display:block;font-size:28px;line-height:1.1;margin:8px 0;color:var(--text)}.jom-metric small,.jom-risk small,.jom-state-card p{color:var(--muted);line-height:1.45}.jom-section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}.jom-section-head h2{margin:3px 0 0;font-size:24px}.jom-pill{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;background:var(--blue-soft);border:1px solid rgba(12,102,228,.22);color:var(--blue);font-size:13px;text-decoration:none;white-space:nowrap}.jom-pill--link:hover{background:#CFE1FD}.jom-brief-list{margin:0;padding-left:20px;color:var(--muted);line-height:1.7}.jom-risk--critical strong{color:var(--red)}.jom-risk--warning strong{color:var(--amber)}.jom-risk--stable strong{color:var(--green)}.jom-table-wrap{overflow-x:auto}.jom-table{width:100%;border-collapse:collapse;font-size:14px}.jom-table th,.jom-table td{padding:12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}.jom-table th{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted)}.jom-status{display:inline-flex;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700;background:#FFF4E5;color:#A54800;border:1px solid rgba(255,171,0,.30)}.jom-status--monitored{background:#E3FCF0;color:#216E4E;border-color:rgba(54,179,126,.30)}.jom-details summary{cursor:pointer;color:var(--blue)}pre{white-space:pre-wrap;overflow:auto;max-height:420px;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text)}@media(max-width:1100px){.jom-burger{display:flex}.jom-side-nav{transform:translateX(-120%);transition:transform .2s ease}.jom-side-nav.jom-side-nav--open{transform:translateX(0)}.jom-shell{width:min(1380px,calc(100vw - 32px));margin:76px auto 60px}.jom-metric-strip,.jom-grid--three,.jom-hero{grid-template-columns:1fr}}@media(min-width:1101px){.jom-side-nav{transform:none!important}.jom-nav-backdrop{display:none!important}}@media(max-width:760px){.jom-metric-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.jom-card{padding:16px}.jom-hero h1{font-size:30px}}
+
+/* === Command Centre Visual Polish v1 START === */
+:root {
+  --jom-navy: #092957;
+  --jom-blue: #0C66E4;
+  --jom-blue-soft: #DEEBFF;
+  --jom-card-shadow: 0 10px 28px rgba(9,30,66,.08);
+}
+body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(12,102,228,.10), transparent 28%),
+    radial-gradient(circle at 100% 12%, rgba(54,179,126,.07), transparent 24%),
+    linear-gradient(180deg, #F4F5F7 0%, #EEF2F7 100%);
+}
+.jom-side-nav {
+  border-radius: 24px;
+  box-shadow: 0 18px 42px rgba(9,30,66,.12);
+}
+.jom-brand {
+  border-radius: 18px;
+  padding: 10px;
+  background: linear-gradient(180deg, #F7F9FC, #FFFFFF);
+  border: 1px solid rgba(9,30,66,.10);
+}
+.jom-brand__logo {
+  width: 78px;
+  min-width: 78px;
+  padding: 8px;
+  border-radius: 14px;
+  background: #0C66E4;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 8px 18px rgba(12,102,228,.20);
+}
+.jom-brand__text strong {
+  color: var(--jom-navy);
+  line-height: 1.15;
+}
+.jom-brand__text small,
+.jom-nav-meta small {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.jom-nav-link {
+  min-height: 44px;
+  font-weight: 600;
+}
+.jom-nav-link--active {
+  box-shadow: inset 3px 0 0 var(--jom-blue);
+}
+.jom-shell {
+  gap: 20px;
+}
+.jom-card {
+  box-shadow: var(--jom-card-shadow);
+}
+.jom-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(9,30,66,.10);
+}
+.jom-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -120px -160px auto;
+  width: 320px;
+  height: 320px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(12,102,228,.08), transparent 68%);
+  pointer-events: none;
+}
+.jom-hero > * {
+  position: relative;
+  z-index: 1;
+}
+.jom-hero h1 {
+  color: var(--jom-navy);
+  letter-spacing: -.02em;
+}
+.jom-kicker {
+  color: #44546F;
+  font-weight: 700;
+}
+.jom-health-card {
+  background: linear-gradient(180deg, #FFFFFF, #F7F9FC);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.90), 0 8px 20px rgba(9,30,66,.06);
+}
+.jom-health-card strong {
+  color: var(--jom-navy);
+}
+.jom-score-bar {
+  height: 10px;
+}
+.jom-status-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.jom-status-strip > div {
+  display: grid;
+  gap: 6px;
+  min-height: 78px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(9,30,66,.10);
+  background: rgba(255,255,255,.78);
+  box-shadow: 0 8px 20px rgba(9,30,66,.06);
+}
+.jom-status-strip span {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+}
+.jom-status-strip strong {
+  color: var(--jom-navy);
+  font-size: 18px;
+}
+.jom-metric-strip {
+  gap: 16px;
+}
+.jom-metric {
+  min-height: 132px;
+  display: grid;
+  align-content: space-between;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.jom-metric:hover {
+  transform: translateY(-1px);
+  border-color: rgba(12,102,228,.24);
+  box-shadow: 0 12px 26px rgba(9,30,66,.10);
+}
+.jom-metric strong,
+.jom-risk strong,
+.jom-state-card strong {
+  color: var(--jom-navy);
+}
+.jom-state-card {
+  min-height: 174px;
+}
+.jom-command-brief {
+  border-left: 4px solid var(--jom-blue);
+}
+.jom-brief-list li + li {
+  margin-top: 6px;
+}
+.jom-risk {
+  min-height: 128px;
+}
+.jom-risk--critical {
+  border-left: 4px solid var(--red);
+}
+.jom-risk--warning {
+  border-left: 4px solid var(--amber);
+}
+.jom-risk--stable {
+  border-left: 4px solid var(--green);
+}
+.jom-table th {
+  background: #FAFBFC;
+}
+.jom-table tr:hover td {
+  background: #F7F9FC;
+}
+.jom-pill {
+  font-weight: 600;
+}
+.jom-details summary {
+  font-weight: 700;
+}
+@media(max-width:1100px){
+  .jom-status-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media(max-width:760px){
+  .jom-status-strip { grid-template-columns: 1fr; }
+  .jom-brand__logo { width: 66px; min-width: 66px; }
+}
+/* === Command Centre Visual Polish v1 END === */
+
