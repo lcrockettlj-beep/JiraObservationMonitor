@@ -2,8 +2,8 @@
  * JOM Reference Contract Binding v1
  * Scope: Reference page read-only registry contract.
  * Primary source: /registry/sites via window.JOMClient.
- * Compatibility: /api/site-registry action flow remains retained separately.
- * Safety: no /api/data or /api/source-state primary fetches, no CSS changes, no visual rebuild.
+ * Compatibility: compatibility site-registry route retained action flow remains retained separately.
+ * Safety: no compatibility data route retained or compatibility source-state route retained primary fetches, no CSS changes, no visual rebuild.
  */
 (function () {
   'use strict';
