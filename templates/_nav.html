@@ -1,26 +1,19 @@
-<nav class="top-nav">
-    <a href="/" class="top-nav__brand-wrap" aria-label="GLI home">
-        <img src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI" class="top-nav__logo">
-        <div class="top-nav__brand-block">
-            <span class="top-nav__brand">Jira Observation Monitor</span>
-            <span class="top-nav__subbrand">Global Compliance Command Layer</span>
-        </div>
-    </a>
-    <div class="top-nav__links">
-        <a href="/" class="top-nav__link {% if request.path == '/' %}top-nav__link--active{% endif %}">Home</a>
-        <a href="/estate" class="top-nav__link {% if request.path == '/estate' %}top-nav__link--active{% endif %}">Estate</a>
-        <a href="/reference" class="top-nav__link {% if request.path == '/reference' %}top-nav__link--active{% endif %}">Admin</a>
-    </div>
-    <div class="top-nav__actions">
-        <label class="theme-select-wrap" for="theme-toggle">
-            <span class="theme-select__label">Theme</span>
-            <select id="theme-toggle" class="theme-select" aria-label="Select theme mode">
-                <option value="dark">Dark core</option>
-                <option value="cyber">Cyber mode</option>
-                <option value="enterprise">Enterprise mode</option>
-                <option value="noc">NOC mode</option>
-                <option value="atlassian">Atlassian mode</option>
-            </select>
-        </label>
-    </div>
-</nav>
+<button class="jom-burger" type="button" id="jom-nav-toggle" aria-label="Toggle navigation" aria-controls="jom-side-nav" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+<aside class="jom-side-nav" id="jom-side-nav" aria-label="Primary navigation">
+  <a href="/" class="jom-brand" aria-label="Command Centre home">
+    <img src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI" class="jom-brand__logo">
+    <span class="jom-brand__text"><strong>Jira Observation Monitor</strong><small>Atlassian Command Centre</small></span>
+  </a>
+  <nav class="jom-nav-links">
+    <a href="/" class="jom-nav-link {% if request.path == '/' %}jom-nav-link--active{% endif %}">Command Centre</a>
+    <a href="/estate" class="jom-nav-link {% if request.path == '/estate' %}jom-nav-link--active{% endif %}">Estate</a>
+    <a href="/reference" class="jom-nav-link {% if request.path == '/reference' %}jom-nav-link--active{% endif %}">Admin</a>
+  </nav>
+  <div class="jom-nav-meta">
+    <span>Theme</span>
+    <strong>Atlassian Light</strong>
+  </div>
+</aside>
+<div class="jom-nav-backdrop" id="jom-nav-backdrop" hidden></div>

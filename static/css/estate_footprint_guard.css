@@ -1,6 +1,0 @@
-/* Guardrail: hide Estate named-user footprint until a real named product-access source is validated.
-   Reason: Jira /users/search returns site-visible users, not confirmed per-user product access. */
-#estate-user-footprint,
-.estate-footprint-panel {
-  display: none !important;
-}

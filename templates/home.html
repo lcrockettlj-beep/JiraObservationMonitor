@@ -1,395 +1,96 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Jira Observation Monitor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/tiles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_registry.css') }}">
-    <script src="/static/js/core_truth_guard.js"></script>
-    <link rel="stylesheet" href="/static/css/truth.css">
-    <link rel="stylesheet" href="/static/css/source_freshness.css">
-    <link rel="stylesheet" href="/static/css/source_reliability_dashboard.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/operational_console_dark.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/operational_console_enhancements.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/site_onboarding_review.css') }}">
+  <meta charset="utf-8">
+  <title>Command Centre - Jira Observation Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
 </head>
 <body>
-<div class="page">
-    {% include "_nav.html" %}
-    {% set discovery_summary = site_discovery.get("summary", {}) if site_discovery else {} %}
-    {% set registry_summary = registry_summary or {} %}
-    {% set registry_discovered_total = registry_summary.discovered_count or (registry_discovered_sites|length if registry_discovered_sites else 0) %}
-    {% set registry_monitored_total = registry_summary.monitored_count or (registry_monitored_sites|length if registry_monitored_sites else 0) %}
-    {% set snapshot_meta = latest_snapshot.get("snapshot_meta", {}) if latest_snapshot else {} %}
-    {% set latest_snapshot_timestamp =
-        snapshot_meta.get("snapshot_timestamp")
-        or latest_snapshot_entry.get("created_at_local")
-        or latest_snapshot_entry.get("snapshot_timestamp")
-        or 'Not available'
-    %}
-    {% set intelligence_site_total = intelligence_sites|length if intelligence_sites else 0 %}
-    {% set critical_count = critical_sites|length if critical_sites else 0 %}
-    {% set warning_count = warning_sites|length if warning_sites else 0 %}
-    {% set stable_count = stable_sites|length if stable_sites else 0 %}
-    {% set tracked_total = registry_monitored_total or discovery_summary.tracked_site_count or 0 %}
-    {% set excluded_total = discovery_summary.excluded_site_count or 0 %}
-    {% set discovered_total = (registry_monitored_total + registry_discovered_total) if (registry_monitored_total or registry_discovered_total) else discovery_summary.discovered_site_count or 0 %}
-    {% set users_total = users_row_count or 0 %}
-    {% set managed_total = managed_row_count or 0 %}
-    {% set attention_total =
-        (estate.managed_disabled_accounts or 0)
-        + (estate.no_tracked_jira_site_access or 0)
-        + (estate.inactive_without_site_access or 0)
-        + (estate.bitbucket_only_no_tracked_jira or 0)
-    %}
-    {% set operational_penalty = (critical_count * 18) + (warning_count * 7) + (5 if attention_total > 0 else 0) %}
-    {% set health_index = 100 - operational_penalty if 100 - operational_penalty > 0 else 0 %}
-    {% set signal_penalty = ((estate.managed_disabled_accounts or 0) * 3) + ((estate.no_tracked_jira_site_access or 0) * 2) + ((estate.inactive_without_site_access or 0) * 2) %}
-    {% set signal_integrity = 100 - signal_penalty if 100 - signal_penalty > 0 else 0 %}
-    {% set predictive_confidence = 97 if critical_count == 0 and warning_count == 0 and attention_total == 0 else 88 if critical_count == 0 and warning_count <= 2 else 72 if critical_count == 0 else 58 %}
-    {% set executive_risk = 'Low' if critical_count == 0 and warning_count == 0 else 'Moderate' if critical_count == 0 else 'Elevated' %}
-    {% set executive_trend = 'Improving' if critical_count == 0 and warning_count <= 1 and attention_total == 0 else 'Stable' if critical_count == 0 else 'Attention Required' %}
-    {% set live_online_total = stable_count + warning_count + critical_count if (stable_count + warning_count + critical_count) > 0 else tracked_total %}
-    {% set cyber_signal_count = attention_total + warning_count + critical_count %}
-    {% set cyber_matrix_nodes = tracked_total + intelligence_site_total + managed_total %}
-    {% macro site_section(title, subtitle, sites, badge_class) -%}
-    <section class="panel section-block command-panel command-panel--{{ badge_class }} home-data-section home-data-section--{{ badge_class }}">
-        <div class="section-header">
-            <div>
-                <h2>{{ title }}</h2>
-                <p>{{ subtitle }}</p>
-            </div>
-            <div class="section-header__actions">
-                <span class="pill">{{ sites|length }} sites</span>
-            </div>
-        </div>
-        {% if sites %}
-        <div class="site-grid {% if badge_class == 'stable' %}site-grid--stable{% endif %}">
-            {% for site in sites %}
-            {% set site_key = site.site if site.site and site.site != 'Not Found' else '' %}
-            {% if badge_class == 'stable' %}
-            <article class="site-card site-card--{{ badge_class }} site-card--compact signal-border">
-                <div class="site-card__top">
-                    <div>
-                        <div class="site-card__title-row">
-                            <h3>{{ site.site_name or site.site or 'Site' }}</h3>
-                            <span class="badge badge--{{ badge_class }}">{{ site.status or badge_class }}</span>
-                        </div>
-                        <p class="site-card__sub">{{ site.reason or "No immediate issues detected" }}</p>
-                    </div>
-                    <div class="site-card__actions">
-                        {% if site_key %}
-                            <a href="/site/{{ site_key }}#signals-trend" class="pill">Site signals</a>
-                            <a href="/site/{{ site_key }}#project-sample" class="pill">Site projects</a>
-                        {% else %}
-                            <span class="pill">Site link unavailable</span>
-                            <span class="pill">Project data unavailable</span>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="chip-list">
-                    {% if site.historical_trend_signals %}
-                        {% for item in site.historical_trend_signals[:2] %}
-                            <span class="chip chip--accent">{{ item }}</span>
-                        {% endfor %}
-                    {% else %}
-                        <span class="chip chip--accent">No material operational signals</span>
-                    {% endif %}
-                </div>
-            </article>
-            {% else %}
-            <article class="site-card site-card--{{ badge_class }} signal-border {% if badge_class == 'critical' %}signal-border--critical{% elif badge_class == 'warning' %}signal-border--warning{% endif %}">
-                <div class="site-card__top">
-                    <div>
-                        <div class="site-card__title-row">
-                            <h3>{{ site.site_name or site.site or 'Site' }}</h3>
-                            <span class="badge badge--{{ badge_class }}">{{ site.status or badge_class }}</span>
-                        </div>
-                        <p class="site-card__sub">{{ site.reason or "No immediate issues detected" }}</p>
-                    </div>
-                    <div class="site-card__actions">
-                        {% if site_key %}
-                            <a href="/site/{{ site_key }}#signals-trend" class="pill">Site signals</a>
-                            <a href="/site/{{ site_key }}#project-sample" class="pill">Site projects</a>
-                        {% else %}
-                            <span class="pill">Site link unavailable</span>
-                            <span class="pill">Project data unavailable</span>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="metric-grid">
-                    <div class="metric-box">
-                        <div class="metric-label">Users</div>
-                        <div class="metric-value">{{ site.total_users or 0 }}</div>
-                        <div class="metric-note">Site total users</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-label">Projects</div>
-                        <div class="metric-value">{{ site.project_count or 0 }}</div>
-                        <div class="metric-note">Current project count</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-label">Risk</div>
-                        <div class="metric-value">{{ site.risk_score or site.historical_trend_score or 0 }}</div>
-                        <div class="metric-note">Current risk level</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-label">Snapshots</div>
-                        <div class="metric-value">{{ site.historical_snapshot_count or site.snapshot_count or 0 }}</div>
-                        <div class="metric-note">Snapshots retained</div>
-                    </div>
-                </div>
-                <div class="delta-grid">
-                    <div class="delta-chip"><span>Total users Delta</span><strong>{{ site.total_users_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Projects Delta</span><strong>{{ site.project_count_delta_live or site.project_count_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Risk Delta</span><strong>{{ site.historical_risk_delta or 0 }}</strong></div>
-                    <div class="delta-chip"><span>Unresolved Delta</span><strong>{{ site.historical_unresolved_delta or 0 }}</strong></div>
-                </div>
-                <div class="chip-list">
-                    {% if site.attention_reasons %}
-                        {% for item in site.attention_reasons[:2] %}
-                            <span class="chip chip--warning">{{ item }}</span>
-                        {% endfor %}
-                    {% endif %}
-                    {% if site.historical_trend_signals %}
-                        {% for item in site.historical_trend_signals[:2] %}
-                            <span class="chip chip--accent">{{ item }}</span>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            </article>
-            {% endif %}
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state">
-            <strong>No sites in this category right now.</strong>
-            <p>This section will populate automatically when site status grouping produces records for {{ title|lower }}.</p>
-        </div>
-        {% endif %}
-    </section>
-    {%- endmacro %}
-    <section class="hero home-hero slide-shell slide-shell--home home-hero--identity">
-        <div class="hero__top home-hero__top">
-            <div class="hero__copy home-hero__copy">
-                <div class="home-hero__title-wrap">
-                    <div class="hero__eyebrow">GLI global compliance telemetry</div>
-                    <h1>Operational Overview</h1>
-                    <p>
-                        Live operational command layer for the monitored estate. Home adapts its command language to the selected mode
-                        while keeping the monitored estate data, status grouping, and navigation intact.
-                    </p>
-                </div>
-                
-                <div class="mode-identity mode-identity--cyber">
-                    <div class="identity-panel identity-panel--cyber signal-border">
-                        <div class="identity-panel__eyebrow">AI command deck</div>
-                        <h2>AI Operational Matrix</h2>
-                        <p class="identity-panel__intro">Neural command framing for estate integrity, operator visibility, and predictive confidence.</p>
-                        <div class="identity-stat-grid identity-stat-grid--cyber">
-                            <div class="identity-stat-card"><div class="identity-stat-label">Health index</div><div class="identity-stat-value">{{ health_index }}%</div><div class="identity-stat-note">Computed from critical, warning, and attention signals.</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">System coherence</div><div class="identity-stat-value">{{ stable_count }}</div><div class="identity-stat-note">Stable monitored sites in the current estate.</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Signal integrity</div><div class="identity-stat-value">{{ signal_integrity }}%</div><div class="identity-stat-note">Access and account integrity estimate from live attention signals.</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Predictive confidence</div><div class="identity-stat-value">{{ predictive_confidence }}%</div><div class="identity-stat-note">Confidence falls when estate warnings and critical conditions rise.</div></div>
-                        </div>
-                        <div class="identity-feed-row identity-feed-row--cyber">
-                            <span class="pill">Signal nodes: {{ cyber_matrix_nodes }}</span>
-                            <span class="pill">Escalation signals: {{ cyber_signal_count }}</span>
-                            <span class="pill">Tracked sites: {{ tracked_total }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mode-identity mode-identity--enterprise">
-                    <div class="identity-panel identity-panel--enterprise">
-                        <div class="identity-panel__eyebrow">Executive summary</div>
-                        <h2>Board-ready posture summary</h2>
-                        <p class="identity-panel__intro">Portfolio framing for leadership review and estate-level decision making.</p>
-                        <div class="identity-stat-grid identity-stat-grid--enterprise">
-                            <div class="identity-stat-card"><div class="identity-stat-label">Compliance health</div><div class="identity-stat-value">{{ health_index }}%</div><div class="identity-stat-note">Blended from current estate operational posture.</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Estate risk</div><div class="identity-stat-value">{{ executive_risk }}</div><div class="identity-stat-note">Executive risk summary from current monitored conditions.</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Sites requiring attention</div><div class="identity-stat-value">{{ critical_count + warning_count }}</div><div class="identity-stat-note">Sites currently needing operational review.</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Trend</div><div class="identity-stat-value">{{ executive_trend }}</div><div class="identity-stat-note">Direction inferred from current critical, warning, and attention counts.</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mode-identity mode-identity--noc">
-                    <div class="identity-panel identity-panel--noc signal-border">
-                        <div class="identity-panel__eyebrow">Operations room</div>
-                        <h2>Network Status</h2>
-                        <p class="identity-panel__intro">Control-room framing for live site coverage, collection posture, and runtime-linked awareness.</p>
-                        <div class="identity-stat-grid identity-stat-grid--noc">
-                            <div class="identity-stat-card"><div class="identity-stat-label">Active sites</div><div class="identity-stat-value">{{ tracked_total }}</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Online</div><div class="identity-stat-value">{{ live_online_total }}</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Warning</div><div class="identity-stat-value">{{ warning_count }}</div></div>
-                            <div class="identity-stat-card"><div class="identity-stat-label">Critical</div><div class="identity-stat-value">{{ critical_count }}</div></div>
-                        </div>
-                        <div class="identity-feed-row">
-                            <span class="pill">Live feed active</span>
-                            <span class="pill">Collection runtime linked</span>
-                            <span class="pill">Signal integrity {{ signal_integrity }}%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="hero__core-wrap">
-                <div class="command-core command-core--healthy" id="hero-command-core" data-default-state="healthy">
-                    <div class="command-core__canvas">
-                        <div class="command-core__beam"></div>
-                        <div class="command-core__ring"></div>
-                        <span class="command-core__node command-core__node--a"></span>
-                        <span class="command-core__node command-core__node--b"></span>
-                    </div>
-                    <div class="command-core__center mode-core mode-core--core"><span class="command-core__label">Operational posture</span><strong class="command-core__value" id="hero-core-state">STABLE</strong></div>
-                    <div class="command-core__center mode-core mode-core--cyber"><span class="command-core__label">AI matrix state</span><strong class="command-core__value">{{ health_index }}%</strong></div>
-                    <div class="command-core__center mode-core mode-core--enterprise"><span class="command-core__label">Executive health</span><strong class="command-core__value">{{ health_index }}%</strong></div>
-                    <div class="command-core__center mode-core mode-core--noc"><span class="command-core__label">Live feed</span><strong class="command-core__value">ACTIVE</strong></div>
-                </div>
-            </div>
-        </div>
-    </section>
-<section class="panel command-panel jom-contract-surface jom-contract-surface--home" data-jom-contract-surface="home" aria-label="Home live operational status">
-  <div class="section-header">
+{% include "_nav.html" %}
+<main class="jom-shell" id="main-content">
+  <section class="jom-hero jom-card">
     <div>
-      <h2>Live Operational Status</h2>
-      <p>Contract-driven runtime, source and alert status surfaced directly from the operator endpoints.</p>
+      <p class="jom-kicker">Live Atlassian estate command layer</p>
+      <h1>Command Centre</h1>
+      <p class="jom-lede">A live operational overview for runtime status, source health, discovery, estate coverage and active risk. All values are loaded from existing JOM backend contracts and runtime sources.</p>
     </div>
-    <div class="section-header__actions"><span class="pill">Operator contract</span></div>
-  </div>
-  <div class="stat-grid">
-    <article class="stat-card signal-border"><div class="label">Runtime Status</div><div class="value" data-jom-client="home-runtime-status">Loading...</div><div class="note">Current runtime state from the frozen operator summary contract.</div></article>
-    <article class="stat-card signal-border"><div class="label">Source Health</div><div class="value" data-jom-client="home-source-health">Loading...</div><div class="note">Current source health surfaced through the operator summary contract.</div></article>
-    <article class="stat-card signal-border"><div class="label">Alert Count</div><div class="value" data-jom-client="home-alert-count">Loading...</div><div class="note">Current alert total from the operator alert contract.</div></article>
-  </div>
-  <details class="jom-contract-detail"><summary>Observability detail</summary><pre data-jom-client="home-observability-json">Loading...</pre></details>
-</section>
-
-<section class="panel command-panel context-panel mode-context mode-context--cyber home-identity-band signal-border">
-        <div class="section-header"><div><h2>Signal Lattice</h2><p>Cyber layer framing for estate telemetry, signal density, and matrix-linked command points.</p></div><div class="section-header__actions"><span class="pill">Matrix active</span></div></div>
-        <div class="stat-grid cyber-grid">
-            <div class="stat-card cyber-card"><div class="label">Tracked nodes</div><div class="value">{{ cyber_matrix_nodes }}</div><div class="note">Combined sites, intelligence coverage, and managed-account scope.</div></div>
-            <div class="stat-card cyber-card"><div class="label">Signal streams</div><div class="value">{{ cyber_signal_count }}</div><div class="note">Operational warnings, criticals, and attention signals now visible.</div></div>
-            <div class="stat-card cyber-card"><div class="label">Discovered surface</div><div class="value">{{ discovered_total }}</div><div class="note">Total discovered sites represented in current estate discovery context.</div></div>
-            <div class="stat-card cyber-card"><div class="label">Snapshot anchor</div><div class="value">{{ latest_snapshot_timestamp }}</div><div class="note">Latest verified estate snapshot for command interpretation.</div></div>
-        </div>
-    </section>
-    <section class="panel command-panel context-panel mode-context mode-context--enterprise home-identity-band">
-        <div class="section-header"><div><h2>Executive Operational Snapshot</h2><p>Portfolio-level summary presented for leaders, directors, and estate owners.</p></div></div>
-        <div class="stat-grid executive-grid">
-            <div class="stat-card executive-card"><div class="label">Compliance health</div><div class="value">{{ health_index }}%</div><div class="note">Combined posture estimate based on estate-critical and warning counts.</div></div>
-            <div class="stat-card executive-card"><div class="label">Risk outlook</div><div class="value">{{ executive_risk }}</div><div class="note">Executive risk summary from the current monitored portfolio.</div></div>
-            <div class="stat-card executive-card"><div class="label">Attention portfolio</div><div class="value">{{ critical_count + warning_count }}</div><div class="note">Sites that currently need operational review.</div></div>
-            <div class="stat-card executive-card"><div class="label">Trend position</div><div class="value">{{ executive_trend }}</div><div class="note">Trend framing based on current critical, warning, and attention counts.</div></div>
-        </div>
-    </section>
-    <section class="panel command-panel context-panel mode-context mode-context--noc signal-border home-identity-band">
-        <div class="section-header"><div><h2>Operations Feed Snapshot</h2><p>Control-room framing for live site coverage and active operational posture.</p></div><div class="section-header__actions"><span class="pill">Runtime linked</span></div></div>
-        <div class="stat-grid noc-grid">
-            <div class="stat-card noc-card"><div class="label">Active sites</div><div class="value">{{ tracked_total }}</div><div class="note">Sites in current coverage scope.</div></div>
-            <div class="stat-card noc-card"><div class="label">Online now</div><div class="value">{{ live_online_total }}</div><div class="note">Sites represented in current intelligence totals.</div></div>
-            <div class="stat-card noc-card"><div class="label">Warnings</div><div class="value">{{ warning_count }}</div><div class="note">Sites currently showing elevated conditions.</div></div>
-            <div class="stat-card noc-card"><div class="label">Critical</div><div class="value">{{ critical_count }}</div><div class="note">Sites requiring immediate review.</div></div>
-        </div>
-        <div class="noc-live-strip"><span class="pill">Live runtime linked</span><span class="pill">Snapshot: {{ latest_snapshot_timestamp }}</span><span class="pill">Attention signals: {{ attention_total }}</span></div>
-    </section>
-    <section class="panel command-panel home-priority-section">
-        <div class="section-header"><div><h2>Risk Grouping</h2><p>Current site grouping by operational state.</p></div></div>
-        <div class="status-grid">
-            <a href="#critical-sites" class="status-tile status-tile--critical signal-border signal-border--critical"><div class="status-tile__label">Critical</div><div class="status-tile__value">{{ critical_count }}</div><div class="status-tile__note">Sites requiring immediate review.</div></a>
-            <a href="#warning-sites" class="status-tile status-tile--warning signal-border signal-border--warning"><div class="status-tile__label">Warning</div><div class="status-tile__value">{{ warning_count }}</div><div class="status-tile__note">Sites showing elevated conditions.</div></a>
-            <a href="#stable-sites" class="status-tile status-tile--stable signal-border"><div class="status-tile__label">Stable</div><div class="status-tile__value">{{ stable_count }}</div><div class="status-tile__note">Sites operating within expected limits.</div></a>
-        </div>
-    </section>
-    {% if attention_total > 0 %}
-    <section class="panel command-panel command-panel--attention home-priority-section home-attention-section">
-        <div class="section-header"><div><h2>Attention Required</h2><p>Immediate account and access issues that may require action.</p></div></div>
-        <div class="stat-grid">
-            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning"><div class="label">Disabled User Accounts</div><div class="value">{{ estate.managed_disabled_accounts or 0 }}</div><div class="note">Managed accounts currently disabled.</div></a>
-            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning"><div class="label">Users Without Jira Access</div><div class="value">{{ estate.no_tracked_jira_site_access or 0 }}</div><div class="note">Accounts without tracked Jira site access in current scope.</div></a>
-            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning"><div class="label">Inactive Users (No Access)</div><div class="value">{{ estate.inactive_without_site_access or 0 }}</div><div class="note">Inactive users who appear to have no tracked site access.</div></a>
-            <a href="/reference" class="stat-card stat-card--link signal-border signal-border--warning"><div class="label">Bitbucket-only Users</div><div class="value">{{ estate.bitbucket_only_no_tracked_jira or 0 }}</div><div class="note">Users aligned to Bitbucket without tracked Jira presence.</div></a>
-        </div>
-    </section>
-    {% endif %}
-    {% if critical_sites %}<div id="critical-sites"></div>{{ site_section('Critical Sites', 'Sites requiring immediate attention based on current status.', critical_sites, 'critical') }}{% endif %}
-    {% if warning_sites %}<div id="warning-sites"></div>{{ site_section('Warning Sites', 'Sites showing early warning signs or potential risk.', warning_sites, 'warning') }}{% endif %}
-    <div id="stable-sites"></div>{{ site_section('Stable Sites', 'Sites operating normally and within expected limits.', stable_sites, 'stable') }}
-
-    <section class="site-registry-panel site-registry-panel--discovery" id="home-site-discovery-source">
-        <div class="site-registry-head">
-            <div>
-                <h2>Discovered Sites Awaiting Review</h2>
-                <p>These Jira resources were discovered from Atlassian Admin/Billing/runtime signals but are not monitored until approved from Admin.</p>
-            </div>
-            <div class="site-registry-summary">
-                <span>Discovered <b>{{ registry_discovered_sites|length if registry_discovered_sites else 0 }}</b></span>
-                <span>Pending onboarding <b>{{ registry_summary.pending_onboarding_count or 0 }}</b></span>
-            </div>
-        </div>
-        {% if registry_discovered_sites %}
-        <div class="site-registry-table-wrap">
-            <table class="site-registry-table">
-                <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Collector</th><th>Signals</th></tr></thead>
-                <tbody>
-                    {% for registry_site in registry_discovered_sites %}
-                    <tr>
-                        <td><strong>{{ registry_site.site_name or registry_site.site_key or registry_site.cloud_id }}</strong><small>{{ registry_site.site_key or '' }}</small></td>
-                        <td>{{ registry_site.site_url or registry_site.cloud_id or 'Unknown' }}</td>
-                        <td><span class="site-registry-badge site-registry-badge--discovered">Discovered</span></td>
-                        <td>{{ registry_site.collector_onboarding_status or 'not_requested' }}</td>
-                        <td>{% set signals = [] %}{% if registry_site.metrics and registry_site.metrics.jira_product_user_count is not none %}{% set _ = signals.append('Product users: ' ~ registry_site.metrics.jira_product_user_count) %}{% endif %}{% if registry_site.metrics and registry_site.metrics.named_access_count is not none %}{% set _ = signals.append('Named direct: ' ~ registry_site.metrics.named_access_count) %}{% endif %}{% if registry_site.sources %}{% set _ = signals.append('Sources: ' ~ registry_site.sources|join(', ')) %}{% endif %}{{ signals|join(' | ') }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <p class="site-registry-note">No discovered Jira resources are waiting for approval.</p>
-        {% endif %}
-        <p class="site-registry-note">Approval is controlled from Admin. Approved sites enter pending collector validation; removed monitored sites return to discovered if discovery signals still see them.</p>
-    </section>
-</div>
-<script>window.JOMTheme.initToggle("theme-toggle");</script>
-<script src="{{ url_for('static', filename='js/dashboard_refresh.js') }}"></script>
-<script src="/static/js/source_freshness_badge.js"></script>
-<script src="/static/js/source_reliability_dashboard.js"></script>
-  <script defer src="{{ url_for('static', filename='js/operational_console_dark.js') }}"></script>
-<!-- JOM_OPERATIONAL_CONSOLE_START -->
-<section id="operational-console-panel" class="jom-operational-console" aria-label="Operational console status">
-  <div class="jom-opcon-header">
-    <div>
-      <p class="jom-opcon-kicker">Operational Console</p>
-      <h2>Runtime Health</h2>
+    <div class="jom-health-card" aria-label="Estate health score">
+      <span>Estate Health Score</span>
+      <strong id="jom-health-score">Loading</strong>
+      <div class="jom-score-bar"><i id="jom-health-score-bar" style="width:0%"></i></div>
+      <small id="jom-health-note">Waiting for live contracts.</small>
     </div>
-    <span id="jom-opcon-overall" class="jom-opcon-pill">Loading</span>
-  </div>
-  <div id="jom-opcon-cards" class="jom-opcon-grid"></div>
-  <div id="jom-opcon-drilldown" class="jom-opcon-drilldown" hidden></div>
-</section>
-<!-- JOM_OPERATIONAL_CONSOLE_END -->
-  <script defer src="{{ url_for('static', filename='js/operational_console_enhancements.js') }}"></script>
-  <script defer src="{{ url_for('static', filename='js/site_onboarding_review.js') }}"></script>
+  </section>
 
-<!-- JOM operator frontend adapters -->
-<script src="/static/js/operator_api.js"></script>
-<script src="/static/js/operator_bindings.js"></script>
-  <script src="{{ url_for('static', filename='js/jom_contract_client.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='js/jom_home_contract_binding.js') }}" defer></script>
-<script src="/static/js/jom_ui_data_presentation_polish.js"></script>
+  <section class="jom-metric-strip" aria-label="Live metrics">
+    <article class="jom-metric"><span>Sites</span><strong id="metric-sites">--</strong><small>Total registry entries</small></article>
+    <article class="jom-metric"><span>Monitored</span><strong id="metric-monitored">--</strong><small>In monitored scope</small></article>
+    <article class="jom-metric"><span>Discovered</span><strong id="metric-discovered">--</strong><small>Awaiting review</small></article>
+    <article class="jom-metric"><span>Users</span><strong id="metric-users">--</strong><small>Footprint records</small></article>
+    <article class="jom-metric"><span>Alerts</span><strong id="metric-alerts">--</strong><small>Operator alerts</small></article>
+    <article class="jom-metric"><span>Runtime</span><strong id="metric-runtime">--</strong><small>Current state</small></article>
+  </section>
+
+  <section class="jom-grid jom-grid--three">
+    <article class="jom-card jom-state-card">
+      <span class="jom-kicker">Runtime Status</span>
+      <strong id="runtime-status">Loading</strong>
+      <p id="runtime-detail">Runtime state is being loaded from /operator/summary.</p>
+    </article>
+    <article class="jom-card jom-state-card">
+      <span class="jom-kicker">Source Health</span>
+      <strong id="source-health">Loading</strong>
+      <p id="source-detail">Source freshness and reliability state are loaded from existing APIs.</p>
+    </article>
+    <article class="jom-card jom-state-card">
+      <span class="jom-kicker">Alerts</span>
+      <strong id="alert-count">Loading</strong>
+      <p id="alert-detail">Alert count is loaded from /operator/alerts.</p>
+    </article>
+  </section>
+
+  <section class="jom-card jom-command-brief">
+    <div class="jom-section-head">
+      <div><p class="jom-kicker">AI Operational Brief</p><h2>Live recommendations</h2></div>
+      <span class="jom-pill">Source-backed only</span>
+    </div>
+    <ul id="ai-brief-list" class="jom-brief-list"><li>Loading operational brief...</li></ul>
+  </section>
+
+  <section class="jom-card">
+    <div class="jom-section-head">
+      <div><p class="jom-kicker">Risk Grouping</p><h2>Current estate posture</h2></div>
+      <span class="jom-pill" id="risk-total-pill">Loading</span>
+    </div>
+    <div class="jom-grid jom-grid--three">
+      <article class="jom-risk jom-risk--critical"><span>Critical</span><strong id="risk-critical">--</strong><small>Immediate review</small></article>
+      <article class="jom-risk jom-risk--warning"><span>Warning</span><strong id="risk-warning">--</strong><small>Elevated conditions</small></article>
+      <article class="jom-risk jom-risk--stable"><span>Stable</span><strong id="risk-stable">--</strong><small>Normal operation</small></article>
+    </div>
+  </section>
+
+  <section class="jom-card">
+    <div class="jom-section-head">
+      <div><p class="jom-kicker">Discovery Queue</p><h2>Discovered sites awaiting review</h2></div>
+      <a class="jom-pill jom-pill--link" href="/reference#site-discovery-control">Open Admin control</a>
+    </div>
+    <div class="jom-table-wrap">
+      <table class="jom-table" aria-label="Discovered sites">
+        <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Signals</th></tr></thead>
+        <tbody id="discovery-body"><tr><td colspan="4">Loading discovered sites...</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="jom-card">
+    <div class="jom-section-head">
+      <div><p class="jom-kicker">Runtime Diagnostics</p><h2>Operator contract detail</h2></div>
+      <span class="jom-pill">Collapsed by default</span>
+    </div>
+    <details class="jom-details"><summary>Show live JSON detail</summary><pre id="command-json">Loading...</pre></details>
+  </section>
+</main>
+<script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
