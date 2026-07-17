@@ -1,0 +1,198 @@
+
+/* JOM Command Centre / Estate / Admin Visual Consistency v2
+   Purpose: one visual rhythm across the active frontend workspaces without changing backend/data contracts. */
+:root {
+  --jom-page-max: 1180px;
+  --jom-section-gap: 18px;
+  --jom-card-radius: 18px;
+  --jom-card-border: #DFE1E6;
+  --jom-card-shadow: 0 8px 24px rgba(9, 30, 66, .06);
+  --jom-card-shadow-strong: 0 14px 38px rgba(9, 30, 66, .09);
+}
+
+/* Page rhythm */
+.jom-shell,
+main.jom-shell,
+.jom-main,
+.jom-content,
+.page-shell {
+  max-width: var(--jom-page-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.jom-shell > section,
+.jom-shell > .section,
+.jom-shell > .panel,
+.jom-shell > .card,
+.jom-shell > article,
+main > section {
+  margin-top: var(--jom-section-gap);
+}
+
+/* Shared section heading style */
+.eyebrow,
+[class*="eyebrow"],
+.command-intel-label,
+.admin-v2-label,
+.admin-kpi-label {
+  color: #5E6C84;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3, h4 {
+  color: #172B4D;
+  letter-spacing: -.01em;
+}
+
+p {
+  line-height: 1.55;
+}
+
+/* Card consistency across Home/Estate/Admin/Site */
+.card,
+.panel,
+.metric-card,
+.kpi-card,
+.admin-v2-card,
+.admin-v2-kpi,
+.admin-workspace-card,
+.command-intel-card,
+.command-intel-kpi,
+.command-intel-score-card,
+.site-card,
+.site-kpi,
+[class*="workspace-card"],
+[class*="summary-card"],
+[class*="intel-card"] {
+  border-color: var(--jom-card-border) !important;
+  border-radius: var(--jom-card-radius) !important;
+  box-shadow: var(--jom-card-shadow) !important;
+  background: #FFFFFF;
+}
+
+.card:hover,
+.panel:hover,
+.metric-card:hover,
+.kpi-card:hover,
+.admin-v2-card:hover,
+.command-intel-card:hover,
+.site-card:hover {
+  box-shadow: var(--jom-card-shadow-strong) !important;
+}
+
+/* Shared KPI density */
+[class*="kpi-grid"],
+[class*="metrics"],
+.admin-v2-kpi-grid,
+.command-intel-kpi-grid {
+  gap: 14px !important;
+}
+
+.admin-v2-kpi,
+.command-intel-kpi,
+.metric-card,
+.kpi-card,
+.site-kpi {
+  min-height: 96px;
+}
+
+/* Tables: consistent containment and row treatment */
+table {
+  border-collapse: collapse;
+}
+
+table th {
+  background: #F7F9FC;
+  color: #5E6C84;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+table td,
+table th {
+  border-bottom: 1px solid rgba(9, 30, 66, .08);
+}
+
+.admin-v2-table-wrap,
+.site-table-wrap,
+.table-wrap,
+[class*="table-wrap"] {
+  border-radius: 14px;
+  border: 1px solid var(--jom-card-border);
+  overflow: auto;
+  background: #fff;
+}
+
+/* Pills and badges */
+.command-intel-pill,
+.admin-v2-pill,
+.admin-pill,
+.site-badge,
+[class*="pill"],
+[class*="badge"] {
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+/* Diagnostics should be secondary and compact */
+details summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: #0747A6;
+}
+
+pre {
+  max-width: 100%;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Prevent horizontal overflow caused by long URLs/source strings */
+.jom-shell,
+.jom-shell * {
+  box-sizing: border-box;
+}
+
+.jom-shell a,
+.jom-shell td,
+.jom-shell pre,
+.jom-shell code,
+.admin-v2-table td,
+.site-table td {
+  overflow-wrap: anywhere;
+}
+
+/* Admin v2 rhythm alignment */
+.jom-admin-workspace-v2,
+.jom-command-intelligence-v1,
+.jom-site-workspace {
+  gap: var(--jom-section-gap);
+}
+
+/* Keep sidebar visual identity stable */
+.jom-side-nav {
+  box-shadow: 0 10px 30px rgba(9, 30, 66, .08);
+}
+
+.jom-side-nav a,
+.jom-side-nav button {
+  border-radius: 10px;
+}
+
+/* Responsive consistency */
+@media (max-width: 1100px) {
+  .jom-shell,
+  main.jom-shell,
+  .jom-main,
+  .jom-content,
+  .page-shell {
+    max-width: calc(100vw - 28px);
+  }
+}
