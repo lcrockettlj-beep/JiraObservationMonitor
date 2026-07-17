@@ -1,0 +1,498 @@
+{
+  "timestamp": "20260717_162344",
+  "decision": "PASS_WITH_CHANGES",
+  "issues": [],
+  "warnings": [],
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "ok": true,
+      "bytes": 6659,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/estate",
+      "status": 200,
+      "ok": true,
+      "bytes": 6925,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/reference",
+      "status": 200,
+      "ok": true,
+      "bytes": 6723,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/site/gli-it-project",
+      "status": 200,
+      "ok": true,
+      "bytes": 4994,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/site/gli-delivery-tm",
+      "status": 200,
+      "ok": true,
+      "bytes": 4995,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/site/gli-global-technology",
+      "status": 200,
+      "ok": true,
+      "bytes": 5001,
+      "error": "",
+      "keys": []
+    }
+  ],
+  "endpoints": [
+    {
+      "path": "/health",
+      "status": 200,
+      "ok": true,
+      "bytes": 412,
+      "error": "",
+      "keys": [
+        "alert_summary",
+        "operator_posture",
+        "runtime",
+        "status"
+      ]
+    },
+    {
+      "path": "/operator/summary",
+      "status": 200,
+      "ok": true,
+      "bytes": 1281,
+      "error": "",
+      "keys": [
+        "admin_truth",
+        "alert_summary",
+        "generated_at_utc",
+        "observability",
+        "posture",
+        "runtime",
+        "schema",
+        "source_health",
+        "top_alerts"
+      ]
+    },
+    {
+      "path": "/operator/alerts",
+      "status": 200,
+      "ok": true,
+      "bytes": 359,
+      "error": "",
+      "keys": [
+        "alerts",
+        "count"
+      ]
+    },
+    {
+      "path": "/operator/surface",
+      "status": 200,
+      "ok": true,
+      "bytes": 64488,
+      "error": "",
+      "keys": [
+        "admin",
+        "alert_summary",
+        "alerts",
+        "estate",
+        "generated_at_utc",
+        "observability",
+        "posture",
+        "runtime",
+        "schema",
+        "sources"
+      ]
+    },
+    {
+      "path": "/operator/observability",
+      "status": 200,
+      "ok": true,
+      "bytes": 508,
+      "error": "",
+      "keys": [
+        "runtime_history",
+        "runtime_status"
+      ]
+    },
+    {
+      "path": "/registry/sites",
+      "status": 200,
+      "ok": true,
+      "bytes": 5452,
+      "error": "",
+      "keys": [
+        "generated_at_utc",
+        "policy",
+        "schema",
+        "sites",
+        "summary"
+      ]
+    },
+    {
+      "path": "/estate/product-access",
+      "status": 200,
+      "ok": true,
+      "bytes": 5067,
+      "error": "",
+      "keys": [
+        "errors",
+        "generated_at_utc",
+        "notes",
+        "roles",
+        "schema",
+        "scope",
+        "sites",
+        "source",
+        "summary"
+      ]
+    },
+    {
+      "path": "/users/footprint",
+      "status": 200,
+      "ok": true,
+      "bytes": 48161,
+      "error": "",
+      "keys": [
+        "generated_at_utc",
+        "reason",
+        "reconciliation_source",
+        "safe_to_show_named_access_ui",
+        "schema",
+        "source_status",
+        "summary",
+        "truth_source",
+        "users"
+      ]
+    },
+    {
+      "path": "/admin/truth",
+      "status": 200,
+      "ok": true,
+      "bytes": 4913,
+      "error": "",
+      "keys": [
+        "admin_identity",
+        "billing_truth",
+        "blocked_resources",
+        "confirmed_product_sites",
+        "controls",
+        "generated_at_utc",
+        "next_actions",
+        "product_access_truth",
+        "schema",
+        "source_policy",
+        "summary"
+      ]
+    },
+    {
+      "path": "/api/data",
+      "status": 200,
+      "ok": true,
+      "bytes": 139399,
+      "error": "",
+      "keys": [
+        "admin_truth",
+        "estate_product_access",
+        "operator_summary",
+        "operator_surface",
+        "schema",
+        "site_registry",
+        "user_footprint"
+      ]
+    },
+    {
+      "path": "/api/source-state",
+      "status": 200,
+      "ok": true,
+      "bytes": 8290,
+      "error": "",
+      "keys": [
+        "operator_summary",
+        "runtime_status",
+        "schema",
+        "source_freshness",
+        "source_reliability"
+      ]
+    },
+    {
+      "path": "/api/site-registry",
+      "status": 200,
+      "ok": true,
+      "bytes": 5452,
+      "error": "",
+      "keys": [
+        "generated_at_utc",
+        "policy",
+        "schema",
+        "sites",
+        "summary"
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "path": "/static/css/jom_atlassian_command.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 12013,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/css/jom_visual_consistency_v2.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 4429,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/css/jom_operational_readiness_v1.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 2528,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/css/jom_admin_workspace_v2.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 4672,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/css/jom_site_workspace_v1.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 7221,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/js/jom_command_centre.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 16553,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/js/jom_operational_readiness_v1.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 4742,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/js/jom_admin_workspace_v2.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 10402,
+      "error": "",
+      "keys": []
+    },
+    {
+      "path": "/static/js/jom_site_workspace_v1.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 20376,
+      "error": "",
+      "keys": []
+    }
+  ],
+  "docs": [
+    {
+      "path": "docs/production_candidate_closeout_v2/PRODUCTION_CANDIDATE_CLOSEOUT_V2.md",
+      "exists": true,
+      "bytes": 2435
+    },
+    {
+      "path": "docs/production_candidate_closeout_v2/RELEASE_CHECKLIST_V2.md",
+      "exists": true,
+      "bytes": 698
+    },
+    {
+      "path": "docs/production_candidate_closeout_v2/STAKEHOLDER_DEMO_BRIEF_V2.md",
+      "exists": true,
+      "bytes": 753
+    },
+    {
+      "path": "docs/production_candidate_closeout_v2/KNOWN_LIMITATIONS_AND_NEXT_STEPS_V2.md",
+      "exists": true,
+      "bytes": 554
+    },
+    {
+      "path": "docs/executive_demo_reporting_v1/EXECUTIVE_DEMO_BRIEF_V1.md",
+      "exists": true,
+      "bytes": 1339
+    },
+    {
+      "path": "docs/executive_demo_reporting_v1/EXECUTIVE_SUMMARY_REPORT_V1.md",
+      "exists": true,
+      "bytes": 480
+    },
+    {
+      "path": "docs/executive_demo_reporting_v1/ESTATE_SUMMARY_REPORT_V1.md",
+      "exists": true,
+      "bytes": 610
+    },
+    {
+      "path": "docs/executive_demo_reporting_v1/GOVERNANCE_SUMMARY_REPORT_V1.md",
+      "exists": true,
+      "bytes": 1007
+    },
+    {
+      "path": "docs/executive_demo_reporting_v1/OPERATIONAL_SNAPSHOT_REPORT_V1.json",
+      "exists": true,
+      "bytes": 4724
+    },
+    {
+      "path": "docs/executive_demo_reporting_v1/executive_metrics_v1.csv",
+      "exists": true,
+      "bytes": 219
+    },
+    {
+      "path": "docs/executive_demo_reporting_v1/estate_sites_v1.csv",
+      "exists": true,
+      "bytes": 624
+    }
+  ],
+  "runtime_files": [
+    {
+      "path": "latest_run.json",
+      "exists": true,
+      "bytes": 158074
+    },
+    {
+      "path": "latest_run_admin_enriched.json",
+      "exists": true,
+      "bytes": 213611
+    },
+    {
+      "path": "latest_run_pretty.json",
+      "exists": true,
+      "bytes": 210961
+    },
+    {
+      "path": "latest_run_safe_partial.json",
+      "exists": true,
+      "bytes": 197151
+    },
+    {
+      "path": "static/data/runtime_refresh_status.json",
+      "exists": true,
+      "bytes": 2632
+    },
+    {
+      "path": "static/data/source_reliability_status.json",
+      "exists": true,
+      "bytes": 836
+    },
+    {
+      "path": "static/data/site_registry.json",
+      "exists": true,
+      "bytes": 5632
+    },
+    {
+      "path": "static/data/estate_product_access.json",
+      "exists": true,
+      "bytes": 5208
+    },
+    {
+      "path": "static/data/user_footprint.json",
+      "exists": true,
+      "bytes": 50248
+    },
+    {
+      "path": "static/data/admin_truth_v2.json",
+      "exists": true,
+      "bytes": 5037
+    }
+  ],
+  "orphans": [
+    {
+      "path": "static/css/jom_admin_workspace_v1.css",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/js/jom_admin_workspace_v1.js",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/css/jom_layout_shell_v1.css",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/js/jom_layout_shell_v1.js",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/css/jom_operator_experience_v1.css",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/js/jom_operator_experience_v1.js",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/css/jom_sidebar_layout_repair_v1.css",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/css/jom_command_colour_alignment_v1.css",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/css/jom_nav_font_identity_v1.css",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/css/admin.css",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/js/admin.js",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/js/home_estate_scope_guard.js",
+      "exists": false,
+      "bytes": 0
+    },
+    {
+      "path": "static/js/site_registry.js",
+      "exists": false,
+      "bytes": 0
+    }
+  ],
+  "git_status_before": "",
+  "branch": "main",
+  "latest_commits": "00ebfc6 add executive demo and reporting pack\nc30aca3 add production candidate closeout v2 documentation\nbdebba2 align admin discovery queue with registry monitoring state\nb54bf83 full\n3a74934 add production candidate documentation and release guidance\n2eefdf4 add end of month production readiness documentation\n24988e6 add operational readiness layer across core workspaces\n4104ebd add visual consistency layer across core workspaces",
+  "remote": "origin\thttps://github.com/lcrockettlj-beep/JiraObservationMonitor.git (fetch)\norigin\thttps://github.com/lcrockettlj-beep/JiraObservationMonitor.git (push)"
+}
