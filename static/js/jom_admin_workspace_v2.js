@@ -16,35 +16,122 @@
     el.textContent = value;
     el.className = 'admin-v2-pill admin-v2-pill--' + (mode || 'info');
   }
-  function registrySummary(registry){
-    const s = registry && registry.summary ? registry.summary : {};
-    const sites = arr(registry && registry.sites);
-    return {
-      total: num(s.total_sites, sites.length),
-      monitored: num(s.monitored_count, sites.filter(x => x.monitored === true || x.monitoring_state === 'monitored').length),
-      discovered: num(s.discovered_count, sites.filter(x => x.monitored === false || x.monitoring_state === 'discovered').length),
-      pending: num(s.pending_onboarding_count, 0),
-      sites
-    };
+  function siteState(site) {
+  const candidates = [
+    site && site.classification,
+    site && site.monitoring_state,
+    site && site.monitoringStatus,
+    site && site.monitoring_status,
+    site && site.status,
+    site && site.state
+  ].filter(Boolean).map(function(value){ return String(value).toLowerCase().trim(); });
+
+  if (site && (site.monitored === true || site.is_monitored === true || site.in_scope === true)) {
+    return 'monitored';
   }
-  function userSummary(footprint){ return footprint && footprint.summary ? footprint.summary : {}; }
-  function renderDiscoveryTable(registry){
-    const table = $('admin-v2-discovery-table-body'); if(!table) return;
-    const reg = registrySummary(registry);
-    const rows = reg.sites.filter(site => !(site.monitored === true || site.monitoring_state === 'monitored')).slice(0, 20);
-    if(!rows.length){
-      table.innerHTML = '<tr><td colspan="4">No unmonitored discovery items currently require review.</td></tr>';
-      return;
-    }
-    table.innerHTML = rows.map(site => {
-      const key = site.key || site.site_key || site.name || site.url || 'unknown';
-      const name = site.name || site.display_name || key;
-      const state = site.monitoring_state || (site.monitored ? 'monitored' : 'discovered');
-      const url = site.url || site.base_url || '';
-      return `<tr><td><strong>${name}</strong><br><span class="admin-v2-sub">${key}</span></td><td>${state}</td><td>${url || 'No URL listed'}</td><td><span class="admin-v2-pill admin-v2-pill--review">Review</span></td></tr>`;
-    }).join('');
+  if (candidates.some(function(value){ return value.indexOf('monitor') >= 0 || value === 'active' || value === 'in_scope'; })) {
+    return 'monitored';
   }
-  function renderNamedAccess(users){
+  if (candidates.some(function(value){ return value.indexOf('discover') >= 0 || value.indexOf('review') >= 0 || value.indexOf('pending') >= 0; })) {
+    return 'discovered';
+  }
+  return 'discovered';
+}
+
+function isMonitoredSite(site) {
+  return siteState(site) === 'monitored';
+}
+
+function siteUrl(site) {
+  return (site && (site.url || site.site_url || site.base_url || site.cloud_url || site.cloudId || site.cloud_id)) || '';
+}
+
+function siteState(site) {
+  const candidates = [
+    site && site.classification,
+    site && site.monitoring_state,
+    site && site.monitoringStatus,
+    site && site.monitoring_status,
+    site && site.status,
+    site && site.state
+  ].filter(Boolean).map(function(value){ return String(value).toLowerCase().trim(); });
+
+  if (site && (site.monitored === true || site.is_monitored === true || site.in_scope === true)) {
+    return 'monitored';
+  }
+  if (candidates.some(function(value){ return value.indexOf('monitor') >= 0 || value === 'active' || value === 'in_scope'; })) {
+    return 'monitored';
+  }
+  if (candidates.some(function(value){ return value.indexOf('discover') >= 0 || value.indexOf('review') >= 0 || value.indexOf('pending') >= 0; })) {
+    return 'discovered';
+  }
+  return 'discovered';
+}
+
+function isMonitoredSite(site) {
+  return siteState(site) === 'monitored';
+}
+
+function siteUrl(site) {
+  return (site && (site.url || site.site_url || site.base_url || site.cloud_url || site.cloudId || site.cloud_id)) || '';
+}
+
+function registrySummary(registry) {
+  const summary = registry && registry.summary ? registry.summary : {};
+  const sites = Array.isArray(registry && registry.sites) ? registry.sites : [];
+  const monitoredSites = sites.filter(isMonitoredSite);
+  const discoveredSites = sites.filter(function(site){ return !isMonitoredSite(site); });
+  const toNumber = function(value, fallback) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  };
+  return {
+    total: toNumber(summary.total_sites ?? summary.site_count, sites.length),
+    monitored: toNumber(summary.monitored_count, monitoredSites.length),
+    discovered: toNumber(summary.discovered_count, discoveredSites.length),
+    pending: toNumber(summary.pending_onboarding_count ?? summary.pending_count, discoveredSites.length),
+    sites: sites,
+    monitoredSites: monitoredSites,
+    discoveredSites: discoveredSites
+  };
+}
+function userSummary(footprint){ return footprint && footprint.summary ? footprint.summary : {}; }
+  function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+
+function renderDiscoveryTable(registry) {
+  const table = document.getElementById('admin-v2-discovery-table-body');
+  if (!table) return;
+
+  const summary = registrySummary(registry);
+  const rows = summary.discoveredSites.slice(0, 20);
+
+  if (!rows.length) {
+    table.innerHTML = '<tr><td colspan="4">No unmonitored discovery items currently require review.</td></tr>';
+    return;
+  }
+
+  table.innerHTML = rows.map(function(site) {
+    const key = site.key || site.site_key || site.slug || site.name || siteUrl(site) || 'unknown-site';
+    const name = site.display_name || site.site_name || site.name || key;
+    const state = siteState(site);
+    const url = siteUrl(site);
+    return '<tr>' +
+      '<td><strong>' + escapeHtml(name) + '</strong><small>' + escapeHtml(key) + '</small></td>' +
+      '<td><span class="admin-v2-pill admin-v2-pill--review">' + escapeHtml(state) + '</span></td>' +
+      '<td>' + escapeHtml(url || 'No URL listed') + '</td>' +
+      '<td><span class="admin-v2-pill admin-v2-pill--review">Review</span></td>' +
+      '</tr>';
+  }).join('');
+}
+function renderNamedAccess(users){
     const list = $('admin-v2-named-access-list'); if(!list) return;
     const safe = users && users.safe_to_show_named_access_ui;
     const summary = userSummary(users);
