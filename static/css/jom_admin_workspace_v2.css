@@ -126,3 +126,47 @@
   .admin-v2-grid-2,
   .admin-v2-grid-3 { grid-template-columns: 1fr; }
 }
+
+/* === Core Workspace Template Consolidation v1 START === */
+.admin-v2-hero h1 {
+  margin: 4px 0 4px;
+  color: var(--jom-navy, #092957);
+  font-size: clamp(34px, 4vw, 48px);
+  letter-spacing: -0.03em;
+}
+.admin-v2-hero h2 {
+  margin-top: 0;
+}
+.admin-v2-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.admin-v2-table td,
+.admin-v2-table th {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.admin-v2-table td:first-child {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.admin-v2-pill,
+.admin-v2-table .admin-v2-pill,
+.admin-v2-list .admin-v2-pill {
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  flex-shrink: 0;
+}
+.admin-v2-table th:nth-child(2),
+.admin-v2-table td:nth-child(2) {
+  min-width: 96px;
+}
+.admin-v2-table th:nth-child(4),
+.admin-v2-table td:nth-child(4) {
+  min-width: 94px;
+  white-space: nowrap;
+}
+/* === Core Workspace Template Consolidation v1 END === */

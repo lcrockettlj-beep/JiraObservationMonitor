@@ -285,52 +285,5 @@ body {
 }
 /* === Estate Foundation Build v1 END === */
 
-/* === Admin Foundation Build v1 START === */
-.jom-admin-hero .jom-admin-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-}
-.jom-admin-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
-  align-items: center;
-}
-.jom-admin-control-panel {
-  border-left: 4px solid var(--jom-blue, #0C66E4);
-}
-.jom-admin-discovery-table td:last-child {
-  white-space: nowrap;
-}
-.jom-admin-action-stack {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.jom-admin-action-muted {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(9,30,66,.12);
-  background: #F7F9FC;
-  color: var(--muted);
-  font-size: 12px;
-}
-.jom-admin-category-card {
-  min-height: 286px;
-}
-.jom-admin-category-card h2 {
-  margin-top: 4px;
-}
-@media(max-width:760px){
-  .jom-admin-toolbar { justify-content: stretch; }
-  .jom-admin-toolbar .jom-input,
-  .jom-admin-toolbar .jom-select { width: 100%; }
-  .jom-admin-hero .jom-admin-actions { justify-content: flex-start; }
-}
-/* === Admin Foundation Build v1 END === */
+
 

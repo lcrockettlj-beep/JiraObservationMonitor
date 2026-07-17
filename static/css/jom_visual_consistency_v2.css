@@ -196,3 +196,30 @@ pre {
     max-width: calc(100vw - 28px);
   }
 }
+
+/* === Core Workspace Template Consolidation v1 START === */
+.jom-status,
+.jom-pill,
+.jom-readiness-pill,
+.admin-v2-pill,
+.site-badge,
+[class*="pill"],
+[class*="badge"] {
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  line-height: 1.2;
+}
+.jom-table td,
+.jom-table th,
+.admin-v2-table td,
+.admin-v2-table th,
+.site-table td,
+.site-table th {
+  vertical-align: middle;
+}
+.jom-table .jom-status,
+.admin-v2-table .admin-v2-pill {
+  min-width: max-content;
+}
+/* === Core Workspace Template Consolidation v1 END === */
