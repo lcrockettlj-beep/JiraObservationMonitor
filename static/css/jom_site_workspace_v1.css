@@ -116,3 +116,79 @@
   vertical-align: top;
 }
 /* === Site Workspace Data Enrichment v1 END === */
+/* === Site Workspace UX Freeze-Safe Closeout v1 START === */
+.site-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(9,30,66,.14);
+  background: #F7F9FC;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+.site-badge--ok {
+  background: #E3FCF0;
+  border-color: rgba(54,179,126,.30);
+  color: #216E4E;
+}
+.site-badge--review {
+  background: #FFF4E5;
+  border-color: rgba(255,171,0,.30);
+  color: #A54800;
+}
+.site-signal-cards {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+.site-signal-card {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  align-items: start;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #FAFBFC;
+}
+.site-signal-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgba(9,30,66,.12);
+  font-size: 11px;
+  font-weight: 900;
+}
+.site-signal-card--ok .site-signal-icon { color: #216E4E; }
+.site-signal-card--review .site-signal-icon { color: #A54800; }
+.site-user-summary-grid {
+  display: grid;
+  gap: 8px;
+}
+.site-user-summary-grid span {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #FAFBFC;
+  color: var(--text);
+}
+.site-empty-value {
+  color: var(--muted) !important;
+  font-style: italic;
+}
+.site-diagnostics summary {
+  color: var(--muted);
+  font-weight: 800;
+}
+/* === Site Workspace UX Freeze-Safe Closeout v1 END === */

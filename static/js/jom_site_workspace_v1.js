@@ -240,3 +240,92 @@
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 /* === Site Workspace Data Enrichment v1 END === */
+/* === Site Workspace UX Freeze-Safe Closeout v1 START === */
+(function(){
+  function text(el){ return (el && el.textContent ? el.textContent : '').trim(); }
+  function normalise(value){ return String(value || '').trim().toLowerCase(); }
+  function isLoading(value){ return !value || value === 'Loading...' || value === 'LOADING...'; }
+  function badgeClass(value){
+    const v = normalise(value);
+    if(v.includes('monitored') || v.includes('normal') || v.includes('ok') || v.includes('yes')) return 'site-badge site-badge--ok';
+    if(v.includes('discover') || v.includes('review') || v.includes('unavailable') || v.includes('pending')) return 'site-badge site-badge--review';
+    return 'site-badge';
+  }
+  function applyBadge(selector){
+    const el = document.querySelector(selector);
+    if(!el) return false;
+    const val = text(el);
+    if(isLoading(val)) return false;
+    if(el.dataset.uxBadgeValue === val) return true;
+    el.textContent = val.toUpperCase();
+    el.className = badgeClass(val);
+    el.dataset.uxBadgeValue = val;
+    return true;
+  }
+  function convertSignals(){
+    const list = document.getElementById('site-signal-list');
+    if(!list) return false;
+    const current = text(list);
+    if(isLoading(current) || current.includes('Loading signals')) return false;
+    list.classList.add('site-signal-cards');
+    Array.from(list.querySelectorAll('li')).forEach(item => {
+      if(item.dataset.uxSignalClosed === 'true') return;
+      const content = text(item);
+      const lowered = normalise(content);
+      item.classList.add('site-signal-card');
+      if(lowered.includes('no exact') || lowered.includes('no product') || lowered.includes('awaiting') || lowered.includes('review')) item.classList.add('site-signal-card--review');
+      else item.classList.add('site-signal-card--ok');
+      const icon = document.createElement('span');
+      icon.className = 'site-signal-icon';
+      icon.textContent = item.classList.contains('site-signal-card--ok') ? 'OK' : '!';
+      item.insertBefore(icon, item.firstChild);
+      item.dataset.uxSignalClosed = 'true';
+    });
+    return true;
+  }
+  function improveEmptyStates(){
+    document.querySelectorAll('[data-site-field]').forEach(el => {
+      const value = text(el);
+      if(value === 'Unavailable') el.classList.add('site-empty-value');
+    });
+    const body = document.getElementById('site-product-access-body');
+    if(body && !body.dataset.uxEmptyChecked && /Unavailable|No product-access/i.test(body.innerText)){
+      body.innerHTML = '<tr><td colspan="4"><strong>No source-backed product access currently available.</strong><br><span class="site-muted">This site exists in the registry but has not yet produced product-access data.</span></td></tr>';
+      body.dataset.uxEmptyChecked = 'true';
+    }
+  }
+  function improveUserSummary(){
+    const summary = document.getElementById('site-users-summary');
+    if(!summary || summary.dataset.uxClosedOut === 'true') return false;
+    const raw = text(summary);
+    if(isLoading(raw)) return false;
+    const parts = raw.split('|').map(x => x.trim()).filter(Boolean);
+    if(parts.length){
+      summary.innerHTML = '<span>' + parts.join('</span><span>') + '</span>';
+      summary.classList.add('site-user-summary-grid');
+      summary.dataset.uxClosedOut = 'true';
+      return true;
+    }
+    return false;
+  }
+  function renameDiagnostics(){
+    const summary = document.querySelector('.site-diagnostics summary');
+    if(summary) summary.textContent = 'Developer diagnostics';
+  }
+  function runCloseout(){
+    applyBadge('#site-status-pill');
+    applyBadge('[data-site-field="monitored"]');
+    applyBadge('[data-site-field="registry-state"]');
+    applyBadge('[data-site-field="risk"]');
+    convertSignals();
+    improveEmptyStates();
+    improveUserSummary();
+    renameDiagnostics();
+  }
+  function scheduleCloseout(){
+    [250, 750, 1500, 3000, 5000, 8000].forEach(delay => window.setTimeout(runCloseout, delay));
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scheduleCloseout);
+  else scheduleCloseout();
+})();
+/* === Site Workspace UX Freeze-Safe Closeout v1 END === */
