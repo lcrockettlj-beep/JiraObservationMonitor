@@ -1,0 +1,96 @@
+
+/* JOM Operational Readiness Expansion v1
+   Cross-workspace readiness layer. No backend changes. */
+.jom-readiness-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  max-width: var(--jom-page-max, 1180px);
+  margin: 0 auto 18px;
+  padding: 14px 16px;
+  border: 1px solid #DFE1E6;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F7F9FC 100%);
+  box-shadow: 0 8px 24px rgba(9, 30, 66, .06);
+}
+.jom-readiness-title {
+  display: grid;
+  gap: 4px;
+}
+.jom-readiness-title strong {
+  color: #172B4D;
+  font-size: 15px;
+}
+.jom-readiness-title span {
+  color: #5E6C84;
+  font-size: 13px;
+}
+.jom-readiness-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.jom-readiness-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(9,30,66,.14);
+  background: #F7F9FC;
+  color: #172B4D;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.jom-readiness-pill--ok { background: #E3FCF0; color: #216E4E; border-color: rgba(54,179,126,.30); }
+.jom-readiness-pill--review { background: #FFF4E5; color: #A54800; border-color: rgba(255,171,0,.30); }
+.jom-readiness-pill--risk { background: #FFEBE6; color: #A32000; border-color: rgba(255,86,48,.30); }
+.jom-readiness-pill--info { background: #DEEBFF; color: #0747A6; border-color: rgba(0,82,204,.18); }
+.jom-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+.jom-action-button,
+.jom-export-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,82,204,.20);
+  background: #DEEBFF;
+  color: #0747A6;
+  font-weight: 800;
+  font-size: 13px;
+  text-decoration: none;
+}
+.jom-export-placeholder[aria-disabled="true"] {
+  opacity: .72;
+  cursor: not-allowed;
+}
+.jom-empty-state {
+  border: 1px dashed #DFE1E6;
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: #FAFBFC;
+  color: #5E6C84;
+}
+.jom-readiness-note {
+  color: #5E6C84;
+  font-size: 12px;
+  margin-top: 8px;
+}
+body[data-jom-readiness="ready"] .jom-readiness-strip {
+  border-color: rgba(54,179,126,.28);
+}
+@media (max-width: 820px) {
+  .jom-readiness-strip { grid-template-columns: 1fr; }
+  .jom-readiness-pills { justify-content: flex-start; }
+}
