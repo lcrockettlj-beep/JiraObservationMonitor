@@ -100,3 +100,19 @@
   cursor: pointer;
 }
 /* === Estate Drilldown Panel Only v1.1 END === */
+
+/* === Site Workspace Data Enrichment v1 START === */
+.site-signal-list li {
+  line-height: 1.55;
+}
+.site-definition-list dd,
+#site-users-summary,
+#site-json-diagnostics {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.site-table td,
+.site-table th {
+  vertical-align: top;
+}
+/* === Site Workspace Data Enrichment v1 END === */
