@@ -1,0 +1,251 @@
+{
+  "timestamp": "20260717_155337",
+  "decision": "PASS_WITH_CHANGES",
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "ok": true,
+      "bytes": 6659,
+      "error": ""
+    },
+    {
+      "path": "/estate",
+      "status": 200,
+      "ok": true,
+      "bytes": 6925,
+      "error": ""
+    },
+    {
+      "path": "/reference",
+      "status": 200,
+      "ok": true,
+      "bytes": 6723,
+      "error": ""
+    },
+    {
+      "path": "/site/gli-it-project",
+      "status": 200,
+      "ok": true,
+      "bytes": 4994,
+      "error": ""
+    },
+    {
+      "path": "/site/gli-delivery-tm",
+      "status": 200,
+      "ok": true,
+      "bytes": 4995,
+      "error": ""
+    },
+    {
+      "path": "/site/gli-global-technology",
+      "status": 200,
+      "ok": true,
+      "bytes": 5001,
+      "error": ""
+    }
+  ],
+  "endpoints": [
+    {
+      "path": "/operator/summary",
+      "status": 200,
+      "ok": true,
+      "bytes": 1281,
+      "error": ""
+    },
+    {
+      "path": "/operator/alerts",
+      "status": 200,
+      "ok": true,
+      "bytes": 359,
+      "error": ""
+    },
+    {
+      "path": "/operator/surface",
+      "status": 200,
+      "ok": true,
+      "bytes": 64488,
+      "error": ""
+    },
+    {
+      "path": "/operator/observability",
+      "status": 200,
+      "ok": true,
+      "bytes": 508,
+      "error": ""
+    },
+    {
+      "path": "/registry/sites",
+      "status": 200,
+      "ok": true,
+      "bytes": 5452,
+      "error": ""
+    },
+    {
+      "path": "/estate/product-access",
+      "status": 200,
+      "ok": true,
+      "bytes": 5067,
+      "error": ""
+    },
+    {
+      "path": "/users/footprint",
+      "status": 200,
+      "ok": true,
+      "bytes": 48161,
+      "error": ""
+    },
+    {
+      "path": "/admin/truth",
+      "status": 200,
+      "ok": true,
+      "bytes": 4913,
+      "error": ""
+    },
+    {
+      "path": "/api/data",
+      "status": 200,
+      "ok": true,
+      "bytes": 139399,
+      "error": ""
+    },
+    {
+      "path": "/api/source-state",
+      "status": 200,
+      "ok": true,
+      "bytes": 8290,
+      "error": ""
+    },
+    {
+      "path": "/api/site-registry",
+      "status": 200,
+      "ok": true,
+      "bytes": 5452,
+      "error": ""
+    }
+  ],
+  "assets": [
+    {
+      "path": "/static/css/jom_atlassian_command.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 12013,
+      "error": ""
+    },
+    {
+      "path": "/static/css/jom_visual_consistency_v2.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 4429,
+      "error": ""
+    },
+    {
+      "path": "/static/css/jom_operational_readiness_v1.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 2528,
+      "error": ""
+    },
+    {
+      "path": "/static/css/jom_admin_workspace_v2.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 4672,
+      "error": ""
+    },
+    {
+      "path": "/static/css/jom_site_workspace_v1.css",
+      "status": 200,
+      "ok": true,
+      "bytes": 7221,
+      "error": ""
+    },
+    {
+      "path": "/static/js/jom_command_centre.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 16553,
+      "error": ""
+    },
+    {
+      "path": "/static/js/jom_operational_readiness_v1.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 4742,
+      "error": ""
+    },
+    {
+      "path": "/static/js/jom_admin_workspace_v2.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 10402,
+      "error": ""
+    },
+    {
+      "path": "/static/js/jom_site_workspace_v1.js",
+      "status": 200,
+      "ok": true,
+      "bytes": 20376,
+      "error": ""
+    }
+  ],
+  "orphans": [
+    {
+      "path": "static/css/jom_admin_workspace_v1.css",
+      "exists": false
+    },
+    {
+      "path": "static/js/jom_admin_workspace_v1.js",
+      "exists": false
+    },
+    {
+      "path": "static/css/jom_layout_shell_v1.css",
+      "exists": false
+    },
+    {
+      "path": "static/js/jom_layout_shell_v1.js",
+      "exists": false
+    },
+    {
+      "path": "static/css/jom_operator_experience_v1.css",
+      "exists": false
+    },
+    {
+      "path": "static/js/jom_operator_experience_v1.js",
+      "exists": false
+    },
+    {
+      "path": "static/css/jom_sidebar_layout_repair_v1.css",
+      "exists": false
+    },
+    {
+      "path": "static/css/jom_command_colour_alignment_v1.css",
+      "exists": false
+    },
+    {
+      "path": "static/css/jom_nav_font_identity_v1.css",
+      "exists": false
+    },
+    {
+      "path": "static/css/admin.css",
+      "exists": false
+    },
+    {
+      "path": "static/js/admin.js",
+      "exists": false
+    },
+    {
+      "path": "static/js/home_estate_scope_guard.js",
+      "exists": false
+    },
+    {
+      "path": "static/js/site_registry.js",
+      "exists": false
+    }
+  ],
+  "git_status": "",
+  "branch": "main",
+  "latest_commits": "bdebba2 align admin discovery queue with registry monitoring state\nb54bf83 full\n3a74934 add production candidate documentation and release guidance\n2eefdf4 add end of month production readiness documentation\n24988e6 add operational readiness layer across core workspaces",
+  "issues": [],
+  "warnings": []
+}
