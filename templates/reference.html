@@ -5,6 +5,7 @@
   <title>Admin - Jira Observation Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_admin_workspace_v2.css') }}">
 </head>
 <body>
 {% include "_nav.html" %}
@@ -111,7 +112,67 @@
       <details class="jom-details"><summary>Show admin JSON</summary><pre id="admin-json">Loading...</pre></details>
     </article>
   </section>
+
+
+
+
+<!-- JOM Admin Workspace Expansion v2 START -->
+<section class="jom-admin-workspace-v2" data-admin-workspace-v2="true">
+  <div class="admin-v2-hero">
+    <p class="eyebrow">Admin Intelligence Centre</p>
+    <h2>Governance, access, discovery and source control</h2>
+    <p>Admin consolidates identity truth, named access safety, runtime health, discovery queue and source reliability into one read-only control workspace.</p>
+  </div>
+
+  <section class="admin-v2-kpi-grid" aria-label="Admin summary KPIs">
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Total Sites</span><span class="admin-v2-value" id="admin-v2-total-sites">Loading...</span><span class="admin-v2-sub">Registry inventory</span></article>
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Monitored</span><span class="admin-v2-value" id="admin-v2-monitored-sites">Loading...</span><span class="admin-v2-sub">Active monitoring scope</span></article>
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Discovered</span><span class="admin-v2-value" id="admin-v2-discovered-sites">Loading...</span><span class="admin-v2-sub">Needs governance review</span></article>
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Users Analysed</span><span class="admin-v2-value" id="admin-v2-users">Loading...</span><span class="admin-v2-sub">User footprint source</span></article>
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Assignments</span><span class="admin-v2-value" id="admin-v2-assignments">Loading...</span><span class="admin-v2-sub">Product access assignments</span></article>
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Named Access</span><span id="admin-v2-named-access-status" class="admin-v2-pill admin-v2-pill--info">Loading...</span><span class="admin-v2-sub">UI exposure guard</span></article>
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Source Health</span><span id="admin-v2-source-health" class="admin-v2-pill admin-v2-pill--info">Loading...</span><span class="admin-v2-sub">Source-state contract</span></article>
+    <article class="admin-v2-kpi"><span class="admin-v2-label">Runtime Health</span><span id="admin-v2-runtime-health" class="admin-v2-pill admin-v2-pill--info">Loading...</span><span class="admin-v2-sub">Operator summary</span></article>
+  </section>
+
+  <section class="admin-v2-grid-2">
+    <article class="admin-v2-card">
+      <h3>Discovery queue</h3>
+      <p class="admin-v2-sub">Unmonitored or newly discovered sites that need operational review.</p>
+      <div class="admin-v2-table-wrap">
+        <table class="admin-v2-table">
+          <thead><tr><th>Site</th><th>State</th><th>URL</th><th>Action</th></tr></thead>
+          <tbody id="admin-v2-discovery-table-body"><tr><td colspan="4">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </article>
+    <article class="admin-v2-card">
+      <h3>Named access intelligence</h3>
+      <ul class="admin-v2-list" id="admin-v2-named-access-list"><li><span>Loading</span><span class="admin-v2-pill admin-v2-pill--info">Loading...</span></li></ul>
+    </article>
+  </section>
+
+  <section class="admin-v2-grid-3">
+    <article class="admin-v2-card"><h3>Runtime health</h3><ul class="admin-v2-list" id="admin-v2-runtime-list"><li><span>Loading</span><span class="admin-v2-pill admin-v2-pill--info">Loading...</span></li></ul></article>
+    <article class="admin-v2-card"><h3>API connections</h3><ul class="admin-v2-list" id="admin-v2-api-list"><li><span>Loading</span><span class="admin-v2-pill admin-v2-pill--info">Loading...</span></li></ul></article>
+    <article class="admin-v2-card"><h3>Admin actions</h3><ul class="admin-v2-list"><li><span>Discovery actions</span><span class="admin-v2-pill admin-v2-pill--info">Retained in registry control</span></li><li><span>Write-back policy</span><span class="admin-v2-pill admin-v2-pill--ok">Read-only</span></li><li><span>Fallback routes</span><span class="admin-v2-pill admin-v2-pill--info">Compatibility retained</span></li></ul></article>
+  </section>
+
+  <section class="admin-v2-diagnostics">
+    <details>
+      <summary>Admin diagnostics</summary>
+      <div class="admin-v2-grid-3">
+        <article class="admin-v2-card"><h4>Admin truth</h4><pre id="admin-v2-admin-truth-json">Loading...</pre></article>
+        <article class="admin-v2-card"><h4>User footprint</h4><pre id="admin-v2-users-json">Loading...</pre></article>
+        <article class="admin-v2-card"><h4>Source state</h4><pre id="admin-v2-source-json">Loading...</pre></article>
+      </div>
+    </details>
+  </section>
+</section>
+<!-- JOM Admin Workspace Expansion v2 END -->
+
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_admin_workspace_v2.js') }}" defer></script>
 </body>
 </html>
