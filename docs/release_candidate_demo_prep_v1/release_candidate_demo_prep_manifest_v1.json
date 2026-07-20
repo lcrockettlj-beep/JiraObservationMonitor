@@ -1,0 +1,11 @@
+{
+  "release_name": "production-candidate-v2-demo-ready",
+  "generated_at": "20260720_092656",
+  "repo": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor",
+  "base_url": "http://127.0.0.1:5000",
+  "branch": "main",
+  "head_commit": "555d1d7",
+  "decision": "PASS_WITH_CHANGES",
+  "issues": [],
+  "warnings": []
+}
