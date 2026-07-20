@@ -1,1 +1,0 @@
-# Command Centre Simplification Pack v1\n\nReplaces the stacked Command Centre with a simplified operational workflow.\n
