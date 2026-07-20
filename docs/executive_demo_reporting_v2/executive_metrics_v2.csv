@@ -1,0 +1,2 @@
+generated_at_utc,estate_health_score,operational_posture,runtime_status,active_alerts,total_sites,monitored_sites,discovered_sites,users_analysed,product_access_assignments,product_access_sites,source_state_sections,reporting_status
+2026-07-20T08:32:35Z,81,Review,ok,1,7,3,4,117,139,6,5,Ready
