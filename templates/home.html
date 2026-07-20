@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v1.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v3.css') }}">
+
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v4.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v4_1.css') }}">
 </head>
 <body data-jom-page="command-centre">
 {% include "_nav.html" %}
@@ -68,8 +68,8 @@
     </div>
     <div class="cc-exec-grid">
       <article><span>Estate health</span><strong id="cc-exec-health">--</strong><small id="cc-exec-health-note">Loading</small></article>
-      <article><span>Discovery pressure</span><strong id="cc-exec-discovery">--</strong><small id="cc-exec-discovery-note">Loading</small></article>
-      <article><span>Governance readiness</span><strong id="cc-exec-governance">--</strong><small id="cc-exec-governance-note">Loading</small></article>
+      <article><span>Discovery backlog</span><strong id="cc-exec-discovery">--</strong><small id="cc-exec-discovery-note">Loading</small></article>
+      <article><span>Governance coverage</span><strong id="cc-exec-governance">--</strong><small id="cc-exec-governance-note">Loading</small></article>
       <article><span>Reporting readiness</span><strong id="cc-exec-reporting">--</strong><small>Reports validated</small></article>
     </div>
     <div class="cc-narrative-grid">
@@ -88,8 +88,8 @@
     </div>
   </section>
 
-  <section class="jom-card cc-events-section">
-    <div class="jom-section-head"><div><p class="jom-kicker">Operational events</p><h2>Current command events</h2></div><span class="jom-pill">Current view</span></div>
+  <section class="jom-card cc-events-section" id="cc-current-operational-status">
+    <div class="jom-section-head"><div><p class="jom-kicker">Operational health</p><h2>Current operational status</h2></div><span class="jom-pill">Current view</span></div>
     <ul id="cc-event-list" class="cc-event-list"><li>Loading operational events...</li></ul>
   </section>
 
@@ -98,7 +98,7 @@
     <div id="cc-posture-detail" class="cc-posture-detail"><p class="jom-muted">Loading posture explanation...</p></div>
   </section>
 
-  <section class="jom-card cc-discovery-section">
+  <section class="jom-card cc-discovery-section" id="cc-discovery-work-queue">
     <div class="jom-section-head">
       <div><p class="jom-kicker">Discovery work queue</p><h2>Discovered sites awaiting review</h2></div>
       <a class="jom-pill jom-pill--link" href="/reference">Open Admin review</a>
@@ -118,9 +118,9 @@
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v1.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v2.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v3.js') }}" defer></script>
+
+
 <script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v4.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v4_1.js') }}" defer></script>
 </body>
 </html>
