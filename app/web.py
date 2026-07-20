@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory
 import json
@@ -448,6 +448,47 @@ def reports_file_legacy(filename):
 @app.route('/site/<path:site_key>')
 def site_workspace(site_key):
     return render_template('site.html', site_key=site_key)
+
+# --- JOM EXPORT REPORTING ROUTES v1 START ---
+try:
+    from flask import Response
+except Exception:
+    Response = None
+
+try:
+    from app.reporting.export_reporting import get_report, to_csv, to_html
+except Exception:
+    get_report = None
+    to_csv = None
+    to_html = None
+
+@app.route("/reports/generated/<report_kind>/<fmt>")
+def jom_generated_report(report_kind, fmt):
+    if get_report is None:
+        return jsonify({"ok": False, "error": "report generator unavailable"}), 500
+    report = get_report(report_kind)
+    return _jom_generated_report_response(report_kind, fmt, report)
+
+@app.route("/reports/generated/site/<site_key>/<fmt>")
+def jom_generated_site_report(site_key, fmt):
+    if get_report is None:
+        return jsonify({"ok": False, "error": "report generator unavailable"}), 500
+    report = get_report("site", site_key)
+    return _jom_generated_report_response("site_" + str(site_key), fmt, report)
+
+def _jom_generated_report_response(report_name, fmt, report):
+    fmt = str(fmt or "json").lower()
+    filename = "jom_" + str(report_name).replace("/", "_") + "_report." + fmt
+    if fmt == "json":
+        return app.response_class(json.dumps(report, indent=2), mimetype="application/json")
+    if fmt == "csv":
+        body = to_csv(report) if to_csv else "field,value\nerror,csv unavailable\n"
+        return Response(body, mimetype="text/csv", headers={"Content-Disposition": "attachment; filename=" + filename})
+    if fmt == "html":
+        body = to_html(report) if to_html else "<h1>Report unavailable</h1>"
+        return Response(body, mimetype="text/html")
+    return jsonify({"ok": False, "error": "unsupported report format", "format": fmt}), 400
+# --- JOM EXPORT REPORTING ROUTES v1 END ---
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
