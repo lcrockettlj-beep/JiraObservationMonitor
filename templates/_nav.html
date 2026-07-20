@@ -1,20 +1,46 @@
-<button class="jom-burger" type="button" id="jom-nav-toggle" aria-label="Toggle navigation" aria-controls="jom-side-nav" aria-expanded="false">
-  <span></span><span></span><span></span>
-</button>
-<aside class="jom-side-nav" id="jom-side-nav" aria-label="Primary navigation">
+<aside class="jom-side-nav" id="jom-side-nav" aria-label="JOM primary navigation">
   <a href="/" class="jom-brand" aria-label="Command Centre home">
-    <img src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI" class="jom-brand__logo">
-    <span class="jom-brand__text"><strong>Jira Observation Monitor</strong><small>Atlassian Command Centre</small></span>
+    <img class="jom-brand__logo" src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI">
+    <span class="jom-brand__text">
+      <strong>Jira Observation Monitor</strong>
+      <small>Atlassian Command Centre</small>
+    </span>
   </a>
-  <nav class="jom-nav-links">
-    <a href="/" class="jom-nav-link {% if request.path == '/' %}jom-nav-link--active{% endif %}">Command Centre</a>
-    <a href="/estate" class="jom-nav-link {% if request.path == '/estate' %}jom-nav-link--active{% endif %}">Estate</a>
-    <a href="/reference" class="jom-nav-link {% if request.path == '/reference' %}jom-nav-link--active{% endif %}">Admin</a>
+
+  <nav class="jom-nav-links" aria-label="Primary navigation">
+    <section class="jom-nav-group" aria-label="Operations navigation">
+      <span class="jom-nav-heading">Operations</span>
+      <a href="/" class="jom-nav-link {% if request.path == '/' %}jom-nav-link--active{% endif %}">Command Centre</a>
+      <a href="/estate" class="jom-nav-link {% if request.path.startswith('/estate') %}jom-nav-link--active{% endif %}">Estate</a>
+      <a href="/reference" class="jom-nav-link {% if request.path.startswith('/reference') %}jom-nav-link--active{% endif %}">Admin</a>
+    </section>
+
+    <section class="jom-nav-group" aria-label="Workspace navigation">
+      <span class="jom-nav-heading">Workspaces</span>
+      <a href="/estate" class="jom-nav-link {% if request.path.startswith('/site/') %}jom-nav-link--active{% endif %}">Site Workspace</a>
+    </section>
+
+    <section class="jom-nav-group" aria-label="Reporting navigation">
+      <span class="jom-nav-heading">Reporting</span>
+      <a href="/reports/generated/executive/html" class="jom-nav-link" target="_blank" rel="noopener">Executive Report</a>
+      <a href="/reports/generated/estate/html" class="jom-nav-link" target="_blank" rel="noopener">Estate Report</a>
+      <a href="/reports/generated/admin/html" class="jom-nav-link" target="_blank" rel="noopener">Governance Report</a>
+    </section>
+
+    <section class="jom-nav-group" aria-label="System navigation">
+      <span class="jom-nav-heading">System</span>
+      <a href="/operator/observability" class="jom-nav-link" target="_blank" rel="noopener">Runtime Status</a>
+      <a href="/api/source-state" class="jom-nav-link" target="_blank" rel="noopener">Source Health</a>
+    </section>
   </nav>
-  <div class="jom-nav-meta">
+
+  <footer class="jom-nav-meta">
     <span>Environment</span>
     <strong id="jom-env-label">Local Dev</strong>
     <small id="jom-build-label">Command Centre v1</small>
-  </div>
+  </footer>
 </aside>
+<button class="jom-burger" type="button" id="jom-nav-toggle" aria-label="Toggle navigation" aria-controls="jom-side-nav" aria-expanded="false" data-jom-nav-toggle>
+  <span></span><span></span><span></span>
+</button>
 <div class="jom-nav-backdrop" id="jom-nav-backdrop" hidden></div>
