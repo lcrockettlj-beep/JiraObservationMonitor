@@ -5,20 +5,21 @@
   <title>Command Centre - Jira Observation Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_operational_readiness_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_home_command_intelligence_v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_executive_intelligence_trend_analytics_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v3.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_rationalised_v4.css') }}">
 </head>
-<body>
+<body data-jom-page="command-centre">
 {% include "_nav.html" %}
-<main class="jom-shell" id="main-content">
-  <section class="jom-hero jom-card">
+<main class="jom-shell jom-command-centre-rationalised" id="main-content">
+  <section class="jom-hero jom-card cc-hero">
     <div>
       <p class="jom-kicker">Live Atlassian estate command layer</p>
       <h1>Command Centre</h1>
-      <p class="jom-lede">A live operational overview for runtime status, source health, discovery, estate coverage and active risk. All values are loaded from existing JOM backend contracts and runtime sources.</p>
+      <p class="jom-lede">The Command Centre shows what needs attention, why it matters, and where to act. All values are sourced from existing JOM runtime, registry, source, access and reporting contracts.</p>
     </div>
     <div class="jom-health-card" aria-label="Estate health score">
       <span>Estate Health Score</span>
@@ -28,155 +29,98 @@
     </div>
   </section>
 
-<!-- JOM_COMMAND_CENTRE_POLISH_STATUS_START -->
-<section class="jom-status-strip" aria-label="Command Centre live status">
-  <div><span>Last refresh</span><strong id="jom-last-refresh">Loading</strong></div>
-  <div><span>Auto-refresh</span><strong id="jom-auto-refresh-state">Live</strong></div>
-  <div><span>Environment</span><strong id="jom-command-env">Local Dev</strong></div>
-  <div><span>Build</span><strong id="jom-command-build">Command Centre v1</strong></div>
-</section>
-<!-- JOM_COMMAND_CENTRE_POLISH_STATUS_END -->
-
-
-
-  <section class="jom-metric-strip" aria-label="Live metrics">
-    <article class="jom-metric"><span>Sites</span><strong id="metric-sites">--</strong><small>Total registry entries</small></article>
-    <article class="jom-metric"><span>Monitored</span><strong id="metric-monitored">--</strong><small>In monitored scope</small></article>
-    <article class="jom-metric"><span>Discovered</span><strong id="metric-discovered">--</strong><small>Awaiting review</small></article>
-    <article class="jom-metric"><span>Users</span><strong id="metric-users">--</strong><small>Footprint records</small></article>
-    <article class="jom-metric"><span>Alerts</span><strong id="metric-alerts">--</strong><small>Operator alerts</small></article>
-    <article class="jom-metric"><span>Runtime</span><strong id="metric-runtime">--</strong><small>Current state</small></article>
+  <section class="jom-status-strip" aria-label="Command Centre live status">
+    <div><span>Viewed at</span><strong id="cc-viewed-at">Loading</strong></div>
+    <div><span>Runtime</span><strong id="metric-runtime">Loading</strong></div>
+    <div><span>Alerts</span><strong id="metric-alerts">--</strong></div>
+    <div><span>Discovery</span><strong id="metric-discovered">--</strong></div>
   </section>
 
-  <section class="jom-grid jom-grid--three">
-    <article class="jom-card jom-state-card">
-      <span class="jom-kicker">Runtime Status</span>
-      <strong id="runtime-status">Loading</strong>
-      <p id="runtime-detail">Runtime state is being loaded from /operator/summary.</p>
-    </article>
-    <article class="jom-card jom-state-card">
-      <span class="jom-kicker">Source Health</span>
-      <strong id="source-health">Loading</strong>
-      <p id="source-detail">Source freshness and reliability state are loaded from existing APIs.</p>
-    </article>
-    <article class="jom-card jom-state-card">
-      <span class="jom-kicker">Alerts</span>
-      <strong id="alert-count">Loading</strong>
-      <p id="alert-detail">Alert count is loaded from /operator/alerts.</p>
-    </article>
-  </section>
-
-  <!-- JOM_HOME_COMMAND_INTELLIGENCE_V2_START -->
-<section class="command-intelligence-v2" aria-label="Command Centre intelligence expansion v2">
-  <section class="command-v2-hero-card">
-    <div>
-      <p class="jom-kicker">Executive operational brief</p>
-      <h2>Command intelligence</h2>
-      <p>Source-backed summary of estate health, runtime stability, discovery pressure, governance readiness and report availability.</p>
-    </div>
-    <div class="command-v2-health-ring" aria-label="Command Centre health score">
-      <strong id="command-v2-health-score">Loading</strong>
-      <span>Estate health</span>
-    </div>
-  </section>
-
-  <section class="command-v2-kpi-grid" aria-label="Command Centre intelligence metrics">
-    <article class="command-v2-kpi"><span>Operational posture</span><strong id="command-v2-posture">Loading</strong><small id="command-v2-posture-note">Waiting for runtime truth.</small></article>
-    <article class="command-v2-kpi"><span>Discovery pressure</span><strong id="command-v2-discovery-pressure">--</strong><small>Discovered / unmonitored sites</small></article>
-    <article class="command-v2-kpi"><span>Governance readiness</span><strong id="command-v2-governance-readiness">--</strong><small>Admin/source confidence</small></article>
-    <article class="command-v2-kpi"><span>Report readiness</span><strong id="command-v2-report-readiness">--</strong><small>Executive exports</small></article>
-  </section>
-
-  <section class="command-v2-grid-two">
-    <article class="command-v2-card">
-      <div class="command-v2-card-head"><p class="jom-kicker">Top risks</p><h3>Current attention queue</h3></div>
-      <ul class="command-v2-list" id="command-v2-risk-list"><li>Loading risk queue...</li></ul>
-    </article>
-    <article class="command-v2-card">
-      <div class="command-v2-card-head"><p class="jom-kicker">Recommended actions</p><h3>Next operator moves</h3></div>
-      <ol class="command-v2-actions" id="command-v2-action-list"><li>Loading recommendations...</li></ol>
-    </article>
-  </section>
-
-  <section class="command-v2-grid-two">
-    <article class="command-v2-card">
-      <div class="command-v2-card-head"><p class="jom-kicker">Recent operational events</p><h3>Source-backed activity</h3></div>
-      <ul class="command-v2-list" id="command-v2-event-list"><li>Loading operational events...</li></ul>
-    </article>
-    <article class="command-v2-card">
-      <div class="command-v2-card-head"><p class="jom-kicker">Reporting shortcuts</p><h3>Management outputs</h3></div>
-      <div class="command-v2-report-links">
-        <a class="jom-pill jom-pill--link" href="/reports/generated/executive/html" target="_blank" rel="noopener">Executive HTML</a>
-        <a class="jom-pill jom-pill--link" href="/reports/generated/executive/csv">Executive CSV</a>
-        <a class="jom-pill jom-pill--link" href="/reports/generated/executive/json" target="_blank" rel="noopener">Executive JSON</a>
+  <section class="cc-attention-grid" aria-label="Immediate attention">
+    <article class="jom-card cc-attention-card cc-attention-primary">
+      <div class="jom-section-head">
+        <div><p class="jom-kicker">Immediate attention</p><h2>Top risks and required action</h2></div>
+        <span class="jom-pill" id="cc-attention-count">Loading</span>
       </div>
+      <div id="cc-risk-list" class="cc-risk-list"><p class="jom-muted">Loading current risks...</p></div>
+    </article>
+    <article class="jom-card cc-attention-card">
+      <div class="jom-section-head">
+        <div><p class="jom-kicker">Operator actions</p><h2>What to do next</h2></div>
+      </div>
+      <ol id="cc-action-list" class="cc-action-list"><li>Loading recommended actions...</li></ol>
     </article>
   </section>
 
-  <section class="command-v2-diagnostics">
-    <details>
-      <summary>Show Command Centre intelligence diagnostics</summary>
-      <pre id="command-v2-diagnostics-json">Loading...</pre>
-    </details>
-  </section>
-</section>
-<!-- JOM_HOME_COMMAND_INTELLIGENCE_V2_END -->
-<section class="jom-card jom-command-brief">
-    <div class="jom-section-head">
-      <div><p class="jom-kicker">AI Operational Brief</p><h2>Live recommendations</h2></div>
-      <span class="jom-pill">Source-backed only</span>
-    </div>
-    <ul id="ai-brief-list" class="jom-brief-list"><li>Loading operational brief...</li></ul>
+  <section class="jom-metric-strip" aria-label="Operational health metrics">
+    <article class="jom-metric"><span>Total sites</span><strong id="metric-sites">--</strong><small>Registry entries</small></article>
+    <article class="jom-metric"><span>Monitored</span><strong id="metric-monitored">--</strong><small>In monitored scope</small></article>
+    <article class="jom-metric"><span>Users</span><strong id="metric-users">--</strong><small>Footprint records</small></article>
+    <article class="jom-metric"><span>Source health</span><strong id="source-health">Loading</strong><small id="source-detail">Source-state contract</small></article>
+    <article class="jom-metric"><span>Runtime</span><strong id="runtime-status">Loading</strong><small id="runtime-detail">Operator summary</small></article>
+    <article class="jom-metric"><span>Reports</span><strong id="cc-reporting-state">Loading</strong><small>HTML / CSV / JSON</small></article>
   </section>
 
-  <section class="jom-card">
+  <section class="jom-card cc-executive-section" aria-label="Executive intelligence">
     <div class="jom-section-head">
-      <div><p class="jom-kicker">Risk Grouping</p><h2>Current estate posture</h2></div>
-      <span class="jom-pill" id="risk-total-pill">Loading</span>
+      <div><p class="jom-kicker">Executive intelligence</p><h2>Decision support summary</h2></div>
+      <span class="jom-pill" id="cc-exec-posture">Loading</span>
     </div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-risk jom-risk--critical"><span>Critical</span><strong id="risk-critical">--</strong><small>Immediate review</small></article>
-      <article class="jom-risk jom-risk--warning"><span>Warning</span><strong id="risk-warning">--</strong><small>Elevated conditions</small></article>
-      <article class="jom-risk jom-risk--stable"><span>Stable</span><strong id="risk-stable">--</strong><small>Normal operation</small></article>
+    <div class="cc-exec-grid">
+      <article><span>Estate health</span><strong id="cc-exec-health">--</strong><small id="cc-exec-health-note">Loading</small></article>
+      <article><span>Discovery pressure</span><strong id="cc-exec-discovery">--</strong><small id="cc-exec-discovery-note">Loading</small></article>
+      <article><span>Governance readiness</span><strong id="cc-exec-governance">--</strong><small id="cc-exec-governance-note">Loading</small></article>
+      <article><span>Reporting readiness</span><strong id="cc-exec-reporting">--</strong><small>Reports validated</small></article>
+    </div>
+    <div class="cc-narrative-grid">
+      <div>
+        <h3>Board-ready narrative</h3>
+        <ul id="cc-board-narrative" class="jom-brief-list"><li>Loading narrative...</li></ul>
+      </div>
+      <div>
+        <h3>Report shortcuts</h3>
+        <div class="cc-report-links">
+          <a class="jom-pill jom-pill--link" href="/reports/generated/executive/html" target="_blank" rel="noopener">Executive report</a>
+          <a class="jom-pill jom-pill--link" href="/reports/generated/estate/html" target="_blank" rel="noopener">Estate report</a>
+          <a class="jom-pill jom-pill--link" href="/reports/generated/admin/html" target="_blank" rel="noopener">Governance report</a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="jom-card">
+  <section class="jom-card cc-events-section">
+    <div class="jom-section-head"><div><p class="jom-kicker">Operational events</p><h2>Current command events</h2></div><span class="jom-pill">Current view</span></div>
+    <ul id="cc-event-list" class="cc-event-list"><li>Loading operational events...</li></ul>
+  </section>
+
+  <section class="jom-card cc-posture-section">
+    <div class="jom-section-head"><div><p class="jom-kicker">Estate posture explanation</p><h2>What the warnings relate to</h2></div><span class="jom-pill" id="risk-total-pill">Loading</span></div>
+    <div id="cc-posture-detail" class="cc-posture-detail"><p class="jom-muted">Loading posture explanation...</p></div>
+  </section>
+
+  <section class="jom-card cc-discovery-section">
     <div class="jom-section-head">
-      <div><p class="jom-kicker">Discovery Queue</p><h2>Discovered sites awaiting review</h2></div>
-      <a class="jom-pill jom-pill--link" href="/reference#site-discovery-control">Open Admin control</a>
+      <div><p class="jom-kicker">Discovery work queue</p><h2>Discovered sites awaiting review</h2></div>
+      <a class="jom-pill jom-pill--link" href="/reference">Open Admin review</a>
     </div>
     <div class="jom-table-wrap">
       <table class="jom-table" aria-label="Discovered sites">
-        <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Signals</th></tr></thead>
-        <tbody id="discovery-body"><tr><td colspan="4">Loading discovered sites...</td></tr></tbody>
+        <thead><tr><th>Site</th><th>URL / Cloud ID</th><th>Status</th><th>Signals</th><th>Action</th></tr></thead>
+        <tbody id="discovery-body"><tr><td colspan="5">Loading discovered sites...</td></tr></tbody>
       </table>
     </div>
   </section>
 
-  <section class="jom-card">
-    <div class="jom-section-head">
-      <div><p class="jom-kicker">Runtime Diagnostics</p><h2>Operator contract detail</h2></div>
-      <span class="jom-pill">Collapsed by default</span>
-    </div>
+  <section class="jom-card cc-diagnostics-section">
+    <div class="jom-section-head"><div><p class="jom-kicker">Runtime diagnostics</p><h2>Operator contract detail</h2></div><span class="jom-pill">Collapsed by default</span></div>
     <details class="jom-details"><summary>Show live JSON detail</summary><pre id="command-json">Loading...</pre></details>
   </section>
-
-
-
-
-</section>
-
-
-<section id="jom-exec-trends-v1" class="jom-exec-trends-v1" aria-label="Executive intelligence and trend analytics">
-  <section class="jom-card"><p class="jom-kicker">Executive intelligence</p><h2>Trend analytics loading</h2><p class="jom-muted">Preparing source-backed executive trend analytics.</p></section>
-</section>
-
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_operational_readiness_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_home_command_intelligence_v2.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_executive_intelligence_trend_analytics_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v2.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v3.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_command_centre_rationalised_v4.js') }}" defer></script>
 </body>
 </html>
