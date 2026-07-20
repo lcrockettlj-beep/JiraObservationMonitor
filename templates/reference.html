@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_operational_readiness_v1.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_admin_governance_depth_v1.css') }}">
 </head>
 <body data-jom-page="admin">
 {% include "_nav.html" %}
@@ -70,10 +71,63 @@
       </details>
     </section>
   </section>
+<!-- JOM_ADMIN_GOVERNANCE_DEPTH_V1_START -->
+<section class="admin-governance-depth-v1" aria-label="Admin governance depth">
+  <div class="admin-gov-hero">
+    <p class="admin-v2-label">Governance depth</p>
+    <h2>Administrative governance intelligence</h2>
+    <p>Source-backed governance view for discovery, access, product coverage, runtime reliability and admin action readiness.</p>
+  </div>
+
+  <section class="admin-gov-kpi-grid" aria-label="Governance KPIs">
+    <article class="admin-gov-kpi"><span>Governance posture</span><strong id="admin-gov-posture">Loading</strong><small id="admin-gov-posture-note">Waiting for live data.</small></article>
+    <article class="admin-gov-kpi"><span>Discovery queue</span><strong id="admin-gov-discovery-count">--</strong><small>Sites requiring review</small></article>
+    <article class="admin-gov-kpi"><span>Users analysed</span><strong id="admin-gov-users-analysed">--</strong><small>User footprint records</small></article>
+    <article class="admin-gov-kpi"><span>Access assignments</span><strong id="admin-gov-access-assignments">--</strong><small>Product access records</small></article>
+  </section>
+
+  <section class="admin-gov-grid-two">
+    <article class="admin-gov-card">
+      <div class="admin-gov-card-head"><p class="admin-v2-label">Discovery governance</p><h3>Unmonitored / discovered estate</h3></div>
+      <div class="admin-gov-table-wrap"><table class="admin-gov-table"><thead><tr><th>Site</th><th>Status</th><th>URL / source</th></tr></thead><tbody id="admin-gov-discovery-table"><tr><td colspan="3">Loading discovery governance...</td></tr></tbody></table></div>
+    </article>
+
+    <article class="admin-gov-card">
+      <div class="admin-gov-card-head"><p class="admin-v2-label">Access governance</p><h3>Named access and footprint</h3></div>
+      <ul class="admin-gov-list" id="admin-gov-access-list"><li>Loading access governance...</li></ul>
+    </article>
+  </section>
+
+  <section class="admin-gov-grid-two">
+    <article class="admin-gov-card">
+      <div class="admin-gov-card-head"><p class="admin-v2-label">Product and billing governance</p><h3>Coverage indicators</h3></div>
+      <ul class="admin-gov-list" id="admin-gov-product-list"><li>Loading product and billing governance...</li></ul>
+    </article>
+
+    <article class="admin-gov-card">
+      <div class="admin-gov-card-head"><p class="admin-v2-label">Runtime and source reliability</p><h3>Operating control signals</h3></div>
+      <ul class="admin-gov-list" id="admin-gov-runtime-list"><li>Loading runtime governance...</li></ul>
+    </article>
+  </section>
+
+  <section class="admin-gov-card">
+    <div class="admin-gov-card-head"><p class="admin-v2-label">Recommended actions</p><h3>Governance action plan</h3></div>
+    <ol class="admin-gov-actions" id="admin-gov-action-list"><li>Loading recommended actions...</li></ol>
+  </section>
+
+  <section class="admin-gov-diagnostics">
+    <details>
+      <summary>Show governance diagnostics</summary>
+      <pre id="admin-gov-diagnostics-json">Loading...</pre>
+    </details>
+  </section>
+</section>
+<!-- JOM_ADMIN_GOVERNANCE_DEPTH_V1_END -->
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_admin_workspace_v2.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_operational_readiness_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_admin_governance_depth_v1.js') }}" defer></script>
 </body>
 </html>

@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_operational_readiness_v1.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_home_command_intelligence_v2.css') }}">
 </head>
 <body>
 {% include "_nav.html" %}
@@ -64,7 +65,62 @@
     </article>
   </section>
 
-  <section class="jom-card jom-command-brief">
+  <!-- JOM_HOME_COMMAND_INTELLIGENCE_V2_START -->
+<section class="command-intelligence-v2" aria-label="Command Centre intelligence expansion v2">
+  <section class="command-v2-hero-card">
+    <div>
+      <p class="jom-kicker">Executive operational brief</p>
+      <h2>Command intelligence</h2>
+      <p>Source-backed summary of estate health, runtime stability, discovery pressure, governance readiness and report availability.</p>
+    </div>
+    <div class="command-v2-health-ring" aria-label="Command Centre health score">
+      <strong id="command-v2-health-score">Loading</strong>
+      <span>Estate health</span>
+    </div>
+  </section>
+
+  <section class="command-v2-kpi-grid" aria-label="Command Centre intelligence metrics">
+    <article class="command-v2-kpi"><span>Operational posture</span><strong id="command-v2-posture">Loading</strong><small id="command-v2-posture-note">Waiting for runtime truth.</small></article>
+    <article class="command-v2-kpi"><span>Discovery pressure</span><strong id="command-v2-discovery-pressure">--</strong><small>Discovered / unmonitored sites</small></article>
+    <article class="command-v2-kpi"><span>Governance readiness</span><strong id="command-v2-governance-readiness">--</strong><small>Admin/source confidence</small></article>
+    <article class="command-v2-kpi"><span>Report readiness</span><strong id="command-v2-report-readiness">--</strong><small>Executive exports</small></article>
+  </section>
+
+  <section class="command-v2-grid-two">
+    <article class="command-v2-card">
+      <div class="command-v2-card-head"><p class="jom-kicker">Top risks</p><h3>Current attention queue</h3></div>
+      <ul class="command-v2-list" id="command-v2-risk-list"><li>Loading risk queue...</li></ul>
+    </article>
+    <article class="command-v2-card">
+      <div class="command-v2-card-head"><p class="jom-kicker">Recommended actions</p><h3>Next operator moves</h3></div>
+      <ol class="command-v2-actions" id="command-v2-action-list"><li>Loading recommendations...</li></ol>
+    </article>
+  </section>
+
+  <section class="command-v2-grid-two">
+    <article class="command-v2-card">
+      <div class="command-v2-card-head"><p class="jom-kicker">Recent operational events</p><h3>Source-backed activity</h3></div>
+      <ul class="command-v2-list" id="command-v2-event-list"><li>Loading operational events...</li></ul>
+    </article>
+    <article class="command-v2-card">
+      <div class="command-v2-card-head"><p class="jom-kicker">Reporting shortcuts</p><h3>Management outputs</h3></div>
+      <div class="command-v2-report-links">
+        <a class="jom-pill jom-pill--link" href="/reports/generated/executive/html" target="_blank" rel="noopener">Executive HTML</a>
+        <a class="jom-pill jom-pill--link" href="/reports/generated/executive/csv">Executive CSV</a>
+        <a class="jom-pill jom-pill--link" href="/reports/generated/executive/json" target="_blank" rel="noopener">Executive JSON</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="command-v2-diagnostics">
+    <details>
+      <summary>Show Command Centre intelligence diagnostics</summary>
+      <pre id="command-v2-diagnostics-json">Loading...</pre>
+    </details>
+  </section>
+</section>
+<!-- JOM_HOME_COMMAND_INTELLIGENCE_V2_END -->
+<section class="jom-card jom-command-brief">
     <div class="jom-section-head">
       <div><p class="jom-kicker">AI Operational Brief</p><h2>Live recommendations</h2></div>
       <span class="jom-pill">Source-backed only</span>
@@ -111,5 +167,6 @@
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_operational_readiness_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_home_command_intelligence_v2.js') }}" defer></script>
 </body>
 </html>
