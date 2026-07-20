@@ -1,9 +1,0 @@
-JOM Restart Prompt:
-
-- Repo is clean at stable checkpoint
-- Scripts rationalised
-- Scheduler aligned
-- Source reliability OK
-
-Next task:
-Continue platform enhancements OR onboarding workflow expansion

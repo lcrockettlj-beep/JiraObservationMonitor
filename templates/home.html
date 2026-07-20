@@ -7,110 +7,79 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_final_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_completion_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_command_centre_hero_metrics_alignment_v1.css') }}">
 </head>
 <body data-jom-page="command-centre">
 {% include "_nav.html" %}
-<main class="jom-shell jom-command-final" id="jom-command-centre">
-  <section class="cc-hero" aria-labelledby="cc-title">
-    <div class="cc-hero__copy">
-      <p class="cc-kicker">Operations / Command Centre</p>
-      <h1 id="cc-title">Command Centre</h1>
-      <p class="cc-lede">What needs attention across the Atlassian estate right now?</p>
-      <div class="cc-actions" aria-label="Primary actions">
-        <a class="cc-btn cc-btn--primary" href="/estate">Open Estate</a>
-        <a class="cc-btn" href="/reference">Review Issues</a>
+<main class="jom-shell jom-command-centre-final" id="jom-command-centre">
+  <section class="jom-final-hero" aria-label="Command Centre overview">
+    <div class="jom-final-hero__copy">
+      <p class="jom-kicker">Operations / Command Centre</p>
+      <h1>Command Centre</h1>
+      <p class="jom-lede">What needs attention across the Atlassian estate right now?</p>
+      <div class="jom-final-actions" aria-label="Primary command actions">
+        <a class="jom-button jom-button--primary" href="/estate">Open Estate</a>
+        <a class="jom-button" href="/reference">Review Issues</a>
       </div>
     </div>
-    <aside class="cc-health-card" aria-label="Estate health">
-      <span>Estate Health</span>
-      <strong id="cc-estate-health">Loading</strong>
-      <div class="cc-health-bar"><i id="cc-estate-health-bar"></i></div>
-      <p id="cc-health-summary">Calculating estate posture from runtime, alerts, registry and source data.</p>
-    </aside>
-  </section>
-
-  <section class="cc-metrics" aria-label="Estate summary">
-    <article><span>Estate</span><strong id="cc-total-sites">-</strong><small id="cc-estate-detail">sites known</small></article>
-    <article><span>Monitored</span><strong id="cc-monitored-sites">-</strong><small>sites in scope</small></article>
-    <article><span>Active Risks</span><strong id="cc-active-risks">-</strong><small>alerts requiring review</small></article>
-    <article><span>Data Health</span><strong id="cc-data-health">Checking</strong><small id="cc-data-health-detail">source state</small></article>
-  </section>
-
-  <section class="cc-grid cc-grid--attention" aria-label="Immediate attention and actions">
-    <article class="cc-card cc-card--attention">
-      <header class="cc-card__header">
-        <div>
-          <p class="cc-kicker">Immediate attention</p>
-          <h2>Top risks & required action</h2>
-        </div>
-        <span class="cc-badge cc-badge--alert" id="cc-risk-count">Loading</span>
-      </header>
-      <div class="cc-list" id="cc-risk-list">
-        <p class="cc-muted">Loading current risks...</p>
-      </div>
-    </article>
-
-    <article class="cc-card">
-      <header class="cc-card__header">
-        <div>
-          <p class="cc-kicker">Operator workflow</p>
-          <h2>What to do next</h2>
-        </div>
-      </header>
-      <ol class="cc-action-list" id="cc-action-list">
-        <li>Loading recommended actions...</li>
-      </ol>
-    </article>
-  </section>
-
-  <section class="cc-grid cc-grid--status" aria-label="Operational status and discovery">
-    <article class="cc-card">
-      <header class="cc-card__header">
-        <div>
-          <p class="cc-kicker">Current state</p>
-          <h2>Operational status</h2>
-        </div>
-      </header>
-      <div class="cc-status-grid" id="cc-status-grid">
-        <p class="cc-muted">Loading operational status...</p>
-      </div>
-    </article>
-
-    <article class="cc-card">
-      <header class="cc-card__header">
-        <div>
-          <p class="cc-kicker">Discovery backlog</p>
-          <h2>Sites awaiting review</h2>
-        </div>
-        <a class="cc-btn cc-btn--compact" href="/reference">Open Admin</a>
-      </header>
-      <div id="cc-discovery-summary" class="cc-discovery-summary">Loading discovery backlog...</div>
-    </article>
-  </section>
-
-  <section class="cc-card cc-card--reports" aria-label="Reports">
-    <header class="cc-card__header">
-      <div>
-        <p class="cc-kicker">Reporting</p>
-        <h2>Management outputs</h2>
-      </div>
-    </header>
-    <div class="cc-report-links">
-      <a href="/reports/generated/executive/html">Executive report</a>
-      <a href="/reports/generated/estate/html">Estate report</a>
-      <a href="/reports/generated/admin/html">Governance report</a>
+    <div class="jom-hero-metric-pair" aria-label="Command Centre headline metrics">
+      <aside class="jom-health-card jom-health-card--readiness" aria-label="Operational readiness score">
+        <span class="jom-card-label">Operational Readiness</span>
+        <strong id="jom-final-health-score">Loading...</strong>
+        <div class="jom-health-bar" aria-hidden="true"><span id="jom-final-health-bar"></span></div>
+        <p id="jom-final-health-reason">Calculated from runtime, alerts, data/source availability and monitored estate position.</p>
+      </aside>
+      <aside class="jom-health-card jom-health-card--coverage" aria-label="Monitoring coverage score">
+        <span class="jom-card-label">Monitoring Coverage</span>
+        <strong id="jom-final-monitoring-coverage">Loading...</strong>
+        <div class="jom-coverage-bar" aria-hidden="true"><span id="jom-final-coverage-monitored"></span><span id="jom-final-coverage-review"></span></div>
+        <p id="jom-final-coverage-reason">Calculating monitored estate coverage from the site registry.</p>
+      </aside>
     </div>
   </section>
+  <section class="jom-final-metrics" aria-label="Live estate metrics">
+    <article class="jom-final-metric"><span>Estate</span><strong id="jom-final-total-sites">--</strong><small id="jom-final-estate-subtext">sites in registry</small></article>
+    <article class="jom-final-metric"><span>Monitored</span><strong id="jom-final-monitored-sites">--</strong><small>sites actively in scope</small></article>
+    <article class="jom-final-metric"><span>Active Risks</span><strong id="jom-final-active-risks">--</strong><small>alerts and review items</small></article>
+    <article class="jom-final-metric"><span>Data Health</span><strong id="jom-final-data-health">--</strong><small>source/state availability</small></article>
+  </section>
 
-  <section class="cc-card cc-card--diagnostics" aria-label="Diagnostics">
-    <details>
-      <summary>Runtime diagnostics</summary>
-      <pre id="cc-diagnostics-json">Diagnostics are available after the Command Centre data loads.</pre>
-    </details>
+  <section class="jom-final-attention-grid" aria-label="Attention and actions">
+    <article class="jom-card jom-attention-card">
+      <div class="jom-card-heading">
+        <p class="jom-kicker">Immediate Attention</p>
+        <h2>Top risks & required action</h2>
+      </div>
+      <div id="jom-final-risk-list" class="jom-risk-list"><p class="jom-muted">Loading current risks...</p></div>
+    </article>
+    <article class="jom-card jom-actions-card">
+      <div class="jom-card-heading">
+        <p class="jom-kicker">Operator Workflow</p>
+        <h2>What to do next</h2>
+      </div>
+      <ol id="jom-final-action-list" class="jom-action-list"><li>Loading recommended actions...</li></ol>
+    </article>
+  </section>
+
+  <section class="jom-final-status-grid" aria-label="Current operational status">
+    <article class="jom-card">
+      <div class="jom-card-heading">
+        <p class="jom-kicker">Current State</p><h2>Operational status</h2>
+      </div>
+      <div id="jom-final-status-list" class="jom-status-grid-inner"></div>
+    </article>
+    <article class="jom-card jom-discovery-summary">
+      <div class="jom-card-heading">
+        <p class="jom-kicker">Discovery Backlog</p><h2>Sites awaiting review</h2>
+      </div>
+      <p id="jom-final-discovery-summary">Loading discovery backlog...</p>
+      <div class="jom-final-actions"><a class="jom-button" href="/reference">Review discovery queue</a></div>
+    </article>
   </section>
 </main>
+<script src="{{ url_for('static', filename='js/jom_command_centre_completion_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_command_centre_final_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_command_centre_hero_metrics_alignment_v1.js') }}" defer></script>
 </body>
 </html>

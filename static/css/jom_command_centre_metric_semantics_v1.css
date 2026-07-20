@@ -1,0 +1,9 @@
+/* JOM Command Centre Metric Semantics Fix v1 */
+.jom-coverage-card{border-left:4px solid #0c66e4;}
+.jom-coverage-bar{height:.65rem;border-radius:999px;overflow:hidden;background:#dfe1e6;margin:.7rem 0 .45rem;display:flex;}
+.jom-coverage-bar span:first-child{background:#0c66e4;}
+.jom-coverage-bar span:last-child{background:#ffab00;}
+.jom-semantic-metric-note{color:#626f86;font-size:.88rem;line-height:1.45;}
+.jom-score-explainer{background:#f7f8f9;border:1px solid #dfe1e6;border-radius:14px;padding:1rem;margin-top:1rem;}
+.jom-score-explainer h3{margin:0 0 .5rem;font-size:1rem;color:#172b4d;}
+.jom-score-explainer p{margin:0;color:#44546f;line-height:1.55;}

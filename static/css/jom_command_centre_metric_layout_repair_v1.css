@@ -1,0 +1,56 @@
+/* JOM Command Centre Metric Layout Repair v1
+   Purpose: keep Operational Readiness and Monitoring Coverage visually separate, while keeping
+   Monitoring Coverage aligned with the primary metric strip instead of wrapping as a stranded card.
+*/
+
+.jom-command-centre-metrics-fixed,
+.jom-command-metrics.jom-command-centre-metrics-fixed,
+.cc-metrics.jom-command-centre-metrics-fixed,
+.jom-metric-grid.jom-command-centre-metrics-fixed {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+}
+
+.jom-command-centre-metrics-fixed > * {
+  min-width: 0 !important;
+  height: auto !important;
+}
+
+.jom-monitoring-coverage-card {
+  border-left: 4px solid #0C66E4 !important;
+}
+
+.jom-monitoring-coverage-card .jom-coverage-bar,
+.jom-monitoring-coverage-card .coverage-bar,
+.jom-monitoring-coverage-card [data-jom-coverage-bar] {
+  max-width: 100%;
+}
+
+@media (max-width: 1280px) {
+  .jom-command-centre-metrics-fixed,
+  .jom-command-metrics.jom-command-centre-metrics-fixed,
+  .cc-metrics.jom-command-centre-metrics-fixed,
+  .jom-metric-grid.jom-command-centre-metrics-fixed {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .jom-command-centre-metrics-fixed,
+  .jom-command-metrics.jom-command-centre-metrics-fixed,
+  .cc-metrics.jom-command-centre-metrics-fixed,
+  .jom-metric-grid.jom-command-centre-metrics-fixed {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .jom-command-centre-metrics-fixed,
+  .jom-command-metrics.jom-command-centre-metrics-fixed,
+  .cc-metrics.jom-command-centre-metrics-fixed,
+  .jom-metric-grid.jom-command-centre-metrics-fixed {
+    grid-template-columns: 1fr !important;
+  }
+}
