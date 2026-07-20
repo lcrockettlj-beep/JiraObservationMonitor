@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_operational_readiness_v1.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_home_command_intelligence_v2.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_executive_intelligence_trend_analytics_v1.css') }}">
 </head>
 <body>
 {% include "_nav.html" %}
@@ -163,10 +164,19 @@
 
 
 
+
+</section>
+
+
+<section id="jom-exec-trends-v1" class="jom-exec-trends-v1" aria-label="Executive intelligence and trend analytics">
+  <section class="jom-card"><p class="jom-kicker">Executive intelligence</p><h2>Trend analytics loading</h2><p class="jom-muted">Preparing source-backed executive trend analytics.</p></section>
+</section>
+
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_operational_readiness_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_home_command_intelligence_v2.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_executive_intelligence_trend_analytics_v1.js') }}" defer></script>
 </body>
 </html>
