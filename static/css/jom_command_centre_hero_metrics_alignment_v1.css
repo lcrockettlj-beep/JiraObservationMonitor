@@ -30,3 +30,29 @@
   .jom-hero-metric-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media(max-width: 720px) { .jom-hero-metric-pair { grid-template-columns: 1fr; } }
+
+/* === Command Centre Remove Readiness v1 START === */
+.jom-hero-metric-pair--coverage-only {
+  grid-template-columns: minmax(360px, 1fr) !important;
+  max-width: 520px;
+  justify-self: end;
+}
+.jom-hero-metric-pair--coverage-only .jom-health-card--readiness {
+  display: none !important;
+}
+.jom-hero-metric-pair--coverage-only .jom-health-card--coverage {
+  min-height: 230px;
+}
+@media(max-width: 1180px) {
+  .jom-hero-metric-pair--coverage-only {
+    max-width: none;
+    justify-self: stretch;
+  }
+}
+@media(max-width: 720px) {
+  .jom-hero-metric-pair--coverage-only {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* === Command Centre Remove Readiness v1 END === */
+

@@ -436,3 +436,12 @@ body {
 }
 /* === Estate Lifecycle Navigation v1 END === */
 
+/* === Estate Subnav Collapse v1 START === */
+.jom-nav-subnav {
+  display: none;
+}
+.jom-nav-subnav.jom-nav-subnav--open {
+  display: grid;
+}
+/* === Estate Subnav Collapse v1 END === */
+

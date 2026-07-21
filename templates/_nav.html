@@ -13,7 +13,7 @@
       <a href="/" class="jom-nav-link {% if request.path == '/' %}jom-nav-link--active{% endif %}">Command Centre</a>
       
 <a href="/estate" class="jom-nav-link {% if request.path.startswith('/estate') %}jom-nav-link--active{% endif %}">Estate</a>
-      <div class="jom-nav-subnav" data-jom-estate-nav>
+      <div class="jom-nav-subnav {% if request.path.startswith('/estate') %}jom-nav-subnav--open{% endif %}" data-jom-estate-nav>
         <a href="/estate#monitored-sites">Monitored Sites</a>
         <a href="/estate#discovered-sites">Discovered Sites</a>
         <a href="/estate#pending-approval">Pending Approval</a>
