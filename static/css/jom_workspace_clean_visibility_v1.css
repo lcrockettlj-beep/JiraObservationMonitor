@@ -1,0 +1,13 @@
+/* JOM Workspace Clean Visibility v1 */
+body[data-jom-page="estate"] .jom-nav-subnav,
+body[data-jom-page="command-centre"] .jom-nav-subnav,
+body[data-jom-page="site"] .jom-nav-subnav,
+body[data-jom-page="site-workspace"] .jom-nav-subnav {
+  display: none !important;
+}
+.jom-hidden-by-cleanup-v1 {
+  display: none !important;
+}
+.site-workspace-cleaned-card {
+  display: none !important;
+}

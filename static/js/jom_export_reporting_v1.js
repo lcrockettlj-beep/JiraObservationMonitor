@@ -5,12 +5,11 @@
   // Command Centre is the live operational landing page.
   // Report export buttons belong in the left Reporting navigation and generated report pages,
   // not as a duplicated strip at the bottom of Command Centre.
-  if (route === '/' || route === '') return;
+  if (route === '/' || route === '' || route.startsWith('/site/')) return;
 
   function reportTarget(){
     if(route.startsWith('/estate')) return 'estate';
     if(route.startsWith('/reference')) return 'admin';
-    if(route.startsWith('/site/')) return 'site/' + encodeURIComponent(route.split('/').filter(Boolean).pop() || 'unknown');
     return 'executive';
   }
 

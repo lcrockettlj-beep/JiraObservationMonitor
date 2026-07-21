@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_lifecycle_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_workspace_clean_visibility_v1.css') }}">
 </head>
 <body data-jom-page="estate">
 {% include "_nav.html" %}
@@ -17,15 +18,6 @@
       <p class="jom-kicker">Estate / Central Inventory</p>
       <h1>Estate</h1>
       <p class="estate-lede">What exists in the Atlassian estate, what state is each site in, and what lifecycle action is needed?</p>
-    </section>
-
-    <section class="estate-overview-grid" aria-label="Estate overview metrics">
-      <article><span>Total Sites</span><strong id="estate-total-sites">--</strong><small>Known registry entries</small></article>
-      <article><span>Monitored</span><strong id="estate-monitored-sites">--</strong><small>Active monitoring scope</small></article>
-      <article><span>Discovered</span><strong id="estate-discovered-sites">--</strong><small>Awaiting lifecycle review</small></article>
-      <article><span>Approval Pending</span><strong id="estate-pending-sites">0</strong><small>Reviewed, waiting enablement</small></article>
-      <article><span>Critical</span><strong id="estate-critical-sites">0</strong><small>Critical site health</small></article>
-      <article><span>Retired</span><strong id="estate-retired-sites">0</strong><small>Removed from active scope</small></article>
     </section>
 
     <section class="estate-panel" id="discovered-sites" aria-label="Discovery review queue">
@@ -93,7 +85,7 @@
       <dl class="estate-rail-list">
         <div><dt>Review Queue</dt><dd id="rail-review-queue">--</dd></div>
         <div><dt>Approval Pending</dt><dd id="rail-pending-sites">0</dd></div>
-        <div><dt>Retired</dt><dd id="rail-retired-sites">0</dd></div>
+        <div><dt>Ignored</dt><dd id="rail-ignored-sites">0</dd></div>
       </dl>
     </section>
 
@@ -108,5 +100,6 @@
   </aside>
 </main>
 <script src="{{ url_for('static', filename='js/jom_estate_lifecycle_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_workspace_clean_visibility_v1.js') }}" defer></script>
 </body>
 </html>

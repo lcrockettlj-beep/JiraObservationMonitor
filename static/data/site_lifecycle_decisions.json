@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-lifecycle-decisions-v1",
-  "generated_at_utc": "2026-07-21T14:50:15.608473Z",
+  "generated_at_utc": "2026-07-21T15:25:50.188382Z",
   "decisions": {
     "gli-tracker": {
       "site_key": "gli-tracker",
@@ -41,7 +41,7 @@
       "previous_decision": "discovered",
       "reason": "not in current monitoring scope",
       "actor": "operator",
-      "decided_at_utc": "2026-07-21T14:49:20.010914Z",
+      "decided_at_utc": "2026-07-21T15:25:50.188370Z",
       "reversible": true,
       "requires_credentials": false,
       "next_state": "ignored"
@@ -389,6 +389,28 @@
       "reason": "not in current monitoring scope",
       "actor": "operator",
       "decided_at_utc": "2026-07-21T14:50:15.608461Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    },
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "decision": "discovered",
+      "previous_decision": "ignore",
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T15:25:43.376197Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "decision": "ignore",
+      "previous_decision": "discovered",
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T15:25:50.188370Z",
       "reversible": true,
       "requires_credentials": false,
       "next_state": "ignored"
