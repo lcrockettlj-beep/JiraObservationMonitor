@@ -31,12 +31,13 @@
       <p class="estate-muted">Discovered sites that require review before monitoring decisions are complete.</p>
       <div class="estate-review-list" id="estate-review-list"><p class="estate-empty">Loading discovered sites...</p></div>
     </section>
-
-    <section class="estate-panel" id="site-registry" aria-label="Site registry">
+<section class="estate-panel" id="site-registry" aria-label="Site registry">
       <div class="estate-section-heading estate-registry-heading">
         <div>
           <p class="jom-kicker">Central Inventory</p>
           <h2>Site Registry</h2>
+          <p class="estate-muted estate-registry-purpose">Central list of estate sites, lifecycle state, monitoring state, health, ownership and next action.</p>
+          <p class="estate-muted estate-lifecycle-inline-note"><strong>Lifecycle:</strong> Discovered -> Review -> Approval Pending -> Validate Access -> Monitoring Enabled -> Monitored. Use Ignored for sites outside current scope.</p>
         </div>
         <div class="estate-toolbar">
           <input id="estate-search" type="search" placeholder="Search site or URL" aria-label="Search sites">
@@ -45,7 +46,7 @@
             <option value="monitored">Monitored</option>
             <option value="discovered">Discovered</option>
             <option value="pending">Pending approval</option>
-            <option value="retired">Retired</option>
+            <option value="ignored">Ignored</option>
           </select>
         </div>
       </div>

@@ -12,3 +12,20 @@ body[data-jom-page="site-workspace"] .jom-export-reporting-actions,
 @media (max-width: 980px) {
   .site-kpi-grid { grid-template-columns: 1fr; }
 }
+
+/* Site Workspace readiness strip removal v1 */
+body[data-jom-page="site-workspace"] .jom-readiness-strip,
+body[data-jom-page="site-workspace"] .jom-operational-readiness,
+body[data-jom-page="site-workspace"] .jom-readiness-card,
+body[data-jom-page="site-workspace"] .jom-readiness-panel,
+body[data-jom-page="site-workspace"] .jom-readiness-actions,
+body[data-jom-page="site-workspace"] [data-jom-readiness],
+body[data-jom-page="site-workspace"] [data-jom-operational-readiness] {
+  display: none !important;
+}
+
+/* Site Workspace breadcrumb removal v1 */
+body[data-jom-page="site-workspace"] .jom-layout-breadcrumb {
+  display: none !important;
+}
+

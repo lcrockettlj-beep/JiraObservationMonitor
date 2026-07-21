@@ -29,8 +29,23 @@
       if(body.includes('monitoring state') || body.includes('operational risk') || body.includes('last refresh')) hide(card);
     });
   }
+
+  function hideReadinessStrip(){
+    document.querySelectorAll('section, article, div').forEach(el => {
+      const body=text(el).toLowerCase();
+      if(body.includes('site workspace readiness') || body.includes('live source-backed status across runtime, alerts, discovery and data contracts') || body.includes('export planned')) hide(el);
+    });
+  }
+
+
+  function hideBreadcrumb(){
+    document.querySelectorAll('.jom-layout-breadcrumb').forEach(hide);
+  }
+
   function run(){
     if(!isSiteWorkspace()) return;
+    hideBreadcrumb();
+    hideReadinessStrip();
     hideReportBars();
     hideEmptyProductAccess();
     hideNoisySignals();
