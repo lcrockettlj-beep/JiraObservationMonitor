@@ -69,6 +69,23 @@
     setText('jom-final-monitored-sites',rc.monitored);
     setText('jom-final-active-risks',risks);
     setText('jom-final-data-health',dataHealth);
+const coveragePct = rc.total ? Math.round((rc.monitored / rc.total) * 100) : 0;
+setText('jom-rail-monitoring-coverage', coveragePct + '%');
+setText('jom-rail-coverage-reason', `${rc.monitored} monitored - ${Math.max(rc.total-rc.monitored,0)} awaiting review`);
+setText('jom-rail-total-sites', rc.total);
+setText('jom-rail-monitored-sites', rc.monitored);
+setText('jom-rail-review-items', risks);
+setText('jom-rail-data-health', dataHealth);
+setText('jom-rail-runtime', runtimeOk ? 'OK' : 'Review');
+setText('jom-rail-alerts', actionableAlertCount);
+setText('jom-rail-users', usersAnalysed || 'n/a');
+const railRing = document.querySelector('.jom-coverage-ring');
+if (railRing) { railRing.style.setProperty('--coverage-deg', (coveragePct * 3.6) + 'deg'); }
+const railMon = document.getElementById('jom-rail-coverage-monitored');
+const railRev = document.getElementById('jom-rail-coverage-review');
+if (railMon) { railMon.style.width = coveragePct + '%'; }
+if (railRev) { railRev.style.width = (100 - coveragePct) + '%'; }
+
     const risksHtml=[];
     riskAlerts.forEach(alert=>risksHtml.push(riskCard({
       title:alert.title||'Actionable alert requires review',

@@ -1,58 +1,8 @@
-/* JOM Command Centre Hero Metrics Alignment v1 */
-.jom-final-hero {
-  grid-template-columns: minmax(0, 1fr) minmax(520px, .9fr) !important;
-  align-items: center !important;
-}
-.jom-hero-metric-pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: stretch;
-}
-.jom-health-card--coverage { border-left: 4px solid #0c66e4; }
-.jom-health-card--coverage strong,
-.jom-health-card--readiness strong { font-size: 40px; }
-.jom-coverage-bar {
-  height: 10px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: #ebecf0;
-  display: flex;
-  margin: 10px 0 12px;
-}
-.jom-coverage-bar span:first-child { background: #0c66e4; width: 0%; }
-.jom-coverage-bar span:last-child { background: #ffab00; width: 0%; }
-.jom-command-centre-final .jom-coverage-card,
-.jom-command-centre-final [data-jom-semantic="coverage-card"],
-.jom-command-centre-final .jom-monitoring-coverage-card { display: none !important; }
-@media(max-width: 1180px) {
-  .jom-final-hero { grid-template-columns: 1fr !important; }
-  .jom-hero-metric-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media(max-width: 720px) { .jom-hero-metric-pair { grid-template-columns: 1fr; } }
-
-/* === Command Centre Remove Readiness v1 START === */
-.jom-hero-metric-pair--coverage-only {
-  grid-template-columns: minmax(360px, 1fr) !important;
-  max-width: 520px;
-  justify-self: end;
-}
-.jom-hero-metric-pair--coverage-only .jom-health-card--readiness {
+/* JOM Command Centre Hero Metrics Alignment v1
+   Compatibility file retained for template imports.
+   Command Centre rail layout is now owned by jom_command_centre_completion_v1.css. */
+body[data-jom-page="command-centre"] .jom-hero-metric-pair,
+body[data-jom-page="command-centre"] .jom-health-card--coverage,
+body[data-jom-page="command-centre"] .jom-health-card--readiness {
   display: none !important;
 }
-.jom-hero-metric-pair--coverage-only .jom-health-card--coverage {
-  min-height: 230px;
-}
-@media(max-width: 1180px) {
-  .jom-hero-metric-pair--coverage-only {
-    max-width: none;
-    justify-self: stretch;
-  }
-}
-@media(max-width: 720px) {
-  .jom-hero-metric-pair--coverage-only {
-    grid-template-columns: 1fr !important;
-  }
-}
-/* === Command Centre Remove Readiness v1 END === */
-
