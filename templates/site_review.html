@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Site Review - Jira Observation Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_lifecycle_v1.css') }}">
+</head>
+<body data-jom-page="site-review" data-site-key="{{ site_key }}">
+{% include "_nav.html" %}
+<main class="jom-shell">
+  <section class="jom-hero jom-card">
+    <div>
+      <p class="jom-kicker">Estate / Site Review</p>
+      <h1 id="review-site-title">Site Review</h1>
+      <p class="jom-lede" id="review-site-summary">Loading site review...</p>
+    </div>
+    <div class="jom-health-card">
+      <span>Lifecycle status</span>
+      <strong id="review-site-status">Loading</strong>
+      <p>Read-only review foundation. Approval write-back can be added once lifecycle controls are approved.</p>
+    </div>
+  </section>
+
+  <section class="estate-review-grid">
+    <article class="jom-card">
+      <p class="jom-kicker">Site Review</p>
+      <h2>Review checklist</h2>
+      <ul class="estate-check-list">
+        <li><span>Identity</span><strong id="check-identity">Loading</strong></li>
+        <li><span>Ownership</span><strong id="check-ownership">Owner not assigned</strong></li>
+        <li><span>Access</span><strong id="check-access">Loading</strong></li>
+        <li><span>Monitoring</span><strong id="check-monitoring">Loading</strong></li>
+      </ul>
+    </article>
+
+    <article class="jom-card">
+      <p class="jom-kicker">Lifecycle Decision</p>
+      <h2>Decision controls</h2>
+      <p class="jom-muted">Decision controls are visible but disabled while JOM remains read-only.</p>
+      <div class="estate-decision-actions">
+        <button disabled>Approve & Start Monitoring</button>
+        <button disabled>Reject</button>
+        <button disabled>Keep Pending</button>
+      </div>
+      <p class="jom-muted">Next build phase can connect these controls to approved lifecycle storage.</p>
+    </article>
+  </section>
+
+  <section class="jom-card">
+    <p class="jom-kicker">Site Detail</p>
+    <dl class="jom-detail-list">
+      <div><dt>Site key</dt><dd id="review-site-key">Loading</dd></div>
+      <div><dt>URL</dt><dd id="review-site-url">Loading</dd></div>
+      <div><dt>Source</dt><dd id="review-site-source">Loading</dd></div>
+      <div><dt>Current classification</dt><dd id="review-site-classification">Loading</dd></div>
+    </dl>
+  </section>
+</main>
+<script>
+(function(){
+  'use strict';
+  const siteKey = document.body.getAttribute('data-site-key');
+  const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=String(v || '-'); };
+  function isMonitored(site){
+    const text = [site.classification,site.monitoring_status,site.monitoring_state,site.lifecycle_state,site.status,site.state,site.decision,site.policy_state].join(' ').toLowerCase();
+    return site.monitored === true || site.is_monitored === true || site.in_monitoring_scope === true || text.includes('monitored') || text.includes('monitoring enabled');
+  }
+  function key(site){return site.site_key || site.key || site.site_name || site.name || '';}
+  function source(site){return Array.isArray(site.sources) ? site.sources.join(', ') : (site.source || 'registry');}
+  fetch('/registry/sites', {cache:'no-store'}).then(r => r.json()).then(reg => {
+    const sites = Array.isArray(reg.sites) ? reg.sites : [];
+    const site = sites.find(s => String(key(s)).toLowerCase() === String(siteKey).toLowerCase());
+    if(!site){ set('review-site-title','Site not found'); set('review-site-summary','No matching registry entry was found.'); return; }
+    const monitored = isMonitored(site);
+    set('review-site-title', site.site_name || site.name || key(site));
+    set('review-site-summary', (site.site_url || site.url || '') + ' - source-backed lifecycle review.');
+    set('review-site-status', monitored ? 'Monitored' : 'Discovered');
+    set('review-site-key', key(site));
+    set('review-site-url', site.site_url || site.url || '-');
+    set('review-site-source', source(site));
+    set('review-site-classification', site.classification || (monitored ? 'monitored' : 'discovered'));
+    set('check-identity', (site.site_url || site.url) ? 'URL confirmed' : 'URL missing');
+    set('check-access', source(site));
+    set('check-monitoring', monitored ? 'Monitoring enabled' : 'Not currently monitored');
+  }).catch(err => {
+    console.error('Site review failed', err);
+    set('review-site-title','Site review unavailable');
+    set('review-site-summary','Unable to load registry data.');
+  });
+})();
+</script>
+</body>
+</html>

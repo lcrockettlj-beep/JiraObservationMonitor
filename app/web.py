@@ -490,6 +490,34 @@ def _jom_generated_report_response(report_name, fmt, report):
     return jsonify({"ok": False, "error": "unsupported report format", "format": fmt}), 400
 # --- JOM EXPORT REPORTING ROUTES v1 END ---
 
+
+
+@app.route("/review-queue")
+def review_queue():
+    return render_template("review_queue.html")
+
+
+
+@app.route("/estate/review/<site_key>")
+def estate_site_review(site_key):
+    return render_template("site_review.html", site_key=site_key)
+
+@app.route("/estate/monitored")
+def estate_monitored_sites():
+    return render_template("estate.html")
+
+@app.route("/estate/discovered")
+def estate_discovered_sites():
+    return render_template("estate.html")
+
+@app.route("/estate/pending")
+def estate_pending_sites():
+    return render_template("estate.html")
+
+@app.route("/estate/retired")
+def estate_retired_sites():
+    return render_template("estate.html")
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 

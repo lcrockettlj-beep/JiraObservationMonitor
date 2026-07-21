@@ -407,3 +407,32 @@ body {
   .jom-nav-links { gap: 14px; }
 }
 /* === Navigation Clean Rebuild v1 END === */
+
+/* === Estate Lifecycle Navigation v1 START === */
+.jom-nav-subnav {
+  display: grid;
+  gap: 4px;
+  margin: -2px 0 6px 14px;
+  padding: 2px 0 2px 10px;
+  border-left: 2px solid rgba(12,102,228,.18);
+}
+.jom-nav-subnav a {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 9px;
+  color: #44546f;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.25;
+  text-decoration: none;
+}
+.jom-nav-subnav a:hover {
+  background: #f4f8ff;
+  color: #0c66e4;
+}
+.jom-nav-subnav a:focus {
+  outline: 2px solid rgba(12,102,228,.22);
+  outline-offset: 2px;
+}
+/* === Estate Lifecycle Navigation v1 END === */
+

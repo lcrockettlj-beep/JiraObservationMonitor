@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Review Queue - Jira Observation Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+</head>
+<body data-jom-page="review-queue">
+{% include "_nav.html" %}
+<main class="jom-shell" id="jom-review-queue">
+  <section class="jom-hero jom-card">
+    <div>
+      <p class="jom-kicker">Operations / Review Queue</p>
+      <h1>Review Queue</h1>
+      <p class="jom-lede">Operational items that require review before the estate can be considered fully governed.</p>
+    </div>
+    <div class="jom-health-card">
+      <span>Items requiring review</span>
+      <strong id="review-queue-count">Loading...</strong>
+      <p id="review-queue-summary">Loading review queue...</p>
+    </div>
+  </section>
+
+  <section class="jom-card" id="discovery-queue">
+    <div class="jom-section-head">
+      <div>
+        <p class="jom-kicker">Discovery Queue</p>
+        <h2>Sites awaiting classification</h2>
+      </div>
+      <a class="jom-pill jom-pill--link" href="/estate#discovery-queue">Open in Estate</a>
+    </div>
+    <p class="jom-muted">These sites are known to JOM but are not currently in the monitored operational scope.</p>
+    <div class="jom-table-wrap">
+      <table class="jom-table" aria-label="Discovery review queue">
+        <thead>
+          <tr><th>Site</th><th>URL</th><th>Source</th><th>Status</th><th>Action owner</th></tr>
+        </thead>
+        <tbody id="review-queue-body"><tr><td colspan="5">Loading discovered sites...</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="jom-card" id="review-queue-empty" hidden>
+    <p class="jom-kicker">No Review Items</p>
+    <h2>No current review queue items</h2>
+    <p class="jom-muted">There are no discovered sites requiring classification. Use the Command Centre for current estate health.</p>
+    <a class="jom-pill jom-pill--link" href="/">Back to Command Centre</a>
+  </section>
+</main>
+<script>
+(function(){
+  'use strict';
+  const body = document.getElementById('review-queue-body');
+  const count = document.getElementById('review-queue-count');
+  const summary = document.getElementById('review-queue-summary');
+  const empty = document.getElementById('review-queue-empty');
+  function esc(v){return String(v || '').replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+  function isMonitored(site){
+    const txt = [site.classification, site.monitoring_status, site.monitoring_state, site.lifecycle_state, site.status, site.state, site.decision, site.policy_state].join(' ').toLowerCase();
+    return site.monitored === true || site.is_monitored === true || site.in_monitoring_scope === true || txt.includes('monitored') || txt.includes('monitoring enabled');
+  }
+  function siteName(site){return site.site_name || site.name || site.site_key || site.key || 'Unknown site';}
+  function siteUrl(site){return site.site_url || site.url || '';}
+  function sourceText(site){return Array.isArray(site.sources) ? site.sources.join(', ') : (site.source || 'registry');}
+  fetch('/registry/sites', {cache:'no-store'})
+    .then(function(r){if(!r.ok) throw new Error('/registry/sites ' + r.status); return r.json();})
+    .then(function(reg){
+      const sites = Array.isArray(reg.sites) ? reg.sites : [];
+      const review = sites.filter(function(site){return !isMonitored(site);});
+      count.textContent = review.length;
+      summary.textContent = review.length ? review.length + ' site(s) require classification.' : 'No current review items.';
+      if(!review.length){
+        body.innerHTML = '<tr><td colspan="5">No sites are currently awaiting review.</td></tr>';
+        empty.hidden = false;
+        return;
+      }
+      body.innerHTML = review.map(function(site){
+        const name = siteName(site);
+        const url = siteUrl(site);
+        return '<tr>' +
+          '<td><strong>' + esc(name) + '</strong></td>' +
+          '<td>' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + '</a>' : '-') + '</td>' +
+          '<td>' + esc(sourceText(site)) + '</td>' +
+          '<td><span class="jom-status">Awaiting review</span></td>' +
+          '<td>Estate owner / JOM operator</td>' +
+        '</tr>';
+      }).join('');
+    })
+    .catch(function(err){
+      console.error('Review Queue failed', err);
+      count.textContent = 'Review';
+      summary.textContent = 'Unable to load review queue.';
+      body.innerHTML = '<tr><td colspan="5">Unable to load review queue. Check registry/site endpoint.</td></tr>';
+    });
+})();
+</script>
+</body>
+</html>

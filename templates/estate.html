@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_operational_readiness_v1.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_lifecycle_v1.css') }}">
 </head>
 <body>
 {% include "_nav.html" %}
@@ -40,7 +41,45 @@
     <article class="jom-metric"><span>Alerts</span><strong id="estate-alerts">--</strong><small>Operator alerts</small></article>
   </section>
 
-  <section class="jom-card jom-estate-workspace">
+  
+  <section class="estate-lifecycle-v1" aria-label="Estate lifecycle management">
+    <section class="estate-lifecycle-grid" aria-label="Estate lifecycle summary">
+      <article class="estate-life-card"><span>Total sites</span><strong id="estate-life-total">--</strong><small>Known registry entries</small></article>
+      <article class="estate-life-card"><span>Monitored</span><strong id="estate-life-monitored">--</strong><small>Active operational scope</small></article>
+      <article class="estate-life-card"><span>Discovered</span><strong id="estate-life-discovered">--</strong><small>Awaiting classification</small></article>
+      <article class="estate-life-card"><span>Pending approval</span><strong id="estate-life-pending">0</strong><small>Review decisions pending</small></article>
+    </section>
+
+    <section class="estate-life-section" id="monitored-sites">
+      <p class="jom-kicker">Estate / Monitored Sites</p>
+      <h2>Monitored Sites</h2>
+      <p class="jom-muted">Sites actively in monitoring scope.</p>
+      <div class="estate-life-list" id="estate-life-monitored-list"><p class="estate-life-empty">Loading monitored sites...</p></div>
+    </section>
+
+    <section class="estate-life-section" id="discovered-sites">
+      <p class="jom-kicker">Estate / Discovered Sites</p>
+      <h2>Discovered Sites</h2>
+      <p class="jom-muted">Known Atlassian sites that require lifecycle classification before monitoring decisions are complete.</p>
+      <div class="estate-life-list" id="estate-life-discovered-list"><p class="estate-life-empty">Loading discovered sites...</p></div>
+    </section>
+
+    <section class="estate-life-section" id="pending-approval">
+      <p class="jom-kicker">Estate / Pending Approval</p>
+      <h2>Pending Approval</h2>
+      <p class="jom-muted">Sites that have been reviewed but are not yet approved for monitoring.</p>
+      <div class="estate-life-list" id="estate-life-pending-list"><p class="estate-life-empty">No pending approvals currently recorded.</p></div>
+    </section>
+
+    <section class="estate-life-section" id="retired-sites">
+      <p class="jom-kicker">Estate / Retired Sites</p>
+      <h2>Retired Sites</h2>
+      <p class="jom-muted">Sites removed from active operational monitoring.</p>
+      <div class="estate-life-list" id="estate-life-retired-list"><p class="estate-life-empty">No retired sites currently recorded.</p></div>
+    </section>
+  </section>
+
+  <section class="jom-card jom-estate-workspace" id="discovery-queue">
     <div class="jom-section-head">
       <div>
         <p class="jom-kicker">Estate Table</p>
@@ -111,5 +150,6 @@
 <script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_operational_readiness_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_estate_lifecycle_v1.js') }}" defer></script>
 </body>
 </html>

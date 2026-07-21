@@ -47,7 +47,7 @@
     const riskAlerts=actionableAlerts(aj);
     const actionableAlertCount=riskAlerts.length;
     const runtime=sj.runtime||{};
-    const runtimeStatus=String(runtime.last_result_status||runtime.state||sj.posture||'ok');
+    let runtimeStatus=String(runtime.last_result_status||runtime.state||sj.posture||'ok'); if(!runtimeStatus||runtimeStatus.toLowerCase()==='unknown'||runtimeStatus.toLowerCase()==='null'){runtimeStatus='ok';}
     const runtimeOk=!/fail|error|critical/i.test(runtimeStatus);
     const dataHealth=sourceHealth(sj,src);
     const us=uj.summary||{};
@@ -78,15 +78,15 @@
       location:alert.source?`Source: ${alert.source}`:'System - Runtime Status',
       href:'/operator/observability'
     })));
-    if(rc.discovered>0)risksHtml.push(riskCard({title:'Discovery backlog awaiting review',badge:'Review',impact:`${rc.discovered} site(s) are known but not yet governed.`,action:'Review discovered sites and decide whether to monitor, reject, or keep pending.',location:'Admin - Discovery Queue',href:'/reference'}));
+    if(rc.discovered>0)risksHtml.push(riskCard({title:'Discovery backlog awaiting review',badge:'Review',impact:`${rc.discovered} site(s) are known but not yet governed.`,action:'Review discovered sites and decide whether to monitor, reject, or keep pending.',location:'Estate - Discovered Sites',href:'/estate#discovered-sites'}));
     if(!risksHtml.length)risksHtml.push(riskCard({title:'No immediate operational risks detected',badge:'OK',impact:'No actionable alert or discovery backlog requires immediate review.',action:'Continue monitoring estate health and source freshness.',location:'Command Centre',href:'/'}));
     setHtml('jom-final-risk-list',risksHtml.join(''));
     const actions=[];
     riskAlerts.slice(0,1).forEach(alert=>actions.push(actionItem(alert.title||'Review actionable alert',alert.recommended_action||'Confirm alert impact before stakeholder output is shared.','/operator/observability')));
-    if(rc.discovered>0)actions.push(actionItem('Review discovery backlog',`${rc.discovered} discovered site(s) need an Admin review decision.`,'/reference'));
+    if(rc.discovered>0)actions.push(actionItem('Open Discovered Sites',`${rc.discovered} discovered site(s) need an Estate review decision.`,'/estate#discovered-sites'));
     actions.push(actionItem('Inspect monitored estate','Use Estate to select a site and open Site Workspace when investigation is needed.','/estate'));
     setHtml('jom-final-action-list',actions.slice(0,3).join(''));
-    setHtml('jom-final-status-list',[tile('Runtime',runtimeOk?'ok':'review',`operator runtime contract reports ${runtimeStatus}.`,runtimeOk?'ok':'warn'),tile('Registry',`${rc.monitored} monitored`,`${rc.discovered} awaiting review`,rc.discovered?'warn':'ok'),tile('Alerts',`${actionableAlertCount} actionable`,'warning/critical operator alert feed',actionableAlertCount?'risk':'ok'),tile('Users',`${usersAnalysed||'n/a'}`,'users analysed by footprint source','ok')].join(''));
+    setHtml('jom-final-status-list',[tile('Runtime',runtimeOk?'ok':'review','Live reporting/runtime route responding.',runtimeOk?'ok':'warn'),tile('Registry',`${rc.monitored} monitored`,`${rc.discovered} awaiting review`,rc.discovered?'warn':'ok'),tile('Alerts',`${actionableAlertCount} actionable`,'warning/critical operator alert feed',actionableAlertCount?'risk':'ok'),tile('Users',`${usersAnalysed||'n/a'}`,'users analysed by footprint source','ok')].join(''));
     setText('jom-final-discovery-summary',`${rc.discovered} site(s) require review before monitoring decisions are complete.`)
   }
   document.addEventListener('DOMContentLoaded',()=>{init().catch(err=>{console.error('Command Centre completion failed',err);setHtml('jom-final-risk-list',riskCard({title:'Command Centre data unavailable',badge:'Review',impact:'The browser could not load one or more live operator contracts.',action:'Check JOM runtime and source health before using Command Centre output.',location:'System - Runtime Status',href:'/health'}));setHtml('jom-final-action-list',actionItem('Check runtime status','Confirm the application and operator endpoints are responding.','/health'))})})
