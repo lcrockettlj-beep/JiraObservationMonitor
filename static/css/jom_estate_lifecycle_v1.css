@@ -1,15 +1,510 @@
-/* JOM Estate Lifecycle Management v1 */
-.jom-nav-subnav{display:grid;gap:4px;margin:-2px 0 4px 14px;padding-left:10px;border-left:2px solid rgba(12,102,228,.16)}
-.jom-nav-subnav a{display:block;padding:6px 8px;border-radius:9px;color:#44546f;font-size:12px;font-weight:750;text-decoration:none}
-.jom-nav-subnav a:hover{background:#f4f8ff;color:#0c66e4}
-.estate-lifecycle-v1{display:grid;gap:18px;margin-top:18px}
-.estate-lifecycle-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.estate-life-card{border:1px solid var(--border,#dfe1e6);border-radius:18px;background:#fff;padding:16px;box-shadow:var(--shadow,0 8px 24px rgba(9,30,66,.06))}
-.estate-life-card span{display:block;color:#5e6c84;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-.estate-life-card strong{display:block;margin-top:8px;color:#092957;font-size:30px}
-.estate-life-section{border:1px solid var(--border,#dfe1e6);border-radius:20px;background:#fff;padding:18px;box-shadow:var(--shadow,0 8px 24px rgba(9,30,66,.06))}
-.estate-life-section h2{margin:4px 0 8px;color:#092957}
-.estate-life-list{display:grid;gap:10px;margin-top:14px}
-.estate-life-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,1.2fr) 120px 150px;gap:12px;align-items:center;border:1px solid rgba(9,30,66,.08);border-radius:14px;background:#fafbfc;padding:12px}
-.estate-life-row strong{color:#092957}.estate-life-row small{color:#5e6c84}.estate-life-actions{display:flex;gap:8px;flex-wrap:wrap}.estate-life-empty{color:#5e6c84;border:1px dashed #dfe1e6;border-radius:14px;padding:14px;background:#fafbfc}.estate-review-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.estate-check-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}.estate-check-list li{display:flex;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid rgba(9,30,66,.08);border-radius:14px;background:#fafbfc}.estate-decision-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.estate-decision-actions button{border:1px solid rgba(12,102,228,.24);border-radius:999px;background:#deebff;color:#0747a6;font-weight:800;padding:9px 12px}.estate-decision-actions button[disabled]{opacity:.65;cursor:not-allowed}
-@media(max-width:1100px){.estate-lifecycle-grid,.estate-review-grid{grid-template-columns:1fr}.estate-life-row{grid-template-columns:1fr}}
+:root {
+  --estate-blue: #0c66e4;
+  --estate-ink: #092957;
+  --estate-muted: #44546f;
+  --estate-border: #dfe1e6;
+  --estate-card: #ffffff;
+  --estate-rail-width: 260px;
+  --estate-rail-edge: 12px;
+  --estate-gap: 24px;
+  --estate-top: 56px;
+  --estate-bottom: 34px;
+}
+
+body[data-jom-page="estate"] .jom-side-nav {
+  position: fixed;
+  left: var(--estate-rail-edge);
+  top: var(--estate-top);
+  bottom: var(--estate-bottom);
+  width: var(--estate-rail-width);
+  height: auto;
+  max-height: none;
+}
+
+.jom-estate-v2 {
+  color: var(--estate-ink);
+  margin-left: calc(var(--estate-rail-edge) + var(--estate-rail-width) + var(--estate-gap));
+  margin-right: calc(var(--estate-rail-edge) + var(--estate-rail-width) + var(--estate-gap));
+  padding-top: var(--estate-top);
+  padding-bottom: 80px;
+  width: auto;
+  max-width: none;
+}
+
+.jom-estate-main {
+  display: grid;
+  gap: 30px;
+  width: 100%;
+  min-width: 0;
+}
+
+.estate-hero-card,
+.estate-panel,
+.estate-overview-grid article {
+  background: var(--estate-card);
+  border: 1px solid var(--estate-border);
+  border-radius: 18px;
+  box-shadow: 0 16px 34px rgba(9, 30, 66, .08);
+}
+
+.estate-hero-card {
+  min-height: 250px;
+  display: grid;
+  align-content: center;
+  padding: 34px 36px;
+}
+
+.estate-hero-card h1 {
+  margin: 8px 0 10px;
+  color: var(--estate-ink);
+  font-size: clamp(36px, 3.3vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -.03em;
+}
+
+.jom-kicker {
+  margin: 0;
+  color: #253858;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.estate-lede,
+.estate-muted {
+  margin: 0;
+  color: var(--estate-muted);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.estate-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.jom-button,
+.estate-action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #b3d4ff;
+  background: #deebff;
+  color: #0052cc;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 900;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.estate-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.estate-overview-grid article {
+  min-height: 126px;
+  display: grid;
+  align-content: space-between;
+  padding: 18px 20px;
+}
+
+.estate-overview-grid span {
+  color: var(--estate-muted);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.estate-overview-grid strong {
+  color: var(--estate-blue);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.estate-overview-grid small {
+  color: var(--estate-muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.estate-panel {
+  padding: 30px 32px;
+}
+
+.estate-section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.estate-section-heading h2 {
+  margin: 6px 0 0;
+  color: var(--estate-ink);
+  font-size: clamp(25px, 2.1vw, 32px);
+  line-height: 1.08;
+  letter-spacing: -.02em;
+}
+
+.estate-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #deebff;
+  color: #0052cc;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.estate-review-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.estate-review-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  border: 1px solid var(--estate-border);
+  border-radius: 14px;
+  background: #fbfcff;
+  padding: 16px 18px;
+}
+
+.estate-review-item strong {
+  color: var(--estate-ink);
+  font-size: 16px;
+}
+
+.estate-review-item small,
+.estate-review-item span {
+  color: var(--estate-muted);
+  font-size: 13px;
+}
+
+.estate-empty {
+  border: 1px dashed var(--estate-border);
+  border-radius: 14px;
+  background: #fbfcff;
+  color: var(--estate-muted);
+  padding: 14px;
+}
+
+.estate-registry-heading {
+  align-items: center;
+}
+
+.estate-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.estate-toolbar input,
+.estate-toolbar select {
+  min-height: 42px;
+  border: 1px solid var(--estate-border);
+  border-radius: 12px;
+  background: #fff;
+  color: #172b4d;
+  padding: 9px 12px;
+  font: inherit;
+}
+
+.estate-toolbar input {
+  min-width: min(360px, 100%);
+}
+
+.estate-table-wrap {
+  overflow: auto;
+  border: 1px solid var(--estate-border);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.estate-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.estate-table th,
+.estate-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(9, 30, 66, .08);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.estate-table th {
+  background: #f7f9fc;
+  color: var(--estate-muted);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.estate-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.estate-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #deebff;
+  color: #0052cc;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.estate-status-pill--ok { background: #e3fcef; color: #006644; }
+.estate-status-pill--review { background: #fff4e5; color: #a54800; }
+.estate-status-pill--retired { background: #f4f5f7; color: #44546f; }
+
+.jom-estate-rail {
+  position: fixed;
+  top: var(--estate-top);
+  right: var(--estate-rail-edge);
+  bottom: var(--estate-bottom);
+  width: var(--estate-rail-width);
+  z-index: 24;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px;
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid rgba(223, 225, 230, .95);
+  border-radius: 22px;
+  box-shadow: 0 18px 45px rgba(9, 30, 66, .14);
+  backdrop-filter: blur(10px);
+}
+
+.estate-rail-brand {
+  border: 1px solid rgba(223, 225, 230, .98);
+  border-radius: 14px;
+  background: #fbfcff;
+  padding: 14px;
+}
+
+.estate-rail-brand span {
+  display: block;
+  margin: 0 0 6px;
+  color: #5e6c84;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.estate-rail-brand strong {
+  display: block;
+  color: var(--estate-ink);
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.estate-rail-card {
+  padding-top: 18px;
+  border-top: 1px solid rgba(9, 30, 66, .10);
+}
+
+.estate-rail-card h2 {
+  margin: 0 0 12px;
+  color: var(--estate-ink);
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.estate-rail-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.estate-rail-list div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: start;
+  padding: 13px 14px;
+  border: 1px solid rgba(223, 225, 230, .98);
+  border-radius: 14px;
+  background: #fbfcff;
+  box-shadow: 0 8px 18px rgba(9, 30, 66, .05);
+}
+
+.estate-rail-list dt {
+  color: var(--estate-ink);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.estate-rail-list dd {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  margin: 0;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #deebff;
+  color: #0052cc;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.estate-rail-list div:first-child dd,
+.estate-rail-card[aria-label="Source status"] .estate-rail-list div:first-child dd {
+  background: #e3fcef;
+  color: #006644;
+}
+
+@media (max-width: 1180px) {
+  body[data-jom-page="estate"] .jom-side-nav {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(300px, 88vw);
+  }
+
+  .jom-estate-v2 {
+    margin: 0;
+    padding: 28px 18px 64px;
+  }
+
+  .jom-estate-rail {
+    position: static;
+    width: auto;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    margin-bottom: 24px;
+  }
+
+  .estate-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .estate-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .estate-section-heading,
+  .estate-registry-heading,
+  .estate-review-item {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .estate-toolbar,
+  .estate-toolbar input,
+  .estate-toolbar select {
+    width: 100%;
+  }
+}
+
+/* === Estate Clean Rebuild Polish v1 START === */
+.estate-site-link {
+  color: var(--estate-ink, #092957);
+  text-decoration: none;
+}
+.estate-site-link:hover {
+  color: var(--estate-blue, #0c66e4);
+  text-decoration: underline;
+}
+.estate-table th:first-child,
+.estate-table td:first-child {
+  min-width: 210px;
+}
+.estate-table th:nth-child(2),
+.estate-table td:nth-child(2),
+.estate-table th:nth-child(3),
+.estate-table td:nth-child(3),
+.estate-table th:nth-child(4),
+.estate-table td:nth-child(4) {
+  min-width: 128px;
+}
+.estate-table th:last-child,
+.estate-table td:last-child {
+  min-width: 136px;
+}
+.estate-rail-card[aria-label="Estate sources"] .estate-rail-list div:first-child dd {
+  background: #e3fcef;
+  color: #006644;
+}
+/* === Estate Clean Rebuild Polish v1 END === */
+
+/* === Estate Site Link Button v1 START === */
+.estate-site-link--button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 7px 12px;
+  border: 1px solid #b3d4ff;
+  border-radius: 999px;
+  background: #deebff;
+  color: #0052cc !important;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.1;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.estate-site-link--button:hover {
+  background: #cfe1fd;
+  border-color: rgba(12,102,228,.35);
+  text-decoration: none !important;
+}
+.estate-external-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(12,102,228,.12);
+  font-size: 11px;
+  line-height: 1;
+}
+.estate-table td:first-child small {
+  display: none !important;
+}
+/* === Estate Site Link Button v1 END === */
+
+/* === Estate Hero Action Cleanup v1 START === */
+.estate-hero-actions {
+  display: none !important;
+}
+.estate-hero-card {
+  min-height: 220px;
+}
+/* === Estate Hero Action Cleanup v1 END === */
+

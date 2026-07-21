@@ -5,151 +5,108 @@
   <title>Estate - Jira Observation Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_operational_readiness_v1.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_lifecycle_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_export_reporting_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_lifecycle_v1.css') }}">
 </head>
-<body>
+<body data-jom-page="estate">
 {% include "_nav.html" %}
-<main class="jom-shell jom-estate-shell">
-  <section class="jom-hero jom-card jom-estate-hero">
-    <div>
-      <p class="jom-kicker">Operational intelligence workspace</p>
+<main class="jom-estate-v2" id="jom-estate">
+  <div class="jom-estate-main">
+    <section class="estate-hero-card" aria-label="Estate overview">
+      <p class="jom-kicker">Estate / Central Inventory</p>
       <h1>Estate</h1>
-      <p class="jom-lede">Live estate view for monitored sites, discovered resources, product access, user footprint and site-level operational prioritisation.</p>
-    </div>
-    <div class="jom-estate-actions">
-      <a class="jom-pill jom-pill--link" href="/">Open Command Centre</a>
-      <a class="jom-pill jom-pill--link" href="/reference#site-discovery-control">Discovery control</a>
-    </div>
-  </section>
-
-  <section class="jom-status-strip" aria-label="Estate live status">
-    <div><span>Last refresh</span><strong id="jom-last-refresh">Loading</strong></div>
-    <div><span>Estate state</span><strong id="estate-state">Loading</strong></div>
-    <div><span>Environment</span><strong id="jom-command-env">Local Dev</strong></div>
-    <div><span>Build</span><strong id="jom-command-build">Estate v1</strong></div>
-  </section>
-
-  <section class="jom-metric-strip" aria-label="Estate metrics">
-    <article class="jom-metric"><span>Total sites</span><strong id="estate-total-sites">--</strong><small>Registry entries</small></article>
-    <article class="jom-metric"><span>Monitored</span><strong id="estate-monitored-sites">--</strong><small>In active scope</small></article>
-    <article class="jom-metric"><span>Discovered</span><strong id="estate-discovered-sites">--</strong><small>Awaiting review</small></article>
-    <article class="jom-metric"><span>Product sites</span><strong id="estate-product-sites">--</strong><small>Product access signals</small></article>
-    <article class="jom-metric"><span>Users analysed</span><strong id="estate-users-analysed">--</strong><small>User footprint</small></article>
-    <article class="jom-metric"><span>Alerts</span><strong id="estate-alerts">--</strong><small>Operator alerts</small></article>
-  </section>
-
-  
-  <section class="estate-lifecycle-v1" aria-label="Estate lifecycle management">
-    <section class="estate-lifecycle-grid" aria-label="Estate lifecycle summary">
-      <article class="estate-life-card"><span>Total sites</span><strong id="estate-life-total">--</strong><small>Known registry entries</small></article>
-      <article class="estate-life-card"><span>Monitored</span><strong id="estate-life-monitored">--</strong><small>Active operational scope</small></article>
-      <article class="estate-life-card"><span>Discovered</span><strong id="estate-life-discovered">--</strong><small>Awaiting classification</small></article>
-      <article class="estate-life-card"><span>Pending approval</span><strong id="estate-life-pending">0</strong><small>Review decisions pending</small></article>
+      <p class="estate-lede">What exists in the Atlassian estate, what state is each site in, and what lifecycle action is needed?</p>
     </section>
 
-    <section class="estate-life-section" id="monitored-sites">
-      <p class="jom-kicker">Estate / Monitored Sites</p>
-      <h2>Monitored Sites</h2>
-      <p class="jom-muted">Sites actively in monitoring scope.</p>
-      <div class="estate-life-list" id="estate-life-monitored-list"><p class="estate-life-empty">Loading monitored sites...</p></div>
+    <section class="estate-overview-grid" aria-label="Estate overview metrics">
+      <article><span>Total Sites</span><strong id="estate-total-sites">--</strong><small>Known registry entries</small></article>
+      <article><span>Monitored</span><strong id="estate-monitored-sites">--</strong><small>Active monitoring scope</small></article>
+      <article><span>Discovered</span><strong id="estate-discovered-sites">--</strong><small>Awaiting lifecycle review</small></article>
+      <article><span>Approval Pending</span><strong id="estate-pending-sites">0</strong><small>Reviewed, waiting enablement</small></article>
+      <article><span>Critical</span><strong id="estate-critical-sites">0</strong><small>Critical site health</small></article>
+      <article><span>Retired</span><strong id="estate-retired-sites">0</strong><small>Removed from active scope</small></article>
     </section>
 
-    <section class="estate-life-section" id="discovered-sites">
-      <p class="jom-kicker">Estate / Discovered Sites</p>
-      <h2>Discovered Sites</h2>
-      <p class="jom-muted">Known Atlassian sites that require lifecycle classification before monitoring decisions are complete.</p>
-      <div class="estate-life-list" id="estate-life-discovered-list"><p class="estate-life-empty">Loading discovered sites...</p></div>
-    </section>
-
-    <section class="estate-life-section" id="pending-approval">
-      <p class="jom-kicker">Estate / Pending Approval</p>
-      <h2>Pending Approval</h2>
-      <p class="jom-muted">Sites that have been reviewed but are not yet approved for monitoring.</p>
-      <div class="estate-life-list" id="estate-life-pending-list"><p class="estate-life-empty">No pending approvals currently recorded.</p></div>
-    </section>
-
-    <section class="estate-life-section" id="retired-sites">
-      <p class="jom-kicker">Estate / Retired Sites</p>
-      <h2>Retired Sites</h2>
-      <p class="jom-muted">Sites removed from active operational monitoring.</p>
-      <div class="estate-life-list" id="estate-life-retired-list"><p class="estate-life-empty">No retired sites currently recorded.</p></div>
-    </section>
-  </section>
-
-  <section class="jom-card jom-estate-workspace" id="discovery-queue">
-    <div class="jom-section-head">
-      <div>
-        <p class="jom-kicker">Estate Table</p>
-        <h2>Site operational coverage</h2>
+    <section class="estate-panel" id="discovered-sites" aria-label="Discovery review queue">
+      <div class="estate-section-heading">
+        <div>
+          <p class="jom-kicker">Lifecycle Queue</p>
+          <h2>Discovery Review Queue</h2>
+        </div>
+        <span class="estate-count-pill" id="estate-review-count">--</span>
       </div>
-      <div class="jom-estate-toolbar">
-        <input id="estate-search" class="jom-input" type="search" placeholder="Search site, URL, status or signal">
-        <select id="estate-filter" class="jom-select" aria-label="Filter estate sites">
-          <option value="all">All sites</option>
-          <option value="monitored">Monitored</option>
-          <option value="discovered">Discovered</option>
-        </select>
+      <p class="estate-muted">Discovered sites that require review before monitoring decisions are complete.</p>
+      <div class="estate-review-list" id="estate-review-list"><p class="estate-empty">Loading discovered sites...</p></div>
+    </section>
+
+    <section class="estate-panel" id="site-registry" aria-label="Site registry">
+      <div class="estate-section-heading estate-registry-heading">
+        <div>
+          <p class="jom-kicker">Central Inventory</p>
+          <h2>Site Registry</h2>
+        </div>
+        <div class="estate-toolbar">
+          <input id="estate-search" type="search" placeholder="Search site or URL" aria-label="Search sites">
+          <select id="estate-filter" aria-label="Filter sites">
+            <option value="all">All sites</option>
+            <option value="monitored">Monitored</option>
+            <option value="discovered">Discovered</option>
+            <option value="pending">Pending approval</option>
+            <option value="retired">Retired</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="jom-estate-grid">
-      <div class="jom-table-wrap">
-        <table class="jom-table jom-estate-table" aria-label="Estate site table">
+      <div class="estate-table-wrap">
+        <table class="estate-table" aria-label="Estate site registry table">
           <thead>
-            <tr><th>Health</th><th>Site</th><th>Products</th><th>Users</th><th>Risk</th><th>Status</th></tr>
+            <tr>
+              <th>Site</th>
+              <th>Lifecycle</th>
+              <th>Monitoring</th>
+              <th>Health</th>
+              <th>Owner</th>
+              <th>Last Observation</th>
+              <th>Actions</th>
+            </tr>
           </thead>
-          <tbody id="estate-site-body"><tr><td colspan="6">Loading estate sites...</td></tr></tbody>
+          <tbody id="estate-registry-body"><tr><td colspan="7">Loading estate registry...</td></tr></tbody>
         </table>
       </div>
-      <aside class="jom-card jom-site-detail-panel" aria-label="Site detail panel">
-        <p class="jom-kicker">Site Detail Panel</p>
-        <h2 id="estate-detail-title">Select a site</h2>
-        <p id="estate-detail-url" class="jom-muted">Choose a row to inspect live registry, product and discovery signals.</p>
-        <dl class="jom-detail-list">
-          <div><dt>Status</dt><dd id="estate-detail-status">--</dd></div>
-          <div><dt>Products</dt><dd id="estate-detail-products">--</dd></div>
-          <div><dt>Users</dt><dd id="estate-detail-users">--</dd></div>
-          <div><dt>Signals</dt><dd id="estate-detail-signals">--</dd></div>
-        </dl>
-      </aside>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section class="jom-grid jom-grid--three">
-    <article class="jom-card">
-      <p class="jom-kicker">Growth</p>
-      <h2>Current baseline</h2>
-      <p class="jom-muted">Trend history will be added once source-backed time-series values are promoted into the new frontend contract.</p>
-      <dl class="jom-detail-list"><div><dt>Sites</dt><dd id="estate-growth-sites">--</dd></div><div><dt>Users</dt><dd id="estate-growth-users">--</dd></div></dl>
-    </article>
-    <article class="jom-card">
-      <p class="jom-kicker">Dependencies</p>
-      <h2>Platform signals</h2>
-      <p class="jom-muted">Dependency mapping will remain source-backed. Current foundation uses registry, product access, alerts and user footprint only.</p>
-      <ul class="jom-brief-list"><li>Jira registry</li><li>Product access</li><li>User footprint</li><li>Operator alerts</li></ul>
-    </article>
-    <article class="jom-card">
-      <p class="jom-kicker">Exports</p>
-      <h2>Operator actions</h2>
-      <p class="jom-muted">CSV/PDF exports are planned for Estate after the workspace layout is accepted.</p>
-      <a class="jom-pill jom-pill--link" href="/reference#site-discovery-control">Manage discovery</a>
-    </article>
-  </section>
+  <aside class="jom-estate-rail" aria-label="Estate operations rail">
+    <div class="estate-rail-brand"><span>Estate Rail</span><strong>Live Inventory Context</strong></div>
 
-  <section class="jom-card">
-    <div class="jom-section-head">
-      <div><p class="jom-kicker">Estate JSON</p><h2>Live contract detail</h2></div>
-      <span class="jom-pill">Collapsed by default</span>
-    </div>
-    <details class="jom-details"><summary>Show estate JSON detail</summary><pre id="estate-json">Loading...</pre></details>
-  </section>
+    <section class="estate-rail-card" aria-label="Estate status">
+      <h2>Estate Scope</h2>
+      <dl class="estate-rail-list">
+        <div><dt>Total Sites</dt><dd id="rail-total-sites">--</dd></div>
+        <div><dt>Monitored</dt><dd id="rail-monitored-sites">--</dd></div>
+        <div><dt>Discovered</dt><dd id="rail-discovered-sites">--</dd></div>
+      </dl>
+    </section>
 
+    <section class="estate-rail-card" aria-label="Lifecycle status">
+      <h2>Lifecycle Queue</h2>
+      <dl class="estate-rail-list">
+        <div><dt>Review Queue</dt><dd id="rail-review-queue">--</dd></div>
+        <div><dt>Approval Pending</dt><dd id="rail-pending-sites">0</dd></div>
+        <div><dt>Retired</dt><dd id="rail-retired-sites">0</dd></div>
+      </dl>
+    </section>
+
+    <section class="estate-rail-card" aria-label="Estate sources">
+      <h2>Estate Sources</h2>
+      <dl class="estate-rail-list">
+        <div><dt>Registry</dt><dd id="rail-registry-status">OK</dd></div>
+        <div><dt>Users</dt><dd id="rail-users-count">--</dd></div>
+        <div><dt>Alerts</dt><dd id="rail-alert-count">--</dd></div>
+      </dl>
+    </section>
+  </aside>
 </main>
-<script src="{{ url_for('static', filename='js/jom_command_centre.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_operational_readiness_v1.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/jom_export_reporting_v1.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/jom_estate_lifecycle_v1.js') }}" defer></script>
 </body>
 </html>

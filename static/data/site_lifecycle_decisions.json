@@ -1,0 +1,107 @@
+{
+  "schema": "jom-site-lifecycle-decisions-v1",
+  "generated_at_utc": "2026-07-21T14:05:59.204555Z",
+  "decisions": {
+    "gli-tracker": {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": "approve",
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:05:59.204541Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    },
+    "gli-usa": {
+      "site_key": "gli-usa",
+      "decision": "ignore",
+      "previous_decision": null,
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T13:48:33.982394Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    },
+    "gaminglabs-team-tsyfo716": {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "decision": "ignore",
+      "previous_decision": null,
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T13:48:37.597213Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    },
+    "gaminglabs-team-h2pbpmis": {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "decision": "ignore",
+      "previous_decision": null,
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T13:48:40.251945Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    }
+  },
+  "history": [
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": null,
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T13:46:46.356666Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    },
+    {
+      "site_key": "gli-usa",
+      "decision": "ignore",
+      "previous_decision": null,
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T13:48:33.982394Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "decision": "ignore",
+      "previous_decision": null,
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T13:48:37.597213Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    },
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "decision": "ignore",
+      "previous_decision": null,
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T13:48:40.251945Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": "approve",
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:05:59.204541Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    }
+  ]
+}

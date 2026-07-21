@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from flask import Flask, jsonify, render_template, send_from_directory
+from flask import Flask, jsonify, render_template, send_from_directory, request
 import json
 import threading
 from datetime import datetime, timezone
@@ -491,6 +491,172 @@ def _jom_generated_report_response(report_name, fmt, report):
 # --- JOM EXPORT REPORTING ROUTES v1 END ---
 
 
+
+
+# --- JOM SITE REVIEW LIFECYCLE DECISION ROUTES v1 START ---
+SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_lifecycle_decisions.json"
+
+def _normalise_site_key(value: Any) -> str:
+    return str(value or "").strip().lower()
+
+def _site_key_from_record(site: Dict[str, Any]) -> str:
+    return str(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or "")
+
+def _load_lifecycle_decisions() -> Dict[str, Any]:
+    payload = load_json("site_lifecycle_decisions.json", {})
+    if not isinstance(payload, dict) or not payload:
+        payload = {"schema": "jom-site-lifecycle-decisions-v1", "generated_at_utc": None, "decisions": {}, "history": []}
+    payload.setdefault("schema", "jom-site-lifecycle-decisions-v1")
+    payload.setdefault("decisions", {})
+    payload.setdefault("history", [])
+    return payload
+
+def _write_lifecycle_decisions(payload: Dict[str, Any]) -> Dict[str, Any]:
+    payload["generated_at_utc"] = now_utc()
+    return write_json(SITE_LIFECYCLE_DECISIONS_PATH, payload)
+
+def _find_site(site_key: str) -> Dict[str, Any]:
+    registry = load_json("site_registry.json", {})
+    sites = registry.get("sites", []) if isinstance(registry, dict) else []
+    target = _normalise_site_key(site_key)
+    for site in sites:
+        if isinstance(site, dict) and _normalise_site_key(_site_key_from_record(site)) == target:
+            return site
+    for site in sites:
+        if isinstance(site, dict) and target in json.dumps(site).lower():
+            return site
+    return {}
+
+def _review_sources_for_site(site_key: str) -> Dict[str, Any]:
+    onboarding = load_json("site_onboarding_review.json", {})
+    for bucket in ["pending", "approved", "ignored"]:
+        for item in onboarding.get(bucket, []) if isinstance(onboarding, dict) else []:
+            if isinstance(item, dict) and _normalise_site_key(item.get("site_key")) == _normalise_site_key(site_key):
+                return {"bucket": bucket, "record": item}
+    return {"bucket": None, "record": {}}
+
+def _owner_from_known_sources(site_key: str, site: Dict[str, Any]) -> str:
+    for key in ["owner", "business_owner", "technical_owner", "contact", "site_owner", "admin_owner"]:
+        if site.get(key):
+            return str(site.get(key))
+    sources_text = json.dumps(site.get("sources") or site.get("source") or "").lower()
+    org_admin_managed_sites = {"gli-delivery-tm", "gli-global-technology", "gli-it-project", "gli-tracker"}
+    if "named_access" in sources_text or _normalise_site_key(site_key) in org_admin_managed_sites:
+        return "Org Admin / Atlassian administration"
+    admin_truth = load_json("admin_truth_v2.json", {})
+    blocked = admin_truth.get("blocked_resources", []) if isinstance(admin_truth, dict) else []
+    for item in blocked:
+        if isinstance(item, dict) and _normalise_site_key(item.get("site_key")) == _normalise_site_key(site_key):
+            return "Owner not available - access blocked; Atlassian/Product admin required"
+    return "Owner not assigned"
+
+def _build_site_review_payload(site_key: str) -> Dict[str, Any]:
+    site = _find_site(site_key)
+    source_review = _review_sources_for_site(site_key)
+    decisions = _load_lifecycle_decisions()
+    decision_state = decisions.get("decisions", {}).get(site_key, {})
+    history = [item for item in decisions.get("history", []) if isinstance(item, dict) and item.get("site_key") == site_key]
+    key = _site_key_from_record(site) or site_key
+    url = site.get("site_url") or site.get("url") or source_review.get("record", {}).get("url") or ""
+    sources = site.get("sources") or site.get("source") or source_review.get("record", {}).get("source") or "Registry"
+    if isinstance(sources, str):
+        sources_list = [sources]
+    else:
+        sources_list = sources if isinstance(sources, list) else ["Registry"]
+    classification = site.get("classification") or source_review.get("record", {}).get("classification") or "discovered"
+    is_monitored = bool(site.get("monitored") or site.get("is_monitored") or site.get("in_monitoring_scope") or str(classification).lower() == "monitored")
+    lifecycle_status = "Monitored" if is_monitored else "Discovered"
+    if decision_state.get("decision") == "approve":
+        lifecycle_status = "Approval Pending"
+    elif decision_state.get("decision") == "ignore":
+        lifecycle_status = "Ignored"
+    elif decision_state.get("decision") == "pending":
+        lifecycle_status = "Pending Review"
+    owner = _owner_from_known_sources(key, site)
+    access = ", ".join(sources_list)
+    admin_truth = load_json("admin_truth_v2.json", {})
+    for item in admin_truth.get("blocked_resources", []) if isinstance(admin_truth, dict) else []:
+        if isinstance(item, dict) and _normalise_site_key(item.get("site_key")) == _normalise_site_key(key):
+            access = "Access blocked - administrator permissions required"
+    return {
+        "site_key": key,
+        "site_name": site.get("site_name") or site.get("name") or key,
+        "url": url,
+        "site": site,
+        "sources": sources_list,
+        "classification": classification,
+        "lifecycle_status": lifecycle_status,
+        "owner": owner,
+        "contact_route": ("Atlassian/Product admin required" if "blocked" in access.lower() else ("Org admin / Atlassian admin console" if ("named_access" in access.lower() or "Org Admin" in owner) else "Owner/contact not yet sourced")),
+        "readiness": {
+            "identity": "URL confirmed" if url else "URL missing",
+            "ownership": owner,
+            "access": access,
+            "monitoring": "Monitoring enabled" if is_monitored else "Not currently monitored",
+            "credentials": "Credentials required before monitoring enablement" if not is_monitored else "Monitoring credentials active or not required",
+        },
+        "decision_state": decision_state,
+        "decision_history": history,
+        "onboarding_review": source_review,
+        "safety_note": "Approve records Approval Pending / Credential Required. It does not create or retrieve tokens automatically.",
+    }
+
+@app.route("/api/site-review/<path:site_key>")
+def api_site_review(site_key):
+    return jsonify(_build_site_review_payload(site_key))
+
+@app.route("/api/site-review/<path:site_key>/decision", methods=["POST"])
+def api_site_review_decision(site_key):
+    payload = request.get_json(silent=True) or {}
+    decision = str(payload.get("decision") or "pending").lower().strip()
+    allowed = {"approve", "ignore", "pending", "restore"}
+    if decision not in allowed:
+        return jsonify({"ok": False, "error": "unsupported decision", "allowed": sorted(allowed)}), 400
+    decisions = _load_lifecycle_decisions()
+    decisions.setdefault("decisions", {})
+    decisions.setdefault("history", [])
+    previous = decisions["decisions"].get(site_key, {})
+    if decision == "restore":
+        record = {
+            "site_key": site_key,
+            "decision": "pending",
+            "previous_decision": previous.get("decision"),
+            "reason": payload.get("reason") or "restored to review queue",
+            "actor": payload.get("actor") or "operator",
+            "decided_at_utc": now_utc(),
+            "reversible": True,
+            "requires_credentials": False,
+        }
+    else:
+        record = {
+            "site_key": site_key,
+            "decision": decision,
+            "previous_decision": previous.get("decision"),
+            "reason": payload.get("reason") or decision,
+            "actor": payload.get("actor") or "operator",
+            "decided_at_utc": now_utc(),
+            "reversible": True,
+            "requires_credentials": decision == "approve",
+            "next_state": "approval_pending_credential_required" if decision == "approve" else ("ignored" if decision == "ignore" else "pending_review"),
+        }
+    decisions["decisions"][site_key] = record
+    decisions["history"].append(record)
+    _write_lifecycle_decisions(decisions)
+    message = "Approval recorded. Monitoring is pending token/credential enablement." if decision == "approve" else "Lifecycle decision recorded."
+    if decision == "restore":
+        message = "Site restored to review queue."
+    return jsonify({"ok": True, "message": message, "record": record})
+
+@app.route("/api/site-lifecycle/decisions")
+def api_site_lifecycle_decisions():
+    payload = load_json("site_lifecycle_decisions.json", {})
+    if not isinstance(payload, dict) or not payload:
+        payload = {"schema": "jom-site-lifecycle-decisions-v1", "decisions": {}, "history": []}
+    payload.setdefault("decisions", {})
+    payload.setdefault("history", [])
+    return jsonify(payload)
+
+# --- JOM SITE REVIEW LIFECYCLE DECISION ROUTES v1 END ---
 
 @app.route("/review-queue")
 def review_queue():
