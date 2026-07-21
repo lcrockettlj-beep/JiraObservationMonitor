@@ -656,6 +656,102 @@ def api_site_lifecycle_decisions():
     payload.setdefault("history", [])
     return jsonify(payload)
 
+
+# --- enable_monitoring_via_jom_v1 START ---
+def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
+    sites = registry.get("sites", []) if isinstance(registry, dict) else []
+    monitored = [s for s in sites if isinstance(s, dict) and (s.get("classification") == "monitored" or s.get("is_monitored") is True)]
+    ignored = [s for s in sites if isinstance(s, dict) and s.get("classification") == "ignored"]
+    pending = [s for s in sites if isinstance(s, dict) and s.get("classification") in ("approval_pending", "pending")]
+    discovered = [s for s in sites if isinstance(s, dict) and s.get("classification") == "discovered" and s.get("is_monitored") is not True]
+    registry.setdefault("summary", {})
+    registry["summary"].update({
+        "total_sites": len(sites),
+        "monitored_count": len(monitored),
+        "discovered_count": len(discovered),
+        "ignored_count": len(ignored),
+        "pending_onboarding_count": len(pending),
+    })
+    registry["generated_at_utc"] = now_utc()
+    return registry
+
+@app.route("/api/site-review/<path:site_key>/enable-monitoring", methods=["POST"])
+def api_site_review_enable_monitoring(site_key):
+    payload = request.get_json(silent=True) or {}
+    actor = payload.get("actor") or "operator"
+    registry = load_json("site_registry.json", {})
+    sites = registry.get("sites", []) if isinstance(registry, dict) else []
+    target = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key).lower()
+    site = None
+    for item in sites:
+        if isinstance(item, dict):
+            item_key = str(item.get("site_key") or item.get("key") or item.get("site_name") or item.get("name") or "").lower()
+            if item_key == target:
+                site = item
+                break
+    if site is None:
+        return jsonify({"ok": False, "error": "site not found", "site_key": site_key}), 404
+    decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else load_json("site_lifecycle_decisions.json", {"decisions": {}, "history": []})
+    decision_state = decisions.get("decisions", {}).get(site_key, {})
+    if decision_state.get("decision") not in ("approve", "monitored"):
+        return jsonify({"ok": False, "error": "site must be approved before monitoring can be enabled", "current_decision": decision_state.get("decision")}), 409
+    sources = site.get("sources", []) if isinstance(site.get("sources"), list) else []
+    if not sources:
+        return jsonify({"ok": False, "error": "site has no source signals to enable", "site_key": site_key}), 409
+    now = now_utc()
+    site["classification"] = "monitored"
+    site["is_monitored"] = True
+    site["can_approve"] = False
+    site["collector_onboarding_status"] = "enabled_via_jom"
+    site["approved_at_utc"] = site.get("approved_at_utc") or now
+    site["monitoring_enabled_at_utc"] = now
+    site["monitoring_enabled_by"] = actor
+    _recalculate_registry_summary(registry)
+    write_json(DATA_PATH / "site_registry.json", registry)
+    monitored_payload = load_json("monitored_sites.json", {})
+    monitored_payload.setdefault("schema", "jom-monitored-sites-v2")
+    monitored_payload.setdefault("policy", registry.get("policy", {}))
+    monitored_payload.setdefault("monitored_sites", [])
+    monitored_payload.setdefault("ignored_sites", [])
+    existing = None
+    for row in monitored_payload["monitored_sites"]:
+        if isinstance(row, dict) and str(row.get("site_key", "")).lower() == target:
+            existing = row
+            break
+    row = {
+        "site_key": site.get("site_key") or site_key,
+        "site_name": site.get("site_name") or site_key,
+        "site_url": site.get("site_url") or site.get("url") or "",
+        "status": "monitored",
+        "approved_by": actor,
+        "approved_at_utc": site.get("approved_at_utc") or now,
+        "monitoring_enabled_at_utc": now,
+        "collector_onboarding_status": "enabled_via_jom",
+    }
+    if existing:
+        existing.update(row)
+    else:
+        monitored_payload["monitored_sites"].append(row)
+    monitored_payload["ignored_sites"] = [r for r in monitored_payload.get("ignored_sites", []) if not (isinstance(r, dict) and str(r.get("site_key", "")).lower() == target)]
+    monitored_payload["updated_at_utc"] = now
+    write_json(DATA_PATH / "monitored_sites.json", monitored_payload)
+    record = {
+        "site_key": site.get("site_key") or site_key,
+        "decision": "monitored",
+        "previous_decision": decision_state.get("decision"),
+        "reason": "monitoring enabled via JOM",
+        "actor": actor,
+        "decided_at_utc": now,
+        "reversible": True,
+        "requires_credentials": False,
+        "next_state": "monitored",
+    }
+    decisions.setdefault("decisions", {})[site_key] = record
+    decisions.setdefault("history", []).append(record)
+    _write_lifecycle_decisions(decisions) if "_write_lifecycle_decisions" in globals() else write_json(DATA_PATH / "site_lifecycle_decisions.json", decisions)
+    return jsonify({"ok": True, "message": "Monitoring enabled in JOM configuration. Run runtime refresh to validate live collection.", "site": site, "record": record, "runtime_refresh_required": True})
+# --- enable_monitoring_via_jom_v1 END ---
+
 # --- JOM SITE REVIEW LIFECYCLE DECISION ROUTES v1 END ---
 
 @app.route("/review-queue")

@@ -1,6 +1,6 @@
 {
   "schema": "jom-admin-truth-layer-v2",
-  "generated_at_utc": "2026-07-01T07:48:44Z",
+  "generated_at_utc": "2026-07-21T14:18:34Z",
   "source_policy": {
     "identity_truth": "Atlassian Admin API enriched runtime payload",
     "commercial_billing_truth": "static/data/billing_seats.json",

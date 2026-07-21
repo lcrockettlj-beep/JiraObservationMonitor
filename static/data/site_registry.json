@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-v3-scope-merged",
-  "generated_at_utc": "2026-06-30T20:50:45Z",
+  "generated_at_utc": "2026-07-21T14:18:14.955779Z",
   "policy": {
     "home_shows_discovered_sites": true,
     "estate_requires_monitored_status": true,
@@ -9,8 +9,8 @@
   },
   "summary": {
     "total_sites": 7,
-    "monitored_count": 3,
-    "discovered_count": 4,
+    "monitored_count": 4,
+    "discovered_count": 3,
     "ignored_count": 0,
     "pending_onboarding_count": 0
   },
@@ -151,10 +151,13 @@
         "gli-tracker"
       ],
       "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
-      "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
-      "is_monitored": false,
-      "can_approve": true
+      "classification": "monitored",
+      "collector_onboarding_status": "enabled_via_jom",
+      "is_monitored": true,
+      "can_approve": false,
+      "approved_at_utc": "2026-07-21T14:18:14.955755Z",
+      "monitoring_enabled_at_utc": "2026-07-21T14:18:14.955755Z",
+      "monitoring_enabled_by": "operator"
     },
     {
       "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",

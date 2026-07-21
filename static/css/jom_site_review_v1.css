@@ -121,3 +121,19 @@ body[data-jom-page="site-review"] .jom-side-nav {
  .review-operations-rail { position:static; width:auto; height:auto; max-height:none; overflow:visible; margin-bottom:24px; }
  .review-detail-list div { grid-template-columns:1fr; }
 }
+
+/* === Monitoring Enablement via JOM v1 START === */
+.review-decision-actions button[data-enable-monitoring="true"] {
+  background: #0c66e4;
+  border-color: #0c66e4;
+  color: #ffffff;
+}
+.review-decision-actions button[data-enable-monitoring="true"]:hover {
+  background: #0052cc;
+}
+.review-decision-actions button[disabled] {
+  opacity: .58;
+  cursor: not-allowed;
+}
+/* === Monitoring Enablement via JOM v1 END === */
+

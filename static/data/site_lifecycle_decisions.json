@@ -1,25 +1,25 @@
 {
   "schema": "jom-site-lifecycle-decisions-v1",
-  "generated_at_utc": "2026-07-21T14:05:59.204555Z",
+  "generated_at_utc": "2026-07-21T14:18:14.957477Z",
   "decisions": {
     "gli-tracker": {
       "site_key": "gli-tracker",
-      "decision": "approve",
+      "decision": "monitored",
       "previous_decision": "approve",
-      "reason": "approved for monitoring review",
+      "reason": "monitoring enabled via JOM",
       "actor": "operator",
-      "decided_at_utc": "2026-07-21T14:05:59.204541Z",
+      "decided_at_utc": "2026-07-21T14:18:14.955755Z",
       "reversible": true,
-      "requires_credentials": true,
-      "next_state": "approval_pending_credential_required"
+      "requires_credentials": false,
+      "next_state": "monitored"
     },
     "gli-usa": {
       "site_key": "gli-usa",
       "decision": "ignore",
-      "previous_decision": null,
+      "previous_decision": "pending",
       "reason": "not in current monitoring scope",
       "actor": "operator",
-      "decided_at_utc": "2026-07-21T13:48:33.982394Z",
+      "decided_at_utc": "2026-07-21T14:17:09.229342Z",
       "reversible": true,
       "requires_credentials": false,
       "next_state": "ignored"
@@ -102,6 +102,121 @@
       "reversible": true,
       "requires_credentials": true,
       "next_state": "approval_pending_credential_required"
+    },
+    {
+      "site_key": "gli-usa",
+      "decision": "pending",
+      "previous_decision": "ignore",
+      "reason": "restored to review queue",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:12.033668Z",
+      "reversible": true,
+      "requires_credentials": false
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "approve",
+      "reason": "kept pending review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:44.388952Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "pending_review"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "pending",
+      "reason": "kept pending review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:45.730496Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "pending_review"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "pending",
+      "reason": "restored to review queue",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:48.100930Z",
+      "reversible": true,
+      "requires_credentials": false
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "pending",
+      "reason": "restored to review queue",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:49.382408Z",
+      "reversible": true,
+      "requires_credentials": false
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "pending",
+      "reason": "restored to review queue",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:50.042422Z",
+      "reversible": true,
+      "requires_credentials": false
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "pending",
+      "reason": "restored to review queue",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:50.290611Z",
+      "reversible": true,
+      "requires_credentials": false
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "pending",
+      "reason": "restored to review queue",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:16:50.485895Z",
+      "reversible": true,
+      "requires_credentials": false
+    },
+    {
+      "site_key": "gli-usa",
+      "decision": "ignore",
+      "previous_decision": "pending",
+      "reason": "not in current monitoring scope",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:17:09.229342Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "ignored"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": "pending",
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:18:09.478744Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "monitored",
+      "previous_decision": "approve",
+      "reason": "monitoring enabled via JOM",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-21T14:18:14.955755Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "monitored"
     }
   ]
 }

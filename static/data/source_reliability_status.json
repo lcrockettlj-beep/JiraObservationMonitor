@@ -1,19 +1,49 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-07-01T07:48:44.983741Z",
-  "overall_status": "review",
+  "generated_at_utc": "2026-07-21T14:18:34.355356Z",
+  "overall_status": "attention",
   "summary": {
-    "issue_count": 1,
-    "freshness_overall": "OK",
-    "runtime_refresh_overall": "review",
-    "user_footprint_status": "generated"
+    "issue_count": 7,
+    "freshness_overall": "ATTENTION",
+    "runtime_refresh_overall": null,
+    "user_footprint_status": "unavailable"
   },
   "issues": [
     {
-      "source": "Runtime Refresh",
-      "state": "review",
-      "path": "static/data/runtime_refresh_status.json",
-      "reason": "Runtime collector was not requested. Status inferred from latest_run.json freshness."
+      "source": "Estate Product Access",
+      "state": "STALE SNAPSHOT",
+      "path": "static/data/estate_product_access.json"
+    },
+    {
+      "source": "Estate Access Truth",
+      "state": "STALE SNAPSHOT",
+      "path": "static/data/estate_access_truth.json"
+    },
+    {
+      "source": "Billing Seats",
+      "state": "STALE SNAPSHOT",
+      "path": "static/data/billing_seats.json"
+    },
+    {
+      "source": "User Footprint",
+      "state": "STALE SNAPSHOT",
+      "path": "static/data/user_footprint.json"
+    },
+    {
+      "source": "Latest Jira Runtime Run",
+      "state": "STALE SNAPSHOT",
+      "path": "latest_run.json"
+    },
+    {
+      "source": "Latest Admin Enriched Run",
+      "state": "STALE SNAPSHOT",
+      "path": "latest_run_admin_enriched.json"
+    },
+    {
+      "source": "User Footprint",
+      "state": "GUARDED UNAVAILABLE",
+      "path": "static/data/user_footprint.json",
+      "reason": "No named access reconciliation file is available."
     }
   ],
   "inputs": {
