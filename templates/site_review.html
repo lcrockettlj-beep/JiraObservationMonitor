@@ -62,13 +62,16 @@
         <button type="button" data-decision="approve">Approve for Monitoring</button>
         <button type="button" data-decision="ignore">Ignore for Now</button>
         <button type="button" data-decision="pending">Keep Pending</button>
-        <button type="button" data-decision="restore">Restore to Review</button>
+        <button type="button" data-decision="restore">Restore to Discovered</button>
+        <button type="button" data-validate-access="true">Validate Access</button>
         <button type="button" data-enable-monitoring="true">Enable Monitoring</button>
       </div>
+      <p class="review-muted" id="site-review-validation-status">Credential access has not been validated in this session.</p>
       <p class="review-muted" id="decision-result">No decision submitted in this session.</p>
     </section>
   </aside>
 </main>
 <script src="{{ url_for('static', filename='js/jom_site_review_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_site_review_access_validation_v1.js') }}" defer></script>
 </body>
 </html>

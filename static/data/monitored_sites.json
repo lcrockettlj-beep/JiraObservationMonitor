@@ -14,10 +14,10 @@
       "status": "monitored",
       "approved_by": "operator",
       "approved_at_utc": "2026-07-21T14:18:14.955755Z",
-      "monitoring_enabled_at_utc": "2026-07-21T14:18:14.955755Z",
+      "monitoring_enabled_at_utc": "2026-07-21T14:47:47.147891Z",
       "collector_onboarding_status": "enabled_via_jom"
     }
   ],
   "ignored_sites": [],
-  "updated_at_utc": "2026-07-21T14:18:14.955755Z"
+  "updated_at_utc": "2026-07-21T14:48:57.865762Z"
 }

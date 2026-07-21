@@ -1,0 +1,68 @@
+{
+  "schema": "jom-site-access-validation-v1",
+  "generated_at_utc": "2026-07-21T14:48:57.866803Z",
+  "validations": {
+    "gli-tracker": {
+      "site_key": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "cloud_id_present": true,
+      "checked_at_utc": "2026-07-21T14:47:41.160161Z",
+      "actor": "operator",
+      "access_valid": true,
+      "status": "ok",
+      "reason": "Atlassian Admin API credential is valid at org level. Site-specific collection still needs runtime refresh validation.",
+      "method": "admin_org_validation",
+      "details": {
+        "status_code": 200,
+        "body_preview": "{\"data\":{\"id\":\"b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\",\"type\":\"orgs\",\"attributes\":{\"name\":\"Gaminglabs\"},\"links\":{\"self\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\"},\"relationships\":{\"domains\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/domains\"},\"users\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users\"}}}}"
+      }
+    }
+  },
+  "history": [
+    {
+      "site_key": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "cloud_id_present": true,
+      "checked_at_utc": "2026-07-21T14:37:54.461298Z",
+      "actor": "operator",
+      "access_valid": true,
+      "status": "ok",
+      "reason": "Atlassian Admin API credential is valid at org level. Site-specific collection still needs runtime refresh validation.",
+      "method": "admin_org_validation",
+      "details": {
+        "status_code": 200,
+        "body_preview": "{\"data\":{\"id\":\"b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\",\"type\":\"orgs\",\"attributes\":{\"name\":\"Gaminglabs\"},\"links\":{\"self\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\"},\"relationships\":{\"domains\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/domains\"},\"users\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users\"}}}}"
+      }
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "cloud_id_present": true,
+      "checked_at_utc": "2026-07-21T14:39:48.835336Z",
+      "actor": "operator",
+      "access_valid": true,
+      "status": "ok",
+      "reason": "Atlassian Admin API credential is valid at org level. Site-specific collection still needs runtime refresh validation.",
+      "method": "admin_org_validation",
+      "details": {
+        "status_code": 200,
+        "body_preview": "{\"data\":{\"id\":\"b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\",\"type\":\"orgs\",\"attributes\":{\"name\":\"Gaminglabs\"},\"links\":{\"self\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\"},\"relationships\":{\"domains\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/domains\"},\"users\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users\"}}}}"
+      }
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "cloud_id_present": true,
+      "checked_at_utc": "2026-07-21T14:47:41.160161Z",
+      "actor": "operator",
+      "access_valid": true,
+      "status": "ok",
+      "reason": "Atlassian Admin API credential is valid at org level. Site-specific collection still needs runtime refresh validation.",
+      "method": "admin_org_validation",
+      "details": {
+        "status_code": 200,
+        "body_preview": "{\"data\":{\"id\":\"b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\",\"type\":\"orgs\",\"attributes\":{\"name\":\"Gaminglabs\"},\"links\":{\"self\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05\"},\"relationships\":{\"domains\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/domains\"},\"users\":{\"related\":\"https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users\"}}}}"
+      }
+    }
+  ]
+}

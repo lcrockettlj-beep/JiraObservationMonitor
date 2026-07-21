@@ -3,6 +3,9 @@ from __future__ import annotations
 from flask import Flask, jsonify, render_template, send_from_directory, request
 import json
 import threading
+import os
+import urllib.request
+import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
@@ -572,6 +575,8 @@ def _build_site_review_payload(site_key: str) -> Dict[str, Any]:
         lifecycle_status = "Ignored"
     elif decision_state.get("decision") == "pending":
         lifecycle_status = "Pending Review"
+    elif decision_state.get("decision") == "discovered":
+        lifecycle_status = "Discovered"
     owner = _owner_from_known_sources(key, site)
     access = ", ".join(sources_list)
     admin_truth = load_json("admin_truth_v2.json", {})
@@ -617,15 +622,41 @@ def api_site_review_decision(site_key):
     decisions.setdefault("history", [])
     previous = decisions["decisions"].get(site_key, {})
     if decision == "restore":
+        # rollback_to_discovered_v1: restore site back to discovered everywhere JOM reads lifecycle state.
+        registry = load_json("site_registry.json", {})
+        target = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key).lower()
+        for site in registry.get("sites", []) if isinstance(registry, dict) else []:
+            if isinstance(site, dict) and str(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or "").lower() == target:
+                site["classification"] = "discovered"
+                site["is_monitored"] = False
+                site["can_approve"] = True
+                site["collector_onboarding_status"] = "not_requested"
+                site.pop("monitoring_enabled_at_utc", None)
+                site.pop("monitoring_enabled_by", None)
+        if "_recalculate_registry_summary" in globals():
+            _recalculate_registry_summary(registry)
+        write_json(DATA_PATH / "site_registry.json", registry)
+        monitored_payload = load_json("monitored_sites.json", {})
+        if isinstance(monitored_payload, dict):
+            monitored_payload["monitored_sites"] = [row for row in monitored_payload.get("monitored_sites", []) if not (isinstance(row, dict) and str(row.get("site_key", "")).lower() == target)]
+            monitored_payload.setdefault("ignored_sites", [])
+            monitored_payload["updated_at_utc"] = now_utc()
+            write_json(DATA_PATH / "monitored_sites.json", monitored_payload)
+        validation_payload = load_json("site_access_validation.json", {})
+        if isinstance(validation_payload, dict):
+            validation_payload.setdefault("validations", {}).pop(site_key, None)
+            validation_payload["generated_at_utc"] = now_utc()
+            write_json(DATA_PATH / "site_access_validation.json", validation_payload)
         record = {
             "site_key": site_key,
-            "decision": "pending",
+            "decision": "discovered",
             "previous_decision": previous.get("decision"),
-            "reason": payload.get("reason") or "restored to review queue",
+            "reason": payload.get("reason") or "rolled back to discovered",
             "actor": payload.get("actor") or "operator",
             "decided_at_utc": now_utc(),
             "reversible": True,
             "requires_credentials": False,
+            "next_state": "discovered",
         }
     else:
         record = {
@@ -644,7 +675,7 @@ def api_site_review_decision(site_key):
     _write_lifecycle_decisions(decisions)
     message = "Approval recorded. Monitoring is pending token/credential enablement." if decision == "approve" else "Lifecycle decision recorded."
     if decision == "restore":
-        message = "Site restored to review queue."
+        message = "Site rolled back to Discovered. Estate and Command Centre will show it as review work again."
     return jsonify({"ok": True, "message": message, "record": record})
 
 @app.route("/api/site-lifecycle/decisions")
@@ -656,6 +687,111 @@ def api_site_lifecycle_decisions():
     payload.setdefault("history", [])
     return jsonify(payload)
 
+
+
+# --- credential_access_validation_v1 START ---
+SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_access_validation.json"
+
+def _load_dotenv_values() -> Dict[str, str]:
+    values = dict(os.environ)
+    env_path = ROOT / ".env"
+    if env_path.exists():
+        for raw in env_path.read_text(encoding="utf-8-sig").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
+
+def _load_site_access_validation() -> Dict[str, Any]:
+    payload = load_json("site_access_validation.json", {})
+    if not isinstance(payload, dict) or not payload:
+        payload = {"schema": "jom-site-access-validation-v1", "generated_at_utc": None, "validations": {}, "history": []}
+    payload.setdefault("validations", {})
+    payload.setdefault("history", [])
+    return payload
+
+def _write_site_access_validation(payload: Dict[str, Any]) -> Dict[str, Any]:
+    payload["generated_at_utc"] = now_utc()
+    return write_json(SITE_ACCESS_VALIDATION_PATH, payload)
+
+def _http_json_validation(url: str, token: str) -> Dict[str, Any]:
+    req = urllib.request.Request(url=url, headers={"Authorization": "Bearer " + token, "Accept": "application/json"}, method="GET")
+    try:
+        with urllib.request.urlopen(req, timeout=30) as response:
+            raw = response.read().decode("utf-8", errors="ignore")
+            return {"ok": True, "status_code": response.status, "body_preview": raw[:500]}
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="ignore")
+        return {"ok": False, "status_code": exc.code, "body_preview": body[:500]}
+    except Exception as exc:
+        return {"ok": False, "status_code": 0, "body_preview": str(exc)}
+
+def _site_for_validation(site_key: str) -> Dict[str, Any]:
+    if "_find_site" in globals():
+        return _find_site(site_key)
+    registry = load_json("site_registry.json", {})
+    for site in registry.get("sites", []) if isinstance(registry, dict) else []:
+        if isinstance(site, dict) and str(site.get("site_key") or site.get("key") or "").lower() == str(site_key).lower():
+            return site
+    return {}
+
+@app.route("/api/site-review/<path:site_key>/access-validation")
+def api_site_review_access_validation(site_key):
+    payload = _load_site_access_validation()
+    return jsonify({"ok": True, "site_key": site_key, "validation": payload.get("validations", {}).get(site_key, {})})
+
+@app.route("/api/site-review/<path:site_key>/validate-access", methods=["POST"])
+def api_site_review_validate_access(site_key):
+    request_payload = request.get_json(silent=True) or {}
+    actor = request_payload.get("actor") or "operator"
+    env = _load_dotenv_values()
+    site = _site_for_validation(site_key)
+    cloud_id = site.get("cloud_id") or site.get("id") or ""
+    site_url = site.get("site_url") or site.get("url") or ""
+    token = env.get("ATLASSIAN_TOKEN") or env.get("ATLASSIAN_ACCESS_TOKEN") or env.get("JOM_ATLASSIAN_ACCESS_TOKEN") or ""
+    admin_key = env.get("ATLASSIAN_ADMIN_API_KEY") or env.get("ATLASSIAN_ADMIN_TOKEN") or ""
+    org_id = env.get("ATLASSIAN_ADMIN_ORG_ID") or env.get("ATLASSIAN_ORG_ID") or ""
+    result = {
+        "site_key": site_key,
+        "site_url": site_url,
+        "cloud_id_present": bool(cloud_id),
+        "checked_at_utc": now_utc(),
+        "actor": actor,
+        "access_valid": False,
+        "status": "blocked",
+        "reason": "No validation path succeeded.",
+        "method": None,
+        "details": {},
+    }
+    if token and cloud_id:
+        url = "https://api.atlassian.com/ex/jira/" + str(cloud_id) + "/rest/api/3/serverInfo"
+        probe = _http_json_validation(url, token)
+        result["method"] = "oauth_site_server_info"
+        result["details"] = {"status_code": probe.get("status_code"), "body_preview": probe.get("body_preview")}
+        if probe.get("ok"):
+            result.update({"access_valid": True, "status": "ok", "reason": "OAuth token can access this Jira cloud site."})
+        else:
+            result["reason"] = "OAuth site validation failed. Token may be expired, missing scope, blocked by MFA/session policy, or not granted to this site."
+    elif admin_key and org_id:
+        url = "https://api.atlassian.com/admin/v1/orgs/" + str(org_id)
+        probe = _http_json_validation(url, admin_key)
+        result["method"] = "admin_org_validation"
+        result["details"] = {"status_code": probe.get("status_code"), "body_preview": probe.get("body_preview")}
+        if probe.get("ok"):
+            result.update({"access_valid": True, "status": "ok", "reason": "Atlassian Admin API credential is valid at org level. Site-specific collection still needs runtime refresh validation."})
+        else:
+            result["reason"] = "Atlassian Admin API validation failed. Admin key may need rotation or permission review."
+    else:
+        result["status"] = "missing_credentials"
+        result["reason"] = "No usable ATLASSIAN_TOKEN/ATLASSIAN_ACCESS_TOKEN or ATLASSIAN_ADMIN_API_KEY + ATLASSIAN_ADMIN_ORG_ID found in backend environment."
+    store = _load_site_access_validation()
+    store.setdefault("validations", {})[site_key] = result
+    store.setdefault("history", []).append(result)
+    _write_site_access_validation(store)
+    return jsonify({"ok": True, "validation": result})
+# --- credential_access_validation_v1 END ---
 
 # --- enable_monitoring_via_jom_v1 START ---
 def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
@@ -691,6 +827,10 @@ def api_site_review_enable_monitoring(site_key):
                 break
     if site is None:
         return jsonify({"ok": False, "error": "site not found", "site_key": site_key}), 404
+    validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else load_json("site_access_validation.json", {"validations": {}})
+    validation_state = validations.get("validations", {}).get(site_key, {}) if isinstance(validations, dict) else {}
+    if validation_state.get("access_valid") is not True:
+        return jsonify({"ok": False, "error": "site has not passed access validation", "site_key": site_key, "validation": validation_state}), 409
     decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else load_json("site_lifecycle_decisions.json", {"decisions": {}, "history": []})
     decision_state = decisions.get("decisions", {}).get(site_key, {})
     if decision_state.get("decision") not in ("approve", "monitored"):

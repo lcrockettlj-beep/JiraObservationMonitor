@@ -137,3 +137,54 @@ body[data-jom-page="site-review"] .jom-side-nav {
 }
 /* === Monitoring Enablement via JOM v1 END === */
 
+/* === Credential Access Validation v1 START === */
+.review-decision-actions button[data-validate-access="true"] {
+  background: #fff4e5;
+  border-color: rgba(255,171,0,.45);
+  color: #7a5400;
+}
+.review-decision-actions button[data-validate-access="true"]:hover {
+  background: #ffe2a8;
+}
+#site-review-validation-status {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(9,30,66,.10);
+  border-radius: 12px;
+  background: #fbfcff;
+  font-size: 13px;
+}
+#site-review-validation-status[data-state="ok"] {
+  background: #e3fcef;
+  color: #006644;
+  border-color: rgba(54,179,126,.35);
+}
+#site-review-validation-status[data-state="failed"],
+#site-review-validation-status[data-state="blocked"] {
+  background: #ffebe6;
+  color: #bf2600;
+  border-color: rgba(255,86,48,.35);
+}
+/* === Credential Access Validation v1 END === */
+
+/* === Lifecycle Flow Polish v1 START === */
+.review-history {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.review-history-card {
+  padding: 10px 12px !important;
+}
+.review-history-card span {
+  font-size: 13px;
+}
+.review-history-current {
+  border-color: rgba(12,102,228,.22) !important;
+  background: #f4f8ff !important;
+}
+.review-decision-actions button[style*="display: none"] {
+  display: none !important;
+}
+/* === Lifecycle Flow Polish v1 END === */
+
