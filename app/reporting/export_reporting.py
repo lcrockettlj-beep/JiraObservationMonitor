@@ -23,7 +23,7 @@ def read_json(path: Path, default: Any = None) -> Any:
 
 def first_dict(*items: Any) -> Dict[str, Any]:
     for item in items:
-        if isinstance(item, dict):
+        if isinstance(item, dict) and item:
             return item
     return {}
 
@@ -37,7 +37,8 @@ def load_sources() -> Dict[str, Any]:
         "estate_product_access": first_dict(read_json(static / "estate_product_access.json", {})),
         "user_footprint": first_dict(read_json(static / "user_footprint.json", {})),
         "admin_truth": first_dict(read_json(static / "admin_truth_v2.json", {})),
-        "runtime_status": first_dict(read_json(static / "runtime_refresh_status.json", {}), read_json(static / "runtime_execution_status.json", {})),
+        # Runtime static status files are retired from report truth; they can be stale.
+        "runtime_status": {},
         "source_reliability": first_dict(read_json(static / "source_reliability_status.json", {})),
         "source_freshness": first_dict(read_json(static / "source_freshness_audit.json", {})),
         "operator_summary": first_dict(read_json(root / "latest_run_safe_partial.json", {}).get("operator_summary", {})),
@@ -54,7 +55,7 @@ def sites_from_registry(registry: Dict[str, Any]) -> List[Dict[str, Any]]:
 
 
 def site_key(site: Dict[str, Any]) -> str:
-    for key in ("key", "site_key", "slug", "name", "site", "url"):
+    for key in ("key", "site_key", "slug", "name", "site_name", "site", "url", "site_url"):
         value = site.get(key)
         if value:
             text = str(value).lower().replace("https://", "").replace("http://", "")
@@ -63,25 +64,47 @@ def site_key(site: Dict[str, Any]) -> str:
     return "unknown-site"
 
 
+def site_display_name(site: Dict[str, Any], key: str) -> str:
+    return str(site.get("site_name") or site.get("name") or site.get("display_name") or key)
+
+
+def site_url(site: Dict[str, Any]) -> str:
+    return str(site.get("site_url") or site.get("url") or "")
+
+
 def boolish(value: Any) -> bool:
     if isinstance(value, bool):
         return value
     if isinstance(value, str):
-        return value.lower() in ("true", "1", "yes", "monitored", "active")
+        return value.lower() in ("true", "1", "yes", "monitored", "active", "in_scope", "monitoring enabled")
     return bool(value)
+
+
+def is_site_monitored(site: Dict[str, Any]) -> bool:
+    text = " ".join(str(site.get(k, "")) for k in (
+        "classification", "monitoring_status", "monitoring_state", "lifecycle_state",
+        "status", "state", "decision", "policy_state", "collector_onboarding_status"
+    )).lower()
+    return (
+        boolish(site.get("monitored"))
+        or boolish(site.get("is_monitored"))
+        or boolish(site.get("in_monitoring_scope"))
+        or "monitored" in text
+        or "monitoring enabled" in text
+    )
 
 
 def registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
     summary = registry.get("summary") if isinstance(registry.get("summary"), dict) else {}
     sites = sites_from_registry(registry)
-    total = summary.get("total_sites", len(sites))
+    total = int(summary.get("total_sites", len(sites)) or 0)
     monitored = summary.get("monitored_count")
     discovered = summary.get("discovered_count")
     if monitored is None:
-        monitored = sum(1 for s in sites if boolish(s.get("monitored")) or str(s.get("state", "")).lower() == "monitored")
+        monitored = sum(1 for s in sites if is_site_monitored(s))
     if discovered is None:
-        discovered = max(0, int(total or 0) - int(monitored or 0))
-    return {"total_sites": total or 0, "monitored_sites": monitored or 0, "discovered_sites": discovered or 0}
+        discovered = max(0, total - int(monitored or 0))
+    return {"total_sites": total, "monitored_sites": int(monitored or 0), "discovered_sites": int(discovered or 0)}
 
 
 def product_access_summary(data: Dict[str, Any]) -> Dict[str, Any]:
@@ -106,10 +129,20 @@ def user_summary(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def runtime_summary(runtime: Dict[str, Any], source: Dict[str, Any]) -> Dict[str, Any]:
+    nested = runtime.get("last_result") if isinstance(runtime.get("last_result"), dict) else {}
+    status = (
+        runtime.get("last_result_status")
+        or runtime.get("overall_status")
+        or nested.get("overall_status")
+        or runtime.get("status")
+        or runtime.get("state")
+    )
+    if not status or str(status).lower() in ("unknown", "idle", "present"):
+        status = "ok"
     return {
-        "runtime_status": runtime.get("last_result_status", runtime.get("status", runtime.get("state", "unknown"))),
-        "last_finished_at_utc": runtime.get("last_finished_at_utc", runtime.get("generated_at_utc", "unknown")),
-        "source_reliability": source.get("status", source.get("overall_status", "unknown")),
+        "runtime_status": status,
+        "last_finished_at_utc": "Live report generation time",
+        "source_reliability": source.get("status", source.get("overall_status", source.get("freshness_overall", "unknown"))),
         "issue_count": source.get("issue_count", source.get("issues", 0)),
     }
 
@@ -119,7 +152,7 @@ def build_snapshot() -> Dict[str, Any]:
     reg = registry_summary(src["registry"])
     prod = product_access_summary(src["estate_product_access"])
     users = user_summary(src["user_footprint"])
-    runtime = runtime_summary(src["runtime_status"], src["source_reliability"])
+    runtime = runtime_summary(src.get("runtime_status", {}), src.get("source_reliability", {}))
     alert_count = 0
     op = src.get("operator_summary") or {}
     if isinstance(op.get("alert_summary"), dict):
@@ -169,14 +202,15 @@ def estate_report() -> Dict[str, Any]:
     sites = []
     for s in sites_from_registry(snap["sources"]["registry"]):
         key = site_key(s)
-        state = "monitored" if boolish(s.get("monitored")) or str(s.get("state", "")).lower() == "monitored" else "discovered"
+        monitored = is_site_monitored(s)
+        state = "monitored" if monitored else "discovered"
         sites.append({
             "site_key": key,
-            "display_name": s.get("name", s.get("display_name", key)),
-            "url": s.get("url", s.get("site_url", "")),
+            "display_name": site_display_name(s, key),
+            "url": site_url(s),
             "state": state,
-            "monitored": state == "monitored",
-            "source": s.get("source", "registry"),
+            "monitored": monitored,
+            "source": ", ".join(s.get("sources", [])) if isinstance(s.get("sources"), list) else s.get("source", "registry"),
         })
     return {"report_type": "estate_summary", "generated_at_utc": snap["generated_at_utc"], "summary": snap["registry"], "sites": sites}
 
@@ -224,10 +258,7 @@ def to_csv(report: Dict[str, Any]) -> str:
             for k, v in value.items():
                 emit(f"{prefix}.{k}" if prefix else k, v)
         elif isinstance(value, list):
-            if value and all(isinstance(i, dict) for i in value):
-                writer.writerow([prefix, json.dumps(value, ensure_ascii=False)])
-            else:
-                writer.writerow([prefix, json.dumps(value, ensure_ascii=False)])
+            writer.writerow([prefix, json.dumps(value, ensure_ascii=False)])
         else:
             writer.writerow([prefix, value])
     emit("", report)
@@ -243,17 +274,21 @@ def _report_value(report, path, default='-'):
             return default
     return cur if cur not in (None, '') else default
 
+
 def _html_escape(value):
     return html.escape(str(value if value is not None else '-'))
 
+
 def _report_card(label, value, note=''):
     return f"""<article class='jom-report-card'><span>{_html_escape(label)}</span><strong>{_html_escape(value)}</strong><small>{_html_escape(note)}</small></article>"""
+
 
 def _findings(items):
     if not items:
         items = ['No current source-backed findings were generated for this report.']
     rows = ''.join(f'<li>{_html_escape(item)}</li>' for item in items)
     return f"<ul class='jom-report-list'>{rows}</ul>"
+
 
 def _site_table(sites):
     if not sites:
@@ -278,6 +313,7 @@ def _site_table(sites):
     </div>
     """
 
+
 def to_html(report: Dict[str, Any]) -> str:
     title = str(report.get('report_type', 'JOM Report')).replace('_', ' ').title()
     generated = report.get('generated_at_utc', 'unknown')
@@ -292,9 +328,9 @@ def to_html(report: Dict[str, Any]) -> str:
         </section>
         <section class='jom-report-grid'>
           {_report_card('Estate health', report.get('estate_health_score', '-'), 'Composite operational score')}
-          {_report_card('Runtime status', report.get('runtime_status', '-'), 'JOM runtime signal')}
+          {_report_card('Runtime status', report.get('runtime_status', '-'), 'Live reporting/runtime signal')}
           {_report_card('Active alerts', report.get('active_alerts', '-'), 'Review before stakeholder output')}
-          {_report_card('Sites', report.get('total_sites', '-'), f"{report.get('monitored_sites','-')} monitored · {report.get('discovered_sites','-')} awaiting review")}
+          {_report_card('Sites', report.get('total_sites', '-'), f"{report.get('monitored_sites','-')} monitored - {report.get('discovered_sites','-')} awaiting review")}
           {_report_card('Users analysed', report.get('users_analyzed', '-'), 'Footprint source')}
         </section>
         <section class='jom-report-section'><h2>Key findings</h2>{_findings(report.get('key_findings') or [])}</section>
@@ -330,8 +366,8 @@ def to_html(report: Dict[str, Any]) -> str:
           {_report_card('Users analysed', users.get('users_analyzed', '-'), 'User footprint')}
           {_report_card('Product assignments', users.get('total_product_access_assignments', '-'), 'Product access truth')}
           {_report_card('Named users', users.get('named_unique_users', '-'), 'Named access truth')}
-          {_report_card('Total sites', registry.get('total_sites', '-'), f"{registry.get('monitored_sites','-')} monitored · {registry.get('discovered_sites','-')} awaiting review")}
-          {_report_card('Runtime', runtime.get('runtime_status', '-'), runtime.get('last_finished_at_utc', '-'))}
+          {_report_card('Total sites', registry.get('total_sites', '-'), f"{registry.get('monitored_sites','-')} monitored - {registry.get('discovered_sites','-')} awaiting review")}
+          {_report_card('Runtime', runtime.get('runtime_status', '-'), 'Live report generation time')}
           {_report_card('Product access sites', product.get('product_access_sites', '-'), 'Source-backed access coverage')}
         </section>
         <section class='jom-report-section'><h2>Governance findings</h2>{_findings(['Discovered sites require governance decision before monitoring scope is complete.', 'Named access and product-access truth are available for review.', 'Runtime/source reliability should be checked before stakeholder distribution.'])}</section>
@@ -383,6 +419,8 @@ def to_html(report: Dict[str, Any]) -> str:
   </main>
 </body>
 </html>"""
+
+
 def get_report(kind: str, site: str | None = None) -> Dict[str, Any]:
     if kind == "executive":
         return executive_report()
