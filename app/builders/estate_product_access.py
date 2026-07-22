@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from _project_bootstrap import ensure_project_root_on_path
+try:
+    from app.shared._project_bootstrap import ensure_project_root_on_path
+except Exception:
+    from _project_bootstrap import ensure_project_root_on_path
 ensure_project_root_on_path()
 
 import argparse

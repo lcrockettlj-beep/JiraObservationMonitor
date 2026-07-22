@@ -28,11 +28,11 @@ def source(path):
 
 def main():
     steps=[]
-    builder = Path('scripts/build_estate_product_access.py')
+    builder = Path('app/builders/estate_product_access.py')
     if builder.exists():
-        steps.append(run([sys.executable, 'scripts/build_estate_product_access.py'], 'estate_product_access', 'Refresh Estate Product Access and Estate Access Truth'))
+        steps.append(run([sys.executable, 'app/builders/estate_product_access.py', '--project-root', '.'], 'estate_product_access', 'Refresh Estate Product Access and Estate Access Truth'))
     else:
-        steps.append({"key":"estate_product_access", "label":"Refresh Estate Product Access and Estate Access Truth", "command":None, "exists":False, "started_at_utc":now(), "finished_at_utc":now(), "status":"manual_required", "returncode":None, "stdout_tail":"", "stderr_tail":"", "note":"scripts/build_estate_product_access.py was not found. Product access data was not faked."})
+        steps.append({"key":"estate_product_access", "label":"Refresh Estate Product Access and Estate Access Truth", "command":None, "exists":False, "started_at_utc":now(), "finished_at_utc":now(), "status":"manual_required", "returncode":None, "stdout_tail":"", "stderr_tail":"", "note":"app/builders/estate_product_access.py was not found. Product access data was not faked."})
     if Path('scripts/build_admin_truth_layer_v2.py').exists(): steps.append(run([sys.executable,'scripts/build_admin_truth_layer_v2.py'], 'admin_truth_v2', 'Rebuild Admin Truth v2 after product access refresh'))
     if Path('scripts/audit_source_freshness.py').exists(): steps.append(run([sys.executable,'scripts/audit_source_freshness.py'], 'source_freshness', 'Rebuild source freshness audit'))
     if Path('scripts/source_reliability_audit.py').exists(): steps.append(run([sys.executable,'scripts/source_reliability_audit.py'], 'source_reliability', 'Rebuild source reliability status'))

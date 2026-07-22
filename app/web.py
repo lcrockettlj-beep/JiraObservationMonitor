@@ -322,7 +322,54 @@ def admin_truth():
 
 @app.route("/estate/product-access")
 def estate_product_access():
-    return jsonify(load_json("estate_product_access.json"))
+    """Return current live product-access truth.
+
+    This route is website-facing and must not silently serve stale static
+    snapshots. It attempts live collection every time it is requested, writes
+    the resulting generated cache for freshness/audit visibility, and returns
+    the same live payload to the caller. If live collection fails, the response
+    exposes the live error instead of falling back to old static JSON.
+    """
+    try:
+        from app.builders.estate_product_access import collect_product_access, build_access_truth
+        product_payload = collect_product_access()
+        if isinstance(product_payload, dict):
+            product_payload["live_endpoint"] = True
+            product_payload["served_at_utc"] = now_utc()
+        write_json(DATA_PATH / "estate_product_access.json", product_payload)
+        try:
+            admin_path = ROOT / "latest_run_admin_enriched_pretty.json"
+            if not admin_path.exists():
+                admin_path = ROOT / "latest_run_admin_enriched.json"
+            truth_payload = build_access_truth(
+                product_payload,
+                admin_path,
+                ROOT / "static" / "data" / "billing_seats.json",
+            )
+            if isinstance(truth_payload, dict):
+                truth_payload["live_endpoint"] = True
+                truth_payload["served_at_utc"] = now_utc()
+            write_json(DATA_PATH / "estate_access_truth.json", truth_payload)
+        except Exception as truth_exc:
+            if isinstance(product_payload, dict):
+                product_payload.setdefault("warnings", []).append(
+                    "estate access truth refresh failed: " + str(truth_exc)
+                )
+        return jsonify(product_payload)
+    except Exception as exc:
+        return jsonify({
+            "schema": "jom-live-product-access-error-v1",
+            "live_endpoint": True,
+            "served_at_utc": now_utc(),
+            "status": "error",
+            "error": str(exc),
+            "sites": [],
+            "roles": [],
+            "notes": [
+                "Live product-access collection failed.",
+                "No stale static product-access data was used as a website fallback."
+            ],
+        }), 500
 
 
 @app.route("/users/footprint")
