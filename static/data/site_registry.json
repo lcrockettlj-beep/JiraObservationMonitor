@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-v3-scope-merged",
-  "generated_at_utc": "2026-07-22T08:44:56.388939Z",
+  "generated_at_utc": "2026-07-22T11:38:48.684924Z",
   "policy": {
     "home_shows_discovered_sites": true,
     "estate_requires_monitored_status": true,
@@ -132,7 +132,8 @@
       "classification": "discovered",
       "collector_onboarding_status": "not_requested",
       "is_monitored": false,
-      "can_approve": true
+      "can_approve": true,
+      "approved_at_utc": "2026-07-22T11:36:47.560324Z"
     },
     {
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
