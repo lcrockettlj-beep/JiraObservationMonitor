@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 try:
     from app.shared._project_bootstrap import ensure_project_root_on_path
 except Exception:
@@ -8,15 +7,138 @@ ensure_project_root_on_path()
 
 import argparse
 import json
+import os
+import urllib.error
+import urllib.request
+import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
-from jira_client import JiraApiClient
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def iso_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+
+
+def load_env() -> Dict[str, str]:
+    values = dict(os.environ)
+    env_path = ROOT / '.env'
+    if env_path.exists():
+        for raw in env_path.read_text(encoding='utf-8-sig', errors='ignore').splitlines():
+            line = raw.strip()
+            if not line or line.startswith('#') or '=' not in line:
+                continue
+            key, value = line.split('=', 1)
+            values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
+
+
+def token_expired(payload: Dict[str, Any], skew_seconds: int = 120) -> bool:
+    try:
+        expires_at = int(payload.get('expires_at_epoch') or 0)
+    except Exception:
+        expires_at = 0
+    return expires_at <= int(datetime.now(timezone.utc).timestamp()) + skew_seconds
+
+
+def save_token_payload(token_path: Path, previous: Dict[str, Any], refreshed: Dict[str, Any]) -> Dict[str, Any]:
+    now_epoch = int(datetime.now(timezone.utc).timestamp())
+    merged = dict(previous or {})
+    merged.update(refreshed or {})
+    merged['saved_at_epoch'] = now_epoch
+    try:
+        expires_in = int(merged.get('expires_in') or refreshed.get('expires_in') or 3600)
+    except Exception:
+        expires_in = 3600
+    merged['expires_at_epoch'] = now_epoch + expires_in
+    token_path.write_text(json.dumps(merged, indent=2), encoding='utf-8')
+    return merged
+
+
+def refresh_tokens(token_path: Path, payload: Dict[str, Any], env: Dict[str, str]) -> Dict[str, Any]:
+    refresh_token = payload.get('refresh_token')
+    token_url = env.get('ATLASSIAN_TOKEN_URL')
+    client_id = env.get('ATLASSIAN_CLIENT_ID')
+    client_secret = env.get('ATLASSIAN_CLIENT_SECRET')
+    if not refresh_token or not token_url or not client_id or not client_secret:
+        return payload
+
+    body = urllib.parse.urlencode({
+        'grant_type': 'refresh_token',
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'refresh_token': refresh_token,
+    }).encode('utf-8')
+    req = urllib.request.Request(
+        url=token_url,
+        data=body,
+        headers={
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'JOM-oauth-token-refresh/1.0',
+        },
+        method='POST',
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=45) as response:
+            raw = response.read().decode('utf-8', errors='replace')
+            refreshed = json.loads(raw)
+            return save_token_payload(token_path, payload, refreshed)
+    except Exception:
+        return payload
+
+
+def get_token() -> str:
+    """Resolve a valid Atlassian OAuth access token from existing backend sources.
+
+    Environment variables remain supported for local override. Otherwise JOM
+    uses tokens.json. If tokens.json is expired and has a refresh_token, JOM
+    refreshes it using ATLASSIAN_TOKEN_URL, ATLASSIAN_CLIENT_ID, and
+    ATLASSIAN_CLIENT_SECRET from .env.
+    """
+    env = load_env()
+    for key in ('ATLASSIAN_TOKEN', 'ATLASSIAN_ACCESS_TOKEN', 'JOM_ATLASSIAN_ACCESS_TOKEN'):
+        value = env.get(key)
+        if value:
+            return value
+
+    token_path = ROOT / 'tokens.json'
+    if not token_path.exists():
+        return ''
+    try:
+        payload = json.loads(token_path.read_text(encoding='utf-8-sig'))
+    except Exception:
+        return ''
+
+    if token_expired(payload):
+        payload = refresh_tokens(token_path, payload, env)
+
+    value = payload.get('access_token')
+    return str(value) if value else ''
+def request_json(url: str, token: str) -> Dict[str, Any]:
+    req = urllib.request.Request(
+        url=url,
+        headers={
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/json',
+            'User-Agent': 'JOM-live-product-access-collector/1.0',
+        },
+        method='GET',
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=45) as response:
+            body = response.read().decode('utf-8', errors='replace')
+            try:
+                return {'ok': True, 'status_code': response.status, 'data': json.loads(body)}
+            except Exception:
+                return {'ok': False, 'status_code': response.status, 'error': 'invalid json response', 'body_preview': body[:500]}
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode('utf-8', errors='replace')
+        return {'ok': False, 'status_code': exc.code, 'error': body[:1000]}
+    except Exception as exc:
+        return {'ok': False, 'status_code': 0, 'error': str(exc)}
 
 
 def normalise_url(value: Any) -> str:
@@ -51,16 +173,13 @@ def role_name(role: Dict[str, Any]) -> str:
 def is_jira_role(role: Dict[str, Any]) -> bool:
     key = role_key(role).lower()
     name = role_name(role).lower()
-    # Keep Jira product roles, exclude Confluence/other application roles if returned.
     return 'jira' in key or 'jira' in name
 
 
 def role_user_count(role: Dict[str, Any]) -> int:
-    # Atlassian role payloads vary by endpoint/version/account permissions.
     for candidate in ('userCount', 'currentUserCount', 'numberOfUsers', 'usersCount'):
         if candidate in role:
             return to_int(role.get(candidate), 0)
-    # Some payloads expose groups/users arrays; do not treat group count as users.
     users = role.get('users')
     if isinstance(users, list):
         return len(users)
@@ -84,23 +203,73 @@ def role_remaining(role: Dict[str, Any]) -> int:
 
 
 def collect_product_access(include_all_resources: bool = True) -> Dict[str, Any]:
-    client = JiraApiClient()
-    resources = client.list_accessible_resources()
+    token = get_token()
+    if not token:
+        return {
+            'source': 'Atlassian Cloud API live collector',
+            'generated_at_utc': iso_now(),
+            'schema': 'jom-estate-product-access-v2-live',
+            'live_collection': True,
+            'status': 'missing_credentials',
+            'summary': {
+                'accessible_jira_resource_count': 0,
+                'sites_with_jira_roles': 0,
+                'total_jira_product_user_count': 0,
+                'total_jira_seat_limit': 0,
+                'total_jira_remaining_seats': 0,
+                'jira_role_rows': 0,
+                'error_site_count': 0,
+            },
+            'sites': [],
+            'roles': [],
+            'errors': {'credentials': ['No ATLASSIAN_TOKEN, ATLASSIAN_ACCESS_TOKEN, or JOM_ATLASSIAN_ACCESS_TOKEN found.']},
+            'notes': ['No stale static product-access data was used.'],
+        }
+
+    resources_result = request_json('https://api.atlassian.com/oauth/token/accessible-resources', token)
+    if not resources_result.get('ok'):
+        return {
+            'source': 'Atlassian Cloud API live collector',
+            'generated_at_utc': iso_now(),
+            'schema': 'jom-estate-product-access-v2-live',
+            'live_collection': True,
+            'status': 'accessible_resources_failed',
+            'summary': {
+                'accessible_jira_resource_count': 0,
+                'sites_with_jira_roles': 0,
+                'total_jira_product_user_count': 0,
+                'total_jira_seat_limit': 0,
+                'total_jira_remaining_seats': 0,
+                'jira_role_rows': 0,
+                'error_site_count': 1,
+            },
+            'sites': [],
+            'roles': [],
+            'errors': {'accessible_resources': [resources_result.get('error') or str(resources_result)]},
+            'notes': ['No stale static product-access data was used.'],
+        }
+
+    resources = resources_result.get('data') or []
+    if not isinstance(resources, list):
+        resources = []
+
     site_rows: List[Dict[str, Any]] = []
     role_rows: List[Dict[str, Any]] = []
     errors: Dict[str, List[str]] = {}
 
     for resource in resources:
+        if not isinstance(resource, dict):
+            continue
         site_key = site_key_from_resource(resource)
         cloud_id = str(resource.get('id') or resource.get('cloudId') or '').strip()
         site_url = normalise_url(resource.get('url'))
         site_name = str(resource.get('name') or site_key).strip()
-
         if not cloud_id:
             errors.setdefault(site_key or 'unknown', []).append('Accessible resource did not expose a cloud id.')
             continue
 
-        result = client.get_application_roles(cloud_id)
+        url = 'https://api.atlassian.com/ex/jira/' + cloud_id + '/rest/api/3/applicationrole'
+        result = request_json(url, token)
         if not result.get('ok'):
             errors.setdefault(site_key, []).append(str(result.get('error') or result.get('status_code') or 'unknown application role error'))
             site_rows.append({
@@ -118,7 +287,6 @@ def collect_product_access(include_all_resources: bool = True) -> Dict[str, Any]
 
         data = result.get('data', [])
         if isinstance(data, dict):
-            # Defensive shape support.
             roles = data.get('values') or data.get('applicationRoles') or data.get('roles') or []
         else:
             roles = data
@@ -129,7 +297,6 @@ def collect_product_access(include_all_resources: bool = True) -> Dict[str, Any]
         site_used = 0
         site_limit = 0
         site_remaining = 0
-
         for role in jira_roles:
             used = role_user_count(role)
             limit = role_seat_limit(role)
@@ -137,7 +304,7 @@ def collect_product_access(include_all_resources: bool = True) -> Dict[str, Any]
             site_used += used
             site_limit += limit
             site_remaining += remaining
-            row = {
+            role_rows.append({
                 'site_key': site_key,
                 'site_name': site_name,
                 'site_url': site_url,
@@ -150,9 +317,7 @@ def collect_product_access(include_all_resources: bool = True) -> Dict[str, Any]
                 'raw_has_default_groups': bool(role.get('defaultGroups')),
                 'raw_platform': role.get('platform', ''),
                 'raw_selected_by_default': role.get('selectedByDefault', ''),
-            }
-            role_rows.append(row)
-
+            })
         site_rows.append({
             'site_key': site_key,
             'site_name': site_name,
@@ -165,20 +330,21 @@ def collect_product_access(include_all_resources: bool = True) -> Dict[str, Any]
             'status': 'ok',
         })
 
-    total_jira_product_users = sum(to_int(row.get('jira_product_user_count'), 0) for row in site_rows)
-    total_jira_seat_limit = sum(to_int(row.get('jira_product_seat_limit'), 0) for row in site_rows)
+    total_users = sum(to_int(row.get('jira_product_user_count'), 0) for row in site_rows)
+    total_limit = sum(to_int(row.get('jira_product_seat_limit'), 0) for row in site_rows)
     total_remaining = sum(to_int(row.get('jira_product_remaining_seats'), 0) for row in site_rows)
-
     return {
-        'source': 'Jira Cloud API /rest/api/3/applicationrole via jira_client.py',
+        'source': 'Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole',
         'generated_at_utc': iso_now(),
-        'schema': 'jom-estate-product-access-v1',
+        'schema': 'jom-estate-product-access-v2-live',
+        'live_collection': True,
+        'status': 'ok' if not errors else 'partial',
         'scope': 'all accessible Jira resources returned by Atlassian OAuth accessible-resources',
         'summary': {
             'accessible_jira_resource_count': len(resources),
             'sites_with_jira_roles': len([row for row in site_rows if to_int(row.get('jira_role_count'), 0) > 0]),
-            'total_jira_product_user_count': total_jira_product_users,
-            'total_jira_seat_limit': total_jira_seat_limit,
+            'total_jira_product_user_count': total_users,
+            'total_jira_seat_limit': total_limit,
             'total_jira_remaining_seats': total_remaining,
             'jira_role_rows': len(role_rows),
             'error_site_count': len(errors),
@@ -187,82 +353,42 @@ def collect_product_access(include_all_resources: bool = True) -> Dict[str, Any]
         'roles': role_rows,
         'errors': errors,
         'notes': [
-            'This is product/application role access truth, not /users/search visibility truth.',
-            'This collector scans all Jira resources visible to the current OAuth token.',
+            'This is live product/application role access truth, not /users/search visibility truth.',
+            'No stale static product-access data was used.',
             'Where applicationrole payloads do not expose seat limits, fields are left as 0 rather than guessed.',
         ],
     }
 
 
 def build_access_truth(product_payload: Dict[str, Any], admin_payload_path: Path | None = None, billing_payload_path: Path | None = None) -> Dict[str, Any]:
-    admin_summary: Dict[str, Any] = {}
-    billing_summary: Dict[str, Any] = {}
-
-    if admin_payload_path and admin_payload_path.exists():
-        try:
-            admin_payload = json.loads(admin_payload_path.read_text(encoding='utf-8'))
-            estate = admin_payload.get('estate', {}) if isinstance(admin_payload, dict) else {}
-            drill = admin_payload.get('drilldowns', {}) if isinstance(admin_payload, dict) else {}
-            human_rows = ((drill.get('admin::human_accounts') or {}).get('rows') or []) if isinstance(drill, dict) else []
-            app_rows = ((drill.get('admin::app_accounts') or {}).get('rows') or []) if isinstance(drill, dict) else []
-            admin_summary = {
-                'human_users': len(human_rows) or to_int(estate.get('human_user_count'), 0),
-                'app_accounts': len(app_rows) or to_int(estate.get('app_account_count'), 0),
-                'org_users': to_int(estate.get('total_users') or estate.get('organisation_users'), 0),
-            }
-        except Exception as exc:
-            admin_summary = {'error': str(exc)}
-
-    if billing_payload_path and billing_payload_path.exists():
-        try:
-            billing_payload = json.loads(billing_payload_path.read_text(encoding='utf-8'))
-            billing_summary = {
-                'total_jira_seats': to_int(billing_payload.get('total_jira_seats'), 0),
-                'jira_site_count': to_int(billing_payload.get('jira_site_count'), 0),
-                'source': billing_payload.get('source', ''),
-            }
-        except Exception as exc:
-            billing_summary = {'error': str(exc)}
-
     product_summary = product_payload.get('summary', {}) if isinstance(product_payload, dict) else {}
     product_user_count = to_int(product_summary.get('total_jira_product_user_count'), 0)
-    human_users = to_int(admin_summary.get('human_users'), 0)
-    billing_seats = to_int(billing_summary.get('total_jira_seats'), 0)
-
     return {
-        'source': 'Derived from estate_product_access.json plus admin/billing summaries where available',
+        'source': 'Derived from live estate_product_access payload; billing is not used as website truth',
         'generated_at_utc': iso_now(),
-        'schema': 'jom-estate-access-truth-v1',
+        'schema': 'jom-estate-access-truth-v2-live',
+        'live_collection': True,
         'summary': {
             'api_product_user_count': product_user_count,
-            'admin_human_users': human_users,
-            'billing_jira_seats': billing_seats,
-            'api_product_to_human_ratio': round(product_user_count / human_users, 2) if human_users else 0,
-            'billing_to_human_ratio': round(billing_seats / human_users, 2) if human_users else 0,
             'accessible_jira_resource_count': to_int(product_summary.get('accessible_jira_resource_count'), 0),
             'sites_with_jira_roles': to_int(product_summary.get('sites_with_jira_roles'), 0),
         },
-        'admin_summary': admin_summary,
-        'billing_summary': billing_summary,
         'product_summary': product_summary,
         'site_product_access': product_payload.get('sites', []),
         'role_product_access': product_payload.get('roles', []),
         'interpretation': [
-            'API product role user counts are estate/product access signals.',
-            'Billing seats are commercial consumption signals.',
-            'Admin human users are identity truth.',
-            'These values should be compared side-by-side rather than forced to match.',
+            'API product role user counts are live estate/product access signals.',
+            'Billing snapshots are not website truth.',
         ],
     }
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description='Collect estate-wide Jira product access using application roles.')
+    parser = argparse.ArgumentParser(description='Collect live estate-wide Jira product access using Atlassian application roles.')
     parser.add_argument('--project-root', default='.')
     parser.add_argument('--product-output', default='static/data/estate_product_access.json')
     parser.add_argument('--truth-output', default='static/data/estate_access_truth.json')
     args = parser.parse_args()
-
     project_root = Path(args.project_root).resolve()
     product_output = Path(args.product_output)
     truth_output = Path(args.truth_output)
@@ -270,27 +396,13 @@ def main() -> int:
         product_output = project_root / product_output
     if not truth_output.is_absolute():
         truth_output = project_root / truth_output
-
     product_payload = collect_product_access()
     product_output.parent.mkdir(parents=True, exist_ok=True)
     product_output.write_text(json.dumps(product_payload, indent=2, ensure_ascii=False), encoding='utf-8')
-
-    admin_path = project_root / 'latest_run_admin_enriched_pretty.json'
-    if not admin_path.exists():
-        admin_path = project_root / 'latest_run_admin_enriched.json'
-    billing_path = project_root / 'static' / 'data' / 'billing_seats.json'
-
-    truth_payload = build_access_truth(product_payload, admin_path, billing_path)
+    truth_payload = build_access_truth(product_payload)
     truth_output.parent.mkdir(parents=True, exist_ok=True)
     truth_output.write_text(json.dumps(truth_payload, indent=2, ensure_ascii=False), encoding='utf-8')
-
-    print('Estate product access collected.')
-    print(json.dumps(product_payload.get('summary', {}), indent=2))
-    print('Estate access truth generated.')
-    print(json.dumps(truth_payload.get('summary', {}), indent=2))
-    if product_payload.get('errors'):
-        print('Collection warnings/errors:')
-        print(json.dumps(product_payload.get('errors'), indent=2, ensure_ascii=False))
+    print(json.dumps({'product_access_status': product_payload.get('status'), 'summary': product_payload.get('summary')}, indent=2))
     return 0
 
 

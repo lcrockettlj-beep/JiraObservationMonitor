@@ -840,6 +840,179 @@ def api_site_review_validate_access(site_key):
     return jsonify({"ok": True, "validation": result})
 # --- credential_access_validation_v1 END ---
 
+
+# --- JOM OAUTH ONBOARDING GATE v1 START ---
+def _oauth_site_aliases(record: Dict[str, Any]) -> set:
+    values = set()
+    for key in ["site_key", "key", "site_name", "name", "site_url", "url", "cloud_id", "id"]:
+        value = record.get(key) if isinstance(record, dict) else None
+        if value:
+            text = str(value).strip().lower()
+            text = text.replace("https://", "").replace("http://", "")
+            text = text.replace(".atlassian.net", "")
+            text = text.strip("/").split("/")[0]
+            if text:
+                values.add(text)
+    for alias in record.get("aliases", []) if isinstance(record, dict) and isinstance(record.get("aliases"), list) else []:
+        text = str(alias).strip().lower()
+        text = text.replace("https://", "").replace("http://", "")
+        text = text.replace(".atlassian.net", "")
+        text = text.strip("/").split("/")[0]
+        if text:
+            values.add(text)
+    return values
+
+
+def _oauth_find_site(site_key: str) -> Dict[str, Any]:
+    if "_find_site" in globals():
+        return _find_site(site_key)
+    registry = load_json("site_registry.json", {})
+    target = str(site_key or "").strip().lower()
+    for site in registry.get("sites", []) if isinstance(registry, dict) else []:
+        if isinstance(site, dict) and target in _oauth_site_aliases(site):
+            return site
+    return {}
+
+
+def _oauth_find_live_product_site(site: Dict[str, Any]) -> Dict[str, Any]:
+    product = load_json("estate_product_access.json", {})
+    aliases = _oauth_site_aliases(site)
+    for row in product.get("sites", []) if isinstance(product, dict) else []:
+        if isinstance(row, dict) and not aliases.isdisjoint(_oauth_site_aliases(row)):
+            return row
+    return {}
+
+
+def _oauth_named_access_count(site: Dict[str, Any]) -> int:
+    aliases = _oauth_site_aliases(site)
+    admin_named = load_json("admin_named_access.json", {})
+    counts = []
+    for item in admin_named.get("site_counts", []) if isinstance(admin_named, dict) else []:
+        if isinstance(item, dict) and str(item.get("site_key") or "").strip().lower() in aliases:
+            try:
+                counts.append(int(item.get("named_access_count") or 0))
+            except Exception:
+                pass
+    return max(counts) if counts else 0
+
+
+def _oauth_env_values() -> Dict[str, str]:
+    values = dict(os.environ)
+    env_path = ROOT / ".env"
+    if env_path.exists():
+        for raw in env_path.read_text(encoding="utf-8-sig", errors="ignore").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
+
+
+def _oauth_authorize_url(site_key: str) -> str:
+    env = _oauth_env_values()
+    auth_url = env.get("ATLASSIAN_AUTH_URL") or "https://auth.atlassian.com/authorize"
+    client_id = env.get("ATLASSIAN_CLIENT_ID") or ""
+    redirect_uri = env.get("ATLASSIAN_REDIRECT_URI") or ""
+    scopes = env.get("ATLASSIAN_SCOPES") or "manage:jira-configuration offline_access read:application-role:jira read:jira-user read:jira-work read:license:jira"
+    if not client_id or not redirect_uri:
+        return ""
+    import urllib.parse
+    params = {
+        "audience": "api.atlassian.com",
+        "client_id": client_id,
+        "scope": scopes,
+        "redirect_uri": redirect_uri,
+        "state": "jom-site-oauth:" + str(site_key or ""),
+        "response_type": "code",
+        "prompt": "consent",
+    }
+    return auth_url + "?" + urllib.parse.urlencode(params)
+
+
+def _oauth_coverage_payload(site_key: str) -> Dict[str, Any]:
+    site = _oauth_find_site(site_key)
+    if not site:
+        return {
+            "ok": False,
+            "site_key": site_key,
+            "coverage_status": "SITE_NOT_FOUND",
+            "oauth_authorized": False,
+            "monitoring_allowed": False,
+            "reason": "Site was not found in the JOM site registry.",
+        }
+    live = _oauth_find_live_product_site(site)
+    named_count = _oauth_named_access_count(site)
+    classification = str(site.get("classification") or site.get("status") or "").lower()
+    monitored = bool(site.get("is_monitored") is True or site.get("monitored") is True or classification == "monitored")
+    if live:
+        live_status = str(live.get("status") or "").lower()
+        role_count = int(live.get("jira_role_count") or 0)
+        error_text = json.dumps(live).lower()
+        if live_status == "ok" and role_count > 0:
+            status = "LIVE_PRODUCT_ACCESS_OK"
+            allowed = True
+            reason = "OAuth product access is authorised and live product access rows are available."
+        elif "tenant is restricted" in error_text or "user-cancellation" in error_text:
+            status = "LIVE_PRODUCT_ACCESS_BLOCKED_RESTRICTED_TENANT"
+            allowed = False
+            reason = "Atlassian returned a restricted/cancelled tenant response."
+        else:
+            status = "LIVE_PRODUCT_ACCESS_BLOCKED_OR_ERROR"
+            allowed = False
+            reason = "OAuth returned the site but product access failed."
+    elif monitored and named_count > 0:
+        status = "MONITORED_BUT_NOT_RETURNED_BY_OAUTH_NAMED_ACCESS_ONLY"
+        allowed = False
+        reason = "JOM has named access/registry evidence, but OAuth accessible-resources does not return this site."
+    elif monitored:
+        status = "MONITORED_BUT_NOT_RETURNED_BY_OAUTH"
+        allowed = False
+        reason = "JOM has the site in monitored state, but OAuth accessible-resources does not return this site."
+    elif named_count > 0:
+        status = "NAMED_ACCESS_ONLY_NOT_OAUTH_AUTHORISED"
+        allowed = False
+        reason = "Named access exists, but OAuth product access has not been authorised."
+    else:
+        status = "NO_LIVE_PRODUCT_ACCESS_REVIEW"
+        allowed = False
+        reason = "No live OAuth product access coverage is available for this site."
+    return {
+        "ok": True,
+        "site_key": site.get("site_key") or site_key,
+        "site_name": site.get("site_name") or site.get("name") or site_key,
+        "site_url": site.get("site_url") or site.get("url") or "",
+        "is_monitored": monitored,
+        "named_access_count": named_count,
+        "live_product_access": live,
+        "coverage_status": status,
+        "oauth_authorized": allowed,
+        "monitoring_allowed": allowed,
+        "authorization_required": not allowed and "OAUTH" in status,
+        "authorization_url": "" if allowed else _oauth_authorize_url(site_key),
+        "reason": reason,
+        "served_at_utc": now_utc(),
+    }
+
+
+@app.route("/api/oauth/coverage/<path:site_key>")
+def api_oauth_coverage(site_key):
+    return jsonify(_oauth_coverage_payload(site_key))
+
+
+@app.route("/api/oauth/authorize-url/<path:site_key>")
+def api_oauth_authorize_url(site_key):
+    payload = _oauth_coverage_payload(site_key)
+    return jsonify({
+        "ok": bool(payload.get("authorization_url")),
+        "site_key": site_key,
+        "coverage_status": payload.get("coverage_status"),
+        "authorization_required": payload.get("authorization_required"),
+        "authorization_url": payload.get("authorization_url"),
+        "reason": payload.get("reason"),
+    })
+# --- JOM OAUTH ONBOARDING GATE v1 END ---
+
 # --- enable_monitoring_via_jom_v1 START ---
 def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
     sites = registry.get("sites", []) if isinstance(registry, dict) else []
@@ -878,6 +1051,16 @@ def api_site_review_enable_monitoring(site_key):
     validation_state = validations.get("validations", {}).get(site_key, {}) if isinstance(validations, dict) else {}
     if validation_state.get("access_valid") is not True:
         return jsonify({"ok": False, "error": "site has not passed access validation", "site_key": site_key, "validation": validation_state}), 409
+    oauth_coverage = _oauth_coverage_payload(site_key)
+    if oauth_coverage.get("monitoring_allowed") is not True:
+        status_code = 409 if oauth_coverage.get("ok") else 404
+        return jsonify({
+            "ok": False,
+            "error": "oauth_authorisation_required",
+            "site_key": site_key,
+            "coverage": oauth_coverage,
+            "message": "OAuth product access must be authorised before monitoring can be enabled.",
+        }), status_code
     decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else load_json("site_lifecycle_decisions.json", {"decisions": {}, "history": []})
     decision_state = decisions.get("decisions", {}).get(site_key, {})
     if decision_state.get("decision") not in ("approve", "monitored"):
