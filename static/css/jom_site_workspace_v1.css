@@ -192,3 +192,25 @@
   font-weight: 800;
 }
 /* === Site Workspace UX Freeze-Safe Closeout v1 END === */
+
+/* === Site Workspace Source Merge v1 === */
+body[data-jom-page="site-workspace"] .jom-layout-breadcrumb,
+body[data-jom-page="site-workspace"] .jom-readiness-strip,
+body[data-jom-page="site-workspace"] .jom-operational-readiness,
+body[data-jom-page="site-workspace"] [data-jom-readiness],
+body[data-jom-page="site-workspace"] [data-jom-operational-readiness] {
+  display: none !important;
+}
+.site-signal-cards { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.site-signal-card { border: 1px solid #dfe1e6; border-radius: 14px; padding: 12px 14px; background: #fff; display: flex; align-items: center; gap: 10px; }
+.site-signal-card--ok .site-signal-icon { color: #006644; border-color: #abf5d1; background: #e3fcef; }
+.site-signal-card--review .site-signal-icon { color: #974f0c; border-color: #ffe2bd; background: #fff4e5; }
+.site-signal-icon { display: inline-flex; min-width: 28px; height: 24px; align-items: center; justify-content: center; border: 1px solid #dfe1e6; border-radius: 999px; font-size: 11px; font-weight: 900; }
+.site-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 900; border: 1px solid #dfe1e6; background: #f4f5f7; color: #172b4d; }
+.site-badge--ok { border-color: #abf5d1; background: #e3fcef; color: #006644; }
+.site-badge--review { border-color: #ffe2bd; background: #fff4e5; color: #974f0c; }
+.site-user-summary-grid { display: block; }
+.site-user-summary-item { display: block; border: 1px solid #dfe1e6; border-radius: 12px; padding: 10px 12px; margin: 8px 0; background: #fff; }
+.site-empty-value { color: #626f86; font-style: italic; }
+/* === /Site Workspace Source Merge v1 === */
+
