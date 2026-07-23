@@ -1,186 +1,224 @@
 {
-  "schema": "jom-site-registry-v3-scope-merged",
-  "generated_at_utc": "2026-07-22T11:38:48.684924Z",
-  "policy": {
-    "home_shows_discovered_sites": true,
-    "estate_requires_monitored_status": true,
-    "approval_triggers_onboarding_queue": true,
-    "new_sites_default_status": "discovered"
-  },
+  "schema": "jom-site-registry-v4-runtime-consolidated",
+  "generated_at_utc": "2026-07-23T14:35:36Z",
   "summary": {
-    "total_sites": 7,
-    "monitored_count": 4,
+    "total_sites": 8,
+    "monitored_count": 5,
     "discovered_count": 3,
-    "ignored_count": 0,
-    "pending_onboarding_count": 0
+    "pending_onboarding_count": 3,
+    "ignored_count": 0
+  },
+  "policy": {
+    "new_sites_default_status": "discovered",
+    "estate_requires_monitored_status": true,
+    "approval_triggers_oauth_onboarding_gate": true
   },
   "sites": [
     {
-      "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "site_key": "gli-delivery-tm",
-      "site_name": "gli-delivery-tm",
-      "site_url": "https://gli-delivery-tm.atlassian.net",
-      "sources": [
-        "runtime",
-        "product_access",
-        "named_access"
-      ],
-      "metrics": {
-        "jira_product_user_count": 28,
-        "named_access_count": 8
-      },
-      "aliases": [
-        "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-        "https://gli-delivery-tm.atlassian.net",
-        "gli-delivery-tm"
-      ],
-      "classification": "monitored",
-      "approved_at_utc": "2026-06-29T07:48:44Z",
-      "collector_onboarding_status": "validated_or_existing",
-      "is_monitored": true,
-      "can_approve": false
-    },
-    {
-      "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "site_key": "gli-global-technology",
-      "site_name": "gli-global-technology",
-      "site_url": "https://gli-global-technology.atlassian.net",
-      "sources": [
-        "runtime",
-        "product_access",
-        "named_access"
-      ],
-      "metrics": {
-        "jira_product_user_count": 53,
-        "named_access_count": 28
-      },
-      "aliases": [
-        "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-        "https://gli-global-technology.atlassian.net",
-        "gli-global-technology"
-      ],
-      "classification": "monitored",
-      "approved_at_utc": "2026-06-29T07:48:44Z",
-      "collector_onboarding_status": "validated_or_existing",
-      "is_monitored": true,
-      "can_approve": false
-    },
-    {
-      "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "site_key": "gli-it-project",
-      "site_name": "gli-it-project",
-      "site_url": "https://gli-it-project.atlassian.net",
-      "sources": [
-        "runtime",
-        "product_access",
-        "named_access"
-      ],
-      "metrics": {
-        "jira_product_user_count": 58,
-        "named_access_count": 37
-      },
-      "aliases": [
-        "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-        "https://gli-it-project.atlassian.net",
-        "gli-it-project"
-      ],
-      "classification": "monitored",
-      "approved_at_utc": "2026-06-29T07:48:44Z",
-      "collector_onboarding_status": "validated_or_existing",
-      "is_monitored": true,
-      "can_approve": false
-    },
-    {
-      "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
       "site_key": "gaminglabs-team-h2pbpmis",
       "site_name": "gaminglabs-team-h2pbpmis",
       "site_url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
-      "sources": [
-        "runtime",
-        "product_access"
-      ],
-      "metrics": {
-        "jira_product_user_count": 0
-      },
       "aliases": [
         "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
         "https://gaminglabs-team-h2pbpmis.atlassian.net",
         "gaminglabs-team-h2pbpmis"
       ],
+      "sources": [
+        "product_access",
+        "runtime"
+      ],
       "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
       "is_monitored": false,
-      "can_approve": true
+      "can_approve": true,
+      "metrics": {
+        "jira_product_user_count": 0,
+        "jira_product_seat_limit": 0,
+        "jira_role_count": 0
+      },
+      "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
+      "collector_onboarding_status": "not_requested",
+      "status": "error"
     },
     {
-      "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
       "site_key": "gaminglabs-team-tsyfo716",
       "site_name": "gaminglabs-team-tsyfo716",
       "site_url": "https://gaminglabs-team-tsyfo716.atlassian.net",
-      "sources": [
-        "runtime",
-        "product_access"
-      ],
-      "metrics": {
-        "jira_product_user_count": 0
-      },
       "aliases": [
         "981786d5-9529-4957-bab0-fdc505ccb9b6",
         "https://gaminglabs-team-tsyfo716.atlassian.net",
         "gaminglabs-team-tsyfo716"
       ],
+      "sources": [
+        "product_access",
+        "runtime"
+      ],
       "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
       "is_monitored": false,
       "can_approve": true,
-      "approved_at_utc": "2026-07-22T11:36:47.560324Z"
+      "metrics": {
+        "jira_product_user_count": 0,
+        "jira_product_seat_limit": 0,
+        "jira_role_count": 0
+      },
+      "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
+      "collector_onboarding_status": "not_requested",
+      "approved_at_utc": "2026-07-22T11:36:47.560324Z",
+      "status": "error"
     },
     {
-      "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "aliases": [
+        "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+        "https://gli-delivery-tm.atlassian.net",
+        "gli-delivery-tm"
+      ],
+      "sources": [
+        "named_access",
+        "product_access",
+        "runtime"
+      ],
+      "classification": "monitored",
+      "is_monitored": true,
+      "can_approve": false,
+      "metrics": {
+        "jira_product_user_count": 30,
+        "named_access_count": 8,
+        "jira_product_seat_limit": 50,
+        "jira_role_count": 1
+      },
+      "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "approved_at_utc": "2026-06-29T07:48:44Z",
+      "collector_onboarding_status": "validated_or_existing",
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "aliases": [
+        "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+        "https://gli-global-technology.atlassian.net",
+        "gli-global-technology"
+      ],
+      "sources": [
+        "named_access",
+        "product_access",
+        "runtime"
+      ],
+      "classification": "monitored",
+      "is_monitored": true,
+      "can_approve": false,
+      "metrics": {
+        "jira_product_user_count": 57,
+        "named_access_count": 28,
+        "jira_product_seat_limit": 100000,
+        "jira_role_count": 1
+      },
+      "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "approved_at_utc": "2026-06-29T07:48:44Z",
+      "collector_onboarding_status": "validated_or_existing",
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "aliases": [
+        "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+        "https://gli-it-project.atlassian.net",
+        "gli-it-project"
+      ],
+      "sources": [
+        "named_access",
+        "product_access",
+        "runtime"
+      ],
+      "classification": "monitored",
+      "is_monitored": true,
+      "can_approve": false,
+      "metrics": {
+        "jira_product_user_count": 59,
+        "named_access_count": 37,
+        "jira_product_seat_limit": 100,
+        "jira_role_count": 1
+      },
+      "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "approved_at_utc": "2026-06-29T07:48:44Z",
+      "collector_onboarding_status": "validated_or_existing",
+      "status": "ok"
+    },
+    {
       "site_key": "gli-tracker",
       "site_name": "gli-tracker",
       "site_url": "https://gli-tracker.atlassian.net",
-      "sources": [
-        "named_access"
-      ],
-      "metrics": {
-        "named_access_count": 3
-      },
       "aliases": [
         "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
         "https://gli-tracker.atlassian.net",
         "gli-tracker"
       ],
-      "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
+      "sources": [
+        "named_access",
+        "product_access"
+      ],
       "classification": "monitored",
-      "collector_onboarding_status": "enabled_via_jom",
       "is_monitored": true,
       "can_approve": false,
+      "metrics": {
+        "named_access_count": 3,
+        "jira_product_user_count": 5,
+        "jira_product_seat_limit": 4000,
+        "jira_role_count": 1
+      },
+      "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
+      "collector_onboarding_status": "enabled_via_jom",
       "approved_at_utc": "2026-07-21T14:18:14.955755Z",
       "monitoring_enabled_at_utc": "2026-07-21T14:47:47.147891Z",
-      "monitoring_enabled_by": "operator"
+      "monitoring_enabled_by": "operator",
+      "status": "ok"
     },
     {
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
       "site_key": "gli-usa",
       "site_name": "gli-usa",
       "site_url": "https://gli-usa.atlassian.net",
-      "sources": [
-        "runtime",
-        "product_access"
-      ],
-      "metrics": {
-        "jira_product_user_count": 0
-      },
       "aliases": [
         "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
         "https://gli-usa.atlassian.net",
         "gli-usa"
       ],
+      "sources": [
+        "product_access",
+        "runtime"
+      ],
       "classification": "discovered",
-      "collector_onboarding_status": "not_requested",
       "is_monitored": false,
-      "can_approve": true
+      "can_approve": true,
+      "metrics": {
+        "jira_product_user_count": 4,
+        "jira_product_seat_limit": 10,
+        "jira_role_count": 1
+      },
+      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+      "collector_onboarding_status": "not_requested",
+      "status": "ok"
+    },
+    {
+      "site_key": "{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}",
+      "site_name": "{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}",
+      "site_url": "https://{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}.atlassian.net",
+      "aliases": [
+        "{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}",
+        "https://{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}.atlassian.net"
+      ],
+      "sources": [
+        "monitoring_state"
+      ],
+      "classification": "monitored",
+      "is_monitored": true,
+      "can_approve": false,
+      "metrics": {}
     }
   ]
 }
