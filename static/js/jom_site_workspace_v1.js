@@ -1,3 +1,36 @@
+
+// --- JOM FRONTEND STATIC TRUTH ELIMINATION v1 START ---
+// Frontend truth must come from backend API contracts, not static/data JSON snapshots.
+window.JOM_FRONTEND_TRUTH_SOURCE_RECONNECT_V1 = {
+  appliedAtUtc: "2026-07-23T09:25:55Z",
+  rule: "Frontend must not read static/data/*.json as truth. Use backend API contracts only.",
+  contracts: {
+    productAccess: "/estate/product-access",
+    adminTruth: "/admin/truth",
+    userFootprint: "/users/footprint",
+    siteRegistry: "/registry/sites",
+    sourceState: "/api/source-state"
+  }
+};
+
+function unwrapJomBackendContractV1(payload) {
+  if (!payload || typeof payload !== "object") return payload;
+  if (payload.schema === "jom-backend-route-contract-v1" && payload.data && typeof payload.data === "object") {
+    return payload.data;
+  }
+  return payload;
+}
+
+function unwrapJomBackendContractEnvelopeV1(payload) {
+  if (!payload || typeof payload !== "object") return payload;
+  const copy = Array.isArray(payload) ? payload.slice() : { ...payload };
+  for (const key of Object.keys(copy)) {
+    copy[key] = unwrapJomBackendContractV1(copy[key]);
+  }
+  return unwrapJomBackendContractV1(copy);
+}
+// --- JOM FRONTEND STATIC TRUTH ELIMINATION v1 END ---
+
 /* JOM Site Workspace Source Merge v1 */
 (function(){
   'use strict';
@@ -11,11 +44,11 @@
     summary: '/operator/summary',
     alerts: '/operator/alerts',
     sourceState: '/api/source-state',
-    billingSeats: '/static/data/billing_seats.json',
-    estateProductAccess: '/static/data/estate_product_access.json',
-    estateAccessTruth: '/static/data/estate_access_truth.json',
-    adminNamedAccess: '/static/data/admin_named_access.json',
-    namedAccessTruth: '/static/data/named_access_truth_v2.json'
+    billingSeats: '/estate/product-access',
+    estateProductAccess: '/estate/product-access',
+    estateAccessTruth: '/admin/truth',
+    adminNamedAccess: '/users/footprint',
+    namedAccessTruth: '/users/footprint'
   };
 
   const $ = selector => document.querySelector(selector);
@@ -43,7 +76,8 @@
     try {
       const res = await fetch(url, {cache:'no-store'});
       if(!res.ok) return null;
-      return await res.json();
+      const payload = await res.json();
+    return unwrapJomBackendContractEnvelopeV1(payload);
     } catch(_error) {
       return null;
     }
