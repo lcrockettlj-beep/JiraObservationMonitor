@@ -16,6 +16,7 @@ STEPS = [
     {"key": "site_registry", "label": "Site Registry rebuild", "command": [sys.executable, "scripts/build_site_registry.py", "--project-root", "."], "required": True},
     {"key": "product_access", "label": "Live Product Access refresh", "command": [sys.executable, "app/builders/product_access_sources.py"], "required": False},
     {"key": "source_freshness", "label": "Source Freshness rebuild", "command": [sys.executable, "scripts/audit_source_freshness.py"], "required": False},
+    {"key": "runtime_live_truth_status", "label": "Runtime Live Truth Status rebuild", "command": [sys.executable, "scripts/backend_runtime_freshness_snapshot_elimination_v1.py"], "required": False},
 ]
 
 OPTIONAL_COLLECTOR_CANDIDATES = [

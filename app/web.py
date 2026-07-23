@@ -491,6 +491,7 @@ def _load_admin_truth_contract() -> Dict[str, Any]:
 def _load_source_state_contract() -> Dict[str, Any]:
     freshness = load_json("source_freshness_audit.json", {})
     reliability = load_json("source_reliability_status.json", {})
+    live_truth = load_json("runtime_live_truth_status.json", {})
     live_product = _live_product_access_snapshot()
     product_summary = live_product.get("summary", {}) if isinstance(live_product, dict) else {}
     product_truth_status = {
@@ -505,14 +506,24 @@ def _load_source_state_contract() -> Dict[str, Any]:
         "source_of_truth": "live /estate/product-access endpoint",
     }
     return {
-        "schema": "jom-source-state-contract-v2",
+        "schema": "jom-source-state-contract-v3",
         "served_at_utc": now_utc(),
         "source_freshness": _contract_payload("source_freshness", freshness, source_file="static/data/source_freshness_audit.json", contract_type="generated_status_cache"),
         "source_reliability": _contract_payload("source_reliability", reliability, source_file="static/data/source_reliability_status.json", contract_type="generated_status_cache"),
+        "runtime_live_truth_status": _contract_payload("runtime_live_truth_status", live_truth, source_file="static/data/runtime_live_truth_status.json", contract_type="generated_live_truth_status", allow_stale=True),
         "live_product_access": product_truth_status,
+        "legacy_snapshot_policy": {
+            "latest_run_json_is_legacy_reference_only": True,
+            "latest_run_admin_enriched_json_is_legacy_reference_only": True,
+            "billing_seats_json_is_legacy_reference_only": True,
+            "product_access_static_files_are_cache_only": True,
+        },
         "runtime_status": compact_runtime_status(),
         "operator_summary": build_operator_summary(),
-        "notes": ["Live product access status is reported separately so stale generated snapshots do not override current endpoint truth."],
+        "notes": [
+            "Live product access status is reported separately so stale generated snapshots do not override current endpoint truth.",
+            "Legacy runtime snapshots are explicitly demoted from website truth.",
+        ],
     }
 
 def _load_user_footprint_contract() -> Dict[str, Any]:
