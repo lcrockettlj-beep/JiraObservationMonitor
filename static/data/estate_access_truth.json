@@ -1,19 +1,19 @@
 {
   "source": "Derived from live estate_product_access payload; billing is not used as website truth",
-  "generated_at_utc": "2026-07-23T14:35:38Z",
+  "generated_at_utc": "2026-07-23T15:27:06Z",
   "schema": "jom-estate-access-truth-v2-live",
   "live_collection": true,
   "summary": {
-    "api_product_user_count": 155,
+    "api_product_user_count": 156,
     "accessible_jira_resource_count": 7,
     "sites_with_jira_roles": 5
   },
   "product_summary": {
     "accessible_jira_resource_count": 7,
     "sites_with_jira_roles": 5,
-    "total_jira_product_user_count": 155,
+    "total_jira_product_user_count": 156,
     "total_jira_seat_limit": 104160,
-    "total_jira_remaining_seats": 104005,
+    "total_jira_remaining_seats": 104004,
     "jira_role_rows": 5,
     "error_site_count": 2
   },
@@ -89,9 +89,9 @@
       "site_name": "gli-delivery-tm",
       "site_url": "https://gli-delivery-tm.atlassian.net",
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "jira_product_user_count": 30,
+      "jira_product_user_count": 31,
       "jira_product_seat_limit": 50,
-      "jira_product_remaining_seats": 20,
+      "jira_product_remaining_seats": 19,
       "jira_role_count": 1,
       "status": "ok"
     }
@@ -160,9 +160,9 @@
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 30,
+      "user_count": 31,
       "seat_limit": 50,
-      "remaining_seats": 20,
+      "remaining_seats": 19,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
@@ -173,5 +173,5 @@
     "Billing snapshots are not website truth."
   ],
   "live_endpoint": true,
-  "served_at_utc": "2026-07-23T14:35:38.738951Z"
+  "served_at_utc": "2026-07-23T15:27:06.818166Z"
 }

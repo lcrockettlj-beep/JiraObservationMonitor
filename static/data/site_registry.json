@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-v4-runtime-consolidated",
-  "generated_at_utc": "2026-07-23T14:35:36Z",
+  "generated_at_utc": "2026-07-23T15:27:04Z",
   "summary": {
     "total_sites": 8,
     "monitored_count": 5,
@@ -83,7 +83,7 @@
       "is_monitored": true,
       "can_approve": false,
       "metrics": {
-        "jira_product_user_count": 30,
+        "jira_product_user_count": 31,
         "named_access_count": 8,
         "jira_product_seat_limit": 50,
         "jira_role_count": 1
