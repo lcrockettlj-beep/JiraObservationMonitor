@@ -1,54 +1,19 @@
-
-// --- JOM FRONTEND STATIC TRUTH ELIMINATION v1 START ---
-// Frontend truth must come from backend API contracts, not static/data JSON snapshots.
-window.JOM_FRONTEND_TRUTH_SOURCE_RECONNECT_V1 = {
-  appliedAtUtc: "2026-07-23T09:25:55Z",
-  rule: "Frontend must not read static/data/*.json as truth. Use backend API contracts only.",
-  contracts: {
-    productAccess: "/estate/product-access",
-    adminTruth: "/admin/truth",
-    userFootprint: "/users/footprint",
-    siteRegistry: "/registry/sites",
-    sourceState: "/api/source-state"
-  }
-};
-
-function unwrapJomBackendContractV1(payload) {
-  if (!payload || typeof payload !== "object") return payload;
-  if (payload.schema === "jom-backend-route-contract-v1" && payload.data && typeof payload.data === "object") {
-    return payload.data;
-  }
-  return payload;
-}
-
-function unwrapJomBackendContractEnvelopeV1(payload) {
-  if (!payload || typeof payload !== "object") return payload;
-  const copy = Array.isArray(payload) ? payload.slice() : { ...payload };
-  for (const key of Object.keys(copy)) {
-    copy[key] = unwrapJomBackendContractV1(copy[key]);
-  }
-  return unwrapJomBackendContractV1(copy);
-}
-// --- JOM FRONTEND STATIC TRUTH ELIMINATION v1 END ---
-
-/* JOM Site Workspace Source Merge v1 */
+// --- JOM SITE WORKSPACE UI DISPLAY ALIGNMENT v1 START ---
+// Site Workspace must render backend API contracts only. No static/data truth reads.
 (function(){
   'use strict';
 
   const siteKey = document.body.getAttribute('data-site-key') || '';
   const endpoints = {
     registry: '/registry/sites',
-    surface: '/operator/surface',
     productAccess: '/estate/product-access',
+    adminTruth: '/admin/truth',
     footprint: '/users/footprint',
-    summary: '/operator/summary',
-    alerts: '/operator/alerts',
     sourceState: '/api/source-state',
-    billingSeats: '/estate/product-access',
-    estateProductAccess: '/estate/product-access',
-    estateAccessTruth: '/admin/truth',
-    adminNamedAccess: '/users/footprint',
-    namedAccessTruth: '/users/footprint'
+    oauthCoverage: '/api/oauth/coverage/' + encodeURIComponent(siteKey),
+    operatorSurface: '/operator/surface',
+    operatorSummary: '/operator/summary',
+    operatorAlerts: '/operator/alerts'
   };
 
   const $ = selector => document.querySelector(selector);
@@ -57,6 +22,30 @@ function unwrapJomBackendContractEnvelopeV1(payload) {
     if (!el) return;
     el.textContent = value === undefined || value === null || value === '' ? 'Unavailable' : String(value);
   };
+
+  function unwrapContract(payload){
+    if (!payload || typeof payload !== 'object') return payload;
+    if (payload.schema === 'jom-backend-route-contract-v1' && payload.data && typeof payload.data === 'object') return payload.data;
+    return payload;
+  }
+
+  function unwrapEnvelope(payload){
+    payload = unwrapContract(payload);
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return payload;
+    const out = {...payload};
+    Object.keys(out).forEach(key => { out[key] = unwrapContract(out[key]); });
+    return unwrapContract(out);
+  }
+
+  async function getJson(url){
+    try {
+      const res = await fetch(url, {cache: 'no-store'});
+      if (!res.ok) return null;
+      return unwrapEnvelope(await res.json());
+    } catch (_error){
+      return null;
+    }
+  }
 
   function normalise(value){
     return String(value || '')
@@ -69,317 +58,229 @@ function unwrapJomBackendContractEnvelopeV1(payload) {
   }
 
   function escapeHtml(value){
-    return String(value ?? '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-  }
-
-  async function getJson(url){
-    try {
-      const res = await fetch(url, {cache:'no-store'});
-      if(!res.ok) return null;
-      const payload = await res.json();
-    return unwrapJomBackendContractEnvelopeV1(payload);
-    } catch(_error) {
-      return null;
-    }
+    return String(value ?? '').replace(/[&<>\"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
   }
 
   function readAny(obj, keys, fallback){
-    if(!obj) return fallback;
-    for(const key of keys){
-      if(obj[key] !== undefined && obj[key] !== null && obj[key] !== '') return obj[key];
-      if(obj.metrics && obj.metrics[key] !== undefined && obj.metrics[key] !== null && obj.metrics[key] !== '') return obj.metrics[key];
-      if(obj.summary && obj.summary[key] !== undefined && obj.summary[key] !== null && obj.summary[key] !== '') return obj.summary[key];
-      if(obj.billing && obj.billing[key] !== undefined && obj.billing[key] !== null && obj.billing[key] !== '') return obj.billing[key];
+    if (!obj || typeof obj !== 'object') return fallback;
+    for (const key of keys){
+      if (obj[key] !== undefined && obj[key] !== null && obj[key] !== '') return obj[key];
+      if (obj.metrics && obj.metrics[key] !== undefined && obj.metrics[key] !== null && obj.metrics[key] !== '') return obj.metrics[key];
+      if (obj.summary && obj.summary[key] !== undefined && obj.summary[key] !== null && obj.summary[key] !== '') return obj.summary[key];
+      if (obj.live_product_access && obj.live_product_access[key] !== undefined && obj.live_product_access[key] !== null && obj.live_product_access[key] !== '') return obj.live_product_access[key];
     }
     return fallback;
   }
 
-  function siteUrl(site){ return readAny(site, ['site_url','url','base_url','cloud_url'], 'Unavailable'); }
-  function siteName(site){ return readAny(site, ['site_name','name','site_key','key','slug','url','site_url'], siteKey); }
-  function siteStatus(site){ return readAny(site, ['classification','status','state','monitoring_status','discovery_status'], 'Unavailable'); }
-  function isMonitored(site){
-    const raw = String(siteStatus(site)).toLowerCase();
-    return raw === 'monitored' || raw.includes('monitored') || (site && (site.monitored === true || site.is_monitored === true));
+  function findSiteInRows(rows, keys){
+    const target = normalise(siteKey);
+    if (!target || !Array.isArray(rows)) return null;
+    return rows.find(row => keys.some(key => normalise(row && row[key]) === target))
+      || rows.find(row => JSON.stringify(row || {}).toLowerCase().includes(target));
   }
 
   function findRegistrySite(registry){
-    const sites = Array.isArray(registry && registry.sites) ? registry.sites : [];
-    const target = normalise(siteKey);
-    return sites.find(s => normalise(readAny(s, ['site_key','key','slug','name','site_name','url','site_url'], '')) === target || normalise(siteUrl(s)) === target)
-      || sites.find(s => JSON.stringify(s).toLowerCase().includes(target));
-  }
-
-  function containsSite(row){
-    const target = normalise(siteKey);
-    return row && JSON.stringify(row).toLowerCase().includes(target);
-  }
-
-  function walkRows(obj, rows=[]){
-    if(!obj) return rows;
-    if(Array.isArray(obj)){
-      obj.forEach(x => walkRows(x, rows));
-      return rows;
-    }
-    if(typeof obj === 'object'){
-      if(containsSite(obj)) rows.push(obj);
-      Object.keys(obj).forEach(k => {
-        const v = obj[k];
-        if(v && typeof v === 'object') walkRows(v, rows);
-      });
-    }
-    return rows;
-  }
-
-  function flattenProductRows(productAccess){
-    if(!productAccess) return [];
-    if(Array.isArray(productAccess.rows)) return productAccess.rows;
-    if(Array.isArray(productAccess.sites)) return productAccess.sites;
-    if(Array.isArray(productAccess.product_access)) return productAccess.product_access;
-    return walkRows(productAccess, []);
+    return findSiteInRows(registry && registry.sites, ['site_key','key','site_name','name','site_url','url']);
   }
 
   function findProductSite(productAccess){
-    const rows = flattenProductRows(productAccess);
+    return findSiteInRows(productAccess && productAccess.sites, ['site_key','key','site_name','name','site_url','url']);
+  }
+
+  function siteName(regSite, productSite){
+    return readAny(regSite, ['site_name','name','site_key','key'], readAny(productSite, ['site_name','name','site_key','key'], siteKey || 'Site Workspace'));
+  }
+
+  function siteUrl(regSite, productSite){
+    return readAny(regSite, ['site_url','url'], readAny(productSite, ['site_url','url'], 'Unavailable'));
+  }
+
+  function siteStatus(regSite, productSite, oauth){
+    if (oauth && oauth.coverage_status === 'LIVE_PRODUCT_ACCESS_OK') return 'monitored';
+    return readAny(regSite, ['classification','status','state'], readAny(productSite, ['status'], 'Review'));
+  }
+
+  function isMonitored(regSite, oauth){
+    return !!(oauth && oauth.monitoring_allowed === true) || !!(regSite && (regSite.is_monitored === true || regSite.monitored === true || String(regSite.classification || '').toLowerCase() === 'monitored'));
+  }
+
+  function liveRoleRows(productAccess){
+    const roles = Array.isArray(productAccess && productAccess.roles) ? productAccess.roles : [];
     const target = normalise(siteKey);
-    return rows.find(s => normalise(readAny(s, ['site_key','key','site','slug','name','site_name','url','site_url'], '')) === target)
-      || rows.find(s => JSON.stringify(s).toLowerCase().includes(target));
+    return roles.filter(row => normalise(row.site_key || row.site_name || row.site_url) === target || JSON.stringify(row).toLowerCase().includes(target));
   }
 
-  function parseUsed(value){
-    if(value === undefined || value === null || value === '') return null;
-    if(typeof value === 'number' && Number.isFinite(value)) return value;
-    const s = String(value).trim();
-    let m = s.match(/(\d+)\s*\/\s*(\d+)/);
-    if(m) return Number(m[1]);
-    m = s.match(/\b(\d+)\b/);
-    return m ? Number(m[1]) : null;
+  function productRows(productAccess, productSite){
+    const roles = liveRoleRows(productAccess);
+    if (roles.length){
+      return roles.map(row => ({
+        product: row.role_name || row.role_key || 'Atlassian product',
+        users: Number(row.user_count ?? row.jira_product_user_count ?? 0),
+        seatLimit: Number(row.seat_limit ?? row.jira_product_seat_limit ?? 0),
+        remaining: Number(row.remaining_seats ?? row.jira_product_remaining_seats ?? 0),
+        roleCount: 1,
+        status: row.status || 'ok',
+        source: 'live product access'
+      }));
+    }
+    if (productSite){
+      return [{
+        product: 'Jira Software',
+        users: Number(productSite.jira_product_user_count ?? 0),
+        seatLimit: Number(productSite.jira_product_seat_limit ?? 0),
+        remaining: Number(productSite.jira_product_remaining_seats ?? 0),
+        roleCount: Number(productSite.jira_role_count ?? 0),
+        status: productSite.status || 'review',
+        source: 'live product access'
+      }];
+    }
+    return [];
   }
 
-  function parseCapacity(value){
-    if(value === undefined || value === null || value === '') return null;
-    const s = String(value).trim();
-    const m = s.match(/(\d+)\s*\/\s*(\d+)/);
-    return m ? Number(m[2]) : null;
+  function usersDisplay(row){
+    if (!row) return 'Unavailable';
+    if (row.seatLimit > 0) return `${row.users} / ${row.seatLimit} (${row.remaining} remaining)`;
+    return row.users || row.users === 0 ? String(row.users) : 'Unavailable';
   }
 
-  function productName(row){
-    return readAny(row, ['product','product_name','app','app_name','application','subscription_name','title','name','key'], 'Atlassian product');
+  function productUsers(productSite, rows){
+    if (productSite && productSite.jira_product_user_count !== undefined) return productSite.jira_product_user_count;
+    if (rows.length) return rows.reduce((max,row) => Math.max(max, Number(row.users || 0)), 0);
+    return 'Unavailable';
   }
 
-  function planName(row){ return readAny(row, ['plan','tier','edition','billing_plan','license_plan'], 'Unavailable'); }
-  function sourceName(row, fallback){ return readAny(row, ['source','source_file','data_source'], fallback || 'source'); }
-
-  function usersRaw(row){
-    return readAny(row, ['users','user_count','used','used_users','licensed_users','product_users','jira_users','confluence_users','seats_used','active_users','count'], undefined);
+  function productCount(productSite, rows){
+    if (rows.length) return rows.length;
+    if (productSite && productSite.jira_role_count !== undefined) return productSite.jira_role_count;
+    return productSite ? 'Available' : 'Unavailable';
   }
 
-  function extractProductRows(payload, source){
-    const rows = [];
-    walkRows(payload, []).forEach(row => {
-      if(!containsSite(row)) return;
-      const raw = usersRaw(row);
-      const used = parseUsed(raw);
-      const cap = parseCapacity(raw) || parseUsed(readAny(row, ['capacity','limit','seats','seat_limit','licensed','max_users'], undefined));
-      const name = productName(row);
-      const plan = planName(row);
-      if(name || used !== null || plan !== 'Unavailable'){
-        rows.push({
-          product: name,
-          users: used,
-          capacity: cap,
-          users_display: used !== null ? (cap ? `${used} / ${cap}` : String(used)) : (raw || 'Unavailable'),
-          plan: plan,
-          source: sourceName(row, source),
-          raw: row
-        });
-      }
-    });
-    return rows;
+  function accessRecords(footprint, adminTruth, oauth){
+    if (oauth && oauth.named_access_count !== undefined && oauth.named_access_count !== null) return oauth.named_access_count;
+    const safe = footprint && footprint.safe_to_show_named_access_ui === true;
+    if (!safe) return 'Guarded unavailable';
+    return readAny(footprint, ['total_product_access_assignments','users_analyzed','assignment_count'], readAny(adminTruth, ['named_access_count'], 'Unavailable'));
   }
 
-  function dedupeRows(rows){
-    const seen = new Set();
-    const out = [];
-    rows.forEach(row => {
-      const key = [normalise(row.product), row.users_display, normalise(row.plan)].join('|');
-      if(seen.has(key)) return;
-      seen.add(key);
-      out.push(row);
-    });
-    return out;
-  }
-
-  function productCount(regSite, productSite, rows){
-    if(rows.length) return String(rows.length);
-    const explicit = readAny(productSite, ['product_count','products_count'], readAny(regSite, ['product_count','products_count'], undefined));
-    if(explicit !== undefined) return explicit;
-    if(productSite && Array.isArray(productSite.products)) return productSite.products.length;
-    if(productSite && Array.isArray(productSite.roles)) return productSite.roles.length;
-    return productSite || regSite ? 'Available' : 'Unavailable';
-  }
-
-  function primaryProductUsers(regSite, productSite, rows){
-    const jira = rows.find(r => /\bjira\b/i.test(r.product) && r.users !== null);
-    const conf = rows.find(r => /confluence/i.test(r.product) && r.users !== null);
-    if(jira && conf) return `Jira ${jira.users}; Confluence ${conf.users}`;
-    if(jira) return String(jira.users);
-    if(conf) return String(conf.users);
-    const numeric = rows.filter(r => r.users !== null).map(r => r.users);
-    if(numeric.length) return String(Math.max(...numeric));
-    const fallback = readAny(productSite, ['jira_product_user_count','product_users','user_count','users','total_users'], readAny(regSite, ['jira_product_user_count','product_users','user_count','users','total_users'], null));
-    return fallback !== null ? fallback : 'Unavailable';
-  }
-
-  function accessCount(regSite, productSite, accessPayloads){
-    const direct = readAny(productSite, ['named_access_count','direct_access_count','access_count','assignment_count','total_product_access_assignments'], readAny(regSite, ['named_access_count','direct_access_count','access_count','assignment_count'], null));
-    if(direct !== null && direct !== undefined) return direct;
-    const values = [];
-    accessPayloads.forEach(payload => {
-      walkRows(payload, []).forEach(row => {
-        if(!containsSite(row)) return;
-        const txt = JSON.stringify(row).toLowerCase();
-        if(txt.includes('named') || txt.includes('access') || txt.includes('assignment') || txt.includes('direct')){
-          const n = parseUsed(readAny(row, ['named_access_count','direct_access_count','access_count','assignment_count','total_product_access_assignments','count','users','user_count'], undefined));
-          if(n !== null) values.push(n);
-        }
-      });
-    });
-    return values.length ? Math.max(...values) : 'Unavailable';
-  }
-
-  function sourceList(regSite, productSite, rows){
-    const values = [];
-    if(regSite && Array.isArray(regSite.sources)) values.push(...regSite.sources);
-    if(productSite && Array.isArray(productSite.sources)) values.push(...productSite.sources);
-    rows.forEach(row => row.source && values.push(row.source));
-    if(!values.length) values.push('registry');
-    return Array.from(new Set(values.filter(Boolean)));
-  }
-
-  function renderProductAccess(rows, hasProductSite){
+  function renderProductAccess(rows, productSite){
     const body = $('#site-product-access-body');
-    if(!body) return;
-    body.innerHTML = '';
-    if(rows.length){
-      rows.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${escapeHtml(row.product)}</td><td>${escapeHtml(row.users_display)}</td><td>${escapeHtml(row.plan)}</td><td><span class="site-badge site-badge--ok">${escapeHtml(row.source)}</span></td>`;
-        body.appendChild(tr);
-      });
+    if (!body) return;
+    if (!rows.length){
+      body.innerHTML = '<tr><td colspan="4"><strong>No live product rows available for this site.</strong><br>Backend product access returned no role rows for this site.</td></tr>';
       return;
     }
-    body.innerHTML = `<tr><td colspan="4"><strong>No source-backed product rows currently available.</strong><br>${hasProductSite ? 'Product-access summary exists, but no product rows were exposed for this site.' : 'The site exists in the registry, but billing/product-access rows were not found in the current local data files.'}</td></tr>`;
+    body.innerHTML = rows.map(row => `
+      <tr>
+        <td>${escapeHtml(row.product)}</td>
+        <td>${escapeHtml(usersDisplay(row))}</td>
+        <td>${escapeHtml(row.roleCount || productSite?.jira_role_count || 'Unavailable')}</td>
+        <td><span class="site-badge ${String(row.status).toLowerCase() === 'ok' ? 'site-badge--ok' : 'site-badge--review'}">${escapeHtml(row.status || 'review').toUpperCase()}</span></td>
+      </tr>`).join('');
   }
 
-  function renderSignals(regSite, productSite, rows, alerts, sourceState){
+  function renderSignals(regSite, productSite, oauth, footprint, sourceState){
     const list = $('#site-signal-list');
-    if(!list) return;
+    if (!list) return;
+    const liveProduct = sourceState && sourceState.live_product_access;
     const signals = [];
-    signals.push({state: regSite ? 'ok' : 'review', text: regSite ? 'Registry entry found for this site.' : 'No exact registry entry found; using route key only.'});
-    signals.push({state: (productSite || rows.length) ? 'ok' : 'review', text: (productSite || rows.length) ? 'Product/access source data is available for this site.' : 'No product/access source rows were found for this site.'});
-    signals.push({state: isMonitored(regSite) ? 'ok' : 'review', text: isMonitored(regSite) ? 'Site is in monitored operational scope.' : 'Site may be discovered or awaiting review.'});
-    const alertCount = Number(readAny(alerts, ['alert_count','count'], 0));
-    signals.push({state: alertCount > 0 ? 'review' : 'ok', text: alertCount > 0 ? `${alertCount} active operator alert signal(s) exist at estate level.` : 'No active operator alert count reported at estate level.'});
-    const source = readAny(sourceState, ['status','state'], null);
-    if(source) signals.push({state:'ok', text:'Source state: '+source+'.'});
-    list.innerHTML = signals.map(s => `<li class="site-signal-card site-signal-card--${s.state === 'ok' ? 'ok' : 'review'}"><span class="site-signal-icon">${s.state === 'ok' ? 'OK' : '!'}</span>${escapeHtml(s.text)}</li>`).join('');
+    signals.push({state: regSite ? 'ok' : 'review', text: regSite ? 'Registry contract matched this site.' : 'Registry contract did not find an exact site match.'});
+    signals.push({state: productSite ? 'ok' : 'review', text: productSite ? 'Live product access is available for this site.' : 'Live product access did not return this site.'});
+    signals.push({state: oauth && oauth.oauth_authorized ? 'ok' : 'review', text: oauth && oauth.oauth_authorized ? 'OAuth coverage is authorised for this site.' : 'OAuth coverage requires review.'});
+    signals.push({state: isMonitored(regSite, oauth) ? 'ok' : 'review', text: isMonitored(regSite, oauth) ? 'Monitoring is allowed for this site.' : 'Monitoring is not confirmed for this site.'});
+    signals.push({state: footprint && footprint.safe_to_show_named_access_ui === false ? 'review' : 'ok', text: footprint && footprint.safe_to_show_named_access_ui === false ? 'Named user footprint is guarded unavailable and hidden by policy.' : 'User footprint contract is available.'});
+    if (liveProduct) signals.push({state: liveProduct.live_collection ? 'ok' : 'review', text: `Live product source status: ${liveProduct.status || 'unavailable'}.`});
+    list.innerHTML = signals.map(s => `<li class="site-signal-card site-signal-card--${s.state}"><span class="site-signal-icon">${s.state === 'ok' ? 'OK' : '!'}</span>${escapeHtml(s.text)}</li>`).join('');
     list.classList.add('site-signal-cards');
   }
 
-  function renderSummary(productUsers, accessRecords, sources){
+  function renderSummary(productUsersValue, accessRecordsValue, productSite, sourceState){
     const summary = $('#site-users-summary');
-    if(!summary) return;
-    summary.innerHTML = ''+
-      `<span class="site-user-summary-item">Product users: ${escapeHtml(productUsers)}</span>`+
-      `<span class="site-user-summary-item">Access records: ${escapeHtml(accessRecords)}</span>`+
-      `<span class="site-user-summary-item">Sources: ${escapeHtml(sources.join(', '))}</span>`;
+    if (!summary) return;
+    const liveProduct = sourceState && sourceState.live_product_access;
+    summary.innerHTML = [
+      `<span class="site-user-summary-item">Product users: ${escapeHtml(productUsersValue)}</span>`,
+      `<span class="site-user-summary-item">Access records: ${escapeHtml(accessRecordsValue)}</span>`,
+      `<span class="site-user-summary-item">Seat limit: ${escapeHtml(readAny(productSite, ['jira_product_seat_limit'], 'Unavailable'))}</span>`,
+      `<span class="site-user-summary-item">Live source: ${escapeHtml(liveProduct && liveProduct.live_collection ? 'Yes' : 'Review')}</span>`
+    ].join('');
     summary.classList.add('site-user-summary-grid');
   }
 
   function applyBadge(selector){
     const el = $(selector);
-    if(!el) return;
-    const val = String(el.textContent || '').trim();
-    const v = val.toLowerCase();
+    if (!el) return;
+    const value = String(el.textContent || '').trim();
+    const lower = value.toLowerCase();
     let cls = 'site-badge';
-    if(v.includes('monitored') || v.includes('normal') || v.includes('ok') || v.includes('yes')) cls += ' site-badge--ok';
-    else if(v.includes('discover') || v.includes('review') || v.includes('unavailable') || v.includes('pending')) cls += ' site-badge--review';
+    if (lower.includes('monitored') || lower.includes('ok') || lower.includes('yes') || lower.includes('normal')) cls += ' site-badge--ok';
+    else cls += ' site-badge--review';
     el.className = cls;
-    el.textContent = val.toUpperCase();
+    el.textContent = value.toUpperCase();
+  }
+
+  function renderDiagnostics(payload){
+    setText('#site-json-diagnostics', JSON.stringify(payload, null, 2));
   }
 
   function removeOldNoise(){
     document.querySelectorAll('.jom-layout-breadcrumb, .jom-readiness-strip, .jom-operational-readiness, [data-jom-readiness], [data-jom-operational-readiness]').forEach(el => el.remove());
   }
 
-  function renderDiagnostics(payload){
-    setText('#site-json-diagnostics', JSON.stringify(payload, null, 2));
-    const summary = document.querySelector('.site-diagnostics summary');
-    if(summary) summary.textContent = 'Developer diagnostics';
-  }
-
   async function init(){
     removeOldNoise();
-    try{
-      const [registry, surface, productAccess, footprint, summary, alerts, sourceState, billingSeats, estateProductAccess, estateAccessTruth, adminNamedAccess, namedAccessTruth] = await Promise.all([
-        getJson(endpoints.registry), getJson(endpoints.surface), getJson(endpoints.productAccess), getJson(endpoints.footprint), getJson(endpoints.summary), getJson(endpoints.alerts), getJson(endpoints.sourceState),
-        getJson(endpoints.billingSeats), getJson(endpoints.estateProductAccess), getJson(endpoints.estateAccessTruth), getJson(endpoints.adminNamedAccess), getJson(endpoints.namedAccessTruth)
+    try {
+      const [registry, productAccess, adminTruth, footprint, sourceState, oauth, surface, summary, alerts] = await Promise.all([
+        getJson(endpoints.registry),
+        getJson(endpoints.productAccess),
+        getJson(endpoints.adminTruth),
+        getJson(endpoints.footprint),
+        getJson(endpoints.sourceState),
+        getJson(endpoints.oauthCoverage),
+        getJson(endpoints.operatorSurface),
+        getJson(endpoints.operatorSummary),
+        getJson(endpoints.operatorAlerts)
       ]);
 
       const regSite = findRegistrySite(registry);
       const productSite = findProductSite(productAccess);
-      const productRows = dedupeRows([]
-        .concat(extractProductRows(billingSeats, 'billing_seats'))
-        .concat(extractProductRows(estateProductAccess, 'estate_product_access'))
-        .concat(extractProductRows(productAccess, 'estate_product_access_api'))
-      );
-      const productUsers = primaryProductUsers(regSite, productSite, productRows);
-      const accessRecords = accessCount(regSite, productSite, [estateAccessTruth, adminNamedAccess, namedAccessTruth]);
-      const products = productCount(regSite, productSite, productRows);
-      const sources = sourceList(regSite, productSite, productRows);
-      const title = siteName(regSite || productSite || {site_key: siteKey});
+      const rows = productRows(productAccess, productSite);
+      const title = siteName(regSite, productSite);
+      const users = productUsers(productSite, rows);
+      const records = accessRecords(footprint, adminTruth, oauth);
+      const products = productCount(productSite, rows);
+      const status = siteStatus(regSite, productSite, oauth);
 
       document.title = 'JOM - ' + title;
       setText('#site-title', title);
       setText('#site-title-breadcrumb', title);
-      setText('#site-status-pill', siteStatus(regSite));
+      setText('#site-status-pill', status);
       setText('[data-site-field="key"]', siteKey);
-      setText('[data-site-field="url"]', siteUrl(regSite || productSite));
-      setText('[data-site-field="monitored"]', isMonitored(regSite) ? 'Yes' : 'Review');
-      setText('[data-site-field="discovery"]', siteStatus(regSite));
+      setText('[data-site-field="url"]', siteUrl(regSite, productSite));
+      setText('[data-site-field="monitored"]', isMonitored(regSite, oauth) ? 'Yes' : 'Review');
+      setText('[data-site-field="discovery"]', readAny(regSite, ['classification'], status));
       setText('[data-site-field="products"]', products);
-      setText('[data-site-field="users"]', productUsers);
-      setText('[data-site-field="assignments"]', accessRecords);
-      setText('[data-site-field="registry-state"]', siteStatus(regSite));
-      setText('[data-site-field="risk"]', isMonitored(regSite) ? 'Normal' : 'Review');
-      setText('[data-site-field="last-seen"]', readAny(registry, ['generated_at_utc','generated_at','last_refresh'], readAny(surface, ['generated_at_utc','generated_at'], 'Unavailable')));
+      setText('[data-site-field="users"]', users);
+      setText('[data-site-field="assignments"]', records);
+      setText('[data-site-field="registry-state"]', readAny(regSite, ['classification'], 'Review'));
+      setText('[data-site-field="risk"]', isMonitored(regSite, oauth) && productSite ? 'Normal' : 'Review');
+      setText('[data-site-field="last-seen"]', readAny(sourceState, ['served_at_utc','generated_at_utc'], readAny(registry, ['generated_at_utc'], 'Unavailable')));
 
-      renderSignals(regSite, productSite, productRows, alerts, sourceState);
-      renderProductAccess(productRows, !!productSite);
-      renderSummary(productUsers, accessRecords, sources);
+      renderSignals(regSite, productSite, oauth, footprint, sourceState);
+      renderProductAccess(rows, productSite);
+      renderSummary(users, records, productSite, sourceState);
       applyBadge('#site-status-pill');
       applyBadge('[data-site-field="monitored"]');
       applyBadge('[data-site-field="registry-state"]');
       applyBadge('[data-site-field="risk"]');
-      renderDiagnostics({
-        route_site_key: siteKey,
-        resolved_site_name: title,
-        registry_match: regSite || null,
-        product_access_match: productSite || null,
-        product_rows: productRows,
-        derived: {products, product_users: productUsers, access_records: accessRecords, monitored: isMonitored(regSite), status: siteStatus(regSite), sources},
-        source_state: sourceState && (sourceState.summary || sourceState),
-        footprint_summary: footprint && (footprint.summary || {user_count: footprint.user_count, total_users: footprint.total_users}),
-        operator_summary: summary && (summary.summary || summary.runtime || summary),
-        alert_summary: alerts && (alerts.summary || alerts)
-      });
-    } catch(e){
+      renderDiagnostics({route_site_key: siteKey, registry_match: regSite, product_access_match: productSite, product_rows: rows, oauth_coverage: oauth, source_state: sourceState, user_footprint: footprint, admin_truth_summary: adminTruth && adminTruth.summary, operator_surface: surface, operator_summary: summary, alerts});
+    } catch (error){
       setText('#site-title', siteKey || 'Site Workspace');
       setText('#site-status-pill', 'Review');
-      setText('#site-json-diagnostics', 'Failed to load site workspace data: ' + e.message);
+      setText('#site-json-diagnostics', 'Failed to load site workspace data: ' + error.message);
     }
   }
 
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+// --- JOM SITE WORKSPACE UI DISPLAY ALIGNMENT v1 END ---
