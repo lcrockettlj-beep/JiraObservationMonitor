@@ -539,6 +539,9 @@ def _load_user_footprint_contract() -> Dict[str, Any]:
 
 # --- JOM BACKEND ROUTE CONTRACTS v1 END ---
 
+
+
+
 @app.route("/")
 def home():
     return render_template("home.html", **home_context())
@@ -1013,211 +1016,6 @@ def api_site_review_access_validation(site_key):
     payload = _load_site_access_validation()
     return jsonify({"ok": True, "site_key": site_key, "validation": payload.get("validations", {}).get(site_key, {})})
 
-@app.route("/api/site-review/<path:site_key>/validate-access", methods=["POST"])
-def api_site_review_validate_access(site_key):
-    request_payload = request.get_json(silent=True) or {}
-    actor = request_payload.get("actor") or "operator"
-    env = _load_dotenv_values()
-    site = _site_for_validation(site_key)
-    cloud_id = site.get("cloud_id") or site.get("id") or ""
-    site_url = site.get("site_url") or site.get("url") or ""
-    token = env.get("ATLASSIAN_TOKEN") or env.get("ATLASSIAN_ACCESS_TOKEN") or env.get("JOM_ATLASSIAN_ACCESS_TOKEN") or ""
-    admin_key = env.get("ATLASSIAN_ADMIN_API_KEY") or env.get("ATLASSIAN_ADMIN_TOKEN") or ""
-    org_id = env.get("ATLASSIAN_ADMIN_ORG_ID") or env.get("ATLASSIAN_ORG_ID") or ""
-    result = {
-        "site_key": site_key,
-        "site_url": site_url,
-        "cloud_id_present": bool(cloud_id),
-        "checked_at_utc": now_utc(),
-        "actor": actor,
-        "access_valid": False,
-        "status": "blocked",
-        "reason": "No validation path succeeded.",
-        "method": None,
-        "details": {},
-    }
-    if token and cloud_id:
-        url = "https://api.atlassian.com/ex/jira/" + str(cloud_id) + "/rest/api/3/serverInfo"
-        probe = _http_json_validation(url, token)
-        result["method"] = "oauth_site_server_info"
-        result["details"] = {"status_code": probe.get("status_code"), "body_preview": probe.get("body_preview")}
-        if probe.get("ok"):
-            result.update({"access_valid": True, "status": "ok", "reason": "OAuth token can access this Jira cloud site."})
-        else:
-            result["reason"] = "OAuth site validation failed. Token may be expired, missing scope, blocked by MFA/session policy, or not granted to this site."
-    elif admin_key and org_id:
-        url = "https://api.atlassian.com/admin/v1/orgs/" + str(org_id)
-        probe = _http_json_validation(url, admin_key)
-        result["method"] = "admin_org_validation"
-        result["details"] = {"status_code": probe.get("status_code"), "body_preview": probe.get("body_preview")}
-        if probe.get("ok"):
-            result.update({"access_valid": True, "status": "ok", "reason": "Atlassian Admin API credential is valid at org level. Site-specific collection still needs runtime refresh validation."})
-        else:
-            result["reason"] = "Atlassian Admin API validation failed. Admin key may need rotation or permission review."
-    else:
-        result["status"] = "missing_credentials"
-        result["reason"] = "No usable ATLASSIAN_TOKEN/ATLASSIAN_ACCESS_TOKEN or ATLASSIAN_ADMIN_API_KEY + ATLASSIAN_ADMIN_ORG_ID found in backend environment."
-    store = _load_site_access_validation()
-    store.setdefault("validations", {})[site_key] = result
-    store.setdefault("history", []).append(result)
-    _write_site_access_validation(store)
-    return jsonify({"ok": True, "validation": result})
-# --- credential_access_validation_v1 END ---
-
-
-# --- JOM OAUTH ONBOARDING GATE v1 START ---
-def _oauth_site_aliases(record: Dict[str, Any]) -> set:
-    values = set()
-    for key in ["site_key", "key", "site_name", "name", "site_url", "url", "cloud_id", "id"]:
-        value = record.get(key) if isinstance(record, dict) else None
-        if value:
-            text = str(value).strip().lower()
-            text = text.replace("https://", "").replace("http://", "")
-            text = text.replace(".atlassian.net", "")
-            text = text.strip("/").split("/")[0]
-            if text:
-                values.add(text)
-    for alias in record.get("aliases", []) if isinstance(record, dict) and isinstance(record.get("aliases"), list) else []:
-        text = str(alias).strip().lower()
-        text = text.replace("https://", "").replace("http://", "")
-        text = text.replace(".atlassian.net", "")
-        text = text.strip("/").split("/")[0]
-        if text:
-            values.add(text)
-    return values
-
-
-def _oauth_find_site(site_key: str) -> Dict[str, Any]:
-    if "_find_site" in globals():
-        return _find_site(site_key)
-    registry = load_json("site_registry.json", {})
-    target = str(site_key or "").strip().lower()
-    for site in registry.get("sites", []) if isinstance(registry, dict) else []:
-        if isinstance(site, dict) and target in _oauth_site_aliases(site):
-            return site
-    return {}
-
-
-def _oauth_find_live_product_site(site: Dict[str, Any]) -> Dict[str, Any]:
-    product = load_json("estate_product_access.json", {})
-    aliases = _oauth_site_aliases(site)
-    for row in product.get("sites", []) if isinstance(product, dict) else []:
-        if isinstance(row, dict) and not aliases.isdisjoint(_oauth_site_aliases(row)):
-            return row
-    return {}
-
-
-def _oauth_named_access_count(site: Dict[str, Any]) -> int:
-    aliases = _oauth_site_aliases(site)
-    admin_named = load_json("admin_named_access.json", {})
-    counts = []
-    for item in admin_named.get("site_counts", []) if isinstance(admin_named, dict) else []:
-        if isinstance(item, dict) and str(item.get("site_key") or "").strip().lower() in aliases:
-            try:
-                counts.append(int(item.get("named_access_count") or 0))
-            except Exception:
-                pass
-    return max(counts) if counts else 0
-
-
-def _oauth_env_values() -> Dict[str, str]:
-    values = dict(os.environ)
-    env_path = ROOT / ".env"
-    if env_path.exists():
-        for raw in env_path.read_text(encoding="utf-8-sig", errors="ignore").splitlines():
-            line = raw.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            key, value = line.split("=", 1)
-            values[key.strip()] = value.strip().strip('"').strip("'")
-    return values
-
-
-def _oauth_authorize_url(site_key: str) -> str:
-    env = _oauth_env_values()
-    auth_url = env.get("ATLASSIAN_AUTH_URL") or "https://auth.atlassian.com/authorize"
-    client_id = env.get("ATLASSIAN_CLIENT_ID") or ""
-    redirect_uri = env.get("ATLASSIAN_REDIRECT_URI") or ""
-    scopes = env.get("ATLASSIAN_SCOPES") or "manage:jira-configuration offline_access read:application-role:jira read:jira-user read:jira-work read:license:jira"
-    if not client_id or not redirect_uri:
-        return ""
-    import urllib.parse
-    params = {
-        "audience": "api.atlassian.com",
-        "client_id": client_id,
-        "scope": scopes,
-        "redirect_uri": redirect_uri,
-        "state": "jom-site-oauth:" + str(site_key or ""),
-        "response_type": "code",
-        "prompt": "consent",
-    }
-    return auth_url + "?" + urllib.parse.urlencode(params)
-
-
-def _oauth_coverage_payload(site_key: str) -> Dict[str, Any]:
-    site = _oauth_find_site(site_key)
-    if not site:
-        return {
-            "ok": False,
-            "site_key": site_key,
-            "coverage_status": "SITE_NOT_FOUND",
-            "oauth_authorized": False,
-            "monitoring_allowed": False,
-            "reason": "Site was not found in the JOM site registry.",
-        }
-    live = _oauth_find_live_product_site(site)
-    named_count = _oauth_named_access_count(site)
-    classification = str(site.get("classification") or site.get("status") or "").lower()
-    monitored = bool(site.get("is_monitored") is True or site.get("monitored") is True or classification == "monitored")
-    if live:
-        live_status = str(live.get("status") or "").lower()
-        role_count = int(live.get("jira_role_count") or 0)
-        error_text = json.dumps(live).lower()
-        if live_status == "ok" and role_count > 0:
-            status = "LIVE_PRODUCT_ACCESS_OK"
-            allowed = True
-            reason = "OAuth product access is authorised and live product access rows are available."
-        elif "tenant is restricted" in error_text or "user-cancellation" in error_text:
-            status = "LIVE_PRODUCT_ACCESS_BLOCKED_RESTRICTED_TENANT"
-            allowed = False
-            reason = "Atlassian returned a restricted/cancelled tenant response."
-        else:
-            status = "LIVE_PRODUCT_ACCESS_BLOCKED_OR_ERROR"
-            allowed = False
-            reason = "OAuth returned the site but product access failed."
-    elif monitored and named_count > 0:
-        status = "MONITORED_BUT_NOT_RETURNED_BY_OAUTH_NAMED_ACCESS_ONLY"
-        allowed = False
-        reason = "JOM has named access/registry evidence, but OAuth accessible-resources does not return this site."
-    elif monitored:
-        status = "MONITORED_BUT_NOT_RETURNED_BY_OAUTH"
-        allowed = False
-        reason = "JOM has the site in monitored state, but OAuth accessible-resources does not return this site."
-    elif named_count > 0:
-        status = "NAMED_ACCESS_ONLY_NOT_OAUTH_AUTHORISED"
-        allowed = False
-        reason = "Named access exists, but OAuth product access has not been authorised."
-    else:
-        status = "NO_LIVE_PRODUCT_ACCESS_REVIEW"
-        allowed = False
-        reason = "No live OAuth product access coverage is available for this site."
-    return {
-        "ok": True,
-        "site_key": site.get("site_key") or site_key,
-        "site_name": site.get("site_name") or site.get("name") or site_key,
-        "site_url": site.get("site_url") or site.get("url") or "",
-        "is_monitored": monitored,
-        "named_access_count": named_count,
-        "live_product_access": live,
-        "coverage_status": status,
-        "oauth_authorized": allowed,
-        "monitoring_allowed": allowed,
-        "authorization_required": not allowed and "OAUTH" in status,
-        "authorization_url": "" if allowed else _oauth_authorize_url(site_key),
-        "reason": reason,
-        "served_at_utc": now_utc(),
-    }
-
 
 @app.route("/api/oauth/coverage/<path:site_key>")
 def api_oauth_coverage(site_key):
@@ -1374,7 +1172,169 @@ def estate_pending_sites():
 def estate_retired_sites():
     return render_template("estate.html")
 
+
+# --- JOM REFERENCED ARTIFACT REPLACEMENT v1 START ---
+def _jom_norm_site_key(value):
+    text = str(value or "").strip().lower()
+    text = text.replace("https://", "").replace("http://", "")
+    text = text.replace(".atlassian.net", "")
+    text = text.strip("/").split("/")[0]
+    return text
+
+
+def _jom_unwrap_contract(payload):
+    if isinstance(payload, dict) and payload.get("schema") == "jom-backend-route-contract-v1" and isinstance(payload.get("data"), dict):
+        return payload.get("data")
+    return payload
+
+
+def _jom_response_json(response_or_payload):
+    try:
+        if hasattr(response_or_payload, "get_json"):
+            return response_or_payload.get_json()
+    except Exception:
+        pass
+    return response_or_payload if isinstance(response_or_payload, dict) else {}
+
+
+def _jom_live_product_access_payload():
+    try:
+        return _jom_unwrap_contract(_jom_response_json(estate_product_access()))
+    except Exception as exc:
+        return {"schema": "jom-live-product-access-unavailable-v1", "status": "unavailable", "error": str(exc), "served_at_utc": now_utc()}
+
+
+def _jom_registry_payload():
+    try:
+        return _jom_unwrap_contract(_load_registry_contract())
+    except Exception:
+        return load_json("site_registry.json", {})
+
+
+def _jom_find_site(rows, site_key):
+    target = _jom_norm_site_key(site_key)
+    if not target or not isinstance(rows, list):
+        return None
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        candidates = [row.get("site_key"), row.get("site_name"), row.get("site_url"), row.get("url"), row.get("key")]
+        if any(_jom_norm_site_key(item) == target for item in candidates):
+            return row
+    for row in rows:
+        if isinstance(row, dict) and target in str(row).lower():
+            return row
+    return None
+
+
+def _jom_site_live_review_contract(site_key):
+    registry = _jom_registry_payload()
+    product_access = _jom_live_product_access_payload()
+    registry_site = _jom_find_site(registry.get("sites", []), site_key) if isinstance(registry, dict) else None
+    product_site = _jom_find_site(product_access.get("sites", []), site_key) if isinstance(product_access, dict) else None
+    product_roles = []
+    if isinstance(product_access, dict):
+        for row in product_access.get("roles", []) or []:
+            if isinstance(row, dict) and _jom_norm_site_key(row.get("site_key") or row.get("site_name") or row.get("site_url")) == _jom_norm_site_key(site_key):
+                product_roles.append(row)
+    live_ok = bool(product_site and product_site.get("status") == "ok") or bool(product_roles)
+    monitored = bool((registry_site or {}).get("is_monitored")) or str((registry_site or {}).get("classification", "")).lower() == "monitored"
+    return {
+        "schema": "jom-site-live-review-contract-v1",
+        "served_at_utc": now_utc(),
+        "site_key": site_key,
+        "registry_site": registry_site or {},
+        "product_access_site": product_site or {},
+        "product_roles": product_roles,
+        "validation": {
+            "access_validated": live_ok,
+            "monitoring_allowed": bool(live_ok and monitored),
+            "oauth_product_access_available": live_ok,
+            "source": "live registry contract plus /estate/product-access",
+            "static_artifact_used": False,
+        },
+        "recommended_actions": [] if live_ok else ["Review OAuth/product access availability for this site."],
+    }
+
+
+def _jom_operator_live_contract(kind):
+    surface = {}
+    summary = {}
+    try:
+        surface = build_operator_surface()
+    except Exception as exc:
+        surface = {"error": str(exc)}
+    try:
+        summary = build_operator_summary()
+    except Exception as exc:
+        summary = {"error": str(exc)}
+    try:
+        runtime = compact_runtime_status()
+    except Exception as exc:
+        runtime = {"error": str(exc)}
+    try:
+        source_state = _load_source_state_contract()
+    except Exception as exc:
+        source_state = {"error": str(exc)}
+    return {
+        "schema": "jom-operator-live-contract-v1",
+        "kind": kind,
+        "served_at_utc": now_utc(),
+        "operator_surface": surface,
+        "operator_summary": summary,
+        "runtime_status": runtime,
+        "source_state": source_state,
+        "static_artifact_used": False,
+        "replacement_for": {
+            "status": "operational_console_status.json",
+            "insights": "operational_console_insights.json",
+            "drilldowns": "operational_console_drilldowns.json",
+            "role_views": "operational_console_role_views.json",
+            "ui_view": "operational_console_ui_view.json",
+        }.get(kind, "operational_console_*.json"),
+    }
+# --- JOM REFERENCED ARTIFACT REPLACEMENT v1 END ---
+
+@app.route("/api/site-review/<path:site_key>/validate-access")
+def api_site_review_validate_access(site_key):
+    return jsonify(_jom_site_live_review_contract(site_key))
+
+
+@app.route("/api/site-review/<path:site_key>/live")
+def api_site_review_live_contract(site_key):
+    return jsonify(_jom_site_live_review_contract(site_key))
+
+
+@app.route("/api/operator/status")
+def api_operator_live_status_contract():
+    return jsonify(_jom_operator_live_contract("status"))
+
+
+@app.route("/api/operator/insights")
+def api_operator_live_insights_contract():
+    return jsonify(_jom_operator_live_contract("insights"))
+
+
+@app.route("/api/operator/drilldowns")
+def api_operator_live_drilldowns_contract():
+    return jsonify(_jom_operator_live_contract("drilldowns"))
+
+
+@app.route("/api/operator/role-views")
+def api_operator_live_role_views_contract():
+    return jsonify(_jom_operator_live_contract("role_views"))
+
+
+@app.route("/api/operator/ui-view")
+def api_operator_live_ui_view_contract():
+    return jsonify(_jom_operator_live_contract("ui_view"))
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
+
+
+
+
 
 
