@@ -1,0 +1,11 @@
+{
+  "schema": "jom-backend-final-website-truth-removal-status-v1.5",
+  "generated_at_utc": "2026-07-23T15:36:41Z",
+  "overall_status": "applied",
+  "target": "app/web.py final website-facing legacy truth block",
+  "replacements": [
+    "latest_run_admin_enriched_pretty.json -> admin_truth_v2.json",
+    "latest_run_admin_enriched.json -> admin_truth_v2.json",
+    "billing_seats.json -> estate_access_truth.json"
+  ]
+}

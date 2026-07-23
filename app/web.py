@@ -625,13 +625,11 @@ def estate_product_access():
             product_payload["served_at_utc"] = now_utc()
         write_json(DATA_PATH / "estate_product_access.json", product_payload)
         try:
-            admin_path = ROOT / "latest_run_admin_enriched_pretty.json"
-            if not admin_path.exists():
-                admin_path = ROOT / "latest_run_admin_enriched.json"
+            admin_path = DATA_PATH / "admin_truth_v2.json"
             truth_payload = build_access_truth(
                 product_payload,
                 admin_path,
-                ROOT / "static" / "data" / "billing_seats.json",
+                DATA_PATH / "estate_access_truth.json",
             )
             if isinstance(truth_payload, dict):
                 truth_payload["live_endpoint"] = True
