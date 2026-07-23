@@ -311,13 +311,230 @@ def detail_list_context() -> Dict[str, Any]:
     return context
 
 
+
+# --- JOM BACKEND ROUTE CONTRACTS v1 START ---
+def _contract_parse_time(value: Any):
+    if not value:
+        return None
+    text = str(value).strip()
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        dt = datetime.fromisoformat(text)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except Exception:
+        return None
+
+
+def _contract_generated_at(payload: Any) -> str:
+    if not isinstance(payload, dict):
+        return ""
+    return str(payload.get("generated_at_utc") or payload.get("updated_at_utc") or payload.get("collected_at_utc") or "")
+
+
+def _contract_freshness(payload: Any, current_hours: int = 24, stale_hours: int = 72) -> Dict[str, Any]:
+    timestamp = _contract_generated_at(payload)
+    parsed = _contract_parse_time(timestamp)
+    if not parsed:
+        return {"state": "unknown_timestamp", "timestamp": timestamp, "age_hours": None}
+    age = round((datetime.now(timezone.utc) - parsed).total_seconds() / 3600, 2)
+    if age <= current_hours:
+        state = "current"
+    elif age <= stale_hours:
+        state = "aging"
+    else:
+        state = "stale"
+    return {"state": state, "timestamp": parsed.isoformat().replace("+00:00", "Z"), "age_hours": age}
+
+
+def _contract_payload(name: str, payload: Any, *, source_file: str, contract_type: str, live_builder: str = "", allow_stale: bool = False) -> Dict[str, Any]:
+    freshness = _contract_freshness(payload)
+    available = isinstance(payload, dict) and bool(payload) and not payload.get("_load_error") and not payload.get("_json_error")
+    status = "ok"
+    if not available:
+        status = "unavailable"
+    elif freshness.get("state") == "stale" and not allow_stale:
+        status = "stale_generated_cache"
+    elif freshness.get("state") == "unknown_timestamp":
+        status = "unknown_freshness"
+    return {
+        "schema": "jom-backend-route-contract-v1",
+        "contract_name": name,
+        "contract_type": contract_type,
+        "served_at_utc": now_utc(),
+        "status": status,
+        "available": available,
+        "source_file": source_file,
+        "source_freshness": freshness,
+        "live_builder": live_builder,
+        "stale_allowed": bool(allow_stale),
+        "notes": [
+            "This endpoint is an explicit backend contract.",
+            "Generated cache is labelled with freshness and is not silent live truth.",
+        ],
+        "data": payload if available else {},
+    }
+
+
+def _load_registry_contract() -> Dict[str, Any]:
+    try:
+        return _build_registry_contract()
+    except Exception as exc:
+        payload = load_json("site_registry.json", {})
+        contract = _contract_payload(
+            "site_registry",
+            payload,
+            source_file="static/data/site_registry.json",
+            contract_type="generated_cache_fallback_after_builder_error",
+            live_builder="app.registry.site_registry_builder.build_registry",
+        )
+        contract["builder_error"] = str(exc)
+        return contract
+
+
+
+def _run_registry_builder() -> Dict[str, Any]:
+    """Refresh the generated site registry without relying on one fixed function name."""
+    import subprocess
+    import sys
+    script = ROOT / "scripts" / "build_site_registry.py"
+    if script.exists():
+        proc = subprocess.run(
+            [sys.executable, str(script), "--project-root", str(ROOT)],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            timeout=180,
+        )
+        if proc.returncode != 0:
+            raise RuntimeError((proc.stderr or proc.stdout or "site registry builder failed")[-4000:])
+        return load_json("site_registry.json", {})
+
+    import app.registry.site_registry_builder as builder
+    for name in ("build_registry", "build_site_registry", "build", "generate_registry", "generate_site_registry"):
+        candidate = getattr(builder, name, None)
+        if callable(candidate):
+            try:
+                registry = candidate(ROOT)
+            except TypeError:
+                registry = candidate()
+            if isinstance(registry, dict):
+                write_json(DATA_PATH / "site_registry.json", registry)
+                return registry
+    raise RuntimeError("No supported site registry builder entrypoint found.")
+
+
+def _build_registry_contract() -> Dict[str, Any]:
+    registry = _run_registry_builder()
+    return _contract_payload(
+        "site_registry",
+        registry,
+        source_file="static/data/site_registry.json",
+        contract_type="live_builder_generated_cache",
+        live_builder="scripts/build_site_registry.py or app.registry.site_registry_builder entrypoint",
+    )
+
+
+def _live_product_access_snapshot() -> Dict[str, Any]:
+    """Use the live product-access route as the current product truth."""
+    try:
+        response = estate_product_access()
+        payload = response.get_json() if hasattr(response, "get_json") else None
+        return payload if isinstance(payload, dict) else {}
+    except Exception as exc:
+        return {
+            "schema": "jom-live-product-access-unavailable-v1",
+            "status": "unavailable",
+            "error": str(exc),
+            "served_at_utc": now_utc(),
+        }
+
+
+def _load_admin_truth_contract() -> Dict[str, Any]:
+    payload = load_json("admin_truth_v2.json", {})
+    contract = _contract_payload(
+        "admin_truth_v2",
+        payload,
+        source_file="static/data/admin_truth_v2.json",
+        contract_type="generated_cache_contract_with_live_product_access_overlay",
+        live_builder="runtime refresh/admin enriched chain plus live /estate/product-access overlay",
+    )
+    live_product = _live_product_access_snapshot()
+    live_summary = live_product.get("summary", {}) if isinstance(live_product, dict) else {}
+    cached_summary = ((payload.get("summary") or {}) if isinstance(payload, dict) else {})
+    cached_product_users = cached_summary.get("api_product_users")
+    live_product_users = live_summary.get("total_jira_product_user_count")
+    try:
+        delta = int(live_product_users) - int(cached_product_users)
+    except Exception:
+        delta = None
+    alignment = {
+        "live_product_access_status": live_product.get("status") if isinstance(live_product, dict) else None,
+        "live_accessible_jira_resource_count": live_summary.get("accessible_jira_resource_count"),
+        "live_total_jira_product_user_count": live_product_users,
+        "cached_admin_truth_api_product_users": cached_product_users,
+        "product_user_delta_live_minus_cached": delta,
+        "live_product_access_is_primary": True,
+    }
+    contract["live_product_access_truth"] = live_product
+    contract["truth_alignment"] = alignment
+    if delta not in (None, 0):
+        contract["status"] = "aging_generated_cache_live_product_delta"
+        contract.setdefault("notes", []).append(
+            "Admin Truth generated cache does not match current live product access. Live product access is primary for website truth."
+        )
+    return contract
+
+
+def _load_source_state_contract() -> Dict[str, Any]:
+    freshness = load_json("source_freshness_audit.json", {})
+    reliability = load_json("source_reliability_status.json", {})
+    live_product = _live_product_access_snapshot()
+    product_summary = live_product.get("summary", {}) if isinstance(live_product, dict) else {}
+    product_truth_status = {
+        "schema": "jom-live-product-source-status-v1",
+        "served_at_utc": now_utc(),
+        "status": live_product.get("status") if isinstance(live_product, dict) else "unavailable",
+        "live_collection": bool(live_product.get("live_collection")) if isinstance(live_product, dict) else False,
+        "generated_at_utc": live_product.get("generated_at_utc") if isinstance(live_product, dict) else None,
+        "accessible_jira_resource_count": product_summary.get("accessible_jira_resource_count"),
+        "total_jira_product_user_count": product_summary.get("total_jira_product_user_count"),
+        "sites_with_jira_roles": product_summary.get("sites_with_jira_roles"),
+        "source_of_truth": "live /estate/product-access endpoint",
+    }
+    return {
+        "schema": "jom-source-state-contract-v2",
+        "served_at_utc": now_utc(),
+        "source_freshness": _contract_payload("source_freshness", freshness, source_file="static/data/source_freshness_audit.json", contract_type="generated_status_cache"),
+        "source_reliability": _contract_payload("source_reliability", reliability, source_file="static/data/source_reliability_status.json", contract_type="generated_status_cache"),
+        "live_product_access": product_truth_status,
+        "runtime_status": compact_runtime_status(),
+        "operator_summary": build_operator_summary(),
+        "notes": ["Live product access status is reported separately so stale generated snapshots do not override current endpoint truth."],
+    }
+
+def _load_user_footprint_contract() -> Dict[str, Any]:
+    payload = load_json("user_footprint.json", {})
+    return _contract_payload(
+        "user_footprint",
+        payload,
+        source_file="static/data/user_footprint.json",
+        contract_type="generated_cache_contract",
+        live_builder="runtime refresh/admin enriched chain",
+    )
+
+
+# --- JOM BACKEND ROUTE CONTRACTS v1 END ---
+
 @app.route("/")
 def home():
     return render_template("home.html", **home_context())
 
 @app.route("/admin/truth")
 def admin_truth():
-    return jsonify(load_json("admin_truth_v2.json"))
+    return jsonify(_load_admin_truth_contract())
 
 
 @app.route("/estate/product-access")
@@ -374,12 +591,12 @@ def estate_product_access():
 
 @app.route("/users/footprint")
 def user_footprint():
-    return jsonify(load_json("user_footprint.json"))
+    return jsonify(_load_user_footprint_contract())
 
 
 @app.route("/registry/sites")
 def site_registry():
-    return jsonify(load_json("site_registry.json"))
+    return jsonify(_load_registry_contract())
 
 
 @app.route("/runtime/status")
@@ -461,31 +678,27 @@ def page_detail_list():
 # ============================================================
 @app.route("/api/source-state")
 def api_source_state_legacy():
-    return jsonify({
-        "schema": "jom-legacy-source-state-compat-v1",
-        "source_freshness": load_json("source_freshness_audit.json", {}),
-        "source_reliability": load_json("source_reliability_status.json", {}),
-        "runtime_status": compact_runtime_status(),
-        "operator_summary": build_operator_summary(),
-    })
+    return jsonify(_load_source_state_contract())
 
 
 @app.route("/api/data")
 def api_data_legacy():
     return jsonify({
-        "schema": "jom-legacy-data-compat-v1",
+        "schema": "jom-api-data-contract-v2",
+        "served_at_utc": now_utc(),
         "operator_surface": build_operator_surface(),
         "operator_summary": build_operator_summary(),
-        "admin_truth": load_json("admin_truth_v2.json", {}),
-        "estate_product_access": load_json("estate_product_access.json", {}),
-        "user_footprint": load_json("user_footprint.json", {}),
-        "site_registry": load_json("site_registry.json", {}),
+        "admin_truth": _load_admin_truth_contract(),
+        "estate_product_access": estate_product_access().get_json(),
+        "user_footprint": _load_user_footprint_contract(),
+        "site_registry": _load_registry_contract(),
+        "notes": ["Aggregated compatibility contract. Static files are labelled as generated cache contracts."],
     })
 
 
 @app.route("/api/site-registry")
 def api_site_registry_legacy():
-    return jsonify(load_json("site_registry.json", {}))
+    return jsonify(_load_registry_contract())
 
 
 @app.route("/reports/<path:filename>")
