@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -9,7 +9,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "static" / "data"
 
-NAMED_ACCESS_FILE = DATA_DIR / "named_access_truth_v2.json"
+NAMED_ACCESS_FILE = DATA_DIR / "live_named_access_contract"
 USER_FOOTPRINT_FILE = DATA_DIR / "user_footprint.json"
 SOURCE_RELIABILITY_FILE = DATA_DIR / "source_reliability_status.json"
 SITE_REGISTRY_FILE = DATA_DIR / "site_registry.json"
@@ -543,7 +543,7 @@ def build_source_capabilities(users: dict[str, dict[str, Any]]) -> dict[str, Any
             "disabled_with_access": not (disabled_available and access_available),
         },
         "capability_notes": [
-            "Capability flags are derived from observed fields in named_access_truth_v2.json and user_footprint.json.",
+            "Capability flags are derived from observed fields in live_named_access_contract and user_footprint.json.",
             "Suppressed categories should not be interpreted as zero confirmed issues.",
             "A suppressed category means the loaded source schema does not expose enough user-level fields to make that judgement safely.",
         ],

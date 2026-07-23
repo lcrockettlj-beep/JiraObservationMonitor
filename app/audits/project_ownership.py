@@ -23,9 +23,9 @@ CORE_KEEP_ROOT = {
 }
 ACTIVE_STATIC_DATA = {
     "admin_enriched_refresh_status.json", "admin_group_expansion.json", "admin_group_expansion_status.json",
-    "admin_named_access.json", "admin_truth_v2.json", "billing_seats.json", "estate_access_truth.json",
+    "live_named_access_contract", "admin_truth_v2.json", "billing_seats.json", "estate_access_truth.json",
     "estate_product_access.json", "group_expansion_recovery_status.json", "named_access_recovery_status.json",
-    "named_access_truth_v2.json", "operational_source_recovery_status.json", "product_access_refresh_status.json",
+    "live_named_access_contract", "operational_source_recovery_status.json", "product_access_refresh_status.json",
     "runtime_refresh_status.json", "site_registry.json", "source_freshness_audit.json",
     "source_reliability_status.json", "user_footprint.json", "user_footprint_unlock_status.json"
 }

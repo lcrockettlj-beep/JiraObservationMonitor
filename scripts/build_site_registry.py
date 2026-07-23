@@ -76,7 +76,7 @@ def build_registry(project_root: Path) -> Dict[str, Any]:
     monitored = read_json(data / "monitored_sites.json", {})
     decisions = read_json(data / "site_lifecycle_decisions.json", {})
     access_validation = read_json(data / "site_access_validation.json", {})
-    admin_named = read_json(data / "admin_named_access.json", {})
+    admin_named = read_json(data / "live_named_access_contract", {})
 
     registry: Dict[str, Dict[str, Any]] = {}
     for site in current.get("sites", []) if isinstance(current, dict) else []:

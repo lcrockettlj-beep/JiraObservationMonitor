@@ -1,13 +1,13 @@
-﻿import json
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = ROOT / "static" / "data" / "user_footprint.json"
-TRUTH_V2_PATH = ROOT / "static" / "data" / "named_access_truth_v2.json"
+TRUTH_V2_PATH = ROOT / "static" / "data" / "live_named_access_contract"
 RECON_V2_PATH = ROOT / "reports" / "named_access_reconciliation_v2.json"
 RECON_V1_PATH = ROOT / "reports" / "named_access_reconciliation.json"
-NAMED_DIRECT_PATH = ROOT / "static" / "data" / "admin_named_access.json"
+NAMED_DIRECT_PATH = ROOT / "static" / "data" / "live_named_access_contract"
 ADMIN_ENRICHED_PATH = ROOT / "latest_run_admin_enriched.json"
 
 
@@ -128,14 +128,14 @@ def main():
 
     truth = read_json(TRUTH_V2_PATH)
     if not truth:
-        unavailable("named_access_truth_v2.json is missing or unreadable even though reconciliation is safe.", reconciliation_source)
+        unavailable("live_named_access_contract is missing or unreadable even though reconciliation is safe.", reconciliation_source)
         return
 
     truth_summary = truth.get('summary') or {}
     recon_summary = recon.get('summary') or {}
     users = truth.get('users') or []
     if not isinstance(users, list) or not users:
-        unavailable("named_access_truth_v2.json has no users. Named footprint cannot be generated.", reconciliation_source)
+        unavailable("live_named_access_contract has no users. Named footprint cannot be generated.", reconciliation_source)
         return
 
     identities = build_identity_lookup()

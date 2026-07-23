@@ -118,7 +118,7 @@ def load_runtime_sites(project_root: Path) -> List[Dict[str, Any]]:
 
 
 def load_named_sites(project_root: Path) -> List[Dict[str, Any]]:
-    payload = read_json(project_root / "static" / "data" / "admin_named_access.json", {})
+    payload = read_json(project_root / "static" / "data" / "live_named_access_contract", {})
     rows = []
     for row in payload.get("site_counts", []) if isinstance(payload.get("site_counts"), list) else []:
         key = str(row.get("site_key") or "").strip()

@@ -15,7 +15,7 @@ def read(path):
 
 def main():
     recon = read(ROOT/'reports/named_access_reconciliation.json') or {}
-    named = read(ROOT/'static/data/admin_named_access.json') or {}
+    named = read(ROOT/'static/data/live_named_access_contract') or {}
     summary = recon.get('summary') or {}
     conclusion = recon.get('conclusion') or {}
     safe = bool(summary.get('safe_to_enable_named_access_ui'))

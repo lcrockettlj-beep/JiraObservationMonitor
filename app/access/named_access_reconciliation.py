@@ -107,7 +107,7 @@ def user_distribution(named: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def build(project_root: Path) -> Dict[str, Any]:
-    named_path = project_root / 'static' / 'data' / 'admin_named_access.json'
+    named_path = project_root / 'static' / 'data' / 'live_named_access_contract'
     admin_truth_path = project_root / 'static' / 'data' / 'admin_truth_v2.json'
     product_path = project_root / 'static' / 'data' / 'estate_product_access.json'
     billing_path = project_root / 'static' / 'data' / 'billing_seats.json'

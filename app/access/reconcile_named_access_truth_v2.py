@@ -1,9 +1,9 @@
-﻿import json
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TRUTH = ROOT / "static" / "data" / "named_access_truth_v2.json"
+TRUTH = ROOT / "static" / "data" / "live_named_access_contract"
 ADMIN_TRUTH = ROOT / "static" / "data" / "admin_truth_v2.json"
 OUT = ROOT / "reports" / "named_access_reconciliation_v2.json"
 REPORT = ROOT / "reports" / "named_access_recovery_implementation.md"

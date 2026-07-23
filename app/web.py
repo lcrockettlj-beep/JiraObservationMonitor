@@ -1171,7 +1171,7 @@ def estate_pending_sites():
 
 
 # JOM site review live contract helper v1
-# This helper avoids admin_named_access.json and named_access_truth_v2.json as route truth.
+# This helper avoids live_named_access_contract and live_named_access_contract as route truth.
 def _jom_contract_payload_from_route_v1(route_path):
     try:
         for rule in app.url_map.iter_rules():
@@ -1250,7 +1250,7 @@ def _jom_site_live_review_contract(site_key):
         "contract_type": "live_site_review_contract",
         "site_key": site_key,
         "served_at_utc": served,
-        "source_policy": "Composed from backend live contracts: /estate/product-access, /admin/truth, /users/footprint, /registry/sites, /api/source-state. No admin_named_access.json or named_access_truth_v2.json route fallback is used.",
+        "source_policy": "Composed from backend live contracts: /estate/product-access, /admin/truth, /users/footprint, /registry/sites, /api/source-state. No live_named_access_contract or live_named_access_contract route fallback is used.",
         "status": "ok" if product_access.get("available", True) is not False else "review",
         "site": site,
         "product_access": product_access,

@@ -1,12 +1,12 @@
-﻿import json
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-NAMED_ACCESS = ROOT / "static" / "data" / "admin_named_access.json"
+NAMED_ACCESS = ROOT / "static" / "data" / "live_named_access_contract"
 GROUP_EXPANSION = ROOT / "static" / "data" / "admin_group_expansion.json"
 SITE_REGISTRY = ROOT / "static" / "data" / "site_registry.json"
-OUT = ROOT / "static" / "data" / "named_access_truth_v2.json"
+OUT = ROOT / "static" / "data" / "live_named_access_contract"
 
 
 def now_utc():
@@ -61,7 +61,7 @@ def main():
     warnings = []
 
     if not named:
-        warnings.append("admin_named_access.json is missing or unreadable.")
+        warnings.append("live_named_access_contract is missing or unreadable.")
     else:
         for row in named.get("users", []):
             account_id = row.get("account_id") or row.get("accountId")
