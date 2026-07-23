@@ -1168,6 +1168,133 @@ def estate_discovered_sites():
 def estate_pending_sites():
     return render_template("estate.html")
 
+@app.route("/estate/retired")
+def estate_retired_sites():
+    return render_template("estate.html")
+
+
+# --- JOM REFERENCED ARTIFACT REPLACEMENT v1 START ---
+def _jom_norm_site_key(value):
+    text = str(value or "").strip().lower()
+    text = text.replace("https://", "").replace("http://", "")
+    text = text.replace(".atlassian.net", "")
+    text = text.strip("/").split("/")[0]
+    return text
+
+
+def _jom_unwrap_contract(payload):
+    if isinstance(payload, dict) and payload.get("schema") == "jom-backend-route-contract-v1" and isinstance(payload.get("data"), dict):
+        return payload.get("data")
+    return payload
+
+
+def _jom_response_json(response_or_payload):
+    try:
+        if hasattr(response_or_payload, "get_json"):
+            return response_or_payload.get_json()
+    except Exception:
+        pass
+    return response_or_payload if isinstance(response_or_payload, dict) else {}
+
+
+def _jom_live_product_access_payload():
+    try:
+        return _jom_unwrap_contract(_jom_response_json(estate_product_access()))
+    except Exception as exc:
+        return {"schema": "jom-live-product-access-unavailable-v1", "status": "unavailable", "error": str(exc), "served_at_utc": now_utc()}
+
+
+def _jom_registry_payload():
+    try:
+        return _jom_unwrap_contract(_load_registry_contract())
+    except Exception:
+        return load_json("site_registry.json", {})
+
+
+def _jom_find_site(rows, site_key):
+    target = _jom_norm_site_key(site_key)
+    if not target or not isinstance(rows, list):
+        return None
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        candidates = [row.get("site_key"), row.get("site_name"), row.get("site_url"), row.get("url"), row.get("key")]
+        if any(_jom_norm_site_key(item) == target for item in candidates):
+            return row
+    for row in rows:
+        if isinstance(row, dict) and target in str(row).lower():
+            return row
+    return None
+
+
+def _jom_site_live_review_contract(site_key):
+    registry = _jom_registry_payload()
+    product_access = _jom_live_product_access_payload()
+    registry_site = _jom_find_site(registry.get("sites", []), site_key) if isinstance(registry, dict) else None
+    product_site = _jom_find_site(product_access.get("sites", []), site_key) if isinstance(product_access, dict) else None
+    product_roles = []
+    if isinstance(product_access, dict):
+        for row in product_access.get("roles", []) or []:
+            if isinstance(row, dict) and _jom_norm_site_key(row.get("site_key") or row.get("site_name") or row.get("site_url")) == _jom_norm_site_key(site_key):
+                product_roles.append(row)
+    live_ok = bool(product_site and product_site.get("status") == "ok") or bool(product_roles)
+    monitored = bool((registry_site or {}).get("is_monitored")) or str((registry_site or {}).get("classification", "")).lower() == "monitored"
+    return {
+        "schema": "jom-site-live-review-contract-v1",
+        "served_at_utc": now_utc(),
+        "site_key": site_key,
+        "registry_site": registry_site or {},
+        "product_access_site": product_site or {},
+        "product_roles": product_roles,
+        "validation": {
+            "access_validated": live_ok,
+            "monitoring_allowed": bool(live_ok and monitored),
+            "oauth_product_access_available": live_ok,
+            "source": "live registry contract plus /estate/product-access",
+            "static_artifact_used": False,
+        },
+        "recommended_actions": [] if live_ok else ["Review OAuth/product access availability for this site."],
+    }
+
+
+def _jom_operator_live_contract(kind):
+    surface = {}
+    summary = {}
+    try:
+        surface = build_operator_surface()
+    except Exception as exc:
+        surface = {"error": str(exc)}
+    try:
+        summary = build_operator_summary()
+    except Exception as exc:
+        summary = {"error": str(exc)}
+    try:
+        runtime = compact_runtime_status()
+    except Exception as exc:
+        runtime = {"error": str(exc)}
+    try:
+        source_state = _load_source_state_contract()
+    except Exception as exc:
+        source_state = {"error": str(exc)}
+    return {
+        "schema": "jom-operator-live-contract-v1",
+        "kind": kind,
+        "served_at_utc": now_utc(),
+        "operator_surface": surface,
+        "operator_summary": summary,
+        "runtime_status": runtime,
+        "source_state": source_state,
+        "static_artifact_used": False,
+        "replacement_for": {
+            "status": "operational_console_status.json",
+            "insights": "operational_console_insights.json",
+            "drilldowns": "operational_console_drilldowns.json",
+            "role_views": "operational_console_role_views.json",
+            "ui_view": "operational_console_ui_view.json",
+        }.get(kind, "operational_console_*.json"),
+    }
+# --- JOM REFERENCED ARTIFACT REPLACEMENT v1 END ---
+
 @app.route("/api/site-review/<path:site_key>/validate-access")
 def api_site_review_validate_access(site_key):
     return jsonify(_jom_site_live_review_contract(site_key))
@@ -1178,104 +1305,36 @@ def api_site_review_live_contract(site_key):
     return jsonify(_jom_site_live_review_contract(site_key))
 
 
-
-
-# JOM operator live replacement contracts v1
-# These routes intentionally avoid operational_console_*.json file truth.
-def _jom_respons*_payload_v1(value):
-    try:
-     *  if hasattr(value, "get_json"):
- *          return value.get_json(si*ent=True) or {}
-        if isinsta*ce(value, tuple) and value:
-      *     return _jom_response_payload_*1(value[0])
-        if isinstance(*alue, dict):
-            return va*ue
-    except Exception as exc:
-  *     return {"error": str(exc)}
-  * return {}
-
-
-def _jom_safe_call_v1*name):
-    fn = globals().get(name*
-    if not callable(fn):
-        *eturn {"available": False, "reason*: f"{name} not callable"}
-    try:*        return _jom_response_paylo*d_v1(fn())
-    except Exception as*exc:
-        return {"available": *alse, "reason": str(exc)}
-
-
-def _j*m_operator_live_contract_v1(kind):*    served = datetime.now(timezone*utc).replace(microsecond=0).isofor*at().replace("+00:00", "Z")
-
-    s*mmary = _jom_safe_call_v1("operato*_summary")
-    surface = _jom_safe*call_v1("operator_surface")
-    so*rce_state = _jom_safe_call_v1("api*source_state_legacy")
-
-    payload*= {
-        "schema": "jom-operato*-live-contract-v1",
-        "contr*ct_type": "live_operator_contract"*
-        "kind": kind,
-        "se*ved_at_utc": served,
-        "sour*e_policy": "Live operator contract*composed from /operator/summary, /*perator/surface and /api/source-st*te. No operational_console static *rtifact fallback is used.",
-      * "operator_summary": summary,
-    *   "operator_surface": surface,
-  *     "source_state": source_state,*    }
-
-    if kind == "status":
-  *     payload["data"] = {
-         *  "runtime": summary.get("runtime"* or surface.get("runtime") or sour*e_state.get("runtime_status") or {*,
-            "posture": summary.g*t("posture") or surface.get("postu*e"),
-            "alerts": summary*get("alert_summary") or surface.ge*("alert_summary") or {},
-         *  "sources": source_state,
-       *}
-    elif kind == "insights":
-   *    payload["data"] = {
-          * "alerts": surface.get("alerts") o* summary.get("top_alerts") or [],
-*           "estate": surface.get("*state") or {},
-            "admin": surface.get("admin") or {},
-        }
-    elif kind == "drilldowns":
-        payload["data"] = {
-            "estate": surface.get("estate") or {},
-            "observability": surface.get("observability") or summary.get("observability") or {},
-            "sources": surface.get("sources") or {},
-        }
-    elif kind == "role_views":
-        payload["data"] = {
-            "admin": surface.get("admin") or {},
-            "estate": surface.get("estate") or {},
-            "user_footprint": (surface.get("estate") or {}).get("user_footprint_summary") or {},
-        }
-    elif kind == "ui_view":
-        payload["data"] = {
-            "layout": "operator-live-contract",
-            "available_sections": ["status", "insights", "drilldowns", "role_views", "ui_view"],
-            "posture": summary.get("posture") or surface.get("posture"),
-        }
-    else:
-        payload["data"] = {}
-
-    return jsonify(payload)
-
-
 @app.route("/api/operator/status")
-def api_operator_status_live_contract():
-    return _jom_operator_live_contract_v1("status")
+def api_operator_live_status_contract():
+    return jsonify(_jom_operator_live_contract("status"))
+
 
 @app.route("/api/operator/insights")
-def api_operator_insights_live_contract():
-    return _jom_operator_live_contract_v1("insights")
+def api_operator_live_insights_contract():
+    return jsonify(_jom_operator_live_contract("insights"))
+
 
 @app.route("/api/operator/drilldowns")
-def api_operator_drilldowns_live_contract():
-    return _jom_operator_live_contract_v1("drilldowns")
+def api_operator_live_drilldowns_contract():
+    return jsonify(_jom_operator_live_contract("drilldowns"))
+
 
 @app.route("/api/operator/role-views")
-def api_operator_role_views_live_contract():
-    return _jom_operator_live_contract_v1("role_views")
+def api_operator_live_role_views_contract():
+    return jsonify(_jom_operator_live_contract("role_views"))
+
 
 @app.route("/api/operator/ui-view")
-def api_operator_ui_view_live_contract():
-    return _jom_operator_live_contract_v1("ui_view")
+def api_operator_live_ui_view_contract():
+    return jsonify(_jom_operator_live_contract("ui_view"))
 
 if __name__ == "__main__":
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    app.run(debug=True, port=5000)
+
+
+
+
+
+
+
