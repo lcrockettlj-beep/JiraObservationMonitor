@@ -33,7 +33,7 @@ def load_sources() -> Dict[str, Any]:
     static = root / "static" / "data"
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "registry": first_dict(read_json(static / "site_registry.json", {}), read_json(root / "latest_run.json", {}).get("site_registry", {})),
+        "registry": first_dict(read_json(static / "site_registry.json", {})),
         "estate_product_access": first_dict(read_json(static / "estate_product_access.json", {})),
         "user_footprint": first_dict(read_json(static / "user_footprint.json", {})),
         "admin_truth": first_dict(read_json(static / "admin_truth_v2.json", {})),
@@ -41,7 +41,7 @@ def load_sources() -> Dict[str, Any]:
         "runtime_status": {},
         "source_reliability": first_dict(read_json(static / "source_reliability_status.json", {})),
         "source_freshness": first_dict(read_json(static / "source_freshness_audit.json", {})),
-        "operator_summary": first_dict(read_json(root / "latest_run_safe_partial.json", {}).get("operator_summary", {})),
+        "operator_summary": first_dict(read_json(static / "backend_final_truth_chain_status.json", {})),
     }
 
 

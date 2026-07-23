@@ -1,0 +1,9 @@
+{
+  "schema": "jom-backend-legacy-truth-eradication-status-v1",
+  "generated_at_utc": "2026-07-23T14:35:09Z",
+  "overall_status": "REVIEW",
+  "website_truth_rule": "If it is not live/current or auto-refreshed, it must not feed the website.",
+  "legacy_reference_rows": 135,
+  "website_blocking_rows": 29,
+  "compile_ok": true
+}

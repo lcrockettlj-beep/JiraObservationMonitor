@@ -29,7 +29,7 @@ WEBSITE_FACING_PATHS = {
 }
 POLICY_OR_AUDIT_FILES = {
     "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
-    "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
+    "scripts/backend_legacy_truth_eradication_v1.py",
     "scripts/backend_runtime_freshness_snapshot_elimination_v1.py",
     "scripts/audit_source_freshness.py",
 }
@@ -159,13 +159,13 @@ def patch_export_reporting(root: Path) -> list[str]:
 
 def patch_final_audit_classifier(root: Path) -> list[str]:
     # Replace old audit script with this improved classifier so future counts do not flag policy/audit references as website risk.
-    source = root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
+    source = root / "scripts" / "backend_legacy_truth_eradication_v1.py"
     target = root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
     if not source.exists() or not target.exists():
         return ["Final truth chain audit script replacement skipped; source or target missing"]
     text = read_text(source)
     # Make the copied audit status names match the original audit purpose where possible.
-    text = text.replace("backend_legacy_runtime_input_final_truth_chain_audit_v1.py", "backend_legacy_runtime_input_final_truth_chain_audit_v1.py")
+    text = text.replace("backend_legacy_truth_eradication_v1.py", "backend_legacy_runtime_input_final_truth_chain_audit_v1.py")
     changed = write_text_if_changed(target, text)
     return ["Updated final truth-chain audit classifier to ignore policy/audit-only legacy references" if changed else "Final truth-chain audit classifier already aligned"]
 
@@ -225,7 +225,7 @@ def build_payload(root: Path, actions: list[str]) -> dict[str, Any]:
     for row in refs:
         by_class[row["classification"]] = by_class.get(row["classification"], 0) + 1
     blocking = [row for row in refs if row["website_blocking"]]
-    compile_ok, compile_output = run_compile(root, ["scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py", "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py"])
+    compile_ok, compile_output = run_compile(root, ["scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py", "scripts/backend_legacy_truth_eradication_v1.py"])
     status = "PASS" if compile_ok and not blocking else "REVIEW"
     return {
         "schema": "jom-backend-legacy-truth-eradication-v1",
@@ -255,12 +255,12 @@ def main() -> int:
     actions: list[str] = []
     actions.extend(patch_export_reporting(root))
     # Copy this script into repo if it is not already running from the target path.
-    target_self = root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
+    target_self = root / "scripts" / "backend_legacy_truth_eradication_v1.py"
     current = Path(__file__).resolve()
     if current != target_self:
         target_self.parent.mkdir(parents=True, exist_ok=True)
         target_self.write_text(read_text(current), encoding="utf-8")
-        actions.append("Installed scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py")
+        actions.append("Installed scripts/backend_legacy_truth_eradication_v1.py")
     actions.extend(patch_final_audit_classifier(root))
 
     payload = build_payload(root, actions)
