@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request
 import json
@@ -1278,30 +1278,31 @@ def api_site_review_live_contract(site_key):
 
 @app.route("/api/operator/status")
 def api_operator_live_status_contract():
-    return jsonify(_jom_operator_live_contract("status"))
+    return jsonify(build_operator_summary())
 
 
 @app.route("/api/operator/insights")
 def api_operator_live_insights_contract():
-    return jsonify(_jom_operator_live_contract("insights"))
+    return jsonify(build_operator_surface())
 
 
 @app.route("/api/operator/drilldowns")
 def api_operator_live_drilldowns_contract():
-    return jsonify(_jom_operator_live_contract("drilldowns"))
+    return jsonify(build_operator_surface())
 
 
 @app.route("/api/operator/role-views")
 def api_operator_live_role_views_contract():
-    return jsonify(_jom_operator_live_contract("role_views"))
+    return jsonify(build_operator_surface())
 
 
 @app.route("/api/operator/ui-view")
 def api_operator_live_ui_view_contract():
-    return jsonify(_jom_operator_live_contract("ui_view"))
+    return jsonify(build_operator_surface())
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
 
 
 

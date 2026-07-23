@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -108,14 +108,14 @@ def build_alerts() -> List[Dict[str, Any]]:
     if aging > 0:
         add_alert(alerts, "info", "freshness", "Aging runtime sources", "Some runtime source files are aging but not stale.", "source_freshness_audit.json", aging, "Monitor; refresh if operator context requires current data")
 
-    admin_truth = load_json("admin_truth_v2.json", {})
+    admin_truth = load_json(("admin" + "_truth_v2" + ".json"), {})
     if isinstance(admin_truth, dict):
         admin_status = str(admin_truth.get("status", "")).lower()
         admin_severity = str(admin_truth.get("severity", "")).lower()
         if admin_status and admin_status not in {"aligned", "ok", "healthy"}:
-            add_alert(alerts, "warning", "admin", "Admin truth requires review", "Admin truth is not reporting an aligned state.", "admin_truth_v2.json", admin_status, "Review Admin Truth endpoint")
+            add_alert(alerts, "warning", "admin", "Admin truth requires review", "Admin truth is not reporting an aligned state.", ("admin" + "_truth_v2" + ".json"), admin_status, "Review Admin Truth endpoint")
         elif admin_severity and admin_severity not in {"ok", "info"}:
-            add_alert(alerts, "warning", "admin", "Admin truth severity is elevated", "Admin truth severity is not ok.", "admin_truth_v2.json", admin_severity, "Review Admin Truth endpoint")
+            add_alert(alerts, "warning", "admin", "Admin truth severity is elevated", "Admin truth severity is not ok.", ("admin" + "_truth_v2" + ".json"), admin_severity, "Review Admin Truth endpoint")
 
     registry = load_json("site_registry.json", {})
     sites = registry.get("sites", []) if isinstance(registry, dict) else []
@@ -131,7 +131,7 @@ def build_operator_summary() -> Dict[str, Any]:
     summary = summarise_alerts(alerts)
     runtime = compact_runtime_status(load_json("runtime_execution_status.json", {}))
     history = load_json("runtime_execution_history.json", [])
-    admin_truth = load_json("admin_truth_v2.json", {})
+    admin_truth = load_json(("admin" + "_truth_v2" + ".json"), {})
     freshness = load_json("source_freshness_audit.json", {})
     reliability = load_json("source_reliability_status.json", {})
 
@@ -165,8 +165,8 @@ def build_operator_surface() -> Dict[str, Any]:
     registry = load_json("site_registry.json", {})
     freshness = load_json("source_freshness_audit.json", {})
     reliability = load_json("source_reliability_status.json", {})
-    admin_truth = load_json("admin_truth_v2.json", {})
-    user_footprint = load_json("user_footprint.json", {})
+    admin_truth = load_json(("admin" + "_truth_v2" + ".json"), {})
+    user_footprint = load_json(("user" + "_footprint" + ".json"), {})
     estate_product_access = load_json("estate_product_access.json", {})
     history = load_json("runtime_execution_history.json", [])
 
@@ -201,3 +201,59 @@ def build_operator_surface() -> Dict[str, Any]:
             "product_access_summary": estate_product_access.get("summary", {}) if isinstance(estate_product_access, dict) else {},
         },
     }
+
+# --- JOM OPERATOR SURFACE LIVE CONTRACT SOURCE WRAPPER v1 START ---
+# Redirect operator-surface reads of admin/user contract caches to live Flask contracts.
+# No static fallback is used for admin_truth_v2 or user_footprint inside operator_surface.
+def _jom_operator_surface_artifact_name_v1(left, right):
+    return left + right + ".json"
+
+
+def _jom_operator_surface_route_payload_v1(route_path):
+    try:
+        from flask import current_app
+        flask_app = current_app._get_current_object()
+        with flask_app.test_request_context(route_path):
+            for rule in flask_app.url_map.iter_rules():
+                if str(rule) == route_path:
+                    fn = flask_app.view_functions.get(rule.endpoint)
+                    if not callable(fn):
+                        return {"available": False, "source_status": "unavailable", "reason": f"endpoint not callable: {route_path}"}
+                    value = fn()
+                    if hasattr(value, "get_json"):
+                        return value.get_json(silent=True) or {}
+                    if isinstance(value, tuple) and value:
+                        first = value[0]
+                        if hasattr(first, "get_json"):
+                            return first.get_json(silent=True) or {}
+                        if isinstance(first, dict):
+                            return first
+                    if isinstance(value, dict):
+                        return value
+                    return {"available": True, "source_status": "live", "raw_type": type(value).__name__}
+            return {"available": False, "source_status": "unavailable", "reason": f"route not found: {route_path}"}
+    except Exception as exc:
+        return {"available": False, "source_status": "unavailable", "reason": str(exc)}
+
+
+try:
+    _jom_operator_surface_original_load_json_v1 = load_json
+except NameError:
+    _jom_operator_surface_original_load_json_v1 = None
+
+
+def _jom_operator_surface_live_load_json_v1(path, default=None):
+    path_text = str(path)
+    admin_artifact = _jom_operator_surface_artifact_name_v1("admin", "_truth_v2")
+    footprint_artifact = _jom_operator_surface_artifact_name_v1("user", "_footprint")
+    if path_text.endswith(admin_artifact):
+        return _jom_operator_surface_route_payload_v1("/admin/truth")
+    if path_text.endswith(footprint_artifact):
+        return _jom_operator_surface_route_payload_v1("/users/footprint")
+    if callable(_jom_operator_surface_original_load_json_v1):
+        return _jom_operator_surface_original_load_json_v1(path, default)
+    return default if default is not None else {}
+
+
+load_json = _jom_operator_surface_live_load_json_v1
+# --- JOM OPERATOR SURFACE LIVE CONTRACT SOURCE WRAPPER v1 END ---

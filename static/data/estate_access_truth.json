@@ -1,36 +1,34 @@
 {
-  "source": "Derived from estate_product_access.json plus admin/billing summaries where available",
-  "generated_at_utc": "2026-06-30T10:17:54Z",
-  "schema": "jom-estate-access-truth-v1",
+  "source": "Derived from live estate_product_access payload; billing is not used as website truth",
+  "generated_at_utc": "2026-07-23T14:03:19Z",
+  "schema": "jom-estate-access-truth-v2-live",
+  "live_collection": true,
   "summary": {
-    "api_product_user_count": 139,
-    "admin_human_users": 61,
-    "billing_jira_seats": 139,
-    "api_product_to_human_ratio": 2.28,
-    "billing_to_human_ratio": 2.28,
-    "accessible_jira_resource_count": 6,
-    "sites_with_jira_roles": 3
-  },
-  "admin_summary": {
-    "human_users": 61,
-    "app_accounts": 39,
-    "org_users": 100
-  },
-  "billing_summary": {
-    "total_jira_seats": 139,
-    "jira_site_count": 3,
-    "source": "billing_catalog.py static billing snapshot"
+    "api_product_user_count": 155,
+    "accessible_jira_resource_count": 7,
+    "sites_with_jira_roles": 5
   },
   "product_summary": {
-    "accessible_jira_resource_count": 6,
-    "sites_with_jira_roles": 3,
-    "total_jira_product_user_count": 139,
-    "total_jira_seat_limit": 100150,
-    "total_jira_remaining_seats": 100011,
-    "jira_role_rows": 3,
-    "error_site_count": 3
+    "accessible_jira_resource_count": 7,
+    "sites_with_jira_roles": 5,
+    "total_jira_product_user_count": 155,
+    "total_jira_seat_limit": 104160,
+    "total_jira_remaining_seats": 104005,
+    "jira_role_rows": 5,
+    "error_site_count": 2
   },
   "site_product_access": [
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "jira_product_user_count": 5,
+      "jira_product_seat_limit": 4000,
+      "jira_product_remaining_seats": 3995,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
     {
       "site_key": "gaminglabs-team-h2pbpmis",
       "site_name": "gaminglabs-team-h2pbpmis",
@@ -58,9 +56,9 @@
       "site_name": "gli-global-technology",
       "site_url": "https://gli-global-technology.atlassian.net",
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "jira_product_user_count": 53,
+      "jira_product_user_count": 57,
       "jira_product_seat_limit": 100000,
-      "jira_product_remaining_seats": 99947,
+      "jira_product_remaining_seats": 99943,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -69,20 +67,20 @@
       "site_name": "gli-usa",
       "site_url": "https://gli-usa.atlassian.net",
       "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "jira_product_user_count": 0,
-      "jira_product_seat_limit": 0,
-      "jira_product_remaining_seats": 0,
-      "jira_role_count": 0,
-      "status": "error"
+      "jira_product_user_count": 4,
+      "jira_product_seat_limit": 10,
+      "jira_product_remaining_seats": 6,
+      "jira_role_count": 1,
+      "status": "ok"
     },
     {
       "site_key": "gli-it-project",
       "site_name": "gli-it-project",
       "site_url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "jira_product_user_count": 58,
+      "jira_product_user_count": 59,
       "jira_product_seat_limit": 100,
-      "jira_product_remaining_seats": 42,
+      "jira_product_remaining_seats": 41,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -91,14 +89,28 @@
       "site_name": "gli-delivery-tm",
       "site_url": "https://gli-delivery-tm.atlassian.net",
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "jira_product_user_count": 28,
+      "jira_product_user_count": 30,
       "jira_product_seat_limit": 50,
-      "jira_product_remaining_seats": 22,
+      "jira_product_remaining_seats": 20,
       "jira_role_count": 1,
       "status": "ok"
     }
   ],
   "role_product_access": [
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "role_key": "jira-software",
+      "role_name": "Jira Software",
+      "user_count": 5,
+      "seat_limit": 4000,
+      "remaining_seats": 3995,
+      "raw_has_default_groups": true,
+      "raw_platform": false,
+      "raw_selected_by_default": false
+    },
     {
       "site_key": "gli-global-technology",
       "site_name": "gli-global-technology",
@@ -106,9 +118,23 @@
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 53,
+      "user_count": 57,
       "seat_limit": 100000,
-      "remaining_seats": 99947,
+      "remaining_seats": 99943,
+      "raw_has_default_groups": true,
+      "raw_platform": false,
+      "raw_selected_by_default": false
+    },
+    {
+      "site_key": "gli-usa",
+      "site_name": "gli-usa",
+      "site_url": "https://gli-usa.atlassian.net",
+      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+      "role_key": "jira-software",
+      "role_name": "Jira Software",
+      "user_count": 4,
+      "seat_limit": 10,
+      "remaining_seats": 6,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
@@ -120,9 +146,9 @@
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 58,
+      "user_count": 59,
       "seat_limit": 100,
-      "remaining_seats": 42,
+      "remaining_seats": 41,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
@@ -134,18 +160,18 @@
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 28,
+      "user_count": 30,
       "seat_limit": 50,
-      "remaining_seats": 22,
+      "remaining_seats": 20,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
     }
   ],
   "interpretation": [
-    "API product role user counts are estate/product access signals.",
-    "Billing seats are commercial consumption signals.",
-    "Admin human users are identity truth.",
-    "These values should be compared side-by-side rather than forced to match."
-  ]
+    "API product role user counts are live estate/product access signals.",
+    "Billing snapshots are not website truth."
+  ],
+  "live_endpoint": true,
+  "served_at_utc": "2026-07-23T14:03:19.062517Z"
 }
