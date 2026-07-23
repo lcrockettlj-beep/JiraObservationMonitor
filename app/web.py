@@ -1168,6 +1168,104 @@ def estate_discovered_sites():
 def estate_pending_sites():
     return render_template("estate.html")
 
+
+
+# JOM site review live contract helper v1
+# This helper avoids admin_named_access.json and named_access_truth_v2.json as route truth.
+def _jom_contract_payload_from_route_v1(route_path):
+    try:
+        for rule in app.url_map.iter_rules():
+            if str(rule) == route_path:
+                fn = app.view_functions.get(rule.endpoint)
+                if not callable(fn):
+                    return {"available": False, "reason": f"endpoint not callable for {route_path}"}
+                value = fn()
+                if hasattr(value, "get_json"):
+                    return value.get_json(silent=True) or {}
+                if isinstance(value, tuple) and value:
+                    first = value[0]
+                    if hasattr(first, "get_json"):
+                        return first.get_json(silent=True) or {}
+                    if isinstance(first, dict):
+                        return first
+                if isinstance(value, dict):
+                    return value
+                return {"available": True, "raw_type": type(value).__name__}
+        return {"available": False, "reason": f"route not found: {route_path}"}
+    except Exception as exc:
+        return {"available": False, "reason": str(exc)}
+
+
+def _jom_unwrap_contract_data_v1(payload):
+    if isinstance(payload, dict) and isinstance(payload.get("data"), dict):
+        return payload.get("data") or {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _jom_find_site_record_v1(site_key, registry_data, product_data):
+    wanted = str(site_key or "").strip().lower()
+    candidates = []
+    reg = _jom_unwrap_contract_data_v1(registry_data)
+    if isinstance(reg.get("sites"), list):
+        candidates.extend(reg.get("sites") or [])
+    if isinstance(registry_data.get("sites"), list):
+        candidates.extend(registry_data.get("sites") or [])
+    prod = _jom_unwrap_contract_data_v1(product_data)
+    if isinstance(prod.get("sites"), list):
+        candidates.extend(prod.get("sites") or [])
+    if isinstance(product_data.get("sites"), list):
+        candidates.extend(product_data.get("sites") or [])
+    for item in candidates:
+        if not isinstance(item, dict):
+            continue
+        values = [item.get("site_key"), item.get("site_name"), item.get("cloud_id"), item.get("site_url")]
+        aliases = item.get("aliases") if isinstance(item.get("aliases"), list) else []
+        values.extend(aliases)
+        for value in values:
+            if value is not None and str(value).strip().lower() == wanted:
+                return item
+    return {}
+
+
+def _jom_site_live_review_contract(site_key):
+    from datetime import datetime, timezone
+    served = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    product_access = _jom_contract_payload_from_route_v1("/estate/product-access")
+    admin_truth = _jom_contract_payload_from_route_v1("/admin/truth")
+    user_footprint = _jom_contract_payload_from_route_v1("/users/footprint")
+    registry = _jom_contract_payload_from_route_v1("/registry/sites")
+    source_state = _jom_contract_payload_from_route_v1("/api/source-state")
+    site = _jom_find_site_record_v1(site_key, registry, product_access)
+    product_data = _jom_unwrap_contract_data_v1(product_access)
+    matching_rows = []
+    for row in product_data.get("sites", []) if isinstance(product_data.get("sites"), list) else []:
+        if isinstance(row, dict) and str(row.get("site_key", "")).lower() == str(site_key).lower():
+            matching_rows.append(row)
+    safe_to_show_named = False
+    footprint_data = _jom_unwrap_contract_data_v1(user_footprint)
+    if isinstance(footprint_data, dict):
+        safe_to_show_named = bool(footprint_data.get("safe_to_show_named_access_ui"))
+    return {
+        "schema": "jom-site-review-live-contract-v1",
+        "contract_type": "live_site_review_contract",
+        "site_key": site_key,
+        "served_at_utc": served,
+        "source_policy": "Composed from backend live contracts: /estate/product-access, /admin/truth, /users/footprint, /registry/sites, /api/source-state. No admin_named_access.json or named_access_truth_v2.json route fallback is used.",
+        "status": "ok" if product_access.get("available", True) is not False else "review",
+        "site": site,
+        "product_access": product_access,
+        "product_access_site_rows": matching_rows,
+        "admin_truth": admin_truth,
+        "user_footprint": user_footprint,
+        "registry": registry,
+        "source_state": source_state,
+        "controls": {
+            "safe_to_show_named_access_ui": safe_to_show_named,
+            "named_access_static_files_used": False,
+        },
+        "recommended_actions": [] if site else ["Site was not matched in live registry/product access contracts."],
+    }
+
 @app.route("/api/site-review/<path:site_key>/validate-access")
 def api_site_review_validate_access(site_key):
     return jsonify(_jom_site_live_review_contract(site_key))
