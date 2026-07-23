@@ -172,6 +172,11 @@ def build_operator_surface() -> Dict[str, Any]:
 
     return {
         "schema": "jom-operator-surface-v1.1",
+        "website_truth_policy": {
+            "mode": "live_or_auto_refreshed_only",
+            "legacy_static_inputs_allowed": False,
+            "unknown_age_sources_allowed": False,
+        },
         "generated_at_utc": now_utc(),
         "posture": derive_posture(summary),
         "alert_summary": summary,
@@ -257,3 +262,4 @@ def _jom_operator_surface_live_load_json_v1(path, default=None):
 
 load_json = _jom_operator_surface_live_load_json_v1
 # --- JOM OPERATOR SURFACE LIVE CONTRACT SOURCE WRAPPER v1 END ---
+

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -116,9 +116,9 @@ def main() -> int:
     )
 
     legacy = [
-        source_record("billing_seats", DATA / "billing_seats.json", "legacy billing snapshot; not website truth"),
-        source_record("latest_run", ROOT / "latest_run.json", "legacy runtime snapshot; not website truth"),
-        source_record("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "legacy runtime snapshot; not website truth"),
+        source_record("billing_seats", DATA / "billing_seats.json", "blocked legacy static input; not website truth"),
+        source_record("latest_run", ROOT / "latest_run.json", "blocked legacy static input; not website truth"),
+        source_record("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "blocked legacy static input; not website truth"),
     ]
 
     payload = {
@@ -152,3 +152,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

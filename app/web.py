@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request
 import json
@@ -59,6 +59,61 @@ def load_json(filename: str, default: Any = None) -> Any:
         return {"_load_error": str(exc), "_file": filename}
 
 
+
+# --- JOM LIVE WEBSITE TRUTH POLICY v1 START ---
+# Website-facing routes may use only live/runtime-refreshed data or generated outputs
+# that have a freshness/status contract. Legacy/manual snapshots must not be exposed as website truth.
+LIVE_WEBSITE_TRUTH_FILES = {
+    "runtime_execution_status.json",
+    "runtime_execution_history.json",
+    "runtime_live_truth_status.json",
+    "runtime_refresh_status.json",
+    "source_freshness_audit.json",
+    "source_reliability_status.json",
+    "admin_enriched_refresh_status.json",
+    "product_access_refresh_status.json",
+    "site_registry.json",
+    "estate_product_access.json",
+    "estate_access_truth.json",
+    "admin_truth_v2.json",
+    "user_footprint.json",
+    "site_lifecycle_decisions.json",
+    "site_access_validation.json",
+    "monitored_sites.json",
+    "site_onboarding_review.json",
+}
+
+LEGACY_NON_WEBSITE_TRUTH_FILES = {
+    "latest_run.json",
+    "latest_run_pretty.json",
+    "latest_run_safe_partial.json",
+    "latest_run_admin_enriched.json",
+    "latest_run_admin_enriched_pretty.json",
+    "billing_seats.json",
+    "latest_snapshot.json",
+    "snapshot_index.json",
+}
+
+def website_truth_classification(filename: str) -> Dict[str, Any]:
+    name = Path(str(filename)).name
+    if name in LEGACY_NON_WEBSITE_TRUTH_FILES:
+        return {
+            "website_truth_allowed": False,
+            "truth_class": "blocked_legacy_static_input",
+            "reason": "Legacy/manual snapshot inputs must not feed website-facing routes.",
+        }
+    if name in LIVE_WEBSITE_TRUTH_FILES:
+        return {
+            "website_truth_allowed": True,
+            "truth_class": "live_or_auto_refreshed_truth",
+            "reason": "Allowed because this source is live, runtime-generated, or auto-refreshed.",
+        }
+    return {
+        "website_truth_allowed": False,
+        "truth_class": "unknown_not_approved_for_website",
+        "reason": "Unknown JSON source is blocked until explicitly classified as live or auto-refreshed.",
+    }
+# --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
 def write_json(path: Path, payload: Any) -> Any:
     DATA_PATH.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -367,6 +422,7 @@ def _contract_payload(name: str, payload: Any, *, source_file: str, contract_typ
         "status": status,
         "available": available,
         "source_file": source_file,
+        "website_truth": website_truth,
         "source_freshness": freshness,
         "live_builder": live_builder,
         "stale_allowed": bool(allow_stale),
@@ -1302,6 +1358,8 @@ def api_operator_live_ui_view_contract():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
+
 
 
 
