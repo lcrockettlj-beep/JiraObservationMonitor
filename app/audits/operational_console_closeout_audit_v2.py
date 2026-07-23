@@ -78,11 +78,11 @@ def main() -> int:
     reliability_summary = reliability.get("summary") or {}
 
     ui_files = [
-        "static/data/operational_console_status.json",
-        "static/data/operational_console_ui_view.json",
-        "static/data/operational_console_drilldowns.json",
-        "static/data/operational_console_insights.json",
-        "static/data/operational_console_role_views.json",
+        "static/data/live_operator_contract",
+        "static/data/live_operator_contract",
+        "static/data/live_operator_contract",
+        "static/data/live_operator_contract",
+        "static/data/live_operator_contract",
         "static/data/site_onboarding_review.json",
     ]
     active_scripts = [
