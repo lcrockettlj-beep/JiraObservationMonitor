@@ -1496,6 +1496,15 @@ def _jom_build_cached_operator_alerts_v1(admin_truth, registry):
     return alerts
 
 
+
+def _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product_users):
+    payload = dict(user_footprint) if isinstance(user_footprint, dict) else {}
+    payload["metric"] = product_users
+    payload["metric_label"] = "Live Jira product-access users"
+    payload["named_access_detail_guarded"] = True
+    payload["source"] = "estate_product_access.summary.total_jira_product_user_count"
+    return payload
+
 def _jom_workspace_command_centre_cached_contract_v1():
     served = _jom_cached_now_v1()
     registry = _jom_cached_read_json_v1("site_registry.json", {})
@@ -1514,7 +1523,7 @@ def _jom_workspace_command_centre_cached_contract_v1():
     data = {
         "registry": registry,
         "registry_summary": registry_summary,
-        "users": user_footprint,
+        "users": _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product_users),
         "users_metric": {"metric": product_users, "metric_label": "Live Jira product-access users", "named_access_detail_guarded": True, "source": "estate_product_access.summary.total_jira_product_user_count"},
         "source_state": source_state,
         "operator_summary": {"schema": "jom-operator-summary-fast-read-v1", "generated_at_utc": served, "posture": "warning" if alerts else "ok", "runtime": runtime_status, "alert_summary": {"critical": len([a for a in alerts if a.get("level") == "critical"]), "warning": len([a for a in alerts if a.get("level") == "warning"]), "info": len([a for a in alerts if a.get("level") == "info"]), "total": len(alerts)}, "top_alerts": alerts[:5], "admin_truth": {"status": admin_truth.get("status") if isinstance(admin_truth, dict) else None, "severity": admin_truth.get("severity") if isinstance(admin_truth, dict) else None}},

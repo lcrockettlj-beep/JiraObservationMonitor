@@ -1,0 +1,9 @@
+{
+  "schema": "jom-command-centre-workspace-users-metric-contract-patch-v1.5",
+  "generated_at_utc": "2026-07-24T13:25:25Z",
+  "overall_status": "applied",
+  "changed": true,
+  "contract": "/api/workspace/command-centre",
+  "field_added": "users.metric",
+  "expected_metric_source": "estate_product_access.summary.total_jira_product_user_count"
+}
