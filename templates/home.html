@@ -11,29 +11,29 @@
 <body data-jom-page="command-centre">
 {% include "_nav.html" %}
 <main class="jom-command-centre-final jom-command-centre-rail-layout" id="jom-command-centre">
-  <div class="jom-command-centre-main jom-command-centre-main--workflow-only">
+  <div class="jom-command-centre-main">
     <section class="jom-final-hero" aria-label="Command Centre overview">
       <div class="jom-final-hero__copy">
         <p class="jom-kicker">Operations / Command Centre</p>
         <h1>Command Centre</h1>
         <p class="jom-lede">What needs attention across the Atlassian estate right now?</p>
-        <div class="jom-final-actions" aria-label="Primary command actions" hidden></div>
       </div>
     </section>
 
-    <section class="jom-final-attention-grid jom-final-attention-grid--single" aria-label="Attention and actions">
+    <section class="jom-final-attention-grid" aria-label="Attention and actions">
       <article class="jom-card jom-attention-card">
         <div class="jom-card-heading">
+          <p class="jom-card-label">Live actions</p>
           <h2>Action Required</h2>
         </div>
-        <div id="jom-final-risk-list" class="jom-risk-list"><p class="jom-muted">Loading current risks...</p></div>
+        <div id="jom-final-risk-list" class="jom-risk-list" aria-live="polite">
+          <div class="jom-final-empty">Loading current actions...</div>
+        </div>
       </article>
     </section>
   </div>
 
   <aside class="jom-operations-rail" aria-label="Command Centre operations rail">
-    <div class="jom-rail-brand"><span>Operations Rail</span><strong>Live Estate Context</strong></div>
-
     <section class="jom-rail-card jom-rail-coverage" aria-label="Monitoring coverage">
       <p class="jom-rail-kicker">Monitoring Coverage</p>
       <div class="jom-coverage-ring" aria-hidden="true"><span id="jom-rail-monitoring-coverage">--</span></div>
@@ -55,7 +55,7 @@
       <h2>Operational Status</h2>
       <dl class="jom-rail-list jom-rail-list--tiles">
         <div><dt>Runtime</dt><dd id="jom-rail-runtime">--</dd></div>
-        <div><dt>Alerts</dt><dd id="jom-rail-alerts">--</dd></div>
+        <div><dt>Actions</dt><dd id="jom-rail-alerts">--</dd></div>
         <div><dt>Users</dt><dd id="jom-rail-users">--</dd></div>
       </dl>
     </section>

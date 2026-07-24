@@ -1,0 +1,18 @@
+{
+  "schema": "jom-command-centre-action-count-label-and-space-repair-v3",
+  "generated_at_utc": "2026-07-24T14:37:58Z",
+  "overall_status": "applied",
+  "scope": "command-centre-only",
+  "changed_files": [
+    "templates/home.html",
+    "static/css/jom_command_centre_completion_v1.css"
+  ],
+  "backend_changes": 0,
+  "overlay_changes": 0,
+  "extra_scripts_added": 0,
+  "fixes": [
+    "alerts label renamed to actions",
+    "action required card height reduced",
+    "single unique action retained"
+  ]
+}

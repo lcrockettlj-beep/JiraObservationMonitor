@@ -1,0 +1,20 @@
+{
+  "schema": "jom-command-centre-clean-single-owner-display-repair-v2",
+  "generated_at_utc": "2026-07-24T14:33:36Z",
+  "overall_status": "applied",
+  "scope": "command-centre-only",
+  "changed_files": [
+    "templates/home.html",
+    "static/css/jom_command_centre_completion_v1.css",
+    "static/js/jom_command_centre_completion_v1.js"
+  ],
+  "backend_changes": 0,
+  "overlay_changes": 0,
+  "extra_scripts_added": 0,
+  "fixes": [
+    "reduced top spacing",
+    "removed right rail title card",
+    "added action buttons",
+    "deduplicated action required items"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "jom-command-centre-clean-single-owner-rebuild-v1",
+  "generated_at_utc": "2026-07-24T14:15:54Z",
+  "overall_status": "applied",
+  "changed_files": [
+    "templates/home.html",
+    "static/css/jom_command_centre_completion_v1.css",
+    "static/js/jom_command_centre_completion_v1.js"
+  ],
+  "scope": "command-centre-only",
+  "backend_changes": 0,
+  "file_deletions": 0,
+  "active_renderer": "static/js/jom_command_centre_completion_v1.js",
+  "active_stylesheet": "static/css/jom_command_centre_completion_v1.css",
+  "active_template": "templates/home.html",
+  "removed_layers_from_home": [
+    "jom_export_reporting_v1",
+    "jom_lifecycle_decision_sync_v1",
+    "jom_workspace_clean_visibility_v1",
+    "jom_command_centre_hero_metrics_alignment_v1"
+  ]
+}
