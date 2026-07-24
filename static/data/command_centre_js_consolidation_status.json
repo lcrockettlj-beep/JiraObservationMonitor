@@ -1,0 +1,19 @@
+{
+  "schema": "jom-command-centre-js-consolidation-v1",
+  "generated_at_utc": "2026-07-24T09:53:01Z",
+  "overall_status": "applied",
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "target_file": "static/js/jom_command_centre_completion_v1.js",
+  "changed": true,
+  "consolidation": "Replaced multiple overlay writers with one clean Command Centre data-binding script.",
+  "users_metric_source": "live Jira product-access users",
+  "users_primary_endpoint": "/api/source-state live_product_access.total_jira_product_user_count",
+  "users_fallback_endpoint": "/estate/product-access summary.total_jira_product_user_count",
+  "notes": [
+    "No layout, HTML, CSS, navigation, card, rail, or section changes.",
+    "Eliminates the 61 -> 156 flicker by removing competing users writers.",
+    "Command Centre Users rail now uses live Jira product-access total."
+  ]
+}
