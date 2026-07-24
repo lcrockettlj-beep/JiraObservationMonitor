@@ -369,3 +369,85 @@ if (railRev) { railRev.style.width = (100 - coveragePct) + '%'; }
 })();
 /* --- JOM COMMAND CENTRE STATUS INTERPRETATION FIX v1 END --- */
 
+/* --- JOM COMMAND CENTRE USERS METRIC SOURCE ALIGNMENT v1.1 START ---
+   Data binding only.
+   No layout, HTML, CSS, navigation, card, rail, or section changes.
+
+   Command Centre "Users" rail shows live Jira product-access users.
+   It does not use guarded named-access footprint or unique admin identity count.
+*/
+(function () {
+  function unwrap(payload) {
+    if (payload && typeof payload === "object" && payload.data && typeof payload.data === "object") {
+      return payload.data;
+    }
+    return payload || {};
+  }
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value == null || value === "" ? "n/a" : String(value);
+  }
+
+  function asNumber(value) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  async function getJson(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(url + " returned " + res.status);
+    return await res.json();
+  }
+
+  function deriveProductAccessUsers(sourceStatePayload, estateProductPayload) {
+    const sourceState = unwrap(sourceStatePayload);
+    const estateProduct = unwrap(estateProductPayload);
+
+    const liveProduct = sourceState.live_product_access || {};
+    const directLive = asNumber(liveProduct.total_jira_product_user_count);
+    if (directLive !== null) return directLive;
+
+    const estateSummary = estateProduct.summary || {};
+    const estateTotal = asNumber(estateSummary.total_jira_product_user_count);
+    if (estateTotal !== null) return estateTotal;
+
+    const adminTruth = sourceState.admin_truth || {};
+    const adminData = unwrap(adminTruth);
+    const liveOverlay = adminData.live_product_access_truth || {};
+    const liveOverlaySummary = liveOverlay.summary || {};
+    const overlayTotal = asNumber(liveOverlaySummary.total_jira_product_user_count);
+    if (overlayTotal !== null) return overlayTotal;
+
+    return null;
+  }
+
+  async function refreshCommandCentreUsersMetric() {
+    try {
+      const [sourceState, estateProduct] = await Promise.all([
+        getJson("/api/source-state").catch(() => ({})),
+        getJson("/estate/product-access").catch(() => ({}))
+      ]);
+
+      const users = deriveProductAccessUsers(sourceState, estateProduct);
+      if (users !== null) {
+        setText("jom-rail-users", users);
+      }
+    } catch (err) {
+      console.warn("Command Centre users metric source alignment failed", err);
+    }
+  }
+
+  function run() {
+    refreshCommandCentreUsersMetric();
+    setTimeout(refreshCommandCentreUsersMetric, 500);
+    setTimeout(refreshCommandCentreUsersMetric, 1500);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
+/* --- JOM COMMAND CENTRE USERS METRIC SOURCE ALIGNMENT v1.1 END --- */

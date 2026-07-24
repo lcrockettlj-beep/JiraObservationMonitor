@@ -1,0 +1,20 @@
+{
+  "schema": "jom-command-centre-users-metric-source-alignment-v1.1",
+  "generated_at_utc": "2026-07-24T09:44:26Z",
+  "overall_status": "applied",
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "target_file": "static/js/jom_command_centre_completion_v1.js",
+  "changed": true,
+  "users_metric_source": "live Jira product-access users",
+  "primary_endpoint": "/api/source-state",
+  "primary_field": "live_product_access.total_jira_product_user_count",
+  "fallback_endpoint": "/estate/product-access",
+  "fallback_field": "summary.total_jira_product_user_count",
+  "notes": [
+    "Command Centre Users rail represents live Jira product-access users across accessible Jira roles.",
+    "Named access detail remains guarded until real named user-to-site reconciliation exists.",
+    "Admin identity human users remain available in Admin Truth but are not the Command Centre Users rail metric."
+  ]
+}
