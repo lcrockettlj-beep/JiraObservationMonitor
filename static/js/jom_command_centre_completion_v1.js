@@ -250,3 +250,122 @@ if (railRev) { railRev.style.width = (100 - coveragePct) + '%'; }
 })();
 /* --- JOM COMMAND CENTRE RAIL TRUTH DISPLAY FIX v1 END --- */
 
+
+/* --- JOM COMMAND CENTRE STATUS INTERPRETATION FIX v1 START ---
+   Data interpretation only.
+   No layout, HTML, CSS, navigation, card, rail, or section changes.
+*/
+(function () {
+  function unwrap(payload) {
+    if (payload && typeof payload === "object" && payload.data && typeof payload.data === "object") {
+      return payload.data;
+    }
+    return payload || {};
+  }
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value == null || value === "" ? "n/a" : String(value);
+  }
+
+  async function getJson(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(url + " returned " + res.status);
+    return await res.json();
+  }
+
+  function deriveDataHealth(sourceStatePayload) {
+    const sourceState = unwrap(sourceStatePayload);
+
+    const freshnessContract = sourceState.source_freshness || {};
+    const freshnessData = unwrap(freshnessContract);
+    const freshnessSummary = freshnessData.summary || {};
+
+    const reliabilityContract = sourceState.source_reliability || {};
+    const reliabilityData = unwrap(reliabilityContract);
+    const reliabilitySummary = reliabilityData.summary || {};
+
+    const freshnessOverall = String(
+      freshnessSummary.overall_state ||
+      freshnessData.overall_state ||
+      freshnessContract.status ||
+      ""
+    ).toLowerCase();
+
+    const reliabilityOverall = String(
+      reliabilityData.overall_status ||
+      reliabilityContract.status ||
+      ""
+    ).toLowerCase();
+
+    const issueCount = Number(
+      reliabilitySummary.issue_count ??
+      reliabilityData.summary?.issue_count ??
+      0
+    );
+
+    if (freshnessOverall === "critical" || reliabilityOverall === "critical") return "Critical";
+    if (
+      freshnessOverall === "attention" ||
+      freshnessOverall === "stale" ||
+      reliabilityOverall === "attention" ||
+      issueCount > 0
+    ) {
+      return "Review";
+    }
+
+    if (
+      freshnessOverall === "ok" ||
+      freshnessOverall === "current" ||
+      reliabilityOverall === "ok"
+    ) {
+      return "OK";
+    }
+
+    return "Review";
+  }
+
+  function deriveUsers(userPayload) {
+    const payload = unwrap(userPayload);
+    const summary = payload.summary || {};
+
+    const userCount = Number(
+      summary.users_analyzed ??
+      summary.named_unique_users ??
+      summary.total_users ??
+      payload.users_analyzed
+    );
+
+    if (Number.isFinite(userCount)) return userCount;
+
+    const sourceStatus = String(payload.source_status || payload.status || "").toLowerCase();
+
+    if (payload.safe_to_show_named_access_ui === false || sourceStatus === "unavailable") {
+      return "Guarded";
+    }
+
+    return "n/a";
+  }
+
+  async function refreshCommandCentreStatusInterpretation() {
+    try {
+      const [sourceState, users] = await Promise.all([
+        getJson("/api/source-state").catch(() => ({})),
+        getJson("/users/footprint").catch(() => ({}))
+      ]);
+
+      setText("jom-rail-data-health", deriveDataHealth(sourceState));
+      setText("jom-rail-users", deriveUsers(users));
+    } catch (err) {
+      console.warn("Command Centre status interpretation refresh failed", err);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", refreshCommandCentreStatusInterpretation);
+  } else {
+    refreshCommandCentreStatusInterpretation();
+  }
+})();
+/* --- JOM COMMAND CENTRE STATUS INTERPRETATION FIX v1 END --- */
+

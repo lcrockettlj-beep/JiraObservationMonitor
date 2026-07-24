@@ -1,0 +1,19 @@
+{
+  "schema": "jom-user-footprint-truth-chain-audit-status-v1",
+  "generated_at_utc": "2026-07-24T09:25:10Z",
+  "overall_status": "REVIEW",
+  "blocker_count": 4,
+  "summary": {
+    "footprint_file_exists": true,
+    "reconciliation_v1_exists": false,
+    "reconciliation_v2_exists": false,
+    "file_source_status": "unavailable",
+    "file_safe_to_show_named_access_ui": false,
+    "file_users_analyzed": null,
+    "http_source_status": "unavailable",
+    "http_safe_to_show_named_access_ui": false,
+    "http_users_analyzed": null,
+    "http_reason": "No named access reconciliation file is available."
+  },
+  "report": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\user_footprint_truth_chain_audit_v1\\USER_FOOTPRINT_TRUTH_CHAIN_AUDIT_V1.md"
+}

@@ -1,16 +1,29 @@
 {
-  "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-07-21T14:48:02.264769Z",
-  "source_status": "unavailable",
-  "reason": "No named access reconciliation file is available.",
+  "schema": "jom-user-footprint-v3-identity-summary",
+  "generated_at_utc": "2026-07-24T09:28:27Z",
+  "source_status": "generated",
+  "source_type": "admin_identity_summary",
+  "reason": "Generated from Admin Truth identity summary. Named user-to-site access remains guarded because no named access reconciliation report exists.",
   "safe_to_show_named_access_ui": false,
+  "safe_to_show_identity_summary": true,
+  "named_access_available": false,
   "reconciliation_source": null,
   "summary": {
-    "users_analyzed": null,
+    "users_analyzed": 61,
+    "human_users": 61,
+    "active_users": 100,
+    "org_users": 100,
+    "managed_users": 61,
+    "suspended_users": 1,
+    "total_product_access_assignments": 156,
     "average_sites_per_user": null,
     "high_duplication_users": null,
-    "medium_duplication_users": null,
-    "total_product_access_assignments": null
+    "medium_duplication_users": null
   },
-  "users": []
+  "users": [],
+  "notes": [
+    "This payload provides estate-level user identity summary only.",
+    "It does not expose named user-to-site entitlement mapping.",
+    "Named access UI remains guarded until a real reconciliation source is available."
+  ]
 }

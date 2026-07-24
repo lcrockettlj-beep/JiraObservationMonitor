@@ -1,0 +1,9 @@
+{
+  "schema": "jom-user-footprint-identity-summary-repair-status-v1",
+  "generated_at_utc": "2026-07-24T09:28:27Z",
+  "overall_status": "applied",
+  "users_analyzed": 61,
+  "safe_to_show_named_access_ui": false,
+  "safe_to_show_identity_summary": true,
+  "output": "static/data/user_footprint.json"
+}
