@@ -1,0 +1,14 @@
+{
+  "schema": "jom-command-centre-workspace-payload-render-fix-v1",
+  "generated_at_utc": "2026-07-24T12:05:35Z",
+  "overall_status": "applied",
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "target_file": "static/js/jom_command_centre_completion_v1.js",
+  "notes": [
+    "Replaced stacked Command Centre JS with one workspace-contract renderer",
+    "Uses /api/workspace/command-centre only",
+    "No layout, HTML, or CSS changes"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "jom-frontend-browser-render-dom-update-audit-status-v1",
+  "generated_at_utc": "2026-07-24T11:58:08Z",
+  "overall_status": "REVIEW",
+  "issue_count": 2,
+  "workspace_metrics": {
+    "users_metric": null,
+    "coverage_total": null,
+    "coverage_monitored": null,
+    "review_items": null,
+    "data_health": null
+  },
+  "report": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\frontend_browser_render_dom_update_audit_v1\\FRONTEND_BROWSER_RENDER_DOM_UPDATE_AUDIT_V1.md"
+}
