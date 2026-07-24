@@ -33,7 +33,7 @@ WEBSITE_FACING_PATHS = {
 POLICY_OR_AUDIT_FILES = {
     "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
     "scripts/backend_legacy_truth_eradication_v1.py",
-    "scripts/backend_legacy_truth_eradication_v1.py",
+    "scripts/backend_final_audit_classification_operational_script_isolation_v1.py",
     "scripts/backend_runtime_freshness_snapshot_elimination_v1.py",
     "scripts/audit_source_freshness.py",
 }
@@ -157,7 +157,7 @@ def run_compile(root: Path) -> tuple[bool, str]:
         "app/reporting/export_reporting.py",
         "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
         "scripts/backend_legacy_truth_eradication_v1.py",
-        "scripts/backend_legacy_truth_eradication_v1.py",
+        "scripts/backend_final_audit_classification_operational_script_isolation_v1.py",
     ]
     files = [item for item in candidates if (root / item).exists()]
     result = subprocess.run([sys.executable, "-m", "py_compile", *files], cwd=root, text=True, capture_output=True)
@@ -238,23 +238,23 @@ def build_payload(root: Path, actions: list[str]) -> dict[str, Any]:
 
 
 def install_current_script(root: Path, current_path: Path) -> str:
-    target = root / "scripts" / "backend_legacy_truth_eradication_v1.py"
+    target = root / "scripts" / "backend_final_audit_classification_operational_script_isolation_v1.py"
     if current_path.resolve() != target.resolve():
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(read_text(current_path), encoding="utf-8")
-        return "Installed scripts/backend_legacy_truth_eradication_v1.py"
+        return "Installed scripts/backend_final_audit_classification_operational_script_isolation_v1.py"
     return "Operational script isolation script already installed"
 
 
 def update_existing_audit_scripts(root: Path) -> list[str]:
     actions: list[str] = []
-    current = read_text(root / "scripts" / "backend_legacy_truth_eradication_v1.py")
+    current = read_text(root / "scripts" / "backend_final_audit_classification_operational_script_isolation_v1.py")
     if not current:
         return ["Could not update existing audit scripts because installed script was not readable"]
     for name in ["backend_legacy_truth_eradication_v1.py", "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"]:
         target = root / "scripts" / name
         if target.exists():
-            text = current.replace("backend_legacy_truth_eradication_v1.py", name)
+            text = current.replace("backend_final_audit_classification_operational_script_isolation_v1.py", name)
             changed = write_text_if_changed(target, text)
             actions.append(f"Updated classifier in scripts/{name}" if changed else f"Classifier already aligned in scripts/{name}")
         else:

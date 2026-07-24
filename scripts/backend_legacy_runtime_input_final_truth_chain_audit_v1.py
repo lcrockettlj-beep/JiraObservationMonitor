@@ -22,17 +22,29 @@ LEGACY_INPUTS = {
 
 SCAN_DIRS = ["app", "scripts"]
 TEXT_SUFFIXES = {".py", ".ps1", ".html", ".js", ".css", ".md", ".txt", ".json", ".yaml", ".yml"}
+
 WEBSITE_FACING_PATHS = {
     "app/web.py",
     "app/operational/operator_surface.py",
     "app/reporting/export_reporting.py",
 }
+
+# These are allowed to mention legacy filenames because they are not website-serving code.
 POLICY_OR_AUDIT_FILES = {
     "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
+    "scripts/backend_legacy_truth_eradication_v1.py",
     "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
     "scripts/backend_runtime_freshness_snapshot_elimination_v1.py",
     "scripts/audit_source_freshness.py",
 }
+
+OPERATIONAL_TOOLING_FILES = {
+    "scripts/audit_sprint10_phase2.ps1",
+    "scripts/health_check.ps1",
+    "scripts/ops/preview_static_cleanup.ps1",
+    "scripts/restore_runtime_from_backup.ps1",
+}
+
 INTERNAL_RUNTIME_PREFIXES = (
     "app/runtime/",
     "app/builders/",
@@ -40,6 +52,7 @@ INTERNAL_RUNTIME_PREFIXES = (
     "app/access/",
     "app/audits/",
 )
+
 POLICY_MARKERS = (
     "LEGACY_NON_WEBSITE_TRUTH_FILES",
     "LEGACY_INPUTS",
@@ -47,6 +60,7 @@ POLICY_MARKERS = (
     "not website truth",
     "BLOCKED_LEGACY_STATIC_INPUT",
     "legacy_static_allowed",
+    "legacy_reference_only",
 )
 
 
@@ -68,26 +82,27 @@ def read_text(path: Path) -> str:
 def write_text_if_changed(path: Path, text: str) -> bool:
     before = read_text(path)
     if before != text:
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
         return True
     return False
 
 
 def iter_text_files(root: Path) -> list[Path]:
-    rows: list[Path] = []
+    files: list[Path] = []
     for folder in SCAN_DIRS:
         base = root / folder
         if not base.exists():
             continue
         for path in base.rglob("*"):
             if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES:
-                rows.append(path)
-    return sorted(rows)
+                files.append(path)
+    return sorted(files)
 
 
 def line_is_policy_context(lines: list[str], index: int) -> bool:
-    start = max(0, index - 8)
-    end = min(len(lines), index + 9)
+    start = max(0, index - 10)
+    end = min(len(lines), index + 11)
     window = "\n".join(lines[start:end])
     return any(marker in window for marker in POLICY_MARKERS)
 
@@ -95,10 +110,16 @@ def line_is_policy_context(lines: list[str], index: int) -> bool:
 def classify_reference(path_rel: str, line_text: str, target: str, policy_context: bool) -> tuple[str, str, bool]:
     if policy_context or path_rel in POLICY_OR_AUDIT_FILES:
         return "POLICY_OR_AUDIT_ONLY", "Reference is inside policy/audit code and is not website data usage.", False
+
+    if path_rel in OPERATIONAL_TOOLING_FILES:
+        return "OPERATIONAL_TOOLING_ONLY", "Reference is inside operational audit/health/restore tooling and does not feed website truth.", False
+
     if path_rel in WEBSITE_FACING_PATHS:
         return "REPLACE_REQUIRED_WEBSITE_RISK", "Website-facing code references a legacy/static input and must not feed the website.", True
+
     if path_rel.startswith(INTERNAL_RUNTIME_PREFIXES):
         return "INTERNAL_REFRESH_INPUT_REVIEW", "Internal runtime/builder reference; allowed only if it feeds an automatic refresh chain and is never exposed directly.", False
+
     return "REVIEW_UNKNOWN_USAGE", "Reference needs review before it can remain.", True
 
 
@@ -129,53 +150,17 @@ def scan_legacy_refs(root: Path) -> list[dict[str, Any]]:
     return rows
 
 
-def patch_export_reporting(root: Path) -> list[str]:
-    path = root / "app" / "reporting" / "export_reporting.py"
-    actions: list[str] = []
-    if not path.exists():
-        return ["export_reporting.py not found; skipped"]
-    text = read_text(path)
-    before = text
-
-    # Remove latest_run fallback from registry export. Static site_registry.json is the generated/runtime contract.
-    text = text.replace(
-        '"registry": first_dict(read_json(static / "site_registry.json", {}), read_json(root / "latest_run.json", {}).get("site_registry", {})),',
-        '"registry": first_dict(read_json(static / "site_registry.json", {})),',
-    )
-
-    # Remove latest_run_safe_partial operator summary fallback. Do not expose legacy runtime snapshots through reports.
-    text = text.replace(
-        '"operator_summary": first_dict(read_json(root / "latest_run_safe_partial.json", {}).get("operator_summary", {})),',
-        '"operator_summary": first_dict(read_json(static / "backend_final_truth_chain_status.json", {})),',
-    )
-
-    if text != before:
-        path.write_text(text, encoding="utf-8")
-        actions.append("Removed website/reporting fallbacks to latest_run.json and latest_run_safe_partial.json")
-    else:
-        actions.append("No exact legacy reporting fallback patterns found or already removed")
-    return actions
-
-
-def patch_final_audit_classifier(root: Path) -> list[str]:
-    # Replace old audit script with this improved classifier so future counts do not flag policy/audit references as website risk.
-    source = root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
-    target = root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
-    if not source.exists() or not target.exists():
-        return ["Final truth chain audit script replacement skipped; source or target missing"]
-    text = read_text(source)
-    # Make the copied audit status names match the original audit purpose where possible.
-    text = text.replace("backend_legacy_runtime_input_final_truth_chain_audit_v1.py", "backend_legacy_runtime_input_final_truth_chain_audit_v1.py")
-    changed = write_text_if_changed(target, text)
-    return ["Updated final truth-chain audit classifier to ignore policy/audit-only legacy references" if changed else "Final truth-chain audit classifier already aligned"]
-
-
-def run_compile(root: Path, extra: list[str] | None = None) -> tuple[bool, str]:
-    files = ["app/web.py", "app/operational/operator_surface.py", "app/reporting/export_reporting.py"]
-    if extra:
-        files.extend(extra)
-    existing = [item for item in files if (root / item).exists()]
-    result = subprocess.run([sys.executable, "-m", "py_compile", *existing], cwd=root, text=True, capture_output=True)
+def run_compile(root: Path) -> tuple[bool, str]:
+    candidates = [
+        "app/web.py",
+        "app/operational/operator_surface.py",
+        "app/reporting/export_reporting.py",
+        "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
+        "scripts/backend_legacy_truth_eradication_v1.py",
+        "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py",
+    ]
+    files = [item for item in candidates if (root / item).exists()]
+    result = subprocess.run([sys.executable, "-m", "py_compile", *files], cwd=root, text=True, capture_output=True)
     return result.returncode == 0, (result.stdout + result.stderr).strip()
 
 
@@ -186,7 +171,7 @@ def write_json(path: Path, payload: Any) -> None:
 
 def write_markdown(path: Path, payload: dict[str, Any]) -> None:
     lines: list[str] = []
-    lines.append("# Backend Legacy Truth Eradication v1")
+    lines.append("# Backend Final Audit Classification & Operational Script Isolation v1")
     lines.append("")
     lines.append(f"- Overall status: **{payload['overall_status']}**")
     lines.append(f"- Generated at UTC: {payload['generated_at_utc']}")
@@ -194,7 +179,7 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
     lines.append(f"- Website-blocking rows: {payload['summary']['website_blocking_rows']}")
     lines.append("")
     lines.append("## Rule")
-    lines.append("If it is not live/current or auto-refreshed, it must not feed the website.")
+    lines.append(payload["plain_rule"])
     lines.append("")
     lines.append("## Actions")
     for action in payload["actions"]:
@@ -212,6 +197,14 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
         for row in blocking:
             lines.append(f"- {row['file']}:{row['line']} - {row['target']} - {row['classification']} - {row['reason']}")
     lines.append("")
+    lines.append("## Operational Tooling Rows")
+    operational = [row for row in payload["legacy_references"] if row["classification"] == "OPERATIONAL_TOOLING_ONLY"]
+    if not operational:
+        lines.append("- None found.")
+    else:
+        for row in operational:
+            lines.append(f"- {row['file']}:{row['line']} - {row['target']} - blocking={row['website_blocking']}")
+    lines.append("")
     lines.append("## Remaining Legacy References")
     for row in payload["legacy_references"]:
         lines.append(f"- {row['file']}:{row['line']} - {row['target']} - {row['classification']} - blocking={row['website_blocking']}")
@@ -225,10 +218,10 @@ def build_payload(root: Path, actions: list[str]) -> dict[str, Any]:
     for row in refs:
         by_class[row["classification"]] = by_class.get(row["classification"], 0) + 1
     blocking = [row for row in refs if row["website_blocking"]]
-    compile_ok, compile_output = run_compile(root, ["scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py", "scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py"])
+    compile_ok, compile_output = run_compile(root)
     status = "PASS" if compile_ok and not blocking else "REVIEW"
     return {
-        "schema": "jom-backend-legacy-truth-eradication-v1",
+        "schema": "jom-backend-final-audit-classification-operational-script-isolation-v1",
         "generated_at_utc": now_utc(),
         "overall_status": status,
         "plain_rule": "If it is not live/current or auto-refreshed, it must not feed the website.",
@@ -244,6 +237,31 @@ def build_payload(root: Path, actions: list[str]) -> dict[str, Any]:
     }
 
 
+def install_current_script(root: Path, current_path: Path) -> str:
+    target = root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
+    if current_path.resolve() != target.resolve():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(read_text(current_path), encoding="utf-8")
+        return "Installed scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
+    return "Operational script isolation script already installed"
+
+
+def update_existing_audit_scripts(root: Path) -> list[str]:
+    actions: list[str] = []
+    current = read_text(root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py")
+    if not current:
+        return ["Could not update existing audit scripts because installed script was not readable"]
+    for name in ["backend_legacy_truth_eradication_v1.py", "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"]:
+        target = root / "scripts" / name
+        if target.exists():
+            text = current.replace("backend_legacy_runtime_input_final_truth_chain_audit_v1.py", name)
+            changed = write_text_if_changed(target, text)
+            actions.append(f"Updated classifier in scripts/{name}" if changed else f"Classifier already aligned in scripts/{name}")
+        else:
+            actions.append(f"scripts/{name} not found; skipped")
+    return actions
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-root", default=".")
@@ -253,20 +271,23 @@ def main() -> int:
         raise SystemExit(f"Project root not found: {root}")
 
     actions: list[str] = []
-    actions.extend(patch_export_reporting(root))
-    # Copy this script into repo if it is not already running from the target path.
-    target_self = root / "scripts" / "backend_legacy_runtime_input_final_truth_chain_audit_v1.py"
-    current = Path(__file__).resolve()
-    if current != target_self:
-        target_self.parent.mkdir(parents=True, exist_ok=True)
-        target_self.write_text(read_text(current), encoding="utf-8")
-        actions.append("Installed scripts/backend_legacy_runtime_input_final_truth_chain_audit_v1.py")
-    actions.extend(patch_final_audit_classifier(root))
+    actions.append(install_current_script(root, Path(__file__).resolve()))
+    actions.extend(update_existing_audit_scripts(root))
 
     payload = build_payload(root, actions)
-    report_dir = root / "reports" / "backend_legacy_truth_eradication_v1"
-    write_json(report_dir / "BACKEND_LEGACY_TRUTH_ERADICATION_V1.json", payload)
-    write_markdown(report_dir / "BACKEND_LEGACY_TRUTH_ERADICATION_V1.md", payload)
+    report_dir = root / "reports" / "backend_final_audit_classification_operational_script_isolation_v1"
+    write_json(report_dir / "BACKEND_FINAL_AUDIT_CLASSIFICATION_OPERATIONAL_SCRIPT_ISOLATION_V1.json", payload)
+    write_markdown(report_dir / "BACKEND_FINAL_AUDIT_CLASSIFICATION_OPERATIONAL_SCRIPT_ISOLATION_V1.md", payload)
+    write_json(root / "static" / "data" / "backend_final_truth_chain_status.json", {
+        "schema": "jom-backend-final-truth-chain-status-v1",
+        "generated_at_utc": payload["generated_at_utc"],
+        "overall_status": payload["overall_status"],
+        "website_truth_rule": payload["plain_rule"],
+        "legacy_reference_rows": payload["summary"]["legacy_reference_rows"],
+        "website_blocking_rows": payload["summary"]["website_blocking_rows"],
+        "compile_ok": payload["summary"]["compile_ok"],
+        "classification_pack": "backend_final_audit_classification_operational_script_isolation_v1",
+    })
     write_json(root / "static" / "data" / "backend_legacy_truth_eradication_status.json", {
         "schema": "jom-backend-legacy-truth-eradication-status-v1",
         "generated_at_utc": payload["generated_at_utc"],
@@ -275,12 +296,13 @@ def main() -> int:
         "legacy_reference_rows": payload["summary"]["legacy_reference_rows"],
         "website_blocking_rows": payload["summary"]["website_blocking_rows"],
         "compile_ok": payload["summary"]["compile_ok"],
+        "classification_pack": "backend_final_audit_classification_operational_script_isolation_v1",
     })
 
     print(f"Overall status: {payload['overall_status']}")
     print(f"Legacy reference rows: {payload['summary']['legacy_reference_rows']}")
     print(f"Website-blocking rows: {payload['summary']['website_blocking_rows']}")
-    print(f"Report: {report_dir / 'BACKEND_LEGACY_TRUTH_ERADICATION_V1.md'}")
+    print(f"Report: {report_dir / 'BACKEND_FINAL_AUDIT_CLASSIFICATION_OPERATIONAL_SCRIPT_ISOLATION_V1.md'}")
     compile_output = payload["summary"].get("compile_output")
     if compile_output:
         print(compile_output)
