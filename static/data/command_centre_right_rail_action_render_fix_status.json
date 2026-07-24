@@ -1,0 +1,11 @@
+{
+  "schema": "jom-command-centre-right-rail-action-render-fix-status-v1",
+  "generated_at_utc": "2026-07-24T12:51:19Z",
+  "overall_status": "applied",
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "target_file": "static/js/jom_command_centre_completion_v1.js",
+  "action_required_renderer_replaced": true,
+  "coverage_reason_hidden_or_cleared": true
+}

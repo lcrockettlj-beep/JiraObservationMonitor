@@ -1,0 +1,15 @@
+{
+  "schema": "jom-command-centre-coverage-text-render-fix-v1",
+  "generated_at_utc": "2026-07-24T12:38:46Z",
+  "overall_status": "applied",
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "target_file": "static/js/jom_command_centre_completion_v1.js",
+  "changed": true,
+  "fixes": [
+    "Monitoring coverage percentage and text now use the same workspace contract registry metrics.",
+    "Coverage reason text is updated after the final workspace payload renders.",
+    "Estate/monitored/review rail counts are kept in sync with the coverage doughnut value."
+  ]
+}

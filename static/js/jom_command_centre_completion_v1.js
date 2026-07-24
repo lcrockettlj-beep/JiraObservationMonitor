@@ -10,6 +10,15 @@
   function n(v){ const x = Number(v); return Number.isFinite(x) ? x : null; }
   function firstNumber(...vals){ for(const v of vals){ const x=n(v); if(x!==null) return x; } return null; }
   function firstText(...vals){ for(const v of vals){ if(v !== undefined && v !== null && String(v).trim() !== '') return String(v); } return null; }
+
+  function setCoverageReasonHidden(){
+    const el = document.getElementById('jom-rail-coverage-reason');
+    if(el){
+      el.textContent = '';
+      el.setAttribute('aria-hidden', 'true');
+      el.style.display = 'none';
+    }
+  }
   function setText(id, value){ const el=document.getElementById(id); if(el) el.textContent = (value===null || value===undefined || value==='') ? 'n/a' : String(value); }
   function setHtml(id, html){ const el=document.getElementById(id); if(el) el.innerHTML = html; }
   function get(obj, path){
@@ -76,20 +85,31 @@
     return {count: count || 0, alerts: arr(alerts)};
   }
 
-  function renderActionList(alerts){
-    if(!alerts.length){
-      setHtml('jom-final-risk-list', '<div class="jom-final-empty">No immediate actions found.</div>');
+
+    function renderActionList(alerts){
+    const target = document.getElementById('jom-final-risk-list');
+    if(!target) return;
+    const all = arr(alerts);
+    const actionable = all.filter(a => {
+      const level = String(a && a.level || '').toLowerCase();
+      return level === 'critical' || level === 'warning';
+    });
+    const selected = (actionable.length ? actionable : all).slice(0, 3);
+    if(!selected.length){
+      target.innerHTML = '<div class="jom-final-empty">No immediate actions found.</div>';
       return;
     }
-    const html = alerts.slice(0,5).map(a => {
-      const level = String(a.level || 'info');
-      const title = a.title || 'Operational item';
-      const reason = a.reason || 'Review required.';
-      const action = a.recommended_action || a.action || 'Review';
-      const source = a.source ? `<div><strong>FIX LOCATION</strong> Source: ${a.source}</div>` : '';
+    const severityRank = {critical: 0, warning: 1, info: 2, ok: 3};
+    selected.sort((a,b) => (severityRank[String(a.level || 'info').toLowerCase()] ?? 9) - (severityRank[String(b.level || 'info').toLowerCase()] ?? 9));
+    const html = selected.map(a => {
+      const level = String(a.level || 'info').toLowerCase();
+      const title = escapeHtml(a.title || 'Action required');
+      const reason = escapeHtml(a.reason || 'Review operational source.');
+      const action = escapeHtml(a.recommended_action || a.action || 'Open relevant operational view.');
+      const source = a.source ? `<div><strong>FIX LOCATION</strong> Source: ${escapeHtml(a.source)}</div>` : '';
       return `<article class="jom-final-risk-card"><span class="jom-risk-pill">${level}</span><h3>${title}</h3><div><strong>IMPACT</strong> ${reason}</div><div><strong>ACTION</strong> ${action}</div>${source}<button class="jom-final-action">Open</button></article>`;
     }).join('');
-    setHtml('jom-final-risk-list', html);
+    target.innerHTML = html;
   }
 
   function render(root){
@@ -100,7 +120,7 @@
     setText('jom-rail-monitoring-coverage', coverage + '%');
     setText('jom-rail-coverage-monitored', registry.monitored);
     setText('jom-rail-coverage-review', registry.review);
-    setText('jom-rail-coverage-reason', registry.monitored + ' monitored - ' + registry.review + ' awaiting review');
+    setCoverageReasonHidden();
     setText('jom-rail-total-sites', registry.total);
     setText('jom-rail-monitored-sites', registry.monitored);
     setText('jom-rail-review-items', registry.review);
@@ -118,3 +138,89 @@
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
+// JOM Command Centre Action Required Stable Render v1 applied
+
+
+/* --- JOM COMMAND CENTRE COVERAGE TEXT RENDER FIX v1 START ---
+   Data rendering only.
+   No layout, HTML, CSS, navigation, card, rail, or section changes.
+*/
+(function () {
+  function unwrap(payload) {
+    if (payload && typeof payload === "object" && payload.data && typeof payload.data === "object") {
+      return payload.data;
+    }
+    return payload || {};
+  }
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value == null || value === "" ? "n/a" : String(value);
+  }
+
+  function asNumber(value, fallback) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  async function getJson(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(url + " returned " + res.status);
+    return await res.json();
+  }
+
+  function deriveRegistryMetrics(payload) {
+    const root = unwrap(payload);
+    const registry = unwrap(root.registry || root.site_registry || root);
+    const summary = registry.summary || {};
+    const sites = Array.isArray(registry.sites) ? registry.sites : [];
+
+    const total = asNumber(summary.total_sites, sites.length);
+    const monitored = asNumber(
+      summary.monitored_count,
+      sites.filter((site) => site && (site.is_monitored || site.classification === "monitored")).length
+    );
+    const discovered = asNumber(
+      summary.discovered_count,
+      sites.filter((site) => site && site.classification === "discovered").length
+    );
+    const pending = asNumber(summary.pending_onboarding_count, 0);
+    const review = discovered + pending;
+    const coverage = total > 0 ? Math.round((monitored / total) * 100) : 0;
+
+    return { total, monitored, review, coverage };
+  }
+
+  function applyCoverage(metrics) {
+    setText("jom-rail-monitoring-coverage", metrics.coverage + "%");
+    setText("jom-rail-coverage-monitored", metrics.monitored);
+    setText("jom-rail-coverage-review", metrics.review);
+    setText("jom-rail-total-sites", metrics.total);
+    setText("jom-rail-monitored-sites", metrics.monitored);
+    setText("jom-rail-review-items", metrics.review);
+    setCoverageReasonHidden();
+  }
+
+  async function refreshCoverageText() {
+    try {
+      const payload = await getJson("/api/workspace/command-centre");
+      applyCoverage(deriveRegistryMetrics(payload));
+    } catch (err) {
+      console.warn("Command Centre coverage text render fix failed", err);
+    }
+  }
+
+  function run() {
+    refreshCoverageText();
+    setTimeout(refreshCoverageText, 300);
+    setTimeout(refreshCoverageText, 1000);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run);
+  } else {
+    run();
+  }
+})();
+/* --- JOM COMMAND CENTRE COVERAGE TEXT RENDER FIX v1 END --- */
+
