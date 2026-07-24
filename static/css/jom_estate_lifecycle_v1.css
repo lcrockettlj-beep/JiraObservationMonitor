@@ -494,17 +494,4 @@ body[data-jom-page="estate"] .jom-side-nav {
   font-size: 11px;
   line-height: 1;
 }
-.estate-table td:first-child small {
-  display: none !important;
-}
 /* === Estate Site Link Button v1 END === */
-
-/* === Estate Hero Action Cleanup v1 START === */
-.estate-hero-actions {
-  display: none !important;
-}
-.estate-hero-card {
-  min-height: 220px;
-}
-/* === Estate Hero Action Cleanup v1 END === */
-

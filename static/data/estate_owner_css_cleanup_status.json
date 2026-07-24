@@ -1,0 +1,18 @@
+{
+  "schema": "jom-estate-owner-css-cleanup-v1",
+  "generated_at_utc": "2026-07-24T15:29:21Z",
+  "overall_status": "applied",
+  "scope": "estate-owner-css-only",
+  "target_file": "static/css/jom_estate_lifecycle_v1.css",
+  "changed": true,
+  "removed_block_count": 2,
+  "removed_blocks": [
+    ".estate-table td:first-child small {\n  display: none !important;\n}",
+    "/* === Estate Hero Action Cleanup v1 START === */\n.estate-hero-actions {\n  display: none !important;\n}\n.estate-hero-card {\n  min-height: 220px;\n}\n/* === Estate Hero Action Cleanup v1 END === */"
+  ],
+  "backend_changes": 0,
+  "html_changes": 0,
+  "js_changes": 0,
+  "file_deletions": 0,
+  "layout_rebuild": false
+}
