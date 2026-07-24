@@ -1,0 +1,12 @@
+{
+  "schema": "jom-workspace-contract-consolidation-status-v1",
+  "generated_at_utc": "2026-07-24T10:33:27Z",
+  "overall_status": "applied",
+  "backend_changed": true,
+  "command_centre_js_replaced": true,
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "workspace_contract": "/api/workspace/command-centre",
+  "target": "Command Centre now uses one workspace contract instead of multiple independent endpoint calls."
+}

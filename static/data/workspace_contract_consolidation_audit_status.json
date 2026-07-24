@@ -1,0 +1,8 @@
+{
+  "schema": "jom-workspace-contract-consolidation-audit-status-v1.2",
+  "generated_at_utc": "2026-07-24T10:14:00Z",
+  "overall_status": "PASS",
+  "workspace_count": 5,
+  "total_reference_rows": 143,
+  "report": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\workspace_contract_consolidation_audit_v1\\WORKSPACE_CONTRACT_CONSOLIDATION_AUDIT_V1.md"
+}

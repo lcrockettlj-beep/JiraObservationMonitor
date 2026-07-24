@@ -1355,6 +1355,141 @@ def api_operator_live_role_views_contract():
 def api_operator_live_ui_view_contract():
     return jsonify(build_operator_surface())
 
+
+
+# --- JOM WORKSPACE CONTRACT CONSOLIDATION v1 START ---
+def _jom_workspace_contract_unwrap_v1(payload):
+    if isinstance(payload, dict) and isinstance(payload.get("data"), dict):
+        return payload.get("data") or {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _jom_workspace_contract_source_status_v1(source_state):
+    source_state = _jom_workspace_contract_unwrap_v1(source_state)
+    freshness_contract = source_state.get("source_freshness") or {}
+    reliability_contract = source_state.get("source_reliability") or {}
+    freshness = _jom_workspace_contract_unwrap_v1(freshness_contract)
+    reliability = _jom_workspace_contract_unwrap_v1(reliability_contract)
+    freshness_summary = freshness.get("summary") if isinstance(freshness.get("summary"), dict) else {}
+    reliability_summary = reliability.get("summary") if isinstance(reliability.get("summary"), dict) else {}
+    freshness_state = str(freshness_summary.get("overall_state") or freshness.get("overall_state") or "").lower()
+    reliability_state = str(reliability.get("overall_status") or reliability_contract.get("status") or "").lower()
+    try:
+        issue_count = int(reliability_summary.get("issue_count") or 0)
+    except Exception:
+        issue_count = 0
+    if freshness_state == "critical" or reliability_state == "critical":
+        return "Critical"
+    if freshness_state in {"attention", "stale"} or reliability_state == "attention" or issue_count > 0:
+        return "Review"
+    if freshness_state in {"ok", "current"} or reliability_state == "ok":
+        return "OK"
+    return "Review"
+
+
+def _jom_workspace_contract_user_metric_v1(source_state, estate_product, user_footprint):
+    source_state = _jom_workspace_contract_unwrap_v1(source_state)
+    estate_product = _jom_workspace_contract_unwrap_v1(estate_product)
+    user_footprint = _jom_workspace_contract_unwrap_v1(user_footprint)
+    live_product = source_state.get("live_product_access") or {}
+    candidates = [
+        live_product.get("total_jira_product_user_count"),
+        (estate_product.get("summary") or {}).get("total_jira_product_user_count"),
+    ]
+    for value in candidates:
+        try:
+            if value is not None:
+                return int(value)
+        except Exception:
+            pass
+    summary = user_footprint.get("summary") if isinstance(user_footprint.get("summary"), dict) else {}
+    for value in [summary.get("users_analyzed"), summary.get("human_users")]:
+        try:
+            if value is not None:
+                return int(value)
+        except Exception:
+            pass
+    return None
+
+
+def _jom_workspace_contract_registry_summary_v1(registry):
+    registry = _jom_workspace_contract_unwrap_v1(registry)
+    sites = registry.get("sites") if isinstance(registry.get("sites"), list) else []
+    summary = registry.get("summary") if isinstance(registry.get("summary"), dict) else {}
+    try:
+        total = int(summary.get("total_sites") if summary.get("total_sites") is not None else len(sites))
+    except Exception:
+        total = len(sites)
+    try:
+        monitored = int(summary.get("monitored_count") if summary.get("monitored_count") is not None else len([s for s in sites if isinstance(s, dict) and (s.get("is_monitored") or s.get("classification") == "monitored")]))
+    except Exception:
+        monitored = 0
+    try:
+        discovered = int(summary.get("discovered_count") if summary.get("discovered_count") is not None else len([s for s in sites if isinstance(s, dict) and s.get("classification") == "discovered"]))
+    except Exception:
+        discovered = 0
+    try:
+        pending = int(summary.get("pending_onboarding_count") if summary.get("pending_onboarding_count") is not None else len([s for s in sites if isinstance(s, dict) and str(s.get("collector_onboarding_status") or "").lower().startswith("pending")]))
+    except Exception:
+        pending = 0
+    coverage = round((monitored / total) * 100) if total else 0
+    return {
+        "total_sites": total,
+        "monitored_count": monitored,
+        "discovered_count": discovered,
+        "pending_onboarding_count": pending,
+        "review_count": discovered + pending,
+        "coverage_percent": coverage,
+        "sites": sites,
+    }
+
+
+@app.route("/api/workspace/command-centre")
+def api_workspace_command_centre_v1():
+    served = now_utc() if "now_utc" in globals() else datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    summary = build_operator_summary()
+    alerts = build_alerts()
+    registry_contract = _load_registry_contract() if "_load_registry_contract" in globals() else load_json("site_registry.json", {})
+    user_contract = _load_user_footprint_contract() if "_load_user_footprint_contract" in globals() else load_json("user_footprint.json", {})
+    source_state = _load_source_state_contract() if "_load_source_state_contract" in globals() else {}
+    estate_product = load_json("estate_product_access.json", {}) if "load_json" in globals() else {}
+    registry_summary = _jom_workspace_contract_registry_summary_v1(registry_contract)
+    user_metric = _jom_workspace_contract_user_metric_v1(source_state, estate_product, user_contract)
+    data_health = _jom_workspace_contract_source_status_v1(source_state)
+    alert_summary = summary.get("alert_summary") if isinstance(summary.get("alert_summary"), dict) else {}
+    return jsonify({
+        "schema": "jom-workspace-command-centre-contract-v1",
+        "served_at_utc": served,
+        "layout_policy": "Data contract only. No layout, HTML, CSS, card, navigation, or section changes.",
+        "runtime": summary.get("runtime", {}),
+        "posture": summary.get("posture"),
+        "alerts": {
+            "count": len(alerts),
+            "items": alerts,
+            "summary": alert_summary,
+            "top_alerts": summary.get("top_alerts", []) if isinstance(summary.get("top_alerts"), list) else alerts[:5],
+        },
+        "registry": registry_summary,
+        "coverage": {
+            "total": registry_summary.get("total_sites"),
+            "monitored": registry_summary.get("monitored_count"),
+            "review": registry_summary.get("review_count"),
+            "coverage_percent": registry_summary.get("coverage_percent"),
+            "reason": f"{registry_summary.get('monitored_count')} monitored - {registry_summary.get('review_count')} awaiting review",
+        },
+        "users": {
+            "metric": user_metric,
+            "metric_label": "Live Jira product-access users",
+            "source": "live_product_access.total_jira_product_user_count",
+            "named_access_detail_guarded": True,
+        },
+        "data_health": {
+            "label": data_health,
+            "source": "/api/source-state equivalent contract composition",
+        },
+    })
+# --- JOM WORKSPACE CONTRACT CONSOLIDATION v1 END ---
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 

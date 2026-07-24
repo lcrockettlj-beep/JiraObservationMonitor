@@ -1,0 +1,11 @@
+{
+  "schema": "jom-frontend-active-js-runtime-audit-status-v1",
+  "generated_at_utc": "2026-07-24T10:22:17Z",
+  "overall_status": "PASS",
+  "active_js_file_count": 1,
+  "active_endpoint_rows": 0,
+  "inactive_workspace_related_js_count": 9,
+  "blocked_legacy_rows": 0,
+  "http_failure_count": 0,
+  "report": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\frontend_active_js_runtime_audit_v1\\FRONTEND_ACTIVE_JS_RUNTIME_AUDIT_V1.md"
+}
