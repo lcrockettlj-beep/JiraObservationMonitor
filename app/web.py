@@ -1331,6 +1331,8 @@ def api_site_review_live_contract(site_key):
     return jsonify(_jom_site_live_review_contract(site_key))
 
 
+
+# --- JOM ESTATE WORKSPACE CONTRACT v1 START ---
 @app.route("/api/operator/status")
 def api_operator_live_status_contract():
     return jsonify(build_operator_summary())
@@ -1444,51 +1446,114 @@ def _jom_workspace_contract_registry_summary_v1(registry):
     }
 
 
+# --- JOM WORKSPACE CONTRACT CACHED READ PATH v1 START ---
+# Fast workspace contracts for page load.
+# These endpoints read generated truth outputs and do not run live collectors on page load.
+def _jom_cached_read_json_v1(filename: str, default=None):
+    if default is None:
+        default = {}
+    try:
+        path = DATA_PATH / filename
+        if not path.exists():
+            return default
+        return json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception as exc:
+        return {"_read_error": str(exc), "_file": filename}
+
+
+def _jom_cached_now_v1() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _jom_cached_source_state_v1():
+    return {
+        "schema": "jom-cached-source-state-v1",
+        "served_at_utc": _jom_cached_now_v1(),
+        "source_freshness": _jom_cached_read_json_v1("source_freshness_audit.json", {}),
+        "source_reliability": _jom_cached_read_json_v1("source_reliability_status.json", {}),
+        "runtime_status": _jom_cached_read_json_v1("runtime_execution_status.json", {}),
+        "runtime_live_truth_status": _jom_cached_read_json_v1("runtime_live_truth_status.json", {}),
+    }
+
+
+def _jom_cached_registry_summary_v1(registry):
+    sites = registry.get("sites", []) if isinstance(registry, dict) else []
+    summary = registry.get("summary", {}) if isinstance(registry, dict) else {}
+    total = summary.get("total_sites") if summary.get("total_sites") is not None else len(sites)
+    monitored = summary.get("monitored_count") if summary.get("monitored_count") is not None else len([s for s in sites if isinstance(s, dict) and (s.get("is_monitored") or s.get("classification") == "monitored")])
+    discovered = summary.get("discovered_count") if summary.get("discovered_count") is not None else len([s for s in sites if isinstance(s, dict) and s.get("classification") == "discovered"])
+    pending = summary.get("pending_onboarding_count") if summary.get("pending_onboarding_count") is not None else len([s for s in sites if isinstance(s, dict) and "pending" in str(s.get("collector_onboarding_status", "")).lower()])
+    return {"total_sites": total, "monitored_count": monitored, "discovered_count": discovered, "pending_onboarding_count": pending}
+
+
+def _jom_build_cached_operator_alerts_v1(admin_truth, registry):
+    alerts = []
+    admin_status = str((admin_truth or {}).get("status") or ((admin_truth or {}).get("summary") or {}).get("status") or "").lower()
+    if admin_status and admin_status not in {"aligned", "ok", "healthy"}:
+        alerts.append({"level": "warning", "category": "admin", "title": "Admin truth requires review", "reason": "Admin truth is not reporting an aligned state.", "source": "admin_truth_v2.json", "value": admin_status, "recommended_action": "Review Admin Truth endpoint"})
+    reg_summary = _jom_cached_registry_summary_v1(registry)
+    discovered = reg_summary.get("discovered_count") or 0
+    if discovered:
+        alerts.append({"level": "info", "category": "registry", "title": "Discovered sites need classification", "reason": "One or more discovered sites are not yet monitored.", "source": "site_registry.json", "value": discovered, "recommended_action": "Review site registry and onboarding decisions"})
+    return alerts
+
+
+def _jom_workspace_command_centre_cached_contract_v1():
+    served = _jom_cached_now_v1()
+    registry = _jom_cached_read_json_v1("site_registry.json", {})
+    user_footprint = _jom_cached_read_json_v1("user_footprint.json", {})
+    estate_product_access = _jom_cached_read_json_v1("estate_product_access.json", {})
+    estate_access_truth = _jom_cached_read_json_v1("estate_access_truth.json", {})
+    admin_truth = _jom_cached_read_json_v1("admin_truth_v2.json", {})
+    runtime_status = _jom_cached_read_json_v1("runtime_execution_status.json", {})
+    source_state = _jom_cached_source_state_v1()
+    registry_summary = _jom_cached_registry_summary_v1(registry)
+    product_summary = estate_product_access.get("summary", {}) if isinstance(estate_product_access, dict) else {}
+    product_users = product_summary.get("total_jira_product_user_count")
+    if product_users is None and isinstance(admin_truth, dict):
+        product_users = ((admin_truth.get("live_product_access_truth") or {}).get("summary") or {}).get("total_jira_product_user_count")
+    alerts = _jom_build_cached_operator_alerts_v1(admin_truth, registry)
+    data = {
+        "registry": registry,
+        "registry_summary": registry_summary,
+        "users": user_footprint,
+        "users_metric": {"metric": product_users, "metric_label": "Live Jira product-access users", "named_access_detail_guarded": True, "source": "estate_product_access.summary.total_jira_product_user_count"},
+        "source_state": source_state,
+        "operator_summary": {"schema": "jom-operator-summary-fast-read-v1", "generated_at_utc": served, "posture": "warning" if alerts else "ok", "runtime": runtime_status, "alert_summary": {"critical": len([a for a in alerts if a.get("level") == "critical"]), "warning": len([a for a in alerts if a.get("level") == "warning"]), "info": len([a for a in alerts if a.get("level") == "info"]), "total": len(alerts)}, "top_alerts": alerts[:5], "admin_truth": {"status": admin_truth.get("status") if isinstance(admin_truth, dict) else None, "severity": admin_truth.get("severity") if isinstance(admin_truth, dict) else None}},
+        "operator_alerts": {"count": len(alerts), "alerts": alerts},
+        "estate_product_access": estate_product_access,
+        "estate_access_truth": estate_access_truth,
+        "admin_truth": admin_truth,
+    }
+    payload = {"schema": "jom-workspace-command-centre-contract-v1-fast-read", "served_at_utc": served, "source_policy": "Fast workspace contract from generated truth outputs. No live collectors run during page load.", "data": data}
+    payload.update(data)
+    return payload
+
+
+def _jom_workspace_estate_cached_contract_v1():
+    served = _jom_cached_now_v1()
+    registry = _jom_cached_read_json_v1("site_registry.json", {})
+    user_footprint = _jom_cached_read_json_v1("user_footprint.json", {})
+    estate_product_access = _jom_cached_read_json_v1("estate_product_access.json", {})
+    estate_access_truth = _jom_cached_read_json_v1("estate_access_truth.json", {})
+    lifecycle_decisions = _jom_cached_read_json_v1("site_lifecycle_decisions.json", {"decisions": {}, "history": []})
+    source_state = _jom_cached_source_state_v1()
+    registry_summary = _jom_cached_registry_summary_v1(registry)
+    data = {"registry": registry, "registry_summary": registry_summary, "users": user_footprint, "estate_product_access": estate_product_access, "estate_access_truth": estate_access_truth, "lifecycle_decisions": lifecycle_decisions, "source_state": source_state, "metrics": {"total_sites": registry_summary.get("total_sites"), "monitored_sites": registry_summary.get("monitored_count"), "discovered_sites": registry_summary.get("discovered_count"), "pending_onboarding": registry_summary.get("pending_onboarding_count")}}
+    payload = {"schema": "jom-workspace-estate-contract-v1-fast-read", "served_at_utc": served, "source_policy": "Fast Estate workspace contract from generated truth outputs. No live collectors run during page load.", "data": data}
+    payload.update(data)
+    return payload
+
+
 @app.route("/api/workspace/command-centre")
-def api_workspace_command_centre_v1():
-    served = now_utc() if "now_utc" in globals() else datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    summary = build_operator_summary()
-    alerts = build_alerts()
-    registry_contract = _load_registry_contract() if "_load_registry_contract" in globals() else load_json("site_registry.json", {})
-    user_contract = _load_user_footprint_contract() if "_load_user_footprint_contract" in globals() else load_json("user_footprint.json", {})
-    source_state = _load_source_state_contract() if "_load_source_state_contract" in globals() else {}
-    estate_product = load_json("estate_product_access.json", {}) if "load_json" in globals() else {}
-    registry_summary = _jom_workspace_contract_registry_summary_v1(registry_contract)
-    user_metric = _jom_workspace_contract_user_metric_v1(source_state, estate_product, user_contract)
-    data_health = _jom_workspace_contract_source_status_v1(source_state)
-    alert_summary = summary.get("alert_summary") if isinstance(summary.get("alert_summary"), dict) else {}
-    return jsonify({
-        "schema": "jom-workspace-command-centre-contract-v1",
-        "served_at_utc": served,
-        "layout_policy": "Data contract only. No layout, HTML, CSS, card, navigation, or section changes.",
-        "runtime": summary.get("runtime", {}),
-        "posture": summary.get("posture"),
-        "alerts": {
-            "count": len(alerts),
-            "items": alerts,
-            "summary": alert_summary,
-            "top_alerts": summary.get("top_alerts", []) if isinstance(summary.get("top_alerts"), list) else alerts[:5],
-        },
-        "registry": registry_summary,
-        "coverage": {
-            "total": registry_summary.get("total_sites"),
-            "monitored": registry_summary.get("monitored_count"),
-            "review": registry_summary.get("review_count"),
-            "coverage_percent": registry_summary.get("coverage_percent"),
-            "reason": f"{registry_summary.get('monitored_count')} monitored - {registry_summary.get('review_count')} awaiting review",
-        },
-        "users": {
-            "metric": user_metric,
-            "metric_label": "Live Jira product-access users",
-            "source": "live_product_access.total_jira_product_user_count",
-            "named_access_detail_guarded": True,
-        },
-        "data_health": {
-            "label": data_health,
-            "source": "/api/source-state equivalent contract composition",
-        },
-    })
-# --- JOM WORKSPACE CONTRACT CONSOLIDATION v1 END ---
+def api_workspace_command_centre_cached_v1():
+    return jsonify(_jom_workspace_command_centre_cached_contract_v1())
+
+
+@app.route("/api/workspace/estate")
+def api_workspace_estate_cached_v1():
+    return jsonify(_jom_workspace_estate_cached_contract_v1())
+# --- JOM WORKSPACE CONTRACT CACHED READ PATH v1 END ---
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -1,0 +1,12 @@
+{
+  "schema": "jom-frontend-endpoint-timing-audit-status-v1",
+  "generated_at_utc": "2026-07-24T11:04:07Z",
+  "overall_status": "REVIEW",
+  "summary": {
+    "endpoint_count": 15,
+    "failure_count": 0,
+    "slow_count": 0,
+    "very_slow_count": 13
+  },
+  "report": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\frontend_endpoint_timing_audit_v1\\FRONTEND_ENDPOINT_TIMING_AUDIT_V1.md"
+}

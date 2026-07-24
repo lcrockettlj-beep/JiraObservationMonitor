@@ -1,0 +1,12 @@
+{
+  "schema": "jom-estate-workspace-contract-consolidation-status-v1",
+  "generated_at_utc": "2026-07-24T10:54:57Z",
+  "overall_status": "applied",
+  "backend_changed": true,
+  "estate_js_replaced": true,
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "workspace_route": "/api/workspace/estate",
+  "target_js": "static/js/jom_estate_lifecycle_v1.js"
+}

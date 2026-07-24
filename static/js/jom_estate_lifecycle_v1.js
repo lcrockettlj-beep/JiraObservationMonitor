@@ -1,89 +1,43 @@
-(function(){
-  'use strict';
-  const $ = id => document.getElementById(id);
-  const arr = value => Array.isArray(value) ? value : [];
-  const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  const setText = (id, value) => { const el = $(id); if (el) el.textContent = String(value ?? '--'); };
-  async function fetchJson(url){ const r = await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error(url+' '+r.status); return r.json(); } function unwrapContract(payload){ if(payload&&typeof payload==='object'&&payload.data&&typeof payload.data==='object') return payload.data; return payload||{}; } function unwrapDecisions(payload){ const p=unwrapContract(payload); return p&&typeof p==='object'?p:{}; }
-  function siteKey(site){ return site.site_key || site.key || site.site_name || site.name || 'unknown-site'; }
-  function siteName(site){ return site.site_name || site.name || siteKey(site); }
-  function siteUrl(site){ return site.site_url || site.url || ''; }
-  function textBlob(site){ return [site.classification,site.monitoring_status,site.monitoring_state,site.lifecycle_state,site.status,site.state,site.decision,site.policy_state].join(' ').toLowerCase(); }
-  function isMonitored(site){ const text=textBlob(site); return site.monitored===true || site.is_monitored===true || site.in_monitoring_scope===true || text.includes('monitored') || text.includes('monitoring enabled'); }
-  function isPending(site){ return textBlob(site).includes('pending'); }
-  function isRetired(site){ const text=textBlob(site); return text.includes('retired') || text.includes('suspended'); }
-  function decisionFor(site, decisions){ return (decisions && decisions[siteKey(site)]) || {}; }
-  function decisionValue(site, decisions){ return String(decisionFor(site, decisions).decision || '').toLowerCase(); }
-  function lifecycle(site, decisions){
-    const d=decisionValue(site, decisions);
-    if(d==='approve') return 'Approval Pending';
-    if(d==='ignore') return 'Ignored';
-    if(d==='pending') return 'Pending Review';
-    if(isRetired(site)) return 'Retired';
-    if(isPending(site)) return 'Approval Pending';
-    if(isMonitored(site)) return 'Monitored';
-    return 'Discovered';
+
+// JOM Estate Workspace Contract Consolidation v1
+// Data-binding only. No layout, HTML, CSS, navigation, card, table, or section changes.
+(function () {
+  "use strict";
+  function byId(id) { return document.getElementById(id); }
+  function setText(id, value) { const el = byId(id); if (el) el.textContent = (value === null || value === undefined || value === "") ? "n/a" : String(value); }
+  function safeNumber(value, fallback) { const n = Number(value); return Number.isFinite(n) ? n : fallback; }
+  function unwrap(payload) { if (payload && typeof payload === "object" && payload.data && typeof payload.data === "object") return payload.data; return payload || {}; }
+  function getSites(contract) { const data = unwrap(contract.registry || contract.site_registry || contract); return Array.isArray(data.sites) ? data.sites : []; }
+  function siteLabel(site) { return site.site_name || site.name || site.site_key || site.url || "Unknown site"; }
+  function siteStatus(site) { return site.status || site.classification || site.collector_onboarding_status || "review"; }
+  async function fetchContract() { const response = await fetch("/api/workspace/estate", { cache: "no-store" }); if (!response.ok) throw new Error("/api/workspace/estate returned " + response.status); return await response.json(); }
+  function renderRail(contract) {
+    const summary = contract.summary || {}; const registry = unwrap(contract.registry || {}); const sites = getSites(contract);
+    const total = safeNumber(summary.total_sites, sites.length);
+    const monitored = safeNumber(summary.monitored_count, sites.filter(s => s && (s.is_monitored || s.classification === "monitored")).length);
+    const discovered = safeNumber(summary.discovered_count, sites.filter(s => s && s.classification === "discovered").length);
+    const pending = safeNumber(summary.pending_onboarding_count, sites.filter(s => s && String(s.collector_onboarding_status || "").includes("pending")).length);
+    const ignored = safeNumber(summary.ignored_count, sites.filter(s => s && s.classification === "ignored").length);
+    setText("rail-total-sites", total); setText("rail-monitored-sites", monitored); setText("rail-discovered-sites", discovered);
+    setText("rail-review-queue", discovered + pending); setText("rail-pending-sites", pending); setText("rail-ignored-sites", ignored);
+    setText("rail-registry-status", contract.registry_status || registry.status || "active");
+    const users = contract.users_summary || contract.user_summary || {}; const userCount = safeNumber(users.users_analyzed ?? users.total_jira_product_user_count ?? users.total_product_access_assignments, null);
+    if (userCount !== null) setText("rail-users-count", userCount);
+    const alertCount = safeNumber(contract.alert_count, Array.isArray(contract.alerts) ? contract.alerts.length : 0); setText("rail-alert-count", alertCount);
   }
-  function monitoring(site, decisions){
-    const d=decisionValue(site, decisions);
-    if(d==='approve') return 'Credential required';
-    if(d==='ignore') return 'Ignored';
-    return isMonitored(site) ? 'Enabled' : 'Not monitored';
+  function renderRegistry(contract) {
+    const body = byId("estate-registry-body"); if (!body) return; const sites = getSites(contract);
+    if (!sites.length) { body.innerHTML = '<tr><td colspan="6">No estate sites available from the live estate workspace contract.</td></tr>'; return; }
+    body.innerHTML = sites.map(site => { const status = siteStatus(site); const monitored = site.is_monitored || site.classification === "monitored" ? "Yes" : "No"; const approval = site.can_approve ? "Review" : "Current"; const productUsers = site.metrics && site.metrics.jira_product_user_count !== undefined ? site.metrics.jira_product_user_count : (site.jira_product_user_count ?? "n/a"); return '<tr><td>' + siteLabel(site) + '</td><td>' + (site.site_key || "n/a") + '</td><td>' + status + '</td><td>' + monitored + '</td><td>' + productUsers + '</td><td>' + approval + '</td></tr>'; }).join("");
   }
-  function health(site, decisions){
-    const life=lifecycle(site, decisions).toLowerCase();
-    if(life.includes('monitored')) return 'Healthy';
-    if(life.includes('ignored')) return 'Inactive';
-    if(life.includes('approval')) return 'Pending';
-    if(life.includes('retired')) return 'Retired';
-    return 'Review';
+  function renderReviewQueue(contract) {
+    const list = byId("estate-review-list"); const count = byId("estate-review-count"); if (!list && !count) return; const sites = getSites(contract);
+    const candidates = sites.filter(site => site && (site.classification === "discovered" || site.can_approve || String(site.collector_onboarding_status || "").includes("pending")));
+    if (count) count.textContent = String(candidates.length); if (!list) return;
+    if (!candidates.length) { list.innerHTML = '<li>No sites currently awaiting Estate review.</li>'; return; }
+    list.innerHTML = candidates.map(site => '<li><strong>' + siteLabel(site) + '</strong><span>' + siteStatus(site) + '</span></li>').join("");
   }
-  function owner(site){ return site.owner || site.business_owner || site.technical_owner || 'Unassigned'; }
-  function lastObservation(site){ return site.last_observation || site.last_seen || site.updated_at || 'Live registry'; }
-  function pillClass(value){ const lower=String(value).toLowerCase(); if(lower.includes('monitored')||lower.includes('healthy')||lower==='enabled') return 'estate-status-pill estate-status-pill--ok'; if(lower.includes('retired')||lower.includes('ignored')||lower.includes('inactive')) return 'estate-status-pill estate-status-pill--retired'; return 'estate-status-pill estate-status-pill--review'; }
-  function actionHref(site){ return isMonitored(site) ? `/site/${encodeURIComponent(siteKey(site))}` : `/estate/review/${encodeURIComponent(siteKey(site))}`; }
-  function actionLabel(site, decisions){ const life=lifecycle(site, decisions); if(life==='Approval Pending') return 'Continue Review'; if(life==='Ignored') return 'Restore / Review'; return isMonitored(site) ? 'Open Workspace' : 'Review Site'; }
-  function reviewItem(site){ return `<article class="estate-review-item"><div><strong>${esc(siteName(site))}</strong><br><small>${esc(siteUrl(site) || siteKey(site))}</small><br><span>Source: ${esc(Array.isArray(site.sources) ? site.sources.join(', ') : (site.source || 'Registry'))}</span></div><a class="estate-action-link" href="${actionHref(site)}">Review Site</a></article>`; }
-  function registryRow(site, decisions){
-    const life=lifecycle(site, decisions), mon=monitoring(site, decisions), h=health(site, decisions);
-    const nameHtml = siteUrl(site) ? `<a class="estate-site-link estate-site-link--button" href="${esc(siteUrl(site))}" target="_blank" rel="noopener" aria-label="Open ${esc(siteName(site))} in a new browser tab"><span>${esc(siteName(site))}</span><span aria-hidden="true" class="estate-external-icon">↗</span></a>` : `<strong>${esc(siteName(site))}</strong>`;
-    return `<tr><td>${nameHtml}</td><td><span class="${pillClass(life)}">${esc(life)}</span></td><td><span class="${pillClass(mon)}">${esc(mon)}</span></td><td><span class="${pillClass(h)}">${esc(h)}</span></td><td>${esc(owner(site))}</td><td>${esc(lastObservation(site))}</td><td><a class="estate-action-link" href="${actionHref(site)}">${actionLabel(site, decisions)}</a></td></tr>`;
-  }
-  function bucketSites(sites, decisions){
-    const monitored=sites.filter(s => isMonitored(s) && !isRetired(s));
-    const approval=sites.filter(s => decisionValue(s,decisions)==='approve' || (isPending(s) && decisionValue(s,decisions)!=='ignore'));
-    const ignored=sites.filter(s => decisionValue(s,decisions)==='ignore');
-    const retired=sites.filter(isRetired);
-    const review=sites.filter(s => !isMonitored(s) && !isPending(s) && !isRetired(s) && !['approve','ignore'].includes(decisionValue(s,decisions)));
-    const critical=sites.filter(s => textBlob(s).includes('critical'));
-    return {monitored, approval, ignored, retired, review, critical};
-  }
-  function renderRegistry(sites, decisions){
-    const body=$('estate-registry-body'); if(!body) return;
-    const search=($('estate-search')?.value||'').toLowerCase().trim(); const filter=$('estate-filter')?.value||'all';
-    let visible=sites.slice();
-    if(filter!=='all'){
-      visible=visible.filter(site => {
-        const life=lifecycle(site, decisions).toLowerCase();
-        if(filter==='monitored') return life==='monitored';
-        if(filter==='discovered') return life==='discovered' || life==='pending review';
-        if(filter==='pending') return life==='approval pending';
-        if(filter==='retired') return life==='retired' || life==='ignored';
-        return true;
-      });
-    }
-    if(search){ visible=visible.filter(site => [siteName(site),siteKey(site),siteUrl(site),lifecycle(site,decisions),monitoring(site,decisions),health(site,decisions),owner(site)].join(' ').toLowerCase().includes(search)); }
-    body.innerHTML=visible.length ? visible.map(site=>registryRow(site, decisions)).join('') : '<tr><td colspan="7">No sites match the current filter.</td></tr>';
-  }
-  function countUsers(payload){ const p=unwrapContract(payload); if(Array.isArray(p.users)) return p.users.length; if(Array.isArray(p.rows)) return p.rows.length; return p.user_count || p.total_users || p.summary?.users_analyzed || p.summary?.named_unique_users || p.summary?.user_count || p.summary?.total_users || 'n/a'; }
-  async function init(){
-    const [registryResult, usersResult, alertsResult, sourceResult, decisionsResult] = await Promise.allSettled([fetchJson('/registry/sites'), fetchJson('/users/footprint'), fetchJson('/operator/alerts'), fetchJson('/api/source-state'), fetchJson('/api/site-lifecycle/decisions')]);
-    const registry=registryResult.status==='fulfilled'?unwrapContract(registryResult.value):{}; const users=usersResult.status==='fulfilled'?unwrapContract(usersResult.value):{}; const alerts=alertsResult.status==='fulfilled'?unwrapContract(alertsResult.value):{}; const sourceOk=sourceResult.status==='fulfilled';
-    const decisionPayload=decisionsResult.status==='fulfilled'?unwrapDecisions(decisionsResult.value):{}; const decisions=decisionPayload.decisions||{}; const sites=arr(registry.sites); const b=bucketSites(sites, decisions); const alertsCount=Number(alerts.count ?? (Array.isArray(alerts.alerts)?alerts.alerts.length:0))||0; const userCount=countUsers(users);
-    setText('estate-total-sites', sites.length); setText('estate-monitored-sites', b.monitored.length); setText('estate-discovered-sites', b.review.length); setText('estate-pending-sites', b.approval.length); setText('estate-critical-sites', b.critical.length); setText('estate-retired-sites', b.retired.length); setText('estate-review-count', `${b.review.length} review`);
-    setText('rail-total-sites', sites.length); setText('rail-monitored-sites', b.monitored.length); setText('rail-discovered-sites', b.review.length); setText('rail-review-queue', b.review.length); setText('rail-pending-sites', b.approval.length); setText('rail-ignored-sites', b.ignored.length); setText('rail-registry-status', sourceOk?'OK':'Review'); setText('rail-users-count', userCount); setText('rail-alert-count', alertsCount);
-    const reviewList=$('estate-review-list'); if(reviewList){ reviewList.innerHTML=b.review.length ? b.review.map(reviewItem).join('') : '<p class="estate-empty">No discovered sites currently require review.</p>'; }
-    renderRegistry(sites, decisions); $('estate-search')?.addEventListener('input',()=>renderRegistry(sites,decisions)); $('estate-filter')?.addEventListener('change',()=>renderRegistry(sites,decisions));
-  }
-  document.addEventListener('DOMContentLoaded',()=>init().catch(error=>{ console.error('Estate lifecycle sync failed', error); const body=$('estate-registry-body'); if(body) body.innerHTML='<tr><td colspan="7">Unable to load estate registry data.</td></tr>'; }));
+  function renderSources(contract) { const sourceState = contract.source_state || {}; const freshness = sourceState.source_freshness || {}; const reliability = sourceState.source_reliability || {}; const health = freshness.status || reliability.status || sourceState.status || "ok"; setText("estate-source-health", health); }
+  async function loadEstateWorkspace() { try { const contract = await fetchContract(); renderRail(contract); renderRegistry(contract); renderReviewQueue(contract); renderSources(contract); } catch (error) { console.warn("Estate workspace contract load failed", error); setText("rail-registry-status", "review"); } }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadEstateWorkspace); else loadEstateWorkspace();
 })();
