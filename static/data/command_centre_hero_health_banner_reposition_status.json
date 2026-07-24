@@ -1,0 +1,19 @@
+{
+  "schema": "jom-command-centre-hero-health-banner-reposition-v5",
+  "generated_at_utc": "2026-07-24T14:51:04Z",
+  "overall_status": "applied",
+  "scope": "command-centre-only",
+  "changed_files": [
+    "templates/home.html",
+    "static/css/jom_command_centre_completion_v1.css",
+    "static/js/jom_command_centre_completion_v1.js"
+  ],
+  "backend_changes": 0,
+  "overlay_changes": 0,
+  "extra_scripts_added": 0,
+  "fixes": [
+    "overall health moved into hero",
+    "overall health removed from right rail",
+    "attention status now front and centre"
+  ]
+}

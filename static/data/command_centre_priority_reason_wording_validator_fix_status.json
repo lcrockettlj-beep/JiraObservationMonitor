@@ -1,0 +1,16 @@
+{
+  "schema": "jom-command-centre-priority-reason-wording-validator-fix-v6-1",
+  "generated_at_utc": "2026-07-24T14:57:18Z",
+  "overall_status": "applied",
+  "scope": "command-centre-only",
+  "changed_files": [
+    "static/js/jom_command_centre_completion_v1.js"
+  ],
+  "backend_changes": 0,
+  "overlay_changes": 0,
+  "extra_scripts_added": 0,
+  "fixes": [
+    "priority reason now names discovery backlog",
+    "validator no longer treats jom-hero-health-note as hero health card"
+  ]
+}

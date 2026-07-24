@@ -1,0 +1,18 @@
+{
+  "schema": "jom-command-centre-priority-health-in-action-required-v6",
+  "generated_at_utc": "2026-07-24T14:54:47Z",
+  "overall_status": "applied",
+  "scope": "command-centre-only",
+  "changed_files": [
+    "templates/home.html",
+    "static/css/jom_command_centre_completion_v1.css"
+  ],
+  "backend_changes": 0,
+  "overlay_changes": 0,
+  "extra_scripts_added": 0,
+  "fixes": [
+    "overall health moved into action required priority summary",
+    "hero returned to simple purpose statement",
+    "priority state shown before action cards"
+  ]
+}
