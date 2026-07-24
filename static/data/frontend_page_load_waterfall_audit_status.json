@@ -1,0 +1,15 @@
+{
+  "schema": "jom-frontend-page-load-waterfall-audit-status-v1",
+  "generated_at_utc": "2026-07-24T11:31:12Z",
+  "overall_status": "REVIEW",
+  "summary": {
+    "template_asset_rows": 43,
+    "active_endpoint_rows": 7,
+    "unique_assets": 3,
+    "timed_paths": 11,
+    "very_slow_count": 7,
+    "failure_count": 1,
+    "duplicate_endpoint_rows": 0
+  },
+  "report": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\frontend_page_load_waterfall_audit_v1\\FRONTEND_PAGE_LOAD_WATERFALL_AUDIT_V1.md"
+}

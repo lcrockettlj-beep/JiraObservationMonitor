@@ -601,8 +601,8 @@ def _load_user_footprint_contract() -> Dict[str, Any]:
 
 @app.route("/")
 def home():
-    return render_template("home.html", **home_context())
-
+    """Fast render route: page shell only; data loads through workspace contracts."""
+    return render_template("home.html")
 @app.route("/admin/truth")
 def admin_truth():
     return jsonify(_load_admin_truth_contract())
@@ -718,14 +718,12 @@ def health():
 
 @app.route("/home")
 def page_home():
-    return render_template("home.html", **home_context())
-
-
+    """Fast render route: page shell only; data loads through workspace contracts."""
+    return render_template("home.html")
 @app.route("/estate")
 def page_estate():
-    return render_template("estate.html", **estate_context())
-
-
+    """Fast render route: page shell only; data loads through workspace contracts."""
+    return render_template("estate.html")
 @app.route("/reference")
 def page_reference():
     return render_template("reference.html", **reference_context())

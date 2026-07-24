@@ -1,0 +1,42 @@
+{
+  "schema": "jom-page-route-fast-render-workspace-asset-isolation-status-v1",
+  "generated_at_utc": "2026-07-24T11:36:24Z",
+  "overall_status": "applied",
+  "layout_changes": 0,
+  "css_changes": 0,
+  "html_structure_changes": 0,
+  "route_result": {
+    "changed": true,
+    "patched_routes": [
+      {
+        "route": "/",
+        "template": "home.html",
+        "status": "patched"
+      },
+      {
+        "route": "/home",
+        "template": "home.html",
+        "status": "patched"
+      },
+      {
+        "route": "/estate",
+        "template": "estate.html",
+        "status": "patched"
+      }
+    ]
+  },
+  "asset_result": {
+    "checked_templates": [
+      "templates/home.html",
+      "templates/estate.html"
+    ],
+    "removed_site_workspace_asset_rows": []
+  },
+  "asset_scan_after": {
+    "site_workspace_asset_rows": []
+  },
+  "compile_ok": true,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "intent": "Make / and /estate render page shells quickly and ensure Site Workspace assets are not loaded directly by Command Centre or Estate templates."
+}

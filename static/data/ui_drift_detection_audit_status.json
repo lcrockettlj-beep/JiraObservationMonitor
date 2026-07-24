@@ -1,0 +1,14 @@
+{
+  "schema": "jom-ui-drift-detection-audit-status-v1",
+  "generated_at_utc": "2026-07-24T11:31:12Z",
+  "overall_status": "PASS",
+  "summary": {
+    "changed_file_count": 4,
+    "html_change_count": 0,
+    "css_change_count": 0,
+    "js_change_count": 0,
+    "data_change_count": 4,
+    "layout_sensitive_diff_rows": 0
+  },
+  "report": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\ui_drift_detection_audit_v1\\UI_DRIFT_DETECTION_AUDIT_V1.md"
+}
