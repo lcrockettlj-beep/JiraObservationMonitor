@@ -405,6 +405,7 @@ def _contract_freshness(payload: Any, current_hours: int = 24, stale_hours: int 
 
 
 def _contract_payload(name: str, payload: Any, *, source_file: str, contract_type: str, live_builder: str = "", allow_stale: bool = False) -> Dict[str, Any]:
+    website_truth = website_truth_classification(source_file) if source_file else {"website_truth_allowed": True, "truth_class": "live_route", "reason": "Direct live route payload."}
     freshness = _contract_freshness(payload)
     available = isinstance(payload, dict) and bool(payload) and not payload.get("_load_error") and not payload.get("_json_error")
     status = "ok"
@@ -1356,6 +1357,7 @@ def api_operator_live_ui_view_contract():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
 
 
 

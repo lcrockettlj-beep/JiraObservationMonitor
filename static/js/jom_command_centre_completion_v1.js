@@ -1,9 +1,9 @@
-(function(){
+﻿(function(){
   'use strict';
   const $=id=>document.getElementById(id);
   const arr=v=>Array.isArray(v)?v:[];
   const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  async function fetchJson(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.json()}
+  async function fetchJson(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.json()} function unwrapContract(payload){if(payload&&typeof payload==='object'&&payload.data&&typeof payload.data==='object')return payload.data;return payload||{}} function unwrapSourceState(payload){return payload||{}} function userCount(payload){const p=payload||{};const s=p.summary||{};return Number(s.users_analyzed??s.named_unique_users??s.user_count??s.total_users??p.user_count??p.total_users??(Array.isArray(p.users)?p.users.length:0)??(Array.isArray(p.rows)?p.rows.length:0)??0)||0}
   function regCounts(reg){
     const s=reg?.summary||{},sites=arr(reg?.sites);
     const total=Number(s.total_sites??s.total??sites.length??0)||0;
@@ -39,9 +39,9 @@
     const [summary,alerts,registry,users,sourceState,execReport]=await Promise.allSettled([fetchJson('/operator/summary'),fetchJson('/operator/alerts'),fetchJson('/registry/sites'),fetchJson('/users/footprint'),fetchJson('/api/source-state'),fetch('/reports/generated/executive/html',{cache:'no-store'})]);
     const sj=summary.status==='fulfilled'?summary.value:{};
     const aj=alerts.status==='fulfilled'?alerts.value:{};
-    const rj=registry.status==='fulfilled'?registry.value:{};
-    const uj=users.status==='fulfilled'?users.value:{};
-    const src=sourceState.status==='fulfilled'?sourceState.value:{};
+    const rj=registry.status==='fulfilled'?unwrapContract(registry.value):{};
+    const uj=users.status==='fulfilled'?unwrapContract(users.value):{};
+    const src=sourceState.status==='fulfilled'?unwrapSourceState(sourceState.value):{};
     const reportsOk=execReport.status==='fulfilled'&&execReport.value&&execReport.value.ok;
     const rc=regCounts(rj);
     const riskAlerts=actionableAlerts(aj);
@@ -108,3 +108,4 @@ if (railRev) { railRev.style.width = (100 - coveragePct) + '%'; }
   }
   document.addEventListener('DOMContentLoaded',()=>{init().catch(err=>{console.error('Command Centre completion failed',err);setHtml('jom-final-risk-list',riskCard({title:'Command Centre data unavailable',badge:'Review',impact:'The browser could not load one or more live operator contracts.',action:'Check JOM runtime and source health before using Command Centre output.',location:'System - Runtime Status',href:'/health'}));setHtml('jom-final-action-list',actionItem('Check runtime status','Confirm the application and operator endpoints are responding.','/health'))})})
 })();
+

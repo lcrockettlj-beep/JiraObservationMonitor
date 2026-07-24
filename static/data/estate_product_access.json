@@ -1,6 +1,6 @@
 {
   "source": "Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole",
-  "generated_at_utc": "2026-07-23T15:38:58Z",
+  "generated_at_utc": "2026-07-24T08:22:14Z",
   "schema": "jom-estate-product-access-v2-live",
   "live_collection": true,
   "status": "partial",
@@ -179,5 +179,5 @@
     "Where applicationrole payloads do not expose seat limits, fields are left as 0 rather than guessed."
   ],
   "live_endpoint": true,
-  "served_at_utc": "2026-07-23T15:38:58.987929Z"
+  "served_at_utc": "2026-07-24T08:22:14.407196Z"
 }
