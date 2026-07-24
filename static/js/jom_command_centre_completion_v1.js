@@ -1,4 +1,4 @@
-﻿(function(){
+(function(){
   'use strict';
   const $=id=>document.getElementById(id);
   const arr=v=>Array.isArray(v)?v:[];
@@ -108,4 +108,145 @@ if (railRev) { railRev.style.width = (100 - coveragePct) + '%'; }
   }
   document.addEventListener('DOMContentLoaded',()=>{init().catch(err=>{console.error('Command Centre completion failed',err);setHtml('jom-final-risk-list',riskCard({title:'Command Centre data unavailable',badge:'Review',impact:'The browser could not load one or more live operator contracts.',action:'Check JOM runtime and source health before using Command Centre output.',location:'System - Runtime Status',href:'/health'}));setHtml('jom-final-action-list',actionItem('Check runtime status','Confirm the application and operator endpoints are responding.','/health'))})})
 })();
+
+
+/* --- JOM COMMAND CENTRE RAIL TRUTH DISPLAY FIX v1 START ---
+   Data-only connection fix.
+   No layout, HTML, CSS, card, navigation, or section changes.
+*/
+(function () {
+  function unwrapContract(payload) {
+    if (payload && typeof payload === "object" && payload.data && typeof payload.data === "object") {
+      return payload.data;
+    }
+    return payload || {};
+  }
+
+  function safeNumber(value, fallback) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value == null || value === "" ? "n/a" : String(value);
+  }
+
+  function getRegistrySummary(registryPayload) {
+    const registry = unwrapContract(registryPayload);
+    const sites = Array.isArray(registry.sites) ? registry.sites : [];
+    const summary = registry.summary || {};
+    const total = safeNumber(summary.total_sites, sites.length);
+    const monitored = safeNumber(summary.monitored_count, sites.filter(s => s && (s.is_monitored || s.classification === "monitored")).length);
+    const discovered = safeNumber(summary.discovered_count, sites.filter(s => s && s.classification === "discovered").length);
+    const pending = safeNumber(summary.pending_onboarding_count, sites.filter(s => s && String(s.collector_onboarding_status || "").includes("pending")).length);
+    return { total, monitored, discovered, pending, sites };
+  }
+
+  function getUserDisplay(userPayload) {
+    const payload = unwrapContract(userPayload);
+    const summary = payload.summary || {};
+    const users =
+      safeNumber(summary.users_analyzed, null) ??
+      safeNumber(summary.named_unique_users, null) ??
+      safeNumber(summary.total_users, null) ??
+      safeNumber(payload.users_analyzed, null);
+
+    if (users !== null && users !== undefined) return users;
+
+    const sourceStatus = String(payload.source_status || payload.status || "").toLowerCase();
+    const safeToShow = payload.safe_to_show_named_access_ui;
+    if (safeToShow === false || sourceStatus === "unavailable") return "Guarded";
+
+    return "n/a";
+  }
+
+  function getDataHealth(sourceStatePayload, summaryPayload) {
+    const sourceState = unwrapContract(sourceStatePayload);
+    const summary = unwrapContract(summaryPayload);
+
+    const reliability =
+      sourceState.source_reliability ||
+      sourceState.reliability ||
+      (sourceState.sources && sourceState.sources.reliability) ||
+      {};
+
+    const freshness =
+      sourceState.source_freshness ||
+      sourceState.freshness ||
+      (sourceState.sources && sourceState.sources.freshness) ||
+      {};
+
+    const liveProduct =
+      sourceState.live_product_access ||
+      sourceState.runtime_live_truth_status ||
+      {};
+
+    const posture = String(summary.posture || sourceState.posture || "").toLowerCase();
+    const reliabilityStatus = String(reliability.overall_status || reliability.status || "").toLowerCase();
+    const freshnessState = String(
+      freshness.overall_state ||
+      (freshness.data && freshness.data.summary && freshness.data.summary.overall_state) ||
+      freshness.status ||
+      ""
+    ).toLowerCase();
+
+    if (posture === "critical" || reliabilityStatus === "critical" || freshnessState === "critical") return "Critical";
+    if (posture === "warning" || reliabilityStatus === "attention" || freshnessState === "attention" || freshnessState === "stale") return "Review";
+    if (String(liveProduct.status || "").toLowerCase() === "partial") return "Review";
+    if (posture === "ok" || reliabilityStatus === "ok" || freshnessState === "ok" || freshnessState === "current") return "OK";
+
+    return "Check";
+  }
+
+  async function getJson(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(url + " returned " + res.status);
+    return await res.json();
+  }
+
+  async function refreshCommandCentreRailTruth() {
+    try {
+      const [summary, alerts, registry, users, sourceState] = await Promise.all([
+        getJson("/operator/summary").catch(() => ({})),
+        getJson("/operator/alerts").catch(() => ({})),
+        getJson("/registry/sites").catch(() => ({})),
+        getJson("/users/footprint").catch(() => ({})),
+        getJson("/api/source-state").catch(() => ({}))
+      ]);
+
+      const reg = getRegistrySummary(registry);
+      const alertCount = safeNumber(alerts.count, Array.isArray(alerts.alerts) ? alerts.alerts.length : 0);
+
+      setText("jom-rail-total-sites", reg.total);
+      setText("jom-rail-monitored-sites", reg.monitored);
+      setText("jom-rail-review-items", reg.discovered + reg.pending);
+      setText("jom-rail-data-health", getDataHealth(sourceState, summary));
+
+      setText("jom-rail-runtime", summary.runtime && summary.runtime.state ? summary.runtime.state : "OK");
+      setText("jom-rail-alerts", alertCount);
+      setText("jom-rail-users", getUserDisplay(users));
+
+      setText("jom-rail-coverage-monitored", reg.monitored);
+      setText("jom-rail-coverage-review", reg.discovered + reg.pending);
+
+      const coverage = reg.total > 0 ? Math.round((reg.monitored / reg.total) * 100) : 0;
+      setText("jom-rail-monitoring-coverage", coverage + "%");
+
+      const reason = document.getElementById("jom-rail-coverage-reason");
+      if (reason) {
+        reason.textContent = reg.monitored + " monitored - " + (reg.discovered + reg.pending) + " awaiting review";
+      }
+    } catch (err) {
+      console.warn("Command Centre rail truth display refresh failed", err);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", refreshCommandCentreRailTruth);
+  } else {
+    refreshCommandCentreRailTruth();
+  }
+})();
+/* --- JOM COMMAND CENTRE RAIL TRUTH DISPLAY FIX v1 END --- */
 

@@ -1,0 +1,16 @@
+{
+  "schema": "jom-command-centre-rail-truth-display-fix-v1",
+  "generated_at_utc": "2026-07-24T09:14:51Z",
+  "overall_status": "applied",
+  "layout_changes": 0,
+  "html_changes": 0,
+  "css_changes": 0,
+  "target_file": "static/js/jom_command_centre_completion_v1.js",
+  "changed": true,
+  "fixed_bindings": [
+    "Estate count uses /registry/sites contract data",
+    "Data Health uses /api/source-state and /operator/summary",
+    "Users rail value handles guarded /users/footprint payloads",
+    "Monitoring coverage reads live registry summary"
+  ]
+}
