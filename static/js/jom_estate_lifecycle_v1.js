@@ -4,7 +4,7 @@
   const arr = value => Array.isArray(value) ? value : [];
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const setText = (id, value) => { const el = $(id); if (el) el.textContent = String(value ?? '--'); };
-  async function fetchJson(url){ const r = await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error(url+' '+r.status); return r.json(); }
+  async function fetchJson(url){ const r = await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error(url+' '+r.status); return r.json(); } function unwrapContract(payload){ if(payload&&typeof payload==='object'&&payload.data&&typeof payload.data==='object') return payload.data; return payload||{}; } function unwrapDecisions(payload){ const p=unwrapContract(payload); return p&&typeof p==='object'?p:{}; }
   function siteKey(site){ return site.site_key || site.key || site.site_name || site.name || 'unknown-site'; }
   function siteName(site){ return site.site_name || site.name || siteKey(site); }
   function siteUrl(site){ return site.site_url || site.url || ''; }
@@ -75,11 +75,11 @@
     if(search){ visible=visible.filter(site => [siteName(site),siteKey(site),siteUrl(site),lifecycle(site,decisions),monitoring(site,decisions),health(site,decisions),owner(site)].join(' ').toLowerCase().includes(search)); }
     body.innerHTML=visible.length ? visible.map(site=>registryRow(site, decisions)).join('') : '<tr><td colspan="7">No sites match the current filter.</td></tr>';
   }
-  function countUsers(payload){ if(Array.isArray(payload.users)) return payload.users.length; if(Array.isArray(payload.rows)) return payload.rows.length; return payload.user_count || payload.total_users || payload.summary?.users_analyzed || payload.summary?.named_unique_users || 'n/a'; }
+  function countUsers(payload){ const p=unwrapContract(payload); if(Array.isArray(p.users)) return p.users.length; if(Array.isArray(p.rows)) return p.rows.length; return p.user_count || p.total_users || p.summary?.users_analyzed || p.summary?.named_unique_users || p.summary?.user_count || p.summary?.total_users || 'n/a'; }
   async function init(){
     const [registryResult, usersResult, alertsResult, sourceResult, decisionsResult] = await Promise.allSettled([fetchJson('/registry/sites'), fetchJson('/users/footprint'), fetchJson('/operator/alerts'), fetchJson('/api/source-state'), fetchJson('/api/site-lifecycle/decisions')]);
-    const registry=registryResult.status==='fulfilled'?registryResult.value:{}; const users=usersResult.status==='fulfilled'?usersResult.value:{}; const alerts=alertsResult.status==='fulfilled'?alertsResult.value:{}; const sourceOk=sourceResult.status==='fulfilled';
-    const decisionPayload=decisionsResult.status==='fulfilled'?decisionsResult.value:{}; const decisions=decisionPayload.decisions||{}; const sites=arr(registry.sites); const b=bucketSites(sites, decisions); const alertsCount=Number(alerts.count ?? (Array.isArray(alerts.alerts)?alerts.alerts.length:0))||0; const userCount=countUsers(users);
+    const registry=registryResult.status==='fulfilled'?unwrapContract(registryResult.value):{}; const users=usersResult.status==='fulfilled'?unwrapContract(usersResult.value):{}; const alerts=alertsResult.status==='fulfilled'?unwrapContract(alertsResult.value):{}; const sourceOk=sourceResult.status==='fulfilled';
+    const decisionPayload=decisionsResult.status==='fulfilled'?unwrapDecisions(decisionsResult.value):{}; const decisions=decisionPayload.decisions||{}; const sites=arr(registry.sites); const b=bucketSites(sites, decisions); const alertsCount=Number(alerts.count ?? (Array.isArray(alerts.alerts)?alerts.alerts.length:0))||0; const userCount=countUsers(users);
     setText('estate-total-sites', sites.length); setText('estate-monitored-sites', b.monitored.length); setText('estate-discovered-sites', b.review.length); setText('estate-pending-sites', b.approval.length); setText('estate-critical-sites', b.critical.length); setText('estate-retired-sites', b.retired.length); setText('estate-review-count', `${b.review.length} review`);
     setText('rail-total-sites', sites.length); setText('rail-monitored-sites', b.monitored.length); setText('rail-discovered-sites', b.review.length); setText('rail-review-queue', b.review.length); setText('rail-pending-sites', b.approval.length); setText('rail-ignored-sites', b.ignored.length); setText('rail-registry-status', sourceOk?'OK':'Review'); setText('rail-users-count', userCount); setText('rail-alert-count', alertsCount);
     const reviewList=$('estate-review-list'); if(reviewList){ reviewList.innerHTML=b.review.length ? b.review.map(reviewItem).join('') : '<p class="estate-empty">No discovered sites currently require review.</p>'; }
