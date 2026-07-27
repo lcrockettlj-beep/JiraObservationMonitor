@@ -167,7 +167,7 @@
 
   function actionCell(site) {
     const key = encodeURIComponent(siteKey(site));
-    return '<a class="estate-site-link estate-site-link--button" href="/estate/manage/' + key + '">Manage</a>';
+    return '<a class="estate-site-link estate-site-link--button" href="/estate/review/' + key + '">Manage</a>';
   }
 
   async function fetchContract() {
@@ -244,7 +244,8 @@
       return;
     }
     list.innerHTML = candidates.map(function (site) {
-      return '<div class="estate-review-item"><strong>' + escapeHtml(siteLabel(site)) + '</strong><span>' + escapeHtml(siteLifecycle(site)) + '</span></div>';
+      const key = encodeURIComponent(siteKey(site));
+      return '<div class="estate-review-item"><strong>' + escapeHtml(siteLabel(site)) + '</strong><a class="estate-site-link estate-site-link--button" href="/estate/review/' + key + '">Review</a></div>';
     }).join("");
   }
 
