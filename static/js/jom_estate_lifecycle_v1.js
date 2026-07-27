@@ -1,33 +1,186 @@
-// JOM Estate Lifecycle v1 - single owner, no sidecar
+// JOM Estate Operational Truth Alignment v1
+// Single-owner Estate page renderer. Aligns Estate rail, discovery queue, users and alerts to active workspace truth.
 (function(){
   'use strict';
-  let contract={},data={},sites=[];
-  const $=id=>document.getElementById(id);
-  const set=(id,v)=>{const e=$(id);if(e)e.textContent=(v==null||v==='')?'n/a':String(v);};
-  const num=(v,f)=>{const n=Number(v);return Number.isFinite(n)?n:f;};
-  const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-  const unwrap=p=>(p&&typeof p==='object'&&p.data&&typeof p.data==='object')?p.data:(p&&typeof p==='object'?p:{});
-  function payload(c){const d=unwrap(c||contract),p=unwrap(d.payload||{}),r=unwrap(d.registry||d.site_registry||{});if(Array.isArray(d.sites))return d;if(Array.isArray(p.sites))return p;if(Array.isArray(r.sites))return r;return r;}
-  function getSites(c){const p=payload(c);return Array.isArray(p.sites)?p.sites.filter(x=>x&&typeof x==='object'):[];}
-  function summary(c){const d=unwrap(c||contract),p=unwrap(d.payload||{}),r=payload(c);return d.summary||p.summary||d.registry_summary||r.summary||{};}
-  function key(s){return s.site_key||s.key||s.cloud_id||s.site_name||s.name||'site';}
-  function label(s){return s.site_name||s.name||s.site_key||s.key||s.site_url||s.url||'Unknown site';}
-  function url(s){return s.site_url||s.url||'';}
-  function life(s){return String(s&&(s.lifecycle||s.classification||s.collector_onboarding_status||s.status)||'review');}
-  function monitored(s){const l=life(s).toLowerCase();return !!(s&&(s.is_monitored===true||s.monitored===true||l==='monitored'||l.includes('monitoring enabled')));}
-  function pending(s){const l=life(s).toLowerCase();return l.includes('pending')||String(s.collector_onboarding_status||'').toLowerCase().includes('pending')||s.can_approve===true;}
-  function health(s){const v=String(s.health||s.health_status||s.source_status||s.status||'not available').toLowerCase();if(v==='ok'||v==='monitored')return'OK';if(v==='error'||v==='failed'||v==='review')return'Review';return v==='not available'?'Not available':v;}
-  function last(s){const r=payload(contract);return s.last_observed_at||s.last_observation_at||s.last_seen_at||s.updated_at_utc||s.generated_at_utc||s.generated_at||r.generated_at_utc||data.generated_at_utc||contract.generated_at_utc||contract.served_at_utc||'Source timestamp unavailable';}
-  function searchMatch(s,q){q=String(q||'').trim().toLowerCase();if(!q)return true;return [s.site_name,s.name,s.site_key,s.key,s.cloud_id,s.url,s.site_url,s.lifecycle,s.classification,s.status,s.collector_onboarding_status].filter(Boolean).join(' ').toLowerCase().includes(q);}
-  function visible(){const q=$('estate-search')?$('estate-search').value:'';return sites.filter(monitored).filter(s=>searchMatch(s,q));}
-  function siteCell(s){const u=url(s),t=esc(label(s));return u?'<a class="estate-site-link" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+t+'</a>':t;}
-  function actionCell(s){return'<a class="estate-site-link estate-site-link--button" href="/estate/review/'+encodeURIComponent(key(s))+'">Manage</a>';}
-  async function fetchContract(){const r=await fetch('/api/estate/admin-site-inventory',{cache:'no-store'});if(!r.ok)throw new Error('/api/estate/admin-site-inventory returned '+r.status);return r.json();}
-  function renderRail(c){const s=summary(c),rows=getSites(c),p=payload(c);const total=num(s.total_sites??s.total_inventory_rows??s.live_resource_count,rows.length),mon=num(s.monitored_count,rows.filter(monitored).length),disc=num(s.discovered_count,rows.filter(x=>life(x).toLowerCase()==='discovered').length),pend=num(s.pending_onboarding_count??s.pending_review_count,rows.filter(pending).length),ign=num(s.ignored_count,rows.filter(x=>life(x).toLowerCase()==='ignored').length);set('rail-total-sites',total);set('rail-monitored-sites',mon);set('rail-discovered-sites',disc);set('rail-review-queue',disc+pend);set('rail-pending-sites',pend);set('rail-ignored-sites',ign);set('rail-registry-status',data.registry_status||p.status||'OK');set('rail-users-count','--');set('rail-alert-count',0);}
-  function renderRows(rows){const b=$('estate-registry-body');if(!b)return;if(!rows.length){b.innerHTML='<tr><td colspan="6">No monitored sites match the current search.</td></tr>';return;}b.innerHTML=rows.map(s=>'<tr><td>'+siteCell(s)+'</td><td>'+esc(life(s))+'</td><td>'+esc(monitored(s)?'Monitored':'Not monitored')+'</td><td>'+esc(health(s))+'</td><td>'+esc(last(s))+'</td><td>'+actionCell(s)+'</td></tr>').join('');}
-  function renderQueue(c){const list=$('estate-review-list'),count=$('estate-review-count'),rows=getSites(c).filter(s=>life(s).toLowerCase()==='discovered'||pending(s));if(count)count.textContent=String(rows.length);if(!list)return;if(!rows.length){list.innerHTML='<p class="estate-empty">No sites currently awaiting Estate review.</p>';return;}list.innerHTML=rows.map(s=>'<div class="estate-review-item"><strong>'+esc(label(s))+'</strong><a class="estate-site-link estate-site-link--button" href="/estate/review/'+encodeURIComponent(key(s))+'">Review</a></div>').join('');}
-  function error(e){const m=e&&e.message?e.message:String(e||'Unknown error'),b=$('estate-registry-body'),l=$('estate-review-list');if(b)b.innerHTML='<tr><td colspan="6">Estate render error: '+esc(m)+'</td></tr>';if(l)l.innerHTML='<p class="estate-empty">Estate render error: '+esc(m)+'</p>';set('rail-registry-status','review');}
-  async function load(){try{contract=await fetchContract();data=unwrap(contract);sites=getSites(contract);renderRail(contract);renderRows(visible());renderQueue(contract);}catch(e){console.warn('Estate workspace contract load failed',e);error(e);}}
-  function init(){const s=$('estate-search'),f=$('estate-filter');if(s)s.addEventListener('input',()=>renderRows(visible()));if(f)f.addEventListener('change',()=>renderRows(visible()));load();}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  let inventory = {};
+  let workspace = {};
+  let sites = [];
+
+  const byId = id => document.getElementById(id);
+  const set = (id, value) => { const el = byId(id); if (el) el.textContent = value === null || value === undefined || value === '' ? 'n/a' : String(value); };
+  const arr = value => Array.isArray(value) ? value : [];
+  const num = (value, fallback) => { const n = Number(value); return Number.isFinite(n) ? n : fallback; };
+  const esc = value => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  const unwrap = payload => payload && typeof payload === 'object' && payload.data && typeof payload.data === 'object' ? payload.data : (payload && typeof payload === 'object' ? payload : {});
+
+  async function fetchJson(url){
+    const response = await fetch(url, {cache:'no-store'});
+    if(!response.ok) throw new Error(url + ' returned ' + response.status);
+    return await response.json();
+  }
+
+  function siteKey(site){ return site.site_key || site.key || site.name || site.site_name || 'site'; }
+  function siteName(site){ return site.name || site.site_name || site.site_key || site.key || 'Unknown site'; }
+  function siteUrl(site){ return site.url || site.site_url || ''; }
+  function lifecycle(site){ return String(site.lifecycle || site.classification || site.collector_onboarding_status || site.status || 'discovery_gap').toLowerCase(); }
+  function isMonitored(site){ return lifecycle(site) === 'monitored' || site.approved_monitored === true || site.is_monitored === true || site.monitored === true; }
+  function isReview(site){ return ['pending_review','registered_review','approval_pending','pending'].includes(lifecycle(site)); }
+  function isApprovalPending(site){ return ['registered_review','approval_pending'].includes(lifecycle(site)); }
+  function isDiscoveryGap(site){ return lifecycle(site) === 'discovery_gap'; }
+  function isIgnored(site){ return lifecycle(site) === 'ignored'; }
+
+  function summary(){
+    const invSummary = inventory.summary || {};
+    const total = num(invSummary.total_inventory_rows ?? invSummary.total_sites, sites.length);
+    const monitored = num(invSummary.monitored_count, sites.filter(isMonitored).length);
+    const pendingReview = num(invSummary.pending_review_count, sites.filter(s => lifecycle(s) === 'pending_review').length);
+    const approvalPending = num(invSummary.registered_review_count ?? invSummary.approval_pending_count, sites.filter(isApprovalPending).length);
+    const discoveryGap = num(invSummary.discovery_gap_count, sites.filter(isDiscoveryGap).length);
+    const ignored = num(invSummary.ignored_count, sites.filter(isIgnored).length);
+    const discovered = total;
+    return {total, monitored, discovered, pendingReview, approvalPending, discoveryGap, ignored, reviewQueue: pendingReview};
+  }
+
+  function setRailLabel(id, value){
+    const dd = byId(id);
+    if(!dd) return;
+    const row = dd.closest('div');
+    const dt = row ? row.querySelector('dt') : null;
+    if(dt) dt.textContent = value;
+  }
+
+  function usersMetric(){
+    const root = unwrap(workspace);
+    const candidates = [
+      root.users && root.users.metric,
+      root.users_metric && root.users_metric.metric,
+      root.users_metric,
+      root.estate_product_access && root.estate_product_access.summary && root.estate_product_access.summary.total_jira_product_user_count,
+      root.estate_access_truth && root.estate_access_truth.product_summary && root.estate_access_truth.product_summary.total_jira_product_user_count,
+      root.estate_access_truth && root.estate_access_truth.summary && root.estate_access_truth.summary.api_product_user_count
+    ];
+    for(const candidate of candidates){ const n = num(candidate, null); if(n !== null) return n; }
+    return null;
+  }
+
+  function alertCount(){
+    const root = unwrap(workspace);
+    if(root.operator_alerts && Array.isArray(root.operator_alerts.alerts)) return root.operator_alerts.alerts.length;
+    if(root.operator_alerts && root.operator_alerts.count !== undefined) return num(root.operator_alerts.count, 0);
+    return 0;
+  }
+
+  function renderRail(){
+    const s = summary();
+    setRailLabel('rail-discovered-sites', 'Discovered');
+    setRailLabel('rail-review-queue', 'Requires Review');
+    setRailLabel('rail-pending-sites', 'Approval Pending');
+    setTextPurpose();
+    set('rail-total-sites', s.total);
+    set('rail-monitored-sites', s.monitored);
+    set('rail-discovered-sites', s.discovered);
+    set('rail-review-queue', s.reviewQueue);
+    set('rail-pending-sites', s.approvalPending);
+    set('rail-ignored-sites', s.ignored);
+    set('rail-registry-status', inventory.ok === false ? 'Review' : 'OK');
+    const users = usersMetric();
+    set('rail-users-count', users === null ? '--' : users);
+    set('rail-alert-count', alertCount());
+  }
+
+  function setTextPurpose(){
+    const heading = document.querySelector('#discovered-sites h2');
+    if(heading) heading.textContent = 'Estate Discovery Queue';
+    const count = byId('estate-review-count');
+    if(count) count.setAttribute('title', 'All sites currently known to Estate discovery inventory.');
+    const section = document.querySelector('#discovered-sites .estate-muted');
+    if(section) section.textContent = 'All sites found by live discovery, OAuth/resource evidence, admin event references, or known discovery-gap targets. Review actions appear where a lifecycle decision is still needed.';
+  }
+
+  function renderDiscoveryQueue(){
+    const list = byId('estate-review-list');
+    const count = byId('estate-review-count');
+    if(count) count.textContent = String(sites.length);
+    if(!list) return;
+    if(!sites.length){ list.innerHTML = '<p class="estate-empty">No estate sites have been discovered.</p>'; return; }
+    list.innerHTML = sites.map(site => {
+      const key = encodeURIComponent(siteKey(site));
+      const life = lifecycle(site);
+      const action = isMonitored(site) ? 'Monitored' : (isReview(site) ? 'Review' : (isDiscoveryGap(site) ? 'Discovery Gap' : 'Review'));
+      return '<div class="estate-review-item">'
+        + '<strong>' + esc(siteName(site)) + '</strong>'
+        + '<span class="estate-muted">' + esc(life.replace(/_/g, ' ')) + '</span>'
+        + '<a class="estate-site-link estate-site-link--button" href="/estate/review/' + key + '">' + esc(action) + '</a>'
+        + '</div>';
+    }).join('');
+  }
+
+  function registryVisibleSites(){ return sites.filter(isMonitored); }
+  function searchMatch(site, query){
+    const q = String(query || '').trim().toLowerCase();
+    if(!q) return true;
+    return [siteName(site), siteUrl(site), siteKey(site), lifecycle(site), arr(site.sources).join(' ')].join(' ').toLowerCase().includes(q);
+  }
+  function filteredRegistrySites(){
+    const q = byId('estate-search') ? byId('estate-search').value : '';
+    return registryVisibleSites().filter(site => searchMatch(site, q));
+  }
+  function renderRegistryRows(rows){
+    const body = byId('estate-registry-body');
+    if(!body) return;
+    if(!rows.length){ body.innerHTML = '<tr><td colspan="6">No monitored sites match the current search.</td></tr>'; return; }
+    body.innerHTML = rows.map(site => {
+      const key = encodeURIComponent(siteKey(site));
+      const url = siteUrl(site);
+      const label = esc(siteName(site));
+      const siteCell = url ? '<a class="estate-site-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + label + '</a>' : label;
+      const last = inventory.generated_utc || inventory.generated_at_utc || site.generated_at_utc || 'Source timestamp unavailable';
+      return '<tr>'
+        + '<td>' + siteCell + '</td>'
+        + '<td>' + esc(lifecycle(site)) + '</td>'
+        + '<td>' + (isMonitored(site) ? 'Monitored' : 'Not monitored') + '</td>'
+        + '<td>' + (isMonitored(site) ? 'OK' : 'Review') + '</td>'
+        + '<td>' + esc(last) + '</td>'
+        + '<td><a class="estate-site-link estate-site-link--button" href="/estate/review/' + key + '">Manage</a></td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  function renderError(error){
+    const message = error && error.message ? error.message : String(error || 'Unknown error');
+    const list = byId('estate-review-list');
+    const body = byId('estate-registry-body');
+    if(list) list.innerHTML = '<p class="estate-empty">Estate render error: ' + esc(message) + '</p>';
+    if(body) body.innerHTML = '<tr><td colspan="6">Estate render error: ' + esc(message) + '</td></tr>';
+    set('rail-registry-status', 'Review');
+  }
+
+  async function load(){
+    try{
+      const results = await Promise.allSettled([
+        fetchJson('/api/estate/admin-site-inventory'),
+        fetchJson('/api/workspace/command-centre')
+      ]);
+      if(results[0].status !== 'fulfilled') throw results[0].reason;
+      inventory = results[0].value || {};
+      workspace = results[1].status === 'fulfilled' ? results[1].value : {};
+      sites = arr(inventory.sites);
+      renderRail();
+      renderDiscoveryQueue();
+      renderRegistryRows(filteredRegistrySites());
+    }catch(error){
+      console.warn('Estate operational truth render failed', error);
+      renderError(error);
+    }
+  }
+
+  function init(){
+    const search = byId('estate-search');
+    const filter = byId('estate-filter');
+    if(search) search.addEventListener('input', () => renderRegistryRows(filteredRegistrySites()));
+    if(filter) filter.addEventListener('change', () => renderRegistryRows(filteredRegistrySites()));
+    load();
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

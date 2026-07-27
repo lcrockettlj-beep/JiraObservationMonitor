@@ -846,7 +846,55 @@ def _write_lifecycle_decisions(payload: Dict[str, Any]) -> Dict[str, Any]:
     payload["generated_at_utc"] = now_utc()
     return write_json(SITE_LIFECYCLE_DECISIONS_PATH, payload)
 
+
+
+# === JOM SITE REVIEW ESTATE INVENTORY TRUTH v1 START ===
+def _jom_site_review_inventory_rows_v1():
+    payload = load_json("estate_admin_site_inventory_v1.json", {})
+    return payload.get("sites", []) if isinstance(payload, dict) and isinstance(payload.get("sites"), list) else []
+
+def _jom_site_review_inventory_record_v1(site_key):
+    wanted = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key or "").strip().lower()
+    for row in _jom_site_review_inventory_rows_v1():
+        if not isinstance(row, dict):
+            continue
+        values = [row.get("site_key"), row.get("key"), row.get("name"), row.get("site_name"), row.get("url"), row.get("site_url"), row.get("cloud_id")]
+        for value in values:
+            if value is not None and str(value).strip().lower() == wanted:
+                return row
+    return {}
+
+def _jom_site_review_normalised_inventory_site_v1(site_key):
+    row = _jom_site_review_inventory_record_v1(site_key)
+    if not row:
+        return {}
+    key = str(row.get("site_key") or row.get("key") or row.get("name") or site_key or "").strip().lower()
+    lifecycle = str(row.get("lifecycle") or "discovery_gap").strip().lower()
+    monitored = lifecycle == "monitored" or row.get("approved_monitored") is True
+    return {
+        "site_key": key,
+        "site_name": row.get("name") or row.get("site_name") or key,
+        "site_url": row.get("url") or row.get("site_url") or "",
+        "url": row.get("url") or row.get("site_url") or "",
+        "cloud_id": row.get("cloud_id"),
+        "sources": row.get("sources") or [],
+        "evidence_levels": row.get("evidence_levels") or [],
+        "classification": "monitored" if monitored else lifecycle,
+        "lifecycle": lifecycle,
+        "is_monitored": bool(monitored),
+        "monitored": bool(monitored),
+        "collector_onboarding_status": "monitoring_enabled" if monitored else lifecycle,
+        "approved_monitored": bool(row.get("approved_monitored") is True),
+        "in_registry": bool(row.get("in_registry") is True),
+        "action_required": row.get("action_required"),
+        "status": "ok" if monitored else "review",
+    }
+# === JOM SITE REVIEW ESTATE INVENTORY TRUTH v1 END ===
+
 def _find_site(site_key: str) -> Dict[str, Any]:
+    inventory_site = _jom_site_review_normalised_inventory_site_v1(site_key)
+    if inventory_site:
+        return inventory_site
     registry = load_json("site_registry.json", {})
     sites = registry.get("sites", []) if isinstance(registry, dict) else []
     target = _normalise_site_key(site_key)
@@ -2101,6 +2149,138 @@ def jom_api_estate_discovery_authority_v1():
     )
     return Response(json.dumps(data, indent=2), mimetype="application/json")
 # END JOM_ESTATE_ADMIN_INVENTORY_API_WIRING_V1
+
+
+
+# === JOM ESTATE SITE REVIEW RESPONSE WRAP TRUTH v1.2 START ===
+def _jom_site_review_inventory_truth_v1_2(site_key):
+    inventory = load_json("estate_admin_site_inventory_v1.json", {})
+    rows = inventory.get("sites", []) if isinstance(inventory, dict) and isinstance(inventory.get("sites"), list) else []
+    wanted = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key or "").strip().lower()
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        values = [row.get("site_key"), row.get("key"), row.get("name"), row.get("site_name"), row.get("url"), row.get("site_url"), row.get("cloud_id")]
+        if not any(str(value or "").strip().lower() == wanted for value in values):
+            continue
+        key = str(row.get("site_key") or row.get("key") or row.get("name") or site_key or "").strip().lower()
+        lifecycle = str(row.get("lifecycle") or "discovery_gap").strip().lower()
+        monitored = lifecycle == "monitored" or row.get("approved_monitored") is True or row.get("is_monitored") is True or row.get("monitored") is True
+        label = "Monitored" if monitored else " ".join(part.capitalize() for part in lifecycle.split("_"))
+        monitoring_label = "Monitoring enabled" if monitored else "Not monitored"
+        return {
+            "found": True,
+            "site_key": key,
+            "site_name": row.get("name") or row.get("site_name") or key,
+            "site_url": row.get("url") or row.get("site_url") or "",
+            "url": row.get("url") or row.get("site_url") or "",
+            "cloud_id": row.get("cloud_id"),
+            "sources": row.get("sources") or [],
+            "evidence_levels": row.get("evidence_levels") or [],
+            "classification": "monitored" if monitored else lifecycle,
+            "lifecycle": lifecycle,
+            "lifecycle_status": label,
+            "is_monitored": bool(monitored),
+            "monitored": bool(monitored),
+            "approved_monitored": bool(row.get("approved_monitored") is True),
+            "collector_onboarding_status": "monitoring_enabled" if monitored else lifecycle,
+            "monitoring_status": monitoring_label,
+            "health_status": "OK" if monitored else "Review",
+            "action_required": row.get("action_required"),
+            "truth_source": "estate_admin_site_inventory_v1.json",
+        }
+    return {"found": False}
+
+def _jom_site_review_align_payload_v1_2(site_key, payload):
+    if not isinstance(payload, dict):
+        return payload
+    truth = _jom_site_review_inventory_truth_v1_2(site_key)
+    if not truth.get("found"):
+        return payload
+    payload.update({
+        "site_key": truth.get("site_key"),
+        "site_name": truth.get("site_name"),
+        "site_url": truth.get("site_url"),
+        "url": truth.get("url"),
+        "cloud_id": truth.get("cloud_id"),
+        "sources": truth.get("sources"),
+        "evidence_levels": truth.get("evidence_levels"),
+        "classification": truth.get("classification"),
+        "lifecycle": truth.get("lifecycle"),
+        "lifecycle_status": truth.get("lifecycle_status"),
+        "is_monitored": truth.get("is_monitored"),
+        "monitored": truth.get("monitored"),
+        "monitoring_status": truth.get("monitoring_status"),
+        "health_status": truth.get("health_status"),
+        "truth_source": truth.get("truth_source"),
+    })
+    readiness = payload.get("readiness") if isinstance(payload.get("readiness"), dict) else {}
+    readiness["lifecycle"] = truth.get("lifecycle_status")
+    readiness["monitoring"] = truth.get("monitoring_status")
+    readiness["source"] = truth.get("truth_source")
+    payload["readiness"] = readiness
+    monitoring = payload.get("monitoring") if isinstance(payload.get("monitoring"), dict) else {}
+    monitoring["enabled"] = truth.get("is_monitored")
+    monitoring["status"] = truth.get("monitoring_status")
+    monitoring["source"] = truth.get("truth_source")
+    payload["monitoring"] = monitoring
+    lifecycle_detail = payload.get("lifecycle_detail") if isinstance(payload.get("lifecycle_detail"), dict) else {}
+    lifecycle_detail["state"] = truth.get("lifecycle")
+    lifecycle_detail["label"] = truth.get("lifecycle_status")
+    lifecycle_detail["source"] = truth.get("truth_source")
+    payload["lifecycle_detail"] = lifecycle_detail
+    return payload
+
+def _jom_register_site_review_truth_wrapper_v1_2():
+    try:
+        rules = list(app.url_map.iter_rules())
+    except Exception:
+        return
+    for rule in rules:
+        rule_text = str(rule)
+        if "/api/site-review" not in rule_text:
+            continue
+        if "<site_key>" not in rule_text and "<path:site_key>" not in rule_text and "<string:site_key>" not in rule_text:
+            continue
+        if "access-validation" in rule_text or "oauth" in rule_text or "complete" in rule_text:
+            continue
+        endpoint = rule.endpoint
+        original = app.view_functions.get(endpoint)
+        if original is None or getattr(original, "_jom_site_review_truth_wrapped_v1_2", False):
+            continue
+        def make_wrapped(func):
+            def wrapped(*args, **kwargs):
+                site_key = kwargs.get("site_key") or (args[0] if args else None)
+                result = func(*args, **kwargs)
+                status = None
+                headers = None
+                response = result
+                if isinstance(result, tuple):
+                    response = result[0]
+                    if len(result) > 1:
+                        status = result[1]
+                    if len(result) > 2:
+                        headers = result[2]
+                try:
+                    payload = response.get_json(silent=True) if hasattr(response, "get_json") else None
+                except Exception:
+                    payload = None
+                if not isinstance(payload, dict):
+                    return result
+                payload = _jom_site_review_align_payload_v1_2(site_key, payload)
+                new_response = jsonify(payload)
+                if status is not None and headers is not None:
+                    return new_response, status, headers
+                if status is not None:
+                    return new_response, status
+                return new_response
+            wrapped.__name__ = getattr(func, "__name__", "jom_site_review_truth_wrapped")
+            wrapped._jom_site_review_truth_wrapped_v1_2 = True
+            return wrapped
+        app.view_functions[endpoint] = make_wrapped(original)
+
+_jom_register_site_review_truth_wrapper_v1_2()
+# === JOM ESTATE SITE REVIEW RESPONSE WRAP TRUTH v1.2 END ===
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
