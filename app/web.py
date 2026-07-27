@@ -1657,21 +1657,114 @@ def _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product
     payload["source"] = "estate_product_access.summary.total_jira_product_user_count"
     return payload
 
+
+
+# === JOM COMMAND CENTRE WORKSPACE TRUTH ALIGNMENT v1 START ===
+def _jom_cmdc_truth_inventory_sites_v1(inventory):
+    return inventory.get("sites") if isinstance(inventory, dict) and isinstance(inventory.get("sites"), list) else []
+
+def _jom_cmdc_truth_registry_map_v1(registry):
+    out = {}
+    sites = registry.get("sites") if isinstance(registry, dict) and isinstance(registry.get("sites"), list) else []
+    for site in sites:
+        if isinstance(site, dict):
+            key = str(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or "").strip().lower()
+            if key:
+                out[key] = site
+    return out
+
+def _jom_cmdc_truth_site_from_inventory_v1(row, registry_map):
+    key = str(row.get("site_key") or row.get("key") or row.get("name") or "").strip().lower()
+    base = dict(registry_map.get(key, {}))
+    lifecycle = str(row.get("lifecycle") or base.get("classification") or "discovery_gap").strip().lower()
+    monitored = lifecycle == "monitored" or row.get("approved_monitored") is True
+    base.update({
+        "site_key": key,
+        "site_name": row.get("name") or row.get("site_name") or base.get("site_name") or key,
+        "site_url": row.get("url") or row.get("site_url") or base.get("site_url") or base.get("url") or "",
+        "cloud_id": row.get("cloud_id") or base.get("cloud_id"),
+        "sources": row.get("sources") or base.get("sources") or [],
+        "evidence_levels": row.get("evidence_levels") or base.get("evidence_levels") or [],
+        "classification": "monitored" if monitored else lifecycle,
+        "lifecycle": lifecycle,
+        "is_monitored": bool(monitored),
+        "monitored": bool(monitored),
+        "collector_onboarding_status": "monitoring_enabled" if monitored else lifecycle,
+        "action_required": row.get("action_required"),
+        "approved_monitored": bool(row.get("approved_monitored") is True),
+        "in_registry": bool(row.get("in_registry") is True),
+        "status": "ok" if monitored else "review",
+    })
+    return base
+
+def _jom_cmdc_truth_registry_from_estate_inventory_v1(inventory, registry):
+    rows = _jom_cmdc_truth_inventory_sites_v1(inventory)
+    if not rows:
+        return registry if isinstance(registry, dict) else {}
+    registry_map = _jom_cmdc_truth_registry_map_v1(registry)
+    sites = [_jom_cmdc_truth_site_from_inventory_v1(row, registry_map) for row in rows if isinstance(row, dict)]
+    total = len(sites)
+    monitored = len([s for s in sites if s.get("is_monitored") is True])
+    pending_review = len([s for s in sites if str(s.get("lifecycle") or "").lower() == "pending_review"])
+    registered_review = len([s for s in sites if str(s.get("lifecycle") or "").lower() in {"registered_review", "approval_pending"}])
+    discovery_gap = len([s for s in sites if str(s.get("lifecycle") or "").lower() == "discovery_gap"])
+    discovered = len([s for s in sites if str(s.get("lifecycle") or "").lower() == "discovered"])
+    review_count = pending_review + registered_review
+    summary = {
+        "total_sites": total,
+        "monitored_count": monitored,
+        "discovered_count": discovered,
+        "pending_review_count": pending_review,
+        "registered_review_count": registered_review,
+        "discovery_gap_count": discovery_gap,
+        "pending_onboarding_count": registered_review,
+        "review_count": review_count,
+        "coverage_percent": round((monitored / total) * 100) if total else 0,
+    }
+    return {
+        "schema": "jom-site-registry-command-centre-estate-truth-v1",
+        "generated_at_utc": inventory.get("generated_utc") or inventory.get("generated_at_utc"),
+        "source": "static/data/estate_admin_site_inventory_v1.json",
+        "source_policy": "Command Centre lifecycle counts aligned to Estate live inventory truth.",
+        "summary": summary,
+        "sites": sites,
+    }
+
+def _jom_cmdc_truth_append_review_alert_v1(alerts, registry_summary):
+    alerts = alerts if isinstance(alerts, list) else []
+    alerts = [item for item in alerts if not (isinstance(item, dict) and item.get("source") == "site_registry.json" and item.get("title") == "Discovered sites need classification")]
+    review_count = int((registry_summary or {}).get("review_count") or 0)
+    if review_count > 0 and not any(isinstance(item, dict) and item.get("category") == "estate_lifecycle" for item in alerts):
+        alerts.append({
+            "level": "info",
+            "category": "estate_lifecycle",
+            "title": "Estate lifecycle review required",
+            "reason": "One or more estate sites need review or approval before monitoring decisions are complete.",
+            "source": "estate_admin_site_inventory_v1.json",
+            "value": review_count,
+            "recommended_action": "Open Estate review and complete lifecycle decisions",
+        })
+    return alerts
+# === JOM COMMAND CENTRE WORKSPACE TRUTH ALIGNMENT v1 END ===
+
 def _jom_workspace_command_centre_cached_contract_v1():
     served = _jom_cached_now_v1()
     registry = _jom_cached_read_json_v1("site_registry.json", {})
+    estate_admin_inventory = _jom_cached_read_json_v1("estate_admin_site_inventory_v1.json", {})
     user_footprint = _jom_cached_read_json_v1("user_footprint.json", {})
     estate_product_access = _jom_cached_read_json_v1("estate_product_access.json", {})
     estate_access_truth = _jom_cached_read_json_v1("estate_access_truth.json", {})
     admin_truth = _jom_cached_read_json_v1("admin_truth_v2.json", {})
     runtime_status = _jom_cached_read_json_v1("runtime_execution_status.json", {})
     source_state = _jom_cached_source_state_v1()
-    registry_summary = _jom_cached_registry_summary_v1(registry)
+    registry = _jom_cmdc_truth_registry_from_estate_inventory_v1(estate_admin_inventory, registry)
+    registry_summary = registry.get("summary") if isinstance(registry, dict) and isinstance(registry.get("summary"), dict) else _jom_cached_registry_summary_v1(registry)
     product_summary = estate_product_access.get("summary", {}) if isinstance(estate_product_access, dict) else {}
     product_users = product_summary.get("total_jira_product_user_count")
     if product_users is None and isinstance(admin_truth, dict):
         product_users = ((admin_truth.get("live_product_access_truth") or {}).get("summary") or {}).get("total_jira_product_user_count")
     alerts = _jom_build_cached_operator_alerts_v1(admin_truth, registry)
+    alerts = _jom_cmdc_truth_append_review_alert_v1(alerts, registry_summary)
     data = {
         "registry": registry,
         "registry_summary": registry_summary,
@@ -1950,8 +2043,68 @@ def api_site_review_oauth_complete_v1(site_key):
     return jsonify(payload), status
 # === Estate OAuth Callback Validation Record Repair v1 END ===
 
+# JOM_ESTATE_ADMIN_INVENTORY_API_WIRING_V1
+# Exposes live Estate discovery authority contracts without changing Estate layout or CSS.
+def _jom_read_static_data_contract_v1(filename, fallback_contract):
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    path = root / "static" / "data" / filename
+    if not path.exists():
+        return {
+            "ok": False,
+            "contract": fallback_contract,
+            "error": "missing_contract_file",
+            "path": str(path),
+            "sites": [],
+        }
+    try:
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
+        if isinstance(data, dict):
+            data.setdefault("ok", True)
+            data.setdefault("contract_file", filename)
+            return data
+        return {
+            "ok": False,
+            "contract": fallback_contract,
+            "error": "contract_file_not_object",
+            "contract_file": filename,
+            "sites": [],
+        }
+    except Exception as exc:
+        return {
+            "ok": False,
+            "contract": fallback_contract,
+            "error": "contract_read_failed",
+            "detail": str(exc),
+            "contract_file": filename,
+            "sites": [],
+        }
+
+@app.route('/api/estate/admin-site-inventory')
+def jom_api_estate_admin_site_inventory_v1():
+    from flask import Response
+    import json
+    data = _jom_read_static_data_contract_v1(
+        "estate_admin_site_inventory_v1.json",
+        "estate_admin_site_inventory_v1",
+    )
+    return Response(json.dumps(data, indent=2), mimetype="application/json")
+
+@app.route('/api/estate/discovery-authority')
+def jom_api_estate_discovery_authority_v1():
+    from flask import Response
+    import json
+    data = _jom_read_static_data_contract_v1(
+        "estate_discovery_authority_v1.json",
+        "estate_discovery_authority_v1",
+    )
+    return Response(json.dumps(data, indent=2), mimetype="application/json")
+# END JOM_ESTATE_ADMIN_INVENTORY_API_WIRING_V1
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
 
 
 

@@ -1,0 +1,362 @@
+{
+  "contract": "estate_admin_site_inventory_v1",
+  "generated_utc": "2026-07-27T17:13:16Z",
+  "source_rules": {
+    "oauth_accessible_resources": "live proof that the OAuth principal can access the cloud resource now",
+    "admin_org_events": "live proof that the organisation event stream references the cloud resource; may include historical/deleted sites",
+    "manual_validation_target": "not evidence; used only to prove whether known gaps are now visible in live sources"
+  },
+  "probes": {
+    "admin_org": {
+      "ok": true,
+      "status": 200,
+      "ms": 268
+    },
+    "oauth_accessible_resources": {
+      "ok": true,
+      "status": 200,
+      "ms": 571,
+      "count": 5
+    },
+    "admin_events": {
+      "event_count_collected": 200,
+      "calls": [
+        {
+          "ok": true,
+          "status": 200,
+          "ms": 1754
+        },
+        {
+          "ok": true,
+          "status": 200,
+          "ms": 1006
+        },
+        {
+          "ok": true,
+          "status": 200,
+          "ms": 584
+        },
+        {
+          "ok": true,
+          "status": 200,
+          "ms": 603
+        },
+        {
+          "ok": true,
+          "status": 200,
+          "ms": 405
+        },
+        {
+          "ok": true,
+          "status": 200,
+          "ms": 669
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total_inventory_rows": 9,
+    "live_oauth_count": 5,
+    "admin_event_reference_count": 4,
+    "monitored_count": 3,
+    "pending_review_count": 1,
+    "discovery_gap_count": 4
+  },
+  "sites": [
+    {
+      "site_key": "baljeet-singh",
+      "url": "https://baljeet-singh.atlassian.net",
+      "sources": [
+        "manual_validation_target"
+      ],
+      "manual_validation_target": "known_from_support_case_manual_only",
+      "evidence_levels": [
+        "manual_unverified"
+      ],
+      "approved_monitored": false,
+      "in_registry": false,
+      "lifecycle": "discovery_gap",
+      "action_required": "review_live_inventory_status"
+    },
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
+      "sources": [
+        "manual_validation_target"
+      ],
+      "manual_validation_target": "known_from_admin_screenshot_or_support_case_manual_only",
+      "evidence_levels": [
+        "manual_unverified"
+      ],
+      "approved_monitored": false,
+      "in_registry": false,
+      "lifecycle": "discovery_gap",
+      "action_required": "review_live_inventory_status"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
+      "sources": [
+        "manual_validation_target"
+      ],
+      "manual_validation_target": "known_from_admin_screenshot_or_support_case_manual_only",
+      "evidence_levels": [
+        "manual_unverified"
+      ],
+      "approved_monitored": false,
+      "in_registry": false,
+      "lifecycle": "discovery_gap",
+      "action_required": "review_live_inventory_status"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "sources": [
+        "admin_org_events",
+        "oauth_accessible_resources"
+      ],
+      "name": "gli-delivery-tm",
+      "url": "https://gli-delivery-tm.atlassian.net",
+      "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "scopes": [
+        "manage:jira-configuration",
+        "read:application-role:jira",
+        "read:jira-user",
+        "read:jira-work",
+        "read:license:jira"
+      ],
+      "admin_event_reference_count": 24,
+      "latest_event_samples": [
+        {
+          "id": "11ca23be-b655-4636-8a61-6206ea83cf2c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "11ca23be-b655-4636-8a61-6206ea83cf2c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "11ca23be-b655-4636-8a61-6206ea83cf2c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "11ca23be-b655-4636-8a61-6206ea83cf2c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "f6117fa3-4804-49d4-bbe4-19d47aa93467",
+          "action": "events",
+          "created": null
+        }
+      ],
+      "evidence_levels": [
+        "live_admin_event_reference",
+        "live_oauth_accessible_resources"
+      ],
+      "approved_monitored": true,
+      "in_registry": true,
+      "lifecycle": "monitored",
+      "action_required": null
+    },
+    {
+      "site_key": "gli-global-technology",
+      "sources": [
+        "admin_org_events",
+        "oauth_accessible_resources"
+      ],
+      "name": "gli-global-technology",
+      "url": "https://gli-global-technology.atlassian.net",
+      "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "scopes": [
+        "manage:jira-configuration",
+        "read:application-role:jira",
+        "read:jira-user",
+        "read:jira-work",
+        "read:license:jira"
+      ],
+      "admin_event_reference_count": 24,
+      "latest_event_samples": [
+        {
+          "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "5242f4da-ebf5-4e18-8251-444e6c48d6d7",
+          "action": "events",
+          "created": null
+        }
+      ],
+      "evidence_levels": [
+        "live_admin_event_reference",
+        "live_oauth_accessible_resources"
+      ],
+      "approved_monitored": true,
+      "in_registry": true,
+      "lifecycle": "monitored",
+      "action_required": null
+    },
+    {
+      "site_key": "gli-it-project",
+      "sources": [
+        "admin_org_events",
+        "oauth_accessible_resources"
+      ],
+      "name": "gli-it-project",
+      "url": "https://gli-it-project.atlassian.net",
+      "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "scopes": [
+        "manage:jira-configuration",
+        "read:application-role:jira",
+        "read:jira-user",
+        "read:jira-work",
+        "read:license:jira"
+      ],
+      "admin_event_reference_count": 48,
+      "latest_event_samples": [
+        {
+          "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "1071cca2-9864-48cf-be8b-811d9ce27e86",
+          "action": "events",
+          "created": null
+        }
+      ],
+      "evidence_levels": [
+        "live_admin_event_reference",
+        "live_oauth_accessible_resources"
+      ],
+      "approved_monitored": true,
+      "in_registry": true,
+      "lifecycle": "monitored",
+      "action_required": null
+    },
+    {
+      "site_key": "gli-testing",
+      "url": "https://gli-testing.atlassian.net",
+      "sources": [
+        "manual_validation_target"
+      ],
+      "manual_validation_target": "known_from_support_case_manual_only",
+      "evidence_levels": [
+        "manual_unverified"
+      ],
+      "approved_monitored": false,
+      "in_registry": false,
+      "lifecycle": "discovery_gap",
+      "action_required": "review_live_inventory_status"
+    },
+    {
+      "site_key": "gli-tracker",
+      "sources": [
+        "admin_org_events",
+        "oauth_accessible_resources"
+      ],
+      "name": "gli-tracker",
+      "url": "https://gli-tracker.atlassian.net",
+      "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "scopes": [
+        "manage:jira-configuration",
+        "read:application-role:jira",
+        "read:jira-user",
+        "read:jira-work",
+        "read:license:jira"
+      ],
+      "admin_event_reference_count": 448,
+      "latest_event_samples": [
+        {
+          "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60",
+          "action": "events",
+          "created": null
+        },
+        {
+          "id": "655addbc-5b0b-446f-ae5e-962e1b8167b3",
+          "action": "events",
+          "created": null
+        }
+      ],
+      "evidence_levels": [
+        "live_admin_event_reference",
+        "live_oauth_accessible_resources"
+      ],
+      "approved_monitored": false,
+      "in_registry": true,
+      "lifecycle": "registered_review",
+      "action_required": "review_live_inventory_status"
+    },
+    {
+      "site_key": "gli-usa",
+      "sources": [
+        "oauth_accessible_resources"
+      ],
+      "name": "gli-usa",
+      "url": "https://gli-usa.atlassian.net",
+      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+      "scopes": [
+        "manage:jira-configuration",
+        "read:application-role:jira",
+        "read:jira-user",
+        "read:jira-work",
+        "read:license:jira"
+      ],
+      "evidence_levels": [
+        "live_oauth_accessible_resources"
+      ],
+      "approved_monitored": false,
+      "in_registry": false,
+      "lifecycle": "pending_review",
+      "action_required": "review_live_inventory_status"
+    }
+  ]
+}
