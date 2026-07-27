@@ -1,11 +1,11 @@
 {
   "schema": "jom-site-registry-v4-runtime-consolidated",
-  "generated_at_utc": "2026-07-24T12:39:06Z",
+  "generated_at_utc": "2026-07-27T08:55:47Z",
   "summary": {
-    "total_sites": 8,
-    "monitored_count": 5,
+    "total_sites": 7,
+    "monitored_count": 4,
     "discovered_count": 3,
-    "pending_onboarding_count": 3,
+    "pending_onboarding_count": 0,
     "ignored_count": 0
   },
   "policy": {
@@ -160,7 +160,8 @@
       ],
       "sources": [
         "named_access",
-        "product_access"
+        "product_access",
+        "monitoring_state"
       ],
       "classification": "monitored",
       "is_monitored": true,
@@ -174,10 +175,11 @@
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
       "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
       "collector_onboarding_status": "enabled_via_jom",
-      "approved_at_utc": "2026-07-21T14:18:14.955755Z",
-      "monitoring_enabled_at_utc": "2026-07-21T14:47:47.147891Z",
+      "approved_at_utc": "2026-07-21t14:18:14.955755z",
+      "monitoring_enabled_at_utc": "2026-07-21t14:47:47.147891z",
       "monitoring_enabled_by": "operator",
-      "status": "ok"
+      "status": "monitored",
+      "approved_by": "operator"
     },
     {
       "site_key": "gli-usa",
@@ -203,22 +205,6 @@
       "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
       "collector_onboarding_status": "not_requested",
       "status": "ok"
-    },
-    {
-      "site_key": "{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}",
-      "site_name": "{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}",
-      "site_url": "https://{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}.atlassian.net",
-      "aliases": [
-        "{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}",
-        "https://{'site_key': 'gli-tracker', 'site_name': 'gli-tracker', 'site_url': 'gli-tracker', 'status': 'monitored', 'approved_by': 'operator', 'approved_at_utc': '2026-07-21t14:18:14.955755z', 'monitoring_enabled_at_utc': '2026-07-21t14:47:47.147891z', 'collector_onboarding_status': 'enabled_via_jom'}.atlassian.net"
-      ],
-      "sources": [
-        "monitoring_state"
-      ],
-      "classification": "monitored",
-      "is_monitored": true,
-      "can_approve": false,
-      "metrics": {}
     }
   ]
 }

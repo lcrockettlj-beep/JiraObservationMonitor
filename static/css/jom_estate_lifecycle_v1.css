@@ -5,9 +5,9 @@
   --estate-border: #dfe1e6;
   --estate-card: #ffffff;
   --estate-rail-width: 260px;
-  --estate-rail-edge: 12px;
-  --estate-gap: 24px;
-  --estate-top: 56px;
+  --estate-rail-edge: 16px;
+  --estate-gap: 48px;
+  --estate-top: 28px;
   --estate-bottom: 34px;
 }
 
@@ -48,7 +48,7 @@ body[data-jom-page="estate"] .jom-side-nav {
 }
 
 .estate-hero-card {
-  min-height: 250px;
+  min-height: 170px;
   display: grid;
   align-content: center;
   padding: 34px 36px;
@@ -209,6 +209,7 @@ body[data-jom-page="estate"] .jom-side-nav {
 }
 
 .estate-toolbar {
+  max-width: min(520px, 100%);
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -227,10 +228,11 @@ body[data-jom-page="estate"] .jom-side-nav {
 }
 
 .estate-toolbar input {
-  min-width: min(360px, 100%);
+  min-width: min(300px, 100%);
 }
 
 .estate-table-wrap {
+  max-width: 100%;
   overflow: auto;
   border: 1px solid var(--estate-border);
   border-radius: 14px;
@@ -289,7 +291,7 @@ body[data-jom-page="estate"] .jom-side-nav {
   bottom: var(--estate-bottom);
   width: var(--estate-rail-width);
   z-index: 24;
-  overflow-y: auto;
+  overflow-y: visible;
   display: flex;
   flex-direction: column;
   gap: 18px;
