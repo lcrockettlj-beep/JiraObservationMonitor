@@ -1562,6 +1562,121 @@ def api_workspace_estate_cached_v1():
     return jsonify(_jom_workspace_estate_cached_contract_v1())
 # --- JOM WORKSPACE CONTRACT CACHED READ PATH v1 END ---
 
+
+# === Estate Manage Route Repair v1 START ===
+def _jom_estate_manage_data_path(filename):
+    from pathlib import Path
+    return Path(__file__).resolve().parent.parent / "static" / "data" / filename
+
+
+def _jom_estate_manage_read_json(path, default):
+    import json
+    try:
+        if not path.exists():
+            return default
+        return json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return default
+
+
+def _jom_estate_manage_write_json(path, payload):
+    import json
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _jom_estate_manage_site_key(row):
+    return str((row or {}).get("site_key") or (row or {}).get("key") or (row or {}).get("site_name") or "").strip().lower()
+
+
+def _jom_estate_manage_load_registry():
+    return _jom_estate_manage_read_json(_jom_estate_manage_data_path("site_registry.json"), {"sites": [], "summary": {}})
+
+
+def _jom_estate_manage_find_site(site_key):
+    registry = _jom_estate_manage_load_registry()
+    wanted = str(site_key or "").strip().lower()
+    for site in registry.get("sites", []):
+        if isinstance(site, dict) and _jom_estate_manage_site_key(site) == wanted:
+            return registry, site
+    return registry, None
+
+
+def _jom_estate_manage_recalculate_summary(registry):
+    sites = [s for s in registry.get("sites", []) if isinstance(s, dict)]
+    monitored = [s for s in sites if s.get("is_monitored") is True or s.get("classification") == "monitored"]
+    discovered = [s for s in sites if s.get("classification") == "discovered" and s.get("is_monitored") is not True]
+    ignored = [s for s in sites if s.get("classification") == "ignored"]
+    pending = [s for s in sites if "pending" in str(s.get("collector_onboarding_status") or "").lower()]
+    registry.setdefault("summary", {})
+    registry["summary"].update({
+        "total_sites": len(sites),
+        "monitored_count": len(monitored),
+        "discovered_count": len(discovered),
+        "ignored_count": len(ignored),
+        "pending_onboarding_count": len(pending),
+    })
+    return registry
+
+
+@app.route("/estate/manage/<site_key>")
+def estate_manage_site(site_key):
+    import json
+    from flask import render_template, abort
+    registry, site = _jom_estate_manage_find_site(site_key)
+    if not site:
+        abort(404)
+    decisions = _jom_estate_manage_read_json(_jom_estate_manage_data_path("site_lifecycle_decisions.json"), {"decisions": {}, "history": []})
+    history = []
+    for item in decisions.get("history", []):
+        if isinstance(item, dict) and str(item.get("site_key") or "").lower() == str(site_key).lower():
+            history.append(item)
+    return render_template("estate_manage.html", site=site, history_json=json.dumps(history[-20:], indent=2, ensure_ascii=False))
+
+
+@app.route("/api/estate/manage/<site_key>/revoke-monitoring", methods=["POST"])
+def estate_manage_revoke_monitoring(site_key):
+    from datetime import datetime, timezone
+    from flask import jsonify, request
+    registry_path = _jom_estate_manage_data_path("site_registry.json")
+    registry, site = _jom_estate_manage_find_site(site_key)
+    if not site:
+        return jsonify({"ok": False, "error": "site not found", "site_key": site_key}), 404
+    body = request.get_json(silent=True) or {}
+    dry_run = body.get("dry_run") is True
+    if dry_run:
+        return jsonify({"ok": True, "dry_run": True, "site_key": site_key, "would_revoke": True})
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    for row in registry.get("sites", []):
+        if isinstance(row, dict) and _jom_estate_manage_site_key(row) == str(site_key).lower():
+            row["classification"] = "discovered"
+            row["is_monitored"] = False
+            row["can_approve"] = True
+            row["status"] = "review"
+            row["monitoring_revoked_at_utc"] = now
+            row["monitoring_revoked_by"] = body.get("actor") or "operator"
+            break
+    registry = _jom_estate_manage_recalculate_summary(registry)
+    _jom_estate_manage_write_json(registry_path, registry)
+    decisions_path = _jom_estate_manage_data_path("site_lifecycle_decisions.json")
+    decisions = _jom_estate_manage_read_json(decisions_path, {"decisions": {}, "history": []})
+    decisions.setdefault("history", []).append({
+        "site_key": str(site_key).lower(),
+        "decision": "revoke_monitoring",
+        "reason": "monitoring revoked from Estate manage view",
+        "actor": body.get("actor") or "operator",
+        "recorded_at_utc": now,
+    })
+    decisions.setdefault("decisions", {})[str(site_key).lower()] = {
+        "decision": "discovered",
+        "reason": "monitoring revoked; returned to discovery review queue",
+        "actor": body.get("actor") or "operator",
+        "decided_at_utc": now,
+    }
+    _jom_estate_manage_write_json(decisions_path, decisions)
+    return jsonify({"ok": True, "site_key": site_key, "classification": "discovered", "is_monitored": False, "message": "Monitoring revoked. Site returned to Discovery Review Queue."})
+# === Estate Manage Route Repair v1 END ===
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 

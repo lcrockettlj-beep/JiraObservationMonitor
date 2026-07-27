@@ -82,7 +82,7 @@
   }
 
   function siteOwner(site) {
-    return site.owner || site.business_owner || site.technical_owner || site.admin_owner || site.contact || "Owner unavailable";
+    return "";
   }
 
   function siteLastObservation(site) {
@@ -141,6 +141,23 @@
     });
   }
 
+
+
+  function registryVisibleSites() {
+    return estateSites.filter(function (site) {
+      return siteMonitoring(site) === "Monitored";
+    });
+  }
+
+  function currentFilteredRegistrySites() {
+    const search = byId("estate-search");
+    const filter = byId("estate-filter");
+    const query = search ? search.value : "";
+    return registryVisibleSites().filter(function (site) {
+      return siteMatchesSearch(site, query);
+    });
+  }
+
   function siteCell(site) {
     const label = escapeHtml(siteLabel(site));
     const url = siteUrl(site);
@@ -150,7 +167,7 @@
 
   function actionCell(site) {
     const key = encodeURIComponent(siteKey(site));
-    return '<a class="estate-site-link estate-site-link--button" href="/estate/review/' + key + '">Review</a>';
+    return '<a class="estate-site-link estate-site-link--button" href="/estate/manage/' + key + '">Manage</a>';
   }
 
   async function fetchContract() {
@@ -192,7 +209,7 @@
     const body = byId("estate-registry-body");
     if (!body) return;
     if (!sites.length) {
-      body.innerHTML = '<tr><td colspan="7">No estate sites match the current search or filter.</td></tr>';
+      body.innerHTML = '<tr><td colspan="6">No monitored sites match the current search.</td></tr>';
       return;
     }
     body.innerHTML = sites.map(function (site) {
@@ -201,7 +218,6 @@
         '<td>' + escapeHtml(siteLifecycle(site)) + '</td>' +
         '<td>' + escapeHtml(siteMonitoring(site)) + '</td>' +
         '<td>' + escapeHtml(siteHealth(site)) + '</td>' +
-        '<td>' + escapeHtml(siteOwner(site)) + '</td>' +
         '<td>' + escapeHtml(siteLastObservation(site)) + '</td>' +
         '<td>' + actionCell(site) + '</td>' +
       '</tr>';
@@ -210,7 +226,7 @@
 
   function renderRegistry(contract) {
     estateSites = getSites(contract);
-    renderRegistryRows(currentFilteredSites());
+    renderRegistryRows(currentFilteredRegistrySites());
   }
 
   function renderReviewQueue(contract) {
@@ -244,13 +260,13 @@
     const message = error && error.message ? error.message : String(error || "Unknown error");
     const body = byId("estate-registry-body");
     const list = byId("estate-review-list");
-    if (body) body.innerHTML = '<tr><td colspan="7">Estate render error: ' + escapeHtml(message) + '</td></tr>';
+    if (body) body.innerHTML = '<tr><td colspan="6">Estate render error: ' + escapeHtml(message) + '</td></tr>';
     if (list) list.innerHTML = '<p class="estate-empty">Estate render error: ' + escapeHtml(message) + '</p>';
     setText("rail-registry-status", "review");
   }
 
   function applySearchAndFilter() {
-    try { renderRegistryRows(currentFilteredSites()); }
+    try { renderRegistryRows(currentFilteredRegistrySites()); }
     catch (error) { showRenderError(error); }
   }
 
