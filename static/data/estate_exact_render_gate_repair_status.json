@@ -1,0 +1,44 @@
+{
+  "schema": "jom-estate-exact-render-gate-repair-status-v1",
+  "generated_at_utc": "2026-07-27T13:14:38.079287Z",
+  "js_patch": {
+    "file": "static/js/jom_estate_lifecycle_v1.js",
+    "exists": true,
+    "changed": true,
+    "helper_inserted": false,
+    "replacements": [
+      {
+        "name": "registryVisibleSites monitored gate",
+        "status": "applied",
+        "before": "return siteMonitoring(site) === \"Monitored\";",
+        "after": "return jomEstateIsMonitoredSite(site);"
+      },
+      {
+        "name": "rail monitored count gate",
+        "status": "applied",
+        "before": "const monitored = safeNumber(summary.monitored_count, sites.filter(function (site) { return siteMonitoring(site) === \"Monitored\"; }).length);",
+        "after": "const monitored = safeNumber(summary.monitored_count, jomEstateFilterMonitoredSites(sites).length);"
+      }
+    ],
+    "missed_replacements": [],
+    "errors": []
+  },
+  "js_validation": {
+    "valid": true,
+    "errors": [],
+    "signals": {
+      "helper_present": true,
+      "registry_visible_uses_helper": true,
+      "rail_monitored_uses_helper": true,
+      "old_siteMonitoring_monitored_gate_remaining": false,
+      "old_rail_siteMonitoring_count_remaining": false
+    }
+  },
+  "registry_validation": {
+    "exists": true,
+    "monitored_count": 0,
+    "discovered_count": 7,
+    "errors": []
+  },
+  "status": "pass"
+}

@@ -1,17 +1,19 @@
 {
   "schema": "jom-site-registry-v4-runtime-consolidated",
-  "generated_at_utc": "2026-07-27T08:55:47Z",
+  "generated_at_utc": "2026-07-27T12:55:29.141575Z",
   "summary": {
     "total_sites": 7,
-    "monitored_count": 4,
-    "discovered_count": 3,
+    "monitored_count": 0,
+    "discovered_count": 7,
     "pending_onboarding_count": 0,
     "ignored_count": 0
   },
   "policy": {
     "new_sites_default_status": "discovered",
     "estate_requires_monitored_status": true,
-    "approval_triggers_oauth_onboarding_gate": true
+    "approval_triggers_oauth_onboarding_gate": true,
+    "estate_active_source": "site_registry.json",
+    "monitored_sites_json_role": "derived_compatibility_view_only"
   },
   "sites": [
     {
@@ -62,7 +64,6 @@
       },
       "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
       "collector_onboarding_status": "not_requested",
-      "approved_at_utc": "2026-07-22T11:36:47.560324Z",
       "status": "error"
     },
     {
@@ -79,9 +80,9 @@
         "product_access",
         "runtime"
       ],
-      "classification": "monitored",
-      "is_monitored": true,
-      "can_approve": false,
+      "classification": "discovered",
+      "is_monitored": false,
+      "can_approve": true,
       "metrics": {
         "jira_product_user_count": 31,
         "named_access_count": 8,
@@ -89,8 +90,7 @@
         "jira_role_count": 1
       },
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "approved_at_utc": "2026-06-29T07:48:44Z",
-      "collector_onboarding_status": "validated_or_existing",
+      "collector_onboarding_status": "not_requested",
       "status": "ok"
     },
     {
@@ -107,9 +107,9 @@
         "product_access",
         "runtime"
       ],
-      "classification": "monitored",
-      "is_monitored": true,
-      "can_approve": false,
+      "classification": "discovered",
+      "is_monitored": false,
+      "can_approve": true,
       "metrics": {
         "jira_product_user_count": 57,
         "named_access_count": 28,
@@ -117,8 +117,7 @@
         "jira_role_count": 1
       },
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "approved_at_utc": "2026-06-29T07:48:44Z",
-      "collector_onboarding_status": "validated_or_existing",
+      "collector_onboarding_status": "not_requested",
       "status": "ok"
     },
     {
@@ -135,9 +134,9 @@
         "product_access",
         "runtime"
       ],
-      "classification": "monitored",
-      "is_monitored": true,
-      "can_approve": false,
+      "classification": "discovered",
+      "is_monitored": false,
+      "can_approve": true,
       "metrics": {
         "jira_product_user_count": 59,
         "named_access_count": 37,
@@ -145,8 +144,7 @@
         "jira_role_count": 1
       },
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "approved_at_utc": "2026-06-29T07:48:44Z",
-      "collector_onboarding_status": "validated_or_existing",
+      "collector_onboarding_status": "not_requested",
       "status": "ok"
     },
     {
@@ -163,9 +161,9 @@
         "product_access",
         "monitoring_state"
       ],
-      "classification": "monitored",
-      "is_monitored": true,
-      "can_approve": false,
+      "classification": "discovered",
+      "is_monitored": false,
+      "can_approve": true,
       "metrics": {
         "named_access_count": 3,
         "jira_product_user_count": 5,
@@ -174,12 +172,8 @@
       },
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
       "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
-      "collector_onboarding_status": "enabled_via_jom",
-      "approved_at_utc": "2026-07-21t14:18:14.955755z",
-      "monitoring_enabled_at_utc": "2026-07-21t14:47:47.147891z",
-      "monitoring_enabled_by": "operator",
-      "status": "monitored",
-      "approved_by": "operator"
+      "collector_onboarding_status": "not_requested",
+      "status": "ok"
     },
     {
       "site_key": "gli-usa",

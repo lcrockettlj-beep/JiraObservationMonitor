@@ -1,0 +1,16 @@
+{
+  "schema": "jom-estate-active-source-consolidation-repair-status-v1",
+  "generated_at_utc": "2026-07-27T13:01:13.067292Z",
+  "status": "pass",
+  "active_source": "static/data/site_registry.json",
+  "compatibility_source": "static/data/monitored_sites.json",
+  "compatibility_source_role": "derived_only",
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "registry_monitored_count": 0,
+    "derived_monitored_count": 0,
+    "discovery_leak_count": 0,
+    "derived_schema": "jom-monitored-sites-v3-derived-from-site-registry"
+  }
+}

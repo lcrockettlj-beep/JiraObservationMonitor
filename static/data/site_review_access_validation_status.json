@@ -1,0 +1,17 @@
+{
+  "schema": "jom-site-review-access-validation-status-v1",
+  "sites": {
+    "gli-tracker": {
+      "access_valid": true,
+      "status": "ok",
+      "reason": "JOM registry identity is available for this site.",
+      "validated_at_utc": "2026-07-27T11:55:56Z",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "source": "site_registry.json",
+      "actor": "validator",
+      "method": "registry_identity_validation"
+    }
+  },
+  "generated_at_utc": "2026-07-27T11:55:56Z"
+}

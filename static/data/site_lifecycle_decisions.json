@@ -1,17 +1,17 @@
 {
   "schema": "jom-site-lifecycle-decisions-v1",
-  "generated_at_utc": "2026-07-22T11:38:48.688490Z",
+  "generated_at_utc": "2026-07-27T12:33:17.207548Z",
   "decisions": {
     "gli-tracker": {
       "site_key": "gli-tracker",
-      "decision": "monitored",
+      "decision": "discovered",
       "previous_decision": "approve",
-      "reason": "monitoring enabled via JOM",
+      "reason": "rolled back to discovered",
       "actor": "operator",
-      "decided_at_utc": "2026-07-21T14:47:47.147891Z",
+      "decided_at_utc": "2026-07-27T12:32:56.005326Z",
       "reversible": true,
       "requires_credentials": false,
-      "next_state": "monitored"
+      "next_state": "discovered"
     },
     "gli-usa": {
       "site_key": "gli-usa",
@@ -42,6 +42,39 @@
       "reason": "rolled back to discovered",
       "actor": "operator",
       "decided_at_utc": "2026-07-22T11:38:48.688480Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    "gli-delivery-tm": {
+      "site_key": "gli-delivery-tm",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:33:01.757420Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    "gli-global-technology": {
+      "site_key": "gli-global-technology",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:33:12.789942Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    "gli-it-project": {
+      "site_key": "gli-it-project",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:33:17.207538Z",
       "reversible": true,
       "requires_credentials": false,
       "next_state": "discovered"
@@ -513,6 +546,175 @@
       "reversible": true,
       "requires_credentials": false,
       "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": "monitored",
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T11:18:15.138781Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": "discovered",
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T11:18:33.891762Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": "approve",
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T11:56:09.399571Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": "discovered",
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T11:56:11.823494Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "monitored",
+      "previous_decision": "approve",
+      "reason": "monitoring enabled via JOM",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T11:56:19.068883Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "monitored"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": "monitored",
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:24:06.840959Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": "discovered",
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:24:09.633940Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "monitored",
+      "previous_decision": "approve",
+      "reason": "monitoring enabled via JOM",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:24:13.909385Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "monitored"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": "monitored",
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:24:41.888620Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "pending",
+      "previous_decision": "discovered",
+      "reason": "kept pending review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:32:53.285949Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "pending_review"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "approve",
+      "previous_decision": "pending",
+      "reason": "approved for monitoring review",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:32:54.620440Z",
+      "reversible": true,
+      "requires_credentials": true,
+      "next_state": "approval_pending_credential_required"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": "approve",
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:32:56.005326Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:33:01.757420Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:33:12.789942Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-it-project",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to discovered",
+      "actor": "operator",
+      "decided_at_utc": "2026-07-27T12:33:17.207538Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
     }
+  ],
+  "last_residue_cleanup_audit_utc": "2026-07-27T12:55:29.144711Z",
+  "notes": [
+    "Registry approval residue cleanup executed; lifecycle decision history preserved."
   ]
 }

@@ -3,6 +3,18 @@
 (function () {
   "use strict";
 
+function jomEstateIsMonitoredSite(site) {
+  if (!site || typeof site !== 'object') return false;
+  const classification = String(site.classification || '').toLowerCase();
+  return site.is_monitored === true || classification === 'monitored';
+}
+
+function jomEstateFilterMonitoredSites(sites) {
+  if (!Array.isArray(sites)) return [];
+  return sites.filter(jomEstateIsMonitoredSite);
+}
+
+
   let estateContract = {};
   let estateData = {};
   let estateSites = [];
@@ -145,7 +157,7 @@
 
   function registryVisibleSites() {
     return estateSites.filter(function (site) {
-      return siteMonitoring(site) === "Monitored";
+      return jomEstateIsMonitoredSite(site);
     });
   }
 
@@ -181,7 +193,7 @@
     const sites = getSites(contract);
     const registry = registryPayload(contract);
     const total = safeNumber(summary.total_sites, sites.length);
-    const monitored = safeNumber(summary.monitored_count, sites.filter(function (site) { return siteMonitoring(site) === "Monitored"; }).length);
+    const monitored = safeNumber(summary.monitored_count, jomEstateFilterMonitoredSites(sites).length);
     const discovered = safeNumber(summary.discovered_count, sites.filter(function (site) { return siteLifecycle(site).toLowerCase() === "discovered"; }).length);
     const pending = safeNumber(summary.pending_onboarding_count, sites.filter(isPending).length);
     const ignored = safeNumber(summary.ignored_count, sites.filter(function (site) { return siteLifecycle(site).toLowerCase() === "ignored"; }).length);

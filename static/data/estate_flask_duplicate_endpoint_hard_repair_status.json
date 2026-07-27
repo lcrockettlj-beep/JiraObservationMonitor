@@ -1,0 +1,9 @@
+{
+  "schema": "jom-estate-flask-duplicate-endpoint-hard-repair-v1-3",
+  "generated_at_utc": "2026-07-27T12:23:17Z",
+  "status": "applied",
+  "changed": false,
+  "source_changes": [],
+  "renamed_functions": [],
+  "intent": "Keep app.web importable by ensuring duplicate Estate review Flask endpoint function names are unique."
+}

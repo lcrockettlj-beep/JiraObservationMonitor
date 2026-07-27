@@ -1,23 +1,18 @@
 {
-  "schema": "jom-monitored-sites-v2",
+  "schema": "jom-monitored-sites-v3-derived-from-site-registry",
+  "generated_at_utc": "2026-07-27T13:01:13.060819Z",
+  "source_of_truth": "static/data/site_registry.json",
+  "deprecated_direct_source": true,
+  "role": "compatibility_view_only_do_not_use_as_estate_truth",
   "policy": {
-    "home_shows_discovered_sites": true,
-    "estate_requires_monitored_status": true,
-    "approval_triggers_onboarding_queue": true,
-    "new_sites_default_status": "discovered"
+    "estate_active_source": "site_registry.json",
+    "include_rule": "site.is_monitored is true or site.classification == 'monitored'",
+    "discovery_sites_excluded": true
   },
-  "monitored_sites": [
-    {
-      "site_key": "gli-tracker",
-      "site_name": "gli-tracker",
-      "site_url": "https://gli-tracker.atlassian.net",
-      "status": "monitored",
-      "approved_by": "operator",
-      "approved_at_utc": "2026-07-21T14:18:14.955755Z",
-      "monitoring_enabled_at_utc": "2026-07-21T14:47:47.147891Z",
-      "collector_onboarding_status": "enabled_via_jom"
-    }
-  ],
-  "ignored_sites": [],
-  "updated_at_utc": "2026-07-22T11:38:48.686389Z"
+  "summary": {
+    "total_registry_sites": 7,
+    "monitored_count": 0,
+    "discovered_count": 7
+  },
+  "sites": []
 }

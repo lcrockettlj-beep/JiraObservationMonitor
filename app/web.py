@@ -1,3 +1,4 @@
+# JOM Estate active monitored source: site_registry.json is source of truth; monitored_sites.json is derived compatibility only.
 from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request
@@ -1065,7 +1066,7 @@ def _site_for_validation(site_key: str) -> Dict[str, Any]:
     return {}
 
 @app.route("/api/site-review/<path:site_key>/access-validation")
-def api_site_review_access_validation(site_key):
+def api_site_review_access_validation_status_gate_v1(site_key):
     payload = _load_site_access_validation()
     return jsonify({"ok": True, "site_key": site_key, "validation": payload.get("validations", {}).get(site_key, {})})
 
@@ -1110,6 +1111,7 @@ def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
 def api_site_review_enable_monitoring(site_key):
     payload = request.get_json(silent=True) or {}
     actor = payload.get("actor") or "operator"
+    dry_run = payload.get("dry_run") is True
     registry = load_json("site_registry.json", {})
     sites = registry.get("sites", []) if isinstance(registry, dict) else []
     target = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key).lower()
@@ -1122,27 +1124,45 @@ def api_site_review_enable_monitoring(site_key):
                 break
     if site is None:
         return jsonify({"ok": False, "error": "site not found", "site_key": site_key}), 404
-    validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else load_json("site_access_validation.json", {"validations": {}})
-    validation_state = validations.get("validations", {}).get(site_key, {}) if isinstance(validations, dict) else {}
-    if validation_state.get("access_valid") is not True:
-        return jsonify({"ok": False, "error": "site has not passed access validation", "site_key": site_key, "validation": validation_state}), 409
-    oauth_coverage = _oauth_coverage_payload(site_key)
-    if oauth_coverage.get("monitoring_allowed") is not True:
-        status_code = 409 if oauth_coverage.get("ok") else 404
+
+    if "_jom_credential_gate_latest_validation" in globals():
+        validation_state = _jom_credential_gate_latest_validation(target)
+    else:
+        validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else load_json("site_access_validation.json", {"validations": {}, "history": []})
+        validation_state = validations.get("validations", {}).get(target, {}) if isinstance(validations, dict) else {}
+    if not validation_state or (validation_state.get("access_valid") is not True and validation_state.get("status") != "ok"):
         return jsonify({
             "ok": False,
-            "error": "oauth_authorisation_required",
+            "error": "credential_access_not_validated",
             "site_key": site_key,
-            "coverage": oauth_coverage,
-            "message": "OAuth product access must be authorised before monitoring can be enabled.",
-        }), status_code
+            "validation": validation_state or {},
+            "message": "Credential access has not been validated yet. Click Validate Access before enabling monitoring.",
+        }), 409
+
+    oauth_coverage = {"ok": True, "monitoring_allowed": True, "status": "validated_by_credential_gate"}
+    if "_oauth_coverage_payload" in globals():
+        oauth_coverage = _oauth_coverage_payload(site_key)
+        if oauth_coverage.get("monitoring_allowed") is not True:
+            status_code = 409 if oauth_coverage.get("ok") else 404
+            return jsonify({
+                "ok": False,
+                "error": "oauth_authorisation_required",
+                "site_key": site_key,
+                "coverage": oauth_coverage,
+                "validation": validation_state,
+                "message": "Atlassian authorisation is required before monitoring can be enabled.",
+            }), status_code
+
     decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else load_json("site_lifecycle_decisions.json", {"decisions": {}, "history": []})
-    decision_state = decisions.get("decisions", {}).get(site_key, {})
+    decision_state = decisions.get("decisions", {}).get(site_key, {}) or decisions.get("decisions", {}).get(target, {})
     if decision_state.get("decision") not in ("approve", "monitored"):
         return jsonify({"ok": False, "error": "site must be approved before monitoring can be enabled", "current_decision": decision_state.get("decision")}), 409
     sources = site.get("sources", []) if isinstance(site.get("sources"), list) else []
     if not sources:
         return jsonify({"ok": False, "error": "site has no source signals to enable", "site_key": site_key}), 409
+    if dry_run:
+        return jsonify({"ok": True, "dry_run": True, "site_key": site_key, "would_enable_monitoring": True, "validation": validation_state, "coverage": oauth_coverage})
+
     now = now_utc()
     site["classification"] = "monitored"
     site["is_monitored"] = True
@@ -1151,8 +1171,10 @@ def api_site_review_enable_monitoring(site_key):
     site["approved_at_utc"] = site.get("approved_at_utc") or now
     site["monitoring_enabled_at_utc"] = now
     site["monitoring_enabled_by"] = actor
+    site["status"] = "ok"
     _recalculate_registry_summary(registry)
     write_json(DATA_PATH / "site_registry.json", registry)
+
     monitored_payload = load_json("monitored_sites.json", {})
     monitored_payload.setdefault("schema", "jom-monitored-sites-v2")
     monitored_payload.setdefault("policy", registry.get("policy", {}))
@@ -1167,21 +1189,18 @@ def api_site_review_enable_monitoring(site_key):
         "site_key": site.get("site_key") or site_key,
         "site_name": site.get("site_name") or site_key,
         "site_url": site.get("site_url") or site.get("url") or "",
-        "status": "monitored",
-        "approved_by": actor,
-        "approved_at_utc": site.get("approved_at_utc") or now,
-        "monitoring_enabled_at_utc": now,
-        "collector_onboarding_status": "enabled_via_jom",
+        "cloud_id": site.get("cloud_id") or "",
+        "enabled_at_utc": now,
+        "enabled_by": actor,
     }
     if existing:
         existing.update(row)
     else:
         monitored_payload["monitored_sites"].append(row)
-    monitored_payload["ignored_sites"] = [r for r in monitored_payload.get("ignored_sites", []) if not (isinstance(r, dict) and str(r.get("site_key", "")).lower() == target)]
-    monitored_payload["updated_at_utc"] = now
     write_json(DATA_PATH / "monitored_sites.json", monitored_payload)
-    record = {
-        "site_key": site.get("site_key") or site_key,
+
+    decision_record = {
+        "site_key": target,
         "decision": "monitored",
         "previous_decision": decision_state.get("decision"),
         "reason": "monitoring enabled via JOM",
@@ -1191,13 +1210,12 @@ def api_site_review_enable_monitoring(site_key):
         "requires_credentials": False,
         "next_state": "monitored",
     }
-    decisions.setdefault("decisions", {})[site_key] = record
-    decisions.setdefault("history", []).append(record)
-    _write_lifecycle_decisions(decisions) if "_write_lifecycle_decisions" in globals() else write_json(DATA_PATH / "site_lifecycle_decisions.json", decisions)
-    return jsonify({"ok": True, "message": "Monitoring enabled in JOM configuration. Run runtime refresh to validate live collection.", "site": site, "record": record, "runtime_refresh_required": True})
-# --- enable_monitoring_via_jom_v1 END ---
+    decisions.setdefault("decisions", {})[target] = decision_record
+    decisions.setdefault("history", []).append(decision_record)
+    decisions["generated_at_utc"] = now
+    write_json(DATA_PATH / "site_lifecycle_decisions.json", decisions)
+    return jsonify({"ok": True, "site_key": site_key, "message": "Monitoring enabled via JOM.", "site": site})
 
-# --- JOM SITE REVIEW LIFECYCLE DECISION ROUTES v1 END ---
 
 @app.route("/review-queue")
 def review_queue():
@@ -1318,11 +1336,6 @@ def _jom_site_live_review_contract(site_key):
         },
         "recommended_actions": [] if site else ["Site was not matched in live registry/product access contracts."],
     }
-
-@app.route("/api/site-review/<path:site_key>/validate-access")
-def api_site_review_validate_access(site_key):
-    return jsonify(_jom_site_live_review_contract(site_key))
-
 
 @app.route("/api/site-review/<path:site_key>/live")
 def api_site_review_live_contract(site_key):
@@ -1561,6 +1574,147 @@ def api_workspace_command_centre_cached_v1():
 def api_workspace_estate_cached_v1():
     return jsonify(_jom_workspace_estate_cached_contract_v1())
 # --- JOM WORKSPACE CONTRACT CACHED READ PATH v1 END ---
+
+
+# === Estate Credential Validation Gate Correction v1 START ===
+def _jom_credential_gate_now_utc():
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _jom_credential_gate_data_path(filename):
+    from pathlib import Path
+    return Path(__file__).resolve().parent.parent / "static" / "data" / filename
+
+
+def _jom_credential_gate_read_json(path, default):
+    import json
+    try:
+        if not path.exists():
+            return default
+        return json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return default
+
+
+def _jom_credential_gate_write_json(path, payload):
+    import json
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _jom_credential_gate_norm(value):
+    return str(value or "").strip().lower()
+
+
+def _jom_credential_gate_allowed_methods():
+    return {
+        "admin_org_validation",
+        "oauth_coverage_validation",
+        "atlassian_token_validation",
+        "admin_api_validation",
+        "stored_credential_validation",
+    }
+
+
+def _jom_credential_gate_validation_is_real(record):
+    if not isinstance(record, dict):
+        return False
+    if record.get("access_valid") is not True and record.get("status") != "ok":
+        return False
+    method = str(record.get("method") or "").strip().lower()
+    return method in _jom_credential_gate_allowed_methods()
+
+
+def _jom_credential_gate_site(site_key):
+    registry = _jom_credential_gate_read_json(_jom_credential_gate_data_path("site_registry.json"), {"sites": []})
+    wanted = _jom_credential_gate_norm(site_key)
+    for site in registry.get("sites", []):
+        if isinstance(site, dict):
+            key = _jom_credential_gate_norm(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name"))
+            if key == wanted:
+                return site
+    return None
+
+
+def _jom_credential_gate_latest_validation(site_key):
+    wanted = _jom_credential_gate_norm(site_key)
+    payload = _jom_credential_gate_read_json(_jom_credential_gate_data_path("site_access_validation.json"), {"validations": {}, "history": []})
+    candidates = []
+    if isinstance(payload, dict):
+        current = payload.get("validations", {}).get(wanted, {})
+        if isinstance(current, dict):
+            candidates.append(current)
+        for row in payload.get("history", []) or []:
+            if isinstance(row, dict) and _jom_credential_gate_norm(row.get("site_key")) == wanted:
+                candidates.append(row)
+    candidates = [row for row in candidates if _jom_credential_gate_validation_is_real(row)]
+    return candidates[-1] if candidates else {}
+
+
+def _jom_credential_gate_status_payload(site_key, validation=None):
+    wanted = _jom_credential_gate_norm(site_key)
+    validation = validation or _jom_credential_gate_latest_validation(wanted)
+    if validation:
+        return {"ok": True, "validation": validation}
+    return {
+        "ok": False,
+        "validation": {
+            "access_valid": False,
+            "status": "blocked",
+            "site_key": wanted,
+            "reason": "Credential access has not been validated yet. Click Validate Access before enabling monitoring.",
+            "method": "not_validated",
+        },
+    }
+
+@app.route("/api/site-review/<path:site_key>/validate-access", methods=["POST"])
+def api_site_review_validate_access_gate_v1(site_key):
+    from flask import jsonify, request
+    wanted = _jom_credential_gate_norm(site_key)
+    body = request.get_json(silent=True) or {}
+    site = _jom_credential_gate_site(wanted)
+    if not site:
+        return jsonify({
+            "ok": False,
+            "error": "site_not_found",
+            "validation": {
+                "access_valid": False,
+                "status": "blocked",
+                "site_key": wanted,
+                "reason": "Site was not found in site_registry.json.",
+                "method": "not_validated",
+            },
+        }), 404
+
+    # Correct behaviour: do not treat registry identity as credential validation.
+    # Reuse a previous real credential validation if one exists; otherwise keep the gate blocked.
+    validation = _jom_credential_gate_latest_validation(wanted)
+    if not validation:
+        return jsonify({
+            "ok": False,
+            "error": "credential_access_not_validated",
+            "validation": {
+                "access_valid": False,
+                "status": "blocked",
+                "site_key": wanted,
+                "site_name": site.get("site_name") or wanted,
+                "reason": "Credential access has not been validated yet. Click Validate Access before enabling monitoring.",
+                "method": "not_validated",
+            },
+            "message": "No real Atlassian credential validation record exists for this site yet.",
+        }), 409
+
+    validation = dict(validation)
+    validation["actor"] = body.get("actor") or validation.get("actor") or "operator"
+    validation["reconfirmed_at_utc"] = _jom_credential_gate_now_utc()
+    current_path = _jom_credential_gate_data_path("site_access_validation.json")
+    access = _jom_credential_gate_read_json(current_path, {"schema": "jom-site-access-validation-v1", "validations": {}, "history": []})
+    access.setdefault("validations", {})[wanted] = validation
+    access["generated_at_utc"] = _jom_credential_gate_now_utc()
+    _jom_credential_gate_write_json(current_path, access)
+    return jsonify({"ok": True, "validation": validation})
+# === Estate Credential Validation Gate Correction v1 END ===
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

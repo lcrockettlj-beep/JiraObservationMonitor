@@ -1,0 +1,8 @@
+{
+  "schema": "jom-enable-monitoring-validation-alignment-v1-1",
+  "generated_at_utc": "2026-07-27T11:39:12Z",
+  "status": "applied",
+  "source_changes": [
+    "app/web.py"
+  ]
+}

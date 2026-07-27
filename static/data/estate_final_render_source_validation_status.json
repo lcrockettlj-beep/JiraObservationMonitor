@@ -1,0 +1,99 @@
+{
+  "schema": "jom-estate-final-render-source-validation-v1",
+  "generated_at_utc": "2026-07-27T13:16:58.971404Z",
+  "overall_status": "PASS",
+  "validations": [
+    {
+      "name": "site_registry",
+      "pass": true,
+      "errors": [],
+      "details": {
+        "schema": "jom-site-registry-v4-runtime-consolidated",
+        "generated_at_utc": "2026-07-27T12:55:29.141575Z",
+        "summary": {
+          "total_sites": 7,
+          "monitored_count": 0,
+          "discovered_count": 7,
+          "pending_onboarding_count": 0,
+          "ignored_count": 0
+        },
+        "actual_monitored_count": 0,
+        "actual_discovered_count": 7,
+        "discovery_leaks_in_monitored": [],
+        "approval_residue": []
+      }
+    },
+    {
+      "name": "monitored_sites_derived",
+      "pass": true,
+      "errors": [],
+      "details": {
+        "schema": "jom-monitored-sites-v3-derived-from-site-registry",
+        "role": "compatibility_view_only_do_not_use_as_estate_truth",
+        "source_of_truth": "static/data/site_registry.json",
+        "derived_count": 0,
+        "registry_monitored_count": 0,
+        "discovery_leaks": []
+      }
+    },
+    {
+      "name": "estate_js_render_gate",
+      "pass": true,
+      "errors": [],
+      "details": {
+        "helper_present": true,
+        "filter_helper_present": true,
+        "registry_visible_uses_helper": true,
+        "rail_monitored_uses_helper": true,
+        "old_registry_siteMonitoring_gate_remaining": false,
+        "old_rail_siteMonitoring_count_remaining": false,
+        "review_queue_still_discovery_pending": true
+      }
+    },
+    {
+      "name": "app_web_compile",
+      "pass": true,
+      "errors": [],
+      "details": {
+        "compiled": true
+      }
+    },
+    {
+      "name": "status_json_validity",
+      "pass": true,
+      "errors": [],
+      "details": {
+        "valid_files": [
+          "estate_active_source_consolidation_repair_status.json",
+          "estate_render_gate_enforcement_status.json",
+          "estate_exact_render_gate_repair_status.json",
+          "estate_credential_gate_duplicate_route_repair_status.json",
+          "estate_credential_gate_endpoint_name_alignment_status.json",
+          "estate_credential_validation_gate_correction_status.json",
+          "estate_enable_monitoring_oauth_guard_repair_status.json",
+          "estate_flask_duplicate_endpoint_hard_repair_status.json",
+          "estate_site_review_enable_monitoring_validation_alignment_status.json",
+          "estate_site_review_validate_access_route_repair_status.json",
+          "site_review_access_validation_status.json"
+        ],
+        "missing_files": []
+      }
+    },
+    {
+      "name": "no_css_layout_changes",
+      "pass": true,
+      "errors": [],
+      "details": {
+        "changed_css_files": []
+      }
+    },
+    {
+      "name": "git_status_snapshot",
+      "pass": true,
+      "errors": [],
+      "details": {
+        "status_short": " M app/web.py\n M static/data/monitored_sites.json\n M static/data/site_access_validation.json\n M static/data/site_lifecycle_decisions.json\n M static/data/site_registry.json\n M static/js/jom_estate_lifecycle_v1.js\n?? static/data/estate_active_source_consolidation_repair_status.json\n?? static/data/estate_credential_gate_duplicate_route_repair_status.json\n?? static/data/estate_credential_gate_endpoint_name_alignment_status.json\n?? static/data/estate_credential_validation_gate_correction_status.json\n?? static/data/estate_enable_monitoring_oauth_guard_repair_status.json\n?? static/data/estate_exact_render_gate_repair_status.json\n?? static/data/estate_flask_duplicate_endpoint_hard_repair_status.json\n?? static/data/estate_render_gate_enforcement_status.json\n?? static/data/estate_site_review_enable_monitoring_validation_alignment_status.json\n?? static/data/estate_site_review_validate_access_route_repair_status.json\n?? static/data/site_review_access_validation_status.json\n"
+      }
+    }
+  ]
+}
