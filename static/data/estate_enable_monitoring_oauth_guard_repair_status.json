@@ -1,9 +1,0 @@
-{
-  "schema": "jom-estate-enable-monitoring-oauth-guard-repair-v1-2",
-  "generated_at_utc": "2026-07-27T11:55:52Z",
-  "status": "applied",
-  "source_changes": [
-    "app/web.py"
-  ],
-  "intent": "Prevent NameError when _oauth_coverage_payload is unavailable; keep OAuth gate when helper exists."
-}
