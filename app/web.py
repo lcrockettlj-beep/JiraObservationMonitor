@@ -2251,6 +2251,102 @@ def _jom_register_site_review_truth_wrapper_v1_2():
 _jom_register_site_review_truth_wrapper_v1_2()
 # === JOM ESTATE SITE REVIEW RESPONSE WRAP TRUTH v1.2 END ===
 
+
+
+# JOM Estate Discovery Authority Coverage API v1.1
+# Backend-only evidence route. Reads runtime/data contracts only; no static/data fallback.
+def _jom_estate_identity_from_item(item):
+    if isinstance(item, str):
+        return item.strip() or None
+    if not isinstance(item, dict):
+        return None
+    for key in ("site_key", "key", "site", "name", "slug", "cloud_id", "cloudId", "url", "base_url"):
+        value = item.get(key)
+        if value:
+            return str(value).strip()
+    return None
+
+
+def _jom_estate_items_from_payload(payload):
+    items = []
+
+    def add(value, source_key=None):
+        if isinstance(value, dict):
+            copy = dict(value)
+            if source_key and not any(copy.get(k) for k in ("site_key", "key", "site", "name", "url", "cloud_id", "cloudId")):
+                copy["site_key"] = str(source_key)
+            items.append(copy)
+        elif isinstance(value, str):
+            items.append({"site_key": value})
+
+    if isinstance(payload, list):
+        for item in payload:
+            add(item)
+    elif isinstance(payload, dict):
+        for key in ("sites", "items", "data", "results", "values", "monitored_sites", "unmonitored_sites"):
+            value = payload.get(key)
+            if isinstance(value, list):
+                for item in value:
+                    add(item)
+            elif isinstance(value, dict):
+                for site_key, item in value.items():
+                    add(item, site_key)
+        if not items:
+            for site_key, item in payload.items():
+                if isinstance(item, (dict, str)):
+                    add(item, site_key)
+    return items
+
+
+@app.route("/api/estate/discovery-authority/coverage")
+def estate_discovery_authority_coverage():
+    from app.runtime.runtime_data_paths import runtime_read_json
+
+    source_files = {
+        "site_registry": "site_registry.json",
+        "monitored_sites": "monitored_sites.json",
+        "estate_admin_site_inventory": "estate_admin_site_inventory_v1.json",
+        "site_onboarding_review": "site_onboarding_review.json",
+        "site_lifecycle_decisions": "site_lifecycle_decisions.json",
+        "estate_access_truth": "estate_access_truth.json",
+        "estate_product_access": "estate_product_access.json",
+    }
+
+    source_status = {}
+    identities = set()
+    identity_sources = {}
+
+    for source_name, file_name in source_files.items():
+        payload = runtime_read_json(file_name, default={})
+        source_items = _jom_estate_items_from_payload(payload)
+        source_identities = []
+        for item in source_items:
+            identity = _jom_estate_identity_from_item(item)
+            if identity:
+                identities.add(identity)
+                source_identities.append(identity)
+                identity_sources.setdefault(identity, []).append(source_name)
+        source_status[source_name] = {
+            "runtime_file": "runtime/data/" + file_name,
+            "available": payload not in ({}, [], None),
+            "identity_count": len(sorted(set(source_identities))),
+            "identities": sorted(set(source_identities)),
+        }
+
+    return jsonify({
+        "status": "success",
+        "authority": "runtime-data-contracts",
+        "static_fallback_used": False,
+        "source_file_count": len(source_files),
+        "source_status": source_status,
+        "coverage": {
+            "unique_identity_count": len(identities),
+            "unique_identities": sorted(identities),
+            "identity_sources": {key: sorted(set(value)) for key, value in sorted(identity_sources.items())},
+        },
+    })
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 
