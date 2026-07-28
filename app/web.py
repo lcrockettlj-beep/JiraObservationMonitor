@@ -113,6 +113,20 @@ def append_runtime_history(event: Dict[str, Any]) -> List[Any]:
     return history
 
 
+
+
+def _jom_json_safe(value):
+    """Convert runtime command payloads into Flask-jsonify-safe values."""
+    from pathlib import Path as _Path
+    if isinstance(value, _Path):
+        return str(value)
+    if isinstance(value, dict):
+        return {str(key): _jom_json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_jom_json_safe(item) for item in value]
+    return value
+
+
 def execute_guarded(action_name: str, runner):
     acquired = _runtime_lock.acquire(blocking=False)
     if not acquired:
@@ -157,7 +171,7 @@ def execute_guarded(action_name: str, runner):
             "status": "success",
             "result_status": result_status,
         })
-        return jsonify({"status": "success", "message": f"{action_name} executed", "runtime_status": status_payload, "result": result})
+        return jsonify({"status": "success", "message": f"{action_name} executed", "runtime_status": _jom_json_safe(status_payload), "result": _jom_json_safe(result)})
     except Exception as exc:
         finished = now_utc()
         status_payload = write_runtime_status({
@@ -176,7 +190,7 @@ def execute_guarded(action_name: str, runner):
             "status": "failed",
             "error": str(exc),
         })
-        return jsonify({"status": "error", "message": str(exc), "runtime_status": status_payload}), 500
+        return jsonify({"status": "error", "message": str(exc), "runtime_status": _jom_json_safe(status_payload)}), 500
     finally:
         _runtime_lock.release()
 
