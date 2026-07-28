@@ -49,52 +49,8 @@ def now_utc() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def load_json(filename: str, default: Any = None) -> Any:
-    if default is None:
-        default = {}
-    path = DATA_PATH / filename
-    if not path.exists():
-        return default
-    try:
-        return json.loads(path.read_text(encoding="utf-8-sig"))
-    except Exception as exc:
-        return {"_load_error": str(exc), "_file": filename}
-
-
-
-# --- JOM LIVE WEBSITE TRUTH POLICY v1 START ---
-# Website-facing routes may use only live/runtime-refreshed data or generated outputs
-# that have a freshness/status contract. Legacy/manual snapshots must not be exposed as website truth.
-LIVE_WEBSITE_TRUTH_FILES = {
-    "runtime_execution_status.json",
-    "runtime_execution_history.json",
-    "runtime_live_truth_status.json",
-    "runtime_refresh_status.json",
-    "source_freshness_audit.json",
-    "source_reliability_status.json",
-    "admin_enriched_refresh_status.json",
-    "product_access_refresh_status.json",
-    "site_registry.json",
-    "estate_product_access.json",
-    "estate_access_truth.json",
-    "admin_truth_v2.json",
-    "user_footprint.json",
-    "site_lifecycle_decisions.json",
-    "site_access_validation.json",
-    "monitored_sites.json",
-    "site_onboarding_review.json",
-}
-
-LEGACY_NON_WEBSITE_TRUTH_FILES = {
-    "latest_run.json",
-    "latest_run_pretty.json",
-    "latest_run_safe_partial.json",
-    "latest_run_admin_enriched.json",
-    "latest_run_admin_enriched_pretty.json",
-    "billing_seats.json",
-    "latest_snapshot.json",
-    "snapshot_index.json",
-}
+def load_json(filename, default=None):
+    return runtime_read_json(filename, default)
 
 def website_truth_classification(filename: str) -> Dict[str, Any]:
     name = Path(str(filename)).name
@@ -116,11 +72,9 @@ def website_truth_classification(filename: str) -> Dict[str, Any]:
         "reason": "Unknown JSON source is blocked until explicitly classified as live or auto-refreshed.",
     }
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
-def write_json(path: Path, payload: Any) -> Any:
-    DATA_PATH.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-    return payload
-
+def write_json(path, payload):
+    filename = getattr(path, "name", path)
+    return runtime_write_json(filename, payload)
 
 def write_runtime_status(payload: Dict[str, Any]) -> Dict[str, Any]:
     return write_json(RUNTIME_STATUS_PATH, payload)

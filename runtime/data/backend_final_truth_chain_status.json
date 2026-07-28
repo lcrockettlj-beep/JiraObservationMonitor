@@ -1,0 +1,10 @@
+{
+  "schema": "jom-backend-final-truth-chain-status-v1",
+  "generated_at_utc": "2026-07-24T07:47:39Z",
+  "overall_status": "PASS",
+  "website_truth_rule": "If it is not live/current or auto-refreshed, it must not feed the website.",
+  "legacy_reference_rows": 132,
+  "website_blocking_rows": 0,
+  "compile_ok": true,
+  "classification_pack": "backend_final_audit_classification_operational_script_isolation_v1"
+}
