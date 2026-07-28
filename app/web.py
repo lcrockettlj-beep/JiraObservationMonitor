@@ -14,6 +14,7 @@ from typing import Any, Dict, List
 from app.runtime.admin_enriched_chain import run_pipeline as run_snapshot
 from app.runtime.operational_source_recovery import run_pipeline as run_recovery
 from app.operational.operator_surface import build_alerts, build_operator_surface, build_operator_summary
+from app.runtime.runtime_data_paths import runtime_data_path, runtime_read_json, runtime_write_json, runtime_path_status
 
 ROOT = Path(__file__).resolve().parents[1]
 app = Flask(
@@ -2296,3 +2297,31 @@ if __name__ == "__main__":
 
 
 
+
+
+# JOM runtime data path abstraction aliases v1
+def load_runtime_json(filename, default=None):
+    return runtime_read_json(filename, default)
+
+def write_runtime_json(filename, payload):
+    return runtime_write_json(filename, payload)
+
+
+@app.route("/api/runtime/data-path-status")
+def api_runtime_data_path_status():
+    files = [
+        "admin_enriched_refresh_status.json", "admin_truth_v2.json",
+        "backend_final_truth_chain_status.json", "backend_legacy_truth_eradication_status.json",
+        "billing_seats.json", "estate_access_truth.json",
+        "estate_admin_site_inventory_v1.json", "estate_product_access.json",
+        "monitored_sites.json", "runtime_execution_history.json",
+        "runtime_execution_status.json", "site_access_validation.json",
+        "site_lifecycle_decisions.json", "site_onboarding_review.json",
+        "site_registry.json", "source_freshness_audit.json",
+        "source_reliability_status.json", "user_footprint.json",
+    ]
+    return jsonify({
+        "schema": "jom-runtime-data-path-status-v1",
+        "files": {name: runtime_path_status(name) for name in files},
+        "policy": "Read runtime/data first; fallback to static/data only during migration.",
+    })
