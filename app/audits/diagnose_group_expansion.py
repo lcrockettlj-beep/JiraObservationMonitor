@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "reports" / "group_expansion_diagnostics_v1_1.json"
 SUMMARY_MD = ROOT / "reports" / "group_expansion_diagnostics_v1_1.md"
-SITE_REGISTRY = ROOT / "static" / "data" / "site_registry.json"
+SITE_REGISTRY = ROOT / "runtime" / "data" / "site_registry.json"
 API_BASE = "https://api.atlassian.com"
 
 

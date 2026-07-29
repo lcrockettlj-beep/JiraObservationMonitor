@@ -10,9 +10,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "static" / "data" / "admin_group_expansion.json"
-STATUS = ROOT / "static" / "data" / "admin_group_expansion_status.json"
-SITE_REGISTRY = ROOT / "static" / "data" / "site_registry.json"
+OUT = ROOT / "runtime" / "data" / "admin_group_expansion.json"
+STATUS = ROOT / "runtime" / "data" / "admin_group_expansion_status.json"
+SITE_REGISTRY = ROOT / "runtime" / "data" / "site_registry.json"
 API_BASE = "https://api.atlassian.com"
 ARI_SITE_RE = re.compile(r"^ari:cloud:(?P<product>[^:]+)::site/(?P<site_id>[^/]+)$", re.IGNORECASE)
 

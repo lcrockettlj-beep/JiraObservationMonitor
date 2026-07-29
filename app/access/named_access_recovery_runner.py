@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-STATUS = ROOT / "static" / "data" / "named_access_recovery_status.json"
+STATUS = ROOT / "runtime" / "data" / "named_access_recovery_status.json"
 
 
 def now_utc():

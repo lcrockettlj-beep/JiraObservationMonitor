@@ -3,15 +3,15 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-OUT_PATH = PROJECT_ROOT / "static" / "data" / "source_freshness_audit.json"
+OUT_PATH = PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json"
 
 SOURCES = [
-    {"key":"site_registry", "label":"Site Registry", "path":"static/data/site_registry.json", "timestamp_fields":["generated_at_utc"], "source_type":"STATIC_SNAPSHOT", "pages":["Home","Estate","Admin"]},
-    {"key":"admin_truth_v2", "label":"Admin Truth Layer v2", "path":"static/data/admin_truth_v2.json", "timestamp_fields":["generated_at_utc"], "source_type":"STATIC_SNAPSHOT", "pages":["Estate","Admin"]},
-    {"key":"estate_product_access", "label":"Estate Product Access", "path":"static/data/estate_product_access.json", "timestamp_fields":["generated_at_utc"], "source_type":"STATIC_SNAPSHOT", "pages":["Estate"]},
-    {"key":"estate_access_truth", "label":"Estate Access Truth", "path":"static/data/estate_access_truth.json", "timestamp_fields":["generated_at_utc"], "source_type":"STATIC_SNAPSHOT", "pages":["Estate"]},
-    {"key":"billing_seats", "label":"Billing Seats", "path":"static/data/billing_seats.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"STATIC_SNAPSHOT", "pages":["Estate","Admin"]},
-    {"key":"user_footprint", "label":"User Footprint", "path":"static/data/user_footprint.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"STATIC_SNAPSHOT", "pages":["Estate"]},
+    {"key":"site_registry", "label":"Site Registry", "path":"runtime/data/site_registry.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Home","Estate","Admin"]},
+    {"key":"admin_truth_v2", "label":"Admin Truth Layer v2", "path":"runtime/data/admin_truth_v2.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate","Admin"]},
+    {"key":"estate_product_access", "label":"Estate Product Access", "path":"runtime/data/estate_product_access.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
+    {"key":"estate_access_truth", "label":"Estate Access Truth", "path":"runtime/data/estate_access_truth.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
+    {"key":"billing_seats", "label":"Billing Seats", "path":"runtime/data/billing_seats.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate","Admin"]},
+    {"key":"user_footprint", "label":"User Footprint", "path":"runtime/data/user_footprint.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
     {"key":"latest_run", "label":"Latest Jira Runtime Run", "path":"latest_run.json", "timestamp_fields":["raw_collection_summary.collected_at_utc","run_timestamp_local"], "source_type":"LATEST_RUN", "pages":["Home","Estate","Site"]},
     {"key":"latest_run_admin_enriched", "label":"Latest Admin Enriched Run", "path":"latest_run_admin_enriched.json", "timestamp_fields":["raw_collection_summary.collected_at_utc","run_timestamp_local"], "source_type":"LATEST_RUN", "pages":["Home","Estate","Admin","Site"]},
 ]
@@ -68,7 +68,7 @@ def operator_label(state):
     }.get(state, 'REVIEW')
 
 def maybe_stamp_billing(project_root, now):
-    path=project_root/'static/data/billing_seats.json'
+    path=project_root/'runtime/data/billing_seats.json'
     if not path.exists(): return False
     try:
         data=read_json(path)

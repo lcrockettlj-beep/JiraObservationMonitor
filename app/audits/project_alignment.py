@@ -143,7 +143,7 @@ def infer_runtime_ownership(files: List[Dict[str, Any]]) -> Dict[str, Any]:
     outputs = {}
     for script_path in (ROOT / "scripts").glob("*.py") if (ROOT / "scripts").exists() else []:
         text = read_text(script_path)
-        targets = sorted(set(re.findall(r"(?:static/data|reports|latest_run)[A-Za-z0-9_./\\-]*\.(?:json|md)", text)))
+        targets = sorted(set(re.findall(r"(?:runtime/data|reports|latest_run)[A-Za-z0-9_./\\-]*\.(?:json|md)", text)))
         if targets:
             outputs[rel(script_path)] = targets
     return outputs
@@ -172,7 +172,7 @@ def folder_proposal() -> Dict[str, Any]:
         "proposed_structure": {
             "app/backend": "Runtime adapters, registry runtime helpers, web service helpers.",
             "app/collectors": "API collectors such as Jira, Admin, group expansion, billing collectors.",
-            "app/builders": "Source-build scripts producing static/data outputs.",
+            "app/builders": "Source-build scripts producing runtime/data outputs.",
             "app/audits": "Freshness, reliability, health, alignment checks.",
             "templates/home": "Home page templates/components.",
             "templates/estate": "Estate page templates/components.",
@@ -186,10 +186,10 @@ def folder_proposal() -> Dict[str, Any]:
             "static/css/estate": "Estate-only CSS.",
             "static/css/admin": "Admin/reference CSS.",
             "static/css/shared": "Theme tokens, nav, common cards, truth/freshness/reliability.",
-            "static/data/runtime": "latest runtime snapshots and metadata.",
-            "static/data/admin": "admin_truth, named_access, group_expansion.",
-            "static/data/estate": "estate_product_access, estate_access_truth, user_footprint.",
-            "static/data/reliability": "source freshness/reliability status.",
+            "runtime/data/runtime": "latest runtime snapshots and metadata.",
+            "runtime/data/admin": "admin_truth, named_access, group_expansion.",
+            "runtime/data/estate": "estate_product_access, estate_access_truth, user_footprint.",
+            "runtime/data/reliability": "source freshness/reliability status.",
             "reports/access": "Named access and group expansion diagnostics/reconciliation.",
             "reports/reliability": "Freshness/reliability audit outputs.",
             "tools/installers": "Install/verify/rollback pack helpers.",
@@ -292,7 +292,7 @@ def main() -> int:
             "template_files": sum(1 for row in files if row["bucket"] == "templates"),
             "static_js_files": sum(1 for row in files if row["bucket"] == "static/js"),
             "static_css_files": sum(1 for row in files if row["bucket"] == "static/css"),
-            "static_data_files": sum(1 for row in files if row["bucket"] == "static/data"),
+            "runtime_data_files": sum(1 for row in files if row["bucket"] == "runtime/data"),
             "bucket_counts": dict(sorted(bucket_counts.items())),
         },
         "route_surface_summary": route_surface_summary(files),

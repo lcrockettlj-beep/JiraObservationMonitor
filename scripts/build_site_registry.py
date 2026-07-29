@@ -70,7 +70,7 @@ def merge_site(registry: Dict[str, Dict[str, Any]], site_key: str, source: str, 
 
 
 def build_registry(project_root: Path) -> Dict[str, Any]:
-    data = project_root / "static" / "data"
+    data = project_root / "runtime" / "data"
     current = read_json(data / "site_registry.json", {})
     product = read_json(data / "estate_product_access.json", {})
     monitored = read_json(data / "monitored_sites.json", {})
@@ -161,7 +161,7 @@ def build_registry(project_root: Path) -> Dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-root", default=".")
-    parser.add_argument("--output", default="static/data/site_registry.json")
+    parser.add_argument("--output", default="runtime/data/site_registry.json")
     args = parser.parse_args()
     project_root = Path(args.project_root).resolve()
     output = Path(args.output)

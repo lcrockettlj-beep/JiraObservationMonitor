@@ -35,8 +35,8 @@ def scan():
 
 def main():
     files=scan(); buckets=Counter(bucket(p) for p in files); suffixes=Counter(p.suffix.lower() or '<none>' for p in files)
-    reliability=read_json(ROOT/'static/data/source_reliability_status.json') or {}
-    freshness=read_json(ROOT/'static/data/source_freshness_audit.json') or {}
+    reliability=read_json(ROOT/'runtime/data/source_reliability_status.json') or {}
+    freshness=read_json(ROOT/'runtime/data/source_freshness_audit.json') or {}
     ownership=read_json(ROOT/'reports/project_ownership_map.json') or {}
     route=read_json(ROOT/'reports/route_static_reference_validation.json') or {}
     bootstrap=read_json(ROOT/'reports/python_import_bootstrap_verify.json') or {}

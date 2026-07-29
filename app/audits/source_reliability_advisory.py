@@ -47,8 +47,8 @@ def runtime_review_is_expected(runtime_status: dict | None) -> tuple[bool, str]:
 
 def align_source_reliability(project_root: Path | str | None = None) -> dict:
     root = Path(project_root) if project_root else Path(__file__).resolve().parents[2]
-    runtime_path = root / "static" / "data" / "runtime_refresh_status.json"
-    reliability_path = root / "static" / "data" / "source_reliability_status.json"
+    runtime_path = root / "runtime" / "data" / "runtime_refresh_status.json"
+    reliability_path = root / "runtime" / "data" / "source_reliability_status.json"
 
     runtime_status = read_json(runtime_path)
     reliability = read_json(reliability_path)
@@ -71,7 +71,7 @@ def align_source_reliability(project_root: Path | str | None = None) -> dict:
             isinstance(issue, dict)
             and issue.get("source") == "Runtime Refresh"
             and issue.get("state") == "review"
-            and issue.get("path") == "static/data/runtime_refresh_status.json"
+            and issue.get("path") == "runtime/data/runtime_refresh_status.json"
             and EXPECTED_NOTE in (issue.get("reason") or "")
         ):
             advisory = dict(issue)
@@ -96,7 +96,7 @@ def align_source_reliability(project_root: Path | str | None = None) -> dict:
         if not (
             isinstance(item, dict)
             and item.get("source") == "Runtime Refresh"
-            and item.get("path") == "static/data/runtime_refresh_status.json"
+            and item.get("path") == "runtime/data/runtime_refresh_status.json"
             and EXPECTED_NOTE in (item.get("reason") or "")
         )
     ]

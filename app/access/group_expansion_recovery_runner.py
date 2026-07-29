@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-STATUS = ROOT / "static" / "data" / "group_expansion_recovery_status.json"
+STATUS = ROOT / "runtime" / "data" / "group_expansion_recovery_status.json"
 
 def now_utc():
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -30,7 +30,7 @@ def main():
     steps.append(run([sys.executable,"scripts/collect_admin_group_expansion.py"],"group_expansion_collector","Collect group-derived product access with ARI mapping"))
     for script,key,label in [("scripts/build_named_access_truth_v2.py","named_access_truth_v2","Rebuild Named Access Truth v2"),("scripts/reconcile_named_access_truth_v2.py","named_access_reconciliation_v2","Reconcile Named Access Truth v2"),("scripts/build_user_footprint_source.py","user_footprint_guard","Rebuild guarded user footprint"),("scripts/audit_source_freshness.py","source_freshness","Rebuild source freshness"),("scripts/source_reliability_audit.py","source_reliability","Rebuild source reliability")]:
         if Path(script).exists(): steps.append(run([sys.executable,script],key,label))
-    expansion=read_json(ROOT/"static"/"data"/"admin_group_expansion.json",{}) or {}
+    expansion=read_json(ROOT / "runtime" / "data"/"admin_group_expansion.json",{}) or {}
     reconciliation=read_json(ROOT/"reports"/"named_access_reconciliation_v2.json",{}) or {}
     safe=bool(reconciliation.get("safe_to_enable_named_access_ui")); expansion_safe=bool(expansion.get("safe_to_use_for_named_access"))
     overall="ok" if all(step.get("status")=="ok" for step in steps if step.get("exists")) else "attention"

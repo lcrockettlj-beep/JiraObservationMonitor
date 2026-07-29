@@ -52,7 +52,7 @@ def snapshot_controller_is_compatibility_shim() -> bool:
 
 
 def main() -> int:
-    reliability = read_json(ROOT / "static" / "data" / "source_reliability_status.json")
+    reliability = read_json(ROOT / "runtime" / "data" / "source_reliability_status.json")
     reliability_summary = reliability.get("summary") or {}
 
     scheduler_query = run(["schtasks", "/Query", "/TN", "JOM_Sync_Runtime", "/V", "/FO", "LIST"])
@@ -74,16 +74,16 @@ def main() -> int:
     }
 
     # Reload reliability after rerun because source_reliability_audit.py updates the JSON.
-    reliability = read_json(ROOT / "static" / "data" / "source_reliability_status.json")
+    reliability = read_json(ROOT / "runtime" / "data" / "source_reliability_status.json")
     reliability_summary = reliability.get("summary") or {}
 
     ui_files = [
-        "static/data/live_operator_contract",
-        "static/data/live_operator_contract",
-        "static/data/live_operator_contract",
-        "static/data/live_operator_contract",
-        "static/data/live_operator_contract",
-        "static/data/site_onboarding_review.json",
+        "runtime/data/live_operator_contract",
+        "runtime/data/live_operator_contract",
+        "runtime/data/live_operator_contract",
+        "runtime/data/live_operator_contract",
+        "runtime/data/live_operator_contract",
+        "runtime/data/site_onboarding_review.json",
     ]
     active_scripts = [
         "scripts/run_operational_snapshot.py",

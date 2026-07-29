@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-STATUS = ROOT / "static" / "data" / "user_footprint_unlock_status.json"
+STATUS = ROOT / "runtime" / "data" / "user_footprint_unlock_status.json"
 
 
 def now_utc():
@@ -55,7 +55,7 @@ def main():
     if Path('scripts/source_reliability_audit.py').exists():
         steps.append(run('scripts/source_reliability_audit.py', 'source_reliability', 'Rebuild source reliability status'))
 
-    footprint = read_json(ROOT / 'static' / 'data' / 'user_footprint.json', {}) or {}
+    footprint = read_json(ROOT / "runtime" / "data" / 'user_footprint.json', {}) or {}
     safe = bool(footprint.get('safe_to_show_named_access_ui'))
     generated = footprint.get('source_status') == 'generated'
     overall = 'ok' if all(step.get('status') == 'ok' for step in steps if step.get('exists')) and safe and generated else 'attention'

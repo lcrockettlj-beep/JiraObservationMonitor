@@ -51,10 +51,10 @@ TARGET_STRUCTURE = {
     "estate": "templates/estate + static/js/estate + static/css/estate",
     "admin": "templates/admin + static/js/admin + static/css/admin",
     "shared_ui": "templates/shared + static/js/shared + static/css/shared",
-    "named_access": "app/access + static/data/admin + reports/access",
-    "site_registry": "app/registry + static/data/registry + reports/registry",
-    "source_reliability": "app/audits + static/data/reliability + reports/reliability",
-    "runtime": "app/runtime + static/data/runtime + tools/maintenance",
+    "named_access": "app/access + runtime/data/admin + reports/access",
+    "site_registry": "app/registry + runtime/data/registry + reports/registry",
+    "source_reliability": "app/audits + runtime/data/reliability + reports/reliability",
+    "runtime": "app/runtime + runtime/data/runtime + tools/maintenance",
     "collectors": "app/collectors",
     "builders": "app/builders",
     "tools": "tools/installers + tools/inputs + tools/maintenance",
@@ -122,7 +122,7 @@ def build_reference_index(paths: List[Path]) -> Tuple[Dict[str, List[str]], Dict
             else:
                 static_refs[ref].append(rp)
         text = read_text(p)
-        for m in re.finditer(r"(?:static/data|reports|latest_run)[A-Za-z0-9_./\\-]*\.(?:json|md)", text):
+        for m in re.finditer(r"(?:runtime/data|reports|latest_run)[A-Za-z0-9_./\\-]*\.(?:json|md)", text):
             data_refs[m.group(0).replace('\\', '/')].append(rp)
     return dict(static_refs), dict(data_refs)
 

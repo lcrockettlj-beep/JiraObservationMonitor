@@ -3,8 +3,8 @@
   "generated_at_utc": "2026-07-21T14:48:02Z",
   "source_policy": {
     "identity_truth": "Atlassian Admin API enriched runtime payload",
-    "commercial_billing_truth": "static/data/billing_seats.json",
-    "product_count_truth": "static/data/estate_product_access.json from Jira application roles",
+    "commercial_billing_truth": "runtime/data/billing_seats.json",
+    "product_count_truth": "runtime/data/estate_product_access.json from Jira application roles",
     "named_access_truth": "not active; user-to-site mapping remains hidden until Directory/export source is verified",
     "excluded_sources": [
       "Jira /rest/api/3/users/search for named access",

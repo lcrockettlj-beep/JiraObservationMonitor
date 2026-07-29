@@ -48,7 +48,7 @@ def as_list(value: Any) -> List[Any]:
 
 
 def product_site_counts(project_root: Path) -> Dict[str, int]:
-    product = read_json(project_root / 'static' / 'data' / 'estate_product_access.json')
+    product = read_json(project_root / "runtime" / "data" / 'estate_product_access.json')
     counts: Dict[str, int] = {}
     for row in as_list(product.get('sites')):
         if not isinstance(row, dict):
@@ -107,10 +107,10 @@ def user_distribution(named: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def build(project_root: Path) -> Dict[str, Any]:
-    named_path = project_root / 'static' / 'data' / 'live_named_access_contract'
-    admin_truth_path = project_root / 'static' / 'data' / 'admin_truth_v2.json'
-    product_path = project_root / 'static' / 'data' / 'estate_product_access.json'
-    billing_path = project_root / 'static' / 'data' / 'billing_seats.json'
+    named_path = project_root / "runtime" / "data" / 'live_named_access_contract'
+    admin_truth_path = project_root / "runtime" / "data" / 'admin_truth_v2.json'
+    product_path = project_root / "runtime" / "data" / 'estate_product_access.json'
+    billing_path = project_root / 'runtime' / 'data' / 'billing_seats.json'
 
     named = read_json(named_path)
     admin_truth = read_json(admin_truth_path)

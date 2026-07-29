@@ -17,8 +17,8 @@ def git(args):
         return {'returncode':p.returncode,'stdout':p.stdout.strip(),'stderr':p.stderr.strip()}
     except Exception as e: return {'returncode':None,'error':str(e)}
 def main():
-    reliability=read_json(ROOT/'static/data/source_reliability_status.json') or {}
-    freshness=read_json(ROOT/'static/data/source_freshness_audit.json') or {}
+    reliability=read_json(ROOT/'runtime/data/source_reliability_status.json') or {}
+    freshness=read_json(ROOT/'runtime/data/source_freshness_audit.json') or {}
     ownership=read_json(ROOT/'reports/project_ownership_map.json') or {}
     route=read_json(ROOT/'reports/route_static_reference_validation.json') or {}
     archive1=read_json(ROOT/'reports/safe_archive_candidates_status.json') or {}

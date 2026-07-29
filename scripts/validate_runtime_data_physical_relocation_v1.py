@@ -6,7 +6,7 @@ FILES=['admin_enriched_refresh_status.json', 'admin_truth_v2.json', 'backend_fin
 def fail(msg):
     print('FAIL: '+msg); raise SystemExit(1)
 def main():
-    runtime=ROOT/'runtime'/'data'; static=ROOT/'static'/'data'
+    runtime=ROOT/'runtime'/'data'; static=ROOT / "runtime" / "data"
     if not runtime.exists(): fail('runtime/data missing')
     missing=[n for n in FILES if not (runtime/n).exists()]
     if missing: fail('runtime/data files missing: '+', '.join(missing))
@@ -18,7 +18,7 @@ def main():
     jsdir=ROOT/'static'/'js'
     if jsdir.exists():
         for js in jsdir.glob('*.js'):
-            if '/static/data/' in js.read_text(encoding='utf-8',errors='replace'):
+            if '/runtime/data/' in js.read_text(encoding='utf-8',errors='replace'):
                 bad.append(str(js.relative_to(ROOT)))
     if bad: fail('frontend static data references remain: '+', '.join(bad))
     unread=[]

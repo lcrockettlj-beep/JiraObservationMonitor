@@ -1,7 +1,7 @@
 {
   "schema": "jom-monitored-sites-v3-derived-from-site-registry",
   "generated_at_utc": "2026-07-27T13:01:13.060819Z",
-  "source_of_truth": "static/data/site_registry.json",
+  "source_of_truth": "runtime/data/site_registry.json",
   "deprecated_direct_source": true,
   "role": "compatibility_view_only_do_not_use_as_estate_truth",
   "policy": {

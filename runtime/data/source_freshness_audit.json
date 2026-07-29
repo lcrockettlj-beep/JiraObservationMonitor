@@ -24,9 +24,9 @@
     {
       "key": "site_registry",
       "label": "Site Registry",
-      "path": "static/data/site_registry.json",
+      "path": "runtime/data/site_registry.json",
       "exists": true,
-      "source_type": "STATIC_SNAPSHOT",
+      "source_type": "RUNTIME_CONTRACT",
       "pages": [
         "Home",
         "Estate",
@@ -44,9 +44,9 @@
     {
       "key": "admin_truth_v2",
       "label": "Admin Truth Layer v2",
-      "path": "static/data/admin_truth_v2.json",
+      "path": "runtime/data/admin_truth_v2.json",
       "exists": true,
-      "source_type": "STATIC_SNAPSHOT",
+      "source_type": "RUNTIME_CONTRACT",
       "pages": [
         "Estate",
         "Admin"
@@ -63,9 +63,9 @@
     {
       "key": "estate_product_access",
       "label": "Estate Product Access",
-      "path": "static/data/estate_product_access.json",
+      "path": "runtime/data/estate_product_access.json",
       "exists": true,
-      "source_type": "STATIC_SNAPSHOT",
+      "source_type": "RUNTIME_CONTRACT",
       "pages": [
         "Estate"
       ],
@@ -81,9 +81,9 @@
     {
       "key": "estate_access_truth",
       "label": "Estate Access Truth",
-      "path": "static/data/estate_access_truth.json",
+      "path": "runtime/data/estate_access_truth.json",
       "exists": true,
-      "source_type": "STATIC_SNAPSHOT",
+      "source_type": "RUNTIME_CONTRACT",
       "pages": [
         "Estate"
       ],
@@ -99,9 +99,9 @@
     {
       "key": "billing_seats",
       "label": "Billing Seats",
-      "path": "static/data/billing_seats.json",
+      "path": "runtime/data/billing_seats.json",
       "exists": true,
-      "source_type": "STATIC_SNAPSHOT",
+      "source_type": "RUNTIME_CONTRACT",
       "pages": [
         "Estate",
         "Admin"
@@ -118,9 +118,9 @@
     {
       "key": "user_footprint",
       "label": "User Footprint",
-      "path": "static/data/user_footprint.json",
+      "path": "runtime/data/user_footprint.json",
       "exists": true,
-      "source_type": "STATIC_SNAPSHOT",
+      "source_type": "RUNTIME_CONTRACT",
       "pages": [
         "Estate"
       ],

@@ -21,32 +21,32 @@ def readable_json(path):
     except Exception:
         return False
 def main():
-    runtime=ROOT/'runtime'/'data'; static=ROOT/'static'/'data'
+    runtime=ROOT/'runtime'/'data'; static=ROOT / "runtime" / "data"
     result={'schema':'jom-static-data-removal-validation-v1','generated_at_utc':now(),'summary':{},'missing_runtime':[],'unreadable_runtime':[],'remaining_static':[],'frontend_static_references':[],'backend_static_reference_files':[],'failure':None}
     for name in FILES:
         rp=runtime/name; sp=static/name
         if not rp.exists(): result['missing_runtime'].append('runtime/data/'+name)
         elif not readable_json(rp): result['unreadable_runtime'].append('runtime/data/'+name)
-        if sp.exists(): result['remaining_static'].append('static/data/'+name)
+        if sp.exists(): result['remaining_static'].append('runtime/data/'+name)
     jsdir=ROOT/'static'/'js'
     if jsdir.exists():
         for js in jsdir.rglob('*.js'):
-            if '/static/data/' in js.read_text(encoding='utf-8',errors='replace'):
+            if '/runtime/data/' in js.read_text(encoding='utf-8',errors='replace'):
                 result['frontend_static_references'].append(str(js.relative_to(ROOT)).replace('\\','/'))
-    # remaining static/data text refs for review only; app/runtime fallback resolver remains expected until next pack
+    # remaining runtime/data text refs for review only; static fallback resolver removed
     for base in ['app','scripts']:
         root=ROOT/base
         if root.exists():
             for py in root.rglob('*.py'):
                 rel=str(py.relative_to(ROOT)).replace('\\','/')
                 text=py.read_text(encoding='utf-8',errors='replace')
-                if 'static/data' in text or ('STATIC_DATA_PATH' in text and rel!='app/runtime/runtime_data_paths.py'):
+                if 'runtime/data' in text or ('STATIC_DATA_PATH' in text and rel!='app/runtime/runtime_data_paths.py'):
                     result['backend_static_reference_files'].append(rel)
     result['summary']={'expected_runtime_file_count':len(FILES),'runtime_file_count':len(FILES)-len(result['missing_runtime']),'missing_runtime_count':len(result['missing_runtime']),'unreadable_runtime_count':len(result['unreadable_runtime']),'remaining_static_count':len(result['remaining_static']),'frontend_static_reference_count':len(result['frontend_static_references']),'backend_static_reference_file_count':len(result['backend_static_reference_files']),'validation_state':'PASS'}
     if result['missing_runtime']: fail('runtime files are missing', result)
     if result['unreadable_runtime']: fail('runtime files are unreadable', result)
     if result['remaining_static']: fail('static fallback files still remain', result)
-    if result['frontend_static_references']: fail('frontend static/data references remain', result)
+    if result['frontend_static_references']: fail('frontend runtime/data reference review remains', result)
     REPORT.parent.mkdir(parents=True,exist_ok=True)
     REPORT.write_text(json.dumps(result,indent=2),encoding='utf-8')
     print(json.dumps(result['summary'],indent=2))

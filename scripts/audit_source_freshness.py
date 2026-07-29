@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "static" / "data"
+DATA = ROOT / "runtime" / "data"
 OUT_FRESHNESS = DATA / "source_freshness_audit.json"
 OUT_RELIABILITY = DATA / "source_reliability_status.json"
 
@@ -17,9 +17,9 @@ SOURCES = [
     ("estate_access_truth", DATA / "estate_access_truth.json", "Estate Access Truth", "LIVE_OR_AUTO_REFRESHED"),
     ("runtime_live_truth_status", DATA / "runtime_live_truth_status.json", "Runtime Live Truth Status", "LIVE_STATUS"),
     ("user_footprint", DATA / "user_footprint.json", "User Footprint", "LIVE_OR_AUTO_REFRESHED_GUARDED"),
-    ("billing_seats", DATA / "billing_seats.json", "Billing Seats", "BLOCKED_LEGACY_STATIC_INPUT"),
-    ("latest_run", ROOT / "latest_run.json", "Latest Jira Runtime Run", "BLOCKED_LEGACY_STATIC_INPUT"),
-    ("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "Latest Admin Enriched Run", "BLOCKED_LEGACY_STATIC_INPUT"),
+    ("billing_seats", DATA / "billing_seats.json", "Billing Seats", "BLOCKED_LEGACY_INPUT"),
+    ("latest_run", ROOT / "latest_run.json", "Latest Jira Runtime Run", "BLOCKED_LEGACY_INPUT"),
+    ("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "Latest Admin Enriched Run", "BLOCKED_LEGACY_INPUT"),
 ]
 
 
@@ -64,7 +64,7 @@ def classify(path: Path, source_type: str, payload: Any) -> Dict[str, Any]:
         age = round((datetime.now(timezone.utc) - parsed).total_seconds() / 3600, 2)
     if not exists:
         state = "MISSING"
-    elif source_type == "BLOCKED_LEGACY_STATIC_INPUT":
+    elif source_type == "BLOCKED_LEGACY_INPUT":
         state = "REFERENCE_ONLY"
     elif isinstance(payload, dict) and payload.get("live_collection") and payload.get("status") in ("ok", "partial"):
         state = "LIVE"

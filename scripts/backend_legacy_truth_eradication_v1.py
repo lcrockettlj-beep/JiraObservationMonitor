@@ -58,7 +58,7 @@ POLICY_MARKERS = (
     "LEGACY_INPUTS",
     "blocked_legacy_static_input",
     "not website truth",
-    "BLOCKED_LEGACY_STATIC_INPUT",
+    "BLOCKED_LEGACY_INPUT",
     "legacy_static_allowed",
     "legacy_reference_only",
 )
@@ -278,7 +278,7 @@ def main() -> int:
     report_dir = root / "reports" / "backend_final_audit_classification_operational_script_isolation_v1"
     write_json(report_dir / "BACKEND_FINAL_AUDIT_CLASSIFICATION_OPERATIONAL_SCRIPT_ISOLATION_V1.json", payload)
     write_markdown(report_dir / "BACKEND_FINAL_AUDIT_CLASSIFICATION_OPERATIONAL_SCRIPT_ISOLATION_V1.md", payload)
-    write_json(root / "static" / "data" / "backend_final_truth_chain_status.json", {
+    write_json(root / "runtime" / "data" / "backend_final_truth_chain_status.json", {
         "schema": "jom-backend-final-truth-chain-status-v1",
         "generated_at_utc": payload["generated_at_utc"],
         "overall_status": payload["overall_status"],
@@ -288,7 +288,7 @@ def main() -> int:
         "compile_ok": payload["summary"]["compile_ok"],
         "classification_pack": "backend_final_audit_classification_operational_script_isolation_v1",
     })
-    write_json(root / "static" / "data" / "backend_legacy_truth_eradication_status.json", {
+    write_json(root / "runtime" / "data" / "backend_legacy_truth_eradication_status.json", {
         "schema": "jom-backend-legacy-truth-eradication-status-v1",
         "generated_at_utc": payload["generated_at_utc"],
         "overall_status": payload["overall_status"],

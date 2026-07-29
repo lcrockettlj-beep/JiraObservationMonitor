@@ -24,7 +24,7 @@ app = Flask(
     static_url_path="/static",
 )
 
-DATA_PATH = ROOT / "static" / "data"
+DATA_PATH = ROOT / "runtime" / "data"
 RUNTIME_STATUS_PATH = DATA_PATH / "runtime_execution_status.json"
 RUNTIME_HISTORY_PATH = DATA_PATH / "runtime_execution_history.json"
 _runtime_lock = threading.Lock()
@@ -413,7 +413,7 @@ def _load_registry_contract() -> Dict[str, Any]:
         contract = _contract_payload(
             "site_registry",
             payload,
-            source_file="static/data/site_registry.json",
+            source_file="runtime/data/site_registry.json",
             contract_type="generated_cache_fallback_after_builder_error",
             live_builder="app.registry.site_registry_builder.build_registry",
         )
@@ -458,7 +458,7 @@ def _build_registry_contract() -> Dict[str, Any]:
     return _contract_payload(
         "site_registry",
         registry,
-        source_file="static/data/site_registry.json",
+        source_file="runtime/data/site_registry.json",
         contract_type="live_builder_generated_cache",
         live_builder="scripts/build_site_registry.py or app.registry.site_registry_builder entrypoint",
     )
@@ -484,7 +484,7 @@ def _load_admin_truth_contract() -> Dict[str, Any]:
     contract = _contract_payload(
         "admin_truth_v2",
         payload,
-        source_file="static/data/admin_truth_v2.json",
+        source_file="runtime/data/admin_truth_v2.json",
         contract_type="generated_cache_contract_with_live_product_access_overlay",
         live_builder="runtime refresh/admin enriched chain plus live /estate/product-access overlay",
     )
@@ -535,9 +535,9 @@ def _load_source_state_contract() -> Dict[str, Any]:
     return {
         "schema": "jom-source-state-contract-v3",
         "served_at_utc": now_utc(),
-        "source_freshness": _contract_payload("source_freshness", freshness, source_file="static/data/source_freshness_audit.json", contract_type="generated_status_cache"),
-        "source_reliability": _contract_payload("source_reliability", reliability, source_file="static/data/source_reliability_status.json", contract_type="generated_status_cache"),
-        "runtime_live_truth_status": _contract_payload("runtime_live_truth_status", live_truth, source_file="static/data/runtime_live_truth_status.json", contract_type="generated_live_truth_status", allow_stale=True),
+        "source_freshness": _contract_payload("source_freshness", freshness, source_file="runtime/data/source_freshness_audit.json", contract_type="generated_status_cache"),
+        "source_reliability": _contract_payload("source_reliability", reliability, source_file="runtime/data/source_reliability_status.json", contract_type="generated_status_cache"),
+        "runtime_live_truth_status": _contract_payload("runtime_live_truth_status", live_truth, source_file="runtime/data/runtime_live_truth_status.json", contract_type="generated_live_truth_status", allow_stale=True),
         "live_product_access": product_truth_status,
         "legacy_snapshot_policy": {
             "latest_run_json_is_legacy_reference_only": True,
@@ -558,7 +558,7 @@ def _load_user_footprint_contract() -> Dict[str, Any]:
     return _contract_payload(
         "user_footprint",
         payload,
-        source_file="static/data/user_footprint.json",
+        source_file="runtime/data/user_footprint.json",
         contract_type="generated_cache_contract",
         live_builder="runtime refresh/admin enriched chain",
     )
@@ -1741,7 +1741,7 @@ def _jom_cmdc_truth_registry_from_estate_inventory_v1(inventory, registry):
     return {
         "schema": "jom-site-registry-command-centre-estate-truth-v1",
         "generated_at_utc": inventory.get("generated_utc") or inventory.get("generated_at_utc"),
-        "source": "static/data/estate_admin_site_inventory_v1.json",
+        "source": "runtime/data/estate_admin_site_inventory_v1.json",
         "source_policy": "Command Centre lifecycle counts aligned to Estate live inventory truth.",
         "summary": summary,
         "sites": sites,
@@ -1833,7 +1833,7 @@ def _jom_credential_gate_now_utc():
 
 def _jom_credential_gate_data_path(filename):
     from pathlib import Path
-    return Path(__file__).resolve().parent.parent / "static" / "data" / filename
+    return Path(__file__).resolve().parent.parent / "runtime" / "data" / filename
 
 
 def _jom_credential_gate_read_json(path, default):
@@ -2066,7 +2066,7 @@ def _jom_read_static_data_contract_v1(filename, fallback_contract):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1]
-    path = root / "static" / "data" / filename
+    path = root / "runtime" / "data" / filename
     if not path.exists():
         return {
             "ok": False,
@@ -2254,7 +2254,7 @@ _jom_register_site_review_truth_wrapper_v1_2()
 
 
 # JOM Estate Discovery Authority Coverage API v1.1
-# Backend-only evidence route. Reads runtime/data contracts only; no static/data fallback.
+# Backend-only evidence route. Reads runtime/data contracts only; no runtime-only source handling.
 def _jom_estate_identity_from_item(item):
     if isinstance(item, str):
         return item.strip() or None
@@ -2387,5 +2387,5 @@ def api_runtime_data_path_status():
     return jsonify({
         "schema": "jom-runtime-data-path-status-v1",
         "files": {name: runtime_path_status(name) for name in files},
-        "policy": "Read runtime/data first; fallback to static/data only during migration.",
+        "policy": "Read runtime/data first; runtime-only source handling disabled; runtime/data is the only operational source.",
     })

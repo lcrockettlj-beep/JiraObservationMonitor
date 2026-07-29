@@ -3,12 +3,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-OUT_PATH = PROJECT_ROOT / "static" / "data" / "source_reliability_status.json"
+OUT_PATH = PROJECT_ROOT / "runtime" / "data" / "source_reliability_status.json"
 INPUTS = {
-    "source_freshness": PROJECT_ROOT / "static" / "data" / "source_freshness_audit.json",
-    "runtime_refresh": PROJECT_ROOT / "static" / "data" / "runtime_refresh_status.json",
-    "user_footprint": PROJECT_ROOT / "static" / "data" / "user_footprint.json",
-    "site_registry": PROJECT_ROOT / "static" / "data" / "site_registry.json",
+    "source_freshness": PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json",
+    "runtime_refresh": PROJECT_ROOT / "runtime" / "data" / "runtime_refresh_status.json",
+    "user_footprint": PROJECT_ROOT / "runtime" / "data" / "user_footprint.json",
+    "site_registry": PROJECT_ROOT / "runtime" / "data" / "site_registry.json",
 }
 
 def now_utc():
@@ -37,14 +37,14 @@ def main():
             issues.append({"source": label, "state": src.get('operator_label') or state, "path": src.get('path')})
 
     if footprint.get('source_status') == 'unavailable':
-        issues.append({"source":"User Footprint", "state":"GUARDED UNAVAILABLE", "path":"static/data/user_footprint.json", "reason":footprint.get('reason')})
+        issues.append({"source":"User Footprint", "state":"GUARDED UNAVAILABLE", "path":"runtime/data/user_footprint.json", "reason":footprint.get('reason')})
 
     if runtime_overall in ('failed', 'attention', 'review'):
         # review is only an issue if latest_run was not current or collector script missing.
         steps = runtime.get('steps') or []
         collector = next((s for s in steps if s.get('key') == 'runtime_collector'), {})
         if runtime_overall != 'review' or collector.get('status') != 'ok':
-            issues.append({"source":"Runtime Refresh", "state":runtime_overall, "path":"static/data/runtime_refresh_status.json", "reason":collector.get('note')})
+            issues.append({"source":"Runtime Refresh", "state":runtime_overall, "path":"runtime/data/runtime_refresh_status.json", "reason":collector.get('note')})
 
     hard_states = {'STALE SNAPSHOT', 'MISSING SOURCE', 'UNAVAILABLE', 'failed', 'attention'}
     if any(i.get('state') in hard_states for i in issues): overall = 'attention'

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "static" / "data"
+DATA = ROOT / "runtime" / "data"
 OUTPUT = DATA / "runtime_live_truth_status.json"
 
 
@@ -116,9 +116,9 @@ def main() -> int:
     )
 
     legacy = [
-        source_record("billing_seats", DATA / "billing_seats.json", "blocked legacy static input; not website truth"),
-        source_record("latest_run", ROOT / "latest_run.json", "blocked legacy static input; not website truth"),
-        source_record("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "blocked legacy static input; not website truth"),
+        source_record("billing_seats", DATA / "billing_seats.json", "blocked legacy input; not website truth"),
+        source_record("latest_run", ROOT / "latest_run.json", "blocked legacy input; not website truth"),
+        source_record("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "blocked legacy input; not website truth"),
     ]
 
     payload = {

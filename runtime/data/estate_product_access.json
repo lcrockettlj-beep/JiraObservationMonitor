@@ -1,18 +1,18 @@
 {
   "source": "Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole",
-  "generated_at_utc": "2026-07-24T12:39:08Z",
+  "generated_at_utc": "2026-07-29T09:56:21Z",
   "schema": "jom-estate-product-access-v2-live",
   "live_collection": true,
-  "status": "partial",
+  "status": "ok",
   "scope": "all accessible Jira resources returned by Atlassian OAuth accessible-resources",
   "summary": {
-    "accessible_jira_resource_count": 7,
+    "accessible_jira_resource_count": 5,
     "sites_with_jira_roles": 5,
-    "total_jira_product_user_count": 156,
+    "total_jira_product_user_count": 161,
     "total_jira_seat_limit": 104160,
-    "total_jira_remaining_seats": 104004,
+    "total_jira_remaining_seats": 103999,
     "jira_role_rows": 5,
-    "error_site_count": 2
+    "error_site_count": 0
   },
   "sites": [
     {
@@ -20,33 +20,11 @@
       "site_name": "gli-tracker",
       "site_url": "https://gli-tracker.atlassian.net",
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
-      "jira_product_user_count": 5,
+      "jira_product_user_count": 6,
       "jira_product_seat_limit": 4000,
-      "jira_product_remaining_seats": 3995,
+      "jira_product_remaining_seats": 3994,
       "jira_role_count": 1,
       "status": "ok"
-    },
-    {
-      "site_key": "gaminglabs-team-h2pbpmis",
-      "site_name": "gaminglabs-team-h2pbpmis",
-      "site_url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
-      "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-      "jira_product_user_count": 0,
-      "jira_product_seat_limit": 0,
-      "jira_product_remaining_seats": 0,
-      "jira_role_count": 0,
-      "status": "error"
-    },
-    {
-      "site_key": "gaminglabs-team-tsyfo716",
-      "site_name": "gaminglabs-team-tsyfo716",
-      "site_url": "https://gaminglabs-team-tsyfo716.atlassian.net",
-      "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
-      "jira_product_user_count": 0,
-      "jira_product_seat_limit": 0,
-      "jira_product_remaining_seats": 0,
-      "jira_role_count": 0,
-      "status": "error"
     },
     {
       "site_key": "gli-global-technology",
@@ -75,9 +53,9 @@
       "site_name": "gli-it-project",
       "site_url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "jira_product_user_count": 59,
+      "jira_product_user_count": 63,
       "jira_product_seat_limit": 100,
-      "jira_product_remaining_seats": 41,
+      "jira_product_remaining_seats": 37,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -101,9 +79,9 @@
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 5,
+      "user_count": 6,
       "seat_limit": 4000,
-      "remaining_seats": 3995,
+      "remaining_seats": 3994,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
@@ -143,9 +121,9 @@
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 59,
+      "user_count": 63,
       "seat_limit": 100,
-      "remaining_seats": 41,
+      "remaining_seats": 37,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
@@ -165,19 +143,12 @@
       "raw_selected_by_default": false
     }
   ],
-  "errors": {
-    "gaminglabs-team-h2pbpmis": [
-      "{\"code\":403,\"message\":\"Tenant is restricted: user-cancellation\"}"
-    ],
-    "gaminglabs-team-tsyfo716": [
-      "{\"code\":403,\"message\":\"Tenant is restricted: user-cancellation\"}"
-    ]
-  },
+  "errors": {},
   "notes": [
     "This is live product/application role access truth, not /users/search visibility truth.",
     "No stale static product-access data was used.",
     "Where applicationrole payloads do not expose seat limits, fields are left as 0 rather than guessed."
   ],
   "live_endpoint": true,
-  "served_at_utc": "2026-07-24T12:39:08.850301Z"
+  "served_at_utc": "2026-07-29T09:56:21.176262Z"
 }

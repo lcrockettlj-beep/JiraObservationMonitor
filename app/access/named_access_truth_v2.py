@@ -3,10 +3,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-NAMED_ACCESS = ROOT / "static" / "data" / "live_named_access_contract"
-GROUP_EXPANSION = ROOT / "static" / "data" / "admin_group_expansion.json"
-SITE_REGISTRY = ROOT / "static" / "data" / "site_registry.json"
-OUT = ROOT / "static" / "data" / "live_named_access_contract"
+NAMED_ACCESS = ROOT / "runtime" / "data" / "live_named_access_contract"
+GROUP_EXPANSION = ROOT / "runtime" / "data" / "admin_group_expansion.json"
+SITE_REGISTRY = ROOT / "runtime" / "data" / "site_registry.json"
+OUT = ROOT / "runtime" / "data" / "live_named_access_contract"
 
 
 def now_utc():

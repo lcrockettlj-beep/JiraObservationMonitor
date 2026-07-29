@@ -12,17 +12,17 @@
     {
       "source": "Estate Product Access",
       "state": "STALE SNAPSHOT",
-      "path": "static/data/estate_product_access.json"
+      "path": "runtime/data/estate_product_access.json"
     },
     {
       "source": "Estate Access Truth",
       "state": "STALE SNAPSHOT",
-      "path": "static/data/estate_access_truth.json"
+      "path": "runtime/data/estate_access_truth.json"
     },
     {
       "source": "Billing Seats",
       "state": "STALE SNAPSHOT",
-      "path": "static/data/billing_seats.json"
+      "path": "runtime/data/billing_seats.json"
     },
     {
       "source": "Latest Jira Runtime Run",
@@ -37,7 +37,7 @@
     {
       "source": "User Footprint",
       "state": "GUARDED UNAVAILABLE",
-      "path": "static/data/user_footprint.json",
+      "path": "runtime/data/user_footprint.json",
       "reason": "No named access reconciliation file is available."
     }
   ],

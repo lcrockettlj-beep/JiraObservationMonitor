@@ -21,7 +21,7 @@ def main():
     if jsdir.exists():
         for js in jsdir.glob("*.js"):
             s = js.read_text(encoding="utf-8", errors="replace")
-            if "/static/data/" in s:
+            if "/runtime/data/" in s:
                 bad.append(str(js.relative_to(ROOT)))
     if bad:
         fail("frontend static fetches remain: " + ", ".join(bad))

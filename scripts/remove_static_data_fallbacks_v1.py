@@ -7,18 +7,18 @@ FILES=['admin_enriched_refresh_status.json', 'admin_truth_v2.json', 'backend_fin
 REPORT=ROOT/'reports'/'static_data_removal_v1.json'
 def now(): return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
 def main():
-    runtime=ROOT/'runtime'/'data'; static=ROOT/'static'/'data'
+    runtime=ROOT/'runtime'/'data'; static=ROOT / "runtime" / "data"
     removed=[]; missing=[]; blocked=[]
     for name in FILES:
         rp=runtime/name; sp=static/name
         if not rp.exists():
-            blocked.append({'file':'static/data/'+name,'reason':'runtime copy missing; static fallback not removed'})
+            blocked.append({'file':'runtime/data/'+name,'reason':'runtime copy missing; static fallback not removed'})
             continue
         if sp.exists():
             sp.unlink()
-            removed.append('static/data/'+name)
+            removed.append('runtime/data/'+name)
         else:
-            missing.append('static/data/'+name)
+            missing.append('runtime/data/'+name)
     report={'schema':'jom-static-data-removal-v1','generated_at_utc':now(),'removed':removed,'already_missing':missing,'blocked':blocked,'summary':{'removed_count':len(removed),'already_missing_count':len(missing),'blocked_count':len(blocked)}}
     REPORT.parent.mkdir(parents=True,exist_ok=True)
     REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
