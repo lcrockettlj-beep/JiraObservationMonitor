@@ -46,15 +46,15 @@
     "payload_available": true
   },
   "billing_truth": {
-    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\billing_seats.json",
+    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\billing_seats.json",
     "source": "billing_catalog.py static billing snapshot",
     "jira_seats": 139,
     "jira_site_count": 3,
     "payload_available": true
   },
   "product_access_truth": {
-    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\estate_product_access.json",
-    "truth_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\static\\data\\estate_access_truth.json",
+    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\estate_product_access.json",
+    "truth_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\estate_access_truth.json",
     "api_product_users": 139,
     "api_product_seat_limit": 100150,
     "api_product_remaining_seats": 100011,

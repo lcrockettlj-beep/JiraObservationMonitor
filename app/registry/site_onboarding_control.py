@@ -7,7 +7,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DECISIONS_PATH = PROJECT_ROOT / "config" / "site_onboarding_decisions.json"
 AUDIT_LOG = PROJECT_ROOT / "reports" / "site_onboarding_decision_audit.jsonl"
-CONTROL_STATUS = PROJECT_ROOT / "static" / "data" / "site_onboarding_control_status.json"
+CONTROL_STATUS = PROJECT_ROOT / "runtime" / "data" / "site_onboarding_control_status.json"
 VALID_STATES = {"pending", "approved", "rejected", "ignored", "monitored"}
 
 

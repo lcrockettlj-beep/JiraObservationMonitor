@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-STATUS_PATH = PROJECT_ROOT / "static" / "data" / "admin_enriched_refresh_status.json"
+STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "admin_enriched_refresh_status.json"
 ADMIN_ENRICHED = PROJECT_ROOT / "latest_run_admin_enriched.json"
 ADMIN_ENRICHED_PRETTY = PROJECT_ROOT / "latest_run_admin_enriched_pretty.json"
 LATEST_RUN = PROJECT_ROOT / "latest_run.json"

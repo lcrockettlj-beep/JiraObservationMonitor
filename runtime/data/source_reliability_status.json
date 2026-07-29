@@ -42,9 +42,9 @@
     }
   ],
   "inputs": {
-    "source_freshness": "static\\data\\source_freshness_audit.json",
-    "runtime_refresh": "static\\data\\runtime_refresh_status.json",
-    "user_footprint": "static\\data\\user_footprint.json",
-    "site_registry": "static\\data\\site_registry.json"
+    "source_freshness": "runtime\\data\\source_freshness_audit.json",
+    "runtime_refresh": "runtime\\data\\runtime_refresh_status.json",
+    "user_footprint": "runtime\\data\\user_footprint.json",
+    "site_registry": "runtime\\data\\site_registry.json"
   }
 }

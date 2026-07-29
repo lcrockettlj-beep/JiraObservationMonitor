@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-STATUS = ROOT / "static" / "data" / "product_access_refresh_status.json"
+STATUS = ROOT / "runtime" / "data" / "product_access_refresh_status.json"
 
 def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
 
@@ -39,7 +39,7 @@ def main():
     if any(s['status']=='failed' for s in steps): overall='failed'
     elif any(s['status'] in ('manual_required','missing') for s in steps if s['key']=='estate_product_access'): overall='manual_required'
     else: overall='ok'
-    payload={"schema":"jom-product-access-refresh-status-v1", "generated_at_utc":now(), "overall_status":overall, "sources":{"estate_product_access":source(ROOT/'static/data/estate_product_access.json'), "estate_access_truth":source(ROOT/'static/data/estate_access_truth.json')}, "steps":steps}
+    payload={"schema":"jom-product-access-refresh-status-v1", "generated_at_utc":now(), "overall_status":overall, "sources":{"estate_product_access":source(ROOT/'runtime/data/estate_product_access.json'), "estate_access_truth":source(ROOT/'runtime/data/estate_access_truth.json')}, "steps":steps}
     STATUS.parent.mkdir(parents=True, exist_ok=True)
     STATUS.write_text(json.dumps(payload, indent=2), encoding='utf-8')
     print(json.dumps({"overall_status":overall,"output":str(STATUS)}, indent=2))

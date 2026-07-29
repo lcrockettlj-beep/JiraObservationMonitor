@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 MONITORED_CONFIG = "config/monitored_sites.json"
-REGISTRY_OUTPUT = "static/data/site_registry.json"
+REGISTRY_OUTPUT = "runtime/data/site_registry.json"
 ONBOARDING_QUEUE = "reports/site_onboarding_queue.json"
 
 APPROVED_OPERATIONAL_SITES = [
@@ -118,7 +118,7 @@ def load_runtime_sites(project_root: Path) -> List[Dict[str, Any]]:
 
 
 def load_named_sites(project_root: Path) -> List[Dict[str, Any]]:
-    payload = read_json(project_root / "static" / "data" / "live_named_access_contract", {})
+    payload = read_json(project_root / "runtime" / "data" / "live_named_access_contract", {})
     rows = []
     for row in payload.get("site_counts", []) if isinstance(payload.get("site_counts"), list) else []:
         key = str(row.get("site_key") or "").strip()
@@ -138,7 +138,7 @@ def load_named_sites(project_root: Path) -> List[Dict[str, Any]]:
 
 
 def load_product_sites(project_root: Path) -> List[Dict[str, Any]]:
-    payload = read_json(project_root / "static" / "data" / "estate_product_access.json", {})
+    payload = read_json(project_root / "runtime" / "data" / "estate_product_access.json", {})
     rows = []
     for row in payload.get("sites", []) if isinstance(payload.get("sites"), list) else []:
         if not isinstance(row, dict):

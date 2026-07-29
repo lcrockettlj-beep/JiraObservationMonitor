@@ -7,7 +7,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = ROOT / "static" / "data"
+DATA_DIR = ROOT / "runtime" / "data"
 
 NAMED_ACCESS_FILE = DATA_DIR / "live_named_access_contract"
 USER_FOOTPRINT_FILE = DATA_DIR / "user_footprint.json"

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = ROOT / "static" / "data"
+DATA_DIR = ROOT / "runtime" / "data"
 
 SEVERITY_RANK = {"critical": 0, "warning": 1, "info": 2, "ok": 3}
 

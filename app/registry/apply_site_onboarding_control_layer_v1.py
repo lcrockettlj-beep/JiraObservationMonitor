@@ -107,7 +107,7 @@ except Exception:
         run([sys.executable, "scripts/build_site_onboarding_review.py"]),
         run([sys.executable, "scripts/source_reliability_audit.py"]),
     ]
-    reliability = read_json(ROOT / "static" / "data" / "source_reliability_status.json", {})
+    reliability = read_json(ROOT / "runtime" / "data" / "source_reliability_status.json", {})
     summary = reliability.get("summary") or {}
     issue_count = summary.get("issue_count", reliability.get("issue_count"))
     validation_ok = all(v.get("returncode") == 0 for v in validations) and reliability.get("overall_status") == "ok" and issue_count == 0

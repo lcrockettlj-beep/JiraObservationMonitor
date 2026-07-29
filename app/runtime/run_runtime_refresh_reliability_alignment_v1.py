@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 STATUS = ROOT / "reports" / "runtime_refresh_reliability_alignment_status.json"
-RUNTIME_STATUS = ROOT / "static" / "data" / "runtime_refresh_status.json"
-SOURCE_RELIABILITY = ROOT / "static" / "data" / "source_reliability_status.json"
+RUNTIME_STATUS = ROOT / "runtime" / "data" / "runtime_refresh_status.json"
+SOURCE_RELIABILITY = ROOT / "runtime" / "data" / "source_reliability_status.json"
 SOURCE_RELIABILITY_SCRIPT = ROOT / "scripts" / "source_reliability_audit.py"
 APP_SOURCE_RELIABILITY = ROOT / "app" / "audits" / "source_reliability.py"
 
@@ -80,7 +80,7 @@ def align_reliability(runtime_status: dict, reliability: dict) -> tuple[dict, di
             isinstance(issue, dict)
             and issue.get("source") == "Runtime Refresh"
             and issue.get("state") == "review"
-            and issue.get("path") == "static/data/runtime_refresh_status.json"
+            and issue.get("path") == "runtime/data/runtime_refresh_status.json"
             and EXPECTED_NOTE in (issue.get("reason") or "")
         ):
             advisory = dict(issue)

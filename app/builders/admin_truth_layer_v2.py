@@ -102,7 +102,7 @@ def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def billing_summary(project_root: Path) -> Dict[str, Any]:
-    billing_path = project_root / 'static' / 'data' / 'billing_seats.json'
+    billing_path = project_root / 'runtime' / 'data' / 'billing_seats.json'
     payload = read_json(billing_path)
     return {
         'source_file': str(billing_path),
@@ -115,8 +115,8 @@ def billing_summary(project_root: Path) -> Dict[str, Any]:
 
 
 def product_access_summary(project_root: Path) -> Dict[str, Any]:
-    product_path = project_root / 'static' / 'data' / 'estate_product_access.json'
-    truth_path = project_root / 'static' / 'data' / 'estate_access_truth.json'
+    product_path = project_root / 'runtime' / 'data' / 'estate_product_access.json'
+    truth_path = project_root / 'runtime' / 'data' / 'estate_access_truth.json'
     product = read_json(product_path)
     truth = read_json(truth_path)
     product_summary = product.get('summary') if isinstance(product.get('summary'), dict) else {}
@@ -229,8 +229,8 @@ def build_admin_truth_v2(project_root: Path) -> Dict[str, Any]:
         'generated_at_utc': utc_now(),
         'source_policy': {
             'identity_truth': 'Atlassian Admin API enriched runtime payload',
-            'commercial_billing_truth': 'static/data/billing_seats.json',
-            'product_count_truth': 'static/data/estate_product_access.json from Jira application roles',
+            'commercial_billing_truth': 'runtime/data/billing_seats.json',
+            'product_count_truth': 'runtime/data/estate_product_access.json from Jira application roles',
             'named_access_truth': 'not active; user-to-site mapping remains hidden until Directory/export source is verified',
             'excluded_sources': [
                 'Jira /rest/api/3/users/search for named access',
@@ -340,7 +340,7 @@ def markdown_report(payload: Dict[str, Any]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description='Build JOM Admin Truth Layer v2 from verified admin, billing, and product access sources.')
     parser.add_argument('--project-root', default='.')
-    parser.add_argument('--output-json', default='static/data/admin_truth_v2.json')
+    parser.add_argument('--output-json', default='runtime/data/admin_truth_v2.json')
     parser.add_argument('--output-report', default='reports/admin_truth_v2.md')
     args = parser.parse_args()
 

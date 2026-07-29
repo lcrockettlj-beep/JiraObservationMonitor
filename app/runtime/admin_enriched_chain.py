@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 ROOT = Path(__file__).resolve().parents[2]
-STATUS = ROOT / "static" / "data" / "admin_enriched_refresh_status.json"
+STATUS = ROOT / "runtime" / "data" / "admin_enriched_refresh_status.json"
 
 
 def now() -> str:

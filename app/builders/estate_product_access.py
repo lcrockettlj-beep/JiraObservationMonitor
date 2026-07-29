@@ -386,8 +386,8 @@ def build_access_truth(product_payload: Dict[str, Any], admin_payload_path: Path
 def main() -> int:
     parser = argparse.ArgumentParser(description='Collect live estate-wide Jira product access using Atlassian application roles.')
     parser.add_argument('--project-root', default='.')
-    parser.add_argument('--product-output', default='static/data/estate_product_access.json')
-    parser.add_argument('--truth-output', default='static/data/estate_access_truth.json')
+    parser.add_argument('--product-output', default='runtime/data/estate_product_access.json')
+    parser.add_argument('--truth-output', default='runtime/data/estate_access_truth.json')
     args = parser.parse_args()
     project_root = Path(args.project_root).resolve()
     product_output = Path(args.product_output)
