@@ -284,3 +284,56 @@
   else init();
 })();
 // --- JOM SITE WORKSPACE UI DISPLAY ALIGNMENT v1 END ---
+
+/* JOM Estate Discovery Authority Frontend Wiring v1
+   Runtime-only frontend contract load. No UI/layout/CSS/HTML changes. */
+(function () {
+  "use strict";
+
+  const COVERAGE_ROUTE = "/api/estate/discovery-authority/coverage";
+  const EVENT_NAME = "jom:estate-discovery-authority:coverage";
+
+  async function loadEstateDiscoveryAuthorityCoverage() {
+    if (typeof fetch !== "function") {
+      return null;
+    }
+
+    try {
+      const response = await fetch(COVERAGE_ROUTE, {
+        method: "GET",
+        headers: { "Accept": "application/json" },
+        cache: "no-store"
+      });
+
+      if (!response.ok) {
+        throw new Error(`Coverage route returned HTTP ${response.status}`);
+      }
+
+      const payload = await response.json();
+      window.JOM_ESTATE_DISCOVERY_AUTHORITY_COVERAGE = payload;
+      window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: payload }));
+      return payload;
+    } catch (error) {
+      window.JOM_ESTATE_DISCOVERY_AUTHORITY_COVERAGE = {
+        status: "unavailable",
+        authority: "runtime-data-contracts",
+        static_fallback_used: false,
+        route: COVERAGE_ROUTE,
+        error: error && error.message ? error.message : String(error)
+      };
+      window.dispatchEvent(new CustomEvent(EVENT_NAME, {
+        detail: window.JOM_ESTATE_DISCOVERY_AUTHORITY_COVERAGE
+      }));
+      return null;
+    }
+  }
+
+  window.JOM_loadEstateDiscoveryAuthorityCoverage = loadEstateDiscoveryAuthorityCoverage;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadEstateDiscoveryAuthorityCoverage, { once: true });
+  } else {
+    loadEstateDiscoveryAuthorityCoverage();
+  }
+}());
+
