@@ -1,7 +1,7 @@
 {
   "schema": "jom-source-freshness-audit-v1.1",
-  "generated_at_utc": "2026-07-21T14:48:02.210887Z",
-  "display_generated_at_utc": "2026-07-21 14:48 UTC",
+  "generated_at_utc": "2026-07-29T13:35:39.387105Z",
+  "display_generated_at_utc": "2026-07-29 13:35 UTC",
   "policy": {
     "current_hours": 24,
     "aging_hours": 72,
@@ -13,9 +13,9 @@
     "source_count": 8,
     "counts": {
       "CURRENT": 3,
-      "AGING": 0,
-      "STALE": 5,
-      "MISSING": 0,
+      "AGING": 1,
+      "STALE": 2,
+      "MISSING": 2,
       "UNKNOWN_TIMESTAMP": 0
     },
     "billing_timestamp_added": false
@@ -33,12 +33,12 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-21T14:47:47.147910Z",
-      "parsed_timestamp_utc": "2026-07-21T14:47:47.147910Z",
-      "display_timestamp_utc": "2026-07-21 14:47 UTC",
-      "age_hours": 0.0,
-      "freshness_state": "CURRENT",
-      "operator_label": "CURRENT",
+      "timestamp_value": "2026-07-28T11:18:13.306141Z",
+      "parsed_timestamp_utc": "2026-07-28T11:18:13.306141Z",
+      "display_timestamp_utc": "2026-07-28 11:18 UTC",
+      "age_hours": 26.29,
+      "freshness_state": "AGING",
+      "operator_label": "AGING SNAPSHOT",
       "error": null
     },
     {
@@ -52,9 +52,9 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-21T14:48:02Z",
-      "parsed_timestamp_utc": "2026-07-21T14:48:02Z",
-      "display_timestamp_utc": "2026-07-21 14:48 UTC",
+      "timestamp_value": "2026-07-29T13:35:39Z",
+      "parsed_timestamp_utc": "2026-07-29T13:35:39Z",
+      "display_timestamp_utc": "2026-07-29 13:35 UTC",
       "age_hours": 0.0,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
@@ -70,12 +70,12 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-06-30T10:17:54Z",
-      "parsed_timestamp_utc": "2026-06-30T10:17:54Z",
-      "display_timestamp_utc": "2026-06-30 10:17 UTC",
-      "age_hours": 508.5,
-      "freshness_state": "STALE",
-      "operator_label": "STALE SNAPSHOT",
+      "timestamp_value": "2026-07-29T09:56:21Z",
+      "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
+      "display_timestamp_utc": "2026-07-29 09:56 UTC",
+      "age_hours": 3.66,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -88,12 +88,12 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-06-30T10:17:54Z",
-      "parsed_timestamp_utc": "2026-06-30T10:17:54Z",
-      "display_timestamp_utc": "2026-06-30 10:17 UTC",
-      "age_hours": 508.5,
-      "freshness_state": "STALE",
-      "operator_label": "STALE SNAPSHOT",
+      "timestamp_value": "2026-07-29T09:56:21Z",
+      "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
+      "display_timestamp_utc": "2026-07-29 09:56 UTC",
+      "age_hours": 3.66,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -110,7 +110,7 @@
       "timestamp_value": "2026-06-29T08:41:11.375374Z",
       "parsed_timestamp_utc": "2026-06-29T08:41:11.375374Z",
       "display_timestamp_utc": "2026-06-29 08:41 UTC",
-      "age_hours": 534.11,
+      "age_hours": 724.91,
       "freshness_state": "STALE",
       "operator_label": "STALE SNAPSHOT",
       "error": null
@@ -125,39 +125,39 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-21T14:47:13.123712Z",
-      "parsed_timestamp_utc": "2026-07-21T14:47:13.123712Z",
-      "display_timestamp_utc": "2026-07-21 14:47 UTC",
-      "age_hours": 0.01,
-      "freshness_state": "CURRENT",
-      "operator_label": "CURRENT",
+      "timestamp_value": "2026-07-24T09:28:27Z",
+      "parsed_timestamp_utc": "2026-07-24T09:28:27Z",
+      "display_timestamp_utc": "2026-07-24 09:28 UTC",
+      "age_hours": 124.12,
+      "freshness_state": "STALE",
+      "operator_label": "STALE SNAPSHOT",
       "error": null
     },
     {
       "key": "latest_run",
       "label": "Latest Jira Runtime Run",
       "path": "latest_run.json",
-      "exists": true,
+      "exists": false,
       "source_type": "LATEST_RUN",
       "pages": [
         "Home",
         "Estate",
         "Site"
       ],
-      "timestamp_field": "raw_collection_summary.collected_at_utc",
-      "timestamp_value": "2026-06-29T09:04:47Z",
-      "parsed_timestamp_utc": "2026-06-29T09:04:47Z",
-      "display_timestamp_utc": "2026-06-29 09:04 UTC",
-      "age_hours": 533.72,
-      "freshness_state": "STALE",
-      "operator_label": "STALE SNAPSHOT",
+      "timestamp_field": null,
+      "timestamp_value": null,
+      "parsed_timestamp_utc": null,
+      "display_timestamp_utc": null,
+      "age_hours": null,
+      "freshness_state": "MISSING",
+      "operator_label": "MISSING SOURCE",
       "error": null
     },
     {
       "key": "latest_run_admin_enriched",
       "label": "Latest Admin Enriched Run",
       "path": "latest_run_admin_enriched.json",
-      "exists": true,
+      "exists": false,
       "source_type": "LATEST_RUN",
       "pages": [
         "Home",
@@ -165,13 +165,13 @@
         "Admin",
         "Site"
       ],
-      "timestamp_field": "raw_collection_summary.collected_at_utc",
-      "timestamp_value": "2026-06-29T09:04:47Z",
-      "parsed_timestamp_utc": "2026-06-29T09:04:47Z",
-      "display_timestamp_utc": "2026-06-29 09:04 UTC",
-      "age_hours": 533.72,
-      "freshness_state": "STALE",
-      "operator_label": "STALE SNAPSHOT",
+      "timestamp_field": null,
+      "timestamp_value": null,
+      "parsed_timestamp_utc": null,
+      "display_timestamp_utc": null,
+      "age_hours": null,
+      "freshness_state": "MISSING",
+      "operator_label": "MISSING SOURCE",
       "error": null
     }
   ]

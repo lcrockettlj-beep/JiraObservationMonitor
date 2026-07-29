@@ -1,4 +1,3 @@
-# JOM Estate active monitored source: site_registry.json is source of truth; monitored_sites.json is derived compatibility only.
 from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request
@@ -2304,10 +2303,8 @@ def estate_discovery_authority_coverage():
 
     source_files = {
         "site_registry": "site_registry.json",
-        "monitored_sites": "monitored_sites.json",
         "estate_admin_site_inventory": "estate_admin_site_inventory_v1.json",
         "site_onboarding_review": "site_onboarding_review.json",
-        "site_lifecycle_decisions": "site_lifecycle_decisions.json",
         "estate_access_truth": "estate_access_truth.json",
         "estate_product_access": "estate_product_access.json",
     }

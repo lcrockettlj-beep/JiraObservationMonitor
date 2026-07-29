@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-MONITORED_CONFIG = "config/monitored_sites.json"
+MONITORED_CONFIG = "runtime/data/site_registry.json"
 REGISTRY_OUTPUT = "runtime/data/site_registry.json"
 ONBOARDING_QUEUE = "reports/site_onboarding_queue.json"
 

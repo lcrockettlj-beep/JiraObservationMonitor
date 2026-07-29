@@ -1,37 +1,32 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-07-21T14:48:02.309416Z",
+  "generated_at_utc": "2026-07-29T13:35:39.506037Z",
   "overall_status": "attention",
   "summary": {
-    "issue_count": 6,
+    "issue_count": 5,
     "freshness_overall": "ATTENTION",
     "runtime_refresh_overall": null,
     "user_footprint_status": "unavailable"
   },
   "issues": [
     {
-      "source": "Estate Product Access",
-      "state": "STALE SNAPSHOT",
-      "path": "runtime/data/estate_product_access.json"
-    },
-    {
-      "source": "Estate Access Truth",
-      "state": "STALE SNAPSHOT",
-      "path": "runtime/data/estate_access_truth.json"
-    },
-    {
       "source": "Billing Seats",
       "state": "STALE SNAPSHOT",
       "path": "runtime/data/billing_seats.json"
     },
     {
-      "source": "Latest Jira Runtime Run",
+      "source": "User Footprint",
       "state": "STALE SNAPSHOT",
+      "path": "runtime/data/user_footprint.json"
+    },
+    {
+      "source": "Latest Jira Runtime Run",
+      "state": "MISSING SOURCE",
       "path": "latest_run.json"
     },
     {
       "source": "Latest Admin Enriched Run",
-      "state": "STALE SNAPSHOT",
+      "state": "MISSING SOURCE",
       "path": "latest_run_admin_enriched.json"
     },
     {
