@@ -73,9 +73,10 @@ def build_registry(project_root: Path) -> Dict[str, Any]:
     data = project_root / "runtime" / "data"
     current = read_json(data / "site_registry.json", {})
     product = read_json(data / "estate_product_access.json", {})
-    monitored = read_json(data / "monitored_sites.json", {})
-    decisions = read_json(data / "site_lifecycle_decisions.json", {})
-    access_validation = read_json(data / "site_access_validation.json", {})
+    registry_contract = read_json(data / "site_registry.json", {})
+    monitored = {"sites": registry_contract.get("sites", []), "summary": registry_contract.get("summary", {}), "source": "runtime/data/site_registry.json"}
+    decisions = {"decisions": {}, "history": [], "source": "runtime/data/site_registry.json"}
+    access_validation = {"validations": {}, "history": [], "source": "runtime/data/site_registry.json"}
     admin_named = read_json(data / "live_named_access_contract", {})
 
     registry: Dict[str, Dict[str, Any]] = {}

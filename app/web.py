@@ -775,6 +775,51 @@ def jom_generated_site_report(site_key, fmt):
     report = get_report("site", site_key)
     return _jom_generated_report_response("site_" + str(site_key), fmt, report)
 
+
+
+# JOM estate runtime consumer replacement helpers v1
+def _jom_estate_runtime_site_registry_contract_v1():
+    """Return current runtime site registry contract without legacy monitored-site JSON dependency."""
+    try:
+        payload = _jom_cached_read_json_v1("site_registry.json", {}) if "_jom_cached_read_json_v1" in globals() else load_json("site_registry.json", {})
+    except Exception:
+        payload = {}
+    if not isinstance(payload, dict):
+        payload = {}
+    sites = payload.get("sites") if isinstance(payload.get("sites"), list) else []
+    return {"schema": payload.get("schema", "site-registry-runtime"), "summary": payload.get("summary", {}), "sites": sites, "source": "runtime/data/site_registry.json"}
+
+
+def _jom_estate_runtime_access_validation_contract_v1():
+    """Return runtime access validation view derived from live estate contracts, not site_access_validation.json."""
+    registry = _jom_estate_runtime_site_registry_contract_v1()
+    validations = {}
+    for site in registry.get("sites", []):
+        if not isinstance(site, dict):
+            continue
+        key = site.get("key") or site.get("site_key") or site.get("cloud_id") or site.get("url")
+        if key:
+            validations[str(key)] = {"status": "runtime_contract", "source": registry.get("source"), "site": site}
+    return {"validations": validations, "history": [], "source": "runtime/site_registry_contract"}
+
+
+def _jom_estate_runtime_lifecycle_contract_v1():
+    """Return read-only lifecycle decision contract derived from runtime site registry."""
+    registry = _jom_estate_runtime_site_registry_contract_v1()
+    decisions = {}
+    for site in registry.get("sites", []):
+        if not isinstance(site, dict):
+            continue
+        key = site.get("key") or site.get("site_key") or site.get("cloud_id") or site.get("url")
+        if key:
+            decisions[str(key)] = {"decision": site.get("lifecycle_decision") or site.get("status") or "runtime_registry", "source": registry.get("source")}
+    return {"decisions": decisions, "history": [], "source": "runtime/site_registry_contract"}
+
+
+def _jom_estate_runtime_noop_write_v1(label, payload=None):
+    """Read-only estate guard: legacy runtime mutation disabled after runtime contract isolation."""
+    return {"status": "skipped", "reason": "read_only_runtime_contract", "label": label}
+
 def _jom_generated_report_response(report_name, fmt, report):
     fmt = str(fmt or "json").lower()
     filename = "jom_" + str(report_name).replace("/", "_") + "_report." + fmt
@@ -793,7 +838,7 @@ def _jom_generated_report_response(report_name, fmt, report):
 
 
 # --- JOM SITE REVIEW LIFECYCLE DECISION ROUTES v1 START ---
-SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_lifecycle_decisions.json"
+SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy lifecycle file retired
 
 def _normalise_site_key(value: Any) -> str:
     return str(value or "").strip().lower()
@@ -802,7 +847,7 @@ def _site_key_from_record(site: Dict[str, Any]) -> str:
     return str(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or "")
 
 def _load_lifecycle_decisions() -> Dict[str, Any]:
-    payload = load_json("site_lifecycle_decisions.json", {})
+    payload = _jom_estate_runtime_lifecycle_contract_v1()
     if not isinstance(payload, dict) or not payload:
         payload = {"schema": "jom-site-lifecycle-decisions-v1", "generated_at_utc": None, "decisions": {}, "history": []}
     payload.setdefault("schema", "jom-site-lifecycle-decisions-v1")
@@ -980,17 +1025,17 @@ def api_site_review_decision(site_key):
         if "_recalculate_registry_summary" in globals():
             _recalculate_registry_summary(registry)
         write_json(DATA_PATH / "site_registry.json", registry)
-        monitored_payload = load_json("monitored_sites.json", {})
+        monitored_payload = _jom_estate_runtime_site_registry_contract_v1()
         if isinstance(monitored_payload, dict):
             monitored_payload["monitored_sites"] = [row for row in monitored_payload.get("monitored_sites", []) if not (isinstance(row, dict) and str(row.get("site_key", "")).lower() == target)]
             monitored_payload.setdefault("ignored_sites", [])
             monitored_payload["updated_at_utc"] = now_utc()
-            write_json(DATA_PATH / "monitored_sites.json", monitored_payload)
-        validation_payload = load_json("site_access_validation.json", {})
+            _jom_estate_runtime_noop_write_v1("monitored_sites", monitored_payload)
+        validation_payload = _jom_estate_runtime_access_validation_contract_v1()
         if isinstance(validation_payload, dict):
             validation_payload.setdefault("validations", {}).pop(site_key, None)
             validation_payload["generated_at_utc"] = now_utc()
-            write_json(DATA_PATH / "site_access_validation.json", validation_payload)
+            _jom_estate_runtime_noop_write_v1("site_access_validation", validation_payload)
         record = {
             "site_key": site_key,
             "decision": "discovered",
@@ -1024,7 +1069,7 @@ def api_site_review_decision(site_key):
 
 @app.route("/api/site-lifecycle/decisions")
 def api_site_lifecycle_decisions():
-    payload = load_json("site_lifecycle_decisions.json", {})
+    payload = _jom_estate_runtime_lifecycle_contract_v1()
     if not isinstance(payload, dict) or not payload:
         payload = {"schema": "jom-site-lifecycle-decisions-v1", "decisions": {}, "history": []}
     payload.setdefault("decisions", {})
@@ -1034,7 +1079,7 @@ def api_site_lifecycle_decisions():
 
 
 # --- credential_access_validation_v1 START ---
-SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_access_validation.json"
+SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy validation file retired
 
 def _load_dotenv_values() -> Dict[str, str]:
     values = dict(os.environ)
@@ -1049,7 +1094,7 @@ def _load_dotenv_values() -> Dict[str, str]:
     return values
 
 def _load_site_access_validation() -> Dict[str, Any]:
-    payload = load_json("site_access_validation.json", {})
+    payload = _jom_estate_runtime_access_validation_contract_v1()
     if not isinstance(payload, dict) or not payload:
         payload = {"schema": "jom-site-access-validation-v1", "generated_at_utc": None, "validations": {}, "history": []}
     payload.setdefault("validations", {})
@@ -1283,7 +1328,7 @@ def api_site_review_enable_monitoring(site_key):
     if "_jom_credential_gate_latest_validation" in globals():
         validation_state = _jom_credential_gate_latest_validation(target)
     else:
-        validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else load_json("site_access_validation.json", {"validations": {}, "history": []})
+        validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else _jom_estate_runtime_access_validation_contract_v1()
         validation_state = validations.get("validations", {}).get(target, {}) if isinstance(validations, dict) else {}
     if not validation_state or (validation_state.get("access_valid") is not True and validation_state.get("status") != "ok"):
         return jsonify({
@@ -1308,7 +1353,7 @@ def api_site_review_enable_monitoring(site_key):
                 "message": "Atlassian authorisation is required before monitoring can be enabled.",
             }), status_code
 
-    decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else load_json("site_lifecycle_decisions.json", {"decisions": {}, "history": []})
+    decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else _jom_estate_runtime_lifecycle_contract_v1()
     decision_state = decisions.get("decisions", {}).get(site_key, {}) or decisions.get("decisions", {}).get(target, {})
     if decision_state.get("decision") not in ("approve", "monitored"):
         return jsonify({"ok": False, "error": "site must be approved before monitoring can be enabled", "current_decision": decision_state.get("decision")}), 409
@@ -1330,7 +1375,7 @@ def api_site_review_enable_monitoring(site_key):
     _recalculate_registry_summary(registry)
     write_json(DATA_PATH / "site_registry.json", registry)
 
-    monitored_payload = load_json("monitored_sites.json", {})
+    monitored_payload = _jom_estate_runtime_site_registry_contract_v1()
     monitored_payload.setdefault("schema", "jom-monitored-sites-v2")
     monitored_payload.setdefault("policy", registry.get("policy", {}))
     monitored_payload.setdefault("monitored_sites", [])
@@ -1352,7 +1397,7 @@ def api_site_review_enable_monitoring(site_key):
         existing.update(row)
     else:
         monitored_payload["monitored_sites"].append(row)
-    write_json(DATA_PATH / "monitored_sites.json", monitored_payload)
+    _jom_estate_runtime_noop_write_v1("monitored_sites", monitored_payload)
 
     decision_record = {
         "site_key": target,
@@ -1368,7 +1413,7 @@ def api_site_review_enable_monitoring(site_key):
     decisions.setdefault("decisions", {})[target] = decision_record
     decisions.setdefault("history", []).append(decision_record)
     decisions["generated_at_utc"] = now
-    write_json(DATA_PATH / "site_lifecycle_decisions.json", decisions)
+    _jom_estate_runtime_noop_write_v1("site_lifecycle_decisions", decisions)
     return jsonify({"ok": True, "site_key": site_key, "message": "Monitoring enabled via JOM.", "site": site})
 
 
@@ -1804,7 +1849,7 @@ def _jom_workspace_estate_cached_contract_v1():
     user_footprint = _jom_cached_read_json_v1("user_footprint.json", {})
     estate_product_access = _jom_cached_read_json_v1("estate_product_access.json", {})
     estate_access_truth = _jom_cached_read_json_v1("estate_access_truth.json", {})
-    lifecycle_decisions = _jom_cached_read_json_v1("site_lifecycle_decisions.json", {"decisions": {}, "history": []})
+    lifecycle_decisions = _jom_estate_runtime_lifecycle_contract_v1()
     source_state = _jom_cached_source_state_v1()
     registry_summary = _jom_cached_registry_summary_v1(registry)
     data = {"registry": registry, "registry_summary": registry_summary, "users": user_footprint, "estate_product_access": estate_product_access, "estate_access_truth": estate_access_truth, "lifecycle_decisions": lifecycle_decisions, "source_state": source_state, "metrics": {"total_sites": registry_summary.get("total_sites"), "monitored_sites": registry_summary.get("monitored_count"), "discovered_sites": registry_summary.get("discovered_count"), "pending_onboarding": registry_summary.get("pending_onboarding_count")}}
@@ -1887,7 +1932,7 @@ def _jom_credential_gate_site(site_key):
 
 def _jom_credential_gate_latest_validation(site_key):
     wanted = _jom_credential_gate_norm(site_key)
-    payload = _jom_credential_gate_read_json(_jom_credential_gate_data_path("site_access_validation.json"), {"validations": {}, "history": []})
+    payload = _jom_estate_runtime_access_validation_contract_v1()
     candidates = []
     if isinstance(payload, dict):
         current = payload.get("validations", {}).get(wanted, {})
@@ -1991,7 +2036,7 @@ def api_site_review_validate_access_gate_v1(site_key):
     validation = dict(validation)
     validation["actor"] = body.get("actor") or validation.get("actor") or "operator"
     validation["reconfirmed_at_utc"] = _jom_credential_gate_now_utc()
-    current_path = _jom_credential_gate_data_path("site_access_validation.json")
+    current_path = DATA_PATH / "site_registry.json"
     access = _jom_credential_gate_read_json(current_path, {"schema": "jom-site-access-validation-v1", "validations": {}, "history": []})
     access.setdefault("validations", {})[wanted] = validation
     access["generated_at_utc"] = _jom_credential_gate_now_utc()
@@ -2018,7 +2063,7 @@ def _jom_estate_oauth_validation_record(site_key, coverage, actor="oauth-callbac
 
 def _jom_estate_write_access_validation_record(site_key, validation):
     wanted = _jom_credential_gate_norm(site_key) if "_jom_credential_gate_norm" in globals() else str(site_key or "").strip().lower()
-    path = _jom_credential_gate_data_path("site_access_validation.json") if "_jom_credential_gate_data_path" in globals() else DATA_PATH / "site_access_validation.json"
+    path = DATA_PATH / "site_registry.json"
     reader = _jom_credential_gate_read_json if "_jom_credential_gate_read_json" in globals() else load_json
     writer = _jom_credential_gate_write_json if "_jom_credential_gate_write_json" in globals() else write_json
     access = reader(path, {"schema": "jom-site-access-validation-v1", "validations": {}, "history": []})
@@ -2375,9 +2420,9 @@ def api_runtime_data_path_status():
         "backend_final_truth_chain_status.json", "backend_legacy_truth_eradication_status.json",
         "billing_seats.json", "estate_access_truth.json",
         "estate_admin_site_inventory_v1.json", "estate_product_access.json",
-        "monitored_sites.json", "runtime_execution_history.json",
-        "runtime_execution_status.json", "site_access_validation.json",
-        "site_lifecycle_decisions.json", "site_onboarding_review.json",
+        "runtime_execution_history.json",
+        "runtime_execution_status.json",
+        "site_onboarding_review.json",
         "site_registry.json", "source_freshness_audit.json",
         "source_reliability_status.json", "user_footprint.json",
     ]
