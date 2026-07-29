@@ -1,5 +1,5 @@
 // --- JOM SITE WORKSPACE UI DISPLAY ALIGNMENT v1 START ---
-// Site Workspace must render backend API contracts only. No static/data truth reads.
+// Site Workspace must render backend API contracts only. No runtime contract truth reads.
 (function(){
   'use strict';
 
