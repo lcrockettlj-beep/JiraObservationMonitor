@@ -1,6 +1,6 @@
 {
   "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-07-29T13:35:39.449308Z",
+  "generated_at_utc": "2026-07-30T13:47:29.867574Z",
   "source_status": "unavailable",
   "reason": "No named access reconciliation file is available.",
   "safe_to_show_named_access_ui": false,

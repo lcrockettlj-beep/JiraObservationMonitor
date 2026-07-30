@@ -1,7 +1,7 @@
 {
   "schema": "jom-source-freshness-audit-v1.1",
-  "generated_at_utc": "2026-07-29T13:35:39.387105Z",
-  "display_generated_at_utc": "2026-07-29 13:35 UTC",
+  "generated_at_utc": "2026-07-30T13:47:29.819856Z",
+  "display_generated_at_utc": "2026-07-30 13:47 UTC",
   "policy": {
     "current_hours": 24,
     "aging_hours": 72,
@@ -12,9 +12,9 @@
     "overall_state": "ATTENTION",
     "source_count": 8,
     "counts": {
-      "CURRENT": 3,
-      "AGING": 1,
-      "STALE": 2,
+      "CURRENT": 6,
+      "AGING": 0,
+      "STALE": 0,
       "MISSING": 2,
       "UNKNOWN_TIMESTAMP": 0
     },
@@ -33,12 +33,12 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-28T11:18:13.306141Z",
-      "parsed_timestamp_utc": "2026-07-28T11:18:13.306141Z",
-      "display_timestamp_utc": "2026-07-28 11:18 UTC",
-      "age_hours": 26.29,
-      "freshness_state": "AGING",
-      "operator_label": "AGING SNAPSHOT",
+      "timestamp_value": "2026-07-30T13:45:18Z",
+      "parsed_timestamp_utc": "2026-07-30T13:45:18Z",
+      "display_timestamp_utc": "2026-07-30 13:45 UTC",
+      "age_hours": 0.04,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -52,9 +52,9 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-29T13:35:39Z",
-      "parsed_timestamp_utc": "2026-07-29T13:35:39Z",
-      "display_timestamp_utc": "2026-07-29 13:35 UTC",
+      "timestamp_value": "2026-07-30T13:47:29Z",
+      "parsed_timestamp_utc": "2026-07-30T13:47:29Z",
+      "display_timestamp_utc": "2026-07-30 13:47 UTC",
       "age_hours": 0.0,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
@@ -70,10 +70,10 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-29T09:56:21Z",
-      "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
-      "display_timestamp_utc": "2026-07-29 09:56 UTC",
-      "age_hours": 3.66,
+      "timestamp_value": "2026-07-30T13:45:24Z",
+      "parsed_timestamp_utc": "2026-07-30T13:45:24Z",
+      "display_timestamp_utc": "2026-07-30 13:45 UTC",
+      "age_hours": 0.03,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -88,10 +88,10 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-29T09:56:21Z",
-      "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
-      "display_timestamp_utc": "2026-07-29 09:56 UTC",
-      "age_hours": 3.66,
+      "timestamp_value": "2026-07-30T13:45:24Z",
+      "parsed_timestamp_utc": "2026-07-30T13:45:24Z",
+      "display_timestamp_utc": "2026-07-30 13:45 UTC",
+      "age_hours": 0.03,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -99,7 +99,7 @@
     {
       "key": "billing_seats",
       "label": "Billing Seats",
-      "path": "runtime/data/billing_seats.json",
+      "path": "runtime/data/estate_access_truth.json",
       "exists": true,
       "source_type": "RUNTIME_CONTRACT",
       "pages": [
@@ -107,12 +107,12 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-06-29T08:41:11.375374Z",
-      "parsed_timestamp_utc": "2026-06-29T08:41:11.375374Z",
-      "display_timestamp_utc": "2026-06-29 08:41 UTC",
-      "age_hours": 724.91,
-      "freshness_state": "STALE",
-      "operator_label": "STALE SNAPSHOT",
+      "timestamp_value": "2026-07-30T13:45:24Z",
+      "parsed_timestamp_utc": "2026-07-30T13:45:24Z",
+      "display_timestamp_utc": "2026-07-30 13:45 UTC",
+      "age_hours": 0.03,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -125,12 +125,12 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-24T09:28:27Z",
-      "parsed_timestamp_utc": "2026-07-24T09:28:27Z",
-      "display_timestamp_utc": "2026-07-24 09:28 UTC",
-      "age_hours": 124.12,
-      "freshness_state": "STALE",
-      "operator_label": "STALE SNAPSHOT",
+      "timestamp_value": "2026-07-30T13:47:29.479073Z",
+      "parsed_timestamp_utc": "2026-07-30T13:47:29.479073Z",
+      "display_timestamp_utc": "2026-07-30 13:47 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     },
     {
@@ -156,7 +156,7 @@
     {
       "key": "latest_run_admin_enriched",
       "label": "Latest Admin Enriched Run",
-      "path": "latest_run_admin_enriched.json",
+      "path": "admin_truth_v2.json",
       "exists": false,
       "source_type": "LATEST_RUN",
       "pages": [

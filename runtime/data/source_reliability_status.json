@@ -1,24 +1,14 @@
 {
   "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-07-29T13:35:39.506037Z",
+  "generated_at_utc": "2026-07-30T13:47:29.910755Z",
   "overall_status": "attention",
   "summary": {
-    "issue_count": 5,
+    "issue_count": 3,
     "freshness_overall": "ATTENTION",
     "runtime_refresh_overall": null,
     "user_footprint_status": "unavailable"
   },
   "issues": [
-    {
-      "source": "Billing Seats",
-      "state": "STALE SNAPSHOT",
-      "path": "runtime/data/billing_seats.json"
-    },
-    {
-      "source": "User Footprint",
-      "state": "STALE SNAPSHOT",
-      "path": "runtime/data/user_footprint.json"
-    },
     {
       "source": "Latest Jira Runtime Run",
       "state": "MISSING SOURCE",
@@ -27,7 +17,7 @@
     {
       "source": "Latest Admin Enriched Run",
       "state": "MISSING SOURCE",
-      "path": "latest_run_admin_enriched.json"
+      "path": "admin_truth_v2.json"
     },
     {
       "source": "User Footprint",

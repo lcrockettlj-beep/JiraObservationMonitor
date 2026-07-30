@@ -1,19 +1,17 @@
 {
   "schema": "jom-site-registry-v4-runtime-consolidated",
-  "generated_at_utc": "2026-07-28T11:18:13.306141Z",
+  "generated_at_utc": "2026-07-30T15:32:25Z",
   "summary": {
     "total_sites": 7,
     "monitored_count": 0,
     "discovered_count": 7,
-    "pending_onboarding_count": 0,
+    "pending_onboarding_count": 7,
     "ignored_count": 0
   },
   "policy": {
     "new_sites_default_status": "discovered",
     "estate_requires_monitored_status": true,
-    "approval_triggers_oauth_onboarding_gate": true,
-    "estate_active_source": "site_registry.json",
-    "monitored_sites_json_role": "derived_compatibility_view_only"
+    "approval_triggers_oauth_onboarding_gate": true
   },
   "sites": [
     {
@@ -138,7 +136,7 @@
       "is_monitored": false,
       "can_approve": true,
       "metrics": {
-        "jira_product_user_count": 59,
+        "jira_product_user_count": 63,
         "named_access_count": 37,
         "jira_product_seat_limit": 100,
         "jira_role_count": 1
@@ -157,16 +155,16 @@
         "gli-tracker"
       ],
       "sources": [
+        "monitoring_state",
         "named_access",
-        "product_access",
-        "monitoring_state"
+        "product_access"
       ],
       "classification": "discovered",
       "is_monitored": false,
       "can_approve": true,
       "metrics": {
         "named_access_count": 3,
-        "jira_product_user_count": 5,
+        "jira_product_user_count": 6,
         "jira_product_seat_limit": 4000,
         "jira_role_count": 1
       },

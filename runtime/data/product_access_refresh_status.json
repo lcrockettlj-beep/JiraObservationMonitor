@@ -1,0 +1,43 @@
+{
+  "schema": "jom-product-access-refresh-status-v1",
+  "generated_at_utc": "2026-07-30T13:47:29.725839Z",
+  "overall_status": "failed",
+  "sources": {
+    "estate_product_access": {
+      "exists": true,
+      "timestamp": "2026-07-30T13:45:24Z",
+      "schema": "jom-estate-product-access-v2-live"
+    },
+    "estate_access_truth": {
+      "exists": true,
+      "timestamp": "2026-07-30T13:45:24Z",
+      "schema": "jom-estate-access-truth-v2-live"
+    }
+  },
+  "steps": [
+    {
+      "key": "estate_product_access",
+      "label": "Refresh Estate Product Access and Estate Access Truth",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe app/builders/estate_product_access.py --project-root .",
+      "exists": true,
+      "started_at_utc": "2026-07-30T13:47:29.585024Z",
+      "finished_at_utc": "2026-07-30T13:47:29.652241Z",
+      "status": "failed",
+      "returncode": 1,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\app\\builders\\estate_product_access.py\", line 3, in <module>\n    from app.shared._project_bootstrap import ensure_project_root_on_path\nModuleNotFoundError: No module named 'app'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\app\\builders\\estate_product_access.py\", line 5, in <module>\n    from _project_bootstrap import ensure_project_root_on_path\nModuleNotFoundError: No module named '_project_bootstrap'\n"
+    },
+    {
+      "key": "source_freshness",
+      "label": "Rebuild source freshness audit",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
+      "exists": true,
+      "started_at_utc": "2026-07-30T13:47:29.652357Z",
+      "finished_at_utc": "2026-07-30T13:47:29.725759Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"freshness\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_freshness_audit.json\",\n  \"reliability\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_reliability_status.json\",\n  \"issues\": 3\n}\n",
+      "stderr_tail": ""
+    }
+  ]
+}
