@@ -110,7 +110,7 @@ def build(project_root: Path) -> Dict[str, Any]:
     named_path = project_root / "runtime" / "data" / 'live_named_access_contract'
     admin_truth_path = project_root / "runtime" / "data" / 'admin_truth_v2.json'
     product_path = project_root / "runtime" / "data" / 'estate_product_access.json'
-    billing_path = project_root / 'runtime' / 'data' / 'billing_seats.json'
+    billing_path = project_root / 'runtime' / 'data' / 'estate_access_truth.json'
 
     named = read_json(named_path)
     admin_truth = read_json(admin_truth_path)

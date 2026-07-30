@@ -116,9 +116,9 @@ def main() -> int:
     )
 
     legacy = [
-        source_record("billing_seats", DATA / "billing_seats.json", "blocked legacy input; not website truth"),
+        source_record("billing_seats", DATA / "estate_access_truth.json", "blocked legacy input; not website truth"),
         source_record("latest_run", ROOT / "latest_run.json", "blocked legacy input; not website truth"),
-        source_record("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "blocked legacy input; not website truth"),
+        source_record("latest_run_admin_enriched", ROOT / "admin_truth_v2.json", "blocked legacy input; not website truth"),
     ]
 
     payload = {

@@ -17,7 +17,7 @@ PACK_DIRS=[
 REPLACEMENTS=[
     ('static\\\\data','runtime\\\\data'),
     ('static\\data','runtime\\data'),
-    ('static/data','runtime/data'),
+    ('runtime/data','runtime/data'),
 ]
 
 def read(p): return p.read_text(encoding='utf-8',errors='ignore')
@@ -50,7 +50,7 @@ def main():
     for p in TARGETS:
         if p.exists():
             for i,line in enumerate(read(p).splitlines(),1):
-                if 'static\\data' in line or 'static/data' in line or 'static\\\\data' in line:
+                if 'static\\data' in line or 'runtime/data' in line or 'static\\\\data' in line:
                     residual.append({'file':p.as_posix(),'line':i,'text':line.strip()[:240]})
     result={
         'cleanup':'JOM Residual Static String Cleanup v1',

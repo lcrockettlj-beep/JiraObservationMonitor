@@ -13,9 +13,9 @@ LEGACY_INPUTS = {
     "latest_run.json": "legacy runtime collector snapshot",
     "latest_run_pretty.json": "legacy runtime collector pretty snapshot",
     "latest_run_safe_partial.json": "legacy safe partial runtime snapshot",
-    "latest_run_admin_enriched.json": "legacy admin enriched runtime snapshot",
-    "latest_run_admin_enriched_pretty.json": "legacy admin enriched pretty snapshot",
-    "billing_seats.json": "legacy billing seat snapshot",
+    "admin_truth_v2.json": "legacy admin enriched runtime snapshot",
+    "admin_truth_v2.json": "legacy admin enriched pretty snapshot",
+    "estate_access_truth.json": "legacy billing seat snapshot",
     "latest_snapshot.json": "legacy snapshot controller output",
     "snapshot_index.json": "legacy snapshot index",
 }

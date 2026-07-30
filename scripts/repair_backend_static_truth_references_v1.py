@@ -33,7 +33,7 @@ DIRECT_REPLACEMENTS=[
     ("PROJECT_ROOT / \"static\" / \"data\"", "PROJECT_ROOT / \"runtime\" / \"data\""),
     ("default='runtime/data/", "default='runtime/data/"),
     ('default="runtime/data/', 'default="runtime/data/'),
-    ("'commercial_billing_truth': 'runtime/data/billing_seats.json'", "'commercial_billing_truth': 'runtime/data/billing_seats.json'"),
+    ("'commercial_billing_truth': 'runtime/data/estate_access_truth.json'", "'commercial_billing_truth': 'runtime/data/estate_access_truth.json'"),
     ("'product_count_truth': 'runtime/data/estate_product_access.json from Jira application roles'", "'product_count_truth': 'runtime/data/estate_product_access.json from Jira application roles'"),
     ('REGISTRY_OUTPUT = "runtime/data/site_registry.json"', 'REGISTRY_OUTPUT = "runtime/data/site_registry.json"'),
 ]
@@ -43,8 +43,8 @@ STATIC_PATTERNS=[
     re.compile(r'/runtime/data', re.I),
 ]
 LEGACY_FILENAMES=[
-    'monitored_sites.json','site_access_validation.json','site_lifecycle_decisions.json',
-    'latest_run_admin_enriched.json','latest_run_admin_enriched_pretty.json','billing_seats.json',
+    'site_registry.json','estate_access_truth.json','site_registry.json',
+    'admin_truth_v2.json','admin_truth_v2.json','estate_access_truth.json',
     'admin_named_access.json','named_access_truth_v2.json'
 ]
 

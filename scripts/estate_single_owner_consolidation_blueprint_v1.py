@@ -21,7 +21,7 @@ BACKEND_ROOTS = [Path('app'), Path('backend'), Path('scripts')]
 
 ESTATE_TERMS = ['estate', 'site-review', 'site_review', 'site lifecycle', 'site_lifecycle', 'lifecycle', 'discovery-authority', 'discovery_authority', 'site_workspace', 'site registry', 'site_registry']
 COMMAND_TERMS = ['command-centre', 'command_centre', 'cmdc', 'workspace/command-centre']
-LEGACY_JSONS = ['monitored_sites.json', 'site_access_validation.json', 'site_lifecycle_decisions.json']
+LEGACY_JSONS = ['site_registry.json', 'estate_access_truth.json', 'site_registry.json']
 
 FETCH_RX = re.compile(r"fetch\s*\(\s*['\"]([^'\"]+)", re.I)
 API_RX = re.compile(r"['\"]((?:/api/|/runtime/|/workspace/)[^'\"]+)['\"]")

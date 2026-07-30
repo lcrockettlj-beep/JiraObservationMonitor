@@ -46,8 +46,8 @@ def write_json(path: Path, payload: Dict[str, Any]) -> None:
 
 def admin_candidates(project_root: Path) -> List[Path]:
     return [
-        project_root / 'latest_run_admin_enriched_pretty.json',
-        project_root / 'latest_run_admin_enriched.json',
+        project_root / 'admin_truth_v2.json',
+        project_root / 'admin_truth_v2.json',
         project_root / 'latest_run_pretty.json',
         project_root / 'latest_run.json',
     ]
@@ -102,11 +102,11 @@ def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def billing_summary(project_root: Path) -> Dict[str, Any]:
-    billing_path = project_root / 'runtime' / 'data' / 'billing_seats.json'
+    billing_path = project_root / 'runtime' / 'data' / 'estate_access_truth.json'
     payload = read_json(billing_path)
     return {
         'source_file': str(billing_path),
-        'source': payload.get('source', 'billing_seats.json') if payload else '',
+        'source': payload.get('source', 'estate_access_truth.json') if payload else '',
         'jira_seats': safe_int(payload.get('total_jira_seats')),
         'jira_site_count': safe_int(payload.get('jira_site_count')),
         'payload_available': bool(payload),
@@ -229,7 +229,7 @@ def build_admin_truth_v2(project_root: Path) -> Dict[str, Any]:
         'generated_at_utc': utc_now(),
         'source_policy': {
             'identity_truth': 'Atlassian Admin API enriched runtime payload',
-            'commercial_billing_truth': 'runtime/data/billing_seats.json',
+            'commercial_billing_truth': 'runtime/data/estate_access_truth.json',
             'product_count_truth': 'runtime/data/estate_product_access.json from Jira application roles',
             'named_access_truth': 'not active; user-to-site mapping remains hidden until Directory/export source is verified',
             'excluded_sources': [

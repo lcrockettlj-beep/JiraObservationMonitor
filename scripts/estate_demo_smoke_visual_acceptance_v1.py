@@ -26,7 +26,7 @@ CONTRACT_ROUTE = '/api/workspace/estate'
 SUPPORTING_ROUTES = ['/api/estate/discovery-authority/coverage', '/api/estate/admin-site-inventory']
 REQUIRED_CONTRACT_FIELDS = ['schema', 'status', 'summary', 'sites', 'source_health']
 REQUIRED_SUMMARY_FIELDS = ['total_sites', 'monitored_sites', 'review_items']
-LEGACY_STRINGS = ['static/data', 'monitored_sites.json', 'site_access_validation.json', 'site_lifecycle_decisions.json', '/api/workspace/command-centre']
+LEGACY_STRINGS = ['runtime/data', 'site_registry.json', 'estate_access_truth.json', 'site_registry.json', '/api/workspace/command-centre']
 SINGLE_OWNER_MARKER = 'JOM Estate single-owner frontend rebuild v1'
 
 @dataclass

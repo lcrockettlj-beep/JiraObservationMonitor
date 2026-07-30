@@ -8,7 +8,7 @@ TRUTH_V2_PATH = ROOT / "runtime" / "data" / "live_named_access_contract"
 RECON_V2_PATH = ROOT / "reports" / "named_access_reconciliation_v2.json"
 RECON_V1_PATH = ROOT / "reports" / "named_access_reconciliation.json"
 NAMED_DIRECT_PATH = ROOT / "runtime" / "data" / "live_named_access_contract"
-ADMIN_ENRICHED_PATH = ROOT / "latest_run_admin_enriched.json"
+ADMIN_ENRICHED_PATH = ROOT / "admin_truth_v2.json"
 
 
 def now_utc():

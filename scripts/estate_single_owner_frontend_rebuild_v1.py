@@ -23,13 +23,13 @@ ESTATE_JS = Path('static/js/jom_estate_lifecycle_v1.js')
 ESTATE_TEMPLATE = Path('templates/estate.html')
 WEB = Path('app/web.py')
 CONTRACT_ROUTE = '/api/workspace/estate'
-LEGACY_STRINGS = ['static/data', 'monitored_sites.json', 'site_access_validation.json', 'site_lifecycle_decisions.json', '/api/workspace/command-centre']
+LEGACY_STRINGS = ['runtime/data', 'site_registry.json', 'estate_access_truth.json', 'site_registry.json', '/api/workspace/command-centre']
 REQUIRED_FIELDS = ['schema', 'status', 'summary', 'sites', 'source_health']
 
 JS_CONTENT = r'''/* JOM Estate single-owner frontend rebuild v1
  * Owner: static/js/jom_estate_lifecycle_v1.js
  * Contract: /api/workspace/estate
- * Rules: no static/data, no legacy JSON, no Command Centre contract dependency.
+ * Rules: no runtime/data, no legacy JSON, no Command Centre contract dependency.
  */
 (function () {
   'use strict';

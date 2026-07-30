@@ -18,8 +18,8 @@ TEXT_EXTS = {".py", ".ps1", ".cmd", ".html", ".css", ".js", ".json", ".md", ".tx
 CODE_EXTS = {".py", ".js", ".css", ".html", ".ps1", ".cmd"}
 RUNTIME_DATA = {
     "latest_run.json",
-    "latest_run_admin_enriched.json",
-    "latest_run_admin_enriched_pretty.json",
+    "admin_truth_v2.json",
+    "admin_truth_v2.json",
     "latest_run_pretty.json",
     "latest_run_safe_partial.json",
     "latest_snapshot.json",

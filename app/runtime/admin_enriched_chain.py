@@ -133,7 +133,7 @@ def main() -> Dict[str, Any]:
         "schema": "jom-admin-enriched-refresh-status-v2",
         "generated_at_utc": now(),
         "overall_status": overall,
-        "latest_run_admin_enriched": freshness(ROOT / "latest_run_admin_enriched.json"),
+        "latest_run_admin_enriched": freshness(ROOT / "admin_truth_v2.json"),
         "steps": steps,
     }
     STATUS.parent.mkdir(parents=True, exist_ok=True)

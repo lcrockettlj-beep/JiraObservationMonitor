@@ -6,8 +6,8 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "admin_enriched_refresh_status.json"
-ADMIN_ENRICHED = PROJECT_ROOT / "latest_run_admin_enriched.json"
-ADMIN_ENRICHED_PRETTY = PROJECT_ROOT / "latest_run_admin_enriched_pretty.json"
+ADMIN_ENRICHED = PROJECT_ROOT / "admin_truth_v2.json"
+ADMIN_ENRICHED_PRETTY = PROJECT_ROOT / "admin_truth_v2.json"
 LATEST_RUN = PROJECT_ROOT / "latest_run.json"
 
 # Candidate scripts are intentionally conservative. The pack will not invent admin-enriched data.
@@ -134,7 +134,7 @@ def main():
             "returncode": None,
             "stdout_tail": "",
             "stderr_tail": "",
-            "note": "No known admin-enrichment builder script found. The pack will not fake latest_run_admin_enriched.json."
+            "note": "No known admin-enrichment builder script found. The pack will not fake admin_truth_v2.json."
         })
 
     for step in REBUILD_STEPS:
@@ -163,7 +163,7 @@ def main():
         "before": before,
         "after": after,
         "steps": steps,
-        "manual_next_action": None if overall == 'ok' else "Locate or build the admin enrichment collector that refreshes latest_run_admin_enriched.json from current admin/runtime data."
+        "manual_next_action": None if overall == 'ok' else "Locate or build the admin enrichment collector that refreshes admin_truth_v2.json from current admin/runtime data."
     }
     STATUS_PATH.parent.mkdir(parents=True, exist_ok=True)
     STATUS_PATH.write_text(json.dumps(payload, indent=2), encoding='utf-8')

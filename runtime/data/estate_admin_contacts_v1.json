@@ -1,0 +1,8 @@
+{
+  "schema": "jom-estate-admin-contacts-v1",
+  "generated_at_utc": "2026-07-30T07:43:43.412754+00:00",
+  "status": "unavailable",
+  "contacts": [],
+  "reason": "No verified live admin contact source configured",
+  "fabricated_contacts": false
+}

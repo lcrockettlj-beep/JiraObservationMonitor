@@ -791,7 +791,7 @@ def _jom_estate_runtime_site_registry_contract_v1():
 
 
 def _jom_estate_runtime_access_validation_contract_v1():
-    """Return runtime access validation view derived from live estate contracts, not site_access_validation.json."""
+    """Return runtime access validation view derived from live estate contracts, not estate_access_truth.json."""
     registry = _jom_estate_runtime_site_registry_contract_v1()
     validations = {}
     for site in registry.get("sites", []):
@@ -2549,7 +2549,7 @@ def api_runtime_data_path_status():
     files = [
         "admin_enriched_refresh_status.json", "admin_truth_v2.json",
         "backend_final_truth_chain_status.json", "backend_legacy_truth_eradication_status.json",
-        "billing_seats.json", "estate_access_truth.json",
+        "estate_access_truth.json", "estate_access_truth.json",
         "estate_admin_site_inventory_v1.json", "estate_product_access.json",
         "runtime_execution_history.json",
         "runtime_execution_status.json",

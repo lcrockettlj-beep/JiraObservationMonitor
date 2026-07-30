@@ -7,7 +7,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "runtime_refresh_status.json"
 LATEST_RUN_PATH = PROJECT_ROOT / "latest_run.json"
-LATEST_ADMIN_ENRICHED_PATH = PROJECT_ROOT / "latest_run_admin_enriched.json"
+LATEST_ADMIN_ENRICHED_PATH = PROJECT_ROOT / "admin_truth_v2.json"
 FRESHNESS_PATH = PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json"
 
 CURRENT_HOURS = 24

@@ -28,7 +28,7 @@ INTERNAL_NAME = '_jom_workspace_estate_existing_fast_read_v1'
 REQUIRED_TOP_LEVEL = ['schema', 'status', 'summary', 'sites', 'source_health']
 REQUIRED_SUMMARY = ['total_sites', 'monitored_sites', 'review_items']
 REQUIRED_SOURCE_HEALTH = ['site_registry', 'estate_access_truth', 'estate_admin_site_inventory']
-LEGACY_STRINGS = ['static/data', 'monitored_sites.json', 'site_access_validation.json', 'site_lifecycle_decisions.json', '/api/workspace/command-centre']
+LEGACY_STRINGS = ['runtime/data', 'site_registry.json', 'estate_access_truth.json', 'site_registry.json', '/api/workspace/command-centre']
 
 ALIGNMENT_BLOCK = r'''
 

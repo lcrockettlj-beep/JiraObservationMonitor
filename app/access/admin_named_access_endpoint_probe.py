@@ -57,7 +57,7 @@ def drill_rows(payload:Dict[str,Any],key:str)->List[Dict[str,Any]]:
     return [r for r in rows if isinstance(r,dict)] if isinstance(rows,list) else []
 
 def human_users(root:Path, limit:int)->List[Dict[str,Any]]:
-    for n in ['latest_run_admin_enriched_pretty.json','latest_run_admin_enriched.json','latest_run_pretty.json','latest_run.json']:
+    for n in ['admin_truth_v2.json','admin_truth_v2.json','latest_run_pretty.json','latest_run.json']:
         payload=read_json(root/n)
         if not payload: continue
         rows=drill_rows(payload,'admin::human_accounts')

@@ -27,7 +27,7 @@ ROUTE_BLOCK = r'''
 
 # JOM estate workspace contract route v1
 def _jom_estate_workspace_read_runtime_contract_v1(filename, default=None):
-    """Read a runtime/data contract by filename only. No static/data and no legacy JSON consumers."""
+    """Read a runtime/data contract by filename only. No runtime/data and no legacy JSON consumers."""
     if default is None:
         default = {}
     try:

@@ -21,7 +21,7 @@ REPORT_JSON = Path('reports/estate_runtime_consumer_replacement_v1.json')
 BACKUP_DIR = Path('reports/estate_runtime_consumer_replacement_v1_backups')
 
 TARGETS = [Path('app/web.py'), Path('scripts/build_site_registry.py')]
-LEGACY_FILES = ['monitored_sites.json', 'site_access_validation.json', 'site_lifecycle_decisions.json']
+LEGACY_FILES = ['site_registry.json', 'estate_access_truth.json', 'site_registry.json']
 AUTHORITY_ROUTE = '/api/estate/discovery-authority/coverage'
 SMOKE_ROUTES = [AUTHORITY_ROUTE, '/api/estate/admin-site-inventory', '/api/site-registry']
 
@@ -42,7 +42,7 @@ def _jom_estate_runtime_site_registry_contract_v1():
 
 
 def _jom_estate_runtime_access_validation_contract_v1():
-    """Return runtime access validation view derived from live estate contracts, not site_access_validation.json."""
+    """Return runtime access validation view derived from live estate contracts, not estate_access_truth.json."""
     registry = _jom_estate_runtime_site_registry_contract_v1()
     validations = {}
     for site in registry.get("sites", []):
@@ -136,25 +136,25 @@ def patch_web(path: Path) -> list[Change]:
         changes.append(Change(path.as_posix(), 'added runtime estate contract helper block', c))
 
     replacements = [
-        ('SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_lifecycle_decisions.json"', 'SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy lifecycle file retired'),
-        ('payload = load_json("site_lifecycle_decisions.json", {})', 'payload = _jom_estate_runtime_lifecycle_contract_v1()'),
-        ('payload = load_json("site_lifecycle_decisions.json", {"decisions": {}, "history": []})', 'payload = _jom_estate_runtime_lifecycle_contract_v1()'),
-        ('monitored_payload = load_json("monitored_sites.json", {})', 'monitored_payload = _jom_estate_runtime_site_registry_contract_v1()'),
-        ('write_json(DATA_PATH / "monitored_sites.json", monitored_payload)', '_jom_estate_runtime_noop_write_v1("monitored_sites", monitored_payload)'),
-        ('validation_payload = load_json("site_access_validation.json", {})', 'validation_payload = _jom_estate_runtime_access_validation_contract_v1()'),
-        ('write_json(DATA_PATH / "site_access_validation.json", validation_payload)', '_jom_estate_runtime_noop_write_v1("site_access_validation", validation_payload)'),
-        ('SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_access_validation.json"', 'SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy validation file retired'),
-        ('payload = load_json("site_access_validation.json", {})', 'payload = _jom_estate_runtime_access_validation_contract_v1()'),
-        ('validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else load_json("site_access_validation.json", {"validations": {}, "history": []})', 'validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else _jom_estate_runtime_access_validation_contract_v1()'),
-        ('decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else load_json("site_lifecycle_decisions.json", {"decisions": {}, "history": []})', 'decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else _jom_estate_runtime_lifecycle_contract_v1()'),
-        ('write_json(DATA_PATH / "site_lifecycle_decisions.json", decisions)', '_jom_estate_runtime_noop_write_v1("site_lifecycle_decisions", decisions)'),
-        ('lifecycle_decisions = _jom_cached_read_json_v1("site_lifecycle_decisions.json", {"decisions": {}, "history": []})', 'lifecycle_decisions = _jom_estate_runtime_lifecycle_contract_v1()'),
-        ('payload = _jom_credential_gate_read_json(_jom_credential_gate_data_path("site_access_validation.json"), {"validations": {}, "history": []})', 'payload = _jom_estate_runtime_access_validation_contract_v1()'),
-        ('current_path = _jom_credential_gate_data_path("site_access_validation.json")', 'current_path = DATA_PATH / "site_registry.json"'),
-        ('path = _jom_credential_gate_data_path("site_access_validation.json") if "_jom_credential_gate_data_path" in globals() else DATA_PATH / "site_access_validation.json"', 'path = DATA_PATH / "site_registry.json"'),
-        ('"monitored_sites.json", "runtime_execution_history.json",', '"runtime_execution_history.json",'),
-        ('"runtime_execution_status.json", "site_access_validation.json",', '"runtime_execution_status.json",'),
-        ('"site_lifecycle_decisions.json", "site_onboarding_review.json",', '"site_onboarding_review.json",'),
+        ('SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_registry.json"', 'SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy lifecycle file retired'),
+        ('payload = load_json("site_registry.json", {})', 'payload = _jom_estate_runtime_lifecycle_contract_v1()'),
+        ('payload = load_json("site_registry.json", {"decisions": {}, "history": []})', 'payload = _jom_estate_runtime_lifecycle_contract_v1()'),
+        ('monitored_payload = load_json("site_registry.json", {})', 'monitored_payload = _jom_estate_runtime_site_registry_contract_v1()'),
+        ('write_json(DATA_PATH / "site_registry.json", monitored_payload)', '_jom_estate_runtime_noop_write_v1("monitored_sites", monitored_payload)'),
+        ('validation_payload = load_json("estate_access_truth.json", {})', 'validation_payload = _jom_estate_runtime_access_validation_contract_v1()'),
+        ('write_json(DATA_PATH / "estate_access_truth.json", validation_payload)', '_jom_estate_runtime_noop_write_v1("site_access_validation", validation_payload)'),
+        ('SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "estate_access_truth.json"', 'SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy validation file retired'),
+        ('payload = load_json("estate_access_truth.json", {})', 'payload = _jom_estate_runtime_access_validation_contract_v1()'),
+        ('validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else load_json("estate_access_truth.json", {"validations": {}, "history": []})', 'validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else _jom_estate_runtime_access_validation_contract_v1()'),
+        ('decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else load_json("site_registry.json", {"decisions": {}, "history": []})', 'decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else _jom_estate_runtime_lifecycle_contract_v1()'),
+        ('write_json(DATA_PATH / "site_registry.json", decisions)', '_jom_estate_runtime_noop_write_v1("site_lifecycle_decisions", decisions)'),
+        ('lifecycle_decisions = _jom_cached_read_json_v1("site_registry.json", {"decisions": {}, "history": []})', 'lifecycle_decisions = _jom_estate_runtime_lifecycle_contract_v1()'),
+        ('payload = _jom_credential_gate_read_json(_jom_credential_gate_data_path("estate_access_truth.json"), {"validations": {}, "history": []})', 'payload = _jom_estate_runtime_access_validation_contract_v1()'),
+        ('current_path = _jom_credential_gate_data_path("estate_access_truth.json")', 'current_path = DATA_PATH / "site_registry.json"'),
+        ('path = _jom_credential_gate_data_path("estate_access_truth.json") if "_jom_credential_gate_data_path" in globals() else DATA_PATH / "estate_access_truth.json"', 'path = DATA_PATH / "site_registry.json"'),
+        ('"site_registry.json", "runtime_execution_history.json",', '"runtime_execution_history.json",'),
+        ('"runtime_execution_status.json", "estate_access_truth.json",', '"runtime_execution_status.json",'),
+        ('"site_registry.json", "site_onboarding_review.json",', '"site_onboarding_review.json",'),
     ]
 
     for old, new in replacements:
@@ -175,9 +175,9 @@ def patch_build_site_registry(path: Path) -> list[Change]:
     changes: list[Change] = []
 
     replacements = [
-        ('monitored = read_json(data / "monitored_sites.json", {})', 'registry_contract = read_json(data / "site_registry.json", {})\n    monitored = {"sites": registry_contract.get("sites", []), "summary": registry_contract.get("summary", {}), "source": "runtime/data/site_registry.json"}'),
-        ('decisions = read_json(data / "site_lifecycle_decisions.json", {})', 'decisions = {"decisions": {}, "history": [], "source": "runtime/data/site_registry.json"}'),
-        ('access_validation = read_json(data / "site_access_validation.json", {})', 'access_validation = {"validations": {}, "history": [], "source": "runtime/data/site_registry.json"}'),
+        ('monitored = read_json(data / "site_registry.json", {})', 'registry_contract = read_json(data / "site_registry.json", {})\n    monitored = {"sites": registry_contract.get("sites", []), "summary": registry_contract.get("summary", {}), "source": "runtime/data/site_registry.json"}'),
+        ('decisions = read_json(data / "site_registry.json", {})', 'decisions = {"decisions": {}, "history": [], "source": "runtime/data/site_registry.json"}'),
+        ('access_validation = read_json(data / "estate_access_truth.json", {})', 'access_validation = {"validations": {}, "history": [], "source": "runtime/data/site_registry.json"}'),
     ]
     for old, new in replacements:
         text, c = replace_count(text, old, new)

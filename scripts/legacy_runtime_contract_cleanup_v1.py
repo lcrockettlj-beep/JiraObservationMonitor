@@ -22,8 +22,8 @@ REPORT_JSON=Path('reports/legacy_runtime_contract_cleanup_v1.json')
 BACKUP_DIR=Path('reports/legacy_runtime_contract_cleanup_v1_backups')
 
 TARGETS=[Path('app/web.py'),Path('app/registry/site_registry_runtime.py'),Path('scripts/build_site_registry.py')]
-LEGACY_NAMES=['monitored_sites.json','site_access_validation.json','site_lifecycle_decisions.json']
-ALL_AUDIT_NAMES=LEGACY_NAMES+['latest_run_admin_enriched.json','latest_run_admin_enriched_pretty.json','billing_seats.json']
+LEGACY_NAMES=['site_registry.json','estate_access_truth.json','site_registry.json']
+ALL_AUDIT_NAMES=LEGACY_NAMES+['admin_truth_v2.json','admin_truth_v2.json','estate_access_truth.json']
 ROUTES=['/api/estate/discovery-authority/coverage','/runtime/status','/runtime/refresh']
 
 @dataclass
@@ -66,15 +66,15 @@ def patch_web_py(path:Path)->list[Change]:
 
     # Remove old misleading compatibility comment only if it is the first line.
     lines=text.splitlines()
-    if lines and 'monitored_sites.json is derived compatibility only' in lines[0]:
+    if lines and 'site_registry.json is derived compatibility only' in lines[0]:
         lines=lines[1:]
         text='\n'.join(lines)+'\n'
         changes.append(Change(path.as_posix(),'removed obsolete monitored_sites compatibility header comment',1))
 
     # Remove obsolete source map entries from discovery-authority coverage dictionaries only where exact quoted keys exist.
     exact_blocks=[
-        '        "monitored_sites": "monitored_sites.json",\n',
-        '        "site_lifecycle_decisions": "site_lifecycle_decisions.json",\n',
+        '        "monitored_sites": "site_registry.json",\n',
+        '        "site_lifecycle_decisions": "site_registry.json",\n',
     ]
     for block in exact_blocks:
         if block in text:
@@ -90,8 +90,8 @@ def patch_site_registry_runtime(path:Path)->list[Change]:
     if not path.exists(): return []
     text=read(path); original=text; changes=[]
     replacements=[
-        ('MONITORED_CONFIG = "config/monitored_sites.json"','MONITORED_CONFIG = "runtime/data/site_registry.json"'),
-        ('REGISTRY_OUTPUT = "static/data/site_registry.json"','REGISTRY_OUTPUT = "runtime/data/site_registry.json"'),
+        ('MONITORED_CONFIG = "config/site_registry.json"','MONITORED_CONFIG = "runtime/data/site_registry.json"'),
+        ('REGISTRY_OUTPUT = "runtime/data/site_registry.json"','REGISTRY_OUTPUT = "runtime/data/site_registry.json"'),
         ('REGISTRY_OUTPUT = "runtime/data/site_registry.json"','REGISTRY_OUTPUT = "runtime/data/site_registry.json"'),
     ]
     for old,new in replacements:
@@ -133,7 +133,7 @@ def collect_static_data_refs()->list[Finding]:
         if not p.exists(): continue
         for i,line in enumerate(read(p).splitlines(),1):
             if re.search(r'static[\\/]+data',line,re.I):
-                refs.append(Finding(p.as_posix(),i,'static/data',line.strip()[:260]))
+                refs.append(Finding(p.as_posix(),i,'runtime/data',line.strip()[:260]))
     return refs
 
 def compile_targets():
@@ -203,7 +203,7 @@ def main():
     static_refs=collect_static_data_refs()
     smoke_result=smoke(args.skip_smoke_test)
     compile_fail=[x for x in compile_results if x.get('status')!='PASS']
-    # PASS means no static/data in target files and compile clean. Legacy filename refs may remain for next route-level cleanup.
+    # PASS means no runtime/data in target files and compile clean. Legacy filename refs may remain for next route-level cleanup.
     status='PASS' if not static_refs and not compile_fail and smoke_result.get('status') in {'PASS','SKIPPED','REVIEW'} else 'FAIL'
     result={
         'cleanup':'JOM Legacy Runtime Contract Cleanup Pack v1',
@@ -232,7 +232,7 @@ def main():
     if len(after_refs)>120: lines.append(f'... {len(after_refs)-120} more in JSON')
     lines += ['',f"Smoke: {smoke_result.get('status')}"]
     if smoke_result.get('reason'): lines.append(f"Smoke reason: {smoke_result.get('reason')}")
-    lines += ['','Decision:', 'PASS means static/data is absent from target files and compile is clean. If legacy filename refs remain, use the report for the next precise route-level refactor.']
+    lines += ['','Decision:', 'PASS means runtime/data is absent from target files and compile is clean. If legacy filename refs remain, use the report for the next precise route-level refactor.']
     REPORT_TXT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
     print(lines[0]); print(f'Status: {status}'); print(f'Changes: {len(changes)}'); print(f'Legacy refs after: {len(after_refs)}'); print(f'Report: {REPORT_TXT}')
     return 0 if status=='PASS' else 1

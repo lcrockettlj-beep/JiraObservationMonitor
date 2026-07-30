@@ -1,0 +1,89 @@
+{
+  "schema": "jom-estate-discovery-authority-v1",
+  "generated_at_utc": "2026-07-30T07:43:38.442429+00:00",
+  "summary": {
+    "total_sites": 9,
+    "monitored_sites": 0,
+    "discovered_sites": 9
+  },
+  "sites": [
+    {
+      "key": "gaminglabs-team-h2pbpmis",
+      "name": "gaminglabs-team-h2pbpmis",
+      "url": null,
+      "status": "error",
+      "is_monitored": false,
+      "source": "site_registry"
+    },
+    {
+      "key": "gaminglabs-team-tsyfo716",
+      "name": "gaminglabs-team-tsyfo716",
+      "url": null,
+      "status": "error",
+      "is_monitored": false,
+      "source": "site_registry"
+    },
+    {
+      "key": "gli-delivery-tm",
+      "name": "gli-delivery-tm",
+      "url": null,
+      "status": "ok",
+      "is_monitored": false,
+      "source": "site_registry"
+    },
+    {
+      "key": "gli-global-technology",
+      "name": "gli-global-technology",
+      "url": null,
+      "status": "ok",
+      "is_monitored": false,
+      "source": "site_registry"
+    },
+    {
+      "key": "gli-it-project",
+      "name": "gli-it-project",
+      "url": null,
+      "status": "ok",
+      "is_monitored": false,
+      "source": "site_registry"
+    },
+    {
+      "key": "gli-tracker",
+      "name": "gli-tracker",
+      "url": null,
+      "status": "ok",
+      "is_monitored": false,
+      "source": "site_registry"
+    },
+    {
+      "key": "gli-usa",
+      "name": "gli-usa",
+      "url": null,
+      "status": "ok",
+      "is_monitored": false,
+      "source": "site_registry"
+    },
+    {
+      "key": "baljeet-singh",
+      "name": "baljeet-singh",
+      "url": "https://baljeet-singh.atlassian.net",
+      "status": "discovered",
+      "is_monitored": false,
+      "source": "estate_admin_site_inventory"
+    },
+    {
+      "key": "gli-testing",
+      "name": "gli-testing",
+      "url": "https://gli-testing.atlassian.net",
+      "status": "discovered",
+      "is_monitored": false,
+      "source": "estate_admin_site_inventory"
+    }
+  ],
+  "source_health": {
+    "site_registry": true,
+    "estate_admin_site_inventory": true,
+    "estate_access_truth": true
+  },
+  "source": "runtime contracts only"
+}
