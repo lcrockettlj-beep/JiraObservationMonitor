@@ -1863,8 +1863,139 @@ def api_workspace_command_centre_cached_v1():
     return jsonify(_jom_workspace_command_centre_cached_contract_v1())
 
 
+# JOM estate workspace contract alignment v1
+def _jom_estate_workspace_alignment_read_contract_v1(filename, default=None):
+    if default is None:
+        default = {}
+    try:
+        if "_jom_cached_read_json_v1" in globals():
+            payload = _jom_cached_read_json_v1(filename, default)
+        else:
+            payload = load_json(filename, default)
+    except Exception:
+        payload = default
+    return payload if payload is not None else default
+
+
+def _jom_estate_workspace_alignment_source_health_v1(label, payload):
+    if isinstance(payload, dict):
+        keys = sorted(list(payload.keys()))[:30]
+        count_hint = None
+        for key in ("sites", "items", "records", "validations", "decisions"):
+            value = payload.get(key)
+            if isinstance(value, (list, dict)):
+                count_hint = len(value)
+                break
+        return {"label": label, "available": True, "type": "dict", "keys": keys, "count_hint": count_hint}
+    if isinstance(payload, list):
+        return {"label": label, "available": True, "type": "list", "count_hint": len(payload)}
+    return {"label": label, "available": bool(payload), "type": type(payload).__name__}
+
+
+def _jom_estate_workspace_alignment_normalise_sites_v1(site_registry, admin_inventory, existing_sites=None):
+    if isinstance(existing_sites, list) and existing_sites:
+        return existing_sites
+    registry_sites = site_registry.get("sites", []) if isinstance(site_registry, dict) else []
+    inventory_sites = admin_inventory.get("sites", []) if isinstance(admin_inventory, dict) else []
+    inventory_by_key = {}
+    for item in inventory_sites if isinstance(inventory_sites, list) else []:
+        if not isinstance(item, dict):
+            continue
+        key = item.get("key") or item.get("site_key") or item.get("cloud_id") or item.get("url") or item.get("name")
+        if key:
+            inventory_by_key[str(key)] = item
+    sites = []
+    for site in registry_sites if isinstance(registry_sites, list) else []:
+        if not isinstance(site, dict):
+            continue
+        key = site.get("key") or site.get("site_key") or site.get("cloud_id") or site.get("url") or site.get("name")
+        inv = inventory_by_key.get(str(key), {}) if key else {}
+        sites.append({
+            "key": key,
+            "name": site.get("name") or inv.get("name") or key,
+            "url": site.get("url") or inv.get("url"),
+            "status": site.get("status") or inv.get("status") or "runtime_registry",
+            "is_monitored": bool(site.get("is_monitored") or inv.get("is_monitored")),
+            "source": "runtime_contract",
+            "registry": site,
+            "inventory": inv,
+        })
+    return sites
+
+
+def _jom_estate_workspace_alignment_summary_v1(site_registry, admin_inventory, sites, existing_summary=None):
+    summary = dict(existing_summary) if isinstance(existing_summary, dict) else {}
+    registry_summary = site_registry.get("summary", {}) if isinstance(site_registry, dict) else {}
+    inventory_summary = admin_inventory.get("summary", {}) if isinstance(admin_inventory, dict) else {}
+    total_sites = summary.get("total_sites") or registry_summary.get("total_sites") or registry_summary.get("site_count") or inventory_summary.get("total_sites") or inventory_summary.get("site_count") or len(sites)
+    monitored_sites = summary.get("monitored_sites") or registry_summary.get("monitored_sites") or registry_summary.get("monitored_count") or inventory_summary.get("monitored_sites")
+    if monitored_sites is None:
+        monitored_sites = sum(1 for site in sites if isinstance(site, dict) and site.get("is_monitored"))
+    review_items = summary.get("review_items") or registry_summary.get("review_items") or inventory_summary.get("review_items") or 0
+    coverage_percent = summary.get("coverage_percent")
+    if coverage_percent is None and total_sites:
+        try:
+            coverage_percent = round((float(monitored_sites or 0) / float(total_sites)) * 100)
+        except Exception:
+            coverage_percent = None
+    return {
+        "total_sites": total_sites or 0,
+        "monitored_sites": monitored_sites or 0,
+        "review_items": review_items or 0,
+        "coverage_percent": coverage_percent,
+    }
+
+
+def _jom_estate_workspace_alignment_get_existing_payload_v1():
+    try:
+        response = _jom_workspace_estate_existing_fast_read_v1()
+        if hasattr(response, "get_json"):
+            return response.get_json(silent=True) or {}
+        if isinstance(response, dict):
+            return response
+    except Exception:
+        pass
+    return {}
+
+
+def _jom_estate_workspace_alignment_payload_v1():
+    existing = _jom_estate_workspace_alignment_get_existing_payload_v1()
+    if not isinstance(existing, dict):
+        existing = {}
+    site_registry = _jom_estate_workspace_alignment_read_contract_v1("site_registry.json", {})
+    access_truth = _jom_estate_workspace_alignment_read_contract_v1("estate_access_truth.json", {})
+    admin_inventory = _jom_estate_workspace_alignment_read_contract_v1("estate_admin_site_inventory_v1.json", {})
+    sites = _jom_estate_workspace_alignment_normalise_sites_v1(site_registry, admin_inventory, existing.get("sites"))
+    summary = _jom_estate_workspace_alignment_summary_v1(site_registry, admin_inventory, sites, existing.get("summary"))
+    source_health = existing.get("source_health") if isinstance(existing.get("source_health"), dict) else {}
+    source_health.update({
+        "site_registry": _jom_estate_workspace_alignment_source_health_v1("site_registry", site_registry),
+        "estate_access_truth": _jom_estate_workspace_alignment_source_health_v1("estate_access_truth", access_truth),
+        "estate_admin_site_inventory": _jom_estate_workspace_alignment_source_health_v1("estate_admin_site_inventory", admin_inventory),
+    })
+    payload = dict(existing)
+    payload.update({
+        "schema": "jom-estate-workspace-contract-v1",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "status": existing.get("status") or ("ok" if site_registry and admin_inventory else "attention"),
+        "summary": summary,
+        "sites": sites,
+        "source_health": source_health,
+        "inventory": existing.get("inventory") if isinstance(existing.get("inventory"), dict) else admin_inventory,
+        "access_truth": existing.get("access_truth") if isinstance(existing.get("access_truth"), dict) else access_truth,
+        "frontend_owner": {
+            "template": "templates/estate.html",
+            "javascript": "static/js/jom_estate_lifecycle_v1.js",
+            "css": "static/css/jom_estate_lifecycle_v1.css",
+        },
+    })
+    return payload
+
+
 @app.route("/api/workspace/estate")
-def api_workspace_estate_cached_v1():
+def jom_api_workspace_estate_aligned_v1():
+    return jsonify(_jom_estate_workspace_alignment_payload_v1())
+def _jom_workspace_estate_existing_fast_read_v1():
     return jsonify(_jom_workspace_estate_cached_contract_v1())
 # --- JOM WORKSPACE CONTRACT CACHED READ PATH v1 END ---
 
