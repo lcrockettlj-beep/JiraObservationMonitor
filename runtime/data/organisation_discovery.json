@@ -1,34 +1,40 @@
 {
   "schema": "jom-live-organisation-discovery-v1",
-  "served_at_utc": "2026-07-30T21:05:34Z",
+  "served_at_utc": "2026-07-30T21:24:16Z",
   "status": "ok",
   "live_collection": true,
   "authority": "atlassian_admin_organisations_api",
   "source_endpoint": "https://api.atlassian.com/admin/v1/orgs",
-  "token_source": "tokens.json:access_token",
+  "token_source": "environment:ATLASSIAN_ADMIN_API_KEY",
   "token_source_detail": {
-    "source": "tokens.json",
+    "source": "environment",
+    "key": "ATLASSIAN_ADMIN_API_KEY",
     "configured": true,
-    "tokens_json": {
-      "exists": true,
-      "readable": true,
-      "access_token_present": true,
-      "refresh_token_present": true,
-      "expires_at_epoch_present": true,
-      "expired_or_near_expiry": false,
-      "scope_present": true,
-      "scope": "manage:jira-configuration offline_access read:application-role:jira read:jira-user read:jira-work read:license:jira",
-      "value_exposed": false
-    },
-    "refresh": {
-      "attempted": false,
-      "available": false,
-      "value_exposed": false
-    },
     "value_exposed": false
   },
-  "organisation_count": 0,
-  "organisations": [],
+  "organisation_count": 1,
+  "organisations": [
+    {
+      "id": "b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+      "type": "orgs",
+      "name": "Gaminglabs",
+      "attributes": {
+        "name": "Gaminglabs"
+      },
+      "relationships": {
+        "domains": {
+          "related": "https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/domains"
+        },
+        "users": {
+          "related": "https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users"
+        }
+      },
+      "links": {
+        "self": "https://api.atlassian.com/admin/v1/orgs/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05"
+      },
+      "source": "atlassian_admin_orgs_api"
+    }
+  ],
   "pages_seen": 1,
   "last_payload_keys": [
     "data",

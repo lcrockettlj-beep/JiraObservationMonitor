@@ -13,6 +13,7 @@ ORG_API_URL = "https://" + "api.atlassian.com/admin/v1/orgs"
 TOKEN_URL = "https://" + "auth.atlassian.com/oauth/token"
 
 ADMIN_TOKEN_KEYS = (
+    "ATLASSIAN_ADMIN_API_KEY",
     "ATLASSIAN_ADMIN_API_TOKEN",
     "ATLASSIAN_ADMIN_TOKEN",
     "ATLASSIAN_ORG_API_TOKEN",
@@ -355,4 +356,5 @@ def collect_organisation_discovery(max_pages: int = 10) -> Dict[str, Any]:
             "static_fallback_used": False,
             "secrets_exposed": False,
         }
+
 
