@@ -1,0 +1,42 @@
+JOM Estate Single-Owner Frontend Rebuild Closeout Fix v1
+===========================================================
+Generated UTC: 2026-07-30T07:13:55.821861+00:00
+Status: PASS
+
+Summary
+-------
+Backup: reports/estate_single_owner_frontend_rebuild_closeout_fix_v1_backups/20260730_071355/static/js/jom_estate_lifecycle_v1.js
+Changes applied: 1
+Compile: PASS
+Contract smoke: PASS
+Failures: 0
+
+Changes
+-------
+- static/js/jom_estate_lifecycle_v1.js: removed literal static/data validation string from Estate JS owner (1)
+
+Checks
+------
+- static/js/jom_estate_lifecycle_v1.js_exists: PASS - present
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_static/data: PASS - static/data
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_monitored_sites.json: PASS - monitored_sites.json
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_site_access_validation.json: PASS - site_access_validation.json
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_site_lifecycle_decisions.json: PASS - site_lifecycle_decisions.json
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_/api/workspace/command-centre: PASS - /api/workspace/command-centre
+- templates/estate.html_exists: PASS - present
+- templates/estate.html_legacy_absent_static/data: PASS - static/data
+- templates/estate.html_legacy_absent_monitored_sites.json: PASS - monitored_sites.json
+- templates/estate.html_legacy_absent_site_access_validation.json: PASS - site_access_validation.json
+- templates/estate.html_legacy_absent_site_lifecycle_decisions.json: PASS - site_lifecycle_decisions.json
+- templates/estate.html_legacy_absent_/api/workspace/command-centre: PASS - /api/workspace/command-centre
+- estate_js_uses_workspace_estate: PASS - /api/workspace/estate
+- estate_js_single_owner_marker: PASS - single-owner marker
+
+Decision
+--------
+PASS - single-owner frontend rebuild hygiene is clean and ready for demo smoke validation.
+
+Next after PASS
+---------------
+- Commit as: rebuild estate frontend single owner
+- Run Estate demo smoke/visual acceptance pack next.
