@@ -1,0 +1,38 @@
+{
+  "schema": "jom-estate-site-resource-mapping-v1",
+  "generated_at_utc": "2026-07-30T10:25:06Z",
+  "status": "mapped",
+  "safe_to_populate_contacts": true,
+  "fabricated_mappings": false,
+  "mappings": [
+    {
+      "site_key": "gli-delivery-tm",
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "product": "jira-software",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "product": "jira-software",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    },
+    {
+      "site_key": "gli-it-project",
+      "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "product": "confluence",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    },
+    {
+      "site_key": "gli-it-project",
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "product": "jira-software",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    }
+  ],
+  "source": "tenant_info_cloud_id_to_role_assignment_resource_token"
+}

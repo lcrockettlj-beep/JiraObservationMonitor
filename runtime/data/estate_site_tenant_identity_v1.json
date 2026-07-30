@@ -1,0 +1,199 @@
+{
+  "schema": "jom-estate-site-tenant-identity-v1",
+  "generated_at_utc": "2026-07-30T10:25:06Z",
+  "site_count": 9,
+  "probe_count": 9,
+  "tenant_identity_count": 5,
+  "role_resource_token_count": 13,
+  "mapping_count": 4,
+  "safe_to_map": true,
+  "sites": [
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "name": "gaminglabs-team-h2pbpmis",
+      "url": null,
+      "candidate_url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "name": "gaminglabs-team-tsyfo716",
+      "url": null,
+      "candidate_url": "https://gaminglabs-team-tsyfo716.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "name": "gli-delivery-tm",
+      "url": null,
+      "candidate_url": "https://gli-delivery-tm.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "name": "gli-global-technology",
+      "url": null,
+      "candidate_url": "https://gli-global-technology.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-it-project",
+      "name": "gli-it-project",
+      "url": null,
+      "candidate_url": "https://gli-it-project.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-tracker",
+      "name": "gli-tracker",
+      "url": null,
+      "candidate_url": "https://gli-tracker.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-usa",
+      "name": "gli-usa",
+      "url": null,
+      "candidate_url": "https://gli-usa.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "baljeet-singh",
+      "name": "baljeet-singh",
+      "url": "https://baljeet-singh.atlassian.net",
+      "candidate_url": "https://baljeet-singh.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-testing",
+      "name": "gli-testing",
+      "url": "https://gli-testing.atlassian.net",
+      "candidate_url": "https://gli-testing.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    }
+  ],
+  "probes": [
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "url": "https://gaminglabs-team-h2pbpmis.atlassian.net/_edge/tenant_info",
+      "ok": false,
+      "http_status": 404,
+      "cloud_id": null,
+      "raw_keys": [],
+      "error": "{\"errorMessage\": \"Site temporarily unavailable\", \"errorCode\": \"OTHER\"}"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "url": "https://gaminglabs-team-tsyfo716.atlassian.net/_edge/tenant_info",
+      "ok": false,
+      "http_status": 404,
+      "cloud_id": null,
+      "raw_keys": [],
+      "error": "{\"errorMessage\": \"Site temporarily unavailable\", \"errorCode\": \"OTHER\"}"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "url": "https://gli-delivery-tm.atlassian.net/_edge/tenant_info",
+      "ok": true,
+      "http_status": 200,
+      "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "raw_keys": [
+        "cloudId"
+      ],
+      "error": null
+    },
+    {
+      "site_key": "gli-global-technology",
+      "url": "https://gli-global-technology.atlassian.net/_edge/tenant_info",
+      "ok": true,
+      "http_status": 200,
+      "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "raw_keys": [
+        "cloudId"
+      ],
+      "error": null
+    },
+    {
+      "site_key": "gli-it-project",
+      "url": "https://gli-it-project.atlassian.net/_edge/tenant_info",
+      "ok": true,
+      "http_status": 200,
+      "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "raw_keys": [
+        "cloudId"
+      ],
+      "error": null
+    },
+    {
+      "site_key": "gli-tracker",
+      "url": "https://gli-tracker.atlassian.net/_edge/tenant_info",
+      "ok": true,
+      "http_status": 200,
+      "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "raw_keys": [
+        "cloudId"
+      ],
+      "error": null
+    },
+    {
+      "site_key": "gli-usa",
+      "url": "https://gli-usa.atlassian.net/_edge/tenant_info",
+      "ok": true,
+      "http_status": 200,
+      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+      "raw_keys": [
+        "cloudId"
+      ],
+      "error": null
+    },
+    {
+      "site_key": "baljeet-singh",
+      "url": "https://baljeet-singh.atlassian.net/_edge/tenant_info",
+      "ok": false,
+      "http_status": 404,
+      "cloud_id": null,
+      "raw_keys": [],
+      "error": "{\"errorMessage\": \"Site temporarily unavailable\", \"errorCode\": \"OTHER\"}"
+    },
+    {
+      "site_key": "gli-testing",
+      "url": "https://gli-testing.atlassian.net/_edge/tenant_info",
+      "ok": false,
+      "http_status": 404,
+      "cloud_id": null,
+      "raw_keys": [],
+      "error": "{\"errorMessage\": \"Site temporarily unavailable\", \"errorCode\": \"OTHER\"}"
+    }
+  ],
+  "mappings": [
+    {
+      "site_key": "gli-delivery-tm",
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "product": "jira-software",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "product": "jira-software",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    },
+    {
+      "site_key": "gli-it-project",
+      "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "product": "confluence",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    },
+    {
+      "site_key": "gli-it-project",
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "product": "jira-software",
+      "confidence": "high",
+      "reason": "tenant cloud_id matched live role assignment resource token"
+    }
+  ],
+  "fabricated_mappings": false
+}

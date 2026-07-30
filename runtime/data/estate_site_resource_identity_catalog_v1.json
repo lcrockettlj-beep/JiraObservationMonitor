@@ -1,0 +1,2745 @@
+{
+  "schema": "jom-estate-site-resource-identity-catalog-v1",
+  "generated_at_utc": "2026-07-30T10:14:37Z",
+  "site_count": 9,
+  "resource_count": 295,
+  "live_resource_count": 185,
+  "diagnostic_role_resource_count": 110,
+  "match_count": 0,
+  "safe_to_map": false,
+  "sites": [
+    {
+      "site_key": "gaminglabs-team-h2pbpmis",
+      "name": "gaminglabs-team-h2pbpmis",
+      "url": null,
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gaminglabs-team-tsyfo716",
+      "name": "gaminglabs-team-tsyfo716",
+      "url": null,
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "name": "gli-delivery-tm",
+      "url": null,
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "name": "gli-global-technology",
+      "url": null,
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-it-project",
+      "name": "gli-it-project",
+      "url": null,
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-tracker",
+      "name": "gli-tracker",
+      "url": null,
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-usa",
+      "name": "gli-usa",
+      "url": null,
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "baljeet-singh",
+      "name": "baljeet-singh",
+      "url": "https://baljeet-singh.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    },
+    {
+      "site_key": "gli-testing",
+      "name": "gli-testing",
+      "url": "https://gli-testing.atlassian.net",
+      "source_file": "runtime/data/estate_discovery_authority_v1.json"
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/9a583afe-fb2d-4bc0-917d-560cea0f76cc",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "workspaces",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[0]"
+    },
+    {
+      "resource_id": "cbcdf04f-2f4c-44f4-a702-71820a3b59e2",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[0].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "workspaces",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[1]"
+    },
+    {
+      "resource_id": "0a1e8410-ec0a-36b2-a95d-a4665cb75570",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[1].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/bf5d907e-3c69-421d-8389-dd0f54e22633",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "workspaces",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[2]"
+    },
+    {
+      "resource_id": "b4a7c4a8-09f4-35df-af93-f08de5605c1b",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[2].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:confluence::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Confluence",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].links"
+    },
+    {
+      "resource_id": null,
+      "name": "gli-delivery-tm",
+      "url": null,
+      "product": null,
+      "resource_type": "Confluence",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships"
+    },
+    {
+      "resource_id": "18ae6f19-2db7-300d-9550-6c53ebf8cd37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.entitlement[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.entitlement[0].attributes"
+    },
+    {
+      "resource_id": "customDomains",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "policies",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.policy[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.policy[0].links"
+    },
+    {
+      "resource_id": "ai",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "policies",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.policy[1]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.policy[1].links"
+    },
+    {
+      "resource_id": "auditLog",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[1].links"
+    },
+    {
+      "resource_id": "sandbox",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[2]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[2].links"
+    },
+    {
+      "resource_id": "releaseTrack",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[3]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[3].links"
+    },
+    {
+      "resource_id": "allowlisting",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[4]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[4].links"
+    },
+    {
+      "resource_id": "customDomain",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[5]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[5].links"
+    },
+    {
+      "resource_id": "dataResidency",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[6]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[6].links"
+    },
+    {
+      "resource_id": "user-management",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[7]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[3].relationships.feature[7].links"
+    },
+    {
+      "resource_id": "ari:cloud:jira::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "workspaces",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[4]"
+    },
+    {
+      "resource_id": "3992e10a-4843-4c7f-8c83-e06b8df221ee",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[4].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].links"
+    },
+    {
+      "resource_id": null,
+      "name": "gli-delivery-tm",
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships"
+    },
+    {
+      "resource_id": "2e509bfd-9273-3c40-88fc-930a369c2ac5",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.entitlement[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.entitlement[0].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.policy[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.policy[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[0].links"
+    },
+    {
+      "resource_id": "insights",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[1]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[2].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[3].links"
+    },
+    {
+      "resource_id": "externalCollaborator",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[4]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[4].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[5].links"
+    },
+    {
+      "resource_id": "dev-ai",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[6]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[6].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[7].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[8].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[9].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.feature[10].links"
+    },
+    {
+      "resource_id": "8c52bd76-8362-3fa2-a994-457e5ad2d5ea",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "relatesFromEntitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.relatesFromEntitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[5].relationships.relatesFromEntitlement[0].links"
+    },
+    {
+      "resource_id": "ari:cloud:rovo::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Rovo",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[6]"
+    },
+    {
+      "resource_id": "b9b567e1-b0ed-375c-91f9-fc152ac48c92",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[6].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "1612f5f7-c81f-3efd-a216-27f227b67d75",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "relatesFromEntitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[6].relationships.relatesFromEntitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:jira::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "workspaces",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[7]"
+    },
+    {
+      "resource_id": "891464e3-849b-41f2-9785-4d5ba216637c",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[7].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].links"
+    },
+    {
+      "resource_id": null,
+      "name": "gli-global-technology",
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships"
+    },
+    {
+      "resource_id": "2314adab-9be0-3f4d-9850-7502cda9b974",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.entitlement[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.entitlement[0].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.policy[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.policy[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[2].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[3].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[4].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[5].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[6].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[7].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[8].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[9].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.feature[10].links"
+    },
+    {
+      "resource_id": "dce79d99-f2d3-383d-b31b-d48e3ac6da2f",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "relatesFromEntitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.relatesFromEntitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[8].relationships.relatesFromEntitlement[0].links"
+    },
+    {
+      "resource_id": "ari:cloud:rovo::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Rovo",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[9]"
+    },
+    {
+      "resource_id": "ce382f67-3ee9-3e83-95a8-ee49a4f70d09",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[9].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "aec24322-9791-3653-bb53-05b0fd195cc2",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "relatesFromEntitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[9].relationships.relatesFromEntitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Confluence",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].links"
+    },
+    {
+      "resource_id": null,
+      "name": "gli-it-project",
+      "url": null,
+      "product": null,
+      "resource_type": "Confluence",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships"
+    },
+    {
+      "resource_id": "e608640b-c49d-3ea7-b1fa-a20fb406b254",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.entitlement[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.entitlement[0].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.policy[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.policy[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[2].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[3].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[4].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[5].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[6].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[7].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[10].relationships.feature[8].links"
+    },
+    {
+      "resource_id": "ari:cloud:goal::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Goals",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[11]"
+    },
+    {
+      "resource_id": "762e314e-4110-33b1-9e40-96dbfea4ebee",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[11].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:jira::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "workspaces",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[12]"
+    },
+    {
+      "resource_id": "0687dd4a-7d4a-4f72-8df8-7802950a77f5",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[12].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].links"
+    },
+    {
+      "resource_id": null,
+      "name": "gli-it-project",
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships"
+    },
+    {
+      "resource_id": "cec3c3dc-d666-42d4-be16-18199cf20ebe",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.entitlement[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.entitlement[0].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.policy[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.policy[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[2].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[3].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[4].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[5].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[6].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[7].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[8].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[9].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.feature[10].links"
+    },
+    {
+      "resource_id": "95914c68-c78b-3d32-805f-22d0e7abc158",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "relatesFromEntitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.relatesFromEntitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[13].relationships.relatesFromEntitlement[0].links"
+    },
+    {
+      "resource_id": "ari:cloud:project::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Projects",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[14]"
+    },
+    {
+      "resource_id": "408ef9ec-dc89-321a-a1ac-6a83a9f1e3c8",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[14].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:rovo::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Rovo",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[15]"
+    },
+    {
+      "resource_id": "f266d719-42b1-3cfd-ad63-8a00efec0437",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[15].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:townsquare::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Atlas",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[16]"
+    },
+    {
+      "resource_id": "6ac5522f-4d2e-3a5a-b60f-8fdaecdbbe6e",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[16].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:avp::site/5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Analytics",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[17]"
+    },
+    {
+      "resource_id": "49e00c94-b005-3702-a415-08f40035f74e",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[17].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:jira::site/5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "workspaces",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[18]"
+    },
+    {
+      "resource_id": "091b1593-0425-44b1-ac53-38df3feb234c",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[18].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].links"
+    },
+    {
+      "resource_id": null,
+      "name": "gli-tracker",
+      "url": null,
+      "product": null,
+      "resource_type": "Jira Software",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships"
+    },
+    {
+      "resource_id": "2531e481-11e8-34a2-a9f3-01b59533544e",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "entitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.entitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.entitlement[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.entitlement[0].attributes"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.policy[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.policy[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[0].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[2].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[3].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[4].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[5].links"
+    },
+    {
+      "resource_id": "freezeWindows",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "features",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[6]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[6].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[7].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[8].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[9].links"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.feature[10].links"
+    },
+    {
+      "resource_id": "dc3fc45a-c84e-3f6c-8376-b8e02d00d5f7",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "relatesFromEntitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.relatesFromEntitlement[0]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.relatesFromEntitlement[0].links"
+    },
+    {
+      "resource_id": "58342045-88a5-3343-9e42-82576c913609",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": "relatesFromEntitlements",
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.relatesFromEntitlement[1]"
+    },
+    {
+      "resource_id": null,
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "workspaces_v2",
+      "observed_path": "$.data[19].relationships.relatesFromEntitlement[1].links"
+    },
+    {
+      "resource_id": null,
+      "name": "David Ludewig",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[0]"
+    },
+    {
+      "resource_id": null,
+      "name": "Jira Software",
+      "url": "gli-global-technology.atlassian.net",
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[0].product_access[0]"
+    },
+    {
+      "resource_id": null,
+      "name": "John Owen",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[2]"
+    },
+    {
+      "resource_id": null,
+      "name": "Jira Software",
+      "url": "gli-delivery-tm.atlassian.net",
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[2].product_access[0]"
+    },
+    {
+      "resource_id": null,
+      "name": "Atlas",
+      "url": "gli-it-project.atlassian.net",
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[2].product_access[2]"
+    },
+    {
+      "resource_id": null,
+      "name": "Jira Software",
+      "url": "gli-tracker.atlassian.net",
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[2].product_access[6]"
+    },
+    {
+      "resource_id": null,
+      "name": "Daniel Hedigan",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[3]"
+    },
+    {
+      "resource_id": null,
+      "name": "Tim Reigel",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[7]"
+    },
+    {
+      "resource_id": null,
+      "name": "Jira Software",
+      "url": "sliglobal.atlassian.net",
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[7].product_access[4]"
+    },
+    {
+      "resource_id": null,
+      "name": "Robert Nyman",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[12]"
+    },
+    {
+      "resource_id": null,
+      "name": "Kale Bystrom",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[18]"
+    },
+    {
+      "resource_id": null,
+      "name": "Dave Daniels",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[19]"
+    },
+    {
+      "resource_id": null,
+      "name": "Pinal Amin",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[22]"
+    },
+    {
+      "resource_id": null,
+      "name": "David Garcia",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[27]"
+    },
+    {
+      "resource_id": null,
+      "name": "Rick Jones",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[36]"
+    },
+    {
+      "resource_id": null,
+      "name": "Robert Lorick",
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "org_users_v1",
+      "observed_path": "$.data[40]"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/9a583afe-fb2d-4bc0-917d-560cea0f76cc",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/bf5d907e-3c69-421d-8389-dd0f54e22633",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "confluence",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "confluence",
+      "name": null,
+      "url": null,
+      "product": "confluence",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:platform::org/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "platform",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/9a583afe-fb2d-4bc0-917d-560cea0f76cc",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "confluence",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "confluence",
+      "name": null,
+      "url": null,
+      "product": "confluence",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:platform::org/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "platform",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:platform::org/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "platform",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:platform::org/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "platform",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:platform::org/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "platform",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/bf5d907e-3c69-421d-8389-dd0f54e22633",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/9a583afe-fb2d-4bc0-917d-560cea0f76cc",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/9a583afe-fb2d-4bc0-917d-560cea0f76cc",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "jira-software",
+      "name": null,
+      "url": null,
+      "product": "jira-software",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:studio::workspace/b298fe4f-578e-43cf-9783-216405870424",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "studio",
+      "name": null,
+      "url": null,
+      "product": null,
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/9a583afe-fb2d-4bc0-917d-560cea0f76cc",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "ari:cloud:bitbucket::workspace/bf5d907e-3c69-421d-8389-dd0f54e22633",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    },
+    {
+      "resource_id": "bitbucket",
+      "name": null,
+      "url": null,
+      "product": "bitbucket",
+      "resource_type": null,
+      "source": "role_diagnostics",
+      "observed_path": "$.role.resource_tokens"
+    }
+  ],
+  "matches": [],
+  "probes": [
+    {
+      "name": "workspaces_v2",
+      "ok": true,
+      "status": 200,
+      "error": null
+    },
+    {
+      "name": "directories_v2",
+      "ok": true,
+      "status": 200,
+      "error": null
+    },
+    {
+      "name": "org_users_v1",
+      "ok": true,
+      "status": 200,
+      "error": null
+    }
+  ],
+  "secrets_redacted": true
+}
