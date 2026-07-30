@@ -1854,29 +1854,73 @@ def _jom_workspace_command_centre_cached_contract_v1():
     estate_product_access = _jom_cached_read_json_v1("estate_product_access.json", {})
     estate_access_truth = _jom_cached_read_json_v1("estate_access_truth.json", {})
     admin_truth = _jom_cached_read_json_v1("admin_truth_v2.json", {})
+    organisation_discovery = _jom_cached_read_json_v1("organisation_discovery.json", {})
     runtime_status = _jom_cached_read_json_v1("runtime_execution_status.json", {})
     source_state = _jom_cached_source_state_v1()
+
     registry = _jom_cmdc_truth_registry_from_estate_inventory_v1(estate_admin_inventory, registry)
     registry_summary = registry.get("summary") if isinstance(registry, dict) and isinstance(registry.get("summary"), dict) else _jom_cached_registry_summary_v1(registry)
+
     product_summary = estate_product_access.get("summary", {}) if isinstance(estate_product_access, dict) else {}
     product_users = product_summary.get("total_jira_product_user_count")
+
     if product_users is None and isinstance(admin_truth, dict):
         product_users = ((admin_truth.get("live_product_access_truth") or {}).get("summary") or {}).get("total_jira_product_user_count")
+
+    organisation_summary = {
+        "metric": organisation_discovery.get("organisation_count") if isinstance(organisation_discovery, dict) else None,
+        "metric_label": "Live Atlassian organisations",
+        "live_collection": organisation_discovery.get("live_collection") if isinstance(organisation_discovery, dict) else None,
+        "authority": organisation_discovery.get("authority") if isinstance(organisation_discovery, dict) else None,
+        "token_source": organisation_discovery.get("token_source") if isinstance(organisation_discovery, dict) else None,
+        "source": "runtime/data/organisation_discovery.json",
+        "organisations": organisation_discovery.get("organisations", []) if isinstance(organisation_discovery, dict) else [],
+    }
+
     alerts = _jom_build_cached_operator_alerts_v1(admin_truth, registry)
     alerts = _jom_cmdc_truth_append_review_alert_v1(alerts, registry_summary)
+
     data = {
         "registry": registry,
         "registry_summary": registry_summary,
+        "organisations": organisation_summary,
         "users": _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product_users),
-        "users_metric": {"metric": product_users, "metric_label": "Live Jira product-access users", "named_access_detail_guarded": True, "source": "estate_product_access.summary.total_jira_product_user_count"},
+        "users_metric": {
+            "metric": product_users,
+            "metric_label": "Live Jira product-access users",
+            "named_access_detail_guarded": True,
+            "source": "estate_product_access.summary.total_jira_product_user_count",
+        },
         "source_state": source_state,
-        "operator_summary": {"schema": "jom-operator-summary-fast-read-v1", "generated_at_utc": served, "posture": "warning" if alerts else "ok", "runtime": runtime_status, "alert_summary": {"critical": len([a for a in alerts if a.get("level") == "critical"]), "warning": len([a for a in alerts if a.get("level") == "warning"]), "info": len([a for a in alerts if a.get("level") == "info"]), "total": len(alerts)}, "top_alerts": alerts[:5], "admin_truth": {"status": admin_truth.get("status") if isinstance(admin_truth, dict) else None, "severity": admin_truth.get("severity") if isinstance(admin_truth, dict) else None}},
+        "operator_summary": {
+            "schema": "jom-operator-summary-fast-read-v1",
+            "generated_at_utc": served,
+            "posture": "warning" if alerts else "ok",
+            "runtime": runtime_status,
+            "alert_summary": {
+                "critical": len([a for a in alerts if a.get("level") == "critical"]),
+                "warning": len([a for a in alerts if a.get("level") == "warning"]),
+                "info": len([a for a in alerts if a.get("level") == "info"]),
+                "total": len(alerts),
+            },
+            "top_alerts": alerts[:5],
+            "admin_truth": {
+                "status": admin_truth.get("status") if isinstance(admin_truth, dict) else None,
+                "severity": admin_truth.get("severity") if isinstance(admin_truth, dict) else None,
+            },
+        },
         "operator_alerts": {"count": len(alerts), "alerts": alerts},
         "estate_product_access": estate_product_access,
         "estate_access_truth": estate_access_truth,
         "admin_truth": admin_truth,
     }
-    payload = {"schema": "jom-workspace-command-centre-contract-v1-fast-read", "served_at_utc": served, "source_policy": "Fast workspace contract from generated truth outputs. No live collectors run during page load.", "data": data}
+
+    payload = {
+        "schema": "jom-workspace-command-centre-contract-v1-fast-read",
+        "served_at_utc": served,
+        "source_policy": "Fast workspace contract from generated truth outputs. No live collectors run during page load.",
+        "data": data,
+    }
     payload.update(data)
     return payload
 

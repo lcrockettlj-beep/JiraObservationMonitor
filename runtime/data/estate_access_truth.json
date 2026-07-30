@@ -1,6 +1,6 @@
 {
   "source": "Derived from live estate_product_access payload; billing is not used as website truth",
-  "generated_at_utc": "2026-07-30T20:30:02Z",
+  "generated_at_utc": "2026-07-30T21:41:35Z",
   "schema": "jom-estate-access-truth-v2-live",
   "live_collection": true,
   "summary": {
@@ -151,5 +151,5 @@
     "Billing snapshots are not website truth."
   ],
   "live_endpoint": true,
-  "served_at_utc": "2026-07-30T20:30:02.240532Z"
+  "served_at_utc": "2026-07-30T21:41:35.821210Z"
 }
