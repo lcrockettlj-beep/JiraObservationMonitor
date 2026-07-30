@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import os
@@ -355,3 +355,4 @@ def collect_organisation_discovery(max_pages: int = 10) -> Dict[str, Any]:
             "static_fallback_used": False,
             "secrets_exposed": False,
         }
+
