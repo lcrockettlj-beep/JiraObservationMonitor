@@ -1,0 +1,66 @@
+JOM Estate Demo Smoke and Visual Acceptance v1
+================================================
+Generated UTC: 2026-07-30T07:20:28.589466+00:00
+Status: PASS
+Demo decision: READY
+
+Summary
+-------
+Compile: PASS
+Smoke: PASS
+Failures: 0
+Review checks: 0
+Local smoke base: http://127.0.0.1:49681
+
+Smoke routes
+------------
+- /estate: 200 schema=None
+- /api/workspace/estate: 200 schema=jom-estate-workspace-contract-v1
+- /api/estate/discovery-authority/coverage: 200 schema=None
+- /api/estate/admin-site-inventory: 200 schema=None
+
+Checks
+------
+- compile_web: PASS - app/web.py compiles
+- contract_top_level_schema: PASS - present
+- contract_top_level_status: PASS - present
+- contract_top_level_summary: PASS - present
+- contract_top_level_sites: PASS - present
+- contract_top_level_source_health: PASS - present
+- contract_summary_total_sites: PASS - present
+- contract_summary_monitored_sites: PASS - present
+- contract_summary_review_items: PASS - present
+- contract_sites_array: PASS - type=list
+- contract_schema_demo_ready: PASS - jom-estate-workspace-contract-v1
+- estate_template_exists: PASS - templates/estate.html
+- estate_js_owner_exists: PASS - static/js/jom_estate_lifecycle_v1.js
+- estate_js_single_owner_marker: PASS - JOM Estate single-owner frontend rebuild v1
+- estate_js_fetches_workspace_estate: PASS - /api/workspace/estate
+- estate_page_references_estate_js_owner: PASS - jom_estate_lifecycle_v1.js
+- templates/estate.html_legacy_absent_static/data: PASS - static/data
+- templates/estate.html_legacy_absent_monitored_sites.json: PASS - monitored_sites.json
+- templates/estate.html_legacy_absent_site_access_validation.json: PASS - site_access_validation.json
+- templates/estate.html_legacy_absent_site_lifecycle_decisions.json: PASS - site_lifecycle_decisions.json
+- templates/estate.html_legacy_absent_/api/workspace/command-centre: PASS - /api/workspace/command-centre
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_static/data: PASS - static/data
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_monitored_sites.json: PASS - monitored_sites.json
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_site_access_validation.json: PASS - site_access_validation.json
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_site_lifecycle_decisions.json: PASS - site_lifecycle_decisions.json
+- static/js/jom_estate_lifecycle_v1.js_legacy_absent_/api/workspace/command-centre: PASS - /api/workspace/command-centre
+
+Demo talking points
+-------------------
+- Estate is now served by one workspace contract: /api/workspace/estate
+- Estate frontend has one JS owner: static/js/jom_estate_lifecycle_v1.js
+- Contract includes summary, site inventory, source health, and status fields
+- No static or legacy Estate JSON dependencies were detected in Estate template/JS
+
+Decision
+--------
+PASS - Estate is ready for demo smoke review.
+
+Next after PASS
+---------------
+- Commit validation report if required.
+- Open /estate locally and perform human visual acceptance.
+- Continue targeted demo polish only if visual issues remain.

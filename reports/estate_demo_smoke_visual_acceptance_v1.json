@@ -1,0 +1,2799 @@
+{
+  "pack": "JOM Estate Demo Smoke and Visual Acceptance v1",
+  "generated_utc": "2026-07-30T07:20:28.589466+00:00",
+  "status": "PASS",
+  "smoke": {
+    "status": "PASS",
+    "base_url": "http://127.0.0.1:49681",
+    "routes": [
+      {
+        "route": "/estate",
+        "http_status": 200,
+        "schema": null,
+        "keys": [],
+        "body": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Estate - Jira Observation Monitor</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"stylesheet\" href=\"/static/css/jom_atlassian_command.css\">\n  <link rel=\"stylesheet\" href=\"/static/css/jom_visual_consistency_v2.css\">\n  <link rel=\"stylesheet\" href=\"/static/css/jom_estate_lifecycle_v1.css\">\n</head>\n<body data-jom-page=\"estate\">\n<aside class=\"jom-side-nav\" id=\"jom-side-nav\" aria-label=\"JOM primary navigation\">\n  <a href=\"/\" class=\"jom-brand\" aria-label=\"Command Centre home\">\n    <img class=\"jom-brand__logo\" src=\"/static/img/gli.svg\" alt=\"GLI\">\n    <span class=\"jom-brand__text\">\n      <strong>Jira Observation Monitor</strong>\n      <small>Atlassian Command Centre</small>\n    </span>\n  </a>\n\n  <nav class=\"jom-nav-links\" aria-label=\"Primary navigation\">\n    <section class=\"jom-nav-group\" aria-label=\"Operations navigation\">\n      <span class=\"jom-nav-heading\">Operations</span>\n      <a href=\"/\" class=\"jom-nav-link \">Command Centre</a>\n      \n<a href=\"/estate\" class=\"jom-nav-link jom-nav-link--active\">Estate</a>\n<a href=\"/reference\" class=\"jom-nav-link \">Admin</a>\n    </section>\n\n\n    <section class=\"jom-nav-group\" aria-label=\"Reporting navigation\">\n      <span class=\"jom-nav-heading\">Reporting</span>\n      <a href=\"/reports/generated/executive/html\" class=\"jom-nav-link\" target=\"_blank\" rel=\"noopener\">Executive Report</a>\n      <a href=\"/reports/generated/estate/html\" class=\"jom-nav-link\" target=\"_blank\" rel=\"noopener\">Estate Report</a>\n      <a href=\"/reports/generated/admin/html\" class=\"jom-nav-link\" target=\"_blank\" rel=\"noopener\">Governance Report</a>\n    </section>\n\n    <section class=\"jom-nav-group\" aria-label=\"System navigation\">\n      <span class=\"jom-nav-heading\">System</span>\n      <a href=\"/operator/observability\" class=\"jom-nav-link\" target=\"_blank\" rel=\"noopener\">Runtime Status</a>\n      <a href=\"/api/source-state\" class=\"jom-nav-link\" target=\"_blank\" rel=\"noopener\">Source Health</a>\n    </section>\n  </nav>\n\n  <footer class=\"jom-nav-meta\">\n    <span>Environment</span>\n    <strong id=\"jom-env-label\">Local Dev</strong>\n    <small id=\"jom-build-label\">Command Centre v1</small>\n  </footer>\n</aside>\n<button class=\"jom-burger\" type=\"button\" id=\"jom-nav-toggle\" aria-label=\"Toggle navigation\" aria-controls=\"jom-side-nav\" aria-expanded=\"false\" data-jom-nav-toggle>\n  <span></span><span></span><span></span>\n</button>\n<div class=\"jom-nav-backdrop\" id=\"jom-nav-backdrop\" hidden></div>\n\n<main class=\"jom-estate-v2\" id=\"jom-estate\">\n  <div class=\"jom-estate-main\">\n    <section class=\"estate-hero-card\" aria-label=\"Estate overview\">\n      <p class=\"jom-kicker\">Estate / Central Inventory</p>\n      <h1>Estate</h1>\n      <p class=\"estate-lede\">What exists in the Atlassian estate, what state is each site in, and what lifecycle action is needed?</p>\n    </section>\n\n    <section class=\"estate-panel\" id=\"discovered-sites\" aria-label=\"Discovery review queue\">\n      <div class=\"estate-section-heading\">\n        <div>\n          <p class=\"jom-kicker\">Lifecycle Queue</p>\n          <h2>Discovery Review Queue</h2>\n        </div>\n        <span class=\"estate-count-pill\" id=\"estate-review-count\">--</span>\n      </div>\n      <p class=\"estate-muted\">Discovered sites that require review before monitoring decisions are complete.</p>\n      <div class=\"estate-review-list\" id=\"estate-review-list\"><p class=\"estate-empty\">Loading discovered sites...</p></div>\n    </section>\n<section class=\"estate-panel\" id=\"site-registry\" aria-label=\"Site registry\">\n      <div class=\"estate-section-heading estate-registry-heading\">\n        <div>\n          <p class=\"jom-kicker\">Central Inventory</p>\n          <h2>Site Registry</h2>\n          <p class=\"estate-muted estate-registry-purpose\">Central list of estate sites, lifecycle state, monitoring state, health, ownership and next action.</p>\n          <p class=\"estate-muted estate-lifecycle-inline-note\"><strong>Lifecycle:</strong> Discovered -> Review -> Approval Pending -> Validate Access -> Monitoring Enabled -> Monitored. Use Ignored for sites outside current scope.</p>\n        </div>\n        <div class=\"estate-toolbar\">\n          <input id=\"estate-search\" type=\"search\" placeholder=\"Search site or URL\" aria-label=\"Search sites\">\n          <select id=\"estate-filter\" aria-label=\"Filter sites\">\n            <option value=\"all\">All sites</option>\n            <option value=\"monitored\">Monitored</option>\n            <option value=\"discovered\">Discovered</option>\n            <option value=\"pending\">Pending approval</option>\n            <option value=\"ignored\">Ignored</option>\n          </select>\n        </div>\n      </div>\n      <div class=\"estate-table-wrap\">\n        <table class=\"estate-table\" aria-label=\"Estate site registry table\">\n          <thead>\n            <tr>\n              <th>Site</th>\n              <th>Lifecycle</th>\n              <th>Monitoring</th>\n              <th>Health</th>\n              <th>Last Observation</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody id=\"estate-registry-body\"><tr><td colspan=\"6\">Loading estate registry...</td></tr></tbody>\n        </table>\n      </div>\n    </section>\n  </div>\n\n  <aside class=\"jom-estate-rail\" aria-label=\"Estate operations rail\">\n    <div class=\"estate-rail-brand\"><span>Estate Rail</span><strong>Live Inventory Context</strong></div>\n\n    <section class=\"estate-rail-card\" aria-label=\"Estate status\">\n      <h2>Estate Scope</h2>\n      <dl class=\"estate-rail-list\">\n        <div><dt>Total Sites</dt><dd id=\"rail-total-sites\">--</dd></div>\n        <div><dt>Monitored</dt><dd id=\"rail-monitored-sites\">--</dd></div>\n        <div><dt>Discovered</dt><dd id=\"rail-discovered-sites\">--</dd></div>\n      </dl>\n    </section>\n\n    <section class=\"estate-rail-card\" aria-label=\"Lifecycle status\">\n      <h2>Lifecycle Queue</h2>\n      <dl class=\"estate-rail-list\">\n        <div><dt>Review Queue</dt><dd id=\"rail-review-queue\">--</dd></div>\n        <div><dt>Approval Pending</dt><dd id=\"rail-pending-sites\">0</dd></div>\n        <div><dt>Ignored</dt><dd id=\"rail-ignored-sites\">0</dd></div>\n      </dl>\n    </section>\n\n    <section class=\"estate-rail-card\" aria-label=\"Estate sources\">\n      <h2>Estate Sources</h2>\n      <dl class=\"estate-rail-list\">\n        <div><dt>Registry</dt><dd id=\"rail-registry-status\">OK</dd></div>\n        <div><dt>Users</dt><dd id=\"rail-users-count\">--</dd></div>\n        <div><dt>Alerts</dt><dd id=\"rail-alert-count\">--</dd></div>\n      </dl>\n    </section>\n  </aside>\n</main>\n<script src=\"/static/js/jom_estate_lifecycle_v1.js\" defer></script>\n</body>\n</html>",
+        "payload": null
+      },
+      {
+        "route": "/api/workspace/estate",
+        "http_status": 200,
+        "schema": "jom-estate-workspace-contract-v1",
+        "keys": [
+          "access_truth",
+          "data",
+          "estate_access_truth",
+          "estate_product_access",
+          "frontend_owner",
+          "generated_at_utc",
+          "inventory",
+          "lifecycle_decisions",
+          "metrics",
+          "registry",
+          "registry_summary",
+          "schema",
+          "served_at_utc",
+          "sites",
+          "source_health",
+          "source_policy",
+          "source_state",
+          "status",
+          "summary",
+          "users"
+        ],
+        "body": "",
+        "payload": {
+          "access_truth": {
+            "generated_at_utc": "2026-07-30T07:13:13Z",
+            "interpretation": [
+              "API product role user counts are live estate/product access signals.",
+              "Billing snapshots are not website truth."
+            ],
+            "live_collection": true,
+            "live_endpoint": true,
+            "product_summary": {
+              "accessible_jira_resource_count": 5,
+              "error_site_count": 0,
+              "jira_role_rows": 5,
+              "sites_with_jira_roles": 5,
+              "total_jira_product_user_count": 161,
+              "total_jira_remaining_seats": 103999,
+              "total_jira_seat_limit": 104160
+            },
+            "role_product_access": [
+              {
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 3994,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 4000,
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "user_count": 6
+              },
+              {
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 99943,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 100000,
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "user_count": 57
+              },
+              {
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 6,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 10,
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "user_count": 4
+              },
+              {
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 37,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 100,
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "user_count": 63
+              },
+              {
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 19,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 50,
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "user_count": 31
+              }
+            ],
+            "schema": "jom-estate-access-truth-v2-live",
+            "served_at_utc": "2026-07-30T07:13:13.668643Z",
+            "site_product_access": [
+              {
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "jira_product_remaining_seats": 3994,
+                "jira_product_seat_limit": 4000,
+                "jira_product_user_count": 6,
+                "jira_role_count": 1,
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "jira_product_remaining_seats": 99943,
+                "jira_product_seat_limit": 100000,
+                "jira_product_user_count": 57,
+                "jira_role_count": 1,
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "jira_product_remaining_seats": 6,
+                "jira_product_seat_limit": 10,
+                "jira_product_user_count": 4,
+                "jira_role_count": 1,
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "jira_product_remaining_seats": 37,
+                "jira_product_seat_limit": 100,
+                "jira_product_user_count": 63,
+                "jira_role_count": 1,
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "jira_product_remaining_seats": 19,
+                "jira_product_seat_limit": 50,
+                "jira_product_user_count": 31,
+                "jira_role_count": 1,
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "status": "ok"
+              }
+            ],
+            "source": "Derived from live estate_product_access payload; billing is not used as website truth",
+            "summary": {
+              "accessible_jira_resource_count": 5,
+              "api_product_user_count": 161,
+              "sites_with_jira_roles": 5
+            }
+          },
+          "data": {
+            "estate_access_truth": {
+              "generated_at_utc": "2026-07-30T07:13:13Z",
+              "interpretation": [
+                "API product role user counts are live estate/product access signals.",
+                "Billing snapshots are not website truth."
+              ],
+              "live_collection": true,
+              "live_endpoint": true,
+              "product_summary": {
+                "accessible_jira_resource_count": 5,
+                "error_site_count": 0,
+                "jira_role_rows": 5,
+                "sites_with_jira_roles": 5,
+                "total_jira_product_user_count": 161,
+                "total_jira_remaining_seats": 103999,
+                "total_jira_seat_limit": 104160
+              },
+              "role_product_access": [
+                {
+                  "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 3994,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 4000,
+                  "site_key": "gli-tracker",
+                  "site_name": "gli-tracker",
+                  "site_url": "https://gli-tracker.atlassian.net",
+                  "user_count": 6
+                },
+                {
+                  "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 99943,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 100000,
+                  "site_key": "gli-global-technology",
+                  "site_name": "gli-global-technology",
+                  "site_url": "https://gli-global-technology.atlassian.net",
+                  "user_count": 57
+                },
+                {
+                  "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 6,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 10,
+                  "site_key": "gli-usa",
+                  "site_name": "gli-usa",
+                  "site_url": "https://gli-usa.atlassian.net",
+                  "user_count": 4
+                },
+                {
+                  "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 37,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 100,
+                  "site_key": "gli-it-project",
+                  "site_name": "gli-it-project",
+                  "site_url": "https://gli-it-project.atlassian.net",
+                  "user_count": 63
+                },
+                {
+                  "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 19,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 50,
+                  "site_key": "gli-delivery-tm",
+                  "site_name": "gli-delivery-tm",
+                  "site_url": "https://gli-delivery-tm.atlassian.net",
+                  "user_count": 31
+                }
+              ],
+              "schema": "jom-estate-access-truth-v2-live",
+              "served_at_utc": "2026-07-30T07:13:13.668643Z",
+              "site_product_access": [
+                {
+                  "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                  "jira_product_remaining_seats": 3994,
+                  "jira_product_seat_limit": 4000,
+                  "jira_product_user_count": 6,
+                  "jira_role_count": 1,
+                  "site_key": "gli-tracker",
+                  "site_name": "gli-tracker",
+                  "site_url": "https://gli-tracker.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                  "jira_product_remaining_seats": 99943,
+                  "jira_product_seat_limit": 100000,
+                  "jira_product_user_count": 57,
+                  "jira_role_count": 1,
+                  "site_key": "gli-global-technology",
+                  "site_name": "gli-global-technology",
+                  "site_url": "https://gli-global-technology.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                  "jira_product_remaining_seats": 6,
+                  "jira_product_seat_limit": 10,
+                  "jira_product_user_count": 4,
+                  "jira_role_count": 1,
+                  "site_key": "gli-usa",
+                  "site_name": "gli-usa",
+                  "site_url": "https://gli-usa.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                  "jira_product_remaining_seats": 37,
+                  "jira_product_seat_limit": 100,
+                  "jira_product_user_count": 63,
+                  "jira_role_count": 1,
+                  "site_key": "gli-it-project",
+                  "site_name": "gli-it-project",
+                  "site_url": "https://gli-it-project.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                  "jira_product_remaining_seats": 19,
+                  "jira_product_seat_limit": 50,
+                  "jira_product_user_count": 31,
+                  "jira_role_count": 1,
+                  "site_key": "gli-delivery-tm",
+                  "site_name": "gli-delivery-tm",
+                  "site_url": "https://gli-delivery-tm.atlassian.net",
+                  "status": "ok"
+                }
+              ],
+              "source": "Derived from live estate_product_access payload; billing is not used as website truth",
+              "summary": {
+                "accessible_jira_resource_count": 5,
+                "api_product_user_count": 161,
+                "sites_with_jira_roles": 5
+              }
+            },
+            "estate_product_access": {
+              "errors": {},
+              "generated_at_utc": "2026-07-30T07:13:13Z",
+              "live_collection": true,
+              "live_endpoint": true,
+              "notes": [
+                "This is live product/application role access truth, not /users/search visibility truth.",
+                "No stale static product-access data was used.",
+                "Where applicationrole payloads do not expose seat limits, fields are left as 0 rather than guessed."
+              ],
+              "roles": [
+                {
+                  "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 3994,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 4000,
+                  "site_key": "gli-tracker",
+                  "site_name": "gli-tracker",
+                  "site_url": "https://gli-tracker.atlassian.net",
+                  "user_count": 6
+                },
+                {
+                  "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 99943,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 100000,
+                  "site_key": "gli-global-technology",
+                  "site_name": "gli-global-technology",
+                  "site_url": "https://gli-global-technology.atlassian.net",
+                  "user_count": 57
+                },
+                {
+                  "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 6,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 10,
+                  "site_key": "gli-usa",
+                  "site_name": "gli-usa",
+                  "site_url": "https://gli-usa.atlassian.net",
+                  "user_count": 4
+                },
+                {
+                  "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 37,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 100,
+                  "site_key": "gli-it-project",
+                  "site_name": "gli-it-project",
+                  "site_url": "https://gli-it-project.atlassian.net",
+                  "user_count": 63
+                },
+                {
+                  "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                  "raw_has_default_groups": true,
+                  "raw_platform": false,
+                  "raw_selected_by_default": false,
+                  "remaining_seats": 19,
+                  "role_key": "jira-software",
+                  "role_name": "Jira Software",
+                  "seat_limit": 50,
+                  "site_key": "gli-delivery-tm",
+                  "site_name": "gli-delivery-tm",
+                  "site_url": "https://gli-delivery-tm.atlassian.net",
+                  "user_count": 31
+                }
+              ],
+              "schema": "jom-estate-product-access-v2-live",
+              "scope": "all accessible Jira resources returned by Atlassian OAuth accessible-resources",
+              "served_at_utc": "2026-07-30T07:13:13.667441Z",
+              "sites": [
+                {
+                  "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                  "jira_product_remaining_seats": 3994,
+                  "jira_product_seat_limit": 4000,
+                  "jira_product_user_count": 6,
+                  "jira_role_count": 1,
+                  "site_key": "gli-tracker",
+                  "site_name": "gli-tracker",
+                  "site_url": "https://gli-tracker.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                  "jira_product_remaining_seats": 99943,
+                  "jira_product_seat_limit": 100000,
+                  "jira_product_user_count": 57,
+                  "jira_role_count": 1,
+                  "site_key": "gli-global-technology",
+                  "site_name": "gli-global-technology",
+                  "site_url": "https://gli-global-technology.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                  "jira_product_remaining_seats": 6,
+                  "jira_product_seat_limit": 10,
+                  "jira_product_user_count": 4,
+                  "jira_role_count": 1,
+                  "site_key": "gli-usa",
+                  "site_name": "gli-usa",
+                  "site_url": "https://gli-usa.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                  "jira_product_remaining_seats": 37,
+                  "jira_product_seat_limit": 100,
+                  "jira_product_user_count": 63,
+                  "jira_role_count": 1,
+                  "site_key": "gli-it-project",
+                  "site_name": "gli-it-project",
+                  "site_url": "https://gli-it-project.atlassian.net",
+                  "status": "ok"
+                },
+                {
+                  "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                  "jira_product_remaining_seats": 19,
+                  "jira_product_seat_limit": 50,
+                  "jira_product_user_count": 31,
+                  "jira_role_count": 1,
+                  "site_key": "gli-delivery-tm",
+                  "site_name": "gli-delivery-tm",
+                  "site_url": "https://gli-delivery-tm.atlassian.net",
+                  "status": "ok"
+                }
+              ],
+              "source": "Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole",
+              "status": "ok",
+              "summary": {
+                "accessible_jira_resource_count": 5,
+                "error_site_count": 0,
+                "jira_role_rows": 5,
+                "sites_with_jira_roles": 5,
+                "total_jira_product_user_count": 161,
+                "total_jira_remaining_seats": 103999,
+                "total_jira_seat_limit": 104160
+              }
+            },
+            "lifecycle_decisions": {
+              "decisions": {
+                "gli-delivery-tm": {
+                  "decision": "ok",
+                  "source": "runtime/data/site_registry.json"
+                },
+                "gli-global-technology": {
+                  "decision": "ok",
+                  "source": "runtime/data/site_registry.json"
+                },
+                "gli-it-project": {
+                  "decision": "ok",
+                  "source": "runtime/data/site_registry.json"
+                },
+                "gli-tracker": {
+                  "decision": "ok",
+                  "source": "runtime/data/site_registry.json"
+                },
+                "gli-usa": {
+                  "decision": "ok",
+                  "source": "runtime/data/site_registry.json"
+                }
+              },
+              "history": [],
+              "source": "runtime/site_registry_contract"
+            },
+            "metrics": {
+              "discovered_sites": 5,
+              "monitored_sites": 0,
+              "pending_onboarding": 0,
+              "total_sites": 5
+            },
+            "registry": {
+              "generated_at_utc": "2026-07-30T07:13:10Z",
+              "policy": {
+                "approval_triggers_oauth_onboarding_gate": true,
+                "estate_requires_monitored_status": true,
+                "new_sites_default_status": "discovered"
+              },
+              "schema": "jom-site-registry-v4-runtime-consolidated",
+              "sites": [
+                {
+                  "aliases": [
+                    "gli-delivery-tm",
+                    "https://gli-delivery-tm.atlassian.net",
+                    "de2de731-c6ae-4e15-a2cf-92d976f0fb7c"
+                  ],
+                  "can_approve": true,
+                  "classification": "discovered",
+                  "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                  "is_monitored": false,
+                  "metrics": {
+                    "jira_product_seat_limit": 50,
+                    "jira_product_user_count": 31,
+                    "jira_role_count": 1
+                  },
+                  "site_key": "gli-delivery-tm",
+                  "site_name": "gli-delivery-tm",
+                  "site_url": "https://gli-delivery-tm.atlassian.net",
+                  "sources": [
+                    "product_access"
+                  ],
+                  "status": "ok"
+                },
+                {
+                  "aliases": [
+                    "gli-global-technology",
+                    "https://gli-global-technology.atlassian.net",
+                    "aaa90a93-f0af-47ba-98d6-47829cc032b7"
+                  ],
+                  "can_approve": true,
+                  "classification": "discovered",
+                  "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                  "is_monitored": false,
+                  "metrics": {
+                    "jira_product_seat_limit": 100000,
+                    "jira_product_user_count": 57,
+                    "jira_role_count": 1
+                  },
+                  "site_key": "gli-global-technology",
+                  "site_name": "gli-global-technology",
+                  "site_url": "https://gli-global-technology.atlassian.net",
+                  "sources": [
+                    "product_access"
+                  ],
+                  "status": "ok"
+                },
+                {
+                  "aliases": [
+                    "gli-it-project",
+                    "https://gli-it-project.atlassian.net",
+                    "d4b3adb4-bd39-435e-bd65-f29db2b11a37"
+                  ],
+                  "can_approve": true,
+                  "classification": "discovered",
+                  "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                  "is_monitored": false,
+                  "metrics": {
+                    "jira_product_seat_limit": 100,
+                    "jira_product_user_count": 63,
+                    "jira_role_count": 1
+                  },
+                  "site_key": "gli-it-project",
+                  "site_name": "gli-it-project",
+                  "site_url": "https://gli-it-project.atlassian.net",
+                  "sources": [
+                    "product_access"
+                  ],
+                  "status": "ok"
+                },
+                {
+                  "aliases": [
+                    "gli-tracker",
+                    "https://gli-tracker.atlassian.net",
+                    "5e39f28e-6ff4-44ff-82b7-d0746cee8db5"
+                  ],
+                  "can_approve": true,
+                  "classification": "discovered",
+                  "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                  "is_monitored": false,
+                  "metrics": {
+                    "jira_product_seat_limit": 4000,
+                    "jira_product_user_count": 6,
+                    "jira_role_count": 1
+                  },
+                  "site_key": "gli-tracker",
+                  "site_name": "gli-tracker",
+                  "site_url": "https://gli-tracker.atlassian.net",
+                  "sources": [
+                    "product_access"
+                  ],
+                  "status": "ok"
+                },
+                {
+                  "aliases": [
+                    "gli-usa",
+                    "https://gli-usa.atlassian.net",
+                    "d13cd0f5-823d-4a16-9952-a15f6bdf9018"
+                  ],
+                  "can_approve": true,
+                  "classification": "discovered",
+                  "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                  "is_monitored": false,
+                  "metrics": {
+                    "jira_product_seat_limit": 10,
+                    "jira_product_user_count": 4,
+                    "jira_role_count": 1
+                  },
+                  "site_key": "gli-usa",
+                  "site_name": "gli-usa",
+                  "site_url": "https://gli-usa.atlassian.net",
+                  "sources": [
+                    "product_access"
+                  ],
+                  "status": "ok"
+                }
+              ],
+              "summary": {
+                "discovered_count": 5,
+                "ignored_count": 0,
+                "monitored_count": 0,
+                "pending_onboarding_count": 0,
+                "total_sites": 5
+              }
+            },
+            "registry_summary": {
+              "discovered_count": 5,
+              "monitored_count": 0,
+              "pending_onboarding_count": 0,
+              "total_sites": 5
+            },
+            "source_state": {
+              "runtime_live_truth_status": {},
+              "runtime_status": {
+                "last_action": "refresh",
+                "last_error": null,
+                "last_finished_at_utc": "2026-07-29T13:35:39.513666Z",
+                "last_result": {
+                  "generated_at_utc": "2026-07-29T13:35:39.512730Z",
+                  "latest_run_admin_enriched": {
+                    "exists": false,
+                    "state": "MISSING"
+                  },
+                  "overall_status": "ok",
+                  "schema": "jom-admin-enriched-refresh-status-v2",
+                  "steps": [
+                    {
+                      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_enriched_sources",
+                      "exists": true,
+                      "finished_at_utc": "2026-07-29T13:35:39.249596Z",
+                      "key": "admin_api_enrichment",
+                      "label": "Refresh latest_run_admin_enriched from current latest_run",
+                      "returncode": 0,
+                      "started_at_utc": "2026-07-29T13:35:39.126976Z",
+                      "status": "ok",
+                      "stderr_tail": "",
+                      "stdout_tail": "{\n  \"overall_status\": \"manual_required\",\n  \"admin_enriched_state\": \"MISSING\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_enriched_refresh_status.json\"\n}\n"
+                    },
+                    {
+                      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_truth_layer_v2",
+                      "exists": true,
+                      "finished_at_utc": "2026-07-29T13:35:39.335349Z",
+                      "key": "admin_truth_v2",
+                      "label": "Rebuild Admin Truth Layer v2",
+                      "returncode": 0,
+                      "started_at_utc": "2026-07-29T13:35:39.249848Z",
+                      "status": "ok",
+                      "stderr_tail": "",
+                      "stdout_tail": "Admin Truth Layer v2 generated.\n{\n  \"status\": \"variance\",\n  \"severity\": \"critical\",\n  \"interpretation\": \"API product access users and billing seats do not match. Review site authorisation, billing source, and product access collection before reporting final licence truth.\",\n  \"admin_human_users\": 0,\n  \"billing_jira_seats\": 139,\n  \"api_product_users\": 161,\n  \"api_minus_billing\": 22,\n  \"api_billing_variance_abs\": 22,\n  \"billing_to_human_ratio\": 0,\n  \"api_product_to_human_ratio\": 0,\n  \"confirmed_product_site_count\": 5,\n  \"accessible_jira_resource_count\": 5,\n  \"blocked_resource_count\": 0\n}\nJSON: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\admin_truth_v2.json\nReport: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\admin_truth_v2.md\n"
+                    },
+                    {
+                      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_freshness",
+                      "exists": true,
+                      "finished_at_utc": "2026-07-29T13:35:39.397940Z",
+                      "key": "source_freshness",
+                      "label": "Rebuild source freshness audit",
+                      "returncode": 0,
+                      "started_at_utc": "2026-07-29T13:35:39.336267Z",
+                      "status": "ok",
+                      "stderr_tail": "",
+                      "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 3,\n    \"AGING\": 1,\n    \"STALE\": 2,\n    \"MISSING\": 2,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_freshness_audit.json\n"
+                    },
+                    {
+                      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.user_footprint_source",
+                      "exists": true,
+                      "finished_at_utc": "2026-07-29T13:35:39.455842Z",
+                      "key": "user_footprint_guard",
+                      "label": "Rebuild guarded user footprint source",
+                      "returncode": 0,
+                      "started_at_utc": "2026-07-29T13:35:39.398803Z",
+                      "status": "ok",
+                      "stderr_tail": "",
+                      "stdout_tail": "{\n  \"source_status\": \"unavailable\",\n  \"safe\": false,\n  \"reason\": \"No named access reconciliation file is available.\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\user_footprint.json\"\n}\n"
+                    },
+                    {
+                      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_reliability",
+                      "exists": true,
+                      "finished_at_utc": "2026-07-29T13:35:39.512703Z",
+                      "key": "source_reliability",
+                      "label": "Rebuild source reliability status",
+                      "returncode": 0,
+                      "started_at_utc": "2026-07-29T13:35:39.456013Z",
+                      "status": "ok",
+                      "stderr_tail": "",
+                      "stdout_tail": "{\n  \"issue_count\": 5,\n  \"freshness_overall\": \"ATTENTION\",\n  \"runtime_refresh_overall\": null,\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_reliability_status.json\n"
+                    }
+                  ]
+                },
+                "last_result_status": "ok",
+                "last_started_at_utc": "2026-07-29T13:35:39.125214Z",
+                "running": false,
+                "state": "idle"
+              },
+              "schema": "jom-cached-source-state-v1",
+              "served_at_utc": "2026-07-30T07:20:28Z",
+              "source_freshness": {
+                "display_generated_at_utc": "2026-07-29 13:35 UTC",
+                "generated_at_utc": "2026-07-29T13:35:39.387105Z",
+                "policy": {
+                  "aging_hours": 72,
+                  "current_hours": 24,
+                  "rule": "No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero.",
+                  "stale_after_hours": 72
+                },
+                "schema": "jom-source-freshness-audit-v1.1",
+                "sources": [
+                  {
+                    "age_hours": 26.29,
+                    "display_timestamp_utc": "2026-07-28 11:18 UTC",
+                    "error": null,
+                    "exists": true,
+                    "freshness_state": "AGING",
+                    "key": "site_registry",
+                    "label": "Site Registry",
+                    "operator_label": "AGING SNAPSHOT",
+                    "pages": [
+                      "Home",
+                      "Estate",
+                      "Admin"
+                    ],
+                    "parsed_timestamp_utc": "2026-07-28T11:18:13.306141Z",
+                    "path": "runtime/data/site_registry.json",
+                    "source_type": "RUNTIME_CONTRACT",
+                    "timestamp_field": "generated_at_utc",
+                    "timestamp_value": "2026-07-28T11:18:13.306141Z"
+                  },
+                  {
+                    "age_hours": 0.0,
+                    "display_timestamp_utc": "2026-07-29 13:35 UTC",
+                    "error": null,
+                    "exists": true,
+                    "freshness_state": "CURRENT",
+                    "key": "admin_truth_v2",
+                    "label": "Admin Truth Layer v2",
+                    "operator_label": "CURRENT",
+                    "pages": [
+                      "Estate",
+                      "Admin"
+                    ],
+                    "parsed_timestamp_utc": "2026-07-29T13:35:39Z",
+                    "path": "runtime/data/admin_truth_v2.json",
+                    "source_type": "RUNTIME_CONTRACT",
+                    "timestamp_field": "generated_at_utc",
+                    "timestamp_value": "2026-07-29T13:35:39Z"
+                  },
+                  {
+                    "age_hours": 3.66,
+                    "display_timestamp_utc": "2026-07-29 09:56 UTC",
+                    "error": null,
+                    "exists": true,
+                    "freshness_state": "CURRENT",
+                    "key": "estate_product_access",
+                    "label": "Estate Product Access",
+                    "operator_label": "CURRENT",
+                    "pages": [
+                      "Estate"
+                    ],
+                    "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
+                    "path": "runtime/data/estate_product_access.json",
+                    "source_type": "RUNTIME_CONTRACT",
+                    "timestamp_field": "generated_at_utc",
+                    "timestamp_value": "2026-07-29T09:56:21Z"
+                  },
+                  {
+                    "age_hours": 3.66,
+                    "display_timestamp_utc": "2026-07-29 09:56 UTC",
+                    "error": null,
+                    "exists": true,
+                    "freshness_state": "CURRENT",
+                    "key": "estate_access_truth",
+                    "label": "Estate Access Truth",
+                    "operator_label": "CURRENT",
+                    "pages": [
+                      "Estate"
+                    ],
+                    "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
+                    "path": "runtime/data/estate_access_truth.json",
+                    "source_type": "RUNTIME_CONTRACT",
+                    "timestamp_field": "generated_at_utc",
+                    "timestamp_value": "2026-07-29T09:56:21Z"
+                  },
+                  {
+                    "age_hours": 724.91,
+                    "display_timestamp_utc": "2026-06-29 08:41 UTC",
+                    "error": null,
+                    "exists": true,
+                    "freshness_state": "STALE",
+                    "key": "billing_seats",
+                    "label": "Billing Seats",
+                    "operator_label": "STALE SNAPSHOT",
+                    "pages": [
+                      "Estate",
+                      "Admin"
+                    ],
+                    "parsed_timestamp_utc": "2026-06-29T08:41:11.375374Z",
+                    "path": "runtime/data/billing_seats.json",
+                    "source_type": "RUNTIME_CONTRACT",
+                    "timestamp_field": "generated_at_utc",
+                    "timestamp_value": "2026-06-29T08:41:11.375374Z"
+                  },
+                  {
+                    "age_hours": 124.12,
+                    "display_timestamp_utc": "2026-07-24 09:28 UTC",
+                    "error": null,
+                    "exists": true,
+                    "freshness_state": "STALE",
+                    "key": "user_footprint",
+                    "label": "User Footprint",
+                    "operator_label": "STALE SNAPSHOT",
+                    "pages": [
+                      "Estate"
+                    ],
+                    "parsed_timestamp_utc": "2026-07-24T09:28:27Z",
+                    "path": "runtime/data/user_footprint.json",
+                    "source_type": "RUNTIME_CONTRACT",
+                    "timestamp_field": "generated_at_utc",
+                    "timestamp_value": "2026-07-24T09:28:27Z"
+                  },
+                  {
+                    "age_hours": null,
+                    "display_timestamp_utc": null,
+                    "error": null,
+                    "exists": false,
+                    "freshness_state": "MISSING",
+                    "key": "latest_run",
+                    "label": "Latest Jira Runtime Run",
+                    "operator_label": "MISSING SOURCE",
+                    "pages": [
+                      "Home",
+                      "Estate",
+                      "Site"
+                    ],
+                    "parsed_timestamp_utc": null,
+                    "path": "latest_run.json",
+                    "source_type": "LATEST_RUN",
+                    "timestamp_field": null,
+                    "timestamp_value": null
+                  },
+                  {
+                    "age_hours": null,
+                    "display_timestamp_utc": null,
+                    "error": null,
+                    "exists": false,
+                    "freshness_state": "MISSING",
+                    "key": "latest_run_admin_enriched",
+                    "label": "Latest Admin Enriched Run",
+                    "operator_label": "MISSING SOURCE",
+                    "pages": [
+                      "Home",
+                      "Estate",
+                      "Admin",
+                      "Site"
+                    ],
+                    "parsed_timestamp_utc": null,
+                    "path": "latest_run_admin_enriched.json",
+                    "source_type": "LATEST_RUN",
+                    "timestamp_field": null,
+                    "timestamp_value": null
+                  }
+                ],
+                "summary": {
+                  "billing_timestamp_added": false,
+                  "counts": {
+                    "AGING": 1,
+                    "CURRENT": 3,
+                    "MISSING": 2,
+                    "STALE": 2,
+                    "UNKNOWN_TIMESTAMP": 0
+                  },
+                  "overall_state": "ATTENTION",
+                  "source_count": 8
+                }
+              },
+              "source_reliability": {
+                "generated_at_utc": "2026-07-29T13:35:39.506037Z",
+                "inputs": {
+                  "runtime_refresh": "runtime\\data\\runtime_refresh_status.json",
+                  "site_registry": "runtime\\data\\site_registry.json",
+                  "source_freshness": "runtime\\data\\source_freshness_audit.json",
+                  "user_footprint": "runtime\\data\\user_footprint.json"
+                },
+                "issues": [
+                  {
+                    "path": "runtime/data/billing_seats.json",
+                    "source": "Billing Seats",
+                    "state": "STALE SNAPSHOT"
+                  },
+                  {
+                    "path": "runtime/data/user_footprint.json",
+                    "source": "User Footprint",
+                    "state": "STALE SNAPSHOT"
+                  },
+                  {
+                    "path": "latest_run.json",
+                    "source": "Latest Jira Runtime Run",
+                    "state": "MISSING SOURCE"
+                  },
+                  {
+                    "path": "latest_run_admin_enriched.json",
+                    "source": "Latest Admin Enriched Run",
+                    "state": "MISSING SOURCE"
+                  },
+                  {
+                    "path": "runtime/data/user_footprint.json",
+                    "reason": "No named access reconciliation file is available.",
+                    "source": "User Footprint",
+                    "state": "GUARDED UNAVAILABLE"
+                  }
+                ],
+                "overall_status": "attention",
+                "schema": "jom-source-reliability-status-v1.1",
+                "summary": {
+                  "freshness_overall": "ATTENTION",
+                  "issue_count": 5,
+                  "runtime_refresh_overall": null,
+                  "user_footprint_status": "unavailable"
+                }
+              }
+            },
+            "users": {
+              "generated_at_utc": "2026-07-29T13:35:39.449308Z",
+              "reason": "No named access reconciliation file is available.",
+              "reconciliation_source": null,
+              "safe_to_show_named_access_ui": false,
+              "schema": "jom-user-footprint-v2",
+              "source_status": "unavailable",
+              "summary": {
+                "average_sites_per_user": null,
+                "high_duplication_users": null,
+                "medium_duplication_users": null,
+                "total_product_access_assignments": null,
+                "users_analyzed": null
+              },
+              "users": []
+            }
+          },
+          "estate_access_truth": {
+            "generated_at_utc": "2026-07-30T07:13:13Z",
+            "interpretation": [
+              "API product role user counts are live estate/product access signals.",
+              "Billing snapshots are not website truth."
+            ],
+            "live_collection": true,
+            "live_endpoint": true,
+            "product_summary": {
+              "accessible_jira_resource_count": 5,
+              "error_site_count": 0,
+              "jira_role_rows": 5,
+              "sites_with_jira_roles": 5,
+              "total_jira_product_user_count": 161,
+              "total_jira_remaining_seats": 103999,
+              "total_jira_seat_limit": 104160
+            },
+            "role_product_access": [
+              {
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 3994,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 4000,
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "user_count": 6
+              },
+              {
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 99943,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 100000,
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "user_count": 57
+              },
+              {
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 6,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 10,
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "user_count": 4
+              },
+              {
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 37,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 100,
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "user_count": 63
+              },
+              {
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 19,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 50,
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "user_count": 31
+              }
+            ],
+            "schema": "jom-estate-access-truth-v2-live",
+            "served_at_utc": "2026-07-30T07:13:13.668643Z",
+            "site_product_access": [
+              {
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "jira_product_remaining_seats": 3994,
+                "jira_product_seat_limit": 4000,
+                "jira_product_user_count": 6,
+                "jira_role_count": 1,
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "jira_product_remaining_seats": 99943,
+                "jira_product_seat_limit": 100000,
+                "jira_product_user_count": 57,
+                "jira_role_count": 1,
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "jira_product_remaining_seats": 6,
+                "jira_product_seat_limit": 10,
+                "jira_product_user_count": 4,
+                "jira_role_count": 1,
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "jira_product_remaining_seats": 37,
+                "jira_product_seat_limit": 100,
+                "jira_product_user_count": 63,
+                "jira_role_count": 1,
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "jira_product_remaining_seats": 19,
+                "jira_product_seat_limit": 50,
+                "jira_product_user_count": 31,
+                "jira_role_count": 1,
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "status": "ok"
+              }
+            ],
+            "source": "Derived from live estate_product_access payload; billing is not used as website truth",
+            "summary": {
+              "accessible_jira_resource_count": 5,
+              "api_product_user_count": 161,
+              "sites_with_jira_roles": 5
+            }
+          },
+          "estate_product_access": {
+            "errors": {},
+            "generated_at_utc": "2026-07-30T07:13:13Z",
+            "live_collection": true,
+            "live_endpoint": true,
+            "notes": [
+              "This is live product/application role access truth, not /users/search visibility truth.",
+              "No stale static product-access data was used.",
+              "Where applicationrole payloads do not expose seat limits, fields are left as 0 rather than guessed."
+            ],
+            "roles": [
+              {
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 3994,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 4000,
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "user_count": 6
+              },
+              {
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 99943,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 100000,
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "user_count": 57
+              },
+              {
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 6,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 10,
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "user_count": 4
+              },
+              {
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 37,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 100,
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "user_count": 63
+              },
+              {
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "raw_has_default_groups": true,
+                "raw_platform": false,
+                "raw_selected_by_default": false,
+                "remaining_seats": 19,
+                "role_key": "jira-software",
+                "role_name": "Jira Software",
+                "seat_limit": 50,
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "user_count": 31
+              }
+            ],
+            "schema": "jom-estate-product-access-v2-live",
+            "scope": "all accessible Jira resources returned by Atlassian OAuth accessible-resources",
+            "served_at_utc": "2026-07-30T07:13:13.667441Z",
+            "sites": [
+              {
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "jira_product_remaining_seats": 3994,
+                "jira_product_seat_limit": 4000,
+                "jira_product_user_count": 6,
+                "jira_role_count": 1,
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "jira_product_remaining_seats": 99943,
+                "jira_product_seat_limit": 100000,
+                "jira_product_user_count": 57,
+                "jira_role_count": 1,
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "jira_product_remaining_seats": 6,
+                "jira_product_seat_limit": 10,
+                "jira_product_user_count": 4,
+                "jira_role_count": 1,
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "jira_product_remaining_seats": 37,
+                "jira_product_seat_limit": 100,
+                "jira_product_user_count": 63,
+                "jira_role_count": 1,
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "status": "ok"
+              },
+              {
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "jira_product_remaining_seats": 19,
+                "jira_product_seat_limit": 50,
+                "jira_product_user_count": 31,
+                "jira_role_count": 1,
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "status": "ok"
+              }
+            ],
+            "source": "Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole",
+            "status": "ok",
+            "summary": {
+              "accessible_jira_resource_count": 5,
+              "error_site_count": 0,
+              "jira_role_rows": 5,
+              "sites_with_jira_roles": 5,
+              "total_jira_product_user_count": 161,
+              "total_jira_remaining_seats": 103999,
+              "total_jira_seat_limit": 104160
+            }
+          },
+          "frontend_owner": {
+            "css": "static/css/jom_estate_lifecycle_v1.css",
+            "javascript": "static/js/jom_estate_lifecycle_v1.js",
+            "template": "templates/estate.html"
+          },
+          "generated_at_utc": "2026-07-30T07:20:28.555423+00:00",
+          "inventory": {
+            "contract": "estate_admin_site_inventory_v1",
+            "generated_utc": "2026-07-27T17:13:16Z",
+            "probes": {
+              "admin_events": {
+                "calls": [
+                  {
+                    "ms": 1754,
+                    "ok": true,
+                    "status": 200
+                  },
+                  {
+                    "ms": 1006,
+                    "ok": true,
+                    "status": 200
+                  },
+                  {
+                    "ms": 584,
+                    "ok": true,
+                    "status": 200
+                  },
+                  {
+                    "ms": 603,
+                    "ok": true,
+                    "status": 200
+                  },
+                  {
+                    "ms": 405,
+                    "ok": true,
+                    "status": 200
+                  },
+                  {
+                    "ms": 669,
+                    "ok": true,
+                    "status": 200
+                  }
+                ],
+                "event_count_collected": 200
+              },
+              "admin_org": {
+                "ms": 268,
+                "ok": true,
+                "status": 200
+              },
+              "oauth_accessible_resources": {
+                "count": 5,
+                "ms": 571,
+                "ok": true,
+                "status": 200
+              }
+            },
+            "sites": [
+              {
+                "action_required": "review_live_inventory_status",
+                "approved_monitored": false,
+                "evidence_levels": [
+                  "manual_unverified"
+                ],
+                "in_registry": false,
+                "lifecycle": "discovery_gap",
+                "manual_validation_target": "known_from_support_case_manual_only",
+                "site_key": "baljeet-singh",
+                "sources": [
+                  "manual_validation_target"
+                ],
+                "url": "https://baljeet-singh.atlassian.net"
+              },
+              {
+                "action_required": "review_live_inventory_status",
+                "approved_monitored": false,
+                "evidence_levels": [
+                  "manual_unverified"
+                ],
+                "in_registry": false,
+                "lifecycle": "discovery_gap",
+                "manual_validation_target": "known_from_admin_screenshot_or_support_case_manual_only",
+                "site_key": "gaminglabs-team-h2pbpmis",
+                "sources": [
+                  "manual_validation_target"
+                ],
+                "url": "https://gaminglabs-team-h2pbpmis.atlassian.net"
+              },
+              {
+                "action_required": "review_live_inventory_status",
+                "approved_monitored": false,
+                "evidence_levels": [
+                  "manual_unverified"
+                ],
+                "in_registry": false,
+                "lifecycle": "discovery_gap",
+                "manual_validation_target": "known_from_admin_screenshot_or_support_case_manual_only",
+                "site_key": "gaminglabs-team-tsyfo716",
+                "sources": [
+                  "manual_validation_target"
+                ],
+                "url": "https://gaminglabs-team-tsyfo716.atlassian.net"
+              },
+              {
+                "action_required": null,
+                "admin_event_reference_count": 24,
+                "approved_monitored": true,
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "f6117fa3-4804-49d4-bbe4-19d47aa93467"
+                  }
+                ],
+                "lifecycle": "monitored",
+                "name": "gli-delivery-tm",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-delivery-tm",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-delivery-tm.atlassian.net"
+              },
+              {
+                "action_required": null,
+                "admin_event_reference_count": 24,
+                "approved_monitored": true,
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "5242f4da-ebf5-4e18-8251-444e6c48d6d7"
+                  }
+                ],
+                "lifecycle": "monitored",
+                "name": "gli-global-technology",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-global-technology",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-global-technology.atlassian.net"
+              },
+              {
+                "action_required": null,
+                "admin_event_reference_count": 48,
+                "approved_monitored": true,
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "1071cca2-9864-48cf-be8b-811d9ce27e86"
+                  }
+                ],
+                "lifecycle": "monitored",
+                "name": "gli-it-project",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-it-project",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-it-project.atlassian.net"
+              },
+              {
+                "action_required": "review_live_inventory_status",
+                "approved_monitored": false,
+                "evidence_levels": [
+                  "manual_unverified"
+                ],
+                "in_registry": false,
+                "lifecycle": "discovery_gap",
+                "manual_validation_target": "known_from_support_case_manual_only",
+                "site_key": "gli-testing",
+                "sources": [
+                  "manual_validation_target"
+                ],
+                "url": "https://gli-testing.atlassian.net"
+              },
+              {
+                "action_required": "review_live_inventory_status",
+                "admin_event_reference_count": 448,
+                "approved_monitored": false,
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "655addbc-5b0b-446f-ae5e-962e1b8167b3"
+                  }
+                ],
+                "lifecycle": "registered_review",
+                "name": "gli-tracker",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-tracker",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-tracker.atlassian.net"
+              },
+              {
+                "action_required": "review_live_inventory_status",
+                "approved_monitored": false,
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "evidence_levels": [
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": false,
+                "lifecycle": "pending_review",
+                "name": "gli-usa",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-usa",
+                "sources": [
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-usa.atlassian.net"
+              }
+            ],
+            "source_rules": {
+              "admin_org_events": "live proof that the organisation event stream references the cloud resource; may include historical/deleted sites",
+              "manual_validation_target": "not evidence; used only to prove whether known gaps are now visible in live sources",
+              "oauth_accessible_resources": "live proof that the OAuth principal can access the cloud resource now"
+            },
+            "summary": {
+              "admin_event_reference_count": 4,
+              "discovery_gap_count": 4,
+              "live_oauth_count": 5,
+              "monitored_count": 3,
+              "pending_review_count": 1,
+              "total_inventory_rows": 9
+            }
+          },
+          "lifecycle_decisions": {
+            "decisions": {
+              "gli-delivery-tm": {
+                "decision": "ok",
+                "source": "runtime/data/site_registry.json"
+              },
+              "gli-global-technology": {
+                "decision": "ok",
+                "source": "runtime/data/site_registry.json"
+              },
+              "gli-it-project": {
+                "decision": "ok",
+                "source": "runtime/data/site_registry.json"
+              },
+              "gli-tracker": {
+                "decision": "ok",
+                "source": "runtime/data/site_registry.json"
+              },
+              "gli-usa": {
+                "decision": "ok",
+                "source": "runtime/data/site_registry.json"
+              }
+            },
+            "history": [],
+            "source": "runtime/site_registry_contract"
+          },
+          "metrics": {
+            "discovered_sites": 5,
+            "monitored_sites": 0,
+            "pending_onboarding": 0,
+            "total_sites": 5
+          },
+          "registry": {
+            "generated_at_utc": "2026-07-30T07:13:10Z",
+            "policy": {
+              "approval_triggers_oauth_onboarding_gate": true,
+              "estate_requires_monitored_status": true,
+              "new_sites_default_status": "discovered"
+            },
+            "schema": "jom-site-registry-v4-runtime-consolidated",
+            "sites": [
+              {
+                "aliases": [
+                  "gli-delivery-tm",
+                  "https://gli-delivery-tm.atlassian.net",
+                  "de2de731-c6ae-4e15-a2cf-92d976f0fb7c"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 50,
+                  "jira_product_user_count": 31,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              {
+                "aliases": [
+                  "gli-global-technology",
+                  "https://gli-global-technology.atlassian.net",
+                  "aaa90a93-f0af-47ba-98d6-47829cc032b7"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 100000,
+                  "jira_product_user_count": 57,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              {
+                "aliases": [
+                  "gli-it-project",
+                  "https://gli-it-project.atlassian.net",
+                  "d4b3adb4-bd39-435e-bd65-f29db2b11a37"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 100,
+                  "jira_product_user_count": 63,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              {
+                "aliases": [
+                  "gli-tracker",
+                  "https://gli-tracker.atlassian.net",
+                  "5e39f28e-6ff4-44ff-82b7-d0746cee8db5"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 4000,
+                  "jira_product_user_count": 6,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              {
+                "aliases": [
+                  "gli-usa",
+                  "https://gli-usa.atlassian.net",
+                  "d13cd0f5-823d-4a16-9952-a15f6bdf9018"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 10,
+                  "jira_product_user_count": 4,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              }
+            ],
+            "summary": {
+              "discovered_count": 5,
+              "ignored_count": 0,
+              "monitored_count": 0,
+              "pending_onboarding_count": 0,
+              "total_sites": 5
+            }
+          },
+          "registry_summary": {
+            "discovered_count": 5,
+            "monitored_count": 0,
+            "pending_onboarding_count": 0,
+            "total_sites": 5
+          },
+          "schema": "jom-estate-workspace-contract-v1",
+          "served_at_utc": "2026-07-30T07:20:28Z",
+          "sites": [
+            {
+              "inventory": {
+                "action_required": null,
+                "admin_event_reference_count": 24,
+                "approved_monitored": true,
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "11ca23be-b655-4636-8a61-6206ea83cf2c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "f6117fa3-4804-49d4-bbe4-19d47aa93467"
+                  }
+                ],
+                "lifecycle": "monitored",
+                "name": "gli-delivery-tm",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-delivery-tm",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-delivery-tm.atlassian.net"
+              },
+              "is_monitored": false,
+              "key": "gli-delivery-tm",
+              "name": "gli-delivery-tm",
+              "registry": {
+                "aliases": [
+                  "gli-delivery-tm",
+                  "https://gli-delivery-tm.atlassian.net",
+                  "de2de731-c6ae-4e15-a2cf-92d976f0fb7c"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 50,
+                  "jira_product_user_count": 31,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-delivery-tm",
+                "site_name": "gli-delivery-tm",
+                "site_url": "https://gli-delivery-tm.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              "source": "runtime_contract",
+              "status": "ok",
+              "url": "https://gli-delivery-tm.atlassian.net"
+            },
+            {
+              "inventory": {
+                "action_required": null,
+                "admin_event_reference_count": 24,
+                "approved_monitored": true,
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "e264c32c-1f72-4c63-98c6-7709b3cf359c"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "5242f4da-ebf5-4e18-8251-444e6c48d6d7"
+                  }
+                ],
+                "lifecycle": "monitored",
+                "name": "gli-global-technology",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-global-technology",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-global-technology.atlassian.net"
+              },
+              "is_monitored": false,
+              "key": "gli-global-technology",
+              "name": "gli-global-technology",
+              "registry": {
+                "aliases": [
+                  "gli-global-technology",
+                  "https://gli-global-technology.atlassian.net",
+                  "aaa90a93-f0af-47ba-98d6-47829cc032b7"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 100000,
+                  "jira_product_user_count": 57,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-global-technology",
+                "site_name": "gli-global-technology",
+                "site_url": "https://gli-global-technology.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              "source": "runtime_contract",
+              "status": "ok",
+              "url": "https://gli-global-technology.atlassian.net"
+            },
+            {
+              "inventory": {
+                "action_required": null,
+                "admin_event_reference_count": 48,
+                "approved_monitored": true,
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "dad2307d-1668-4dea-98b4-d3c3ba6fbf3f"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "1071cca2-9864-48cf-be8b-811d9ce27e86"
+                  }
+                ],
+                "lifecycle": "monitored",
+                "name": "gli-it-project",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-it-project",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-it-project.atlassian.net"
+              },
+              "is_monitored": false,
+              "key": "gli-it-project",
+              "name": "gli-it-project",
+              "registry": {
+                "aliases": [
+                  "gli-it-project",
+                  "https://gli-it-project.atlassian.net",
+                  "d4b3adb4-bd39-435e-bd65-f29db2b11a37"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 100,
+                  "jira_product_user_count": 63,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-it-project",
+                "site_name": "gli-it-project",
+                "site_url": "https://gli-it-project.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              "source": "runtime_contract",
+              "status": "ok",
+              "url": "https://gli-it-project.atlassian.net"
+            },
+            {
+              "inventory": {
+                "action_required": "review_live_inventory_status",
+                "admin_event_reference_count": 448,
+                "approved_monitored": false,
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "evidence_levels": [
+                  "live_admin_event_reference",
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": true,
+                "latest_event_samples": [
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "c2ecc9dc-2f87-4e6a-8fc2-764462003a60"
+                  },
+                  {
+                    "action": "events",
+                    "created": null,
+                    "id": "655addbc-5b0b-446f-ae5e-962e1b8167b3"
+                  }
+                ],
+                "lifecycle": "registered_review",
+                "name": "gli-tracker",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-tracker",
+                "sources": [
+                  "admin_org_events",
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-tracker.atlassian.net"
+              },
+              "is_monitored": false,
+              "key": "gli-tracker",
+              "name": "gli-tracker",
+              "registry": {
+                "aliases": [
+                  "gli-tracker",
+                  "https://gli-tracker.atlassian.net",
+                  "5e39f28e-6ff4-44ff-82b7-d0746cee8db5"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 4000,
+                  "jira_product_user_count": 6,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-tracker",
+                "site_name": "gli-tracker",
+                "site_url": "https://gli-tracker.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              "source": "runtime_contract",
+              "status": "ok",
+              "url": "https://gli-tracker.atlassian.net"
+            },
+            {
+              "inventory": {
+                "action_required": "review_live_inventory_status",
+                "approved_monitored": false,
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "evidence_levels": [
+                  "live_oauth_accessible_resources"
+                ],
+                "in_registry": false,
+                "lifecycle": "pending_review",
+                "name": "gli-usa",
+                "scopes": [
+                  "manage:jira-configuration",
+                  "read:application-role:jira",
+                  "read:jira-user",
+                  "read:jira-work",
+                  "read:license:jira"
+                ],
+                "site_key": "gli-usa",
+                "sources": [
+                  "oauth_accessible_resources"
+                ],
+                "url": "https://gli-usa.atlassian.net"
+              },
+              "is_monitored": false,
+              "key": "gli-usa",
+              "name": "gli-usa",
+              "registry": {
+                "aliases": [
+                  "gli-usa",
+                  "https://gli-usa.atlassian.net",
+                  "d13cd0f5-823d-4a16-9952-a15f6bdf9018"
+                ],
+                "can_approve": true,
+                "classification": "discovered",
+                "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
+                "is_monitored": false,
+                "metrics": {
+                  "jira_product_seat_limit": 10,
+                  "jira_product_user_count": 4,
+                  "jira_role_count": 1
+                },
+                "site_key": "gli-usa",
+                "site_name": "gli-usa",
+                "site_url": "https://gli-usa.atlassian.net",
+                "sources": [
+                  "product_access"
+                ],
+                "status": "ok"
+              },
+              "source": "runtime_contract",
+              "status": "ok",
+              "url": "https://gli-usa.atlassian.net"
+            }
+          ],
+          "source_health": {
+            "estate_access_truth": {
+              "available": true,
+              "count_hint": null,
+              "keys": [
+                "generated_at_utc",
+                "interpretation",
+                "live_collection",
+                "live_endpoint",
+                "product_summary",
+                "role_product_access",
+                "schema",
+                "served_at_utc",
+                "site_product_access",
+                "source",
+                "summary"
+              ],
+              "label": "estate_access_truth",
+              "type": "dict"
+            },
+            "estate_admin_site_inventory": {
+              "available": true,
+              "count_hint": 9,
+              "keys": [
+                "contract",
+                "generated_utc",
+                "probes",
+                "sites",
+                "source_rules",
+                "summary"
+              ],
+              "label": "estate_admin_site_inventory",
+              "type": "dict"
+            },
+            "site_registry": {
+              "available": true,
+              "count_hint": 5,
+              "keys": [
+                "generated_at_utc",
+                "policy",
+                "schema",
+                "sites",
+                "summary"
+              ],
+              "label": "site_registry",
+              "type": "dict"
+            }
+          },
+          "source_policy": "Fast Estate workspace contract from generated truth outputs. No live collectors run during page load.",
+          "source_state": {
+            "runtime_live_truth_status": {},
+            "runtime_status": {
+              "last_action": "refresh",
+              "last_error": null,
+              "last_finished_at_utc": "2026-07-29T13:35:39.513666Z",
+              "last_result": {
+                "generated_at_utc": "2026-07-29T13:35:39.512730Z",
+                "latest_run_admin_enriched": {
+                  "exists": false,
+                  "state": "MISSING"
+                },
+                "overall_status": "ok",
+                "schema": "jom-admin-enriched-refresh-status-v2",
+                "steps": [
+                  {
+                    "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_enriched_sources",
+                    "exists": true,
+                    "finished_at_utc": "2026-07-29T13:35:39.249596Z",
+                    "key": "admin_api_enrichment",
+                    "label": "Refresh latest_run_admin_enriched from current latest_run",
+                    "returncode": 0,
+                    "started_at_utc": "2026-07-29T13:35:39.126976Z",
+                    "status": "ok",
+                    "stderr_tail": "",
+                    "stdout_tail": "{\n  \"overall_status\": \"manual_required\",\n  \"admin_enriched_state\": \"MISSING\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_enriched_refresh_status.json\"\n}\n"
+                  },
+                  {
+                    "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_truth_layer_v2",
+                    "exists": true,
+                    "finished_at_utc": "2026-07-29T13:35:39.335349Z",
+                    "key": "admin_truth_v2",
+                    "label": "Rebuild Admin Truth Layer v2",
+                    "returncode": 0,
+                    "started_at_utc": "2026-07-29T13:35:39.249848Z",
+                    "status": "ok",
+                    "stderr_tail": "",
+                    "stdout_tail": "Admin Truth Layer v2 generated.\n{\n  \"status\": \"variance\",\n  \"severity\": \"critical\",\n  \"interpretation\": \"API product access users and billing seats do not match. Review site authorisation, billing source, and product access collection before reporting final licence truth.\",\n  \"admin_human_users\": 0,\n  \"billing_jira_seats\": 139,\n  \"api_product_users\": 161,\n  \"api_minus_billing\": 22,\n  \"api_billing_variance_abs\": 22,\n  \"billing_to_human_ratio\": 0,\n  \"api_product_to_human_ratio\": 0,\n  \"confirmed_product_site_count\": 5,\n  \"accessible_jira_resource_count\": 5,\n  \"blocked_resource_count\": 0\n}\nJSON: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\admin_truth_v2.json\nReport: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\admin_truth_v2.md\n"
+                  },
+                  {
+                    "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_freshness",
+                    "exists": true,
+                    "finished_at_utc": "2026-07-29T13:35:39.397940Z",
+                    "key": "source_freshness",
+                    "label": "Rebuild source freshness audit",
+                    "returncode": 0,
+                    "started_at_utc": "2026-07-29T13:35:39.336267Z",
+                    "status": "ok",
+                    "stderr_tail": "",
+                    "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 3,\n    \"AGING\": 1,\n    \"STALE\": 2,\n    \"MISSING\": 2,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_freshness_audit.json\n"
+                  },
+                  {
+                    "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.user_footprint_source",
+                    "exists": true,
+                    "finished_at_utc": "2026-07-29T13:35:39.455842Z",
+                    "key": "user_footprint_guard",
+                    "label": "Rebuild guarded user footprint source",
+                    "returncode": 0,
+                    "started_at_utc": "2026-07-29T13:35:39.398803Z",
+                    "status": "ok",
+                    "stderr_tail": "",
+                    "stdout_tail": "{\n  \"source_status\": \"unavailable\",\n  \"safe\": false,\n  \"reason\": \"No named access reconciliation file is available.\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\user_footprint.json\"\n}\n"
+                  },
+                  {
+                    "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_reliability",
+                    "exists": true,
+                    "finished_at_utc": "2026-07-29T13:35:39.512703Z",
+                    "key": "source_reliability",
+                    "label": "Rebuild source reliability status",
+                    "returncode": 0,
+                    "started_at_utc": "2026-07-29T13:35:39.456013Z",
+                    "status": "ok",
+                    "stderr_tail": "",
+                    "stdout_tail": "{\n  \"issue_count\": 5,\n  \"freshness_overall\": \"ATTENTION\",\n  \"runtime_refresh_overall\": null,\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_reliability_status.json\n"
+                  }
+                ]
+              },
+              "last_result_status": "ok",
+              "last_started_at_utc": "2026-07-29T13:35:39.125214Z",
+              "running": false,
+              "state": "idle"
+            },
+            "schema": "jom-cached-source-state-v1",
+            "served_at_utc": "2026-07-30T07:20:28Z",
+            "source_freshness": {
+              "display_generated_at_utc": "2026-07-29 13:35 UTC",
+              "generated_at_utc": "2026-07-29T13:35:39.387105Z",
+              "policy": {
+                "aging_hours": 72,
+                "current_hours": 24,
+                "rule": "No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero.",
+                "stale_after_hours": 72
+              },
+              "schema": "jom-source-freshness-audit-v1.1",
+              "sources": [
+                {
+                  "age_hours": 26.29,
+                  "display_timestamp_utc": "2026-07-28 11:18 UTC",
+                  "error": null,
+                  "exists": true,
+                  "freshness_state": "AGING",
+                  "key": "site_registry",
+                  "label": "Site Registry",
+                  "operator_label": "AGING SNAPSHOT",
+                  "pages": [
+                    "Home",
+                    "Estate",
+                    "Admin"
+                  ],
+                  "parsed_timestamp_utc": "2026-07-28T11:18:13.306141Z",
+                  "path": "runtime/data/site_registry.json",
+                  "source_type": "RUNTIME_CONTRACT",
+                  "timestamp_field": "generated_at_utc",
+                  "timestamp_value": "2026-07-28T11:18:13.306141Z"
+                },
+                {
+                  "age_hours": 0.0,
+                  "display_timestamp_utc": "2026-07-29 13:35 UTC",
+                  "error": null,
+                  "exists": true,
+                  "freshness_state": "CURRENT",
+                  "key": "admin_truth_v2",
+                  "label": "Admin Truth Layer v2",
+                  "operator_label": "CURRENT",
+                  "pages": [
+                    "Estate",
+                    "Admin"
+                  ],
+                  "parsed_timestamp_utc": "2026-07-29T13:35:39Z",
+                  "path": "runtime/data/admin_truth_v2.json",
+                  "source_type": "RUNTIME_CONTRACT",
+                  "timestamp_field": "generated_at_utc",
+                  "timestamp_value": "2026-07-29T13:35:39Z"
+                },
+                {
+                  "age_hours": 3.66,
+                  "display_timestamp_utc": "2026-07-29 09:56 UTC",
+                  "error": null,
+                  "exists": true,
+                  "freshness_state": "CURRENT",
+                  "key": "estate_product_access",
+                  "label": "Estate Product Access",
+                  "operator_label": "CURRENT",
+                  "pages": [
+                    "Estate"
+                  ],
+                  "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
+                  "path": "runtime/data/estate_product_access.json",
+                  "source_type": "RUNTIME_CONTRACT",
+                  "timestamp_field": "generated_at_utc",
+                  "timestamp_value": "2026-07-29T09:56:21Z"
+                },
+                {
+                  "age_hours": 3.66,
+                  "display_timestamp_utc": "2026-07-29 09:56 UTC",
+                  "error": null,
+                  "exists": true,
+                  "freshness_state": "CURRENT",
+                  "key": "estate_access_truth",
+                  "label": "Estate Access Truth",
+                  "operator_label": "CURRENT",
+                  "pages": [
+                    "Estate"
+                  ],
+                  "parsed_timestamp_utc": "2026-07-29T09:56:21Z",
+                  "path": "runtime/data/estate_access_truth.json",
+                  "source_type": "RUNTIME_CONTRACT",
+                  "timestamp_field": "generated_at_utc",
+                  "timestamp_value": "2026-07-29T09:56:21Z"
+                },
+                {
+                  "age_hours": 724.91,
+                  "display_timestamp_utc": "2026-06-29 08:41 UTC",
+                  "error": null,
+                  "exists": true,
+                  "freshness_state": "STALE",
+                  "key": "billing_seats",
+                  "label": "Billing Seats",
+                  "operator_label": "STALE SNAPSHOT",
+                  "pages": [
+                    "Estate",
+                    "Admin"
+                  ],
+                  "parsed_timestamp_utc": "2026-06-29T08:41:11.375374Z",
+                  "path": "runtime/data/billing_seats.json",
+                  "source_type": "RUNTIME_CONTRACT",
+                  "timestamp_field": "generated_at_utc",
+                  "timestamp_value": "2026-06-29T08:41:11.375374Z"
+                },
+                {
+                  "age_hours": 124.12,
+                  "display_timestamp_utc": "2026-07-24 09:28 UTC",
+                  "error": null,
+                  "exists": true,
+                  "freshness_state": "STALE",
+                  "key": "user_footprint",
+                  "label": "User Footprint",
+                  "operator_label": "STALE SNAPSHOT",
+                  "pages": [
+                    "Estate"
+                  ],
+                  "parsed_timestamp_utc": "2026-07-24T09:28:27Z",
+                  "path": "runtime/data/user_footprint.json",
+                  "source_type": "RUNTIME_CONTRACT",
+                  "timestamp_field": "generated_at_utc",
+                  "timestamp_value": "2026-07-24T09:28:27Z"
+                },
+                {
+                  "age_hours": null,
+                  "display_timestamp_utc": null,
+                  "error": null,
+                  "exists": false,
+                  "freshness_state": "MISSING",
+                  "key": "latest_run",
+                  "label": "Latest Jira Runtime Run",
+                  "operator_label": "MISSING SOURCE",
+                  "pages": [
+                    "Home",
+                    "Estate",
+                    "Site"
+                  ],
+                  "parsed_timestamp_utc": null,
+                  "path": "latest_run.json",
+                  "source_type": "LATEST_RUN",
+                  "timestamp_field": null,
+                  "timestamp_value": null
+                },
+                {
+                  "age_hours": null,
+                  "display_timestamp_utc": null,
+                  "error": null,
+                  "exists": false,
+                  "freshness_state": "MISSING",
+                  "key": "latest_run_admin_enriched",
+                  "label": "Latest Admin Enriched Run",
+                  "operator_label": "MISSING SOURCE",
+                  "pages": [
+                    "Home",
+                    "Estate",
+                    "Admin",
+                    "Site"
+                  ],
+                  "parsed_timestamp_utc": null,
+                  "path": "latest_run_admin_enriched.json",
+                  "source_type": "LATEST_RUN",
+                  "timestamp_field": null,
+                  "timestamp_value": null
+                }
+              ],
+              "summary": {
+                "billing_timestamp_added": false,
+                "counts": {
+                  "AGING": 1,
+                  "CURRENT": 3,
+                  "MISSING": 2,
+                  "STALE": 2,
+                  "UNKNOWN_TIMESTAMP": 0
+                },
+                "overall_state": "ATTENTION",
+                "source_count": 8
+              }
+            },
+            "source_reliability": {
+              "generated_at_utc": "2026-07-29T13:35:39.506037Z",
+              "inputs": {
+                "runtime_refresh": "runtime\\data\\runtime_refresh_status.json",
+                "site_registry": "runtime\\data\\site_registry.json",
+                "source_freshness": "runtime\\data\\source_freshness_audit.json",
+                "user_footprint": "runtime\\data\\user_footprint.json"
+              },
+              "issues": [
+                {
+                  "path": "runtime/data/billing_seats.json",
+                  "source": "Billing Seats",
+                  "state": "STALE SNAPSHOT"
+                },
+                {
+                  "path": "runtime/data/user_footprint.json",
+                  "source": "User Footprint",
+                  "state": "STALE SNAPSHOT"
+                },
+                {
+                  "path": "latest_run.json",
+                  "source": "Latest Jira Runtime Run",
+                  "state": "MISSING SOURCE"
+                },
+                {
+                  "path": "latest_run_admin_enriched.json",
+                  "source": "Latest Admin Enriched Run",
+                  "state": "MISSING SOURCE"
+                },
+                {
+                  "path": "runtime/data/user_footprint.json",
+                  "reason": "No named access reconciliation file is available.",
+                  "source": "User Footprint",
+                  "state": "GUARDED UNAVAILABLE"
+                }
+              ],
+              "overall_status": "attention",
+              "schema": "jom-source-reliability-status-v1.1",
+              "summary": {
+                "freshness_overall": "ATTENTION",
+                "issue_count": 5,
+                "runtime_refresh_overall": null,
+                "user_footprint_status": "unavailable"
+              }
+            }
+          },
+          "status": "ok",
+          "summary": {
+            "coverage_percent": 0,
+            "monitored_sites": 0,
+            "review_items": 0,
+            "total_sites": 5
+          },
+          "users": {
+            "generated_at_utc": "2026-07-29T13:35:39.449308Z",
+            "reason": "No named access reconciliation file is available.",
+            "reconciliation_source": null,
+            "safe_to_show_named_access_ui": false,
+            "schema": "jom-user-footprint-v2",
+            "source_status": "unavailable",
+            "summary": {
+              "average_sites_per_user": null,
+              "high_duplication_users": null,
+              "medium_duplication_users": null,
+              "total_product_access_assignments": null,
+              "users_analyzed": null
+            },
+            "users": []
+          }
+        }
+      },
+      {
+        "route": "/api/estate/discovery-authority/coverage",
+        "http_status": 200,
+        "schema": null,
+        "keys": [
+          "authority",
+          "coverage",
+          "source_file_count",
+          "source_status",
+          "static_fallback_used",
+          "status"
+        ],
+        "body": "",
+        "payload": null
+      },
+      {
+        "route": "/api/estate/admin-site-inventory",
+        "http_status": 200,
+        "schema": null,
+        "keys": [
+          "contract",
+          "contract_file",
+          "generated_utc",
+          "ok",
+          "probes",
+          "sites",
+          "source_rules",
+          "summary"
+        ],
+        "body": "",
+        "payload": null
+      }
+    ]
+  },
+  "checks": [
+    {
+      "name": "compile_web",
+      "status": "PASS",
+      "detail": "app/web.py compiles"
+    },
+    {
+      "name": "contract_top_level_schema",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_top_level_status",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_top_level_summary",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_top_level_sites",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_top_level_source_health",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_summary_total_sites",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_summary_monitored_sites",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_summary_review_items",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "name": "contract_sites_array",
+      "status": "PASS",
+      "detail": "type=list"
+    },
+    {
+      "name": "contract_schema_demo_ready",
+      "status": "PASS",
+      "detail": "jom-estate-workspace-contract-v1"
+    },
+    {
+      "name": "estate_template_exists",
+      "status": "PASS",
+      "detail": "templates/estate.html"
+    },
+    {
+      "name": "estate_js_owner_exists",
+      "status": "PASS",
+      "detail": "static/js/jom_estate_lifecycle_v1.js"
+    },
+    {
+      "name": "estate_js_single_owner_marker",
+      "status": "PASS",
+      "detail": "JOM Estate single-owner frontend rebuild v1"
+    },
+    {
+      "name": "estate_js_fetches_workspace_estate",
+      "status": "PASS",
+      "detail": "/api/workspace/estate"
+    },
+    {
+      "name": "estate_page_references_estate_js_owner",
+      "status": "PASS",
+      "detail": "jom_estate_lifecycle_v1.js"
+    },
+    {
+      "name": "templates/estate.html_legacy_absent_static/data",
+      "status": "PASS",
+      "detail": "static/data"
+    },
+    {
+      "name": "templates/estate.html_legacy_absent_monitored_sites.json",
+      "status": "PASS",
+      "detail": "monitored_sites.json"
+    },
+    {
+      "name": "templates/estate.html_legacy_absent_site_access_validation.json",
+      "status": "PASS",
+      "detail": "site_access_validation.json"
+    },
+    {
+      "name": "templates/estate.html_legacy_absent_site_lifecycle_decisions.json",
+      "status": "PASS",
+      "detail": "site_lifecycle_decisions.json"
+    },
+    {
+      "name": "templates/estate.html_legacy_absent_/api/workspace/command-centre",
+      "status": "PASS",
+      "detail": "/api/workspace/command-centre"
+    },
+    {
+      "name": "static/js/jom_estate_lifecycle_v1.js_legacy_absent_static/data",
+      "status": "PASS",
+      "detail": "static/data"
+    },
+    {
+      "name": "static/js/jom_estate_lifecycle_v1.js_legacy_absent_monitored_sites.json",
+      "status": "PASS",
+      "detail": "monitored_sites.json"
+    },
+    {
+      "name": "static/js/jom_estate_lifecycle_v1.js_legacy_absent_site_access_validation.json",
+      "status": "PASS",
+      "detail": "site_access_validation.json"
+    },
+    {
+      "name": "static/js/jom_estate_lifecycle_v1.js_legacy_absent_site_lifecycle_decisions.json",
+      "status": "PASS",
+      "detail": "site_lifecycle_decisions.json"
+    },
+    {
+      "name": "static/js/jom_estate_lifecycle_v1.js_legacy_absent_/api/workspace/command-centre",
+      "status": "PASS",
+      "detail": "/api/workspace/command-centre"
+    }
+  ],
+  "failures": [],
+  "reviews": [],
+  "demo_decision": "READY"
+}
