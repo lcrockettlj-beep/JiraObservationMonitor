@@ -1,0 +1,40 @@
+{
+  "schema": "jom-live-organisation-discovery-v1",
+  "served_at_utc": "2026-07-30T15:50:16Z",
+  "status": "ok",
+  "live_collection": true,
+  "authority": "atlassian_admin_organisations_api",
+  "source_endpoint": "https://api.atlassian.com/admin/v1/orgs",
+  "token_source": "tokens.json:access_token",
+  "token_source_detail": {
+    "source": "tokens.json",
+    "configured": true,
+    "tokens_json": {
+      "exists": true,
+      "readable": true,
+      "access_token_present": true,
+      "refresh_token_present": true,
+      "expires_at_epoch_present": true,
+      "expired_or_near_expiry": false,
+      "scope_present": true,
+      "scope": "manage:jira-configuration offline_access read:application-role:jira read:jira-user read:jira-work read:license:jira",
+      "value_exposed": false
+    },
+    "refresh": {
+      "attempted": false,
+      "available": false,
+      "value_exposed": false
+    },
+    "value_exposed": false
+  },
+  "organisation_count": 0,
+  "organisations": [],
+  "pages_seen": 1,
+  "last_payload_keys": [
+    "data",
+    "links",
+    "meta"
+  ],
+  "static_fallback_used": false,
+  "secrets_exposed": false
+}

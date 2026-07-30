@@ -1,0 +1,21 @@
+{
+  "schema": "jom-atlassian-organisation-auth-source-audit-v1",
+  "generated_at_utc": "2026-07-30T15:50:16Z",
+  "status": "oauth_token_candidate_present",
+  "admin_token_sources_configured": [],
+  "oauth_client_configured": true,
+  "oauth_client_secret_configured": true,
+  "tokens_json_summary": {
+    "exists": true,
+    "readable": true,
+    "access_token_present": true,
+    "refresh_token_present": true,
+    "expires_at_epoch_present": true,
+    "expired_or_near_expiry": false,
+    "scope_present": true,
+    "scope": "manage:jira-configuration offline_access read:application-role:jira read:jira-user read:jira-work read:license:jira",
+    "value_exposed": false
+  },
+  "secrets_exposed": false,
+  "static_fallback_used": false
+}
