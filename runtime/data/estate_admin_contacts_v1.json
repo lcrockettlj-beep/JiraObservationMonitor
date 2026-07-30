@@ -1,8 +1,37 @@
 {
   "schema": "jom-estate-admin-contacts-v1",
-  "generated_at_utc": "2026-07-30T07:43:43.412754+00:00",
-  "status": "unavailable",
+  "generated_at_utc": "2026-07-30T09:04:10Z",
+  "status": "available_no_contacts_mapped",
   "contacts": [],
-  "reason": "No verified live admin contact source configured",
-  "fabricated_contacts": false
+  "reason": "Live role assignment endpoint is available, but no admin-role assignments mapped to known sites yet.",
+  "fabricated_contacts": false,
+  "source": "atlassian_admin_v2_user_role_assignments",
+  "summary": {
+    "known_site_count": 9,
+    "directory_id_count": 21,
+    "assignment_count": 55,
+    "user_hint_count": 20,
+    "contact_count": 0,
+    "successful_role_probe_count": 20
+  },
+  "diagnostics": {
+    "directory_discovery": [
+      {
+        "name": "directories",
+        "ok": true,
+        "status": 200,
+        "row_count": 1,
+        "error": null
+      },
+      {
+        "name": "workspaces",
+        "ok": true,
+        "status": 200,
+        "row_count": 20,
+        "error": null
+      }
+    ],
+    "probe_count": 105,
+    "failed_probe_count": 84
+  }
 }
