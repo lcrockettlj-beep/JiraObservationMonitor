@@ -1,3 +1,7 @@
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
 from __future__ import annotations
 
 import json
@@ -6,9 +10,9 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STATUS = ROOT / "reports" / "operational_console_enhancement_suite_template_binding_status.json"
-CSS_LINK = "<link rel=\"stylesheet\" href=\"{{ url_for('static', filename='css/operational_console_enhancements.css') }}\">"
-JS_SCRIPT = "<script defer src=\"{{ url_for('static', filename='js/operational_console_enhancements.js') }}\"></script>"
+STATUS = ROOT / "reports" / "runtime_contract_disabled_operational_consoleenhancement_suite_template_binding_status.json"
+CSS_LINK = "<link rel=\"stylesheet\" href=\"{{ url_for('static', filename='css/runtime_contract_disabled_operational_consoleenhancements.css') }}\">"
+JS_SCRIPT = "<script defer src=\"{{ url_for('static', filename='js/runtime_contract_disabled_operational_consoleenhancements.js') }}\"></script>"
 
 
 def inject(path: Path) -> dict:
@@ -20,7 +24,7 @@ def inject(path: Path) -> dict:
     if JS_SCRIPT not in text:
         text = text.replace("</body>", f"  {JS_SCRIPT}\n</body>") if "</body>" in text else text + "\n" + JS_SCRIPT + "\n"
     if text != original:
-        backup = ROOT / "backups" / f"operational_console_enhancement_suite_template_binding_{datetime.now().strftime('%Y%m%d_%H%M%S')}" / path.relative_to(ROOT)
+        backup = ROOT / "backups" / f"runtime_contract_disabled_operational_consoleenhancement_suite_template_binding_{datetime.now().strftime('%Y%m%d_%H%M%S')}" / path.relative_to(ROOT)
         backup.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, backup)
         path.write_text(text, encoding="utf-8")

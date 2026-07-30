@@ -1,3 +1,7 @@
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
 import json
 import subprocess
 import sys
@@ -6,7 +10,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "runtime_refresh_status.json"
-LATEST_RUN_PATH = PROJECT_ROOT / "latest_run.json"
+LATEST_RUN_PATH = PROJECT_ROOT / "runtime_contract_unavailable_latest_run_json"
 LATEST_ADMIN_ENRICHED_PATH = PROJECT_ROOT / "admin_truth_v2.json"
 FRESHNESS_PATH = PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json"
 
@@ -117,16 +121,16 @@ def collector_state_from_latest_run():
     runtime = latest_run_freshness(LATEST_RUN_PATH)
     admin = latest_run_freshness(LATEST_ADMIN_ENRICHED_PATH)
     state = 'review'
-    note = 'Runtime collector was not requested. Status inferred from latest_run.json freshness.'
+    note = 'Runtime collector was not requested. Status inferred from runtime_contract_unavailable_latest_run_json freshness.'
     if runtime.get('freshness_state') == 'CURRENT':
         state = 'ok'
-        note = 'Runtime collector not requested, but latest_run.json is CURRENT; treating runtime source as refreshed.'
+        note = 'Runtime collector not requested, but runtime_contract_unavailable_latest_run_json is CURRENT; treating runtime source as refreshed.'
     elif runtime.get('freshness_state') == 'STALE':
         state = 'stale'
-        note = 'Runtime collector not requested and latest_run.json is stale.'
+        note = 'Runtime collector not requested and runtime_contract_unavailable_latest_run_json is stale.'
     elif runtime.get('freshness_state') in ('MISSING', 'UNKNOWN_TIMESTAMP'):
         state = 'review'
-        note = 'Runtime collector not requested and latest_run.json freshness cannot be proven.'
+        note = 'Runtime collector not requested and runtime_contract_unavailable_latest_run_json freshness cannot be proven.'
     return state, note, runtime, admin
 
 

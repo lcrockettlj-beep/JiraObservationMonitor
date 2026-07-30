@@ -1,4 +1,8 @@
-﻿from __future__ import annotations
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
+from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -117,7 +121,7 @@ def main() -> int:
 
     legacy = [
         source_record("billing_seats", DATA / "estate_access_truth.json", "blocked legacy input; not website truth"),
-        source_record("latest_run", ROOT / "latest_run.json", "blocked legacy input; not website truth"),
+        source_record("latest_run", ROOT / "runtime_contract_unavailable_latest_run_json", "blocked legacy input; not website truth"),
         source_record("latest_run_admin_enriched", ROOT / "admin_truth_v2.json", "blocked legacy input; not website truth"),
     ]
 

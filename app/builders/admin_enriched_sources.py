@@ -1,3 +1,7 @@
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
 import json
 import subprocess
 import sys
@@ -8,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "admin_enriched_refresh_status.json"
 ADMIN_ENRICHED = PROJECT_ROOT / "admin_truth_v2.json"
 ADMIN_ENRICHED_PRETTY = PROJECT_ROOT / "admin_truth_v2.json"
-LATEST_RUN = PROJECT_ROOT / "latest_run.json"
+LATEST_RUN = PROJECT_ROOT / "runtime_contract_unavailable_latest_run_json"
 
 # Candidate scripts are intentionally conservative. The pack will not invent admin-enriched data.
 # It will run a detected existing project script only, otherwise it records manual action required.

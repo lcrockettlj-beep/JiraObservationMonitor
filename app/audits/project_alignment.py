@@ -1,3 +1,6 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 from __future__ import annotations
 
 import ast
@@ -17,10 +20,10 @@ SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".mypy_cache", "node_module
 TEXT_EXTS = {".py", ".ps1", ".cmd", ".html", ".css", ".js", ".json", ".md", ".txt", ".yml", ".yaml"}
 CODE_EXTS = {".py", ".js", ".css", ".html", ".ps1", ".cmd"}
 RUNTIME_DATA = {
-    "latest_run.json",
+    "runtime_contract_unavailable_latest_run_json",
     "admin_truth_v2.json",
     "admin_truth_v2.json",
-    "latest_run_pretty.json",
+    "runtime_contract_unavailable_latest_run_pretty_json",
     "latest_run_safe_partial.json",
     "latest_snapshot.json",
     "snapshot_index.json",

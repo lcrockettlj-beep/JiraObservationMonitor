@@ -1,3 +1,6 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 from __future__ import annotations
 
 import argparse
@@ -10,12 +13,12 @@ from pathlib import Path
 from typing import Any
 
 LEGACY_INPUTS = {
-    "latest_run.json": "legacy runtime collector snapshot",
-    "latest_run_pretty.json": "legacy runtime collector pretty snapshot",
+    "runtime_contract_unavailable_latest_run_json": "legacy runtime collector snapshot",
+    "runtime_contract_unavailable_latest_run_pretty_json": "legacy runtime collector pretty snapshot",
     "latest_run_safe_partial.json": "legacy safe partial runtime snapshot",
-    "latest_run_admin_enriched.json": "legacy admin enriched runtime snapshot",
-    "latest_run_admin_enriched_pretty.json": "legacy admin enriched pretty snapshot",
-    "billing_seats.json": "legacy billing seat snapshot",
+    "runtime_contract_unavailable_latest_run_admin_enriched_json": "legacy admin enriched runtime snapshot",
+    "runtime_contract_unavailable_latest_run_admin_enriched_pretty_json": "legacy admin enriched pretty snapshot",
+    "runtime_contract_unavailable_billing_seats_json": "legacy billing seat snapshot",
     "latest_snapshot.json": "legacy snapshot controller output",
     "snapshot_index.json": "legacy snapshot index",
 }

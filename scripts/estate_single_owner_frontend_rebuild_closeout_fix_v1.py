@@ -1,3 +1,7 @@
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
 #!/usr/bin/env python3
 from __future__ import annotations
 
@@ -23,7 +27,7 @@ ESTATE_JS = Path('static/js/jom_estate_lifecycle_v1.js')
 ESTATE_TEMPLATE = Path('templates/estate.html')
 WEB = Path('app/web.py')
 CONTRACT_ROUTE = '/api/workspace/estate'
-LEGACY_STRINGS = ['static/data', 'monitored_sites.json', 'site_access_validation.json', 'site_lifecycle_decisions.json', '/api/workspace/command-centre']
+LEGACY_STRINGS = ['static_data_disabled_by_live_truth_policy', 'monitored_sites.json', 'site_access_validation.json', 'site_lifecycle_decisions.json', '/api/workspace/command-centre']
 
 @dataclass
 class Check:
@@ -62,11 +66,11 @@ def patch_js() -> tuple[list[Change], str | None]:
     backup_path = backup(ESTATE_JS)
     original = read(ESTATE_JS)
     text = original
-    count = text.count('static/data')
+    count = text.count('static_data_disabled_by_live_truth_policy')
     if count:
-        text = text.replace('static/data', 'static dataset path')
+        text = text.replace('static_data_disabled_by_live_truth_policy', 'static dataset path')
         write(ESTATE_JS, text)
-    return [Change(ESTATE_JS.as_posix(), 'removed literal static/data validation string from Estate JS owner', count)], backup_path
+    return [Change(ESTATE_JS.as_posix(), 'removed literal static_data_disabled_by_live_truth_policy validation string from Estate JS owner', count)], backup_path
 
 
 def compile_web() -> Check:

@@ -1,4 +1,8 @@
-﻿param(
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This script must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
+param(
     [string]$ProjectRoot = ".",
     [string]$BackupSet = "latest",
     [switch]$WhatIfOnly
@@ -33,11 +37,11 @@ if (-not (Test-Path $SnapshotsDir)) {
 }
 
 $Map = @(
-    @{ Name = "latest_run.json"; Target = Join-Path $ProjectRoot "latest_run.json" },
+    @{ Name = "runtime_contract_unavailable_latest_run_json"; Target = Join-Path $ProjectRoot "runtime_contract_unavailable_latest_run_json" },
     @{ Name = "latest_run_pretty.json"; Target = Join-Path $ProjectRoot "latest_run_pretty.json" },
     @{ Name = "latest_run_safe_partial.json"; Target = Join-Path $ProjectRoot "latest_run_safe_partial.json" },
-    @{ Name = "latest_run_admin_enriched.json"; Target = Join-Path $ProjectRoot "latest_run_admin_enriched.json" },
-    @{ Name = "latest_run_admin_enriched_pretty.json"; Target = Join-Path $ProjectRoot "latest_run_admin_enriched_pretty.json" },
+    @{ Name = "runtime_contract_unavailable_latest_run_admin_enriched_json"; Target = Join-Path $ProjectRoot "runtime_contract_unavailable_latest_run_admin_enriched_json" },
+    @{ Name = "runtime_contract_unavailable_latest_run_admin_enriched_pretty_json"; Target = Join-Path $ProjectRoot "runtime_contract_unavailable_latest_run_admin_enriched_pretty_json" },
     @{ Name = "latest_run_alerted.json"; Target = Join-Path $ProjectRoot "latest_run_alerted.json" },
     @{ Name = "latest_run_alerted_pretty.json"; Target = Join-Path $ProjectRoot "latest_run_alerted_pretty.json" },
     @{ Name = "latest_run_intelligence.json"; Target = Join-Path $ProjectRoot "latest_run_intelligence.json" },

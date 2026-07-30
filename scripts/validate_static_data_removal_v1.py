@@ -1,9 +1,12 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-FILES=['admin_enriched_refresh_status.json', 'admin_truth_v2.json', 'backend_final_truth_chain_status.json', 'backend_legacy_truth_eradication_status.json', 'billing_seats.json', 'estate_access_truth.json', 'estate_admin_site_inventory_v1.json', 'estate_product_access.json', 'monitored_sites.json', 'runtime_execution_history.json', 'runtime_execution_status.json', 'site_access_validation.json', 'site_lifecycle_decisions.json', 'site_onboarding_review.json', 'site_registry.json', 'source_freshness_audit.json', 'source_reliability_status.json', 'user_footprint.json']
+FILES=['admin_enriched_refresh_status.json', 'admin_truth_v2.json', 'backend_final_truth_chain_status.json', 'backend_legacy_truth_eradication_status.json', 'runtime_contract_unavailable_billing_seats_json', 'estate_access_truth.json', 'estate_admin_site_inventory_v1.json', 'estate_product_access.json', 'monitored_sites.json', 'runtime_execution_history.json', 'runtime_execution_status.json', 'site_access_validation.json', 'site_lifecycle_decisions.json', 'site_onboarding_review.json', 'site_registry.json', 'source_freshness_audit.json', 'source_reliability_status.json', 'user_footprint.json']
 REPORT=ROOT/'reports'/'static_data_removal_validation_v1.json'
 def now(): return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
 def fail(msg, result):

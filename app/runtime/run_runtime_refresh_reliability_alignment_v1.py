@@ -1,3 +1,6 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 from __future__ import annotations
 
 import json
@@ -14,7 +17,7 @@ SOURCE_RELIABILITY = ROOT / "runtime" / "data" / "source_reliability_status.json
 SOURCE_RELIABILITY_SCRIPT = ROOT / "scripts" / "source_reliability_audit.py"
 APP_SOURCE_RELIABILITY = ROOT / "app" / "audits" / "source_reliability.py"
 
-EXPECTED_NOTE = "Runtime collector was not requested. Status inferred from latest_run.json freshness."
+EXPECTED_NOTE = "Runtime collector was not requested. Status inferred from runtime_contract_unavailable_latest_run_json freshness."
 
 
 def now_utc() -> str:

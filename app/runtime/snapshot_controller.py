@@ -1,3 +1,7 @@
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
 import sys
 import io
 from datetime import datetime, time, timedelta
@@ -26,8 +30,8 @@ Rules:
 
 Important runtime-file behaviour in this replacement:
 - Prefer latest_run_intelligence.json when present
-- Fallback to latest_run.json
-- Fallback to backups/latest_runtime/current/latest_run.json
+- Fallback to runtime_contract_unavailable_latest_run_json
+- Fallback to backups/latest_runtime/current/runtime_contract_unavailable_latest_run_json
 - Fallback to latest_run_safe_partial.json
 This keeps anchor creation aligned with the current morning startup pipeline.
 """
@@ -43,8 +47,8 @@ SNAPSHOT_INDEX_FILE = SNAPSHOT_DIR / "snapshot_index.json"
 
 RUNTIME_CANDIDATES = [
     PROJECT_ROOT / "latest_run_intelligence.json",
-    PROJECT_ROOT / "latest_run.json",
-    PROJECT_ROOT / "backups" / "latest_runtime" / "current" / "latest_run.json",
+    PROJECT_ROOT / "runtime_contract_unavailable_latest_run_json",
+    PROJECT_ROOT / "backups" / "latest_runtime" / "current" / "runtime_contract_unavailable_latest_run_json",
     PROJECT_ROOT / "latest_run_safe_partial.json",
 ]
 

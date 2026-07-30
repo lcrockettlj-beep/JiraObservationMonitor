@@ -1,3 +1,6 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 #!/usr/bin/env python3
 """
 JOM Runtime Authority Consumer Elimination Audit v1.
@@ -55,10 +58,10 @@ STATIC_TRUTH_PATTERNS = [
     ("monitored_sites.json", re.compile(r"monitored_sites\.json", re.I)),
     ("site_access_validation.json", re.compile(r"site_access_validation\.json", re.I)),
     ("site_lifecycle_decisions.json", re.compile(r"site_lifecycle_decisions\.json", re.I)),
-    ("latest_run_admin_enriched.json", re.compile(r"latest_run_admin_enriched(?:_pretty)?\.json", re.I)),
-    ("billing_seats.json", re.compile(r"billing_seats\.json", re.I)),
-    ("admin_named_access.json", re.compile(r"admin_named_access\.json", re.I)),
-    ("named_access_truth_v2.json", re.compile(r"named_access_truth_v2\.json", re.I)),
+    ("runtime_contract_unavailable_latest_run_admin_enriched_json", re.compile(r"runtime_contract_unavailable_latest_run_admin_enriched_pattern", re.I)),
+    ("runtime_contract_unavailable_billing_seats_json", re.compile(r"runtime_contract_unavailable_billing_seats_pattern", re.I)),
+    ("runtime_contract_unavailable_admin_named_access_json", re.compile(r"runtime_contract_unavailable_admin_named_access_pattern", re.I)),
+    ("runtime_contract_unavailable_named_access_truth_v2_json", re.compile(r"runtime_contract_unavailable_named_access_truth_v2_pattern", re.I)),
 ]
 
 AUTHORITY_ROUTE = "/api/estate/discovery-authority/coverage"

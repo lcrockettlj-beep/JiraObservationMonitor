@@ -51,6 +51,44 @@ def now_utc() -> str:
 def load_json(filename, default=None):
     return runtime_read_json(filename, default)
 
+
+# --- JOM LIVE WEBSITE TRUTH POLICY v1 START ---
+# Website-facing backend routes must not use legacy/manual snapshot files as truth.
+# Runtime-generated/live contracts may be used, but they must remain explicitly labelled
+# by the route contract freshness/status logic.
+LEGACY_NON_WEBSITE_TRUTH_FILES = {
+    "latest_run.json",
+    "latest_run_admin_enriched.json",
+    "latest_run_admin_enriched_pretty.json",
+    "billing_seats.json",
+    "admin_named_access.json",
+    "named_access_truth_v2.json",
+}
+
+LIVE_WEBSITE_TRUTH_FILES = {
+    "admin_enriched_refresh_status.json",
+    "admin_truth_v2.json",
+    "backend_final_truth_chain_status.json",
+    "backend_legacy_truth_eradication_status.json",
+    "estate_access_truth.json",
+    "estate_admin_site_inventory_v1.json",
+    "estate_discovery_authority_v1.json",
+    "estate_product_access.json",
+    "organisation_auth_source_audit.json",
+    "organisation_discovery.json",
+    "operational_source_recovery_status.json",
+    "product_access_refresh_status.json",
+    "runtime_execution_history.json",
+    "runtime_execution_status.json",
+    "runtime_live_truth_status.json",
+    "site_onboarding_review.json",
+    "site_registry.json",
+    "source_freshness_audit.json",
+    "source_reliability_status.json",
+    "user_footprint.json",
+}
+# --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
+
 def website_truth_classification(filename: str) -> Dict[str, Any]:
     name = Path(str(filename)).name
     if name in LEGACY_NON_WEBSITE_TRUTH_FILES:
@@ -2519,6 +2557,67 @@ def estate_discovery_authority_coverage():
         },
     })
 
+
+
+# --- JOM LIVE ORGANISATION DISCOVERY CONTRACT v1 START ---
+@app.route("/api/estate/organisations")
+@app.route("/api/estate/organizations")
+def api_estate_organisations_live_v1():
+    """Live Atlassian organisation discovery.
+
+    This route does not use static fallback data. If the admin API token is not
+    configured or Atlassian does not return organisation data, the route reports
+    unavailable/error instead of inventing organisation counts.
+    """
+    try:
+        from app.builders.organisation_discovery import collect_organisation_discovery
+        payload = collect_organisation_discovery()
+        try:
+            runtime_write_json("organisation_discovery.json", payload)
+        except Exception as write_exc:
+            if isinstance(payload, dict):
+                payload.setdefault("warnings", []).append("organisation discovery cache write failed: " + str(write_exc))
+        status = 200 if payload.get("status") in {"ok", "unavailable"} else 502
+        return jsonify(payload), status
+    except Exception as exc:
+        return jsonify({
+            "schema": "jom-live-organisation-discovery-v1",
+            "status": "error",
+            "live_collection": False,
+            "organisation_count": None,
+            "organisations": [],
+            "error": str(exc),
+            "static_fallback_used": False,
+        }), 500
+# --- JOM LIVE ORGANISATION DISCOVERY CONTRACT v1 END ---
+
+
+# --- JOM ATLASSIAN ORGANISATION AUTH SOURCE AUDIT v1 START ---
+@app.route("/api/estate/organisation-auth-source-audit")
+@app.route("/api/estate/organization-auth-source-audit")
+def api_estate_organisation_auth_source_audit_v1():
+    """Audit configured Atlassian organisation authentication sources.
+
+    This route reports presence/absence of usable auth sources without exposing
+    secret values and without creating frontend truth.
+    """
+    try:
+        from app.audits.organisation_auth_source_audit import audit_organisation_auth_sources
+        payload = audit_organisation_auth_sources()
+        try:
+            runtime_write_json("organisation_auth_source_audit.json", payload)
+        except Exception as write_exc:
+            payload.setdefault("warnings", []).append("organisation auth source audit cache write failed: " + str(write_exc))
+        return jsonify(payload)
+    except Exception as exc:
+        return jsonify({
+            "schema": "jom-atlassian-organisation-auth-source-audit-v1",
+            "status": "error",
+            "error": str(exc),
+            "secrets_exposed": False,
+            "static_fallback_used": False,
+        }), 500
+# --- JOM ATLASSIAN ORGANISATION AUTH SOURCE AUDIT v1 END ---
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

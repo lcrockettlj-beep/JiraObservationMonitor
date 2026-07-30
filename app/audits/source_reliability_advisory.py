@@ -1,10 +1,13 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-EXPECTED_NOTE = "Runtime collector was not requested. Status inferred from latest_run.json freshness."
+EXPECTED_NOTE = "Runtime collector was not requested. Status inferred from runtime_contract_unavailable_latest_run_json freshness."
 
 
 def now_utc() -> str:

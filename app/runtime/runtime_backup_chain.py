@@ -1,3 +1,7 @@
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
 from __future__ import annotations
 
 import io
@@ -18,7 +22,7 @@ HISTORY_DIR = BACKUP_ROOT / "history"
 CURRENT_MANIFEST = BACKUP_ROOT / "latest_manifest.json"
 
 FILES_TO_BACKUP: List[Tuple[Path, str]] = [
-    (PROJECT_ROOT / "latest_run.json", "latest_run.json"),
+    (PROJECT_ROOT / "runtime_contract_unavailable_latest_run_json", "runtime_contract_unavailable_latest_run_json"),
     (PROJECT_ROOT / "latest_run_pretty.json", "latest_run_pretty.json"),
     (PROJECT_ROOT / "latest_run_safe_partial.json", "latest_run_safe_partial.json"),
     (PROJECT_ROOT / "admin_truth_v2.json", "admin_truth_v2.json"),

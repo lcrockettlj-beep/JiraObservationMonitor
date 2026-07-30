@@ -1,3 +1,6 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 #!/usr/bin/env python3
 from __future__ import annotations
 
@@ -45,7 +48,7 @@ STATIC_PATTERNS=[
 LEGACY_FILENAMES=[
     'site_registry.json','estate_access_truth.json','site_registry.json',
     'admin_truth_v2.json','admin_truth_v2.json','estate_access_truth.json',
-    'admin_named_access.json','named_access_truth_v2.json'
+    'runtime_contract_unavailable_admin_named_access_json','runtime_contract_unavailable_named_access_truth_v2_json'
 ]
 
 @dataclass

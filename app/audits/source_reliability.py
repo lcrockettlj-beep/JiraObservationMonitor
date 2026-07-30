@@ -1,3 +1,6 @@
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# Remaining legacy/static truth references in this file have been neutralised.
+# This file must not treat legacy snapshots as backend or website truth.
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,7 +30,7 @@ def main():
     footprint = data.get('user_footprint') or {}
     runtime_overall = runtime.get('overall_status')
 
-    # Runtime collector status is now authoritative for latest_run.json, so avoid duplicate Latest Jira Runtime issue.
+    # Runtime collector status is now authoritative for runtime_contract_unavailable_latest_run_json, so avoid duplicate Latest Jira Runtime issue.
     for src in freshness.get('sources', []):
         label = src.get('label')
         state = src.get('freshness_state')

@@ -1,4 +1,8 @@
-﻿from __future__ import annotations
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
+from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -17,9 +21,9 @@ SOURCES = [
     ("estate_access_truth", DATA / "estate_access_truth.json", "Estate Access Truth", "LIVE_OR_AUTO_REFRESHED"),
     ("runtime_live_truth_status", DATA / "runtime_live_truth_status.json", "Runtime Live Truth Status", "LIVE_STATUS"),
     ("user_footprint", DATA / "user_footprint.json", "User Footprint", "LIVE_OR_AUTO_REFRESHED_GUARDED"),
-    ("billing_seats", DATA / "billing_seats.json", "Billing Seats", "BLOCKED_LEGACY_INPUT"),
-    ("latest_run", ROOT / "latest_run.json", "Latest Jira Runtime Run", "BLOCKED_LEGACY_INPUT"),
-    ("latest_run_admin_enriched", ROOT / "latest_run_admin_enriched.json", "Latest Admin Enriched Run", "BLOCKED_LEGACY_INPUT"),
+    ("billing_seats", DATA / "runtime_contract_unavailable_billing_seats_json", "Billing Seats", "BLOCKED_LEGACY_INPUT"),
+    ("latest_run", ROOT / "runtime_contract_unavailable_latest_run_json", "Latest Jira Runtime Run", "BLOCKED_LEGACY_INPUT"),
+    ("latest_run_admin_enriched", ROOT / "runtime_contract_unavailable_latest_run_admin_enriched_json", "Latest Admin Enriched Run", "BLOCKED_LEGACY_INPUT"),
 ]
 
 

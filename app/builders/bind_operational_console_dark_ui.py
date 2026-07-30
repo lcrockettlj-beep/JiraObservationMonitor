@@ -1,3 +1,7 @@
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This code must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
 from __future__ import annotations
 
 import json
@@ -6,9 +10,9 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STATUS = ROOT / "reports" / "operational_console_dark_ui_template_binding_status.json"
-CSS_LINK = "<link rel=\"stylesheet\" href=\"{{ url_for('static', filename='css/operational_console_dark.css') }}\">"
-JS_SCRIPT = "<script defer src=\"{{ url_for('static', filename='js/operational_console_dark.js') }}\"></script>"
+STATUS = ROOT / "reports" / "runtime_contract_disabled_operational_consoledark_ui_template_binding_status.json"
+CSS_LINK = "<link rel=\"stylesheet\" href=\"{{ url_for('static', filename='css/runtime_contract_disabled_operational_consoledark.css') }}\">"
+JS_SCRIPT = "<script defer src=\"{{ url_for('static', filename='js/runtime_contract_disabled_operational_consoledark.js') }}\"></script>"
 PANEL = """<!-- JOM_OPERATIONAL_CONSOLE_START -->
 <section id="operational-console-panel" class="jom-operational-console" aria-label="Operational console status">
   <div class="jom-opcon-header">
@@ -42,7 +46,7 @@ def inject_template(path: Path) -> dict:
         else:
             text += "\n" + PANEL + "\n"
     if text != original:
-        backup = ROOT / "backups" / f"operational_console_dark_ui_template_binding_{datetime.now().strftime('%Y%m%d_%H%M%S')}" / path.relative_to(ROOT)
+        backup = ROOT / "backups" / f"runtime_contract_disabled_operational_consoledark_ui_template_binding_{datetime.now().strftime('%Y%m%d_%H%M%S')}" / path.relative_to(ROOT)
         backup.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, backup)
         path.write_text(text, encoding="utf-8")

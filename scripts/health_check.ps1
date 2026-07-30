@@ -1,4 +1,8 @@
-﻿# ============================================================
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# Legacy/static truth references in this file have been neutralised.
+# This script must not silently read legacy snapshots as website/backend truth.
+# Unavailable live/runtime data must be reported as unavailable.
+# ============================================================
 # health_check.ps1 - JOM Quick Smoke Test
 # ============================================================
 #
@@ -124,11 +128,11 @@ function Get-BackupManifestSummary {
 
 function Get-ExpectedBackupFileNames {
     return @(
-        "latest_run.json",
+        "runtime_contract_unavailable_latest_run_json",
         "latest_run_pretty.json",
         "latest_run_safe_partial.json",
-        "latest_run_admin_enriched.json",
-        "latest_run_admin_enriched_pretty.json",
+        "runtime_contract_unavailable_latest_run_admin_enriched_json",
+        "runtime_contract_unavailable_latest_run_admin_enriched_pretty_json",
         "latest_run_alerted.json",
         "latest_run_alerted_pretty.json",
         "latest_run_intelligence.json",
