@@ -179,7 +179,7 @@
       const monitoring = isMonitored(site) ? 'Enabled' : 'Not enabled';
       const health = healthLabel(site);
       const last = site.last_observation || site.last_seen || site.observed_at || site.updated_at || 'Live contract';
-      const action = url ? '<a class="estate-site-link estate-site-link--button" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">Open site <span class="estate-external-icon">â†—</span></a>' : '<span class="estate-status-pill estate-status-pill--review">No site link</span>';
+      const action = url ? '<a class="estate-site-link estate-site-link--button" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">Open site</a>' : '<span class="estate-status-pill estate-status-pill--review">No site link</span>';
       return '<tr data-site-key="' + escapeHtml(key) + '" data-estate-state="' + escapeHtml(normaliseState(site)) + '">' +
         '<td><strong>' + escapeHtml(name) + '</strong><br><small>' + escapeHtml(key || 'Unavailable') + '</small></td>' +
         '<td><span class="' + pillClass(lifecycle) + '">' + escapeHtml(lifecycle) + '</span></td>' +
@@ -538,4 +538,6 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run); else run();
 }());
 // JOM Estate Registry Table Filter Fix v1 END
+
+
 
