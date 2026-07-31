@@ -1,4 +1,4 @@
-/* JOM Estate release frontend v1
+﻿/* JOM Estate release frontend v1
  * Owner: static/js/jom_estate_lifecycle_v1.js
  * Contract: /api/workspace/estate
  * Rules: no static dataset path, no legacy JSON, no Command Centre contract dependency.
@@ -179,7 +179,7 @@
       const monitoring = isMonitored(site) ? 'Enabled' : 'Not enabled';
       const health = healthLabel(site);
       const last = site.last_observation || site.last_seen || site.observed_at || site.updated_at || 'Live contract';
-      const action = url ? '<a class="estate-site-link estate-site-link--button" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">Open site <span class="estate-external-icon">↗</span></a>' : '<span class="estate-status-pill estate-status-pill--review">No site link</span>';
+      const action = url ? '<a class="estate-site-link estate-site-link--button" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">Open site <span class="estate-external-icon">â†—</span></a>' : '<span class="estate-status-pill estate-status-pill--review">No site link</span>';
       return '<tr data-site-key="' + escapeHtml(key) + '" data-estate-state="' + escapeHtml(normaliseState(site)) + '">' +
         '<td><strong>' + escapeHtml(name) + '</strong><br><small>' + escapeHtml(key || 'Unavailable') + '</small></td>' +
         '<td><span class="' + pillClass(lifecycle) + '">' + escapeHtml(lifecycle) + '</span></td>' +
@@ -265,3 +265,251 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadEstate);
   else loadEstate();
 }());
+
+// JOM Estate Existing UI Filter Patch v1 START
+(function () {
+  "use strict";
+
+  const CONTRACT_URL = "/api/workspace/estate";
+  const LIVE_EVIDENCE = new Set([
+    "live_oauth_accessible_resources",
+    "live_admin_event_reference",
+    "live_admin_org",
+    "live_product_access",
+    "oauth_accessible_resources",
+    "admin_org_events"
+  ]);
+  const UNTRUSTED_EVIDENCE = new Set([
+    "manual_unverified",
+    "manual_validation_target",
+    "known_from_support_case_manual_only",
+    "known_from_admin_screenshot_or_support_case_manual_only",
+    "static",
+    "cached",
+    "unknown"
+  ]);
+
+  function asArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function lower(value) {
+    return String(value || "").toLowerCase();
+  }
+
+  function normalizeKey(value) {
+    return lower(value).replace(/^https?:\/\//, "").replace(/\.atlassian\.net.*$/, "").trim();
+  }
+
+  function getRecordKey(record) {
+    const inventory = record.inventory || {};
+    const registry = record.registry || {};
+    return normalizeKey(
+      record.key ||
+      record.site_key ||
+      record.siteKey ||
+      record.name ||
+      record.site_name ||
+      registry.site_key ||
+      registry.siteKey ||
+      registry.site_name ||
+      inventory.site_key ||
+      inventory.siteKey ||
+      inventory.name ||
+      inventory.url ||
+      record.url ||
+      ""
+    );
+  }
+
+  function mergedSignals(record) {
+    const inventory = record.inventory || {};
+    const registry = record.registry || {};
+    return {
+      key: getRecordKey(record),
+      sources: [
+        ...asArray(record.sources),
+        ...asArray(record.source),
+        ...asArray(inventory.sources),
+        ...asArray(registry.sources)
+      ].map(lower),
+      evidence: [
+        ...asArray(record.evidence_levels),
+        ...asArray(record.evidenceLevels),
+        ...asArray(inventory.evidence_levels),
+        ...asArray(registry.evidence_levels)
+      ].map(lower),
+      lifecycle: lower(record.lifecycle || registry.lifecycle || inventory.lifecycle || registry.collector_onboarding_status || inventory.collector_onboarding_status || record.status || registry.status || inventory.status),
+      approvedMonitored: record.approved_monitored === true || registry.approved_monitored === true || inventory.approved_monitored === true,
+      monitored: record.is_monitored === true || record.monitored === true || registry.is_monitored === true || registry.monitored === true || inventory.is_monitored === true || inventory.monitored === true
+    };
+  }
+
+  function hasLiveEvidence(signals) {
+    const values = [...signals.sources, ...signals.evidence];
+    return values.some((value) => LIVE_EVIDENCE.has(value));
+  }
+
+  function isManualOnly(signals) {
+    const values = [...signals.sources, ...signals.evidence];
+    return values.length > 0 && values.every((value) => UNTRUSTED_EVIDENCE.has(value));
+  }
+
+  function isDeletion(signals) {
+    return signals.lifecycle.includes("deletion") || signals.lifecycle.includes("deleted") || signals.lifecycle.includes("retired") || signals.lifecycle.includes("archive");
+  }
+
+  function collectRecords(contract) {
+    const data = contract && contract.data ? contract.data : contract || {};
+    const rows = [];
+
+    asArray(contract && contract.sites).forEach((row) => rows.push(row));
+    asArray(contract && contract.registry && contract.registry.sites).forEach((row) => rows.push(row));
+    asArray(data.registry && data.registry.sites).forEach((row) => rows.push(row));
+    asArray(contract && contract.inventory && contract.inventory.sites).forEach((row) => rows.push({ inventory: row, key: row.site_key, name: row.name || row.site_key, url: row.url }));
+    asArray(data.estate_admin_site_inventory && data.estate_admin_site_inventory.sites).forEach((row) => rows.push({ inventory: row, key: row.site_key, name: row.name || row.site_key, url: row.url }));
+
+    return rows;
+  }
+
+  function buildModel(contract) {
+    const byKey = new Map();
+    collectRecords(contract).forEach((row) => {
+      const signals = mergedSignals(row);
+      if (!signals.key) return;
+      const current = byKey.get(signals.key) || {
+        key: signals.key,
+        live: false,
+        manualOnly: true,
+        monitored: false,
+        deletion: false
+      };
+      current.live = current.live || hasLiveEvidence(signals);
+      current.manualOnly = current.manualOnly && isManualOnly(signals);
+      current.monitored = current.monitored || signals.approvedMonitored || signals.monitored || signals.lifecycle === "monitored";
+      current.deletion = current.deletion || isDeletion(signals);
+      byKey.set(signals.key, current);
+    });
+
+    const model = {
+      monitored: new Set(),
+      discovery: new Set(),
+      deletion: new Set(),
+      excluded: new Set()
+    };
+
+    byKey.forEach((record, key) => {
+      if (!record.live || record.manualOnly) {
+        model.excluded.add(key);
+      } else if (record.deletion) {
+        model.deletion.add(key);
+      } else if (record.monitored) {
+        model.monitored.add(key);
+      } else {
+        model.discovery.add(key);
+      }
+    });
+
+    return model;
+  }
+
+  function findKeyInText(text) {
+    const value = lower(text || "");
+    const keyMatch = value.match(/key:\s*([a-z0-9][a-z0-9-]+)/);
+    if (keyMatch) return normalizeKey(keyMatch[1]);
+    const urlMatch = value.match(/https?:\/\/([a-z0-9-]+)\.atlassian\.net/);
+    if (urlMatch) return normalizeKey(urlMatch[1]);
+    return "";
+  }
+
+  function nearestSectionLabel(element) {
+    let node = element;
+    for (let depth = 0; node && depth < 8; depth += 1, node = node.parentElement) {
+      const text = lower(node.innerText || "");
+      if (text.includes("discovery review queue") || text.includes("discovery queue")) return "discovery";
+      if (text.includes("site registry") || text.includes("central inventory")) return "registry";
+      if (text.includes("deletion") || text.includes("lifecycle queue")) return "deletion";
+    }
+    return "unknown";
+  }
+
+  function candidateRows() {
+    return Array.from(document.querySelectorAll("article, tr, li, .site-row, .site-card, .queue-item, .registry-row, .jom-card, .jom-table-row"));
+  }
+
+  function shouldRemoveRow(section, key, model) {
+    if (!key) return false;
+    if (model.excluded.has(key)) return true;
+    if (section === "registry" && !model.monitored.has(key)) return true;
+    if (section === "discovery" && !model.discovery.has(key)) return true;
+    if (section === "deletion" && !model.deletion.has(key)) return true;
+    return false;
+  }
+
+  function removeRows(model) {
+    candidateRows().forEach((row) => {
+      const key = findKeyInText(row.innerText || row.textContent || "");
+      const section = nearestSectionLabel(row);
+      if (shouldRemoveRow(section, key, model)) {
+        row.setAttribute("data-jom-estate-filtered", "true");
+        row.remove();
+      }
+    });
+  }
+
+  function updateVisibleCounts(model) {
+    const map = [
+      { label: "total sites", value: model.monitored.size + model.discovery.size + model.deletion.size },
+      { label: "monitored", value: model.monitored.size },
+      { label: "discovered", value: model.discovery.size },
+      { label: "review queue", value: model.discovery.size },
+      { label: "approval pending", value: model.discovery.size },
+      { label: "ignored", value: 0 }
+    ];
+
+    Array.from(document.querySelectorAll("*"))
+      .filter((el) => el.children.length === 0 && /^\d+$/.test((el.textContent || "").trim()))
+      .forEach((el) => {
+        const parentText = lower((el.parentElement && el.parentElement.innerText) || "");
+        const found = map.find((item) => parentText.includes(item.label));
+        if (found) el.textContent = String(found.value);
+      });
+  }
+
+  function applyEstateDisplayFilter(model) {
+    removeRows(model);
+    updateVisibleCounts(model);
+    window.JOMEstateDisplayFilterV1 = {
+      monitored: Array.from(model.monitored),
+      discovery: Array.from(model.discovery),
+      deletion: Array.from(model.deletion),
+      excluded: Array.from(model.excluded)
+    };
+  }
+
+  async function runFilter() {
+    try {
+      const response = await fetch(CONTRACT_URL, { headers: { "Accept": "application/json" } });
+      if (!response.ok) return;
+      const contract = await response.json();
+      const model = buildModel(contract);
+
+      let attempts = 0;
+      const timer = window.setInterval(() => {
+        attempts += 1;
+        applyEstateDisplayFilter(model);
+        if (attempts >= 10) window.clearInterval(timer);
+      }, 250);
+    } catch (error) {
+      console.warn("JOM Estate display filter skipped", error);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runFilter);
+  } else {
+    runFilter();
+  }
+}());
+// JOM Estate Existing UI Filter Patch v1 END
+
