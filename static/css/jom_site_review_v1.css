@@ -4,11 +4,11 @@
   --review-muted: #44546f;
   --review-border: #dfe1e6;
   --review-card: #ffffff;
-  --review-rail-width: 260px;
-  --review-rail-edge: 16px;
-  --review-gap: 28px;
-  --review-top: 16px;
-  --review-bottom: 16px;
+  --review-rail-width: var(--jom-layout-rail-width,260px);
+  --review-rail-edge: var(--jom-layout-edge,16px);
+  --review-gap: var(--jom-layout-gap,28px);
+  --review-top: var(--jom-layout-top,16px);
+  --review-bottom: var(--jom-layout-bottom,16px);
   --jom-action-height: 32px;
   --jom-action-padding-x: 12px;
 }
@@ -166,3 +166,107 @@ body[data-jom-page="site-review"] .jom-side-nav {
  .review-operations-rail { position:static; width:auto; height:auto; max-height:none; overflow:visible; margin-bottom:24px; }
  .review-detail-list div { grid-template-columns:1fr; }
 }
+
+/* JOM_SITE_REVIEW_RAIL_WARNING_REMOVE_V1 START */
+/* Remove the rail validation/warning text blocks so decision controls fit cleanly. */
+body[data-jom-page="site-review"] #site-review-validation-status,
+body[data-jom-page="site-review"] #decision-result {
+  display: none !important;
+}
+body[data-jom-page="site-review"] .review-operations-rail {
+  overflow: visible !important;
+  max-height: none !important;
+}
+body[data-jom-page="site-review"] .review-decision-actions--rail {
+  gap: 10px !important;
+}
+body[data-jom-page="site-review"] .review-decision-actions button,
+body[data-jom-page="site-review"] .review-decision-actions .review-action-link {
+  white-space: normal !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow-wrap: normal !important;
+}
+/* JOM_SITE_REVIEW_RAIL_WARNING_REMOVE_V1 END */
+/* JOM_SITE_REVIEW_DECISION_HELP_OVERLAP_FIX_V1 START */
+/* Remove only the explanatory text under Decision Controls. Keep validation/result messages available. */
+body[data-jom-page="site-review"] #decision-help {
+  display: none !important;
+}
+/* Reserve enough room for the fixed right rail so it does not sit over the centre content. */
+body[data-jom-page="site-review"] .jom-site-review-v1 {
+  margin-left: calc(var(--review-rail-edge, 16px) + var(--review-rail-width, 260px) + 32px) !important;
+  margin-right: calc(var(--review-rail-edge, 16px) + var(--review-rail-width, 260px) + 32px) !important;
+}
+body[data-jom-page="site-review"] .review-operations-rail {
+  width: var(--review-rail-width, 260px) !important;
+  right: var(--review-rail-edge, 16px) !important;
+  overflow: visible !important;
+  max-height: none !important;
+}
+/* Keep rail controls compact and single-column without horizontal overflow. */
+body[data-jom-page="site-review"] .review-decision-actions--rail {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+body[data-jom-page="site-review"] .review-decision-actions button,
+body[data-jom-page="site-review"] .review-decision-actions .review-action-link {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+@media(max-width:1180px){
+  body[data-jom-page="site-review"] .jom-site-review-v1 {
+    margin: 0 !important;
+    padding: 18px !important;
+  }
+  body[data-jom-page="site-review"] .review-operations-rail {
+    position: static !important;
+    width: auto !important;
+    max-height: none !important;
+    margin-top: 24px !important;
+  }
+}
+/* JOM_SITE_REVIEW_DECISION_HELP_OVERLAP_FIX_V1 END */
+/* JOM_SITE_REVIEW_RESTORE_WARNING_TILE_HIDE_HELP_V1 START */
+/* Keep the warning/status tile visible, but remove only the explanatory help text under Decision Controls. */
+body[data-jom-page="site-review"] #decision-help {
+  display: none !important;
+}
+body[data-jom-page="site-review"] #site-review-validation-status {
+  display: block !important;
+  margin-top: 10px !important;
+  padding: 10px 12px !important;
+  border: 1px solid rgba(9,30,66,.10) !important;
+  border-radius: 12px !important;
+  background: #fbfcff !important;
+  max-height: none !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+body[data-jom-page="site-review"] #site-review-validation-status[data-state="ok"] {
+  background: #e3fcef !important;
+  color: #006644 !important;
+  border-color: rgba(54,179,126,.35) !important;
+}
+body[data-jom-page="site-review"] #site-review-validation-status[data-state="failed"],
+body[data-jom-page="site-review"] #site-review-validation-status[data-state="blocked"] {
+  background: #ffebe6 !important;
+  color: #bf2600 !important;
+  border-color: rgba(255,86,48,.35) !important;
+}
+body[data-jom-page="site-review"] #decision-result {
+  display: block !important;
+  margin-top: 8px !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+body[data-jom-page="site-review"] .review-operations-rail {
+  overflow: visible !important;
+  max-height: none !important;
+}
+/* JOM_SITE_REVIEW_RESTORE_WARNING_TILE_HIDE_HELP_V1 END */

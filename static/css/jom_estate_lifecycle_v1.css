@@ -4,11 +4,11 @@
   --estate-muted: #44546f;
   --estate-border: #dfe1e6;
   --estate-card: #ffffff;
-  --estate-rail-width: 260px;
-  --estate-rail-edge: 16px;
-  --estate-gap: 28px;
-  --estate-top: 16px;
-  --estate-bottom: 16px;
+  --estate-rail-width: var(--jom-layout-rail-width,260px);
+  --estate-rail-edge: var(--jom-layout-edge,16px);
+  --estate-gap: var(--jom-layout-gap,28px);
+  --estate-top: var(--jom-layout-top,16px);
+  --estate-bottom: var(--jom-layout-bottom,16px);
 }
 
 body[data-jom-page="estate"] .jom-side-nav {

@@ -295,3 +295,140 @@ body[data-jom-page="estate"] .estate-review-table td {
   padding-bottom: 10px !important;
 }
 /* === JOM Global Button Uniformity v1 END === */
+
+/* JOM_ACTIVE_LAYOUT_SPACING_ALIGNMENT_V1 START */
+:root {
+  --jom-layout-rail-width: 260px;
+  --jom-layout-edge: 16px;
+  --jom-layout-gap: 28px;
+  --jom-layout-top: 16px;
+  --jom-layout-bottom: 16px;
+  --jom-layout-main-left: calc(var(--jom-layout-edge) + var(--jom-layout-rail-width) + 32px);
+  --jom-layout-main-right: 22px;
+  --jom-layout-section-gap: 28px;
+  --jom-layout-card-radius: 18px;
+  --jom-layout-rail-radius: 22px;
+  --jom-layout-card-shadow: 0 16px 34px rgba(9,30,66,.08);
+  --jom-layout-rail-shadow: 0 18px 45px rgba(9,30,66,.14);
+}
+body[data-jom-page="command-centre"] .jom-side-nav,
+body[data-jom-page="estate"] .jom-side-nav,
+body[data-jom-page="site-review"] .jom-side-nav,
+body[data-jom-page="site-workspace"] .jom-side-nav {
+  left: var(--jom-layout-edge) !important;
+  top: var(--jom-layout-top) !important;
+  bottom: var(--jom-layout-bottom) !important;
+  width: var(--jom-layout-rail-width) !important;
+}
+body[data-jom-page="command-centre"] .jom-command-centre-final,
+body[data-jom-page="estate"] .jom-estate-v2,
+body[data-jom-page="site-review"] .jom-site-review-v1,
+body[data-jom-page="site-workspace"] .jom-site-standard-v1 {
+  margin-left: var(--jom-layout-main-left) !important;
+  margin-right: var(--jom-layout-main-right) !important;
+  padding-top: var(--jom-layout-top) !important;
+  padding-bottom: 80px !important;
+}
+body[data-jom-page="command-centre"] .jom-command-centre-main,
+body[data-jom-page="estate"] .jom-estate-main,
+body[data-jom-page="site-review"] .review-main-flow,
+body[data-jom-page="site-workspace"] .site-standard-main {
+  gap: var(--jom-layout-section-gap) !important;
+}
+body[data-jom-page="command-centre"] .jom-operations-rail,
+body[data-jom-page="estate"] .jom-estate-rail,
+body[data-jom-page="site-review"] .review-operations-rail,
+body[data-jom-page="site-workspace"] .site-operations-rail {
+  width: var(--jom-layout-rail-width) !important;
+  top: var(--jom-layout-top) !important;
+  right: var(--jom-layout-edge) !important;
+  bottom: var(--jom-layout-bottom) !important;
+  border-radius: var(--jom-layout-rail-radius) !important;
+  box-shadow: var(--jom-layout-rail-shadow) !important;
+}
+body[data-jom-page="command-centre"] .jom-final-hero,
+body[data-jom-page="estate"] .estate-hero-card,
+body[data-jom-page="site-review"] .review-hero-card,
+body[data-jom-page="site-workspace"] .site-hero,
+body[data-jom-page="command-centre"] .jom-card,
+body[data-jom-page="estate"] .estate-panel,
+body[data-jom-page="site-review"] .review-panel,
+body[data-jom-page="site-workspace"] .site-panel {
+  border-radius: var(--jom-layout-card-radius) !important;
+  box-shadow: var(--jom-layout-card-shadow) !important;
+}
+@media(max-width:1180px){
+  body[data-jom-page="command-centre"] .jom-command-centre-final,
+  body[data-jom-page="estate"] .jom-estate-v2,
+  body[data-jom-page="site-review"] .jom-site-review-v1,
+  body[data-jom-page="site-workspace"] .jom-site-standard-v1 {
+    margin: 0 !important;
+    padding: 18px !important;
+  }
+  body[data-jom-page="command-centre"] .jom-operations-rail,
+  body[data-jom-page="estate"] .jom-estate-rail,
+  body[data-jom-page="site-review"] .review-operations-rail,
+  body[data-jom-page="site-workspace"] .site-operations-rail {
+    position: static !important;
+    width: auto !important;
+    max-height: none !important;
+    margin-top: 24px !important;
+  }
+}
+/* JOM_ACTIVE_LAYOUT_SPACING_ALIGNMENT_V1 END */
+/* JOM_RIGHT_RAIL_NO_INTERNAL_SCROLL_V1 START */
+/* Right rails should behave like fixed/sticky page rails, not independent scroll panels. */
+body[data-jom-page="command-centre"] .jom-operations-rail,
+body[data-jom-page="estate"] .jom-estate-rail,
+body[data-jom-page="site-review"] .review-operations-rail,
+body[data-jom-page="site-workspace"] .site-operations-rail {
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+  max-height: none !important;
+}
+/* Keep Site Review rail actions readable without creating horizontal scrollbars. */
+body[data-jom-page="site-review"] .review-decision-actions,
+body[data-jom-page="site-review"] .review-decision-actions button,
+body[data-jom-page="site-review"] .review-decision-actions .review-action-link,
+body[data-jom-page="site-review"] #site-review-validation-status {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+/* Restore Command Centre proportions after spacing alignment. */
+body[data-jom-page="command-centre"] .jom-command-centre-final {
+  margin-left: 300px !important;
+  margin-right: 300px !important;
+  padding-top: 16px !important;
+}
+body[data-jom-page="command-centre"] .jom-operations-rail {
+  right: 12px !important;
+  top: 16px !important;
+  bottom: 16px !important;
+}
+body[data-jom-page="command-centre"] .jom-final-hero {
+  min-height: 220px !important;
+  padding: 30px 34px !important;
+}
+body[data-jom-page="command-centre"] .jom-command-centre-main {
+  gap: 22px !important;
+}
+@media(max-width:1180px){
+  body[data-jom-page="command-centre"] .jom-command-centre-final,
+  body[data-jom-page="estate"] .jom-estate-v2,
+  body[data-jom-page="site-review"] .jom-site-review-v1,
+  body[data-jom-page="site-workspace"] .jom-site-standard-v1 {
+    margin: 0 !important;
+    padding: 18px !important;
+  }
+  body[data-jom-page="command-centre"] .jom-operations-rail,
+  body[data-jom-page="estate"] .jom-estate-rail,
+  body[data-jom-page="site-review"] .review-operations-rail,
+  body[data-jom-page="site-workspace"] .site-operations-rail {
+    position: static !important;
+    width: auto !important;
+    margin-top: 24px !important;
+  }
+}
+/* JOM_RIGHT_RAIL_NO_INTERNAL_SCROLL_V1 END */
