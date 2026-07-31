@@ -1,18 +1,16 @@
 :root {
-  --review-blue: #0c66e4;
   --review-ink: #092957;
   --review-muted: #44546f;
   --review-border: #dfe1e6;
   --review-card: #ffffff;
-  --review-rail-width: var(--jom-layout-rail-width,260px);
-  --review-rail-edge: var(--jom-layout-edge,16px);
-  --review-gap: var(--jom-layout-gap,28px);
-  --review-top: var(--jom-layout-top,16px);
-  --review-bottom: var(--jom-layout-bottom,16px);
+  --review-rail-width: var(--jom-layout-rail-width, 260px);
+  --review-rail-edge: var(--jom-layout-edge, 16px);
+  --review-top: var(--jom-layout-top, 16px);
+  --review-bottom: var(--jom-layout-bottom, 16px);
+  --review-gap: var(--jom-layout-gap, 28px);
   --jom-action-height: 32px;
   --jom-action-padding-x: 12px;
 }
-
 body[data-jom-page="site-review"] .jom-side-nav {
   position: fixed;
   left: var(--review-rail-edge);
@@ -20,82 +18,40 @@ body[data-jom-page="site-review"] .jom-side-nav {
   bottom: var(--review-bottom);
   width: var(--review-rail-width);
 }
-
-.jom-site-review-v1 {
+body[data-jom-page="site-review"] .jom-site-review-v1 {
   color: var(--review-ink);
-  margin-left: calc(var(--review-rail-edge) + var(--review-rail-width) + 32px);
-  margin-right: calc(var(--review-rail-edge) + var(--review-rail-width) + var(--review-gap));
-  padding-top: var(--review-top);
-  padding-bottom: 80px;
+  margin-left: calc(var(--review-rail-edge) + var(--review-rail-width) + 32px) !important;
+  margin-right: calc(var(--review-rail-edge) + var(--review-rail-width) + 48px) !important;
+  padding-top: var(--review-top) !important;
+  padding-bottom: 80px !important;
   width: auto;
   max-width: none;
+  box-sizing: border-box;
 }
-
-.review-main-flow {
-  display: grid;
-  gap: 30px;
-  width: 100%;
-  min-width: 0;
-}
-
+.review-main-flow { display: grid; gap: 30px; width: 100%; min-width: 0; }
 .review-hero-card,
-.review-panel,
-.review-rail-brand,
-.review-rail-card {
-  background: var(--review-card);
-  border: 1px solid var(--review-border);
-  border-radius: 18px;
-  box-shadow: 0 16px 34px rgba(9,30,66,.08);
-}
-
-.review-hero-card {
-  min-height: 250px;
-  display: grid;
-  align-items: center;
-  padding: 34px 36px;
-}
-
-.review-hero-card h1 {
-  margin: 8px 0 10px;
-  color: var(--review-ink);
-  font-size: clamp(36px,3.3vw,48px);
-  line-height: 1.05;
-  letter-spacing: -.03em;
-}
-
-.jom-kicker {
-  margin: 0;
-  color: #253858;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
+.review-panel { background: var(--review-card); border: 1px solid var(--review-border); border-radius: 18px; box-shadow: 0 16px 34px rgba(9,30,66,.08); }
+.review-hero-card { min-height: 250px; display: grid; align-items: center; padding: 34px 36px; }
+.review-hero-card h1 { margin: 8px 0 10px; color: var(--review-ink); font-size: clamp(36px,3.3vw,48px); line-height: 1.05; letter-spacing: -.03em; }
+.jom-kicker { margin: 0; color: #253858; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .review-lede,
 .review-muted,
-.review-rail-card p {
-  margin: 0;
-  color: var(--review-muted);
-  font-size: 15px;
-  line-height: 1.55;
-}
-
+.review-rail-card p { margin: 0; color: var(--review-muted); font-size: 15px; line-height: 1.55; }
 .review-panel { padding: 30px 32px; }
 .review-panel h2 { margin: 6px 0 18px; color: var(--review-ink); font-size: clamp(24px,2vw,30px); letter-spacing:-.02em; }
 .review-detail-list { display:grid; gap:10px; margin:0; }
 .review-detail-list div { display:grid; grid-template-columns: 180px minmax(0,1fr); gap:14px; align-items:center; padding:13px 14px; border:1px solid var(--review-border); border-radius:14px; background:#fbfcff; }
 .review-detail-list dt { color: var(--review-muted); font-size:11px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
 .review-detail-list dd { margin:0; color:var(--review-ink); font-weight:800; overflow-wrap:anywhere; }
-
-.review-operations-rail {
+body[data-jom-page="site-review"] .review-operations-rail {
   position: fixed;
   top: var(--review-top);
   right: var(--review-rail-edge);
   bottom: var(--review-bottom);
   width: var(--review-rail-width);
+  box-sizing: border-box;
   z-index: 24;
-  overflow-y: auto;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -106,52 +62,29 @@ body[data-jom-page="site-review"] .jom-side-nav {
   box-shadow: 0 18px 45px rgba(9,30,66,.14);
   backdrop-filter: blur(10px);
 }
-
-.review-rail-brand { padding: 14px; background:#fbfcff; }
+.review-rail-brand { padding: 14px; background:#fbfcff; border: 1px solid var(--review-border); border-radius: 14px; }
 .review-rail-brand span { display:block; margin:0 0 6px; color:#5e6c84; font-size:11px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
 .review-rail-brand strong { display:block; color:var(--review-ink); font-size:15px; line-height:1.2; }
 .review-rail-card { padding: 16px 18px; box-shadow:none; background:transparent; border:0; border-top:1px solid rgba(9,30,66,.10); border-radius:0; }
 .review-rail-card h2 { margin:0 0 12px; color:var(--review-ink); font-size:16px; line-height:1.15; }
 .review-rail-card strong#review-site-status { display:block; margin:8px 0 10px; font-size:28px; line-height:1.08; color:var(--review-ink); letter-spacing:-.02em; }
-
 .review-decision-actions { display:grid; grid-template-columns:1fr; gap:10px; margin:16px 0 14px; }
 .review-decision-actions button,
-.review-decision-actions .review-action-link {
-  min-height: var(--jom-action-height);
-  height: var(--jom-action-height);
-  border-radius:999px;
-  padding:0 var(--jom-action-padding-x);
-  font-size:12px;
-  font-weight:900;
-  line-height:1;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  text-decoration:none;
-  box-sizing:border-box;
-  cursor:pointer;
-}
+.review-decision-actions .review-action-link { min-height: var(--jom-action-height); height: var(--jom-action-height); border-radius:999px; padding:0 var(--jom-action-padding-x); font-size:12px; font-weight:900; line-height:1; display:inline-flex; align-items:center; justify-content:center; width:100%; text-decoration:none; box-sizing:border-box; cursor:pointer; white-space: normal; }
 .review-decision-actions button { border:1px solid #b3d4ff; background:#deebff; color:#0052cc; }
 .review-decision-actions button[data-decision="approve"] { background:#e3fcef; border-color:rgba(54,179,126,.35); color:#006644; }
-.review-decision-actions button[data-decision="ignore"] { background:#ffebe6; border-color:rgba(255,86,48,.35); color:#bf2600; }
-.review-decision-actions button[data-validate-access="true"] { background:#fff4e5; border-color:rgba(255,171,0,.45); color:#7a5400; }
-.review-decision-actions button[data-enable-monitoring="true"] { background:#0c66e4; border-color:#0c66e4; color:#fff; }
+.review-decision-actions button[data-decision="ignore"],
 .review-decision-actions button[data-stop-monitoring="true"] { background:#ffebe6; border-color:rgba(255,86,48,.35); color:#bf2600; }
+.review-decision-actions button[data-start-auth="true"] { background:#fff4e5; border-color:rgba(255,171,0,.45); color:#7a5400; }
+.review-decision-actions button[data-enable-monitoring="true"] { background:#0c66e4; border-color:#0c66e4; color:#fff; }
 .review-decision-actions .review-action-link { border:1px solid #b3d4ff; background:#deebff; color:#0052cc; }
 .review-decision-actions button[disabled] { opacity:.58; cursor:not-allowed; }
-
-#decision-help,
 #decision-result,
-#site-review-validation-status {
-  font-size:13px;
-  line-height:1.45;
-}
-#site-review-validation-status { margin-top:10px; padding:10px 12px; border:1px solid rgba(9,30,66,.10); border-radius:12px; background:#fbfcff; max-height:130px; overflow-y:auto; }
+#site-review-validation-status { font-size:13px; line-height:1.45; }
+#site-review-validation-status { margin-top:10px; padding:10px 12px; border:1px solid rgba(9,30,66,.10); border-radius:12px; background:#fbfcff; white-space: normal; overflow-wrap:anywhere; }
 #site-review-validation-status[data-state="ok"] { background:#e3fcef; color:#006644; border-color:rgba(54,179,126,.35); }
 #site-review-validation-status[data-state="failed"],
 #site-review-validation-status[data-state="blocked"] { background:#ffebe6; color:#bf2600; border-color:rgba(255,86,48,.35); }
-
 .review-history { display:grid; gap:10px; max-height:420px; overflow-y:auto; padding-right:4px; }
 .review-history-card { border:1px solid var(--review-border); border-radius:14px; background:#fbfcff; padding:10px 12px; line-height:1.45; }
 .review-history-current { border-color:rgba(12,102,228,.22); background:#f4f8ff; }
@@ -159,114 +92,11 @@ body[data-jom-page="site-review"] .jom-side-nav {
 .review-pill--ok { background:#e3fcef; color:#006644; }
 .review-pill--warn { background:#fff4e5; color:#a54800; }
 .review-pill--risk { background:#ffebe6; color:#bf2600; }
-
+.review-ignored-panel { border-color: rgba(255,171,0,.35); background: #fffaf0; }
+.review-ignored-panel[hidden] { display: none !important; }
 @media(max-width:1180px){
  body[data-jom-page="site-review"] .jom-side-nav { top:0; bottom:0; left:0; width:min(300px,88vw); }
- .jom-site-review-v1 { margin:0; padding:28px 18px 64px; }
- .review-operations-rail { position:static; width:auto; height:auto; max-height:none; overflow:visible; margin-bottom:24px; }
+ body[data-jom-page="site-review"] .jom-site-review-v1 { margin:0 !important; padding:18px !important; }
+ body[data-jom-page="site-review"] .review-operations-rail { position:static; width:auto; height:auto; max-height:none; overflow:visible; margin-top:24px; }
  .review-detail-list div { grid-template-columns:1fr; }
 }
-
-/* JOM_SITE_REVIEW_RAIL_WARNING_REMOVE_V1 START */
-/* Remove the rail validation/warning text blocks so decision controls fit cleanly. */
-body[data-jom-page="site-review"] #site-review-validation-status,
-body[data-jom-page="site-review"] #decision-result {
-  display: none !important;
-}
-body[data-jom-page="site-review"] .review-operations-rail {
-  overflow: visible !important;
-  max-height: none !important;
-}
-body[data-jom-page="site-review"] .review-decision-actions--rail {
-  gap: 10px !important;
-}
-body[data-jom-page="site-review"] .review-decision-actions button,
-body[data-jom-page="site-review"] .review-decision-actions .review-action-link {
-  white-space: normal !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  overflow-wrap: normal !important;
-}
-/* JOM_SITE_REVIEW_RAIL_WARNING_REMOVE_V1 END */
-/* JOM_SITE_REVIEW_DECISION_HELP_OVERLAP_FIX_V1 START */
-/* Remove only the explanatory text under Decision Controls. Keep validation/result messages available. */
-body[data-jom-page="site-review"] #decision-help {
-  display: none !important;
-}
-/* Reserve enough room for the fixed right rail so it does not sit over the centre content. */
-body[data-jom-page="site-review"] .jom-site-review-v1 {
-  margin-left: calc(var(--review-rail-edge, 16px) + var(--review-rail-width, 260px) + 32px) !important;
-  margin-right: calc(var(--review-rail-edge, 16px) + var(--review-rail-width, 260px) + 32px) !important;
-}
-body[data-jom-page="site-review"] .review-operations-rail {
-  width: var(--review-rail-width, 260px) !important;
-  right: var(--review-rail-edge, 16px) !important;
-  overflow: visible !important;
-  max-height: none !important;
-}
-/* Keep rail controls compact and single-column without horizontal overflow. */
-body[data-jom-page="site-review"] .review-decision-actions--rail {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 10px !important;
-}
-body[data-jom-page="site-review"] .review-decision-actions button,
-body[data-jom-page="site-review"] .review-decision-actions .review-action-link {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
-@media(max-width:1180px){
-  body[data-jom-page="site-review"] .jom-site-review-v1 {
-    margin: 0 !important;
-    padding: 18px !important;
-  }
-  body[data-jom-page="site-review"] .review-operations-rail {
-    position: static !important;
-    width: auto !important;
-    max-height: none !important;
-    margin-top: 24px !important;
-  }
-}
-/* JOM_SITE_REVIEW_DECISION_HELP_OVERLAP_FIX_V1 END */
-/* JOM_SITE_REVIEW_RESTORE_WARNING_TILE_HIDE_HELP_V1 START */
-/* Keep the warning/status tile visible, but remove only the explanatory help text under Decision Controls. */
-body[data-jom-page="site-review"] #decision-help {
-  display: none !important;
-}
-body[data-jom-page="site-review"] #site-review-validation-status {
-  display: block !important;
-  margin-top: 10px !important;
-  padding: 10px 12px !important;
-  border: 1px solid rgba(9,30,66,.10) !important;
-  border-radius: 12px !important;
-  background: #fbfcff !important;
-  max-height: none !important;
-  overflow: visible !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
-body[data-jom-page="site-review"] #site-review-validation-status[data-state="ok"] {
-  background: #e3fcef !important;
-  color: #006644 !important;
-  border-color: rgba(54,179,126,.35) !important;
-}
-body[data-jom-page="site-review"] #site-review-validation-status[data-state="failed"],
-body[data-jom-page="site-review"] #site-review-validation-status[data-state="blocked"] {
-  background: #ffebe6 !important;
-  color: #bf2600 !important;
-  border-color: rgba(255,86,48,.35) !important;
-}
-body[data-jom-page="site-review"] #decision-result {
-  display: block !important;
-  margin-top: 8px !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
-body[data-jom-page="site-review"] .review-operations-rail {
-  overflow: visible !important;
-  max-height: none !important;
-}
-/* JOM_SITE_REVIEW_RESTORE_WARNING_TILE_HIDE_HELP_V1 END */
