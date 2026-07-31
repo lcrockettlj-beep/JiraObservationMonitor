@@ -132,3 +132,66 @@
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire); else wire();
 }());
 // JOM Site Review Lifecycle Action Controls Alignment v2 END
+// JOM Site Review Visual Polish and Wording v1 START
+(function(){
+  "use strict";
+  function q(selector){ return document.querySelector(selector); }
+  function text(el, value){ if(el) el.textContent = value; }
+  function normalise(value){ return String(value || "").trim().toLowerCase(); }
+  function prettyStatus(raw){
+    const value = normalise(raw);
+    if(value === "registered review" || value === "registered_review") return "Review Required";
+    if(value === "pending review" || value === "pending_review") return "Pending Review";
+    if(value === "approval pending" || value === "approval_pending") return "Approval Pending";
+    if(value === "monitored") return "Monitored";
+    if(value === "ignored") return "Ignored";
+    return raw || "Review Required";
+  }
+  function polishStatus(){
+    const status = document.getElementById("review-site-status");
+    if(status) text(status, prettyStatus(status.textContent));
+  }
+  function polishValidationCopy(){
+    const validation = document.getElementById("site-review-validation-status");
+    if(!validation) return;
+    const current = normalise(validation.textContent);
+    if(current.includes("credential access has not been validated")){
+      validation.textContent = "Access has not been validated yet. Start Atlassian authorization before enabling monitoring.";
+    }
+    if(current.includes("access validation required before monitoring can be enabled")){
+      validation.textContent = "Access validation is required before monitoring can be enabled. Start Atlassian authorization when ready.";
+    }
+  }
+  function polishDecisionResult(){
+    const result = document.getElementById("decision-result");
+    if(result && normalise(result.textContent).includes("no decision submitted")){
+      result.textContent = "No lifecycle action has been submitted in this session.";
+    }
+  }
+  function polishButtons(){
+    const validate = q('[data-validate-access]');
+    if(validate) validate.textContent = "Start Atlassian Authorization";
+    const pending = q('[data-decision="pending"]');
+    if(pending) pending.textContent = "Keep in Review";
+    const approve = q('[data-decision="approve"]');
+    if(approve) approve.textContent = "Approve for Monitoring";
+    const ignore = q('[data-decision="ignore"]');
+    if(ignore) ignore.textContent = "Ignore for Now";
+  }
+  function polish(){
+    polishStatus();
+    polishValidationCopy();
+    polishDecisionResult();
+    polishButtons();
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", polish);
+  else polish();
+  let attempts = 0;
+  const timer = setInterval(function(){
+    attempts += 1;
+    polish();
+    if(attempts >= 10) clearInterval(timer);
+  }, 400);
+  window.addEventListener("focus", function(){ setTimeout(polish, 300); });
+}());
+// JOM Site Review Visual Polish and Wording v1 END

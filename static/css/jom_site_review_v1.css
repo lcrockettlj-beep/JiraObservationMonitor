@@ -214,3 +214,42 @@ body[data-jom-page="site-review"] .jom-side-nav {
   background: #ffd5cc;
 }
 /* === Site Review Lifecycle Action Controls Alignment v2 END === */
+/* === Site Review Visual Polish and Wording v1 START === */
+.review-operations-rail {
+  gap: 14px;
+}
+.review-rail-card {
+  padding: 16px 18px;
+}
+.review-rail-card strong#review-site-status {
+  font-size: 28px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+.review-decision-actions--rail {
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 14px;
+}
+.review-decision-actions button,
+.review-decision-actions .review-action-link {
+  min-height: 42px;
+  line-height: 1.2;
+}
+#decision-help,
+#decision-result,
+#site-review-validation-status {
+  font-size: 13px;
+  line-height: 1.45;
+}
+#site-review-validation-status {
+  max-height: 130px;
+  overflow-y: auto;
+}
+.review-history-card {
+  line-height: 1.45;
+}
+.review-panel {
+  overflow-wrap: anywhere;
+}
+/* === Site Review Visual Polish and Wording v1 END === */
