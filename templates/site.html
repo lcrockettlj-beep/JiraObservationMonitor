@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>JOM - Site Workspace</title>
-  <link rel="stylesheet" href="/static/css/jom_atlassian_command.css">
-<link rel="stylesheet" href="/static/css/jom_site_workspace_v1.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_site_workspace_v1.css') }}">
 </head>
 <body data-jom-page="site-workspace" data-site-key="{{ site_key }}">
-  {% include '_nav.html' %}
-  <main class="jom-shell jom-site-workspace">
-<section class="site-hero">
+{% include '_nav.html' %}
+<main class="jom-site-standard-v1 jom-site-workspace" id="jom-site-workspace">
+  <div class="site-standard-main">
+    <section class="site-hero" aria-label="Site workspace overview">
       <div>
         <p class="eyebrow">Site Workspace</p>
         <h1 id="site-title">Loading site...</h1>
@@ -22,52 +23,28 @@
         <span class="site-pill" id="site-status-pill">Loading</span>
       </div>
     </section>
-
-    <section class="site-kpi-grid" aria-label="Site KPIs">
-      <article class="site-kpi"><span>Products</span><strong data-site-field="products">Loading...</strong></article>
-      <article class="site-kpi"><span>Product Users</span><strong data-site-field="users">Loading...</strong></article>
-      <article class="site-kpi"><span>Access Records</span><strong data-site-field="assignments">Loading...</strong></article>
+    <section class="site-panel" aria-label="Site detail">
+      <h2>Site Detail</h2>
+      <dl class="site-definition-list">
+        <div><dt>Site key</dt><dd data-site-field="key">Loading...</dd></div>
+        <div><dt>URL</dt><dd data-site-field="url">Loading...</dd></div>
+        <div><dt>Monitored</dt><dd data-site-field="monitored">Loading...</dd></div>
+        <div><dt>Discovery status</dt><dd data-site-field="discovery">Loading...</dd></div>
+      </dl>
     </section>
-
-    <section class="site-grid-two">
-      <article class="site-panel">
-        <h2>Overview</h2>
-        <dl class="site-definition-list">
-          <div><dt>Site key</dt><dd data-site-field="key">Loading...</dd></div>
-          <div><dt>URL</dt><dd data-site-field="url">Loading...</dd></div>
-          <div><dt>Monitored</dt><dd data-site-field="monitored">Loading...</dd></div>
-          <div><dt>Discovery status</dt><dd data-site-field="discovery">Loading...</dd></div>
-        </dl>
-      </article>
-      <article class="site-panel">
-        <h2>Operational Signals</h2>
-        <ul class="site-signal-list" id="site-signal-list">
-          <li>Preparing operational signals...</li>
-        </ul>
-      </article>
-    </section>
-
     <section class="site-panel" id="site-product-access-panel">
-      <div class="site-panel-header">
-        <h2>Product Access</h2>
-        <span class="site-muted">Source-backed product/access summary</span>
-      </div>
-      <div class="site-table-wrap">
-        <table class="site-table">
-          <thead><tr><th>Product</th><th>Users</th><th>Roles</th><th>Status</th></tr></thead>
-          <tbody id="site-product-access-body"><tr><td colspan="4">Loading...</td></tr></tbody>
-        </table>
-      </div>
+      <div class="site-panel-header"><h2>Product Access</h2><span class="site-muted">Live product/access summary</span></div>
+      <div class="site-table-wrap"><table class="site-table"><thead><tr><th>Product</th><th>Users</th><th>Roles</th><th>Status</th></tr></thead><tbody id="site-product-access-body"><tr><td colspan="4">Loading...</td></tr></tbody></table></div>
     </section>
-    <section class="site-grid-two">
-      <article class="site-panel"><h2>User Summary</h2><p id="site-users-summary">Loading...</p></article>
-    </section>
-
-    <details class="site-diagnostics">
-      <summary>Developer diagnostics</summary>
-      <pre id="site-json-diagnostics">Loading...</pre>
-    </details>
-  </main>
-<script src="/static/js/jom_site_workspace_v1.js" defer></script>
+  </div>
+  <aside class="site-operations-rail" aria-label="Site operations rail">
+    <div class="site-rail-brand"><span>Site Rail</span><strong>Live Site Context</strong></div>
+    <section class="site-rail-card"><h2>Site KPIs</h2><dl class="site-rail-list"><div><dt>Products</dt><dd data-site-field="products">--</dd></div><div><dt>Product Users</dt><dd data-site-field="users">--</dd></div><div><dt>Access Records</dt><dd data-site-field="assignments">--</dd></div></dl></section>
+    <section class="site-rail-card"><h2>Operational Signals</h2><ul class="site-signal-list" id="site-signal-list"><li>Preparing operational signals...</li></ul></section>
+    <section class="site-rail-card"><h2>User Summary</h2><p id="site-users-summary">Loading...</p></section>
+  </aside>
+  <details class="site-diagnostics"><summary>Developer diagnostics</summary><pre id="site-json-diagnostics">Loading...</pre></details>
+</main>
+<script src="{{ url_for('static', filename='js/jom_site_workspace_v1.js') }}" defer></script>
 </body>
 </html>

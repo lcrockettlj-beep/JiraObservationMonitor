@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
@@ -1456,9 +1456,7 @@ def api_site_review_enable_monitoring(site_key):
 
 @app.route("/review-queue")
 def review_queue():
-    return render_template("review_queue.html")
-
-
+    return redirect("/estate#discovered-sites", code=302)
 
 @app.route("/estate/review/<site_key>")
 def estate_site_review(site_key):
