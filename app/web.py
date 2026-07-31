@@ -1,6 +1,6 @@
 ﻿from __future__ import annotations
 
-from flask import Flask, jsonify, render_template, send_from_directory, request
+from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
 import threading
 import os
@@ -733,8 +733,7 @@ def page_estate():
     return render_template("estate.html")
 @app.route("/reference")
 def page_reference():
-    return render_template("reference.html", **reference_context())
-
+    return redirect("/", code=302)
 
 @app.route("/site")
 def page_site():
@@ -788,7 +787,7 @@ def site_workspace(site_key):
 
 # --- JOM EXPORT REPORTING ROUTES v1 START ---
 try:
-    from flask import Response
+    from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 except Exception:
     Response = None
 
@@ -2321,7 +2320,7 @@ def _jom_credential_gate_status_payload(site_key, validation=None):
 
 @app.route("/api/site-review/<path:site_key>/validate-access", methods=["POST"])
 def api_site_review_validate_access_gate_v1(site_key):
-    from flask import jsonify, request
+    from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
     wanted = _jom_credential_gate_norm(site_key)
     body = request.get_json(silent=True) or {}
     site = _jom_credential_gate_site(wanted)
@@ -2454,7 +2453,7 @@ def _jom_estate_complete_oauth_validation(site_key, actor="oauth-callback"):
 
 @app.route("/api/site-review/<path:site_key>/oauth-complete", methods=["GET", "POST"])
 def api_site_review_oauth_complete_v1(site_key):
-    from flask import jsonify, request
+    from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
     body = request.get_json(silent=True) or {}
     actor = body.get("actor") or "oauth-callback"
     payload = _jom_estate_complete_oauth_validation(site_key, actor=actor)
@@ -2502,7 +2501,7 @@ def _jom_read_static_data_contract_v1(filename, fallback_contract):
 
 @app.route('/api/estate/admin-site-inventory')
 def jom_api_estate_admin_site_inventory_v1():
-    from flask import Response
+    from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
     import json
     data = _jom_read_static_data_contract_v1(
         "estate_admin_site_inventory_v1.json",
@@ -2512,7 +2511,7 @@ def jom_api_estate_admin_site_inventory_v1():
 
 @app.route('/api/estate/discovery-authority')
 def jom_api_estate_discovery_authority_v1():
-    from flask import Response
+    from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
     import json
     data = _jom_read_static_data_contract_v1(
         "estate_discovery_authority_v1.json",
@@ -2890,4 +2889,5 @@ def api_runtime_data_path_status():
         "files": {name: runtime_path_status(name) for name in files},
         "policy": "Read runtime/data first; runtime-only source handling disabled; runtime/data is the only operational source.",
     })
+
 

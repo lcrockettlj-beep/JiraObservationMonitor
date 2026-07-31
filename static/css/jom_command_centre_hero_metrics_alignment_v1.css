@@ -1,8 +1,0 @@
-/* JOM Command Centre Hero Metrics Alignment v1
-   Compatibility file retained for template imports.
-   Command Centre rail layout is now owned by jom_command_centre_completion_v1.css. */
-body[data-jom-page="command-centre"] .jom-hero-metric-pair,
-body[data-jom-page="command-centre"] .jom-health-card--coverage,
-body[data-jom-page="command-centre"] .jom-health-card--readiness {
-  display: none !important;
-}
