@@ -513,3 +513,29 @@
 }());
 // JOM Estate Existing UI Filter Patch v1 END
 
+// JOM Estate Registry Table Filter Fix v1 START
+(function(){
+  "use strict";
+  const CONTRACT_URL="/api/workspace/estate";
+  const LIVE=new Set(["live_oauth_accessible_resources","live_admin_event_reference","oauth_accessible_resources","admin_org_events","live_admin_org","live_product_access"]);
+  const BAD=new Set(["manual_unverified","manual_validation_target","known_from_support_case_manual_only","known_from_admin_screenshot_or_support_case_manual_only","static","cached","unknown"]);
+  function arr(v){return Array.isArray(v)?v:[];}
+  function low(v){return String(v||"").toLowerCase();}
+  function norm(v){return low(v).replace(/^https?:\/\//,"").replace(/\.atlassian\.net.*$/,"").trim();}
+  function keyOf(r){const i=r.inventory||{},g=r.registry||{};return norm(r.key||r.site_key||r.siteKey||r.name||r.site_name||g.site_key||g.siteKey||g.site_name||i.site_key||i.siteKey||i.name||i.url||r.url||"");}
+  function sig(r){const i=r.inventory||{},g=r.registry||{};return {key:keyOf(r),src:[...arr(r.sources),...arr(i.sources),...arr(g.sources)].map(low),ev:[...arr(r.evidence_levels),...arr(i.evidence_levels),...arr(g.evidence_levels)].map(low),mon:r.approved_monitored===true||g.approved_monitored===true||i.approved_monitored===true||r.is_monitored===true||r.monitored===true||g.is_monitored===true||g.monitored===true||i.is_monitored===true||i.monitored===true||low(r.lifecycle||g.lifecycle||i.lifecycle)==="monitored"};}
+  function live(s){return [...s.src,...s.ev].some(v=>LIVE.has(v));}
+  function manualOnly(s){const vals=[...s.src,...s.ev];return vals.length>0&&vals.every(v=>BAD.has(v));}
+  function rows(c){const d=c&&c.data?c.data:c||{},out=[]; arr(c&&c.sites).forEach(x=>out.push(x)); arr(c&&c.registry&&c.registry.sites).forEach(x=>out.push(x)); arr(d.registry&&d.registry.sites).forEach(x=>out.push(x)); arr(c&&c.inventory&&c.inventory.sites).forEach(x=>out.push({inventory:x,key:x.site_key,name:x.name||x.site_key,url:x.url})); arr(d.estate_admin_site_inventory&&d.estate_admin_site_inventory.sites).forEach(x=>out.push({inventory:x,key:x.site_key,name:x.name||x.site_key,url:x.url})); return out;}
+  function model(c){const m={mon:new Set(),disc:new Set(),excluded:new Set()}; rows(c).forEach(r=>{const s=sig(r); if(!s.key)return; if(!live(s)||manualOnly(s))m.excluded.add(s.key); else if(s.mon)m.mon.add(s.key); else m.disc.add(s.key);}); return m;}
+  function keyFromRow(tr){const txt=low(tr.innerText||tr.textContent||""); let m=txt.match(/key:\s*([a-z0-9][a-z0-9-]+)/); if(m)return norm(m[1]); m=txt.match(/^\s*([a-z0-9][a-z0-9-]+)\s+\1\s+/); if(m)return norm(m[1]); const first=(tr.querySelector("td,th")||{}).innerText||""; const lines=first.split(/\n|\r/).map(x=>x.trim()).filter(Boolean); return norm(lines[0]||"");}
+  function findRegistryTables(){return Array.from(document.querySelectorAll("table")).filter(t=>low((t.closest("section,main,div")||t).innerText).includes("site registry")||low(t.innerText).includes("last observation"));}
+  function filterRegistryTable(m){findRegistryTables().forEach(table=>{Array.from(table.querySelectorAll("tbody tr, tr")).forEach(tr=>{if(tr.querySelector("th"))return; const k=keyFromRow(tr); if(!k)return; if(m.excluded.has(k)||!m.mon.has(k)){tr.remove();}});});}
+  function updateCounts(m){Array.from(document.querySelectorAll("*"))
+    .filter(e=>e.children.length===0&&/^\d+$/.test((e.textContent||"").trim()))
+    .forEach(e=>{const p=low((e.parentElement&&e.parentElement.innerText)||""); if(p.includes("total sites"))e.textContent=String(m.mon.size+m.disc.size); else if(p.includes("monitored"))e.textContent=String(m.mon.size); else if(p.includes("discovered"))e.textContent=String(m.disc.size); else if(p.includes("review queue"))e.textContent=String(m.disc.size);});}
+  async function run(){try{const r=await fetch(CONTRACT_URL,{headers:{Accept:"application/json"}}); if(!r.ok)return; const c=await r.json(); const m=model(c); let n=0; const timer=setInterval(()=>{n++; filterRegistryTable(m); updateCounts(m); window.JOMEstateRegistryTableFilterFixV1={monitored:[...m.mon],discovery:[...m.disc],excluded:[...m.excluded]}; if(n>=12)clearInterval(timer);},250);}catch(e){console.warn("JOM registry table filter skipped",e);}}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run); else run();
+}());
+// JOM Estate Registry Table Filter Fix v1 END
+
