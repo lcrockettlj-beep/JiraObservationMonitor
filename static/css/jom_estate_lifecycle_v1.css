@@ -562,3 +562,55 @@ body[data-jom-page="estate"] .jom-side-nav {
 .estate-review-table td:first-child span {
   display: none !important;
 }
+/* === Estate Fixed Width Table v1 START === */
+/* Keep Discovery Review Queue and Site Registry visually aligned. */
+.estate-review-table,
+.estate-table {
+  table-layout: fixed;
+  width: 100%;
+}
+.estate-review-table th:nth-child(1),
+.estate-review-table td:nth-child(1),
+.estate-table th:nth-child(1),
+.estate-table td:nth-child(1) {
+  width: 30%;
+}
+.estate-review-table th:nth-child(2),
+.estate-review-table td:nth-child(2),
+.estate-table th:nth-child(2),
+.estate-table td:nth-child(2) {
+  width: 18%;
+}
+.estate-review-table th:nth-child(3),
+.estate-review-table td:nth-child(3),
+.estate-table th:nth-child(3),
+.estate-table td:nth-child(3) {
+  width: 16%;
+}
+.estate-review-table th:nth-child(4),
+.estate-review-table td:nth-child(4),
+.estate-table th:nth-child(4),
+.estate-table td:nth-child(4) {
+  width: 14%;
+}
+.estate-review-table th:nth-child(5),
+.estate-review-table td:nth-child(5),
+.estate-table th:nth-child(5),
+.estate-table td:nth-child(5) {
+  width: 22%;
+}
+.estate-review-table th,
+.estate-review-table td,
+.estate-table th,
+.estate-table td {
+  overflow-wrap: anywhere;
+}
+.estate-action-cell {
+  justify-content: flex-start;
+  min-width: 0;
+}
+.estate-action-cell .estate-action-button,
+.estate-action-cell .estate-site-link--button {
+  flex: 0 0 auto;
+}
+/* === Estate Fixed Width Table v1 END === */
