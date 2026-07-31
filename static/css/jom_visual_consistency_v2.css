@@ -223,3 +223,75 @@ pre {
   min-width: max-content;
 }
 /* === Core Workspace Template Consolidation v1 END === */
+
+/* === JOM Global Button Uniformity v1 START === */
+:root {
+  --jom-action-height: 32px;
+  --jom-action-padding-x: 12px;
+  --jom-action-radius: 999px;
+  --jom-action-font-size: 12px;
+  --jom-action-font-weight: 900;
+}
+
+/* Shared button contract across Command Centre, Estate and Site Review. */
+body[data-jom-page] .estate-action-button,
+body[data-jom-page] .estate-site-link--button,
+body[data-jom-page] .review-decision-actions button,
+body[data-jom-page] .review-decision-actions .review-action-link,
+body[data-jom-page] .review-action-link,
+body[data-jom-page] .site-pill,
+body[data-jom-page] .jom-action-button,
+body[data-jom-page] .action-button,
+body[data-jom-page] .action-link,
+body[data-jom-page] a[href^="/estate/review"],
+body[data-jom-page] a[href^="/estate"].estate-site-link,
+body[data-jom-page] a[href^="/admin"],
+body[data-jom-page] button[data-decision],
+body[data-jom-page] button[data-validate-access],
+body[data-jom-page] button[data-enable-monitoring],
+body[data-jom-page] button[data-stop-monitoring] {
+  min-height: var(--jom-action-height) !important;
+  height: var(--jom-action-height) !important;
+  padding: 0 var(--jom-action-padding-x) !important;
+  border-radius: var(--jom-action-radius) !important;
+  font-size: var(--jom-action-font-size) !important;
+  font-weight: var(--jom-action-font-weight) !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  letter-spacing: 0 !important;
+}
+
+/* Keep action groups horizontal where space exists. */
+body[data-jom-page] .estate-action-cell,
+body[data-jom-page] .review-decision-actions,
+body[data-jom-page] .site-hero-actions,
+body[data-jom-page] .jom-action-row,
+body[data-jom-page] .action-row,
+body[data-jom-page] .actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+body[data-jom-page="estate"] .estate-action-cell {
+  flex-wrap: nowrap !important;
+}
+
+body[data-jom-page="site-review"] .review-decision-actions--rail {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+
+/* Consistent compact table rows where action buttons appear. */
+body[data-jom-page="estate"] .estate-table td,
+body[data-jom-page="estate"] .estate-review-table td {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+/* === JOM Global Button Uniformity v1 END === */
