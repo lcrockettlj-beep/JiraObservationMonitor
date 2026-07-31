@@ -1903,7 +1903,8 @@ def _jom_workspace_command_centre_cached_contract_v1():
                 "info": len([a for a in alerts if a.get("level") == "info"]),
                 "total": len(alerts),
             },
-            "top_alerts": alerts[:5],
+            "top_alerts": [],
+            "top_alerts_source": "operator_alerts.alerts",
             "admin_truth": {
                 "status": admin_truth.get("status") if isinstance(admin_truth, dict) else None,
                 "severity": admin_truth.get("severity") if isinstance(admin_truth, dict) else None,
