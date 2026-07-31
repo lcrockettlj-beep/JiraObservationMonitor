@@ -37,16 +37,6 @@
           <p class="estate-muted estate-registry-purpose">Central list of estate sites, lifecycle state, monitoring state, health, ownership and next action.</p>
           <p class="estate-muted estate-lifecycle-inline-note"><strong>Lifecycle:</strong> Discovered -> Review -> Approval Pending -> Validate Access -> Monitoring Enabled -> Monitored. Use Ignored for sites outside current scope.</p>
         </div>
-        <div class="estate-toolbar">
-          <input id="estate-search" type="search" placeholder="Search site or URL" aria-label="Search sites">
-          <select id="estate-filter" aria-label="Filter sites">
-            <option value="all">All sites</option>
-            <option value="monitored">Monitored</option>
-            <option value="discovered">Discovered</option>
-            <option value="pending">Pending approval</option>
-            <option value="ignored">Ignored</option>
-          </select>
-        </div>
       </div>
       <div class="estate-table-wrap">
         <table class="estate-table" aria-label="Estate site registry table">
@@ -56,11 +46,10 @@
               <th>Lifecycle</th>
               <th>Monitoring</th>
               <th>Health</th>
-              <th>Last Observation</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="estate-registry-body"><tr><td colspan="6">Loading estate registry...</td></tr></tbody>
+          <tbody id="estate-registry-body"><tr><td colspan="5">Loading estate registry...</td></tr></tbody>
         </table>
       </div>
     </section>

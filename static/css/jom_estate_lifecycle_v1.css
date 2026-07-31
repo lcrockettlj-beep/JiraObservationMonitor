@@ -497,3 +497,68 @@ body[data-jom-page="estate"] .jom-side-nav {
   line-height: 1;
 }
 /* === Estate Site Link Button v1 END === */
+
+
+/* JOM Estate single-owner table renderer v1 */
+#estate-search,
+#estate-filter,
+.estate-toolbar,
+.estate-filter-bar,
+.estate-search-filter,
+.estate-registry-controls {
+  display: none !important;
+}
+.estate-review-table-wrap {
+  margin-top: 16px;
+}
+.estate-review-table,
+.estate-table {
+  width: 100%;
+}
+.estate-review-table th,
+.estate-review-table td,
+.estate-table th,
+.estate-table td {
+  vertical-align: middle;
+}
+.estate-action-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.estate-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.estate-action-button--review {
+  background: #e9f2ff !important;
+  border: 1px solid rgba(12,102,228,.28) !important;
+  color: #0052cc !important;
+}
+.estate-action-button--atlassian {
+  background: #deebff !important;
+  border: 1px solid #b3d4ff !important;
+  color: #0052cc !important;
+}
+.estate-action-button:hover {
+  text-decoration: none;
+  background: #d8e9ff !important;
+}
+
+/* === Estate Remove Duplicate Site Subtext v1 === */
+.estate-table td:first-child strong,
+.estate-review-table td:first-child strong {
+  display: inline-block;
+}
+.estate-table td:first-child span,
+.estate-review-table td:first-child span {
+  display: none !important;
+}
