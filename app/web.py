@@ -1739,7 +1739,17 @@ def _jom_build_cached_operator_alerts_v1(admin_truth, registry):
     alerts = []
     admin_status = str((admin_truth or {}).get("status") or ((admin_truth or {}).get("summary") or {}).get("status") or "").lower()
     if admin_status and admin_status not in {"aligned", "ok", "healthy"}:
-        alerts.append({"level": "warning", "category": "admin", "title": "Admin truth requires review", "reason": "Admin truth is not reporting an aligned state.", "source": "admin_truth_v2.json", "value": admin_status, "recommended_action": "Review Admin Truth endpoint"})
+        alerts.append({
+            "level": "warning",
+            "category": "admin_truth",
+            "title": "Administration data requires attention",
+            "reason": "JOM has detected that the live administration truth layer is not currently reporting an aligned state.",
+            "source": "admin_truth_v2.json",
+            "source_label": "Live Admin truth layer",
+            "value": admin_status,
+            "recommended_action": "Open Admin and review the current governance and access data.",
+            "action_label": "Open Admin",
+        })
     reg_summary = _jom_cached_registry_summary_v1(registry)
     discovered = reg_summary.get("discovered_count") or 0
     if discovered:
@@ -1834,14 +1844,17 @@ def _jom_cmdc_truth_append_review_alert_v1(alerts, registry_summary):
     alerts = [item for item in alerts if not (isinstance(item, dict) and item.get("source") == "site_registry.json" and item.get("title") == "Discovered sites need classification")]
     review_count = int((registry_summary or {}).get("review_count") or 0)
     if review_count > 0 and not any(isinstance(item, dict) and item.get("category") == "estate_lifecycle" for item in alerts):
+        item_label = "site" if review_count == 1 else "sites"
         alerts.append({
             "level": "info",
             "category": "estate_lifecycle",
-            "title": "Estate lifecycle review required",
-            "reason": "One or more estate sites need review or approval before monitoring decisions are complete.",
+            "title": "Estate review required",
+            "reason": f"{review_count} discovered {item_label} require lifecycle review before the monitored estate can be considered complete.",
             "source": "estate_admin_site_inventory_v1.json",
+            "source_label": "Live Estate inventory",
             "value": review_count,
-            "recommended_action": "Open Estate review and complete lifecycle decisions",
+            "recommended_action": "Open Estate review and complete lifecycle decisions.",
+            "action_label": "Open Estate review",
         })
     return alerts
 # === JOM COMMAND CENTRE WORKSPACE TRUTH ALIGNMENT v1 END ===
