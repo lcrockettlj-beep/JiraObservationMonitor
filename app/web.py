@@ -1942,14 +1942,77 @@ def _jom_workspace_command_centre_cached_contract_v1():
 def _jom_workspace_estate_cached_contract_v1():
     served = _jom_cached_now_v1()
     registry = _jom_cached_read_json_v1("site_registry.json", {})
+    estate_admin_inventory = _jom_cached_read_json_v1("estate_admin_site_inventory_v1.json", {})
     user_footprint = _jom_cached_read_json_v1("user_footprint.json", {})
     estate_product_access = _jom_cached_read_json_v1("estate_product_access.json", {})
     estate_access_truth = _jom_cached_read_json_v1("estate_access_truth.json", {})
     lifecycle_decisions = _jom_estate_runtime_lifecycle_contract_v1()
     source_state = _jom_cached_source_state_v1()
-    registry_summary = _jom_cached_registry_summary_v1(registry)
-    data = {"registry": registry, "registry_summary": registry_summary, "users": user_footprint, "estate_product_access": estate_product_access, "estate_access_truth": estate_access_truth, "lifecycle_decisions": lifecycle_decisions, "source_state": source_state, "metrics": {"total_sites": registry_summary.get("total_sites"), "monitored_sites": registry_summary.get("monitored_count"), "discovered_sites": registry_summary.get("discovered_count"), "pending_onboarding": registry_summary.get("pending_onboarding_count")}}
-    payload = {"schema": "jom-workspace-estate-contract-v1-fast-read", "served_at_utc": served, "source_policy": "Fast Estate workspace contract from generated truth outputs. No live collectors run during page load.", "data": data}
+
+    if "_jom_cmdc_truth_registry_from_estate_inventory_v1" in globals():
+        registry = _jom_cmdc_truth_registry_from_estate_inventory_v1(estate_admin_inventory, registry)
+
+    registry_summary = registry.get("summary") if isinstance(registry, dict) and isinstance(registry.get("summary"), dict) else _jom_cached_registry_summary_v1(registry)
+
+    product_summary = estate_product_access.get("summary", {}) if isinstance(estate_product_access, dict) else {}
+    access_product_summary = estate_access_truth.get("product_summary", {}) if isinstance(estate_access_truth, dict) else {}
+    access_summary = estate_access_truth.get("summary", {}) if isinstance(estate_access_truth, dict) else {}
+    product_users = product_summary.get("total_jira_product_user_count")
+    if product_users is None:
+        product_users = access_product_summary.get("total_jira_product_user_count")
+    if product_users is None:
+        product_users = access_summary.get("api_product_user_count")
+
+    if "_jom_command_centre_users_metric_contract_payload_v1" in globals():
+        users_payload = _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product_users)
+    else:
+        users_payload = dict(user_footprint) if isinstance(user_footprint, dict) else {}
+        users_payload["metric"] = product_users
+        users_payload["metric_label"] = "Live Jira product-access users"
+        users_payload["named_access_detail_guarded"] = True
+        users_payload["source"] = "estate_product_access.summary.total_jira_product_user_count"
+
+    metrics = {
+        "total_sites": registry_summary.get("total_sites"),
+        "monitored_sites": registry_summary.get("monitored_count"),
+        "discovered_sites": registry_summary.get("discovered_count"),
+        "review_items": registry_summary.get("review_count"),
+        "pending_onboarding": registry_summary.get("pending_onboarding_count"),
+        "coverage_percent": registry_summary.get("coverage_percent"),
+        "users": product_users,
+    }
+
+    source_health = {
+        "site_registry": _jom_estate_workspace_alignment_source_health_v1("site_registry", registry) if "_jom_estate_workspace_alignment_source_health_v1" in globals() else {"available": bool(registry)},
+        "estate_admin_site_inventory": _jom_estate_workspace_alignment_source_health_v1("estate_admin_site_inventory", estate_admin_inventory) if "_jom_estate_workspace_alignment_source_health_v1" in globals() else {"available": bool(estate_admin_inventory)},
+        "estate_product_access": _jom_estate_workspace_alignment_source_health_v1("estate_product_access", estate_product_access) if "_jom_estate_workspace_alignment_source_health_v1" in globals() else {"available": bool(estate_product_access)},
+        "estate_access_truth": _jom_estate_workspace_alignment_source_health_v1("estate_access_truth", estate_access_truth) if "_jom_estate_workspace_alignment_source_health_v1" in globals() else {"available": bool(estate_access_truth)},
+    }
+
+    data = {
+        "registry": registry,
+        "registry_summary": registry_summary,
+        "users": users_payload,
+        "users_metric": {
+            "metric": product_users,
+            "metric_label": "Live Jira product-access users",
+            "named_access_detail_guarded": True,
+            "source": "estate_product_access.summary.total_jira_product_user_count",
+        },
+        "estate_admin_site_inventory": estate_admin_inventory,
+        "estate_product_access": estate_product_access,
+        "estate_access_truth": estate_access_truth,
+        "lifecycle_decisions": lifecycle_decisions,
+        "source_state": source_state,
+        "source_health": source_health,
+        "metrics": metrics,
+    }
+    payload = {
+        "schema": "jom-workspace-estate-contract-v1-aligned-read",
+        "served_at_utc": served,
+        "source_policy": "Fast Estate workspace contract aligned to live Estate inventory truth. No live collectors run during page load.",
+        "data": data,
+    }
     payload.update(data)
     return payload
 
