@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request
 import json
@@ -1859,6 +1859,74 @@ def _jom_cmdc_truth_append_review_alert_v1(alerts, registry_summary):
     return alerts
 # === JOM COMMAND CENTRE WORKSPACE TRUTH ALIGNMENT v1 END ===
 
+
+# === JOM COMMAND CENTRE ESTATE METRICS ALIGNMENT v1 START ===
+# Align Command Centre estate counts with the authenticated Estate display model.
+def _jom_cmdc_estate_metric_key_v1(site):
+    if not isinstance(site, dict):
+        return ""
+    value = site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or site.get("url") or site.get("site_url") or ""
+    text = str(value).strip().lower()
+    if text.startswith("http") and ".atlassian.net" in text:
+        text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
+    return text
+
+def _jom_cmdc_estate_signals_v1(site):
+    if not isinstance(site, dict):
+        site = {}
+    sources = site.get("sources") if isinstance(site.get("sources"), list) else []
+    evidence = site.get("evidence_levels") if isinstance(site.get("evidence_levels"), list) else []
+    values = [str(v).strip().lower() for v in list(sources) + list(evidence)]
+    lifecycle = str(site.get("lifecycle") or site.get("classification") or site.get("collector_onboarding_status") or site.get("status") or "").strip().lower()
+    monitored = bool(site.get("approved_monitored") is True or site.get("is_monitored") is True or site.get("monitored") is True or lifecycle == "monitored")
+    return values, lifecycle, monitored
+
+def _jom_cmdc_estate_has_live_evidence_v1(site):
+    live = {"live_oauth_accessible_resources", "live_admin_event_reference", "oauth_accessible_resources", "admin_org_events", "live_admin_org", "live_product_access"}
+    manual = {"manual_unverified", "manual_validation_target", "known_from_support_case_manual_only", "known_from_admin_screenshot_or_support_case_manual_only", "static", "cached", "unknown"}
+    values, lifecycle, monitored = _jom_cmdc_estate_signals_v1(site)
+    if not values:
+        return False
+    return any(v in live for v in values) and not all(v in manual for v in values)
+
+def _jom_cmdc_estate_display_summary_v1(registry):
+    registry = registry if isinstance(registry, dict) else {}
+    sites = registry.get("sites") if isinstance(registry.get("sites"), list) else []
+    by_key = {}
+    for site in sites:
+        key = _jom_cmdc_estate_metric_key_v1(site)
+        if not key:
+            continue
+        current = by_key.setdefault(key, {"live": False, "monitored": False, "review": False})
+        values, lifecycle, monitored = _jom_cmdc_estate_signals_v1(site)
+        has_live = _jom_cmdc_estate_has_live_evidence_v1(site)
+        current["live"] = current["live"] or has_live
+        current["monitored"] = current["monitored"] or (has_live and monitored)
+        current["review"] = current["review"] or (has_live and not monitored and lifecycle not in {"deletion", "deleted", "retired", "archived"})
+    monitored_count = len([v for v in by_key.values() if v["monitored"]])
+    review_count = len([v for v in by_key.values() if v["review"]])
+    total_sites = monitored_count + review_count
+    coverage = round((monitored_count / total_sites) * 100) if total_sites else 0
+    return {
+        "total_sites": total_sites,
+        "monitored_count": monitored_count,
+        "discovered_count": review_count,
+        "pending_onboarding_count": review_count,
+        "review_count": review_count,
+        "coverage_percent": coverage,
+    }
+
+if "_jom_cmdc_truth_registry_from_estate_inventory_v1" in globals():
+    _jom_cmdc_truth_registry_from_estate_inventory_v1_original = _jom_cmdc_truth_registry_from_estate_inventory_v1
+    def _jom_cmdc_truth_registry_from_estate_inventory_v1(inventory, registry):
+        payload = _jom_cmdc_truth_registry_from_estate_inventory_v1_original(inventory, registry)
+        if isinstance(payload, dict):
+            aligned = _jom_cmdc_estate_display_summary_v1(payload)
+            payload["summary"] = dict(payload.get("summary") or {})
+            payload["summary"].update(aligned)
+            payload["source_policy"] = "Command Centre estate metrics aligned to authenticated Estate display model. Manual-only records are excluded from totals."
+        return payload
+# === JOM COMMAND CENTRE ESTATE METRICS ALIGNMENT v1 END ===
 def _jom_workspace_command_centre_cached_contract_v1():
     served = _jom_cached_now_v1()
     registry = _jom_cached_read_json_v1("site_registry.json", {})
@@ -2782,3 +2850,4 @@ def api_runtime_data_path_status():
         "files": {name: runtime_path_status(name) for name in files},
         "policy": "Read runtime/data first; runtime-only source handling disabled; runtime/data is the only operational source.",
     })
+
