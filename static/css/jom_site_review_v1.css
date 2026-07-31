@@ -187,4 +187,30 @@ body[data-jom-page="site-review"] .jom-side-nav {
   display: none !important;
 }
 /* === Lifecycle Flow Polish v1 END === */
-
+/* === Site Review Lifecycle Action Controls Alignment v2 START === */
+.review-decision-actions .review-action-link,
+.review-decision-actions button[data-stop-monitoring="true"] {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 900;
+  width: 100%;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+.review-decision-actions .review-action-link {
+  border: 1px solid #b3d4ff;
+  background: #deebff;
+  color: #0052cc;
+}
+.review-decision-actions button[data-stop-monitoring="true"] {
+  border: 1px solid rgba(255,86,48,.35);
+  background: #ffebe6;
+  color: #bf2600;
+}
+.review-decision-actions button[data-stop-monitoring="true"]:hover {
+  background: #ffd5cc;
+}
+/* === Site Review Lifecycle Action Controls Alignment v2 END === */

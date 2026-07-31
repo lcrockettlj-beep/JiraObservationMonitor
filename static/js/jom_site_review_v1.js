@@ -88,3 +88,47 @@
   }
   document.addEventListener('DOMContentLoaded',()=>init().catch(error=>{ console.error('Site review failed', error); setText('review-site-title','Site review unavailable'); setText('review-site-summary','Unable to load site review data.'); setText('decision-result','Unable to load site review data: '+error.message); }));
 })();
+// JOM Site Review Lifecycle Action Controls Alignment v2 START
+(function(){
+  "use strict";
+  const siteKey = document.body.getAttribute("data-site-key") || "";
+  const q = (selector) => document.querySelector(selector);
+  const show = (el, visible) => { if(el) el.style.display = visible ? "" : "none"; };
+  const text = (el, value) => { if(el) el.textContent = value; };
+  async function getJson(url){ const r = await fetch(url,{cache:"no-store"}); const j = await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error || j.message || url + " failed"); return j; }
+  async function postJson(url,payload){ const r = await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload||{})}); const j = await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error || j.message || url + " failed"); return j; }
+  function stateOf(data){
+    const decision = String((data.decision_state || {}).decision || "").toLowerCase();
+    const lifecycle = String(data.lifecycle_status || data.lifecycle || data.classification || "").toLowerCase();
+    const monitored = data.is_monitored === true || data.monitored === true || lifecycle === "monitored" || decision === "monitored";
+    if(monitored) return "monitored";
+    if(decision === "approve" || lifecycle.includes("approval pending")) return "approval_pending";
+    if(decision === "ignore" || lifecycle === "ignored") return "ignored";
+    return "review";
+  }
+  function ensureControls(){
+    const host = q(".review-decision-actions");
+    if(!host) return;
+    if(!q("[data-stop-monitoring]")){
+      const b = document.createElement("button"); b.type = "button"; b.setAttribute("data-stop-monitoring", "true"); b.textContent = "Stop Monitoring"; host.appendChild(b);
+    }
+    if(!q("[data-open-site]")){
+      const a = document.createElement("a"); a.className = "review-action-link"; a.setAttribute("data-open-site", "true"); a.href = "#"; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = "Open Site"; host.appendChild(a);
+    }
+  }
+  function applyStage(data){
+    ensureControls(); const state = stateOf(data || {});
+    const approve = q('[data-decision="approve"]'), ignore = q('[data-decision="ignore"]'), pending = q('[data-decision="pending"]'), restore = q('[data-decision="restore"]'), validate = q('[data-validate-access]'), enable = q('[data-enable-monitoring]'), stop = q('[data-stop-monitoring]'), open = q('[data-open-site]');
+    const url = data && (data.url || data.site_url || (data.site || {}).site_url || (data.site || {}).url);
+    if(open){ open.href = url || "#"; show(open, !!url); }
+    show(approve, state === "review"); show(ignore, state === "review" || state === "approval_pending"); show(pending, state === "review"); show(restore, state === "approval_pending" || state === "ignored"); show(validate, state === "approval_pending"); show(enable, state === "approval_pending"); show(stop, state === "monitored");
+    if(validate) text(validate, "Start Atlassian Authorization"); if(enable) text(enable, "Enable Monitoring"); if(stop) text(stop, "Stop Monitoring"); if(restore) text(restore, state === "ignored" ? "Restore to Review" : "Return to Review");
+    const help = document.getElementById("decision-help");
+    if(help){ help.textContent = state === "approval_pending" ? "Approval is recorded. Start Atlassian authorization, validate access, then enable monitoring." : state === "monitored" ? "Monitoring is enabled. Stop monitoring if this site should leave the monitored registry." : state === "ignored" ? "This site is ignored from current scope. Restore it to review before taking monitoring action." : "Review this authenticated discovery. Approve for monitoring or ignore it from current scope."; }
+  }
+  async function refreshStage(){ try{ const data = await getJson(`/api/site-review/${encodeURIComponent(siteKey)}`); applyStage(data); }catch(_error){ ensureControls(); } }
+  async function stopMonitoring(){ const result = document.getElementById("decision-result"); try{ text(result, "Stopping monitoring..."); const payload = await postJson(`/api/site-review/${encodeURIComponent(siteKey)}/stop-monitoring`, {actor:"operator", reason:"stopped from Site Review"}); text(result, payload.message || "Monitoring stopped."); await refreshStage(); }catch(error){ text(result, "Stop monitoring failed: " + error.message); } }
+  function wire(){ ensureControls(); const stop = q('[data-stop-monitoring]'); if(stop && !stop.dataset.stopMonitoringWired){ stop.dataset.stopMonitoringWired = "true"; stop.addEventListener("click", stopMonitoring); } document.querySelectorAll("[data-decision], [data-enable-monitoring], [data-validate-access]").forEach((el)=>{ if(!el.dataset.lifecycleRefreshWired){ el.dataset.lifecycleRefreshWired = "true"; el.addEventListener("click", ()=>{ setTimeout(refreshStage,900); setTimeout(refreshStage,1800); }); } }); refreshStage(); let attempts=0; const timer=setInterval(()=>{ attempts += 1; refreshStage(); if(attempts>=8) clearInterval(timer); },400); window.addEventListener("focus",()=>setTimeout(refreshStage,500)); }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire); else wire();
+}());
+// JOM Site Review Lifecycle Action Controls Alignment v2 END

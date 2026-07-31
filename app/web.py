@@ -2808,6 +2808,46 @@ def api_estate_organisation_auth_source_audit_v1():
         }), 500
 # --- JOM ATLASSIAN ORGANISATION AUTH SOURCE AUDIT v1 END ---
 
+# === JOM SITE REVIEW STOP MONITORING ROUTE v2 START ===
+@app.route("/api/site-review/<site_key>/stop-monitoring", methods=["POST"])
+def api_site_review_stop_monitoring_v2(site_key):
+    payload = request.get_json(silent=True) or {}
+    actor = payload.get("actor") or "operator"
+    reason = payload.get("reason") or "monitoring stopped from Site Review"
+    target = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key or "").strip().lower()
+    registry = load_json("site_registry.json", {"sites": []})
+    if not isinstance(registry, dict):
+        registry = {"sites": []}
+    sites = registry.get("sites") if isinstance(registry.get("sites"), list) else []
+    matched = None
+    for site in sites:
+        if not isinstance(site, dict):
+            continue
+        key = str(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or "").strip().lower()
+        if key == target:
+            matched = site
+            break
+    if matched is None:
+        return jsonify({"ok": False, "error": "site_not_found", "site_key": target}), 404
+    matched["classification"] = "discovered"
+    matched["lifecycle"] = "stopped_monitoring"
+    matched["is_monitored"] = False
+    matched["monitored"] = False
+    matched["approved_monitored"] = False
+    matched["collector_onboarding_status"] = "review_required"
+    matched["action_required"] = "review_monitoring_state"
+    matched["status"] = "review"
+    matched["monitoring_stopped_at_utc"] = now_utc()
+    matched["monitoring_stopped_by"] = actor
+    matched["monitoring_stop_reason"] = reason
+    if "_recalculate_registry_summary" in globals():
+        _recalculate_registry_summary(registry)
+    else:
+        registry["generated_at_utc"] = now_utc()
+    write_json(DATA_PATH / "site_registry.json", registry)
+    return jsonify({"ok": True, "message": "Monitoring stopped. Site returned to review and will no longer appear in the monitored Site Registry.", "site_key": target, "record": matched})
+# === JOM SITE REVIEW STOP MONITORING ROUTE v2 END ===
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 
