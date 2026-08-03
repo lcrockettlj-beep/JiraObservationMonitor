@@ -464,3 +464,40 @@ body[data-jom-page="estate"] .estate-rail-card h2 {
   margin-bottom: 10px !important;
 }
 /* JOM_ESTATE_VISUAL_POLISH_V1 END */
+
+/* JOM Site Review skeleton loading polish v1 */
+.review-loading-skeleton{
+  color: transparent !important;
+  background: linear-gradient(90deg, #edf1f7 0%, #f7f9fc 50%, #edf1f7 100%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  min-height: 18px;
+  display: inline-block;
+  width: 100%;
+  animation: reviewSkeletonPulse 1.2s ease-in-out infinite;
+}
+
+#review-site-status.review-loading-skeleton{
+  min-height: 32px;
+  width: 70%;
+}
+
+#review-status-note.review-loading-skeleton{
+  min-height: 38px;
+}
+
+#review-site-summary.review-loading-skeleton{
+  min-height: 20px;
+  width: 40%;
+}
+
+#review-decision-history.review-loading-skeleton{
+  min-height: 22px;
+  width: 45%;
+}
+
+@keyframes reviewSkeletonPulse{
+  0%{background-position: 200% 0;}
+  100%{background-position: -200% 0;}
+}
+

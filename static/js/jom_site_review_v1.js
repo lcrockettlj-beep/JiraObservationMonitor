@@ -3,6 +3,13 @@
 
   const siteKey = document.body.getAttribute('data-site-key') || '';
   const $ = (id) => document.getElementById(id);
+
+  function clearLoadingSkeletons(){
+    document.querySelectorAll('.review-loading-skeleton').forEach(function(el){
+      el.classList.remove('review-loading-skeleton');
+    });
+  }
+
   const setText = (id, value) => { const el = $(id); if (el) el.textContent = String(value ?? '-'); };
   const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 
@@ -165,6 +172,7 @@
     if(urlNode) urlNode.innerHTML = link(url);
     setText('review-site-owner', data.owner || 'Owner not assigned');
     setText('review-site-contact', data.contact_route || 'Owner/contact not yet sourced');
+    clearLoadingSkeletons();
     renderHistory(data);
     applyButtonFlow(data);
   }
