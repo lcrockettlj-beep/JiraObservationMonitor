@@ -102,6 +102,10 @@
   }
 
   function isMonitored(site) {
+// JOM_INVENTORY_ONLY_MONITORED_STATE_CORRECTION_V1_JS START
+// Inventory-only monitored signals are not enough. A site must have a monitored registry row.
+if (site && site.in_registry === false) return false;
+// JOM_INVENTORY_ONLY_MONITORED_STATE_CORRECTION_V1_JS END
     const state = normaliseState(site);
     return !!(
       site.is_monitored === true ||
@@ -122,7 +126,7 @@
   function needsReview(site) {
     if (!site || isMonitored(site) || isIgnored(site)) return false;
     const state = normaliseState(site);
-    return state === '' || state.includes('discovered') || state.includes('review') || state.includes('pending') || state.includes('gap') || state.includes('error');
+    return state === '' || state.includes('discovered') || state.includes('review') || state.includes('pending') || state.includes('stopped_monitoring') || state.includes('monitoring_stopped') || state.includes('gap') || state.includes('error');
   }
 
   function lifecycleLabel(site) {
@@ -130,7 +134,7 @@
     if (isIgnored(site)) return 'Ignored';
     const state = normaliseState(site);
     if (state.includes('pending')) return 'Approval Pending';
-    if (state.includes('error') || state.includes('gap') || state.includes('review')) return 'Review Required';
+    if (state.includes('error') || state.includes('gap') || state.includes('review') || state.includes('stopped_monitoring') || state.includes('monitoring_stopped')) return 'Review Required';
     return 'Discovered';
   }
 
@@ -297,7 +301,7 @@ function lifecycleQueueState(site) {
   const state = normaliseState(site);
   const label = lifecycleLabel(site);
   if (isIgnored(site)) return 'ignored';
-  if (state.includes('delete') || state.includes('deletion') || state.includes('stopped_monitoring') || state.includes('monitoring_stopped')) return 'deletion';
+  if (state.includes('delete') || state.includes('deletion')) return 'deletion';
   if (!isMonitored(site) && label === 'Approval Pending') return 'approval';
   return '';
 }
@@ -377,4 +381,9 @@ renderConditionalLifecycleQueues(sites);
 // JOM_ESTATE_REMOVE_APPROVAL_PENDING_QUEUE_V1 START
 // Standalone Approval Pending queue removed; approval pending remains inside Discovery Review Queue.
 // JOM_ESTATE_REMOVE_APPROVAL_PENDING_QUEUE_V1 END
+
+
+// JOM_ESTATE_STOP_MONITORING_REVIEW_QUEUE_V1
+// Stopped monitoring returns to Discovery Review Queue, not Deletion Queue.
+
 

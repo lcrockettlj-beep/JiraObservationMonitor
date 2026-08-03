@@ -77,6 +77,22 @@
     show('[data-decision="restore"]', stage === 'approval_pending' || stage === 'ignored');
     show('[data-start-auth]', stage === 'approval_pending' && !valid);
     show('[data-enable-monitoring]', stage === 'approval_pending' && valid);
+    // JOM_SITE_REVIEW_VALID_ACCESS_ENABLE_UNLOCK_V1_REVIEW START
+    // If access is already valid, do not keep the Validate Access step visible or leave Enable Monitoring blocked.
+    if(stage === 'approval_pending' && valid){
+      show('[data-start-auth]', false);
+      show('[data-validate-access]', false);
+      show('[data-enable-monitoring]', true);
+      var enableButton = document.querySelector('[data-enable-monitoring]');
+      if(enableButton){
+        enableButton.disabled = false;
+        enableButton.removeAttribute('disabled');
+        enableButton.removeAttribute('aria-disabled');
+        enableButton.style.pointerEvents = 'auto';
+        enableButton.style.cursor = 'pointer';
+      }
+    }
+    // JOM_SITE_REVIEW_VALID_ACCESS_ENABLE_UNLOCK_V1_REVIEW END
     show('[data-stop-monitoring]', stage === 'monitored');
     show('[data-open-site]', true);
     // JOM_SITE_REVIEW_MONITORED_CONTROLS_CLEANUP_V1_2 START
@@ -234,4 +250,5 @@
     setText('decision-result', 'Unable to load site review data: ' + error.message);
   }));
 })();
+
 

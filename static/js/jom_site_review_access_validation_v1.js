@@ -1,4 +1,28 @@
-﻿// JOM Site Review Access Validation v1 - single owner
+﻿
+// JOM_SITE_REVIEW_VALID_ACCESS_ENABLE_UNLOCK_V1_ACCESS START
+// Shared UI unlock after backend confirms OAuth/access coverage is valid.
+function jomUnlockEnableMonitoringWhenAccessValid(){
+  var enableButton = document.querySelector('[data-enable-monitoring]');
+  var validateButton = document.querySelector('[data-validate-access], [data-start-auth]');
+  if(validateButton){
+    validateButton.hidden = true;
+    validateButton.setAttribute('aria-hidden','true');
+    validateButton.style.display = 'none';
+  }
+  if(enableButton){
+    enableButton.hidden = false;
+    enableButton.removeAttribute('hidden');
+    enableButton.setAttribute('aria-hidden','false');
+    enableButton.disabled = false;
+    enableButton.removeAttribute('disabled');
+    enableButton.removeAttribute('aria-disabled');
+    enableButton.style.display = '';
+    enableButton.style.pointerEvents = 'auto';
+    enableButton.style.cursor = 'pointer';
+  }
+}
+// JOM_SITE_REVIEW_VALID_ACCESS_ENABLE_UNLOCK_V1_ACCESS END
+// JOM Site Review Access Validation v1 - single owner
 // Single-refresh repair: avoid repeated post-load UI repaint cycles.
 (function(){
   'use strict';
@@ -28,7 +52,7 @@
     const ok=v&&v.access_valid===true;
     const mon=b&&/monitoring enabled/i.test(b.textContent||'');
     if(b&&!mon&&b.style.display!=='none')b.disabled=!ok;
-    if(ok){removePrompt();status('Access validated. Monitoring can be enabled in JOM.','ok');}
+    if(ok){removePrompt();jomUnlockEnableMonitoringWhenAccessValid();status('Access validated. Monitoring can be enabled in JOM.','ok');}
     else if(v&&v.status)status('Access validation required before monitoring can be enabled. Current status: '+v.status+'. '+(v.reason||''),v.status==='ok'?'ok':'blocked');
     else status('Credential access has not been validated yet. Click Validate Access before enabling monitoring.','blocked');
   }
@@ -85,4 +109,5 @@
 // JOM Site Review Access Validation Single Refresh v1 END
 
 // JOM_OAUTH_CALLBACK_MODAL_CLOSE_REPAIR_V1_1
+
 

@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
@@ -1049,72 +1049,41 @@ def api_site_review(site_key):
 
 @app.route("/api/site-review/<path:site_key>/decision", methods=["POST"])
 def api_site_review_decision(site_key):
-    payload = request.get_json(silent=True) or {}
-    decision = str(payload.get("decision") or "pending").lower().strip()
-    allowed = {"approve", "ignore", "pending", "restore"}
-    if decision not in allowed:
-        return jsonify({"ok": False, "error": "unsupported decision", "allowed": sorted(allowed)}), 400
-    decisions = _load_lifecycle_decisions()
-    decisions.setdefault("decisions", {})
-    decisions.setdefault("history", [])
-    previous = decisions["decisions"].get(site_key, {})
-    if decision == "restore":
-        # rollback_to_discovered_v1: restore site back to discovered everywhere JOM reads lifecycle state.
-        registry = load_json("site_registry.json", {})
-        target = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key).lower()
-        for site in registry.get("sites", []) if isinstance(registry, dict) else []:
-            if isinstance(site, dict) and str(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or "").lower() == target:
-                site["classification"] = "discovered"
-                site["is_monitored"] = False
-                site["can_approve"] = True
-                site["collector_onboarding_status"] = "not_requested"
-                site.pop("monitoring_enabled_at_utc", None)
-                site.pop("monitoring_enabled_by", None)
-        if "_recalculate_registry_summary" in globals():
-            _recalculate_registry_summary(registry)
-        write_json(DATA_PATH / "site_registry.json", registry)
-        monitored_payload = _jom_estate_runtime_site_registry_contract_v1()
-        if isinstance(monitored_payload, dict):
-            monitored_payload["monitored_sites"] = [row for row in monitored_payload.get("monitored_sites", []) if not (isinstance(row, dict) and str(row.get("site_key", "")).lower() == target)]
-            monitored_payload.setdefault("ignored_sites", [])
-            monitored_payload["updated_at_utc"] = now_utc()
-            _jom_estate_runtime_noop_write_v1("monitored_sites", monitored_payload)
-        validation_payload = _jom_estate_runtime_access_validation_contract_v1()
-        if isinstance(validation_payload, dict):
-            validation_payload.setdefault("validations", {}).pop(site_key, None)
-            validation_payload["generated_at_utc"] = now_utc()
-            _jom_estate_runtime_noop_write_v1("site_access_validation", validation_payload)
-        record = {
-            "site_key": site_key,
-            "decision": "discovered",
-            "previous_decision": previous.get("decision"),
-            "reason": payload.get("reason") or "rolled back to discovered",
-            "actor": payload.get("actor") or "operator",
-            "decided_at_utc": now_utc(),
-            "reversible": True,
-            "requires_credentials": False,
-            "next_state": "discovered",
-        }
-    else:
-        record = {
-            "site_key": site_key,
-            "decision": decision,
-            "previous_decision": previous.get("decision"),
-            "reason": payload.get("reason") or decision,
-            "actor": payload.get("actor") or "operator",
-            "decided_at_utc": now_utc(),
-            "reversible": True,
-            "requires_credentials": decision == "approve",
-            "next_state": "approval_pending_credential_required" if decision == "approve" else ("ignored" if decision == "ignore" else "pending_review"),
-        }
-    decisions["decisions"][site_key] = record
-    decisions["history"].append(record)
-    _write_lifecycle_decisions(decisions)
-    message = "Approval recorded. Monitoring is pending token/credential enablement." if decision == "approve" else "Lifecycle decision recorded."
-    if decision == "restore":
-        message = "Site rolled back to Discovered. Estate and Command Centre will show it as review work again."
-    return jsonify({"ok": True, "message": message, "record": record})
-
+    body = request.get_json(silent=True) or {}
+    decision = str(body.get("decision") or body.get("state") or "").strip().lower()
+    actor = body.get("actor") or "operator"
+    if decision in ("approve", "approved", "approval_pending"):
+        record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_approval_pending_v1(site_key, actor=actor)
+        if record is None and inventory_record is None:
+            return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
+        return jsonify({
+            "ok": True,
+            "site_key": _jom_lifecycle_norm_v1(site_key),
+            "decision": "approve",
+            "classification": "approval_pending",
+            "lifecycle": "approval_pending",
+            "message": "Approval recorded. Monitoring is pending token/credential enablement.",
+            "registry_record": record,
+            "inventory_record": inventory_record,
+        })
+    if decision in ("ignore", "ignored"):
+        record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_review_v1(site_key, actor=actor)
+        if record:
+            record["classification"] = "ignored"
+            record["lifecycle"] = "ignored"
+            record["collector_onboarding_status"] = "ignored"
+            record["status"] = "ignored"
+            record["action_required"] = None
+        if inventory_record:
+            inventory_record.update(record)
+        _jom_lifecycle_save_sources_v1(_registry, _inventory)
+        return jsonify({"ok": True, "site_key": _jom_lifecycle_norm_v1(site_key), "decision": "ignore", "classification": "ignored", "lifecycle": "ignored", "record": record})
+    if decision in ("pending", "review", "restore", "discovered"):
+        record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_review_v1(site_key, actor=actor)
+        if record is None and inventory_record is None:
+            return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
+        return jsonify({"ok": True, "site_key": _jom_lifecycle_norm_v1(site_key), "decision": "review", "classification": "discovered", "lifecycle": "stopped_monitoring", "record": record, "inventory_record": inventory_record})
+    return jsonify({"ok": False, "error": "unsupported_decision", "decision": decision, "site_key": site_key}), 400
 @app.route("/api/site-lifecycle/decisions")
 def api_site_lifecycle_decisions():
     payload = _jom_estate_runtime_lifecycle_contract_v1()
@@ -1341,6 +1310,235 @@ def api_oauth_authorize_url(site_key):
     })
 # --- JOM OAUTH ONBOARDING GATE v1 END ---
 
+
+# JOM_SITE_REVIEW_LIFECYCLE_CONSOLIDATED_V1 START
+# Owner implementation for Site Review lifecycle transitions.
+# This replaces temporary route wrappers and keeps registry/inventory state aligned.
+def _jom_lifecycle_norm_v1(value):
+    text = str(value or "").strip().lower()
+    if text.startswith("http") and ".atlassian.net" in text:
+        text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
+    return text.rstrip("/")
+
+
+def _jom_lifecycle_is_monitored_v1(site):
+    if not isinstance(site, dict):
+        return False
+    state = _jom_lifecycle_norm_v1(site.get("lifecycle") or site.get("classification") or site.get("status") or site.get("collector_onboarding_status"))
+    return bool(
+        site.get("is_monitored") is True
+        or site.get("monitored") is True
+        or site.get("approved_monitored") is True
+        or state in {"monitored", "monitoring_enabled"}
+    )
+
+
+def _jom_lifecycle_key_v1(site):
+    if not isinstance(site, dict):
+        return ""
+    return _jom_lifecycle_norm_v1(
+        site.get("site_key") or site.get("key") or site.get("name") or site.get("site_name") or site.get("url") or site.get("site_url") or site.get("cloud_id")
+    )
+
+
+def _jom_lifecycle_find_v1(rows, site_key):
+    wanted = _jom_lifecycle_norm_v1(site_key)
+    for row in rows if isinstance(rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        values = [row.get("site_key"), row.get("key"), row.get("name"), row.get("site_name"), row.get("url"), row.get("site_url"), row.get("cloud_id")]
+        if any(_jom_lifecycle_norm_v1(value) == wanted for value in values if value is not None):
+            return row
+    return None
+
+
+def _jom_lifecycle_base_record_v1(site_key, registry_site=None, inventory_site=None):
+    source = inventory_site if isinstance(inventory_site, dict) and inventory_site else registry_site if isinstance(registry_site, dict) else {}
+    key = _jom_lifecycle_norm_v1(source.get("site_key") or source.get("key") or source.get("name") or source.get("site_name") or site_key)
+    url = source.get("site_url") or source.get("url") or ("https://" + key + ".atlassian.net" if key else "")
+    record = dict(registry_site) if isinstance(registry_site, dict) else {}
+    record.update({
+        "site_key": key,
+        "key": key,
+        "site_name": source.get("site_name") or source.get("name") or key,
+        "name": source.get("name") or source.get("site_name") or key,
+        "site_url": url,
+        "url": url,
+        "cloud_id": source.get("cloud_id") or record.get("cloud_id"),
+    })
+    sources = record.get("sources") if isinstance(record.get("sources"), list) else []
+    for value in ["oauth_accessible_resources", "estate_admin_site_inventory", "site_review_lifecycle"]:
+        if value not in sources:
+            sources.append(value)
+    record["sources"] = sources
+    return key, record
+
+
+def _jom_lifecycle_load_sources_v1():
+    registry = load_json("site_registry.json", {})
+    if not isinstance(registry, dict):
+        registry = {"schema": "site-registry-runtime", "sites": []}
+    registry.setdefault("sites", [])
+    if not isinstance(registry.get("sites"), list):
+        registry["sites"] = []
+
+    inventory = load_json("estate_admin_site_inventory_v1.json", {})
+    if not isinstance(inventory, dict):
+        inventory = {"schema": "estate_admin_site_inventory_v1", "sites": []}
+    inventory.setdefault("sites", [])
+    if not isinstance(inventory.get("sites"), list):
+        inventory["sites"] = []
+    return registry, inventory
+
+
+def _jom_lifecycle_save_sources_v1(registry, inventory):
+    if "_recalculate_registry_summary" in globals():
+        _recalculate_registry_summary(registry)
+    else:
+        registry["generated_at_utc"] = now_utc()
+    inventory["generated_at_utc"] = now_utc()
+    write_json(DATA_PATH / "site_registry.json", registry)
+    write_json(DATA_PATH / "estate_admin_site_inventory_v1.json", inventory)
+
+
+def _jom_lifecycle_mark_approval_pending_v1(site_key, actor="operator"):
+    registry, inventory = _jom_lifecycle_load_sources_v1()
+    registry_site = _jom_lifecycle_find_v1(registry["sites"], site_key)
+    inventory_site = _jom_lifecycle_find_v1(inventory["sites"], site_key)
+    if registry_site is None and inventory_site is not None:
+        registry_site = dict(inventory_site)
+        registry["sites"].append(registry_site)
+    if registry_site is None and inventory_site is None:
+        return None, None, registry, inventory
+    key, record = _jom_lifecycle_base_record_v1(site_key, registry_site, inventory_site)
+    record.update({
+        "classification": "approval_pending",
+        "lifecycle": "approval_pending",
+        "is_monitored": False,
+        "monitored": False,
+        "approved_monitored": False,
+        "collector_onboarding_status": "approval_pending",
+        "status": "pending",
+        "health_status": "Review",
+        "action_required": "validate_access",
+        "approved_for_monitoring_at_utc": now_utc(),
+        "approved_for_monitoring_by": actor,
+        "truth_source": "site_review_lifecycle_consolidated_v1",
+    })
+    registry_site.clear()
+    registry_site.update(record)
+    if inventory_site is not None:
+        inventory_site.update(record)
+    _jom_lifecycle_save_sources_v1(registry, inventory)
+    return record, inventory_site, registry, inventory
+
+
+def _jom_lifecycle_mark_monitored_v1(site_key, actor="operator"):
+    registry, inventory = _jom_lifecycle_load_sources_v1()
+    registry_site = _jom_lifecycle_find_v1(registry["sites"], site_key)
+    inventory_site = _jom_lifecycle_find_v1(inventory["sites"], site_key)
+    if registry_site is None and inventory_site is not None:
+        registry_site = dict(inventory_site)
+        registry["sites"].append(registry_site)
+    if registry_site is None and inventory_site is None:
+        return None, None, registry, inventory
+    key, record = _jom_lifecycle_base_record_v1(site_key, registry_site, inventory_site)
+    record.update({
+        "classification": "monitored",
+        "lifecycle": "monitored",
+        "is_monitored": True,
+        "monitored": True,
+        "approved_monitored": True,
+        "collector_onboarding_status": "monitoring_enabled",
+        "status": "ok",
+        "health_status": "OK",
+        "action_required": None,
+        "monitoring_enabled_at_utc": now_utc(),
+        "monitoring_enabled_by": actor,
+        "truth_source": "site_review_lifecycle_consolidated_v1",
+    })
+    registry_site.clear()
+    registry_site.update(record)
+    if inventory_site is not None:
+        inventory_site.update(record)
+    _jom_lifecycle_save_sources_v1(registry, inventory)
+    return record, inventory_site, registry, inventory
+
+
+def _jom_lifecycle_mark_review_v1(site_key, actor="operator"):
+    registry, inventory = _jom_lifecycle_load_sources_v1()
+    registry_site = _jom_lifecycle_find_v1(registry["sites"], site_key)
+    inventory_site = _jom_lifecycle_find_v1(inventory["sites"], site_key)
+    if registry_site is None and inventory_site is not None:
+        registry_site = dict(inventory_site)
+        registry["sites"].append(registry_site)
+    if registry_site is None and inventory_site is None:
+        return None, None, registry, inventory
+    key, record = _jom_lifecycle_base_record_v1(site_key, registry_site, inventory_site)
+    record.update({
+        "classification": "discovered",
+        "lifecycle": "stopped_monitoring",
+        "is_monitored": False,
+        "monitored": False,
+        "approved_monitored": False,
+        "collector_onboarding_status": "review_required",
+        "status": "review",
+        "health_status": "Review",
+        "action_required": "review_monitoring_state",
+        "monitoring_stopped_at_utc": now_utc(),
+        "monitoring_stopped_by": actor,
+        "truth_source": "site_review_lifecycle_consolidated_v1",
+    })
+    registry_site.clear()
+    registry_site.update(record)
+    if inventory_site is not None:
+        inventory_site.update(record)
+    _jom_lifecycle_save_sources_v1(registry, inventory)
+    return record, inventory_site, registry, inventory
+
+
+def _jom_lifecycle_latest_validation_v1(site_key):
+    # Preserve existing OAuth/access validation behaviour, but do not let valid access imply monitoring.
+    if "_jom_estate_complete_oauth_validation" in globals():
+        try:
+            payload = _jom_estate_complete_oauth_validation(site_key, actor="enable-monitoring-precheck")
+            record = payload.get("validation") if isinstance(payload, dict) else None
+            if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
+                return record
+        except Exception:
+            pass
+    registry = load_json("site_registry.json", {})
+    validations = registry.get("validations", {}) if isinstance(registry, dict) else {}
+    record = validations.get(_jom_lifecycle_norm_v1(site_key)) if isinstance(validations, dict) else None
+    if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
+        return record
+    return {}
+
+
+def _jom_lifecycle_inventory_only_correction_v1():
+    registry, inventory = _jom_lifecycle_load_sources_v1()
+    registry_monitored = {_jom_lifecycle_key_v1(site) for site in registry["sites"] if _jom_lifecycle_is_monitored_v1(site)}
+    changed = []
+    for site in inventory["sites"]:
+        key = _jom_lifecycle_key_v1(site)
+        if key and _jom_lifecycle_is_monitored_v1(site) and key not in registry_monitored:
+            site.update({
+                "classification": "approval_pending",
+                "lifecycle": "approval_pending",
+                "is_monitored": False,
+                "monitored": False,
+                "approved_monitored": False,
+                "collector_onboarding_status": "approval_pending",
+                "status": "pending",
+                "health_status": "Review",
+                "action_required": "validate_access",
+                "truth_source": "site_review_lifecycle_consolidated_inventory_guard_v1",
+            })
+            changed.append(key)
+    _jom_lifecycle_save_sources_v1(registry, inventory)
+    return changed
+# JOM_SITE_REVIEW_LIFECYCLE_CONSOLIDATED_V1 END
+
 # --- enable_monitoring_via_jom_v1 START ---
 def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
     sites = registry.get("sites", []) if isinstance(registry, dict) else []
@@ -1361,277 +1559,24 @@ def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
 
 @app.route("/api/site-review/<path:site_key>/enable-monitoring", methods=["POST"])
 def api_site_review_enable_monitoring(site_key):
-    payload = request.get_json(silent=True) or {}
-    actor = payload.get("actor") or "operator"
-    dry_run = payload.get("dry_run") is True
-    registry = load_json("site_registry.json", {})
-    sites = registry.get("sites", []) if isinstance(registry, dict) else []
-    target = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key).lower()
-    site = None
-    for item in sites:
-        if isinstance(item, dict):
-            item_key = str(item.get("site_key") or item.get("key") or item.get("site_name") or item.get("name") or "").lower()
-            if item_key == target:
-                site = item
-                break
-    if site is None:
-        return jsonify({"ok": False, "error": "site not found", "site_key": site_key}), 404
-
-    if "_jom_credential_gate_latest_validation" in globals():
-        validation_state = _jom_credential_gate_latest_validation(target)
-    else:
-        validations = _load_site_access_validation() if "_load_site_access_validation" in globals() else _jom_estate_runtime_access_validation_contract_v1()
-        validation_state = validations.get("validations", {}).get(target, {}) if isinstance(validations, dict) else {}
-    if not validation_state or (validation_state.get("access_valid") is not True and validation_state.get("status") != "ok"):
-        return jsonify({
-            "ok": False,
-            "error": "credential_access_not_validated",
-            "site_key": site_key,
-            "validation": validation_state or {},
-            "message": "Credential access has not been validated yet. Click Validate Access before enabling monitoring.",
-        }), 409
-
-    oauth_coverage = {"ok": True, "monitoring_allowed": True, "status": "validated_by_credential_gate"}
-    if "_oauth_coverage_payload" in globals():
-        oauth_coverage = _oauth_coverage_payload(site_key)
-        if oauth_coverage.get("monitoring_allowed") is not True:
-            status_code = 409 if oauth_coverage.get("ok") else 404
-            return jsonify({
-                "ok": False,
-                "error": "oauth_authorisation_required",
-                "site_key": site_key,
-                "coverage": oauth_coverage,
-                "validation": validation_state,
-                "message": "Atlassian authorisation is required before monitoring can be enabled.",
-            }), status_code
-
-    decisions = _load_lifecycle_decisions() if "_load_lifecycle_decisions" in globals() else _jom_estate_runtime_lifecycle_contract_v1()
-    decision_state = decisions.get("decisions", {}).get(site_key, {}) or decisions.get("decisions", {}).get(target, {})
-    if decision_state.get("decision") not in ("approve", "monitored"):
-        return jsonify({"ok": False, "error": "site must be approved before monitoring can be enabled", "current_decision": decision_state.get("decision")}), 409
-    sources = site.get("sources", []) if isinstance(site.get("sources"), list) else []
-    if not sources:
-        return jsonify({"ok": False, "error": "site has no source signals to enable", "site_key": site_key}), 409
-    if dry_run:
-        return jsonify({"ok": True, "dry_run": True, "site_key": site_key, "would_enable_monitoring": True, "validation": validation_state, "coverage": oauth_coverage})
-
-    now = now_utc()
-    site["classification"] = "monitored"
-    site["is_monitored"] = True
-    site["can_approve"] = False
-    site["collector_onboarding_status"] = "enabled_via_jom"
-    site["approved_at_utc"] = site.get("approved_at_utc") or now
-    site["monitoring_enabled_at_utc"] = now
-    site["monitoring_enabled_by"] = actor
-    site["status"] = "ok"
-    _recalculate_registry_summary(registry)
-    write_json(DATA_PATH / "site_registry.json", registry)
-
-    monitored_payload = _jom_estate_runtime_site_registry_contract_v1()
-    monitored_payload.setdefault("schema", "jom-monitored-sites-v2")
-    monitored_payload.setdefault("policy", registry.get("policy", {}))
-    monitored_payload.setdefault("monitored_sites", [])
-    monitored_payload.setdefault("ignored_sites", [])
-    existing = None
-    for row in monitored_payload["monitored_sites"]:
-        if isinstance(row, dict) and str(row.get("site_key", "")).lower() == target:
-            existing = row
-            break
-    row = {
-        "site_key": site.get("site_key") or site_key,
-        "site_name": site.get("site_name") or site_key,
-        "site_url": site.get("site_url") or site.get("url") or "",
-        "cloud_id": site.get("cloud_id") or "",
-        "enabled_at_utc": now,
-        "enabled_by": actor,
-    }
-    if existing:
-        existing.update(row)
-    else:
-        monitored_payload["monitored_sites"].append(row)
-    _jom_estate_runtime_noop_write_v1("monitored_sites", monitored_payload)
-
-    decision_record = {
-        "site_key": target,
-        "decision": "monitored",
-        "previous_decision": decision_state.get("decision"),
-        "reason": "monitoring enabled via JOM",
-        "actor": actor,
-        "decided_at_utc": now,
-        "reversible": True,
-        "requires_credentials": False,
-        "next_state": "monitored",
-    }
-    decisions.setdefault("decisions", {})[target] = decision_record
-    decisions.setdefault("history", []).append(decision_record)
-    decisions["generated_at_utc"] = now
-    _jom_estate_runtime_noop_write_v1("site_lifecycle_decisions", decisions)
-    return jsonify({"ok": True, "site_key": site_key, "message": "Monitoring enabled via JOM.", "site": site})
-
-
-
-# JOM_ENABLE_MONITORING_INVENTORY_MATCH_REPAIR_V1 START
-# Repair: Enable Monitoring must promote a validated inventory-discovered site even when
-# the site is not already present as a direct site_registry row.
-def _jom_enable_monitoring_norm_v1(value):
-    text = str(value or "").strip().lower()
-    if text.startswith("http") and ".atlassian.net" in text:
-        text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
-    return text.rstrip("/")
-
-
-def _jom_enable_monitoring_site_key_v1(site):
-    if not isinstance(site, dict):
-        return ""
-    for key in ("site_key", "key", "name", "site_name", "url", "site_url", "cloud_id"):
-        value = site.get(key)
-        if value:
-            return _jom_enable_monitoring_norm_v1(value)
-    return ""
-
-
-def _jom_enable_monitoring_find_row_v1(rows, site_key):
-    wanted = _jom_enable_monitoring_norm_v1(site_key)
-    for row in rows if isinstance(rows, list) else []:
-        if not isinstance(row, dict):
-            continue
-        values = [row.get("site_key"), row.get("key"), row.get("name"), row.get("site_name"), row.get("url"), row.get("site_url"), row.get("cloud_id")]
-        if any(_jom_enable_monitoring_norm_v1(value) == wanted for value in values if value is not None):
-            return row
-    return None
-
-
-def _jom_enable_monitoring_latest_validation_v1(site_key):
-    if "_jom_credential_gate_latest_validation" in globals():
-        try:
-            record = _jom_credential_gate_latest_validation(site_key)
-            if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
-                return record
-        except Exception:
-            pass
-    if "_jom_estate_complete_oauth_validation" in globals():
-        try:
-            payload = _jom_estate_complete_oauth_validation(site_key, actor="enable-monitoring-precheck")
-            record = payload.get("validation") if isinstance(payload, dict) else None
-            if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
-                return record
-        except Exception:
-            pass
-    return {}
-
-
-def _jom_enable_monitoring_registry_record_v1(site_key, registry_site, inventory_site):
-    source = inventory_site if isinstance(inventory_site, dict) and inventory_site else registry_site if isinstance(registry_site, dict) else {}
-    key = _jom_enable_monitoring_norm_v1(source.get("site_key") or source.get("key") or source.get("name") or site_key)
-    url = source.get("site_url") or source.get("url") or ("https://" + key + ".atlassian.net" if key else "")
-    record = dict(registry_site) if isinstance(registry_site, dict) else {}
-    record.update({
-        "site_key": key,
-        "key": key,
-        "site_name": source.get("site_name") or source.get("name") or key,
-        "name": source.get("name") or source.get("site_name") or key,
-        "site_url": url,
-        "url": url,
-        "cloud_id": source.get("cloud_id") or record.get("cloud_id"),
-        "classification": "monitored",
-        "lifecycle": "monitored",
-        "is_monitored": True,
-        "monitored": True,
-        "approved_monitored": True,
-        "collector_onboarding_status": "monitoring_enabled",
-        "status": "ok",
-        "health_status": "OK",
-        "action_required": None,
-        "monitoring_enabled_at_utc": now_utc(),
-        "monitoring_enabled_by": "operator",
-        "truth_source": "enable_monitoring_inventory_match_repair_v1",
-    })
-    sources = record.get("sources") if isinstance(record.get("sources"), list) else []
-    for value in ["oauth_accessible_resources", "estate_admin_site_inventory", "site_review_enable_monitoring"]:
-        if value not in sources:
-            sources.append(value)
-    record["sources"] = sources
-    return record
-
-
-def _jom_enable_monitoring_repaired_v1(site_key):
     body = request.get_json(silent=True) or {}
     actor = body.get("actor") or "operator"
-    dry_run = body.get("dry_run") is True
-    target = _jom_enable_monitoring_norm_v1(site_key)
-
-    validation = _jom_enable_monitoring_latest_validation_v1(target)
+    validation = _jom_lifecycle_latest_validation_v1(site_key)
     if not validation:
-        return jsonify({
-            "ok": False,
-            "error": "access_not_validated",
-            "site_key": target,
-            "message": "Credential access must be validated before monitoring can be enabled.",
-        }), 409
-
-    registry = load_json("site_registry.json", {})
-    if not isinstance(registry, dict):
-        registry = {"schema": "site-registry-runtime", "sites": []}
-    registry.setdefault("sites", [])
-    registry_sites = registry.get("sites") if isinstance(registry.get("sites"), list) else []
-
-    inventory = load_json("estate_admin_site_inventory_v1.json", {})
-    if not isinstance(inventory, dict):
-        inventory = {"schema": "estate_admin_site_inventory_v1", "sites": []}
-    inventory.setdefault("sites", [])
-    inventory_sites = inventory.get("sites") if isinstance(inventory.get("sites"), list) else []
-
-    registry_site = _jom_enable_monitoring_find_row_v1(registry_sites, target)
-    inventory_site = _jom_enable_monitoring_find_row_v1(inventory_sites, target)
-    if registry_site is None and inventory_site is None:
-        return jsonify({"ok": False, "error": "site_not_found", "site_key": target}), 404
-
-    record = _jom_enable_monitoring_registry_record_v1(target, registry_site or {}, inventory_site or {})
-    record["monitoring_enabled_by"] = actor
-
-    if dry_run:
-        return jsonify({"ok": True, "dry_run": True, "site_key": target, "record": record, "validation": validation})
-
-    if registry_site is None:
-        registry_sites.append(record)
-    else:
-        registry_site.clear()
-        registry_site.update(record)
-    registry["sites"] = registry_sites
-
-    if inventory_site is not None:
-        inventory_site.update(record)
-        inventory_site["lifecycle"] = "monitored"
-        inventory_site["classification"] = "monitored"
-        inventory_site["approved_monitored"] = True
-        inventory_site["is_monitored"] = True
-        inventory_site["monitored"] = True
-        inventory_site["status"] = "ok"
-        inventory_site["collector_onboarding_status"] = "monitoring_enabled"
-    inventory["generated_at_utc"] = now_utc()
-
-    if "_recalculate_registry_summary" in globals():
-        _recalculate_registry_summary(registry)
-    else:
-        registry["generated_at_utc"] = now_utc()
-
-    write_json(DATA_PATH / "site_registry.json", registry)
-    write_json(DATA_PATH / "estate_admin_site_inventory_v1.json", inventory)
-
+        return jsonify({"ok": False, "error": "access_not_validated", "site_key": _jom_lifecycle_norm_v1(site_key), "message": "Credential access must be validated before monitoring can be enabled."}), 409
+    record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_monitored_v1(site_key, actor=actor)
+    if record is None and inventory_record is None:
+        return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
     return jsonify({
         "ok": True,
         "message": "Monitoring enabled. Site has been promoted into the monitored Site Registry.",
-        "site_key": target,
+        "site_key": _jom_lifecycle_norm_v1(site_key),
+        "classification": "monitored",
+        "lifecycle": "monitored",
         "record": record,
+        "inventory_record": inventory_record,
         "validation": validation,
     })
-
-
-if "api_site_review_enable_monitoring" in globals():
-    api_site_review_enable_monitoring._jom_original_enable_monitoring_v1 = api_site_review_enable_monitoring
-    api_site_review_enable_monitoring = _jom_enable_monitoring_repaired_v1
-    app.view_functions["api_site_review_enable_monitoring"] = api_site_review_enable_monitoring
-# JOM_ENABLE_MONITORING_INVENTORY_MATCH_REPAIR_V1 END
 @app.route("/review-queue")
 def review_queue():
     return redirect("/estate#discovered-sites", code=302)
@@ -3128,41 +3073,18 @@ def api_estate_organisation_auth_source_audit_v1():
 # === JOM SITE REVIEW STOP MONITORING ROUTE v2 START ===
 @app.route("/api/site-review/<site_key>/stop-monitoring", methods=["POST"])
 def api_site_review_stop_monitoring_v2(site_key):
-    payload = request.get_json(silent=True) or {}
-    actor = payload.get("actor") or "operator"
-    reason = payload.get("reason") or "monitoring stopped from Site Review"
-    target = _normalise_site_key(site_key) if "_normalise_site_key" in globals() else str(site_key or "").strip().lower()
-    registry = load_json("site_registry.json", {"sites": []})
-    if not isinstance(registry, dict):
-        registry = {"sites": []}
-    sites = registry.get("sites") if isinstance(registry.get("sites"), list) else []
-    matched = None
-    for site in sites:
-        if not isinstance(site, dict):
-            continue
-        key = str(site.get("site_key") or site.get("key") or site.get("site_name") or site.get("name") or "").strip().lower()
-        if key == target:
-            matched = site
-            break
-    if matched is None:
-        return jsonify({"ok": False, "error": "site_not_found", "site_key": target}), 404
-    matched["classification"] = "discovered"
-    matched["lifecycle"] = "stopped_monitoring"
-    matched["is_monitored"] = False
-    matched["monitored"] = False
-    matched["approved_monitored"] = False
-    matched["collector_onboarding_status"] = "review_required"
-    matched["action_required"] = "review_monitoring_state"
-    matched["status"] = "review"
-    matched["monitoring_stopped_at_utc"] = now_utc()
-    matched["monitoring_stopped_by"] = actor
-    matched["monitoring_stop_reason"] = reason
-    if "_recalculate_registry_summary" in globals():
-        _recalculate_registry_summary(registry)
-    else:
-        registry["generated_at_utc"] = now_utc()
-    write_json(DATA_PATH / "site_registry.json", registry)
-    return jsonify({"ok": True, "message": "Monitoring stopped. Site returned to review and will no longer appear in the monitored Site Registry.", "site_key": target, "record": matched})
+    body = request.get_json(silent=True) or {}
+    actor = body.get("actor") or "operator"
+    record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_review_v1(site_key, actor=actor)
+    if record is None and inventory_record is None:
+        return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
+    return jsonify({
+        "ok": True,
+        "message": "Monitoring stopped. Site returned to review across Site Registry and Estate inventory truth sources.",
+        "site_key": _jom_lifecycle_norm_v1(site_key),
+        "registry_record": record,
+        "inventory_record": inventory_record,
+    })
 # === JOM SITE REVIEW STOP MONITORING ROUTE v2 END ===
 
 if __name__ == "__main__":
@@ -3207,10 +3129,3 @@ def api_runtime_data_path_status():
         "files": {name: runtime_path_status(name) for name in files},
         "policy": "Read runtime/data first; runtime-only source handling disabled; runtime/data is the only operational source.",
     })
-
-
-
-
-
-
-
