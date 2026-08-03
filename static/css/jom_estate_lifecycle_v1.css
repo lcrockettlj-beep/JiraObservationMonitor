@@ -429,3 +429,38 @@ body[data-jom-page="estate"] .jom-estate-rail > * {
 /* JOM_ESTATE_RIGHT_RAIL_FULL_HEIGHT_ALIGNMENT_V1 END */
 
 
+
+/* JOM_ESTATE_VISUAL_POLISH_V1 START */
+/* Estate-only visual polish. Does not change data, table structure, or right-rail tile sizes. */
+body[data-jom-page="estate"] .estate-hero-card {
+  min-height: 132px !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
+body[data-jom-page="estate"] .estate-hero-card h1 {
+  margin-top: 6px !important;
+  margin-bottom: 8px !important;
+}
+
+body[data-jom-page="estate"] .estate-section-heading {
+  align-items: center !important;
+}
+
+body[data-jom-page="estate"] .estate-section-heading .estate-count-pill {
+  align-self: center !important;
+  margin-top: 0 !important;
+}
+
+body[data-jom-page="estate"] .jom-estate-rail {
+  gap: 14px !important;
+}
+
+body[data-jom-page="estate"] .estate-rail-card {
+  padding-top: 14px !important;
+}
+
+body[data-jom-page="estate"] .estate-rail-card h2 {
+  margin-bottom: 10px !important;
+}
+/* JOM_ESTATE_VISUAL_POLISH_V1 END */
