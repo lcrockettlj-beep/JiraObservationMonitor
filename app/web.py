@@ -1145,12 +1145,18 @@ def _site_for_validation(site_key: str) -> Dict[str, Any]:
 
 @app.route("/api/site-review/<path:site_key>/access-validation")
 def api_site_review_access_validation_status_gate_v1(site_key):
-    payload = _load_site_access_validation()
-    return jsonify({"ok": True, "site_key": site_key, "validation": payload.get("validations", {}).get(site_key, {})})
-
-
-
-
+    gate = _jom_access_gate_current_coverage_v1(site_key, actor="site-review-access-status")
+    status_code = 200
+    return jsonify({
+        "ok": True,
+        "site_key": _jom_lifecycle_norm_v1(site_key) if "_jom_lifecycle_norm_v1" in globals() else site_key,
+        "validation": gate.get("validation", {}),
+        "coverage": gate.get("coverage", {}),
+        "authorization_required": gate.get("authorization_required", True),
+        "authorization_url": gate.get("authorization_url"),
+        "action": gate.get("action"),
+        "message": gate.get("message"),
+    }), status_code
 def _oauth_coverage_payload(site_key):
     """Return OAuth/token coverage for an Estate site without mutating registry state."""
     import json as _json
@@ -1497,24 +1503,84 @@ def _jom_lifecycle_mark_review_v1(site_key, actor="operator"):
     return record, inventory_site, registry, inventory
 
 
+
+# JOM_SITE_REVIEW_ACCESS_GATE_OWNER_ALIGNMENT_V1 START
+# Owner implementation for Site Review access gating.
+# Current OAuth coverage is the authority for access validation.
+# Stored validation history is useful evidence, but it must not override current authorization_required=true.
+def _jom_access_gate_current_coverage_v1(site_key, actor="access-gate"):
+    coverage = _oauth_coverage_payload(site_key) if "_oauth_coverage_payload" in globals() else {}
+    if not isinstance(coverage, dict):
+        coverage = {}
+
+    site_key_norm = _jom_lifecycle_norm_v1(site_key) if "_jom_lifecycle_norm_v1" in globals() else str(site_key or "").strip().lower()
+    authorization_required = bool(coverage.get("authorization_required") is True)
+    coverage_status = str(coverage.get("coverage_status") or coverage.get("status") or "").strip().lower()
+    matched_resource = coverage.get("matched_resource") if isinstance(coverage.get("matched_resource"), dict) else None
+
+    access_valid = bool(
+        not authorization_required
+        and coverage_status == "validated"
+        and matched_resource
+    )
+
+    if access_valid:
+        validation = {
+            "access_valid": True,
+            "status": "ok",
+            "site_key": site_key_norm,
+            "site_name": site_key_norm,
+            "method": "oauth_coverage_validation",
+            "validated_at_utc": now_utc(),
+            "actor": actor,
+            "reason": "Current OAuth coverage validates access to this Atlassian site.",
+            "coverage_status": coverage_status,
+        }
+        if "_jom_estate_write_access_validation_record" in globals():
+            try:
+                _jom_estate_write_access_validation_record(site_key_norm, validation)
+            except Exception:
+                pass
+        return {
+            "ok": True,
+            "site_key": site_key_norm,
+            "access_valid": True,
+            "validation": validation,
+            "coverage": coverage,
+            "authorization_required": False,
+            "authorization_url": None,
+        }
+
+    validation = {
+        "access_valid": False,
+        "status": "blocked",
+        "site_key": site_key_norm,
+        "site_name": site_key_norm,
+        "method": "oauth_coverage_validation",
+        "validated_at_utc": now_utc(),
+        "actor": actor,
+        "reason": coverage.get("reason") or "Current OAuth coverage does not validate access to this Atlassian site.",
+        "coverage_status": coverage_status or "authorization_required",
+    }
+    return {
+        "ok": False,
+        "site_key": site_key_norm,
+        "access_valid": False,
+        "validation": validation,
+        "coverage": coverage,
+        "authorization_required": True,
+        "authorization_url": coverage.get("authorization_url"),
+        "action": "open_authorization_url" if coverage.get("authorization_url") else None,
+        "message": "Atlassian authorisation is required before monitoring can be enabled.",
+    }
+# JOM_SITE_REVIEW_ACCESS_GATE_OWNER_ALIGNMENT_V1 END
+
 def _jom_lifecycle_latest_validation_v1(site_key):
-    # Preserve existing OAuth/access validation behaviour, but do not let valid access imply monitoring.
-    if "_jom_estate_complete_oauth_validation" in globals():
-        try:
-            payload = _jom_estate_complete_oauth_validation(site_key, actor="enable-monitoring-precheck")
-            record = payload.get("validation") if isinstance(payload, dict) else None
-            if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
-                return record
-        except Exception:
-            pass
-    registry = load_json("site_registry.json", {})
-    validations = registry.get("validations", {}) if isinstance(registry, dict) else {}
-    record = validations.get(_jom_lifecycle_norm_v1(site_key)) if isinstance(validations, dict) else None
-    if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
-        return record
+    gate = _jom_access_gate_current_coverage_v1(site_key, actor="enable-monitoring-precheck")
+    validation = gate.get("validation") if isinstance(gate, dict) else None
+    if isinstance(validation, dict) and validation.get("access_valid") is True and validation.get("status") == "ok":
+        return validation
     return {}
-
-
 def _jom_lifecycle_inventory_only_correction_v1():
     registry, inventory = _jom_lifecycle_load_sources_v1()
     registry_monitored = {_jom_lifecycle_key_v1(site) for site in registry["sites"] if _jom_lifecycle_is_monitored_v1(site)}
@@ -2441,85 +2507,27 @@ def _jom_credential_gate_status_payload(site_key, validation=None):
 
 @app.route("/api/site-review/<path:site_key>/validate-access", methods=["POST"])
 def api_site_review_validate_access_gate_v1(site_key):
-    from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
-    wanted = _jom_credential_gate_norm(site_key)
-    body = request.get_json(silent=True) or {}
-    site = _jom_credential_gate_site(wanted)
-    if not site:
+    gate = _jom_access_gate_current_coverage_v1(site_key, actor=(request.get_json(silent=True) or {}).get("actor") or "operator")
+    if gate.get("access_valid") is True:
         return jsonify({
-            "ok": False,
-            "error": "site_not_found",
-            "validation": {
-                "access_valid": False,
-                "status": "blocked",
-                "site_key": wanted,
-                "reason": "Site was not found in site_registry.json.",
-                "method": "not_validated",
-            },
-        }), 404
-
-    # Correct behaviour: do not treat registry identity as credential validation.
-    # Reuse a previous real credential validation if one exists.
-    # If no record exists, use live OAuth coverage as the real validation source or return an authorisation action.
-    validation = _jom_credential_gate_latest_validation(wanted)
-    if not validation:
-        coverage = {}
-        if "_oauth_coverage_payload" in globals():
-            coverage = _oauth_coverage_payload(wanted)
-        if isinstance(coverage, dict) and coverage.get("monitoring_allowed") is True:
-            validation = {
-                "access_valid": True,
-                "status": "ok",
-                "site_key": wanted,
-                "site_name": site.get("site_name") or wanted,
-                "method": "oauth_coverage_validation",
-                "validated_at_utc": _jom_credential_gate_now_utc(),
-                "reason": "Credential access validated from OAuth coverage.",
-                "coverage_status": coverage.get("coverage_status") or coverage.get("status"),
-            }
-        elif isinstance(coverage, dict) and (coverage.get("authorization_required") is True or coverage.get("authorization_url")):
-            return jsonify({
-                "ok": False,
-                "error": "oauth_authorisation_required",
-                "site_key": wanted,
-                "coverage": coverage,
-                "validation": {
-                    "access_valid": False,
-                    "status": "blocked",
-                    "site_key": wanted,
-                    "site_name": site.get("site_name") or wanted,
-                    "reason": "Atlassian authorisation is required before credential access can be validated.",
-                    "method": "not_validated",
-                },
-                "message": "Atlassian authorisation is required before monitoring can be enabled.",
-                "action": "open_authorization_url",
-                "authorization_url": coverage.get("authorization_url"),
-            }), 409
-        else:
-            return jsonify({
-                "ok": False,
-                "error": "credential_access_not_validated",
-                "validation": {
-                    "access_valid": False,
-                    "status": "blocked",
-                    "site_key": wanted,
-                    "site_name": site.get("site_name") or wanted,
-                    "reason": "Credential access has not been validated yet. Click Validate Access before enabling monitoring.",
-                    "method": "not_validated",
-                },
-                "coverage": coverage,
-                "message": "No real Atlassian credential validation record exists for this site yet.",
-            }), 409
-
-    validation = dict(validation)
-    validation["actor"] = body.get("actor") or validation.get("actor") or "operator"
-    validation["reconfirmed_at_utc"] = _jom_credential_gate_now_utc()
-    current_path = DATA_PATH / "site_registry.json"
-    access = _jom_credential_gate_read_json(current_path, {"schema": "jom-site-access-validation-v1", "validations": {}, "history": []})
-    access.setdefault("validations", {})[wanted] = validation
-    access["generated_at_utc"] = _jom_credential_gate_now_utc()
-    _jom_credential_gate_write_json(current_path, access)
-    return jsonify({"ok": True, "validation": validation})
+            "ok": True,
+            "site_key": gate.get("site_key"),
+            "validation": gate.get("validation", {}),
+            "coverage": gate.get("coverage", {}),
+            "authorization_required": False,
+            "authorization_url": None,
+            "message": "Access validated. Monitoring can be enabled in JOM.",
+        })
+    return jsonify({
+        "ok": False,
+        "site_key": gate.get("site_key"),
+        "validation": gate.get("validation", {}),
+        "coverage": gate.get("coverage", {}),
+        "authorization_required": True,
+        "authorization_url": gate.get("authorization_url"),
+        "action": gate.get("action"),
+        "message": gate.get("message") or "Atlassian authorisation is required before monitoring can be enabled.",
+    }), 409
 # === Estate Credential Validation Gate Correction v1 END ===
 
 # === Estate OAuth Callback Validation Record Repair v1 START ===
