@@ -1,202 +1,541 @@
 {
-  "schema": "jom-site-registry-v4-runtime-consolidated",
-  "generated_at_utc": "2026-07-30T21:41:33Z",
-  "summary": {
-    "total_sites": 7,
-    "monitored_count": 0,
-    "discovered_count": 7,
-    "pending_onboarding_count": 7,
-    "ignored_count": 0
+  "decisions": {
+    "gli-tracker": {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to review",
+      "actor": "operator",
+      "decided_at_utc": "2026-08-03T10:49:52.720184Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    }
   },
-  "policy": {
-    "new_sites_default_status": "discovered",
-    "estate_requires_monitored_status": true,
-    "approval_triggers_oauth_onboarding_gate": true
+  "history": [
+    {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to review",
+      "actor": "operator",
+      "decided_at_utc": "2026-08-03T10:49:52.720184Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T10:49:54Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:00:45Z",
+      "actor": "enable-monitoring-precheck",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:01:14Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:01:53Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:01:59Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:01:59Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:02:25Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:03:33Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:03:44Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:03:45Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:05:22Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:05:33Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:06:32Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:10:49Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:10:51Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:10:54Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:11:02Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:12:20Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:12:24Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:12:54Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:05Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:24Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:31Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:31Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:31Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:32Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:32Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:33Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:33Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:35Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:36Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:38Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:39Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:41Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:42Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:43Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:44Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:46Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:47Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    }
+  ],
+  "source": "runtime/site_registry_contract",
+  "schema": "jom-site-lifecycle-decisions-v1",
+  "generated_at_utc": "2026-08-03T11:13:47Z",
+  "validations": {
+    "gli-tracker": {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:47Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    "gli-delivery-tm": {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:41Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    "gli-global-technology": {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:42Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    "gli-it-project": {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-08-03T11:13:46Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    }
   },
   "sites": [
     {
-      "site_key": "gaminglabs-team-h2pbpmis",
-      "site_name": "gaminglabs-team-h2pbpmis",
-      "site_url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
-      "aliases": [
-        "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-        "https://gaminglabs-team-h2pbpmis.atlassian.net",
-        "gaminglabs-team-h2pbpmis"
-      ],
-      "sources": [
-        "product_access",
-        "runtime"
-      ],
-      "classification": "discovered",
-      "is_monitored": false,
-      "can_approve": true,
-      "metrics": {
-        "jira_product_user_count": 0,
-        "jira_product_seat_limit": 0,
-        "jira_role_count": 0
-      },
-      "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-      "collector_onboarding_status": "not_requested",
-      "status": "error"
-    },
-    {
-      "site_key": "gaminglabs-team-tsyfo716",
-      "site_name": "gaminglabs-team-tsyfo716",
-      "site_url": "https://gaminglabs-team-tsyfo716.atlassian.net",
-      "aliases": [
-        "981786d5-9529-4957-bab0-fdc505ccb9b6",
-        "https://gaminglabs-team-tsyfo716.atlassian.net",
-        "gaminglabs-team-tsyfo716"
-      ],
-      "sources": [
-        "product_access",
-        "runtime"
-      ],
-      "classification": "discovered",
-      "is_monitored": false,
-      "can_approve": true,
-      "metrics": {
-        "jira_product_user_count": 0,
-        "jira_product_seat_limit": 0,
-        "jira_role_count": 0
-      },
-      "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
-      "collector_onboarding_status": "not_requested",
-      "status": "error"
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "site_name": "gli-delivery-tm",
-      "site_url": "https://gli-delivery-tm.atlassian.net",
-      "aliases": [
-        "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-        "https://gli-delivery-tm.atlassian.net",
-        "gli-delivery-tm"
-      ],
-      "sources": [
-        "named_access",
-        "product_access",
-        "runtime"
-      ],
-      "classification": "discovered",
-      "is_monitored": false,
-      "can_approve": true,
-      "metrics": {
-        "jira_product_user_count": 31,
-        "named_access_count": 8,
-        "jira_product_seat_limit": 50,
-        "jira_role_count": 1
-      },
-      "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "collector_onboarding_status": "not_requested",
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-global-technology",
-      "site_name": "gli-global-technology",
-      "site_url": "https://gli-global-technology.atlassian.net",
-      "aliases": [
-        "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-        "https://gli-global-technology.atlassian.net",
-        "gli-global-technology"
-      ],
-      "sources": [
-        "named_access",
-        "product_access",
-        "runtime"
-      ],
-      "classification": "discovered",
-      "is_monitored": false,
-      "can_approve": true,
-      "metrics": {
-        "jira_product_user_count": 57,
-        "named_access_count": 28,
-        "jira_product_seat_limit": 100000,
-        "jira_role_count": 1
-      },
-      "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "collector_onboarding_status": "not_requested",
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-it-project",
-      "site_name": "gli-it-project",
-      "site_url": "https://gli-it-project.atlassian.net",
-      "aliases": [
-        "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-        "https://gli-it-project.atlassian.net",
-        "gli-it-project"
-      ],
-      "sources": [
-        "named_access",
-        "product_access",
-        "runtime"
-      ],
-      "classification": "discovered",
-      "is_monitored": false,
-      "can_approve": true,
-      "metrics": {
-        "jira_product_user_count": 63,
-        "named_access_count": 37,
-        "jira_product_seat_limit": 100,
-        "jira_role_count": 1
-      },
-      "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "collector_onboarding_status": "not_requested",
-      "status": "ok"
-    },
-    {
       "site_key": "gli-tracker",
+      "key": "gli-tracker",
       "site_name": "gli-tracker",
+      "name": "gli-tracker",
       "site_url": "https://gli-tracker.atlassian.net",
-      "aliases": [
-        "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
-        "https://gli-tracker.atlassian.net",
-        "gli-tracker"
-      ],
-      "sources": [
-        "monitoring_state",
-        "named_access",
-        "product_access"
-      ],
-      "classification": "discovered",
-      "is_monitored": false,
-      "can_approve": true,
-      "metrics": {
-        "named_access_count": 3,
-        "jira_product_user_count": 6,
-        "jira_product_seat_limit": 4000,
-        "jira_role_count": 1
-      },
+      "url": "https://gli-tracker.atlassian.net",
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
-      "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
-      "collector_onboarding_status": "not_requested",
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-usa",
-      "site_name": "gli-usa",
-      "site_url": "https://gli-usa.atlassian.net",
-      "aliases": [
-        "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-        "https://gli-usa.atlassian.net",
-        "gli-usa"
-      ],
+      "classification": "monitored",
+      "lifecycle": "monitored",
+      "is_monitored": true,
+      "monitored": true,
+      "approved_monitored": true,
+      "collector_onboarding_status": "monitoring_enabled",
+      "status": "ok",
+      "health_status": "OK",
+      "action_required": null,
+      "monitoring_enabled_at_utc": "2026-08-03T11:00:45.526569Z",
+      "monitoring_enabled_by": "operator",
+      "truth_source": "enable_monitoring_inventory_match_repair_v1",
       "sources": [
-        "product_access",
-        "runtime"
-      ],
-      "classification": "discovered",
-      "is_monitored": false,
-      "can_approve": true,
-      "metrics": {
-        "jira_product_user_count": 4,
-        "jira_product_seat_limit": 10,
-        "jira_role_count": 1
-      },
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "collector_onboarding_status": "not_requested",
-      "status": "ok"
+        "oauth_accessible_resources",
+        "estate_admin_site_inventory",
+        "site_review_enable_monitoring"
+      ]
     }
-  ]
+  ],
+  "summary": {
+    "total_sites": 1,
+    "monitored_count": 1,
+    "discovered_count": 0,
+    "ignored_count": 0,
+    "pending_onboarding_count": 0
+  }
 }

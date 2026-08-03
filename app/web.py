@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
@@ -735,6 +735,17 @@ def page_estate():
 def page_reference():
     return redirect("/", code=302)
 
+
+# JOM_SITE_WORKSPACE_SHELL_ROUTES_V1 START
+@app.route("/site-workspace")
+def page_site_workspace_shell_index():
+    site_key = request.args.get("site", "")
+    return render_template("site_workspace.html", site_key=site_key)
+
+@app.route("/site-workspace/<site_key>")
+def page_site_workspace_shell_site(site_key):
+    return render_template("site_workspace.html", site_key=site_key)
+# JOM_SITE_WORKSPACE_SHELL_ROUTES_V1 END
 @app.route("/site")
 def page_site():
     return render_template("site.html", **site_context())
@@ -1217,7 +1228,11 @@ def _oauth_coverage_payload(site_key):
     client_id = env.get("ATLASSIAN_OAUTH_CLIENT_ID") or env.get("ATLASSIAN_CLIENT_ID") or tokens.get("client_id") or ""
     redirect_uri = env.get("ATLASSIAN_OAUTH_REDIRECT_URI") or env.get("ATLASSIAN_REDIRECT_URI") or "http://127.0.0.1:5000/oauth/callback"
     scope = env.get("ATLASSIAN_OAUTH_SCOPE") or tokens.get("scope") or "manage:jira-configuration offline_access read:application-role:jira read:jira-user read:jira-work read:license:jira"
-    auth_state = state.get("state") or env.get("ATLASSIAN_OAUTH_STATE") or "jom-estate-oauth"
+    # JOM_OAUTH_CALLBACK_SITE_RETURN_CONTEXT_V1 START
+    # Carry the active Site Review site in OAuth state so /callback can return to the same review page.
+    base_auth_state = state.get("state") or env.get("ATLASSIAN_OAUTH_STATE") or "jom-estate-oauth"
+    auth_state = "site:" + wanted if wanted else base_auth_state
+    # JOM_OAUTH_CALLBACK_SITE_RETURN_CONTEXT_V1 END
 
     authorize_params = {
         "audience": "api.atlassian.com",
@@ -1454,6 +1469,169 @@ def api_site_review_enable_monitoring(site_key):
     return jsonify({"ok": True, "site_key": site_key, "message": "Monitoring enabled via JOM.", "site": site})
 
 
+
+# JOM_ENABLE_MONITORING_INVENTORY_MATCH_REPAIR_V1 START
+# Repair: Enable Monitoring must promote a validated inventory-discovered site even when
+# the site is not already present as a direct site_registry row.
+def _jom_enable_monitoring_norm_v1(value):
+    text = str(value or "").strip().lower()
+    if text.startswith("http") and ".atlassian.net" in text:
+        text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
+    return text.rstrip("/")
+
+
+def _jom_enable_monitoring_site_key_v1(site):
+    if not isinstance(site, dict):
+        return ""
+    for key in ("site_key", "key", "name", "site_name", "url", "site_url", "cloud_id"):
+        value = site.get(key)
+        if value:
+            return _jom_enable_monitoring_norm_v1(value)
+    return ""
+
+
+def _jom_enable_monitoring_find_row_v1(rows, site_key):
+    wanted = _jom_enable_monitoring_norm_v1(site_key)
+    for row in rows if isinstance(rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        values = [row.get("site_key"), row.get("key"), row.get("name"), row.get("site_name"), row.get("url"), row.get("site_url"), row.get("cloud_id")]
+        if any(_jom_enable_monitoring_norm_v1(value) == wanted for value in values if value is not None):
+            return row
+    return None
+
+
+def _jom_enable_monitoring_latest_validation_v1(site_key):
+    if "_jom_credential_gate_latest_validation" in globals():
+        try:
+            record = _jom_credential_gate_latest_validation(site_key)
+            if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
+                return record
+        except Exception:
+            pass
+    if "_jom_estate_complete_oauth_validation" in globals():
+        try:
+            payload = _jom_estate_complete_oauth_validation(site_key, actor="enable-monitoring-precheck")
+            record = payload.get("validation") if isinstance(payload, dict) else None
+            if isinstance(record, dict) and (record.get("access_valid") is True or record.get("status") == "ok"):
+                return record
+        except Exception:
+            pass
+    return {}
+
+
+def _jom_enable_monitoring_registry_record_v1(site_key, registry_site, inventory_site):
+    source = inventory_site if isinstance(inventory_site, dict) and inventory_site else registry_site if isinstance(registry_site, dict) else {}
+    key = _jom_enable_monitoring_norm_v1(source.get("site_key") or source.get("key") or source.get("name") or site_key)
+    url = source.get("site_url") or source.get("url") or ("https://" + key + ".atlassian.net" if key else "")
+    record = dict(registry_site) if isinstance(registry_site, dict) else {}
+    record.update({
+        "site_key": key,
+        "key": key,
+        "site_name": source.get("site_name") or source.get("name") or key,
+        "name": source.get("name") or source.get("site_name") or key,
+        "site_url": url,
+        "url": url,
+        "cloud_id": source.get("cloud_id") or record.get("cloud_id"),
+        "classification": "monitored",
+        "lifecycle": "monitored",
+        "is_monitored": True,
+        "monitored": True,
+        "approved_monitored": True,
+        "collector_onboarding_status": "monitoring_enabled",
+        "status": "ok",
+        "health_status": "OK",
+        "action_required": None,
+        "monitoring_enabled_at_utc": now_utc(),
+        "monitoring_enabled_by": "operator",
+        "truth_source": "enable_monitoring_inventory_match_repair_v1",
+    })
+    sources = record.get("sources") if isinstance(record.get("sources"), list) else []
+    for value in ["oauth_accessible_resources", "estate_admin_site_inventory", "site_review_enable_monitoring"]:
+        if value not in sources:
+            sources.append(value)
+    record["sources"] = sources
+    return record
+
+
+def _jom_enable_monitoring_repaired_v1(site_key):
+    body = request.get_json(silent=True) or {}
+    actor = body.get("actor") or "operator"
+    dry_run = body.get("dry_run") is True
+    target = _jom_enable_monitoring_norm_v1(site_key)
+
+    validation = _jom_enable_monitoring_latest_validation_v1(target)
+    if not validation:
+        return jsonify({
+            "ok": False,
+            "error": "access_not_validated",
+            "site_key": target,
+            "message": "Credential access must be validated before monitoring can be enabled.",
+        }), 409
+
+    registry = load_json("site_registry.json", {})
+    if not isinstance(registry, dict):
+        registry = {"schema": "site-registry-runtime", "sites": []}
+    registry.setdefault("sites", [])
+    registry_sites = registry.get("sites") if isinstance(registry.get("sites"), list) else []
+
+    inventory = load_json("estate_admin_site_inventory_v1.json", {})
+    if not isinstance(inventory, dict):
+        inventory = {"schema": "estate_admin_site_inventory_v1", "sites": []}
+    inventory.setdefault("sites", [])
+    inventory_sites = inventory.get("sites") if isinstance(inventory.get("sites"), list) else []
+
+    registry_site = _jom_enable_monitoring_find_row_v1(registry_sites, target)
+    inventory_site = _jom_enable_monitoring_find_row_v1(inventory_sites, target)
+    if registry_site is None and inventory_site is None:
+        return jsonify({"ok": False, "error": "site_not_found", "site_key": target}), 404
+
+    record = _jom_enable_monitoring_registry_record_v1(target, registry_site or {}, inventory_site or {})
+    record["monitoring_enabled_by"] = actor
+
+    if dry_run:
+        return jsonify({"ok": True, "dry_run": True, "site_key": target, "record": record, "validation": validation})
+
+    if registry_site is None:
+        registry_sites.append(record)
+    else:
+        registry_site.clear()
+        registry_site.update(record)
+    registry["sites"] = registry_sites
+
+    if inventory_site is not None:
+        inventory_site.update(record)
+        inventory_site["lifecycle"] = "monitored"
+        inventory_site["classification"] = "monitored"
+        inventory_site["approved_monitored"] = True
+        inventory_site["is_monitored"] = True
+        inventory_site["monitored"] = True
+        inventory_site["status"] = "ok"
+        inventory_site["collector_onboarding_status"] = "monitoring_enabled"
+    inventory["generated_at_utc"] = now_utc()
+
+    if "_recalculate_registry_summary" in globals():
+        _recalculate_registry_summary(registry)
+    else:
+        registry["generated_at_utc"] = now_utc()
+
+    write_json(DATA_PATH / "site_registry.json", registry)
+    write_json(DATA_PATH / "estate_admin_site_inventory_v1.json", inventory)
+
+    return jsonify({
+        "ok": True,
+        "message": "Monitoring enabled. Site has been promoted into the monitored Site Registry.",
+        "site_key": target,
+        "record": record,
+        "validation": validation,
+    })
+
+
+if "api_site_review_enable_monitoring" in globals():
+    api_site_review_enable_monitoring._jom_original_enable_monitoring_v1 = api_site_review_enable_monitoring
+    api_site_review_enable_monitoring = _jom_enable_monitoring_repaired_v1
+    app.view_functions["api_site_review_enable_monitoring"] = api_site_review_enable_monitoring
+# JOM_ENABLE_MONITORING_INVENTORY_MATCH_REPAIR_V1 END
 @app.route("/review-queue")
 def review_queue():
     return redirect("/estate#discovered-sites", code=302)
@@ -2457,6 +2635,148 @@ def api_site_review_oauth_complete_v1(site_key):
     payload = _jom_estate_complete_oauth_validation(site_key, actor=actor)
     status = 200 if payload.get("ok") else 409
     return jsonify(payload), status
+
+# JOM_OAUTH_CALLBACK_COMPLETION_REPAIR_V1_1 START
+# Receives Atlassian OAuth callbacks on /callback and /oauth/callback, saves tokens.json,
+# then returns the operator to the active Site Review page.
+def _jom_oauth_paths_v1_1():
+    root = Path(__file__).resolve().parents[1]
+    return root, root / "tokens.json", root / ".auth_state.json", root / ".env"
+
+
+def _jom_oauth_read_env_v1_1():
+    import os as _os
+    root, _token_path, _state_path, env_path = _jom_oauth_paths_v1_1()
+    env = dict(_os.environ)
+    if env_path.exists():
+        for raw in env_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            env[key.strip()] = value.strip().strip('"').strip("'")
+    return env
+
+
+def _jom_oauth_read_json_v1_1(path, default):
+    try:
+        if not path.exists():
+            return default
+        value = json.loads(path.read_text(encoding="utf-8-sig"))
+        return value if isinstance(value, dict) else default
+    except Exception:
+        return default
+
+
+def _jom_oauth_write_json_v1_1(path, payload):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    return payload
+
+
+def _jom_oauth_store_pending_site_v1_1(site_key):
+    _root, _token_path, state_path, _env_path = _jom_oauth_paths_v1_1()
+    state = _jom_oauth_read_json_v1_1(state_path, {})
+    state["latest_site_key"] = str(site_key or "").strip()
+    state.setdefault("state", state.get("state") or "jom-estate-oauth")
+    state["updated_at_utc"] = now_utc() if "now_utc" in globals() else datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    return _jom_oauth_write_json_v1_1(state_path, state)
+
+
+def _jom_oauth_site_from_callback_v1_1():
+    _root, _token_path, state_path, _env_path = _jom_oauth_paths_v1_1()
+    requested = request.args.get("site") or request.args.get("site_key") or ""
+    if requested:
+        return requested
+    state_arg = request.args.get("state") or ""
+    if state_arg.startswith("site:"):
+        return state_arg.split(":", 1)[1]
+    state = _jom_oauth_read_json_v1_1(state_path, {})
+    return state.get("latest_site_key") or state.get("site_key") or ""
+
+
+def _jom_oauth_exchange_code_v1_1(code):
+    import time as _time
+    import urllib.request as _request
+    import urllib.error as _error
+    env = _jom_oauth_read_env_v1_1()
+    _root, token_path, _state_path, _env_path = _jom_oauth_paths_v1_1()
+    token_url = env.get("ATLASSIAN_TOKEN_URL") or "https://auth.atlassian.com/oauth/token"
+    client_id = env.get("ATLASSIAN_OAUTH_CLIENT_ID") or env.get("ATLASSIAN_CLIENT_ID") or ""
+    client_secret = env.get("ATLASSIAN_OAUTH_CLIENT_SECRET") or env.get("ATLASSIAN_CLIENT_SECRET") or ""
+    redirect_uri = env.get("ATLASSIAN_OAUTH_REDIRECT_URI") or env.get("ATLASSIAN_REDIRECT_URI") or "http://127.0.0.1:5000/oauth/callback"
+    if not client_id or not client_secret:
+        return {"ok": False, "error": "missing_client_credentials"}
+    body = {
+        "grant_type": "authorization_code",
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "code": code,
+        "redirect_uri": redirect_uri,
+    }
+    req = _request.Request(
+        token_url,
+        data=json.dumps(body).encode("utf-8"),
+        headers={"Content-Type": "application/json", "Accept": "application/json"},
+        method="POST",
+    )
+    try:
+        with _request.urlopen(req, timeout=30) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+            payload = json.loads(raw) if raw else {}
+    except _error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        return {"ok": False, "error": "token_exchange_failed", "http_status": exc.code, "detail": detail[:1000]}
+    except Exception as exc:
+        return {"ok": False, "error": "token_exchange_failed", "detail": str(exc)}
+    if not isinstance(payload, dict) or not payload.get("access_token"):
+        return {"ok": False, "error": "token_response_missing_access_token", "payload": payload}
+    expires_in = int(payload.get("expires_in") or 3600)
+    saved = _jom_oauth_read_json_v1_1(token_path, {})
+    saved.update(payload)
+    saved["client_id"] = client_id
+    saved["scope"] = payload.get("scope") or env.get("ATLASSIAN_SCOPES") or env.get("ATLASSIAN_OAUTH_SCOPE") or saved.get("scope")
+    saved["expires_at_epoch"] = int(_time.time()) + expires_in
+    saved["updated_at_utc"] = now_utc() if "now_utc" in globals() else datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    saved["source"] = "oauth_callback"
+    _jom_oauth_write_json_v1_1(token_path, saved)
+    return {"ok": True, "tokens_saved": True, "expires_at_epoch": saved["expires_at_epoch"]}
+
+
+def _jom_oauth_callback_response_v1_1():
+    code = request.args.get("code") or ""
+    if not code:
+        return jsonify({"ok": False, "error": "missing_oauth_code", "query": dict(request.args)}), 400
+    site_key = _jom_oauth_site_from_callback_v1_1()
+    exchange = _jom_oauth_exchange_code_v1_1(code)
+    if not exchange.get("ok"):
+        return jsonify(exchange), 502
+    if site_key and "_jom_estate_complete_oauth_validation" in globals():
+        _jom_estate_complete_oauth_validation(site_key, actor="oauth-callback")
+    if site_key:
+        return redirect("/estate/review/" + str(site_key) + "?oauth=complete", code=302)
+    return redirect("/estate?oauth=complete", code=302)
+
+
+@app.route("/callback")
+def jom_oauth_callback_root_v1_1():
+    return _jom_oauth_callback_response_v1_1()
+
+
+@app.route("/oauth/callback")
+def jom_oauth_callback_oauth_v1_1():
+    return _jom_oauth_callback_response_v1_1()
+
+
+# Wrap the existing authorize-url endpoint without relying on its exact source text.
+if "api_oauth_authorize_url" in globals() and not getattr(api_oauth_authorize_url, "_jom_oauth_pending_site_wrapped_v1_1", False):
+    _jom_original_api_oauth_authorize_url_v1_1 = api_oauth_authorize_url
+    def api_oauth_authorize_url(site_key):
+        _jom_oauth_store_pending_site_v1_1(site_key)
+        return _jom_original_api_oauth_authorize_url_v1_1(site_key)
+    api_oauth_authorize_url._jom_oauth_pending_site_wrapped_v1_1 = True
+    app.view_functions["api_oauth_authorize_url"] = api_oauth_authorize_url
+# JOM_OAUTH_CALLBACK_COMPLETION_REPAIR_V1_1 END
 # === Estate OAuth Callback Validation Record Repair v1 END ===
 
 # JOM_ESTATE_ADMIN_INVENTORY_API_WIRING_V1
@@ -2887,5 +3207,10 @@ def api_runtime_data_path_status():
         "files": {name: runtime_path_status(name) for name in files},
         "policy": "Read runtime/data first; runtime-only source handling disabled; runtime/data is the only operational source.",
     })
+
+
+
+
+
 
 

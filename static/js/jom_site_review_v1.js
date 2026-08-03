@@ -1,4 +1,4 @@
-(function(){
+﻿(function(){
   'use strict';
 
   const siteKey = document.body.getAttribute('data-site-key') || '';
@@ -79,6 +79,25 @@
     show('[data-enable-monitoring]', stage === 'approval_pending' && valid);
     show('[data-stop-monitoring]', stage === 'monitored');
     show('[data-open-site]', true);
+    // JOM_SITE_REVIEW_MONITORED_CONTROLS_CLEANUP_V1_2 START
+    // Monitored means validation and promotion are complete. Keep operational controls only.
+    if(stage === 'monitored'){
+      show('[data-decision="approve"]', false);
+      show('[data-decision="ignore"]', false);
+      show('[data-decision="pending"]', false);
+      show('[data-decision="restore"]', false);
+      show('[data-start-auth]', false);
+      show('[data-validate-access]', false);
+      show('[data-enable-monitoring]', false);
+      show('[data-stop-monitoring]', true);
+      show('[data-open-site]', true);
+    }
+    if(stage === 'approval_pending' && valid){
+      show('[data-start-auth]', false);
+      show('[data-validate-access]', false);
+      show('[data-enable-monitoring]', true);
+    }
+    // JOM_SITE_REVIEW_MONITORED_CONTROLS_CLEANUP_V1_2 END
 
     const restore = document.querySelector('[data-decision="restore"]');
     if(restore) restore.textContent = stage === 'ignored' ? 'Restore to Review' : 'Return to Review';
@@ -215,3 +234,4 @@
     setText('decision-result', 'Unable to load site review data: ' + error.message);
   }));
 })();
+

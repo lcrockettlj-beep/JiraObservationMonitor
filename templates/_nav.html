@@ -1,4 +1,4 @@
-<aside class="jom-side-nav" id="jom-side-nav" aria-label="JOM primary navigation">
+﻿<aside class="jom-side-nav" id="jom-side-nav" aria-label="JOM primary navigation">
   <a href="/" class="jom-brand" aria-label="Command Centre home">
     <img class="jom-brand__logo" src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI">
     <span class="jom-brand__text">
@@ -12,7 +12,12 @@
       <span class="jom-nav-heading">Operations</span>
       <a href="/" class="jom-nav-link {% if request.path == '/' %}jom-nav-link--active{% endif %}">Command Centre</a>
       
-<a href="/estate" class="jom-nav-link {% if request.path.startswith('/estate') %}jom-nav-link--active{% endif %}">Estate</a>
+      <a href="/estate" class="jom-nav-link {% if request.path.startswith('/estate') or request.path.startswith('/site-workspace') or request.path.startswith('/review-queue') %}jom-nav-link--active{% endif %}">Estate</a>
+      <div class="jom-nav-subnav {% if request.path.startswith('/estate') or request.path.startswith('/site-workspace') or request.path.startswith('/review-queue') %}jom-nav-subnav--open{% endif %}" aria-label="Estate navigation">
+        <a href="/review-queue" class="{% if request.path.startswith('/review-queue') or request.path.startswith('/estate/review') %}jom-nav-subnav--active{% endif %}">Site Review</a>
+        <a href="/site-workspace" class="{% if request.path.startswith('/site-workspace') %}jom-nav-subnav--active{% endif %}">Site Workspace</a>
+      </div>
+      <!-- JOM_SITE_WORKSPACE_LEFT_NAV_FIX_V1 -->
 </section>
 
 
@@ -39,4 +44,7 @@
   <span></span><span></span><span></span>
 </button>
 <div class="jom-nav-backdrop" id="jom-nav-backdrop" hidden></div>
+
+
+
 

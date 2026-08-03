@@ -285,8 +285,9 @@
     {
       "site_key": "gli-tracker",
       "sources": [
-        "admin_org_events",
-        "oauth_accessible_resources"
+        "oauth_accessible_resources",
+        "estate_admin_site_inventory",
+        "site_review_enable_monitoring"
       ],
       "name": "gli-tracker",
       "url": "https://gli-tracker.atlassian.net",
@@ -330,10 +331,22 @@
         "live_admin_event_reference",
         "live_oauth_accessible_resources"
       ],
-      "approved_monitored": false,
+      "approved_monitored": true,
       "in_registry": true,
-      "lifecycle": "registered_review",
-      "action_required": "review_live_inventory_status"
+      "lifecycle": "monitored",
+      "action_required": null,
+      "key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "classification": "monitored",
+      "is_monitored": true,
+      "monitored": true,
+      "collector_onboarding_status": "monitoring_enabled",
+      "status": "ok",
+      "health_status": "OK",
+      "monitoring_enabled_at_utc": "2026-08-03T11:00:45.526569Z",
+      "monitoring_enabled_by": "operator",
+      "truth_source": "enable_monitoring_inventory_match_repair_v1"
     },
     {
       "site_key": "gli-usa",
@@ -358,5 +371,6 @@
       "lifecycle": "pending_review",
       "action_required": "review_live_inventory_status"
     }
-  ]
+  ],
+  "generated_at_utc": "2026-08-03T11:00:45.526588Z"
 }

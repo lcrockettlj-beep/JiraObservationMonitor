@@ -1,4 +1,4 @@
-// JOM Site Review Access Validation v1 - single owner
+﻿// JOM Site Review Access Validation v1 - single owner
 // Single-refresh repair: avoid repeated post-load UI repaint cycles.
 (function(){
   'use strict';
@@ -28,7 +28,7 @@
     const ok=v&&v.access_valid===true;
     const mon=b&&/monitoring enabled/i.test(b.textContent||'');
     if(b&&!mon&&b.style.display!=='none')b.disabled=!ok;
-    if(ok)status('Access validated. Monitoring can be enabled in JOM.','ok');
+    if(ok){removePrompt();status('Access validated. Monitoring can be enabled in JOM.','ok');}
     else if(v&&v.status)status('Access validation required before monitoring can be enabled. Current status: '+v.status+'. '+(v.reason||''),v.status==='ok'?'ok':'blocked');
     else status('Credential access has not been validated yet. Click Validate Access before enabling monitoring.','blocked');
   }
@@ -83,3 +83,6 @@
 // JOM Site Review Access Validation Single Refresh v1 START
 // Removed automatic 800ms and 2000ms post-load refreshes to prevent visible page settling/repaint.
 // JOM Site Review Access Validation Single Refresh v1 END
+
+// JOM_OAUTH_CALLBACK_MODAL_CLOSE_REPAIR_V1_1
+
