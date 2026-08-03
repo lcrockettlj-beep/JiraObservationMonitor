@@ -60,7 +60,11 @@
     "admin_event_reference_count": 4,
     "monitored_count": 3,
     "pending_review_count": 1,
-    "discovery_gap_count": 4
+    "discovery_gap_count": 4,
+    "oauth_estate_site_count": 5,
+    "review_count": 2,
+    "personal_external_discovery_count": 4,
+    "excluded_from_estate_truth_count": 4
   },
   "sites": [
     {
@@ -76,7 +80,9 @@
       "approved_monitored": false,
       "in_registry": false,
       "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status"
+      "action_required": "review_live_inventory_status",
+      "estate_visibility": "personal_or_external_access",
+      "estate_truth_included": false
     },
     {
       "site_key": "gaminglabs-team-h2pbpmis",
@@ -91,7 +97,9 @@
       "approved_monitored": false,
       "in_registry": false,
       "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status"
+      "action_required": "review_live_inventory_status",
+      "estate_visibility": "personal_or_external_access",
+      "estate_truth_included": false
     },
     {
       "site_key": "gaminglabs-team-tsyfo716",
@@ -106,7 +114,9 @@
       "approved_monitored": false,
       "in_registry": false,
       "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status"
+      "action_required": "review_live_inventory_status",
+      "estate_visibility": "personal_or_external_access",
+      "estate_truth_included": false
     },
     {
       "site_key": "gli-delivery-tm",
@@ -159,7 +169,16 @@
       "approved_monitored": true,
       "in_registry": true,
       "lifecycle": "monitored",
-      "action_required": null
+      "action_required": null,
+      "estate_visibility": "oauth_accessible_resource",
+      "estate_truth_included": true,
+      "classification": "monitored",
+      "is_monitored": true,
+      "monitored": true,
+      "collector_onboarding_status": "monitoring_enabled",
+      "status": "ok",
+      "health_status": "OK",
+      "truth_source": "oauth_estate_truth_owner_repair_v1"
     },
     {
       "site_key": "gli-global-technology",
@@ -212,7 +231,16 @@
       "approved_monitored": true,
       "in_registry": true,
       "lifecycle": "monitored",
-      "action_required": null
+      "action_required": null,
+      "estate_visibility": "oauth_accessible_resource",
+      "estate_truth_included": true,
+      "classification": "monitored",
+      "is_monitored": true,
+      "monitored": true,
+      "collector_onboarding_status": "monitoring_enabled",
+      "status": "ok",
+      "health_status": "OK",
+      "truth_source": "oauth_estate_truth_owner_repair_v1"
     },
     {
       "site_key": "gli-it-project",
@@ -265,7 +293,16 @@
       "approved_monitored": true,
       "in_registry": true,
       "lifecycle": "monitored",
-      "action_required": null
+      "action_required": null,
+      "estate_visibility": "oauth_accessible_resource",
+      "estate_truth_included": true,
+      "classification": "monitored",
+      "is_monitored": true,
+      "monitored": true,
+      "collector_onboarding_status": "monitoring_enabled",
+      "status": "ok",
+      "health_status": "OK",
+      "truth_source": "oauth_estate_truth_owner_repair_v1"
     },
     {
       "site_key": "gli-testing",
@@ -280,7 +317,9 @@
       "approved_monitored": false,
       "in_registry": false,
       "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status"
+      "action_required": "review_live_inventory_status",
+      "estate_visibility": "personal_or_external_access",
+      "estate_truth_included": false
     },
     {
       "site_key": "gli-tracker",
@@ -331,22 +370,24 @@
         "live_admin_event_reference",
         "live_oauth_accessible_resources"
       ],
-      "approved_monitored": true,
+      "approved_monitored": false,
       "in_registry": true,
-      "lifecycle": "monitored",
-      "action_required": null,
+      "lifecycle": "pending_review",
+      "action_required": "review_live_inventory_status",
       "key": "gli-tracker",
       "site_name": "gli-tracker",
       "site_url": "https://gli-tracker.atlassian.net",
-      "classification": "monitored",
-      "is_monitored": true,
-      "monitored": true,
-      "collector_onboarding_status": "monitoring_enabled",
-      "status": "ok",
-      "health_status": "OK",
+      "classification": "discovered",
+      "is_monitored": false,
+      "monitored": false,
+      "collector_onboarding_status": "review_required",
+      "status": "review",
+      "health_status": "Review",
       "monitoring_enabled_at_utc": "2026-08-03T11:00:45.526569Z",
       "monitoring_enabled_by": "operator",
-      "truth_source": "enable_monitoring_inventory_match_repair_v1"
+      "truth_source": "oauth_estate_truth_owner_repair_v1",
+      "estate_visibility": "oauth_accessible_resource",
+      "estate_truth_included": true
     },
     {
       "site_key": "gli-usa",
@@ -369,8 +410,18 @@
       "approved_monitored": false,
       "in_registry": false,
       "lifecycle": "pending_review",
-      "action_required": "review_live_inventory_status"
+      "action_required": "review_live_inventory_status",
+      "estate_visibility": "oauth_accessible_resource",
+      "estate_truth_included": true,
+      "classification": "discovered",
+      "is_monitored": false,
+      "monitored": false,
+      "collector_onboarding_status": "review_required",
+      "status": "review",
+      "health_status": "Review",
+      "truth_source": "oauth_estate_truth_owner_repair_v1"
     }
   ],
-  "generated_at_utc": "2026-08-03T11:00:45.526588Z"
+  "generated_at_utc": "2026-08-03T14:00:54Z",
+  "source_policy": "Estate truth includes OAuth-accessible resources only. Personal or external admin discoveries are labelled separately and excluded from Estate counts."
 }

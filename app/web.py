@@ -886,7 +886,7 @@ def _jom_generated_report_response(report_name, fmt, report):
 
 
 # --- JOM SITE REVIEW LIFECYCLE DECISION ROUTES v1 START ---
-SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy lifecycle file retired
+SITE_LIFECYCLE_DECISIONS_PATH = DATA_PATH / "site_lifecycle_decisions.json"  # owner contract for lifecycle decisions
 
 def _normalise_site_key(value: Any) -> str:
     return str(value or "").strip().lower()
@@ -1096,7 +1096,7 @@ def api_site_lifecycle_decisions():
 
 
 # --- credential_access_validation_v1 START ---
-SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_registry.json"  # runtime contract, legacy validation file retired
+SITE_ACCESS_VALIDATION_PATH = DATA_PATH / "site_access_validation.json"  # owner contract for access validation
 
 def _load_dotenv_values() -> Dict[str, str]:
     values = dict(os.environ)
@@ -2549,7 +2549,7 @@ def _jom_estate_oauth_validation_record(site_key, coverage, actor="oauth-callbac
 
 def _jom_estate_write_access_validation_record(site_key, validation):
     wanted = _jom_credential_gate_norm(site_key) if "_jom_credential_gate_norm" in globals() else str(site_key or "").strip().lower()
-    path = DATA_PATH / "site_registry.json"
+    path = DATA_PATH / "site_access_validation.json"
     reader = _jom_credential_gate_read_json if "_jom_credential_gate_read_json" in globals() else load_json
     writer = _jom_credential_gate_write_json if "_jom_credential_gate_write_json" in globals() else write_json
     access = reader(path, {"schema": "jom-site-access-validation-v1", "validations": {}, "history": []})

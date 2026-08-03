@@ -1,14 +1,14 @@
 {
   "schema": "jom-site-lifecycle-decisions-v1",
-  "generated_at_utc": "2026-07-28T11:18:13.309943Z",
+  "generated_at_utc": "2026-08-03T14:00:54Z",
   "decisions": {
     "gli-tracker": {
       "site_key": "gli-tracker",
       "decision": "discovered",
-      "previous_decision": "approve",
-      "reason": "rolled back to discovered",
+      "previous_decision": null,
+      "reason": "rolled back to review",
       "actor": "operator",
-      "decided_at_utc": "2026-07-28T11:17:55.782050Z",
+      "decided_at_utc": "2026-08-03T10:49:52.720184Z",
       "reversible": true,
       "requires_credentials": false,
       "next_state": "discovered"
@@ -788,10 +788,23 @@
       "reversible": true,
       "requires_credentials": false,
       "next_state": "discovered"
+    },
+    {
+      "site_key": "gli-tracker",
+      "decision": "discovered",
+      "previous_decision": null,
+      "reason": "rolled back to review",
+      "actor": "operator",
+      "decided_at_utc": "2026-08-03T10:49:52.720184Z",
+      "reversible": true,
+      "requires_credentials": false,
+      "next_state": "discovered"
     }
   ],
   "last_residue_cleanup_audit_utc": "2026-07-27T12:55:29.144711Z",
   "notes": [
     "Registry approval residue cleanup executed; lifecycle decision history preserved."
-  ]
+  ],
+  "source": "runtime/data/site_lifecycle_decisions.json",
+  "owner": "JOM OAuth Estate Truth Owner Repair Pack v1"
 }
