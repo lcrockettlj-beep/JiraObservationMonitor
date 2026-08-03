@@ -1605,6 +1605,125 @@ def _jom_lifecycle_inventory_only_correction_v1():
     return changed
 # JOM_SITE_REVIEW_LIFECYCLE_CONSOLIDATED_V1 END
 
+
+
+# JOM_ENABLE_MONITORING_SELECTED_SITE_GUARD_V1 START
+# Owner implementation guard: Enable Monitoring may only promote the requested site.
+# Other OAuth-visible review sites must remain in review until explicitly selected.
+def _jom_lifecycle_guard_review_keyset_v1(inventory, requested_site_key):
+    requested = _jom_lifecycle_norm_v1(requested_site_key)
+    protected = set()
+    rows = inventory.get("sites", []) if isinstance(inventory, dict) else []
+    for site in rows if isinstance(rows, list) else []:
+        if not isinstance(site, dict):
+            continue
+        key = _jom_lifecycle_key_v1(site)
+        if not key or key == requested:
+            continue
+        if site.get("estate_truth_included") is not True:
+            continue
+        if not _jom_lifecycle_is_monitored_v1(site):
+            protected.add(key)
+    return protected
+
+
+def _jom_lifecycle_canonical_registry_site_v1(site):
+    key = _jom_lifecycle_key_v1(site)
+    url = site.get("site_url") or site.get("url") or ("https://" + key + ".atlassian.net" if key else "")
+    return {
+        "site_key": key,
+        "key": key,
+        "site_name": site.get("site_name") or site.get("name") or key,
+        "name": site.get("name") or site.get("site_name") or key,
+        "site_url": url,
+        "url": url,
+        "cloud_id": site.get("cloud_id"),
+        "classification": "monitored",
+        "lifecycle": "monitored",
+        "is_monitored": True,
+        "monitored": True,
+        "approved_monitored": True,
+        "collector_onboarding_status": "monitoring_enabled",
+        "status": "ok",
+        "health_status": "OK",
+        "action_required": None,
+        "sources": site.get("sources") if isinstance(site.get("sources"), list) else [],
+        "evidence_levels": site.get("evidence_levels") if isinstance(site.get("evidence_levels"), list) else [],
+        "truth_source": "site_review_enable_monitoring_selected_site_guard_v1",
+    }
+
+
+def _jom_lifecycle_enforce_selected_enable_monitoring_v1(requested_site_key, registry, inventory, protected_review_keys):
+    requested = _jom_lifecycle_norm_v1(requested_site_key)
+    rows = inventory.get("sites", []) if isinstance(inventory, dict) else []
+    monitored_sites = []
+    review_keys = set()
+    requested_inventory_record = None
+
+    for site in rows if isinstance(rows, list) else []:
+        if not isinstance(site, dict):
+            continue
+        key = _jom_lifecycle_key_v1(site)
+        if not key:
+            continue
+        if key == requested:
+            requested_inventory_record = site
+        if key in protected_review_keys and key != requested:
+            site.update({
+                "classification": "discovered",
+                "lifecycle": "pending_review",
+                "is_monitored": False,
+                "monitored": False,
+                "approved_monitored": False,
+                "collector_onboarding_status": "review_required",
+                "status": "review",
+                "health_status": "Review",
+                "action_required": "review_live_inventory_status",
+                "truth_source": "site_review_enable_monitoring_selected_site_guard_v1",
+            })
+
+    for site in rows if isinstance(rows, list) else []:
+        if not isinstance(site, dict):
+            continue
+        key = _jom_lifecycle_key_v1(site)
+        if not key:
+            continue
+        if site.get("estate_truth_included") is True and _jom_lifecycle_is_monitored_v1(site):
+            monitored_sites.append(_jom_lifecycle_canonical_registry_site_v1(site))
+        elif site.get("estate_truth_included") is True:
+            review_keys.add(key)
+
+    registry["schema"] = "jom-site-registry-oauth-estate-truth-v1"
+    registry["source"] = "runtime/data/estate_admin_site_inventory_v1.json"
+    registry["source_policy"] = "Site Registry contains monitored OAuth-estate sites only. Enable Monitoring may only promote the requested site."
+    registry["sites"] = monitored_sites
+    registry["review_site_keys"] = sorted(review_keys)
+    registry["summary"] = {
+        "total_sites": len(monitored_sites),
+        "monitored_count": len(monitored_sites),
+        "discovered_count": len(review_keys),
+        "ignored_count": 0,
+        "pending_onboarding_count": len(review_keys),
+        "review_count": len(review_keys),
+        "coverage_percent": round((len(monitored_sites) / (len(monitored_sites) + len(review_keys))) * 100) if (len(monitored_sites) + len(review_keys)) else 0,
+    }
+    registry["generated_at_utc"] = now_utc()
+
+    inventory["generated_at_utc"] = now_utc()
+    inventory.setdefault("summary", {})
+    inventory["summary"].update({
+        "oauth_estate_site_count": len(monitored_sites) + len(review_keys),
+        "monitored_count": len(monitored_sites),
+        "review_count": len(review_keys),
+    })
+
+    write_json(DATA_PATH / "site_registry.json", registry)
+    write_json(DATA_PATH / "estate_admin_site_inventory_v1.json", inventory)
+
+    requested_registry_record = _jom_lifecycle_find_v1(registry.get("sites", []), requested)
+    return requested_registry_record, requested_inventory_record, registry, inventory
+# JOM_ENABLE_MONITORING_SELECTED_SITE_GUARD_V1 END
+
 # --- enable_monitoring_via_jom_v1 START ---
 def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
     sites = registry.get("sites", []) if isinstance(registry, dict) else []
@@ -1627,20 +1746,25 @@ def _recalculate_registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
 def api_site_review_enable_monitoring(site_key):
     body = request.get_json(silent=True) or {}
     actor = body.get("actor") or "operator"
+    _registry_before, _inventory_before = _jom_lifecycle_load_sources_v1()
+    protected_review_keys = _jom_lifecycle_guard_review_keyset_v1(_inventory_before, site_key)
     validation = _jom_lifecycle_latest_validation_v1(site_key)
     if not validation:
         return jsonify({"ok": False, "error": "access_not_validated", "site_key": _jom_lifecycle_norm_v1(site_key), "message": "Credential access must be validated before monitoring can be enabled."}), 409
     record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_monitored_v1(site_key, actor=actor)
     if record is None and inventory_record is None:
         return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
+    if "_jom_lifecycle_enforce_selected_enable_monitoring_v1" in globals():
+        record, inventory_record, _registry, _inventory = _jom_lifecycle_enforce_selected_enable_monitoring_v1(site_key, _registry, _inventory, protected_review_keys)
     return jsonify({
         "ok": True,
-        "message": "Monitoring enabled. Site has been promoted into the monitored Site Registry.",
+        "message": "Monitoring enabled. Only the selected site has been promoted into the monitored Site Registry.",
         "site_key": _jom_lifecycle_norm_v1(site_key),
         "classification": "monitored",
         "lifecycle": "monitored",
         "record": record,
         "inventory_record": inventory_record,
+        "protected_review_keys": sorted(protected_review_keys),
         "validation": validation,
     })
 @app.route("/review-queue")
