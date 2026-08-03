@@ -1,4 +1,4 @@
-/* JOM Estate single-owner table renderer v1
+﻿/* JOM Estate single-owner table renderer v1
 - Owner: static/js/jom_estate_lifecycle_v1.js
 - Contract: /api/workspace/estate
 - Rules: runtime workspace contract only, no static dataset path, no DOM post-processing layers.
@@ -291,13 +291,64 @@
     setText('rail-alert-count', summary.review);
   }
 
-  function render(payload) {
+  
+// JOM_ESTATE_CONDITIONAL_LIFECYCLE_QUEUES_V1_JS START
+function lifecycleQueueState(site) {
+  const state = normaliseState(site);
+  const label = lifecycleLabel(site);
+  if (isIgnored(site)) return 'ignored';
+  if (state.includes('delete') || state.includes('deletion') || state.includes('stopped_monitoring') || state.includes('monitoring_stopped')) return 'deletion';
+  if (!isMonitored(site) && label === 'Approval Pending') return 'approval';
+  return '';
+}
+
+function setLifecyclePanel(panelId, countId, listId, sites, emptyText) {
+  const panel = document.getElementById(panelId);
+  const list = document.getElementById(listId);
+  setText(countId, sites.length);
+  if (!panel) return;
+  panel.hidden = sites.length === 0;
+  panel.setAttribute('aria-hidden', sites.length === 0 ? 'true' : 'false');
+  if (!list) return;
+  if (!sites.length) {
+    list.innerHTML = '<p class="estate-empty">' + escapeHtml(emptyText) + '</p>';
+    return;
+  }
+  list.innerHTML = 'SiteLifecycleMonitoringHealthActions' +
+    sites.map(site => {
+      const lifecycle = lifecycleLabel(site);
+      const monitoring = lifecycle === 'Approval Pending' ? 'Pending' : isIgnored(site) ? 'Ignored' : 'Stopped';
+      const health = isIgnored(site) ? 'Ignored' : lifecycle === 'Approval Pending' ? 'Review' : 'Removal';
+      return '' + siteCell(site) + statusCell(lifecycle) + statusCell(monitoring) + statusCell(health) + '' + reviewLink(site, isIgnored(site) ? 'Restore / Review' : 'Review Site') + atlassianLink(site) + '' + '';
+    }).join('') + '';
+}
+
+function setLifecycleRailVisibility(kind, count) {
+  const row = document.querySelector('[data-lifecycle-rail="' + kind + '"]');
+  if (!row) return;
+  row.hidden = count === 0;
+  row.setAttribute('aria-hidden', count === 0 ? 'true' : 'false');
+}
+
+function renderConditionalLifecycleQueues(sites) {
+  const deletion = sites.filter(site => lifecycleQueueState(site) === 'deletion');
+  const ignored = sites.filter(site => lifecycleQueueState(site) === 'ignored');
+  setLifecyclePanel('deletion-sites', 'estate-deletion-count', 'estate-deletion-list', deletion, 'No deletion queue items are currently recorded.');
+  setLifecyclePanel('ignored-sites', 'estate-ignored-count', 'estate-ignored-list', ignored, 'No ignored sites are currently recorded.');
+  setText('rail-ignored-sites', ignored.length);
+  setText('rail-deletion-sites', deletion.length);
+  setLifecycleRailVisibility('ignored', ignored.length);
+  setLifecycleRailVisibility('deletion', deletion.length);
+}
+// JOM_ESTATE_CONDITIONAL_LIFECYCLE_QUEUES_V1_JS END
+function render(payload) {
     const root = unwrap(payload);
     const sites = sitesFromPayload(root);
     const summary = summaryFromSites(sites);
     renderReviewQueue(sites);
     renderRegistry(sites);
     updateRail(root, sites, summary);
+renderConditionalLifecycleQueues(sites);
   }
 
   function renderError(error) {
@@ -321,3 +372,9 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadEstate);
   else loadEstate();
 }());
+
+
+// JOM_ESTATE_REMOVE_APPROVAL_PENDING_QUEUE_V1 START
+// Standalone Approval Pending queue removed; approval pending remains inside Discovery Review Queue.
+// JOM_ESTATE_REMOVE_APPROVAL_PENDING_QUEUE_V1 END
+

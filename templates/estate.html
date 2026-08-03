@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -53,8 +53,32 @@
         </table>
       </div>
     </section>
-  </div>
+    <!-- JOM_ESTATE_CONDITIONAL_LIFECYCLE_QUEUES_V1_HTML START -->
+<section class="estate-panel estate-lifecycle-conditional-panel" id="deletion-sites" aria-label="Deletion queue" hidden>
+      <div class="estate-section-heading">
+        <div>
+          <p class="jom-kicker">Lifecycle Queue</p>
+          <h2>Deletion Queue</h2>
+        </div>
+        <span class="estate-count-pill estate-count-pill--risk" id="estate-deletion-count">0</span>
+      </div>
+      <p class="estate-muted">Sites where monitoring has been stopped or deletion/removal action is being tracked outside the monitored registry.</p>
+      <div class="estate-review-list" id="estate-deletion-list"></div>
+    </section>
 
+    <section class="estate-panel estate-lifecycle-conditional-panel" id="ignored-sites" aria-label="Ignored sites queue" hidden>
+      <div class="estate-section-heading">
+        <div>
+          <p class="jom-kicker">Lifecycle Queue</p>
+          <h2>Ignored Sites</h2>
+        </div>
+        <span class="estate-count-pill estate-count-pill--ignored" id="estate-ignored-count">0</span>
+      </div>
+      <p class="estate-muted">Sites intentionally held outside the current monitoring scope. This queue is shown only when ignored items exist.</p>
+      <div class="estate-review-list" id="estate-ignored-list"></div>
+    </section>
+    <!-- JOM_ESTATE_CONDITIONAL_LIFECYCLE_QUEUES_V1_HTML END -->
+  </div>
   <aside class="jom-estate-rail" aria-label="Estate operations rail">
     <div class="estate-rail-brand"><span>Estate Rail</span><strong>Live Inventory Context</strong></div>
 
@@ -71,8 +95,8 @@
       <h2>Lifecycle Queue</h2>
       <dl class="estate-rail-list">
         <div><dt>Review Queue</dt><dd id="rail-review-queue">--</dd></div>
-        <div><dt>Approval Pending</dt><dd id="rail-pending-sites">0</dd></div>
-        <div><dt>Ignored</dt><dd id="rail-ignored-sites">0</dd></div>
+<div data-lifecycle-rail="ignored"><dt>Ignored</dt><dd id="rail-ignored-sites">0</dd></div>
+        <div data-lifecycle-rail="deletion"><dt>Deletion Queue</dt><dd id="rail-deletion-sites">0</dd></div>
       </dl>
     </section>
 
@@ -85,7 +109,10 @@
       </dl>
     </section>
   </aside>
+<!-- JOM_ESTATE_REMOVE_APPROVAL_PENDING_QUEUE_V1_HTML -->
 </main>
 <script src="{{ url_for('static', filename='js/jom_estate_lifecycle_v1.js') }}" defer></script>
 </body>
 </html>
+
+

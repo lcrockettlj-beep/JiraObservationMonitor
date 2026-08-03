@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --estate-blue: #0c66e4;
   --estate-ink: #092957;
   --estate-muted: #44546f;
@@ -383,3 +383,49 @@ body[data-jom-page="estate"] .jom-side-nav {
     margin-top: 24px;
   }
 }
+
+/* JOM_ESTATE_CONDITIONAL_LIFECYCLE_QUEUES_V1_CSS START */
+.estate-lifecycle-conditional-panel[hidden],
+[data-lifecycle-rail][hidden] {
+  display: none !important;
+}
+.estate-count-pill--ignored {
+  background: #f4f5f7;
+  color: #44546f;
+}
+.estate-count-pill--risk,
+.estate-status-pill--risk {
+  background: #ffebe6;
+  color: #bf2600;
+}
+#ignored-sites {
+  order: 99;
+}
+/* JOM_ESTATE_CONDITIONAL_LIFECYCLE_QUEUES_V1_CSS END */
+
+/* JOM_ESTATE_REMOVE_APPROVAL_PENDING_QUEUE_V1_CSS */
+
+
+/* JOM_ESTATE_RIGHT_RAIL_FULL_HEIGHT_ALIGNMENT_V1 START */
+/* Estate-only polish: make the right rail outer border/background match the left navigation height.
+   Tiles inside the rail are not stretched; remaining lower rail space stays empty white space. */
+body[data-jom-page="estate"] .jom-estate-rail {
+  position: fixed !important;
+  top: var(--estate-top) !important;
+  right: var(--estate-rail-edge) !important;
+  bottom: var(--estate-bottom) !important;
+  width: var(--estate-rail-width) !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+  align-content: start !important;
+}
+
+body[data-jom-page="estate"] .jom-estate-rail > * {
+  flex: 0 0 auto;
+}
+/* JOM_ESTATE_RIGHT_RAIL_FULL_HEIGHT_ALIGNMENT_V1 END */
+
+
