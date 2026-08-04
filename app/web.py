@@ -1046,8 +1046,10 @@ def _build_site_review_payload(site_key: str) -> Dict[str, Any]:
 
 @app.route("/api/site-review/<path:site_key>")
 def api_site_review(site_key):
-    return jsonify(_build_site_review_payload(site_key))
-
+    payload = _build_site_review_payload(site_key)
+    if "_jom_site_review_align_payload_v1_2" in globals():
+        payload = _jom_site_review_align_payload_v1_2(site_key, payload)
+    return jsonify(payload)
 @app.route("/api/site-review/<path:site_key>/decision", methods=["POST"])
 def api_site_review_decision(site_key):
     body = request.get_json(silent=True) or {}
@@ -1306,6 +1308,8 @@ def api_oauth_coverage(site_key):
 
 @app.route("/api/oauth/authorize-url/<path:site_key>")
 def api_oauth_authorize_url(site_key):
+    if "_jom_oauth_store_pending_site_v1_1" in globals():
+        _jom_oauth_store_pending_site_v1_1(site_key)
     payload = _oauth_coverage_payload(site_key)
     return jsonify({
         "ok": bool(payload.get("authorization_url")),
@@ -1793,29 +1797,32 @@ def estate_pending_sites():
 # JOM site review live contract helper v1
 # This helper avoids live_named_access_contract and live_named_access_contract as route truth.
 def _jom_contract_payload_from_route_v1(route_path):
+    """Return contract payload from known owner route functions without route-table indirection."""
     try:
-        for rule in app.url_map.iter_rules():
-            if str(rule) == route_path:
-                fn = app.view_functions.get(rule.endpoint)
-                if not callable(fn):
-                    return {"available": False, "reason": f"endpoint not callable for {route_path}"}
-                value = fn()
-                if hasattr(value, "get_json"):
-                    return value.get_json(silent=True) or {}
-                if isinstance(value, tuple) and value:
-                    first = value[0]
-                    if hasattr(first, "get_json"):
-                        return first.get_json(silent=True) or {}
-                    if isinstance(first, dict):
-                        return first
-                if isinstance(value, dict):
-                    return value
-                return {"available": True, "raw_type": type(value).__name__}
-        return {"available": False, "reason": f"route not found: {route_path}"}
+        route_map = {
+            "/estate/product-access": estate_product_access,
+            "/admin/truth": admin_truth,
+            "/users/footprint": user_footprint,
+            "/registry/sites": site_registry,
+            "/api/source-state": api_source_state_legacy,
+        }
+        fn = route_map.get(str(route_path or ""))
+        if not callable(fn):
+            return {"available": False, "reason": f"route not mapped: {route_path}"}
+        value = fn()
+        if hasattr(value, "get_json"):
+            return value.get_json(silent=True) or {}
+        if isinstance(value, tuple) and value:
+            first = value[0]
+            if hasattr(first, "get_json"):
+                return first.get_json(silent=True) or {}
+            if isinstance(first, dict):
+                return first
+        if isinstance(value, dict):
+            return value
+        return {"available": True, "raw_type": type(value).__name__}
     except Exception as exc:
         return {"available": False, "reason": str(exc)}
-
-
 def _jom_unwrap_contract_data_v1(payload):
     if isinstance(payload, dict) and isinstance(payload.get("data"), dict):
         return payload.get("data") or {}
@@ -2802,14 +2809,6 @@ def jom_oauth_callback_oauth_v1_1():
     return _jom_oauth_callback_response_v1_1()
 
 
-# Wrap the existing authorize-url endpoint without relying on its exact source text.
-if "api_oauth_authorize_url" in globals() and not getattr(api_oauth_authorize_url, "_jom_oauth_pending_site_wrapped_v1_1", False):
-    _jom_original_api_oauth_authorize_url_v1_1 = api_oauth_authorize_url
-    def api_oauth_authorize_url(site_key):
-        _jom_oauth_store_pending_site_v1_1(site_key)
-        return _jom_original_api_oauth_authorize_url_v1_1(site_key)
-    api_oauth_authorize_url._jom_oauth_pending_site_wrapped_v1_1 = True
-    app.view_functions["api_oauth_authorize_url"] = api_oauth_authorize_url
 # JOM_OAUTH_CALLBACK_COMPLETION_REPAIR_V1_1 END
 # === Estate OAuth Callback Validation Record Repair v1 END ===
 
@@ -2953,55 +2952,6 @@ def _jom_site_review_align_payload_v1_2(site_key, payload):
     payload["lifecycle_detail"] = lifecycle_detail
     return payload
 
-def _jom_register_site_review_truth_wrapper_v1_2():
-    try:
-        rules = list(app.url_map.iter_rules())
-    except Exception:
-        return
-    for rule in rules:
-        rule_text = str(rule)
-        if "/api/site-review" not in rule_text:
-            continue
-        if "<site_key>" not in rule_text and "<path:site_key>" not in rule_text and "<string:site_key>" not in rule_text:
-            continue
-        if "access-validation" in rule_text or "oauth" in rule_text or "complete" in rule_text:
-            continue
-        endpoint = rule.endpoint
-        original = app.view_functions.get(endpoint)
-        if original is None or getattr(original, "_jom_site_review_truth_wrapped_v1_2", False):
-            continue
-        def make_wrapped(func):
-            def wrapped(*args, **kwargs):
-                site_key = kwargs.get("site_key") or (args[0] if args else None)
-                result = func(*args, **kwargs)
-                status = None
-                headers = None
-                response = result
-                if isinstance(result, tuple):
-                    response = result[0]
-                    if len(result) > 1:
-                        status = result[1]
-                    if len(result) > 2:
-                        headers = result[2]
-                try:
-                    payload = response.get_json(silent=True) if hasattr(response, "get_json") else None
-                except Exception:
-                    payload = None
-                if not isinstance(payload, dict):
-                    return result
-                payload = _jom_site_review_align_payload_v1_2(site_key, payload)
-                new_response = jsonify(payload)
-                if status is not None and headers is not None:
-                    return new_response, status, headers
-                if status is not None:
-                    return new_response, status
-                return new_response
-            wrapped.__name__ = getattr(func, "__name__", "jom_site_review_truth_wrapped")
-            wrapped._jom_site_review_truth_wrapped_v1_2 = True
-            return wrapped
-        app.view_functions[endpoint] = make_wrapped(original)
-
-_jom_register_site_review_truth_wrapper_v1_2()
 # === JOM ESTATE SITE REVIEW RESPONSE WRAP TRUTH v1.2 END ===
 
 
