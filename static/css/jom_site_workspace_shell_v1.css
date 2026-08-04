@@ -97,18 +97,45 @@ body[data-jom-page="site-workspace"] .jom-side-nav{position:fixed;left:var(--sit
 }
 /* JOM_SITE_WORKSPACE_OVERVIEW_RAIL_CLEANUP_V1 END */
 
-/* JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1 START */
-.site-workspace-summary-grid article{
+/* JOM_SITE_WORKSPACE_MAIN_LANDING_CORRECTION_V1_1 START */
+/* Main /site-workspace is a landing selector, not an Estate overview duplicate. */
+.site-workspace-main{
+  max-width:980px;
+  gap:26px;
+}
+.site-workspace-selector-panel{
+  padding:30px;
+}
+.site-workspace-selector-list{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.site-workspace-selector-card{
   min-height:104px;
-  display:grid;
-  align-content:start;
+  padding:16px 18px;
 }
-.site-workspace-summary-grid small{
-  display:block;
-  margin-top:6px;
-  color:var(--site-workspace-muted);
-  font-size:12px;
-  line-height:1.35;
+.site-workspace-rail-brand strong{
+  font-size:16px;
 }
-/* JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1 END */
+.site-workspace-status-list div,
+.site-workspace-source-list div{
+  grid-template-columns:minmax(0,1fr) auto;
+}
+.site-workspace-source-list dd,
+.site-workspace-status-list dd{
+  max-width:112px;
+  text-align:right;
+}
+.site-workspace-actions{
+  gap:10px;
+}
+.site-workspace-action{
+  min-height:38px;
+  border-radius:14px;
+  font-size:.9rem;
+}
+@media(max-width:1180px){
+  .site-workspace-selector-list{grid-template-columns:1fr;}
+}
+/* JOM_SITE_WORKSPACE_MAIN_LANDING_CORRECTION_V1_1 END */
 

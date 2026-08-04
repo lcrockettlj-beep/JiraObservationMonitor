@@ -33,6 +33,24 @@
       return '<a class="site-workspace-selector-card" href="'+esc(workspaceHref(site))+'"><strong>'+esc(name)+'</strong><span>'+esc(key||'Site key unavailable')+'</span><small>Lifecycle: '+esc(lifecycle)+' | Monitoring: '+esc(monitoring)+'</small></a>';
     }).join('');
   }
+
+  // JOM_SITE_WORKSPACE_MAIN_LANDING_CORRECTION_V1_1_JS START
+  function updateLandingRail(sites){
+    const currentSites=Array.isArray(sites)?sites:[];
+    const monitored=currentSites.filter(site=>monitoringOf(site)==='Enabled');
+    setText('workspace-rail-site-count',currentSites.length||'0');
+    setText('workspace-rail-selected-site',siteKey?siteKey:'None');
+    setText('workspace-rail-monitoring-scope',monitored.length+'/'+(currentSites.length||0));
+    fetch('/estate/product-access',{cache:'no-store',headers:{'Accept':'application/json'}})
+      .then(response=>response.ok?response.json():null)
+      .then(payload=>{
+        const product=unwrap(payload||{});
+        setText('workspace-source-product-users',product&&product.live_collection===true?'Available':'Unavailable');
+      })
+      .catch(()=>setText('workspace-source-product-users','Unavailable'));
+  }
+  // JOM_SITE_WORKSPACE_MAIN_LANDING_CORRECTION_V1_1_JS END
+
   function renderNoSelection(sites){
     setText('workspace-site-title','Select Site Workspace');
     setText('workspace-site-summary','Choose a site workspace from the list below. No site-specific workspace is currently selected.');
@@ -59,45 +77,13 @@
     setLink('workspace-review-link','/estate/review/'+encodeURIComponent(key),!!key);
     setLink('workspace-atlassian-link',url,!!url);
   }
-
-  // JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1_JS START
-  function setMetric(id,value,noteId,note){
-    const valueEl=$(id); if(valueEl)valueEl.textContent=(value===undefined||value===null||value==='')?'Unavailable':String(value);
-    const noteEl=$(noteId); if(noteEl)noteEl.textContent=note||'';
-  }
-  function numberOrNull(value){const n=Number(value);return Number.isFinite(n)?n:null;}
-  async function loadOverviewMetrics(){
-    let product=null;
-    try{product=unwrap(await (await fetch('/estate/product-access',{cache:'no-store',headers:{'Accept':'application/json'}})).json());}
-    catch(_error){product=null;}
-    const summary=(product&&product.summary&&typeof product.summary==='object')?product.summary:{};
-    const totalUsers=numberOrNull(summary.total_jira_product_user_count);
-    const roleRows=numberOrNull(summary.jira_role_rows);
-    const sitesWithRoles=numberOrNull(summary.sites_with_jira_roles);
-    if(product&&product.live_collection===true&&totalUsers!==null){
-      setMetric('workspace-metric-users',totalUsers,'workspace-metric-users-note','Live Jira product access users.');
-    }else{
-      setMetric('workspace-metric-users','Unavailable','workspace-metric-users-note','Live product user source unavailable.');
-    }
-    setMetric('workspace-metric-projects','Unavailable','workspace-metric-projects-note','No live project source connected.');
-    if(product&&product.live_collection===true&&(roleRows!==null||sitesWithRoles!==null)){
-      const value = roleRows!==null ? roleRows : sitesWithRoles;
-      const note = roleRows!==null ? 'Live Jira application role rows.' : 'Sites with live Jira roles.';
-      setMetric('workspace-metric-applications',value,'workspace-metric-applications-note',note);
-    }else{
-      setMetric('workspace-metric-applications','Unavailable','workspace-metric-applications-note','Live product role source unavailable.');
-    }
-    setMetric('workspace-metric-automation','Unavailable','workspace-metric-automation-note','No live automation source connected.');
-  }
-  // JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1_JS END
-
-  async function load(){
+async function load(){
     try{
       const response=await fetch('/api/workspace/estate',{cache:'no-store',headers:{'Accept':'application/json'}});
       if(!response.ok)throw new Error('Estate workspace contract returned HTTP '+response.status);
       const root=unwrap(await response.json());
-      loadOverviewMetrics().catch(error=>console.warn('Site Workspace overview metrics failed',error));
       const sites=collectSites(root);
+      updateLandingRail(sites);
       const site=findSite(sites);
       if(!site){renderNoSelection(sites);return}
       renderSite(site);

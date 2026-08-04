@@ -32,48 +32,29 @@
       <div class="site-workspace-selector-list" id="workspace-selector-list"></div>
     </section>
     <!-- JOM_SITE_WORKSPACE_CONTEXT_SELECTION_V1_HTML END -->
-    <section class="site-workspace-panel" id="workspace-overview" aria-label="Workspace overview">
-      <div class="site-workspace-heading">
-        <div>
-          <p class="jom-kicker">Workspace</p>
-          <h2>Overview</h2>
-        </div>
-        <span class="site-workspace-pill" id="workspace-lifecycle-pill">Loading</span>
-      </div>
-      <div class="site-workspace-summary-grid" id="workspace-overview-metrics">
-        <article><span>Jira product users</span><strong id="workspace-metric-users">Unavailable</strong><small id="workspace-metric-users-note">Runtime source not loaded.</small></article>
-        <article><span>Projects</span><strong id="workspace-metric-projects">Unavailable</strong><small id="workspace-metric-projects-note">No live project source connected.</small></article>
-        <article><span>Product roles</span><strong id="workspace-metric-applications">Unavailable</strong><small id="workspace-metric-applications-note">Runtime source not loaded.</small></article>
-        <article><span>Automation</span><strong id="workspace-metric-automation">Unavailable</strong><small id="workspace-metric-automation-note">No live automation source connected.</small></article>
-      </div>
+<aside class="site-workspace-rail" aria-label="Site workspace rail">
+    <div class="site-workspace-rail-brand"><span>Site Workspace</span><strong>Landing Context</strong></div>
+    <section class="site-workspace-rail-card" aria-label="Workspace status">
+      <h2>Workspace Status</h2>
+      <dl class="site-workspace-rail-list site-workspace-status-list">
+        <div><dt>Available workspaces</dt><dd id="workspace-rail-site-count">--</dd></div>
+        <div><dt>Selected site</dt><dd id="workspace-rail-selected-site">None</dd></div>
+        <div><dt>Monitoring scope</dt><dd id="workspace-rail-monitoring-scope">--</dd></div>
+      </dl>
     </section>
-
-    <!-- JOM_SITE_WORKSPACE_OVERVIEW_RAIL_CLEANUP_V1_ANCHORS START -->
-    <span id="workspace-section-users" class="site-workspace-anchor" aria-hidden="true"></span>
-    <span id="workspace-section-projects" class="site-workspace-anchor" aria-hidden="true"></span>
-    <span id="workspace-section-applications" class="site-workspace-anchor" aria-hidden="true"></span>
-    <span id="workspace-section-automation" class="site-workspace-anchor" aria-hidden="true"></span>
-    <span id="workspace-section-activity" class="site-workspace-anchor" aria-hidden="true"></span>
-    <span id="workspace-section-governance" class="site-workspace-anchor" aria-hidden="true"></span>
-    <!-- JOM_SITE_WORKSPACE_OVERVIEW_RAIL_CLEANUP_V1_ANCHORS END --></div>
-
-  <aside class="site-workspace-rail" aria-label="Site workspace rail">
-    <div class="site-workspace-rail-brand"><span>Site Workspace</span><strong>Site Context</strong></div>
+    <section class="site-workspace-rail-card" aria-label="Source coverage">
+      <h2>Source Coverage</h2>
+      <dl class="site-workspace-rail-list site-workspace-source-list">
+        <div><dt>Product users</dt><dd id="workspace-source-product-users">Checking</dd></div>
+        <div><dt>Projects</dt><dd>Not connected</dd></div>
+        <div><dt>Marketplace apps</dt><dd>Not connected</dd></div>
+        <div><dt>Automation</dt><dd>Not connected</dd></div>
+      </dl>
+    </section>
     <section class="site-workspace-rail-card" aria-label="Workspace actions">
       <h2>Actions</h2>
       <div class="site-workspace-actions">
-        <!-- JOM_SITE_WORKSPACE_OVERVIEW_RAIL_CLEANUP_V1_NAV START -->
-        <a href="#workspace-overview" class="site-workspace-action">Workspace Overview</a>
-        <a href="#workspace-section-users" class="site-workspace-action">Users</a>
-        <a href="#workspace-section-projects" class="site-workspace-action">Projects</a>
-        <a href="#workspace-section-applications" class="site-workspace-action">Applications</a>
-        <a href="#workspace-section-automation" class="site-workspace-action">Automation</a>
-        <a href="#workspace-section-activity" class="site-workspace-action">Activity</a>
-        <a href="#workspace-section-governance" class="site-workspace-action">Governance</a>
-        <!-- JOM_SITE_WORKSPACE_OVERVIEW_RAIL_CLEANUP_V1_NAV END -->
         <a href="/estate" class="site-workspace-action">Back to Estate</a>
-        <a href="#" id="workspace-review-link" class="site-workspace-action">Open Site Review</a>
-        <a href="#" id="workspace-atlassian-link" class="site-workspace-action" target="_blank" rel="noopener noreferrer">Atlassian Site</a>
       </div>
     </section>
     <section class="site-workspace-rail-card" aria-label="Source status"><h2>Source Status</h2><p id="workspace-source-status">Loading workspace context...</p></section>
