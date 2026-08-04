@@ -1,6 +1,6 @@
 {
   "schema": "jom-estate-site-resource-identity-catalog-v1",
-  "generated_at_utc": "2026-07-30T10:14:37Z",
+  "generated_at_utc": "2026-08-04T09:28:16Z",
   "site_count": 9,
   "resource_count": 295,
   "live_resource_count": 185,
@@ -8,18 +8,6 @@
   "match_count": 0,
   "safe_to_map": false,
   "sites": [
-    {
-      "site_key": "gaminglabs-team-h2pbpmis",
-      "name": "gaminglabs-team-h2pbpmis",
-      "url": null,
-      "source_file": "runtime/data/estate_discovery_authority_v1.json"
-    },
-    {
-      "site_key": "gaminglabs-team-tsyfo716",
-      "name": "gaminglabs-team-tsyfo716",
-      "url": null,
-      "source_file": "runtime/data/estate_discovery_authority_v1.json"
-    },
     {
       "site_key": "gli-delivery-tm",
       "name": "gli-delivery-tm",
@@ -42,24 +30,6 @@
       "site_key": "gli-tracker",
       "name": "gli-tracker",
       "url": null,
-      "source_file": "runtime/data/estate_discovery_authority_v1.json"
-    },
-    {
-      "site_key": "gli-usa",
-      "name": "gli-usa",
-      "url": null,
-      "source_file": "runtime/data/estate_discovery_authority_v1.json"
-    },
-    {
-      "site_key": "baljeet-singh",
-      "name": "baljeet-singh",
-      "url": "https://baljeet-singh.atlassian.net",
-      "source_file": "runtime/data/estate_discovery_authority_v1.json"
-    },
-    {
-      "site_key": "gli-testing",
-      "name": "gli-testing",
-      "url": "https://gli-testing.atlassian.net",
       "source_file": "runtime/data/estate_discovery_authority_v1.json"
     }
   ],
@@ -2741,5 +2711,17 @@
       "error": null
     }
   ],
-  "secrets_redacted": true
+  "secrets_redacted": true,
+  "summary": {
+    "total_sites": 4,
+    "site_count": 4,
+    "monitored_count": 3,
+    "monitored_sites": 3,
+    "discovered_count": 1,
+    "review_count": 1,
+    "pending_onboarding_count": 1,
+    "ignored_count": 0,
+    "coverage_percent": 75,
+    "current_state_authority": "live_oauth_runtime_authority_only"
+  }
 }

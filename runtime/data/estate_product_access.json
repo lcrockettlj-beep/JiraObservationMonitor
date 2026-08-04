@@ -1,6 +1,6 @@
 {
   "source": "Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole",
-  "generated_at_utc": "2026-07-30T21:41:35Z",
+  "generated_at_utc": "2026-08-04T09:28:16Z",
   "schema": "jom-estate-product-access-v2-live",
   "live_collection": true,
   "status": "ok",
@@ -12,7 +12,17 @@
     "total_jira_seat_limit": 104160,
     "total_jira_remaining_seats": 103999,
     "jira_role_rows": 5,
-    "error_site_count": 0
+    "error_site_count": 0,
+    "total_sites": 4,
+    "site_count": 4,
+    "monitored_count": 3,
+    "monitored_sites": 3,
+    "discovered_count": 1,
+    "review_count": 1,
+    "pending_onboarding_count": 1,
+    "ignored_count": 0,
+    "coverage_percent": 75,
+    "current_state_authority": "live_oauth_runtime_authority_only"
   },
   "sites": [
     {
@@ -34,17 +44,6 @@
       "jira_product_user_count": 57,
       "jira_product_seat_limit": 100000,
       "jira_product_remaining_seats": 99943,
-      "jira_role_count": 1,
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-usa",
-      "site_name": "gli-usa",
-      "site_url": "https://gli-usa.atlassian.net",
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "jira_product_user_count": 4,
-      "jira_product_seat_limit": 10,
-      "jira_product_remaining_seats": 6,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -96,20 +95,6 @@
       "user_count": 57,
       "seat_limit": 100000,
       "remaining_seats": 99943,
-      "raw_has_default_groups": true,
-      "raw_platform": false,
-      "raw_selected_by_default": false
-    },
-    {
-      "site_key": "gli-usa",
-      "site_name": "gli-usa",
-      "site_url": "https://gli-usa.atlassian.net",
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "role_key": "jira-software",
-      "role_name": "Jira Software",
-      "user_count": 4,
-      "seat_limit": 10,
-      "remaining_seats": 6,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false

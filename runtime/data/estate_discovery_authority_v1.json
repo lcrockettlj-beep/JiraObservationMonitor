@@ -1,28 +1,20 @@
 {
   "schema": "jom-estate-discovery-authority-v1",
-  "generated_at_utc": "2026-07-30T07:43:38.442429+00:00",
+  "generated_at_utc": "2026-08-04T09:28:16Z",
   "summary": {
-    "total_sites": 9,
-    "monitored_sites": 0,
-    "discovered_sites": 9
+    "total_sites": 4,
+    "monitored_sites": 3,
+    "discovered_sites": 9,
+    "site_count": 4,
+    "monitored_count": 3,
+    "discovered_count": 1,
+    "review_count": 1,
+    "pending_onboarding_count": 1,
+    "ignored_count": 0,
+    "coverage_percent": 75,
+    "current_state_authority": "live_oauth_runtime_authority_only"
   },
   "sites": [
-    {
-      "key": "gaminglabs-team-h2pbpmis",
-      "name": "gaminglabs-team-h2pbpmis",
-      "url": null,
-      "status": "error",
-      "is_monitored": false,
-      "source": "site_registry"
-    },
-    {
-      "key": "gaminglabs-team-tsyfo716",
-      "name": "gaminglabs-team-tsyfo716",
-      "url": null,
-      "status": "error",
-      "is_monitored": false,
-      "source": "site_registry"
-    },
     {
       "key": "gli-delivery-tm",
       "name": "gli-delivery-tm",
@@ -54,30 +46,6 @@
       "status": "ok",
       "is_monitored": false,
       "source": "site_registry"
-    },
-    {
-      "key": "gli-usa",
-      "name": "gli-usa",
-      "url": null,
-      "status": "ok",
-      "is_monitored": false,
-      "source": "site_registry"
-    },
-    {
-      "key": "baljeet-singh",
-      "name": "baljeet-singh",
-      "url": "https://baljeet-singh.atlassian.net",
-      "status": "discovered",
-      "is_monitored": false,
-      "source": "estate_admin_site_inventory"
-    },
-    {
-      "key": "gli-testing",
-      "name": "gli-testing",
-      "url": "https://gli-testing.atlassian.net",
-      "status": "discovered",
-      "is_monitored": false,
-      "source": "estate_admin_site_inventory"
     }
   ],
   "source_health": {

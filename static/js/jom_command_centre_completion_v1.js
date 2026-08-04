@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const ENDPOINT='/api/workspace/command-centre';
+  const ENDPOINT='/api/workspace/command-centre';const JOM_CURRENT_STATE_ALLOWED_KEYS_V1=new Set(['gli-delivery-tm','gli-global-technology','gli-it-project','gli-tracker']); function currentKey(s){return String((s&& (s.site_key||s.key||s.site_name||s.name||s.url||s.site_url))||'').toLowerCase().replace(/^https?:\/\//,'').replace(/\.atlassian\.net.*$/,'').trim();} function currentSite(s){const k=currentKey(s);return JOM_CURRENT_STATE_ALLOWED_KEYS_V1.has(k);} 
   const asArray=v=>Array.isArray(v)?v:[];
   const asNumber=(v,f)=>{const n=Number(v);return Number.isFinite(n)?n:f;};
   const unwrap=p=>(p&&typeof p==='object'&&p.data&&typeof p.data==='object')?p.data:(p&&typeof p==='object'?p:{});
@@ -16,7 +16,7 @@
   function discovered(s){const t=state(s);return !!(s&&!monitored(s)&&!ignored(s)&&(t==='discovered'||t.includes('review')||t.includes('pending')||t.includes('gap')));}
   function registry(root){
     const reg=unwrap(get(root,'registry',get(root,'site_registry',{})));
-    const sites=asArray(reg.sites||get(root,'sites',[]));
+    const sites=asArray(reg.sites||get(root,'sites',[])).filter(currentSite);
     const sum=get(root,'registry_summary',get(reg,'summary',get(root,'summary',{})))||{};
     const total=asNumber(sum.total_sites??sum.site_count,sites.length);
     const mon=asNumber(sum.monitored_count,sites.filter(monitored).length);

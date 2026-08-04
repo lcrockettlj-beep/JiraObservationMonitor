@@ -41,17 +41,6 @@
       "status": "ok"
     },
     {
-      "site_key": "gli-usa",
-      "site_name": "gli-usa",
-      "site_url": "https://gli-usa.atlassian.net",
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "jira_product_user_count": 4,
-      "jira_product_seat_limit": 10,
-      "jira_product_remaining_seats": 6,
-      "jira_role_count": 1,
-      "status": "ok"
-    },
-    {
       "site_key": "gli-it-project",
       "site_name": "gli-it-project",
       "site_url": "https://gli-it-project.atlassian.net",
@@ -99,20 +88,6 @@
       "user_count": 57,
       "seat_limit": 100000,
       "remaining_seats": 99943,
-      "raw_has_default_groups": true,
-      "raw_platform": false,
-      "raw_selected_by_default": false
-    },
-    {
-      "site_key": "gli-usa",
-      "site_name": "gli-usa",
-      "site_url": "https://gli-usa.atlassian.net",
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "role_key": "jira-software",
-      "role_name": "Jira Software",
-      "user_count": 4,
-      "seat_limit": 10,
-      "remaining_seats": 6,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false

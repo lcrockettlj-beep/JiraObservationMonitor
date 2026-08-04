@@ -148,20 +148,21 @@
     if(stage === 'ignored') setValidationText('This site is ignored from current monitoring scope.', 'review');
   }
 
-  function renderHistory(data){
-    const host = $('review-decision-history');
-    if(!host) return;
-    const history = Array.isArray(data.decision_history) ? data.decision_history : [];
-    const current = data.decision_state || {};
-    const rows = [];
-    if(current.decision){
-      rows.push('<div class="review-history-card review-history-current"><strong>Current: ' + pill(current.decision) + '</strong><br>' + esc(current.reason || 'No reason recorded') + '</div>');
-    }
-    history.slice().reverse().slice(0,5).forEach(item => {
-      rows.push('<div class="review-history-card"><strong>' + esc(item.decision) + '</strong> <span>' + esc(item.decided_at_utc || item.recorded_at_utc || '') + '</span><br>' + esc(item.reason || '') + '</div>');
-    });
-    host.innerHTML = rows.length ? rows.join('') : '<p class="review-muted">No lifecycle decision has been recorded yet.</p>';
-  }
+  
+function renderHistory(data){
+  const host = $('review-decision-history');
+  if(!host) return;
+  const history = Array.isArray(data.decision_history) ? data.decision_history : [];
+  const current = data.decision_state || {};
+  const rows = [];
+  function label(value){ return String(value || 'Lifecycle Event').replace(/[\_\-]+/g,' ').replace(/\s+/g,' ').replace(/\b\w/g, ch => ch.toUpperCase()); }
+  function when(item){ return item.decided_at_utc || item.recorded_at_utc || item.monitoring_enabled_at_utc || item.approved_for_monitoring_at_utc || ''; }
+  function actor(item){ return item.actor || item.decided_by || item.recorded_by || 'Operator'; }
+  function line(item, prefix){ const time = when(item); return '<p class="review-history-line"><strong>' + esc(prefix || label(item.decision)) + '</strong>' + (time ? ' | ' + esc(time) : '') + ' | ' + esc(actor(item)) + '</p>'; }
+  if(current && current.decision){ rows.push(line(current, 'Current: ' + label(current.decision))); }
+  history.slice().reverse().slice(0,8).forEach(item => rows.push(line(item)));
+  host.innerHTML = rows.length ? rows.join('') : '<p class="review-muted">No current lifecycle history is available for this site.</p>';
+}
 
   function render(data){
     currentReviewData = data;
@@ -175,7 +176,7 @@
     const summary = $('review-site-summary');
     if(summary) summary.innerHTML = link(url) + ' - source-backed lifecycle review.';
     setText('review-site-status', data.lifecycle_status || (stage === 'review' ? 'Review Required' : stage));
-    setText('review-status-note', stage === 'monitored' ? 'Monitoring is enabled in JOM. Run refresh to validate live source collection.' : decision.requires_credentials ? 'Approved for monitoring. Start Atlassian Authorization before enabling monitoring.' : (decision.decision ? 'Lifecycle decision has been recorded and can be rolled back.' : 'No lifecycle decision has been recorded yet.'));
+    setText('review-status-note', stage === 'monitored' ? 'Monitoring is enabled in JOM. Run refresh to validate live source collection.' : stage === 'approval_pending' ? 'Approved for monitoring. Start Atlassian Authorization before enabling monitoring.' : (stage === 'review' ? 'Current state is Review/Discovery under live OAuth runtime authority.' : (decision.decision ? 'Current lifecycle decision is recorded.' : 'No current lifecycle decision is active.')));
     setText('review-site-key', data.site_key || siteKey);
     const urlNode = $('review-site-url');
     if(urlNode) urlNode.innerHTML = link(url);

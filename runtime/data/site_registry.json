@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-oauth-estate-truth-v1",
-  "generated_at_utc": "2026-08-03T14:00:54Z",
+  "generated_at_utc": "2026-08-04T09:28:16Z",
   "source": "runtime/data/estate_admin_site_inventory_v1.json",
   "source_policy": "Site Registry contains monitored OAuth-estate sites only. Review items remain outside the monitored registry until explicitly enabled.",
   "sites": [
@@ -87,22 +87,19 @@
     }
   ],
   "review_site_keys": [
-    "gli-tracker",
-    "gli-usa"
+    "gli-tracker"
   ],
-  "excluded_personal_external_site_keys": [
-    "baljeet-singh",
-    "gaminglabs-team-h2pbpmis",
-    "gaminglabs-team-tsyfo716",
-    "gli-testing"
-  ],
+  "excluded_personal_external_site_keys": [],
   "summary": {
     "total_sites": 3,
     "monitored_count": 3,
-    "discovered_count": 2,
+    "discovered_count": 0,
     "ignored_count": 0,
-    "pending_onboarding_count": 2,
-    "review_count": 2,
-    "coverage_percent": 60
+    "pending_onboarding_count": 0,
+    "review_count": 0,
+    "coverage_percent": 100,
+    "site_count": 3,
+    "monitored_sites": 3,
+    "current_state_authority": "live_oauth_runtime_authority_only"
   }
 }

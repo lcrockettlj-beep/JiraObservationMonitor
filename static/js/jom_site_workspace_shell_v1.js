@@ -1,6 +1,6 @@
 ﻿(function(){
   'use strict';
-  const siteKey=document.body.getAttribute('data-site-key')||'';
+  const siteKey=document.body.getAttribute('data-site-key')||''; const JOM_CURRENT_STATE_ALLOWED_KEYS_V1=new Set(['gli-delivery-tm','gli-global-technology','gli-it-project','gli-tracker']);
   const $=id=>document.getElementById(id);
   const setText=(id,value)=>{const el=$(id);if(el)el.textContent=value===undefined||value===null||value===''?'Unavailable':String(value)};
   const lower=value=>String(value||'').toLowerCase();
@@ -8,7 +8,7 @@
   const norm=value=>lower(value).replace(/^https?:\/\//,'').replace(/\.atlassian\.net.*$/,'').replace(/\/$/,'').trim();
   function unwrap(payload){return payload&&payload.data&&typeof payload.data==='object'?payload.data:(payload||{})}
   function get(obj,path,fallback){let current=obj;for(const part of String(path||'').split('.')){if(current&&typeof current==='object'&&part in current)current=current[part];else return fallback}return current===undefined||current===null?fallback:current}
-  function collectSites(root){const lists=[get(root,'sites',[]),get(root,'registry.sites',[]),get(root,'site_registry.sites',[]),get(root,'inventory.sites',[])];const byKey=new Map();lists.forEach(list=>{if(Array.isArray(list)){list.forEach(item=>{if(item&&typeof item==='object'){const key=norm(keyOf(item)||urlOf(item));if(key&&!byKey.has(key))byKey.set(key,item)}})}});return Array.from(byKey.values())}
+  function collectSites(root){const lists=[get(root,'sites',[]),get(root,'registry.sites',[]),get(root,'site_registry.sites',[]),get(root,'inventory.sites',[])];const byKey=new Map();lists.forEach(list=>{if(Array.isArray(list)){list.forEach(item=>{if(item&&typeof item==='object'){const key=norm(keyOf(item)||urlOf(item));if(key&&!byKey.has(key))byKey.set(key,item)}})}});return Array.from(byKey.values()).filter(site=>JOM_CURRENT_STATE_ALLOWED_KEYS_V1.has(norm(keyOf(site)||urlOf(site))))}
   function keyOf(site){return String(site.site_key||site.key||site.name||site.site_name||site.url||site.site_url||'').trim()}
   function nameOf(site){return String(site.site_name||site.name||site.site_key||site.key||'Site Workspace')}
   function urlOf(site){return String(site.site_url||site.url||'').trim()}

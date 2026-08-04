@@ -63,48 +63,6 @@
     "blocked_resource_count": 0,
     "payload_available": true
   },
-  "confirmed_product_sites": [
-    {
-      "site_key": "gli-it-project",
-      "site_name": "gli-it-project",
-      "site_url": "https://gli-it-project.atlassian.net",
-      "jira_product_user_count": 63,
-      "jira_role_count": 1,
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-global-technology",
-      "site_name": "gli-global-technology",
-      "site_url": "https://gli-global-technology.atlassian.net",
-      "jira_product_user_count": 57,
-      "jira_role_count": 1,
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "site_name": "gli-delivery-tm",
-      "site_url": "https://gli-delivery-tm.atlassian.net",
-      "jira_product_user_count": 31,
-      "jira_role_count": 1,
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-tracker",
-      "site_name": "gli-tracker",
-      "site_url": "https://gli-tracker.atlassian.net",
-      "jira_product_user_count": 6,
-      "jira_role_count": 1,
-      "status": "ok"
-    },
-    {
-      "site_key": "gli-usa",
-      "site_name": "gli-usa",
-      "site_url": "https://gli-usa.atlassian.net",
-      "jira_product_user_count": 4,
-      "jira_role_count": 1,
-      "status": "ok"
-    }
-  ],
   "blocked_resources": [],
   "controls": {
     "named_user_footprint_visible": false,

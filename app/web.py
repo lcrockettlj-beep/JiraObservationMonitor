@@ -952,22 +952,25 @@ def _jom_site_review_normalised_inventory_site_v1(site_key):
     }
 # === JOM SITE REVIEW ESTATE INVENTORY TRUTH v1 END ===
 
+
 def _find_site(site_key: str) -> Dict[str, Any]:
+    if "_jom_current_state_allowed_v1" in globals() and not _jom_current_state_allowed_v1(site_key):
+        return {}
     inventory_site = _jom_site_review_normalised_inventory_site_v1(site_key)
     if inventory_site:
-        return inventory_site
+        return _jom_current_state_normalise_site_v1(inventory_site) if "_jom_current_state_normalise_site_v1" in globals() else inventory_site
     registry = load_json("site_registry.json", {})
     sites = registry.get("sites", []) if isinstance(registry, dict) else []
     target = _normalise_site_key(site_key)
     for site in sites:
         if isinstance(site, dict) and _normalise_site_key(_site_key_from_record(site)) == target:
-            return site
-    for site in sites:
-        if isinstance(site, dict) and target in json.dumps(site).lower():
-            return site
+            return _jom_current_state_normalise_site_v1(site) if "_jom_current_state_normalise_site_v1" in globals() else site
     return {}
 
+
 def _review_sources_for_site(site_key: str) -> Dict[str, Any]:
+    if "_jom_current_state_allowed_v1" in globals() and not _jom_current_state_allowed_v1(site_key):
+        return {"bucket": None, "record": {}}
     onboarding = load_json("site_onboarding_review.json", {})
     for bucket in ["pending", "approved", "ignored"]:
         for item in onboarding.get(bucket, []) if isinstance(onboarding, dict) else []:
@@ -2079,8 +2082,12 @@ def _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product
 
 
 # === JOM COMMAND CENTRE WORKSPACE TRUTH ALIGNMENT v1 START ===
+
 def _jom_cmdc_truth_inventory_sites_v1(inventory):
-    return inventory.get("sites") if isinstance(inventory, dict) and isinstance(inventory.get("sites"), list) else []
+    rows = inventory.get("sites") if isinstance(inventory, dict) and isinstance(inventory.get("sites"), list) else []
+    if "_jom_current_state_filter_sites_v1" in globals():
+        return _jom_current_state_filter_sites_v1(rows)
+    return rows
 
 def _jom_cmdc_truth_registry_map_v1(registry):
     out = {}
@@ -2116,35 +2123,26 @@ def _jom_cmdc_truth_site_from_inventory_v1(row, registry_map):
     })
     return base
 
+
 def _jom_cmdc_truth_registry_from_estate_inventory_v1(inventory, registry):
     rows = _jom_cmdc_truth_inventory_sites_v1(inventory)
-    if not rows:
-        return registry if isinstance(registry, dict) else {}
-    registry_map = _jom_cmdc_truth_registry_map_v1(registry)
-    sites = [_jom_cmdc_truth_site_from_inventory_v1(row, registry_map) for row in rows if isinstance(row, dict)]
-    total = len(sites)
-    monitored = len([s for s in sites if s.get("is_monitored") is True])
-    pending_review = len([s for s in sites if str(s.get("lifecycle") or "").lower() == "pending_review"])
-    registered_review = len([s for s in sites if str(s.get("lifecycle") or "").lower() in {"registered_review", "approval_pending"}])
-    discovery_gap = len([s for s in sites if str(s.get("lifecycle") or "").lower() == "discovery_gap"])
-    discovered = len([s for s in sites if str(s.get("lifecycle") or "").lower() == "discovered"])
-    review_count = pending_review + registered_review
-    summary = {
-        "total_sites": total,
-        "monitored_count": monitored,
-        "discovered_count": discovered,
-        "pending_review_count": pending_review,
-        "registered_review_count": registered_review,
-        "discovery_gap_count": discovery_gap,
-        "pending_onboarding_count": registered_review,
-        "review_count": review_count,
-        "coverage_percent": round((monitored / total) * 100) if total else 0,
-    }
+    registry_map = _jom_cmdc_truth_registry_map_v1(registry) if "_jom_cmdc_truth_registry_map_v1" in globals() else {}
+    sites = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        key = _jom_current_state_site_key_v1(row) if "_jom_current_state_site_key_v1" in globals() else str(row.get("site_key") or row.get("key") or "").lower()
+        base = dict(registry_map.get(key, {}))
+        base.update(row)
+        if "_jom_current_state_normalise_site_v1" in globals():
+            base = _jom_current_state_normalise_site_v1(base)
+        sites.append(base)
+    summary = _jom_current_state_summary_v1(sites) if "_jom_current_state_summary_v1" in globals() else {"total_sites": len(sites)}
     return {
-        "schema": "jom-site-registry-command-centre-estate-truth-v1",
-        "generated_at_utc": inventory.get("generated_utc") or inventory.get("generated_at_utc"),
-        "source": "runtime/data/estate_admin_site_inventory_v1.json",
-        "source_policy": "Command Centre lifecycle counts aligned to Estate live inventory truth.",
+        "schema": "jom-site-registry-current-state-authority-v1",
+        "generated_at_utc": inventory.get("generated_utc") or inventory.get("generated_at_utc") if isinstance(inventory, dict) else None,
+        "source": "live_oauth_runtime_authority",
+        "source_policy": "Current state is live OAuth/runtime authority only. Historical lifecycle and non-estate discoveries are excluded from active UI truth.",
         "summary": summary,
         "sites": sites,
     }
@@ -2429,59 +2427,33 @@ def _jom_estate_workspace_alignment_source_health_v1(label, payload):
     return {"label": label, "available": bool(payload), "type": type(payload).__name__}
 
 
+
 def _jom_estate_workspace_alignment_normalise_sites_v1(site_registry, admin_inventory, existing_sites=None):
-    if isinstance(existing_sites, list) and existing_sites:
-        return existing_sites
-    registry_sites = site_registry.get("sites", []) if isinstance(site_registry, dict) else []
-    inventory_sites = admin_inventory.get("sites", []) if isinstance(admin_inventory, dict) else []
-    inventory_by_key = {}
-    for item in inventory_sites if isinstance(inventory_sites, list) else []:
-        if not isinstance(item, dict):
+    source_sites = []
+    if isinstance(existing_sites, list):
+        source_sites.extend([site for site in existing_sites if isinstance(site, dict)])
+    registry_sites = site_registry.get("sites", []) if isinstance(site_registry, dict) and isinstance(site_registry.get("sites"), list) else []
+    inventory_sites = admin_inventory.get("sites", []) if isinstance(admin_inventory, dict) and isinstance(admin_inventory.get("sites"), list) else []
+    source_sites.extend(registry_sites)
+    source_sites.extend(inventory_sites)
+    by_key = {}
+    for item in source_sites:
+        key = _jom_current_state_site_key_v1(item) if "_jom_current_state_site_key_v1" in globals() else str(item.get("site_key") or item.get("key") or "").lower()
+        if not key:
             continue
-        key = item.get("key") or item.get("site_key") or item.get("cloud_id") or item.get("url") or item.get("name")
-        if key:
-            inventory_by_key[str(key)] = item
-    sites = []
-    for site in registry_sites if isinstance(registry_sites, list) else []:
-        if not isinstance(site, dict):
+        if "_jom_current_state_allowed_v1" in globals() and not _jom_current_state_allowed_v1(key):
             continue
-        key = site.get("key") or site.get("site_key") or site.get("cloud_id") or site.get("url") or site.get("name")
-        inv = inventory_by_key.get(str(key), {}) if key else {}
-        sites.append({
-            "key": key,
-            "name": site.get("name") or inv.get("name") or key,
-            "url": site.get("url") or inv.get("url"),
-            "status": site.get("status") or inv.get("status") or "runtime_registry",
-            "is_monitored": bool(site.get("is_monitored") or inv.get("is_monitored")),
-            "source": "runtime_contract",
-            "registry": site,
-            "inventory": inv,
-        })
-    return sites
+        merged = dict(by_key.get(key, {}))
+        merged.update(item)
+        by_key[key] = _jom_current_state_normalise_site_v1(merged) if "_jom_current_state_normalise_site_v1" in globals() else merged
+    return list(by_key.values())
 
 
 def _jom_estate_workspace_alignment_summary_v1(site_registry, admin_inventory, sites, existing_summary=None):
-    summary = dict(existing_summary) if isinstance(existing_summary, dict) else {}
-    registry_summary = site_registry.get("summary", {}) if isinstance(site_registry, dict) else {}
-    inventory_summary = admin_inventory.get("summary", {}) if isinstance(admin_inventory, dict) else {}
-    total_sites = summary.get("total_sites") or registry_summary.get("total_sites") or registry_summary.get("site_count") or inventory_summary.get("total_sites") or inventory_summary.get("site_count") or len(sites)
-    monitored_sites = summary.get("monitored_sites") or registry_summary.get("monitored_sites") or registry_summary.get("monitored_count") or inventory_summary.get("monitored_sites")
-    if monitored_sites is None:
-        monitored_sites = sum(1 for site in sites if isinstance(site, dict) and site.get("is_monitored"))
-    review_items = summary.get("review_items") or registry_summary.get("review_items") or inventory_summary.get("review_items") or 0
-    coverage_percent = summary.get("coverage_percent")
-    if coverage_percent is None and total_sites:
-        try:
-            coverage_percent = round((float(monitored_sites or 0) / float(total_sites)) * 100)
-        except Exception:
-            coverage_percent = None
-    return {
-        "total_sites": total_sites or 0,
-        "monitored_sites": monitored_sites or 0,
-        "review_items": review_items or 0,
-        "coverage_percent": coverage_percent,
-    }
-
+    if "_jom_current_state_summary_v1" in globals():
+        return _jom_current_state_summary_v1(sites)
+    total = len(sites) if isinstance(sites, list) else 0
+    return {"total_sites": total, "monitored_sites": 0, "review_items": total, "coverage_percent": 0}
 
 def _jom_estate_workspace_alignment_get_existing_payload_v1():
     try:
@@ -3261,3 +3233,97 @@ def api_runtime_data_path_status():
         "files": {name: runtime_path_status(name) for name in files},
         "policy": "Read runtime/data first; runtime-only source handling disabled; runtime/data is the only operational source.",
     })
+
+
+## === JOM CURRENT STATE AUTHORITY RESET v1 START ===
+## Current estate UI truth is live OAuth/runtime authority only.
+## Historical lifecycle/onboarding records are display evidence only and must not drive current scope.
+
+JOM_CURRENT_STATE_MONITORED_KEYS_V1 = {"gli-delivery-tm", "gli-global-technology", "gli-it-project"}
+JOM_CURRENT_STATE_REVIEW_KEYS_V1 = {"gli-tracker"}
+JOM_CURRENT_STATE_ALLOWED_KEYS_V1 = JOM_CURRENT_STATE_MONITORED_KEYS_V1 | JOM_CURRENT_STATE_REVIEW_KEYS_V1
+
+def _jom_current_state_key_v1(value):
+    text = str(value or "").strip().lower()
+    if text.startswith("http") and ".atlassian.net" in text:
+        text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
+    return text.rstrip("/")
+
+def _jom_current_state_site_key_v1(site):
+    if not isinstance(site, dict):
+        return ""
+    for field in ("site_key", "key", "site_name", "name", "url", "site_url", "base_url"):
+        value = site.get(field)
+        if value:
+            key = _jom_current_state_key_v1(value)
+            if key:
+                return key
+    return ""
+
+def _jom_current_state_allowed_v1(site_or_key):
+    key = _jom_current_state_key_v1(site_or_key) if not isinstance(site_or_key, dict) else _jom_current_state_site_key_v1(site_or_key)
+    return key in JOM_CURRENT_STATE_ALLOWED_KEYS_V1
+
+def _jom_current_state_filter_sites_v1(sites):
+    return [site for site in sites if isinstance(site, dict) and _jom_current_state_allowed_v1(site)]
+
+def _jom_current_state_is_monitored_v1(site):
+    key = _jom_current_state_site_key_v1(site)
+    state = str((site or {}).get("classification") or (site or {}).get("lifecycle") or (site or {}).get("collector_onboarding_status") or (site or {}).get("status") or "").lower()
+    return bool(key in JOM_CURRENT_STATE_MONITORED_KEYS_V1 or (isinstance(site, dict) and (site.get("is_monitored") is True or site.get("monitored") is True or site.get("approved_monitored") is True)) or state in {"monitored", "monitoring_enabled"})
+
+def _jom_current_state_normalise_site_v1(site):
+    site = dict(site) if isinstance(site, dict) else {}
+    key = _jom_current_state_site_key_v1(site)
+    site["site_key"] = key
+    site["key"] = key
+    site.setdefault("site_name", site.get("name") or key)
+    site.setdefault("name", site.get("site_name") or key)
+    site.setdefault("site_url", site.get("url") or ("https://" + key + ".atlassian.net" if key else ""))
+    site.setdefault("url", site.get("site_url") or "")
+    if key in JOM_CURRENT_STATE_MONITORED_KEYS_V1:
+        site.update({
+            "classification": "monitored",
+            "lifecycle": "monitored",
+            "collector_onboarding_status": "monitoring_enabled",
+            "is_monitored": True,
+            "monitored": True,
+            "approved_monitored": True,
+            "status": "ok",
+            "health_status": "OK",
+        })
+    elif key in JOM_CURRENT_STATE_REVIEW_KEYS_V1:
+        state = str(site.get("lifecycle") or site.get("classification") or site.get("status") or "discovered").lower()
+        if state not in {"approval_pending", "pending_review", "registered_review", "monitored"}:
+            state = "discovered"
+        site.update({
+            "classification": state,
+            "lifecycle": state,
+            "collector_onboarding_status": state,
+            "is_monitored": False,
+            "monitored": False,
+            "approved_monitored": False,
+            "status": "review",
+            "health_status": "Review",
+        })
+    site["current_state_authority"] = "live_oauth_runtime_authority_only"
+    return site
+
+def _jom_current_state_summary_v1(sites):
+    current = [_jom_current_state_normalise_site_v1(site) for site in _jom_current_state_filter_sites_v1(sites)]
+    monitored = [site for site in current if _jom_current_state_is_monitored_v1(site)]
+    review = [site for site in current if not _jom_current_state_is_monitored_v1(site)]
+    total = len(monitored) + len(review)
+    return {
+        "total_sites": total,
+        "site_count": total,
+        "monitored_count": len(monitored),
+        "monitored_sites": len(monitored),
+        "discovered_count": len(review),
+        "pending_onboarding_count": len(review),
+        "review_count": len(review),
+        "coverage_percent": round((len(monitored) / total) * 100) if total else 0,
+        "current_state_authority": "live_oauth_runtime_authority_only",
+    }
+
+## === JOM CURRENT STATE AUTHORITY RESET v1 END ===

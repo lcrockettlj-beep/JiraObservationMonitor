@@ -1,34 +1,12 @@
 {
   "schema": "jom-site-onboarding-review-v2",
-  "generated_at_utc": "2026-06-30T13:41:06Z",
+  "generated_at_utc": "2026-08-04T09:35:22Z",
   "summary": {
     "pending_count": 2,
     "approved_count": 1,
     "ignored_count": 1,
     "total_review_count": 4
   },
-  "pending": [
-    {
-      "site_key": "gaminglabs-team-h2pbpmis",
-      "classification": "discovered",
-      "is_monitored": false,
-      "cloud_id": "5e7a134a-c1f4-4617-b4f2-a3bd6b3799c9",
-      "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
-      "approve_command": "python scripts/run_site_onboarding_action_v1.py --site-key gaminglabs-team-h2pbpmis --decision approve --reason \"approved for monitoring\" --actor operator --apply",
-      "ignore_command": "python scripts/run_site_onboarding_action_v1.py --site-key gaminglabs-team-h2pbpmis --decision ignore --reason \"not in monitoring scope\" --actor operator --apply",
-      "decision": "pending"
-    },
-    {
-      "site_key": "gaminglabs-team-tsyfo716",
-      "classification": "discovered",
-      "is_monitored": false,
-      "cloud_id": "981786d5-9529-4957-bab0-fdc505ccb9b6",
-      "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
-      "approve_command": "python scripts/run_site_onboarding_action_v1.py --site-key gaminglabs-team-tsyfo716 --decision approve --reason \"approved for monitoring\" --actor operator --apply",
-      "ignore_command": "python scripts/run_site_onboarding_action_v1.py --site-key gaminglabs-team-tsyfo716 --decision ignore --reason \"not in monitoring scope\" --actor operator --apply",
-      "decision": "pending"
-    }
-  ],
   "approved": [
     {
       "site_key": "gli-tracker",
@@ -54,31 +32,7 @@
       }
     }
   ],
-  "ignored": [
-    {
-      "site_key": "gli-usa",
-      "classification": "discovered",
-      "is_monitored": false,
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "url": "https://gli-usa.atlassian.net",
-      "approve_command": "python scripts/run_site_onboarding_action_v1.py --site-key gli-usa --decision approve --reason \"approved for monitoring\" --actor operator --apply",
-      "ignore_command": "python scripts/run_site_onboarding_action_v1.py --site-key gli-usa --decision ignore --reason \"not in monitoring scope\" --actor operator --apply",
-      "decision": "ignored",
-      "decision_record": {
-        "site_key": "gli-usa",
-        "decision": "ignore",
-        "reason": "not in current monitoring scope",
-        "actor": "Luke_C",
-        "decided_at_utc": "2026-06-30T11:19:36Z",
-        "site_snapshot": {
-          "classification": "discovered",
-          "is_monitored": false,
-          "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-          "url": "https://gli-usa.atlassian.net"
-        }
-      }
-    }
-  ],
   "decision_source": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\config\\site_onboarding_decisions.json",
-  "safety_note": "Approve/ignore records decisions only. Monitoring scope changes require a separate controlled registry/config sync step."
+  "safety_note": "Approve/ignore records decisions only. Monitoring scope changes require a separate controlled registry/config sync step.",
+  "current_state_authority": "live_oauth_runtime_authority_only"
 }

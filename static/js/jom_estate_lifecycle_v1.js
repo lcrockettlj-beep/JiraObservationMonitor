@@ -25,6 +25,12 @@
     'unknown'
   ]);
 
+const JOM_CURRENT_STATE_ALLOWED_KEYS_V1 = new Set(['gli-delivery-tm','gli-global-technology','gli-it-project','gli-tracker']);
+const JOM_CURRENT_STATE_MONITORED_KEYS_V1 = new Set(['gli-delivery-tm','gli-global-technology','gli-it-project']);
+function currentStateKey(site){ return normaliseKey(siteKey(site) || siteUrl(site)); }
+function isCurrentAuthoritySite(site){ const key = currentStateKey(site); return JOM_CURRENT_STATE_ALLOWED_KEYS_V1.has(key); }
+
+
   const asArray = value => Array.isArray(value) ? value : [];
   const asNumber = (value, fallback) => {
     const n = Number(value);
@@ -168,16 +174,36 @@ if (site && site.in_registry === false) return false;
     return rows;
   }
 
-  function sitesFromPayload(root) {
-    const byKey = new Map();
-    for (const raw of collectCandidates(root)) {
-      const key = normaliseKey(siteKey(raw) || siteUrl(raw));
-      if (!key) continue;
-      const existing = byKey.get(key) || {};
-      byKey.set(key, Object.assign({}, existing, raw));
-    }
-    return Array.from(byKey.values()).filter(hasAuthenticatedEvidence);
-  }
+  
+function sitesFromPayload(root) {
+const byKey = new Map();
+for (const raw of collectCandidates(root)) {
+const key = normaliseKey(siteKey(raw) || siteUrl(raw));
+if (!key) continue;
+if (!JOM_CURRENT_STATE_ALLOWED_KEYS_V1.has(key)) continue;
+const existing = byKey.get(key) || {};
+const merged = Object.assign({}, existing, raw);
+if (JOM_CURRENT_STATE_MONITORED_KEYS_V1.has(key)) {
+  merged.classification = 'monitored';
+  merged.lifecycle = 'monitored';
+  merged.collector_onboarding_status = 'monitoring_enabled';
+  merged.is_monitored = true;
+  merged.monitored = true;
+  merged.approved_monitored = true;
+  merged.status = 'ok';
+} else {
+  merged.classification = merged.classification || merged.lifecycle || 'discovered';
+  merged.lifecycle = merged.lifecycle || merged.classification || 'discovered';
+  merged.is_monitored = false;
+  merged.monitored = false;
+  merged.approved_monitored = false;
+  merged.status = 'review';
+}
+merged.current_state_authority = 'live_oauth_runtime_authority_only';
+byKey.set(key, merged);
+}
+return Array.from(byKey.values()).filter(hasAuthenticatedEvidence);
+}
 
   function summaryFromSites(sites) {
     const monitored = sites.filter(isMonitored).length;

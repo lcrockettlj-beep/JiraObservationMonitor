@@ -62,62 +62,19 @@
     "pending_review_count": 1,
     "discovery_gap_count": 4,
     "oauth_estate_site_count": 5,
-    "review_count": 2,
+    "review_count": 1,
     "personal_external_discovery_count": 4,
-    "excluded_from_estate_truth_count": 4
+    "excluded_from_estate_truth_count": 4,
+    "total_sites": 4,
+    "site_count": 4,
+    "monitored_sites": 3,
+    "discovered_count": 1,
+    "pending_onboarding_count": 1,
+    "ignored_count": 0,
+    "coverage_percent": 75,
+    "current_state_authority": "live_oauth_runtime_authority_only"
   },
   "sites": [
-    {
-      "site_key": "baljeet-singh",
-      "url": "https://baljeet-singh.atlassian.net",
-      "sources": [
-        "manual_validation_target"
-      ],
-      "manual_validation_target": "known_from_support_case_manual_only",
-      "evidence_levels": [
-        "manual_unverified"
-      ],
-      "approved_monitored": false,
-      "in_registry": false,
-      "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status",
-      "estate_visibility": "personal_or_external_access",
-      "estate_truth_included": false
-    },
-    {
-      "site_key": "gaminglabs-team-h2pbpmis",
-      "url": "https://gaminglabs-team-h2pbpmis.atlassian.net",
-      "sources": [
-        "manual_validation_target"
-      ],
-      "manual_validation_target": "known_from_admin_screenshot_or_support_case_manual_only",
-      "evidence_levels": [
-        "manual_unverified"
-      ],
-      "approved_monitored": false,
-      "in_registry": false,
-      "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status",
-      "estate_visibility": "personal_or_external_access",
-      "estate_truth_included": false
-    },
-    {
-      "site_key": "gaminglabs-team-tsyfo716",
-      "url": "https://gaminglabs-team-tsyfo716.atlassian.net",
-      "sources": [
-        "manual_validation_target"
-      ],
-      "manual_validation_target": "known_from_admin_screenshot_or_support_case_manual_only",
-      "evidence_levels": [
-        "manual_unverified"
-      ],
-      "approved_monitored": false,
-      "in_registry": false,
-      "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status",
-      "estate_visibility": "personal_or_external_access",
-      "estate_truth_included": false
-    },
     {
       "site_key": "gli-delivery-tm",
       "sources": [
@@ -305,23 +262,6 @@
       "truth_source": "oauth_estate_truth_owner_repair_v1"
     },
     {
-      "site_key": "gli-testing",
-      "url": "https://gli-testing.atlassian.net",
-      "sources": [
-        "manual_validation_target"
-      ],
-      "manual_validation_target": "known_from_support_case_manual_only",
-      "evidence_levels": [
-        "manual_unverified"
-      ],
-      "approved_monitored": false,
-      "in_registry": false,
-      "lifecycle": "discovery_gap",
-      "action_required": "review_live_inventory_status",
-      "estate_visibility": "personal_or_external_access",
-      "estate_truth_included": false
-    },
-    {
       "site_key": "gli-tracker",
       "sources": [
         "oauth_accessible_resources",
@@ -388,40 +328,8 @@
       "truth_source": "oauth_estate_truth_owner_repair_v1",
       "estate_visibility": "oauth_accessible_resource",
       "estate_truth_included": true
-    },
-    {
-      "site_key": "gli-usa",
-      "sources": [
-        "oauth_accessible_resources"
-      ],
-      "name": "gli-usa",
-      "url": "https://gli-usa.atlassian.net",
-      "cloud_id": "d13cd0f5-823d-4a16-9952-a15f6bdf9018",
-      "scopes": [
-        "manage:jira-configuration",
-        "read:application-role:jira",
-        "read:jira-user",
-        "read:jira-work",
-        "read:license:jira"
-      ],
-      "evidence_levels": [
-        "live_oauth_accessible_resources"
-      ],
-      "approved_monitored": false,
-      "in_registry": false,
-      "lifecycle": "pending_review",
-      "action_required": "review_live_inventory_status",
-      "estate_visibility": "oauth_accessible_resource",
-      "estate_truth_included": true,
-      "classification": "discovered",
-      "is_monitored": false,
-      "monitored": false,
-      "collector_onboarding_status": "review_required",
-      "status": "review",
-      "health_status": "Review",
-      "truth_source": "oauth_estate_truth_owner_repair_v1"
     }
   ],
-  "generated_at_utc": "2026-08-03T14:00:54Z",
+  "generated_at_utc": "2026-08-04T09:28:16Z",
   "source_policy": "Estate truth includes OAuth-accessible resources only. Personal or external admin discoveries are labelled separately and excluded from Estate counts."
 }
