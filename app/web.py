@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
@@ -2070,6 +2070,34 @@ def _jom_workspace_contract_registry_summary_v1(registry):
     }
 
 
+
+# --- JOM USERS METRIC CONTRACT SEPARATION v1 START ---
+def _jom_active_users_unavailable_metric_v1():
+    """Headline Users authority placeholder.
+
+    Current rule: headline Users must be unique active Atlassian users from
+    proven OAuth/Admin live authority. No such authority is currently proven,
+    so the value must be unavailable rather than replaced with product access.
+    """
+    return {
+        "metric": None,
+        "metric_label": "Active users unavailable",
+        "source": "oauth_admin_active_users_unavailable",
+        "available": False,
+        "definition": "Unique active Atlassian users from OAuth/Admin live authority. No proven active-user authority is currently wired.",
+    }
+
+
+def _jom_product_access_assignments_metric_v1(product_users):
+    return {
+        "metric": product_users,
+        "metric_label": "Product access assignments",
+        "source": "estate_product_access.summary.total_jira_product_user_count",
+        "available": product_users is not None,
+        "definition": "Assignment count across Jira product/site access. One person may count more than once. Not headline Users.",
+    }
+# --- JOM USERS METRIC CONTRACT SEPARATION v1 END ---
+
 # --- JOM WORKSPACE CONTRACT CACHED READ PATH v1 START ---
 # Fast workspace contracts for page load.
 # These endpoints read generated truth outputs and do not run live collectors on page load.
@@ -2121,14 +2149,10 @@ def _jom_build_cached_operator_alerts_v1(admin_truth, registry):
 
 
 def _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product_users):
-    payload = dict(user_footprint) if isinstance(user_footprint, dict) else {}
-    payload["metric"] = product_users
-    payload["metric_label"] = "Live Jira product-access users"
+    payload = _jom_active_users_unavailable_metric_v1()
     payload["named_access_detail_guarded"] = True
-    payload["source"] = "estate_product_access.summary.total_jira_product_user_count"
+    payload["product_access_assignments"] = _jom_product_access_assignments_metric_v1(product_users)
     return payload
-
-
 
 # === JOM COMMAND CENTRE WORKSPACE TRUTH ALIGNMENT v1 START ===
 
@@ -2323,12 +2347,8 @@ def _jom_workspace_command_centre_cached_contract_v1():
         "registry_summary": registry_summary,
         "organisations": organisation_summary,
         "users": _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product_users),
-        "users_metric": {
-            "metric": product_users,
-            "metric_label": "Live Jira product-access users",
-            "named_access_detail_guarded": True,
-            "source": "estate_product_access.summary.total_jira_product_user_count",
-        },
+        "users_metric": _jom_active_users_unavailable_metric_v1(),
+        "product_access_metric": _jom_product_access_assignments_metric_v1(product_users),
         "source_state": source_state,
         "operator_summary": {
             "schema": "jom-operator-summary-fast-read-v1",
@@ -2392,7 +2412,8 @@ def _jom_workspace_estate_cached_contract_v1():
         users_payload = _jom_command_centre_users_metric_contract_payload_v1(user_footprint, product_users)
     else:
         users_payload = dict(user_footprint) if isinstance(user_footprint, dict) else {}
-        users_payload["metric"] = product_users
+        users_payload = _jom_active_users_unavailable_metric_v1()
+        users_payload["product_access_assignments"] = _jom_product_access_assignments_metric_v1(product_users)
         users_payload["metric_label"] = "Live Jira product-access users"
         users_payload["named_access_detail_guarded"] = True
         users_payload["source"] = "estate_product_access.summary.total_jira_product_user_count"
@@ -2404,7 +2425,8 @@ def _jom_workspace_estate_cached_contract_v1():
         "review_items": registry_summary.get("review_count"),
         "pending_onboarding": registry_summary.get("pending_onboarding_count"),
         "coverage_percent": registry_summary.get("coverage_percent"),
-        "users": product_users,
+        "users": _jom_active_users_unavailable_metric_v1(),
+        "product_access_assignments": product_users,
     }
 
     source_health = {
@@ -2418,12 +2440,8 @@ def _jom_workspace_estate_cached_contract_v1():
         "registry": registry,
         "registry_summary": registry_summary,
         "users": users_payload,
-        "users_metric": {
-            "metric": product_users,
-            "metric_label": "Live Jira product-access users",
-            "named_access_detail_guarded": True,
-            "source": "estate_product_access.summary.total_jira_product_user_count",
-        },
+        "users_metric": _jom_active_users_unavailable_metric_v1(),
+        "product_access_metric": _jom_product_access_assignments_metric_v1(product_users),
         "estate_admin_site_inventory": estate_admin_inventory,
         "estate_product_access": estate_product_access,
         "estate_access_truth": estate_access_truth,

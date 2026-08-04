@@ -1,4 +1,4 @@
-﻿/* JOM Estate single-owner table renderer v1
+/* JOM Estate single-owner table renderer v1
 - Owner: static/js/jom_estate_lifecycle_v1.js
 - Contract: /api/workspace/estate
 - Rules: runtime workspace contract only, no static dataset path, no DOM post-processing layers.
@@ -324,7 +324,7 @@ return Array.from(byKey.values()).filter(hasAuthenticatedEvidence);
     setText('rail-ignored-sites', summary.ignored);
     setText('rail-registry-status', sites.length ? 'OK' : 'Review', sites.length ? 'ok' : 'review');
     const users = userCount(root);
-    setText('rail-users-count', users === null ? '--' : users);
+    setText('rail-users-count', users === null ? 'Unavailable' : users);
     setText('rail-alert-count', summary.review);
   }
 
