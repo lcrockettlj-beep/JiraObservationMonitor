@@ -735,6 +735,14 @@ def page_reference():
 
 
 # JOM_SITE_WORKSPACE_SHELL_ROUTES_V1 START
+
+# JOM_SITE_WORKSPACE_PRODUCT_USERS_PACK_V1 START
+@app.route("/api/workspace/product-users")
+def api_workspace_product_users_v1():
+    from app.builders.site_workspace_product_users_builder import build_site_workspace_product_users
+    return jsonify(build_site_workspace_product_users(ROOT))
+# JOM_SITE_WORKSPACE_PRODUCT_USERS_PACK_V1 END
+
 @app.route("/site-workspace")
 def page_site_workspace_shell_index():
     site_key = request.args.get("site", "")

@@ -41,11 +41,12 @@
     setText('workspace-rail-site-count',currentSites.length||'0');
     setText('workspace-rail-selected-site',siteKey?siteKey:'None');
     setText('workspace-rail-monitoring-scope',monitored.length+'/'+(currentSites.length||0));
-    fetch('/estate/product-access',{cache:'no-store',headers:{'Accept':'application/json'}})
+    fetch('/api/workspace/product-users',{cache:'no-store',headers:{'Accept':'application/json'}})
       .then(response=>response.ok?response.json():null)
       .then(payload=>{
         const product=unwrap(payload||{});
-        setText('workspace-source-product-users',product&&product.live_collection===true?'Available':'Unavailable');
+        const metric=product&&product.metric?product.metric:{};
+        setText('workspace-source-product-users',metric.display||metric.total||'Unavailable');
       })
       .catch(()=>setText('workspace-source-product-users','Unavailable'));
   }
