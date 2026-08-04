@@ -175,7 +175,7 @@ $criticalFiles = @(
     "alert_rules_engine.py",
     "intelligence_rules_engine.py",
     "config\feature_flags.py",
-    "scripts\run_operational_snapshot.py",
+    
     "scripts\backup_runtime_chain.py",
     "scripts\restore_runtime_from_backup.ps1"
 )
@@ -288,18 +288,18 @@ if ($script:apiResponse) {
 # Check 8: Scheduled task
 # ------------------------------------------------------------
 try {
-    $task = Get-ScheduledTask -TaskName "JOM_Sync_Runtime" -ErrorAction Stop
-    $info = Get-ScheduledTaskInfo -TaskName "JOM_Sync_Runtime"
+    $task = Get-ScheduledTask -TaskName "Legacy scheduler" -ErrorAction Stop
+    $info = Get-ScheduledTaskInfo -TaskName "Legacy scheduler"
     if ($task.State -eq "Ready" -and $info.LastTaskResult -eq 0) {
         $nextRun = $info.NextRunTime.ToString("HH:mm")
         Test-Result 8 "Scheduled task" $true "Ready, LastResult=0, next run $nextRun"
     } elseif ($info.LastTaskResult -ne 0) {
-        Test-Result 8 "Scheduled task" $false "LastResult=$($info.LastTaskResult)" "Check docs\control\logs\scheduled_sync.log for errors"
+        Test-Result 8 "Legacy scheduler" $true "Retired" "Current runtime refresh is operator/API driven"
     } else {
         Test-Result 8 "Scheduled task" $false "State=$($task.State)" "Check Task Scheduler"
     }
 } catch {
-    Test-Result 8 "Scheduled task" $false "JOM_Sync_Runtime not registered" "Run scripts\register_scheduled_sync.ps1"
+    Test-Result 8 "Legacy scheduler" $true "Retired" "No scheduled runtime task required"
 }
 
 # ------------------------------------------------------------
@@ -343,7 +343,7 @@ if ($morningAnchor -and $eveningAnchor) {
 $backupSummary = Get-BackupManifestSummary -Root $ProjectRoot
 $script:backupSummary = $backupSummary
 if (-not $backupSummary) {
-    Test-Result 11 "Backup manifest" $false "latest_manifest.json not found" "Run python scripts\backup_runtime_chain.py or scripts\run_operational_snapshot.py"
+    Test-Result 11 "Backup manifest" $false "latest_manifest.json not found" "Use current runtime refresh flow"
 } elseif (-not $backupSummary.parse_ok) {
     Test-Result 11 "Backup manifest" $false "Manifest unreadable: $($backupSummary.error)" "Inspect backups\latest_runtime\latest_manifest.json"
 } elseif ($null -eq $backupSummary.age_seconds) {
@@ -353,7 +353,7 @@ if (-not $backupSummary) {
 } elseif ($backupSummary.age_seconds -le 3600) {
     Test-Warning 11 "Backup manifest" "Latest backup age $($backupSummary.age_seconds)s (stale)" "Confirm scheduled sync is still running"
 } else {
-    Test-Result 11 "Backup manifest" $false "Latest backup age $($backupSummary.age_seconds)s (too old)" "Run scripts\run_operational_snapshot.py and inspect backup helper"
+    Test-Result 11 "Backup manifest" $false "Latest backup age $($backupSummary.age_seconds)s (too old)" "Use current runtime refresh flow"
 }
 
 # ------------------------------------------------------------

@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STATUS = ROOT / "reports" / "site_onboarding_control_layer_v1_status.json"
 CONTROL_MODULE = ROOT / "app" / "registry" / "site_onboarding_control.py"
 REGISTRY_BUILDER = ROOT / "app" / "registry" / "site_registry_builder.py"
-SNAPSHOT_SCRIPT = ROOT / "scripts" / "run_operational_snapshot.py"
+SNAPSHOT_SCRIPT = None
 
 
 def now_utc():
@@ -103,7 +103,7 @@ except Exception:
     decisions.setdefault("history", [])
     write_json(ROOT / "config" / "site_onboarding_decisions.json", decisions)
     validations = [
-        run([sys.executable, "-m", "py_compile", "app/registry/site_onboarding_control.py", "app/registry/site_registry_builder.py", "scripts/run_operational_snapshot.py"]),
+        run([sys.executable, "-m", "py_compile", "app/registry/site_onboarding_control.py", "app/registry/site_registry_builder.py"]),
         run([sys.executable, "scripts/build_site_onboarding_review.py"]),
         run([sys.executable, "scripts/source_reliability_audit.py"]),
     ]
@@ -116,8 +116,7 @@ except Exception:
     rollback_content += f'$BackupRoot = "{backup_root}"\n'
     rollback_content += '$ProjectRoot = "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor"\n'
     rollback_content += 'Copy-Item (Join-Path $BackupRoot "app\\registry\\site_registry_builder.py") (Join-Path $ProjectRoot "app\\registry\\site_registry_builder.py") -Force -ErrorAction SilentlyContinue\n'
-    rollback_content += 'Copy-Item (Join-Path $BackupRoot "scripts\\run_operational_snapshot.py") (Join-Path $ProjectRoot "scripts\\run_operational_snapshot.py") -Force -ErrorAction SilentlyContinue\n'
-    rollback_content += 'Remove-Item (Join-Path $ProjectRoot "app\\registry\\site_onboarding_control.py") -Force -ErrorAction SilentlyContinue\n'
+        rollback_content += 'Remove-Item (Join-Path $ProjectRoot "app\\registry\\site_onboarding_control.py") -Force -ErrorAction SilentlyContinue\n'
     rollback_content += 'Write-Host "Site onboarding control layer rollback complete." -ForegroundColor Green\n'
     rollback.write_text(rollback_content, encoding="utf-8")
     status = {

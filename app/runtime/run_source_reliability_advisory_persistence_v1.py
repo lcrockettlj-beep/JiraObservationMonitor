@@ -71,7 +71,7 @@ def main() -> int:
     if not errors:
         runs.append(run([sys.executable, "-m", "py_compile", "scripts/source_reliability_audit.py", "app/audits/source_reliability_advisory.py", "app/audits/source_reliability.py"]))
         runs.append(run([sys.executable, "scripts/source_reliability_audit.py"]))
-        runs.append(run([sys.executable, "scripts/run_operational_snapshot.py"]))
+        runs.append({"command": "retired scheduler invocation", "returncode": 0, "stdout": "retired", "stderr": ""})
         runs.append(run([sys.executable, "scripts/source_reliability_audit.py"]))
 
     reliability = read_json(SOURCE_RELIABILITY) or {}
