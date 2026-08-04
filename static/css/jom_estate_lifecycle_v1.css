@@ -501,3 +501,107 @@ body[data-jom-page="estate"] .estate-rail-card h2 {
   100%{background-position: -200% 0;}
 }
 
+/* JOM_SITE_REVIEW_EXECUTIVE_LIFECYCLE_RECORD_COMPACT_V1 START */
+.review-history-compact {
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+}
+.review-history-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(9, 30, 66, 0.10);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.72);
+  font-size: 13px;
+  line-height: 1.25;
+}
+.review-history-row--current {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.18);
+}
+.review-history-event {
+  font-weight: 800;
+  color: #08275c;
+}
+.review-history-meta {
+  color: #42526e;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.review-history-older {
+  margin-top: 2px;
+  font-size: 13px;
+}
+.review-history-older summary {
+  cursor: pointer;
+  color: #0c58d3;
+  font-weight: 800;
+  padding: 4px 2px;
+}
+.review-history-older .review-history-row {
+  margin-top: 6px;
+  opacity: 0.92;
+}
+/* JOM_SITE_REVIEW_EXECUTIVE_LIFECYCLE_RECORD_COMPACT_V1 END */
+
+/* JOM_SITE_REVIEW_LIFECYCLE_RECORD_FULL_WIDTH_COMPACT_V1 START */
+#review-decision-history.review-history {
+  width: 100%;
+}
+#review-decision-history .review-history-compact {
+  width: 100%;
+  max-width: none;
+  display: grid;
+  gap: 6px;
+}
+#review-decision-history .review-history-row {
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(190px, 260px) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+#review-decision-history .review-history-row--current {
+  border-color: rgba(37, 99, 235, 0.20);
+  background: rgba(37, 99, 235, 0.07);
+}
+#review-decision-history .review-history-event {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#review-decision-history .review-history-meta {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+  font-size: 12px;
+}
+#review-decision-history .review-history-older {
+  width: 100%;
+  margin-top: 0;
+}
+#review-decision-history .review-history-older summary {
+  font-size: 12px;
+  padding: 3px 2px;
+}
+#review-decision-history .review-muted {
+  margin: 0;
+  font-size: 13px;
+}
+/* JOM_SITE_REVIEW_LIFECYCLE_RECORD_FULL_WIDTH_COMPACT_V1 END */
+

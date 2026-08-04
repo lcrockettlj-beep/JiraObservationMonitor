@@ -152,16 +152,53 @@
 function renderHistory(data){
   const host = $('review-decision-history');
   if(!host) return;
-  const history = Array.isArray(data.decision_history) ? data.decision_history : [];
+  const rawHistory = Array.isArray(data.decision_history) ? data.decision_history : [];
   const current = data.decision_state || {};
-  const rows = [];
-  function label(value){ return String(value || 'Lifecycle Event').replace(/[\_\-]+/g,' ').replace(/\s+/g,' ').replace(/\b\w/g, ch => ch.toUpperCase()); }
-  function when(item){ return item.decided_at_utc || item.recorded_at_utc || item.monitoring_enabled_at_utc || item.approved_for_monitoring_at_utc || ''; }
+  const meaningful = new Set(['approve_for_monitoring','oauth_access_validated','enable_monitoring','stop_monitoring','return_to_review','ignore_for_now']);
+  const map = {
+    approve_for_monitoring: 'Approved',
+    oauth_access_validated: 'Access validated',
+    enable_monitoring: 'Monitoring enabled',
+    stop_monitoring: 'Monitoring stopped',
+    return_to_review: 'Returned to review',
+    ignore_for_now: 'Ignored'
+  };
+  function actionOf(item){ return String(item && (item.action || item.decision || item.state) || '').toLowerCase(); }
+  function label(value){ return map[String(value || '').toLowerCase()] || String(value || 'Lifecycle event').replace(/[\_\-]+/g,' '); }
+  function when(item){ return item.recorded_at_utc || item.decided_at_utc || item.monitoring_enabled_at_utc || item.approved_for_monitoring_at_utc || ''; }
+  function shortDate(value){
+    if(!value) return '';
+    const m = String(value).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    return m ? (m[3] + '/' + m[2] + ' ' + m[4] + ':' + m[5]) : String(value).slice(0,16);
+  }
   function actor(item){ return item.actor || item.decided_by || item.recorded_by || 'Operator'; }
-  function line(item, prefix){ const time = when(item); return '<p class="review-history-line"><strong>' + esc(prefix || label(item.decision)) + '</strong>' + (time ? ' | ' + esc(time) : '') + ' | ' + esc(actor(item)) + '</p>'; }
-  if(current && current.decision){ rows.push(line(current, 'Current: ' + label(current.decision))); }
-  history.slice().reverse().slice(0,8).forEach(item => rows.push(line(item)));
-  host.innerHTML = rows.length ? rows.join('') : '<p class="review-muted">No current lifecycle history is available for this site.</p>';
+  function keyOf(item){ return [actionOf(item), item.state || '', item.result || '', item.source || ''].join('|'); }
+  function row(item, currentLabel){
+    const action = actionOf(item);
+    const cls = currentLabel ? ' review-history-row review-history-row--current' : ' review-history-row';
+    return '<div class="' + cls.trim() + '"><span class="review-history-event">' + esc(currentLabel || label(action)) + '</span><span class="review-history-meta">' + esc(shortDate(when(item))) + ' · ' + esc(actor(item)) + '</span></div>';
+  }
+  const deduped = [];
+  const seen = new Set();
+  rawHistory.slice().reverse().forEach(function(item){
+    const action = actionOf(item);
+    if(!meaningful.has(action)) return;
+    const key = keyOf(item);
+    if(action === 'oauth_access_validated' && seen.has(key)) return;
+    seen.add(key);
+    deduped.push(item);
+  });
+  const rows = [];
+  const currentAction = actionOf(current);
+  const firstHistoryAction = deduped.length ? actionOf(deduped[0]) : '';
+  const visibleHistory = (currentAction && firstHistoryAction === currentAction) ? deduped.slice(1) : deduped;
+  if(currentAction && meaningful.has(currentAction)) rows.push(row(current, 'Current: ' + label(currentAction)));
+  visibleHistory.slice(0,4).forEach(item => rows.push(row(item)));
+  const older = visibleHistory.slice(4,10);
+  if(older.length){
+    rows.push('<details class="review-history-older"><summary>' + older.length + ' older event' + (older.length === 1 ? '' : 's') + '</summary>' + older.map(item => row(item)).join('') + '</details>');
+  }
+  host.innerHTML = rows.length ? '<div class="review-history-compact">' + rows.join('') + '</div>' : '<p class="review-muted">No Site Review lifecycle actions have been recorded for this site yet.</p>';
 }
 
   function render(data){

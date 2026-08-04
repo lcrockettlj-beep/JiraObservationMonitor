@@ -906,6 +906,52 @@ def _write_lifecycle_decisions(payload: Dict[str, Any]) -> Dict[str, Any]:
     return write_json(SITE_LIFECYCLE_DECISIONS_PATH, payload)
 
 
+def _jom_lifecycle_audit_contract_v1():
+    payload = load_json("site_lifecycle_decisions.json", {})
+    if not isinstance(payload, dict):
+        payload = {}
+    payload.setdefault("schema", "jom-site-lifecycle-decisions-v1")
+    payload.setdefault("decisions", {})
+    payload.setdefault("history", [])
+    return payload
+
+
+def _jom_lifecycle_audit_event_v1(site_key, action, actor="operator", state=None, result="ok", message=None, source=None):
+    key = _jom_lifecycle_norm_v1(site_key) if "_jom_lifecycle_norm_v1" in globals() else str(site_key or "").strip().lower()
+    payload = _jom_lifecycle_audit_contract_v1()
+    now = now_utc() if "now_utc" in globals() else datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    action_value = str(action or "lifecycle_event")
+    source_value = source or "site_review_lifecycle"
+    event = {
+        "site_key": key,
+        "action": action_value,
+        "decision": action_value,
+        "state": state or action_value,
+        "result": result,
+        "actor": actor or "operator",
+        "recorded_at_utc": now,
+        "decided_at_utc": now,
+        "source": source_value,
+    }
+    if message:
+        event["message"] = message
+    history = payload.setdefault("history", [])
+    if action_value == "oauth_access_validated":
+        recent_duplicate = next((item for item in reversed(history[-10:]) if isinstance(item, dict) and item.get("site_key") == key and item.get("action") == action_value and item.get("source") == source_value and item.get("result") == result), None)
+        if recent_duplicate:
+            payload.setdefault("decisions", {})[key] = recent_duplicate
+            payload["generated_at_utc"] = now
+            return write_json(SITE_LIFECYCLE_DECISIONS_PATH, payload)
+    payload.setdefault("decisions", {})[key] = event
+    history.append(event)
+    # Keep audit evidence bounded: latest 10 lifecycle events per site, plus unrelated historical events.
+    site_events = [item for item in history if isinstance(item, dict) and item.get("site_key") == key]
+    other_events = [item for item in history if not (isinstance(item, dict) and item.get("site_key") == key)]
+    payload["history"] = (other_events + site_events[-10:])[-250:]
+    payload["generated_at_utc"] = now
+    return write_json(SITE_LIFECYCLE_DECISIONS_PATH, payload)
+
+
 
 # === JOM SITE REVIEW ESTATE INVENTORY TRUTH v1 START ===
 def _jom_site_review_inventory_rows_v1():
@@ -994,7 +1040,7 @@ def _owner_from_known_sources(site_key: str, site: Dict[str, Any]) -> str:
 def _build_site_review_payload(site_key: str) -> Dict[str, Any]:
     site = _find_site(site_key)
     source_review = _review_sources_for_site(site_key)
-    decisions = _load_lifecycle_decisions()
+    decisions = _jom_lifecycle_audit_contract_v1() if "_jom_lifecycle_audit_contract_v1" in globals() else _load_lifecycle_decisions()
     decision_state = decisions.get("decisions", {}).get(site_key, {})
     history = [item for item in decisions.get("history", []) if isinstance(item, dict) and item.get("site_key") == site_key]
     key = _site_key_from_record(site) or site_key
@@ -1059,6 +1105,8 @@ def api_site_review_decision(site_key):
         record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_approval_pending_v1(site_key, actor=actor)
         if record is None and inventory_record is None:
             return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
+        if "_jom_lifecycle_audit_event_v1" in globals():
+            _jom_lifecycle_audit_event_v1(site_key, "approve_for_monitoring", actor=actor, state="approval_pending", message="Approved for monitoring. Credential access required before enablement.", source="site_review_decision")
         return jsonify({
             "ok": True,
             "site_key": _jom_lifecycle_norm_v1(site_key),
@@ -1761,6 +1809,8 @@ def api_site_review_enable_monitoring(site_key):
         return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
     if "_jom_lifecycle_enforce_selected_enable_monitoring_v1" in globals():
         record, inventory_record, _registry, _inventory = _jom_lifecycle_enforce_selected_enable_monitoring_v1(site_key, _registry, _inventory, protected_review_keys)
+    if "_jom_lifecycle_audit_event_v1" in globals():
+        _jom_lifecycle_audit_event_v1(site_key, "enable_monitoring", actor=actor, state="monitored", message="Monitoring enabled. Selected site promoted into Site Registry.", source="site_review_enable_monitoring")
     return jsonify({
         "ok": True,
         "message": "Monitoring enabled. Only the selected site has been promoted into the monitored Site Registry.",
@@ -2675,6 +2725,8 @@ def api_site_review_oauth_complete_v1(site_key):
     actor = body.get("actor") or "oauth-callback"
     payload = _jom_estate_complete_oauth_validation(site_key, actor=actor)
     status = 200 if payload.get("ok") else 409
+    if status == 200 and "_jom_lifecycle_audit_event_v1" in globals():
+        _jom_lifecycle_audit_event_v1(site_key, "oauth_access_validated", actor=actor, state="access_validated", message="Atlassian authorization completed and access validated.", source="site_review_oauth_complete")
     return jsonify(payload), status
 
 # JOM_OAUTH_CALLBACK_COMPLETION_REPAIR_V1_1 START
@@ -3117,6 +3169,8 @@ def api_site_review_stop_monitoring_v2(site_key):
     record, inventory_record, _registry, _inventory = _jom_lifecycle_mark_review_v1(site_key, actor=actor)
     if record is None and inventory_record is None:
         return jsonify({"ok": False, "error": "site_not_found", "site_key": site_key}), 404
+    if "_jom_lifecycle_audit_event_v1" in globals():
+        _jom_lifecycle_audit_event_v1(site_key, "stop_monitoring", actor=actor, state="stopped_monitoring", message="Monitoring stopped. Site returned to review/discovery.", source="site_review_stop_monitoring")
     return jsonify({
         "ok": True,
         "message": "Monitoring stopped. Site returned to review across Site Registry and Estate inventory truth sources.",

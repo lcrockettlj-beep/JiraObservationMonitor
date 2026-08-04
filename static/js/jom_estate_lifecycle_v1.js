@@ -261,15 +261,19 @@ return Array.from(byKey.values()).filter(hasAuthenticatedEvidence);
     return '<td><span class="' + pillClass(label) + '">' + escapeHtml(label) + '</span></td>';
   }
 
+  function setReviewQueueVisible(visible){const list=document.getElementById('estate-review-list');const panel=list?list.closest('section'):null;if(panel){panel.hidden=!visible;panel.setAttribute('aria-hidden',visible?'false':'true');}}
+  function setRailReviewQueueVisible(visible){const dd=document.getElementById('rail-review-queue');const row=dd?dd.closest('div'):null;if(row){row.hidden=!visible;row.setAttribute('aria-hidden',visible?'false':'true');}const section=dd?dd.closest('section'):null;if(section){const visibleRows=Array.from(section.querySelectorAll('dl > div')).some(function(item){return !item.hidden;});section.hidden=!visibleRows;section.setAttribute('aria-hidden',visibleRows?'false':'true');}}
   function renderReviewQueue(sites) {
     const list = document.getElementById('estate-review-list');
     const reviewSites = sites.filter(needsReview);
     setText('estate-review-count', reviewSites.length);
     if (!list) return;
     if (!reviewSites.length) {
-      list.innerHTML = '<p class="estate-empty">No discovered sites currently require lifecycle review.</p>';
+      setReviewQueueVisible(false);
+      list.innerHTML = '';
       return;
     }
+    setReviewQueueVisible(true);
     list.innerHTML = '<div class="estate-table-wrap estate-review-table-wrap"><table class="estate-table estate-review-table" aria-label="Discovery review queue table"><thead><tr><th>Site</th><th>Lifecycle</th><th>Monitoring</th><th>Health</th><th>Actions</th></tr></thead><tbody>' +
       reviewSites.map(site => {
         const lifecycle = lifecycleLabel(site);
@@ -313,6 +317,7 @@ return Array.from(byKey.values()).filter(hasAuthenticatedEvidence);
     setText('rail-monitored-sites', summary.monitored);
     setText('rail-discovered-sites', summary.discovered);
     setText('rail-review-queue', summary.review);
+    if (typeof setRailReviewQueueVisible === 'function') setRailReviewQueueVisible(Number(summary.review || 0) > 0);
     setText('rail-pending-sites', summary.pending);
     setText('rail-ignored-sites', summary.ignored);
     setText('rail-registry-status', sites.length ? 'OK' : 'Review', sites.length ? 'ok' : 'review');
