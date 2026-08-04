@@ -2051,18 +2051,6 @@ def _jom_cached_registry_summary_v1(registry):
 def _jom_build_cached_operator_alerts_v1(admin_truth, registry):
     alerts = []
     admin_status = str((admin_truth or {}).get("status") or ((admin_truth or {}).get("summary") or {}).get("status") or "").lower()
-    if admin_status and admin_status not in {"aligned", "ok", "healthy"}:
-        alerts.append({
-            "level": "warning",
-            "category": "admin_truth",
-            "title": "Administration data requires attention",
-            "reason": "JOM has detected that the live administration truth layer is not currently reporting an aligned state.",
-            "source": "admin_truth_v2.json",
-            "source_label": "Live Admin truth layer",
-            "value": admin_status,
-            "recommended_action": "Open Admin and review the current governance and access data.",
-            "action_label": "Open Admin",
-        })
     reg_summary = _jom_cached_registry_summary_v1(registry)
     discovered = reg_summary.get("discovered_count") or 0
     if discovered:
