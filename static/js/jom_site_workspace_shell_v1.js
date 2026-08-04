@@ -59,11 +59,44 @@
     setLink('workspace-review-link','/estate/review/'+encodeURIComponent(key),!!key);
     setLink('workspace-atlassian-link',url,!!url);
   }
+
+  // JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1_JS START
+  function setMetric(id,value,noteId,note){
+    const valueEl=$(id); if(valueEl)valueEl.textContent=(value===undefined||value===null||value==='')?'Unavailable':String(value);
+    const noteEl=$(noteId); if(noteEl)noteEl.textContent=note||'';
+  }
+  function numberOrNull(value){const n=Number(value);return Number.isFinite(n)?n:null;}
+  async function loadOverviewMetrics(){
+    let product=null;
+    try{product=unwrap(await (await fetch('/estate/product-access',{cache:'no-store',headers:{'Accept':'application/json'}})).json());}
+    catch(_error){product=null;}
+    const summary=(product&&product.summary&&typeof product.summary==='object')?product.summary:{};
+    const totalUsers=numberOrNull(summary.total_jira_product_user_count);
+    const roleRows=numberOrNull(summary.jira_role_rows);
+    const sitesWithRoles=numberOrNull(summary.sites_with_jira_roles);
+    if(product&&product.live_collection===true&&totalUsers!==null){
+      setMetric('workspace-metric-users',totalUsers,'workspace-metric-users-note','Live Jira product access users.');
+    }else{
+      setMetric('workspace-metric-users','Unavailable','workspace-metric-users-note','Live product user source unavailable.');
+    }
+    setMetric('workspace-metric-projects','Unavailable','workspace-metric-projects-note','No live project source connected.');
+    if(product&&product.live_collection===true&&(roleRows!==null||sitesWithRoles!==null)){
+      const value = roleRows!==null ? roleRows : sitesWithRoles;
+      const note = roleRows!==null ? 'Live Jira application role rows.' : 'Sites with live Jira roles.';
+      setMetric('workspace-metric-applications',value,'workspace-metric-applications-note',note);
+    }else{
+      setMetric('workspace-metric-applications','Unavailable','workspace-metric-applications-note','Live product role source unavailable.');
+    }
+    setMetric('workspace-metric-automation','Unavailable','workspace-metric-automation-note','No live automation source connected.');
+  }
+  // JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1_JS END
+
   async function load(){
     try{
       const response=await fetch('/api/workspace/estate',{cache:'no-store',headers:{'Accept':'application/json'}});
       if(!response.ok)throw new Error('Estate workspace contract returned HTTP '+response.status);
       const root=unwrap(await response.json());
+      loadOverviewMetrics().catch(error=>console.warn('Site Workspace overview metrics failed',error));
       const sites=collectSites(root);
       const site=findSite(sites);
       if(!site){renderNoSelection(sites);return}

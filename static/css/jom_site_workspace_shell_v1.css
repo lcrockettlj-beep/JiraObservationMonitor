@@ -54,3 +54,61 @@ body[data-jom-page="site-workspace"] .jom-side-nav{position:fixed;left:var(--sit
   .site-workspace-selector-list { grid-template-columns: 1fr; }
 }
 /* JOM_SITE_WORKSPACE_CONTEXT_SELECTION_V1_CSS END */
+
+/* JOM_SITE_WORKSPACE_OVERVIEW_RAIL_CLEANUP_V1 START */
+/* Align Site Workspace shell proportions with Command Centre/Estate/Site Review locked layout. */
+.site-workspace-main{
+  max-width:960px;
+}
+.site-workspace-hero,
+.site-workspace-panel{
+  border-radius:22px;
+}
+.site-workspace-hero h1{
+  font-size:clamp(2.2rem,4vw,3.1rem);
+  line-height:1.04;
+}
+.site-workspace-panel h2{
+  font-size:1.65rem;
+  line-height:1.15;
+}
+.site-workspace-summary-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.site-workspace-rail .site-workspace-rail-card[aria-label="Workspace actions"]{
+  padding-top:18px;
+}
+.site-workspace-actions{
+  gap:8px;
+}
+.site-workspace-action{
+  min-height:36px;
+  padding:9px 12px;
+  font-size:.86rem;
+}
+.site-workspace-anchor{
+  display:block;
+  height:0;
+  overflow:hidden;
+  scroll-margin-top:24px;
+}
+@media (max-width:1100px){
+  .site-workspace-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+/* JOM_SITE_WORKSPACE_OVERVIEW_RAIL_CLEANUP_V1 END */
+
+/* JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1 START */
+.site-workspace-summary-grid article{
+  min-height:104px;
+  display:grid;
+  align-content:start;
+}
+.site-workspace-summary-grid small{
+  display:block;
+  margin-top:6px;
+  color:var(--site-workspace-muted);
+  font-size:12px;
+  line-height:1.35;
+}
+/* JOM_SITE_WORKSPACE_OVERVIEW_METRICS_SOURCE_ALIGNMENT_V1 END */
+
