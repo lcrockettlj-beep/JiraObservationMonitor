@@ -40,9 +40,13 @@
     return '<span class="' + cls + '">' + esc(value) + '</span>';
   }
 
+  function normaliseStageText(value){
+    return String(value || '').toLowerCase().replace(/[\_\-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
   function stageOf(data){
-    const decision = String((data.decision_state || {}).decision || '').toLowerCase();
-    const lifecycle = String(data.lifecycle_status || data.lifecycle || data.classification || '').toLowerCase();
+    const decision = normaliseStageText((data.decision_state || {}).decision || '');
+    const lifecycle = normaliseStageText(data.lifecycle_status || data.lifecycle || data.classification || '');
     const monitored = data.is_monitored === true || data.monitored === true || lifecycle === 'monitored' || lifecycle.includes('monitoring enabled') || decision === 'monitored';
     if(monitored) return 'monitored';
     if(decision === 'ignore' || decision === 'ignored' || lifecycle.includes('ignored')) return 'ignored';
@@ -74,9 +78,14 @@
     if(state) el.setAttribute('data-state', state);
   }
 
+  function resetLifecycleControls(){
+    ['[data-decision="approve"]','[data-decision="ignore"]','[data-decision="pending"]','[data-decision="restore"]','[data-start-auth]','[data-validate-access]','[data-enable-monitoring]','[data-stop-monitoring]','[data-open-site]'].forEach(function(selector){ show(selector, false); });
+  }
+
   function applyButtonFlow(data){
     const stage = stageOf(data);
     const valid = accessValid();
+    resetLifecycleControls();
 
     show('[data-decision="approve"]', stage === 'review');
     show('[data-decision="ignore"]', stage === 'review');
@@ -187,8 +196,14 @@
   }
 
   async function reload(){
-    await loadValidation();
     const data = await getJson('/api/site-review/' + encodeURIComponent(siteKey));
+    currentReviewData = data;
+    const stage = stageOf(data);
+    if(stage === 'approval_pending'){
+      await loadValidation();
+    } else {
+      validationState = {};
+    }
     render(data);
     return data;
   }
@@ -248,7 +263,25 @@
     if(enable) enable.addEventListener('click', async () => { try{ setText('decision-result','Enabling monitoring in JOM...'); const result = await enableMonitoring(); setText('decision-result', result.message || 'Monitoring enabled.'); await reload(); }catch(error){ setText('decision-result','Enable monitoring failed: ' + error.message); } });
     const stop = document.querySelector('[data-stop-monitoring]');
     if(stop) stop.addEventListener('click', async () => { try{ setText('decision-result','Stopping monitoring...'); const result = await stopMonitoring(); setText('decision-result', result.message || 'Monitoring stopped.'); await reload(); }catch(error){ setText('decision-result','Stop monitoring failed: ' + error.message); } });
-    window.addEventListener('focus', () => setTimeout(() => { completeOAuth(); reload(); }, 600));
+    // JOM_SITE_REVIEW_RIGHT_RAIL_FLASH_POLISH_V1 START
+    // Avoid repainting the right rail on every browser focus. Only refresh after an OAuth return marker,
+    // then debounce the refresh so focus events cannot stack repeated reloads.
+    let focusRefreshTimer = null;
+    let oauthReturnRefreshDone = false;
+    window.addEventListener('focus', () => {
+      const query = new URLSearchParams(window.location.search || '');
+      const oauthReturn = query.get('oauth') === 'complete' || query.has('code') || query.has('state');
+      if(!oauthReturn || oauthReturnRefreshDone) return;
+      oauthReturnRefreshDone = true;
+      if(focusRefreshTimer) window.clearTimeout(focusRefreshTimer);
+      focusRefreshTimer = window.setTimeout(async () => {
+        try{
+          await completeOAuth();
+          await reload();
+        } catch(_error){ }
+      }, 600);
+    });
+    // JOM_SITE_REVIEW_RIGHT_RAIL_FLASH_POLISH_V1 END
   }
 
   document.addEventListener('DOMContentLoaded', () => init().catch(error => {

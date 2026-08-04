@@ -100,3 +100,19 @@ body[data-jom-page="site-review"] .review-operations-rail {
  body[data-jom-page="site-review"] .review-operations-rail { position:static; width:auto; height:auto; max-height:none; overflow:visible; margin-top:24px; }
  .review-detail-list div { grid-template-columns:1fr; }
 }
+
+/* JOM_SITE_REVIEW_HIDDEN_CONTROL_CSS_GUARD_V1_2 START */
+body[data-jom-page="site-review"] .review-decision-actions [hidden],
+body[data-jom-page="site-review"] .review-decision-actions button[hidden],
+body[data-jom-page="site-review"] .review-decision-actions .review-action-link[hidden],
+body[data-jom-page="site-review"] [data-start-auth][hidden],
+body[data-jom-page="site-review"] [data-validate-access][hidden],
+body[data-jom-page="site-review"] [data-enable-monitoring][hidden],
+body[data-jom-page="site-review"] [data-stop-monitoring][hidden],
+body[data-jom-page="site-review"] [data-decision][hidden],
+body[data-jom-page="site-review"] [data-open-site][hidden]{
+  display: none !important;
+  visibility: hidden !important;
+}
+/* JOM_SITE_REVIEW_HIDDEN_CONTROL_CSS_GUARD_V1_2 END */
+

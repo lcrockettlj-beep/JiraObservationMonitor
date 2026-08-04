@@ -59,17 +59,17 @@
       <h2>Decision Controls</h2>
       <p class="review-muted" id="decision-help">Choose the valid action for the current lifecycle stage. Decisions remain reversible.</p>
       <div class="review-decision-actions review-decision-actions--rail">
-        <button type="button" data-decision="approve">Approve for Monitoring</button>
-        <button type="button" data-decision="ignore">Ignore for Now</button>
-        <button type="button" data-decision="pending">Keep Pending</button>
-        <button type="button" data-decision="restore">Restore to Discovered</button>
-        <button type="button" data-validate-access="true">Validate Access</button>
-        <button type="button" data-enable-monitoring="true">Enable Monitoring</button>
-        <button type="button" data-stop-monitoring="true">Stop Monitoring</button>
-        <a class="review-action-link" data-open-site="true" href="#" target="_blank" rel="noopener noreferrer">Open Site</a>
+        <button type="button" data-decision="approve" hidden aria-hidden="true">Approve for Monitoring</button>
+        <button type="button" data-decision="ignore" hidden aria-hidden="true">Ignore for Now</button>
+        <button type="button" data-decision="pending" hidden aria-hidden="true">Keep Pending</button>
+        <button type="button" data-decision="restore" hidden aria-hidden="true">Restore to Discovered</button>
+        <button type="button" data-validate-access="true" hidden aria-hidden="true">Validate Access</button>
+        <button type="button" data-enable-monitoring="true" hidden aria-hidden="true">Enable Monitoring</button>
+        <button type="button" data-stop-monitoring="true" hidden aria-hidden="true">Stop Monitoring</button>
+        <a class="review-action-link" data-open-site="true" href="#" target="_blank" rel="noopener noreferrer" hidden aria-hidden="true">Open Site</a>
       </div>
-      <p class="review-muted" id="site-review-validation-status">Credential access has not been validated in this session.</p>
-      <p class="review-muted" id="decision-result">No decision submitted in this session.</p>
+      <p class="review-muted" id="site-review-validation-status">&nbsp;</p>
+      <p class="review-muted" id="decision-result">&nbsp;</p>
     </section>
   </aside>
 </main>

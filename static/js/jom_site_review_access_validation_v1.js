@@ -47,11 +47,20 @@ function jomUnlockEnableMonitoringWhenAccessValid(){
   function enable(){return document.querySelector('[data-enable-monitoring]');}
   function validate(){return document.querySelector('[data-validate-access]');}
   const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  function pageStage(){
+    const statusNode = $('review-site-status');
+    const bodyText = String((statusNode && statusNode.textContent) || '').toLowerCase();
+    if(bodyText.includes('monitored')) return 'monitored';
+    if(bodyText.includes('ignored')) return 'ignored';
+    if(bodyText.includes('approval') || bodyText.includes('pending')) return 'approval_pending';
+    return 'review';
+  }
   function gate(v){
+    const stage = pageStage();
+    if(stage === 'monitored') return;
     const b=enable();
     const ok=v&&v.access_valid===true;
-    const mon=b&&/monitoring enabled/i.test(b.textContent||'');
-    if(b&&!mon&&b.style.display!=='none')b.disabled=!ok;
+    if(b&&b.style.display!=='none')b.disabled=!ok;
     if(ok){removePrompt();jomUnlockEnableMonitoringWhenAccessValid();status('Access validated. Monitoring can be enabled in JOM.','ok');}
     else if(v&&v.status)status('Access validation required before monitoring can be enabled. Current status: '+v.status+'. '+(v.reason||''),v.status==='ok'?'ok':'blocked');
     else status('Credential access has not been validated yet. Click Validate Access before enabling monitoring.','blocked');
@@ -98,9 +107,13 @@ function jomUnlockEnableMonitoringWhenAccessValid(){
         }finally{v.disabled=false;}
       });
     }
-    refresh();
-    window.addEventListener('focus',()=>setTimeout(refresh,600));
-    if(String(location.search||'').includes('oauth'))setTimeout(()=>complete(false),800);
+    // JOM_SITE_REVIEW_ACCESS_VALIDATION_QUIET_OWNER_V1 START
+    // Do not auto-refresh validation on page load/focus. The main Site Review owner renders the correct lifecycle state.
+    // This file now performs validation only after explicit operator action or OAuth return.
+    const query = new URLSearchParams(location.search || '');
+    const oauthReturn = query.get('oauth') === 'complete' || query.has('code') || query.has('state');
+    if(oauthReturn) setTimeout(()=>complete(false),800);
+    // JOM_SITE_REVIEW_ACCESS_VALIDATION_QUIET_OWNER_V1 END
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
 })();
