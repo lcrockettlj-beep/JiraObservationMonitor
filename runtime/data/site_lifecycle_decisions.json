@@ -1,13 +1,51 @@
 {
   "schema": "jom-site-lifecycle-decisions-v1",
-  "generated_at_utc": "2026-08-04T09:35:22Z",
+  "generated_at_utc": "2026-08-04T13:11:35.637803Z",
   "last_residue_cleanup_audit_utc": "2026-07-27T12:55:29.144711Z",
   "notes": [
     "Registry approval residue cleanup executed; lifecycle decision history preserved."
   ],
   "source": "runtime/data/site_lifecycle_decisions.json",
   "owner": "JOM OAuth Estate Truth Owner Repair Pack v1",
-  "decisions": {},
-  "history": [],
+  "decisions": {
+    "gli-tracker": {
+      "site_key": "gli-tracker",
+      "action": "oauth_access_validated",
+      "decision": "oauth_access_validated",
+      "state": "access_validated",
+      "result": "ok",
+      "actor": "site-review-oauth-complete",
+      "recorded_at_utc": "2026-08-04T13:10:21.236959Z",
+      "decided_at_utc": "2026-08-04T13:10:21.236959Z",
+      "source": "site_review_oauth_complete",
+      "message": "Atlassian authorization completed and access validated."
+    }
+  },
+  "history": [
+    {
+      "site_key": "gli-tracker",
+      "action": "oauth_access_validated",
+      "decision": "oauth_access_validated",
+      "state": "access_validated",
+      "result": "ok",
+      "actor": "site-review-oauth-complete",
+      "recorded_at_utc": "2026-08-04T13:10:21.236959Z",
+      "decided_at_utc": "2026-08-04T13:10:21.236959Z",
+      "source": "site_review_oauth_complete",
+      "message": "Atlassian authorization completed and access validated."
+    },
+    {
+      "site_key": "gli-tracker",
+      "action": "enable_monitoring",
+      "decision": "enable_monitoring",
+      "state": "monitored",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:10:22.068338Z",
+      "decided_at_utc": "2026-08-04T13:10:22.068338Z",
+      "source": "site_review_enable_monitoring",
+      "message": "Monitoring enabled. Selected site promoted into Site Registry."
+    }
+  ],
   "current_state_authority": "live_oauth_runtime_authority_only"
 }
