@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
@@ -80,8 +80,7 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "product_access_refresh_status.json",
     "runtime_execution_history.json",
     "runtime_execution_status.json",
-    "runtime_live_truth_status.json",
-    "site_onboarding_review.json",
+        "site_onboarding_review.json",
     "site_registry.json",
     "source_freshness_audit.json",
     "source_reliability_status.json",
@@ -555,7 +554,7 @@ def _load_admin_truth_contract() -> Dict[str, Any]:
 def _load_source_state_contract() -> Dict[str, Any]:
     freshness = load_json("source_freshness_audit.json", {})
     reliability = load_json("source_reliability_status.json", {})
-    live_truth = load_json("runtime_live_truth_status.json", {})
+    live_truth = load_json({})
     live_product = _live_product_access_snapshot()
     product_summary = live_product.get("summary", {}) if isinstance(live_product, dict) else {}
     product_truth_status = {
@@ -574,7 +573,6 @@ def _load_source_state_contract() -> Dict[str, Any]:
         "served_at_utc": now_utc(),
         "source_freshness": _contract_payload("source_freshness", freshness, source_file="runtime/data/source_freshness_audit.json", contract_type="generated_status_cache"),
         "source_reliability": _contract_payload("source_reliability", reliability, source_file="runtime/data/source_reliability_status.json", contract_type="generated_status_cache"),
-        "runtime_live_truth_status": _contract_payload("runtime_live_truth_status", live_truth, source_file="runtime/data/runtime_live_truth_status.json", contract_type="generated_live_truth_status", allow_stale=True),
         "live_product_access": product_truth_status,
         "legacy_snapshot_policy": {
             "latest_run_json_is_legacy_reference_only": True,
@@ -2034,7 +2032,6 @@ def _jom_cached_source_state_v1():
         "source_freshness": _jom_cached_read_json_v1("source_freshness_audit.json", {}),
         "source_reliability": _jom_cached_read_json_v1("source_reliability_status.json", {}),
         "runtime_status": _jom_cached_read_json_v1("runtime_execution_status.json", {}),
-        "runtime_live_truth_status": _jom_cached_read_json_v1("runtime_live_truth_status.json", {}),
     }
 
 
