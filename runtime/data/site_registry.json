@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-oauth-estate-truth-v1",
-  "generated_at_utc": "2026-08-04T13:10:22.066465Z",
+  "generated_at_utc": "2026-08-04T13:16:07.224095Z",
   "source": "runtime/data/estate_admin_site_inventory_v1.json",
   "source_policy": "Site Registry contains monitored OAuth-estate sites only. Enable Monitoring may only promote the requested site.",
   "sites": [
@@ -12,24 +12,28 @@
       "site_url": "https://gli-delivery-tm.atlassian.net",
       "url": "https://gli-delivery-tm.atlassian.net",
       "cloud_id": "de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "classification": "monitored",
-      "lifecycle": "monitored",
-      "is_monitored": true,
-      "monitored": true,
-      "approved_monitored": true,
-      "collector_onboarding_status": "monitoring_enabled",
-      "status": "ok",
-      "health_status": "OK",
-      "action_required": null,
+      "classification": "discovered",
+      "lifecycle": "stopped_monitoring",
+      "is_monitored": false,
+      "monitored": false,
+      "approved_monitored": false,
+      "collector_onboarding_status": "review_required",
+      "status": "review",
+      "health_status": "Review",
+      "action_required": "review_monitoring_state",
       "sources": [
         "admin_org_events",
-        "oauth_accessible_resources"
+        "oauth_accessible_resources",
+        "estate_admin_site_inventory",
+        "site_review_lifecycle"
       ],
       "evidence_levels": [
         "live_admin_event_reference",
         "live_oauth_accessible_resources"
       ],
-      "truth_source": "site_review_enable_monitoring_selected_site_guard_v1"
+      "truth_source": "site_review_lifecycle_consolidated_v1",
+      "monitoring_stopped_at_utc": "2026-08-04T13:15:31.148231Z",
+      "monitoring_stopped_by": "operator"
     },
     {
       "site_key": "gli-global-technology",
@@ -39,24 +43,28 @@
       "site_url": "https://gli-global-technology.atlassian.net",
       "url": "https://gli-global-technology.atlassian.net",
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "classification": "monitored",
-      "lifecycle": "monitored",
-      "is_monitored": true,
-      "monitored": true,
-      "approved_monitored": true,
-      "collector_onboarding_status": "monitoring_enabled",
-      "status": "ok",
-      "health_status": "OK",
-      "action_required": null,
+      "classification": "discovered",
+      "lifecycle": "stopped_monitoring",
+      "is_monitored": false,
+      "monitored": false,
+      "approved_monitored": false,
+      "collector_onboarding_status": "review_required",
+      "status": "review",
+      "health_status": "Review",
+      "action_required": "review_monitoring_state",
       "sources": [
         "admin_org_events",
-        "oauth_accessible_resources"
+        "oauth_accessible_resources",
+        "estate_admin_site_inventory",
+        "site_review_lifecycle"
       ],
       "evidence_levels": [
         "live_admin_event_reference",
         "live_oauth_accessible_resources"
       ],
-      "truth_source": "site_review_enable_monitoring_selected_site_guard_v1"
+      "truth_source": "site_review_lifecycle_consolidated_v1",
+      "monitoring_stopped_at_utc": "2026-08-04T13:16:03.391714Z",
+      "monitoring_stopped_by": "operator"
     },
     {
       "site_key": "gli-it-project",
@@ -66,24 +74,28 @@
       "site_url": "https://gli-it-project.atlassian.net",
       "url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "classification": "monitored",
-      "lifecycle": "monitored",
-      "is_monitored": true,
-      "monitored": true,
-      "approved_monitored": true,
-      "collector_onboarding_status": "monitoring_enabled",
-      "status": "ok",
-      "health_status": "OK",
-      "action_required": null,
+      "classification": "discovered",
+      "lifecycle": "stopped_monitoring",
+      "is_monitored": false,
+      "monitored": false,
+      "approved_monitored": false,
+      "collector_onboarding_status": "review_required",
+      "status": "review",
+      "health_status": "Review",
+      "action_required": "review_monitoring_state",
       "sources": [
         "admin_org_events",
-        "oauth_accessible_resources"
+        "oauth_accessible_resources",
+        "estate_admin_site_inventory",
+        "site_review_lifecycle"
       ],
       "evidence_levels": [
         "live_admin_event_reference",
         "live_oauth_accessible_resources"
       ],
-      "truth_source": "site_review_enable_monitoring_selected_site_guard_v1"
+      "truth_source": "site_review_lifecycle_consolidated_v1",
+      "monitoring_stopped_at_utc": "2026-08-04T13:16:05.108772Z",
+      "monitoring_stopped_by": "operator"
     },
     {
       "site_key": "gli-tracker",
@@ -93,15 +105,15 @@
       "site_url": "https://gli-tracker.atlassian.net",
       "url": "https://gli-tracker.atlassian.net",
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
-      "classification": "monitored",
-      "lifecycle": "monitored",
-      "is_monitored": true,
-      "monitored": true,
-      "approved_monitored": true,
-      "collector_onboarding_status": "monitoring_enabled",
-      "status": "ok",
-      "health_status": "OK",
-      "action_required": null,
+      "classification": "discovered",
+      "lifecycle": "stopped_monitoring",
+      "is_monitored": false,
+      "monitored": false,
+      "approved_monitored": false,
+      "collector_onboarding_status": "review_required",
+      "status": "review",
+      "health_status": "Review",
+      "action_required": "review_monitoring_state",
       "sources": [
         "oauth_accessible_resources",
         "estate_admin_site_inventory",
@@ -112,15 +124,17 @@
         "live_admin_event_reference",
         "live_oauth_accessible_resources"
       ],
-      "truth_source": "site_review_enable_monitoring_selected_site_guard_v1"
+      "truth_source": "site_review_lifecycle_consolidated_v1",
+      "monitoring_stopped_at_utc": "2026-08-04T13:16:07.224077Z",
+      "monitoring_stopped_by": "operator"
     }
   ],
   "review_site_keys": [],
   "excluded_personal_external_site_keys": [],
   "summary": {
     "total_sites": 4,
-    "monitored_count": 4,
-    "discovered_count": 0,
+    "monitored_count": 0,
+    "discovered_count": 4,
     "ignored_count": 0,
     "pending_onboarding_count": 0,
     "review_count": 0,

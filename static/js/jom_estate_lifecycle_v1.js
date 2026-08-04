@@ -26,7 +26,7 @@
   ]);
 
 const JOM_CURRENT_STATE_ALLOWED_KEYS_V1 = new Set(['gli-delivery-tm','gli-global-technology','gli-it-project','gli-tracker']);
-const JOM_CURRENT_STATE_MONITORED_KEYS_V1 = new Set(['gli-delivery-tm','gli-global-technology','gli-it-project']);
+const JOM_CURRENT_STATE_MONITORED_KEYS_V1 = new Set(); // retired: Estate render must use live runtime row state, not hard-coded monitored keys.
 function currentStateKey(site){ return normaliseKey(siteKey(site) || siteUrl(site)); }
 function isCurrentAuthoritySite(site){ const key = currentStateKey(site); return JOM_CURRENT_STATE_ALLOWED_KEYS_V1.has(key); }
 
@@ -108,6 +108,8 @@ function isCurrentAuthoritySite(site){ const key = currentStateKey(site); return
   }
 
   function isMonitored(site) {
+    const stateGuard = String((site && (site.lifecycle || site.classification || site.collector_onboarding_status || site.status)) || '').toLowerCase();
+    if (stateGuard.includes('stopped_monitoring') || stateGuard.includes('monitoring_stopped') || stateGuard.includes('review_required') || stateGuard === 'discovered') return false;
 // JOM_INVENTORY_ONLY_MONITORED_STATE_CORRECTION_V1_JS START
 // Inventory-only monitored signals are not enough. A site must have a monitored registry row.
 if (site && site.in_registry === false) return false;

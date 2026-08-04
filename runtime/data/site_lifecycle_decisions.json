@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-lifecycle-decisions-v1",
-  "generated_at_utc": "2026-08-04T13:11:35.637803Z",
+  "generated_at_utc": "2026-08-04T13:16:07.226532Z",
   "last_residue_cleanup_audit_utc": "2026-07-27T12:55:29.144711Z",
   "notes": [
     "Registry approval residue cleanup executed; lifecycle decision history preserved."
@@ -10,18 +10,90 @@
   "decisions": {
     "gli-tracker": {
       "site_key": "gli-tracker",
-      "action": "oauth_access_validated",
-      "decision": "oauth_access_validated",
-      "state": "access_validated",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
       "result": "ok",
-      "actor": "site-review-oauth-complete",
-      "recorded_at_utc": "2026-08-04T13:10:21.236959Z",
-      "decided_at_utc": "2026-08-04T13:10:21.236959Z",
-      "source": "site_review_oauth_complete",
-      "message": "Atlassian authorization completed and access validated."
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:16:07.226532Z",
+      "decided_at_utc": "2026-08-04T13:16:07.226532Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
+    },
+    "gli-delivery-tm": {
+      "site_key": "gli-delivery-tm",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:15:31.150470Z",
+      "decided_at_utc": "2026-08-04T13:15:31.150470Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
+    },
+    "gli-global-technology": {
+      "site_key": "gli-global-technology",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:16:03.393886Z",
+      "decided_at_utc": "2026-08-04T13:16:03.393886Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
+    },
+    "gli-it-project": {
+      "site_key": "gli-it-project",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:16:05.111136Z",
+      "decided_at_utc": "2026-08-04T13:16:05.111136Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
     }
   },
   "history": [
+    {
+      "site_key": "gli-delivery-tm",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:15:31.150470Z",
+      "decided_at_utc": "2026-08-04T13:15:31.150470Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
+    },
+    {
+      "site_key": "gli-global-technology",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:16:03.393886Z",
+      "decided_at_utc": "2026-08-04T13:16:03.393886Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
+    },
+    {
+      "site_key": "gli-it-project",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:16:05.111136Z",
+      "decided_at_utc": "2026-08-04T13:16:05.111136Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
+    },
     {
       "site_key": "gli-tracker",
       "action": "oauth_access_validated",
@@ -45,6 +117,18 @@
       "decided_at_utc": "2026-08-04T13:10:22.068338Z",
       "source": "site_review_enable_monitoring",
       "message": "Monitoring enabled. Selected site promoted into Site Registry."
+    },
+    {
+      "site_key": "gli-tracker",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-08-04T13:16:07.226532Z",
+      "decided_at_utc": "2026-08-04T13:16:07.226532Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
     }
   ],
   "current_state_authority": "live_oauth_runtime_authority_only"
