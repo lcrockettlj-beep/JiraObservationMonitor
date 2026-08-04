@@ -746,9 +746,8 @@ def page_site_workspace_shell_site(site_key):
 # JOM_SITE_WORKSPACE_SHELL_ROUTES_V1 END
 @app.route("/site")
 def page_site():
-    return render_template("site.html", **site_context())
-
-
+    """Legacy Site Workspace route. Current owner is /site-workspace."""
+    return redirect("/site-workspace", code=302)
 @app.route("/detail-list")
 def page_detail_list():
     return render_template("detail_list.html", **detail_list_context())
@@ -792,8 +791,8 @@ def reports_file_legacy(filename):
 
 @app.route('/site/<path:site_key>')
 def site_workspace(site_key):
-    return render_template('site.html', site_key=site_key)
-
+    """Legacy Site Workspace route. Current owner is /site-workspace/<site_key>."""
+    return redirect('/site-workspace/' + str(site_key), code=302)
 # --- JOM EXPORT REPORTING ROUTES v1 START ---
 try:
     from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
