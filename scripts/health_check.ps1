@@ -1,4 +1,4 @@
-# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+﻿# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
 # Legacy/static truth references in this file have been neutralised.
 # This script must not silently read legacy legacy_records as website/backend truth.
 # Unavailable live/runtime data must be reported as unavailable.
@@ -129,7 +129,7 @@ function Get-BackupManifestSummary {
 function Get-ExpectedBackupFileNames {
     return @(
         "retired_runtime_contract_marker_json",
-        "latest_run_pretty.json",
+        "retired_runtime_pretty.json",
         "retired_safe_partial.json",
         "retired_runtime_contract_marker_admin_enriched_json",
         "retired_runtime_contract_marker_admin_enriched_pretty_json",
@@ -443,4 +443,3 @@ if ($Failed -eq 0) {
 } else {
     exit 1
 }
-

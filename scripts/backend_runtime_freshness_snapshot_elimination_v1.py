@@ -1,6 +1,6 @@
-# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+﻿# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
 # Legacy/static truth references in this file have been neutralised.
-# This code must not silently read legacy snapshots as website/backend truth.
+# This code must not silently read retired runtime records as website/backend truth.
 # Unavailable live/runtime data must be reported as unavailable.
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ def source_record(name: str, path: Path, source_of_truth: str, *, expected_live:
     elif fresh.get("state") in ("current", "aging"):
         trust_state = "generated_cache_available"
     elif path.exists():
-        trust_state = "legacy_snapshot_not_website_truth"
+        trust_state = "retired_runtime_record_not_website_truth"
     else:
         trust_state = "missing"
     return {
@@ -121,16 +121,16 @@ def main() -> int:
 
     legacy = [
         source_record("billing_seats", DATA / "estate_access_truth.json", "blocked legacy input; not website truth"),
-        source_record("latest_run", ROOT / "runtime_contract_unavailable_latest_run_json", "blocked legacy input; not website truth"),
-        source_record("latest_run_admin_enriched", ROOT / "admin_truth_v2.json", "blocked legacy input; not website truth"),
+        source_record("retired_runtime_marker", ROOT / "retired_runtime_marker", "blocked legacy input; not website truth"),
+        source_record("retired_admin_enriched", ROOT / "admin_truth_v2.json", "blocked legacy input; not website truth"),
     ]
 
     payload = {
         "schema": "jom-runtime-live-truth-status-v1",
         "generated_at_utc": now_utc(),
         "policy": {
-            "rule": "Live endpoints and explicit backend contracts are source of truth. Legacy snapshots must not drive website truth.",
-            "legacy_snapshot_files_are_reference_only": True,
+            "rule": "Live endpoints and explicit backend contracts are source of truth. Legacy retired_records must not drive website truth.",
+            "retired_runtime_record_files_are_reference_only": True,
             "generated_static_files_are_cache_or_state_only": True,
         },
         "live_truth_sources": {
@@ -140,12 +140,12 @@ def main() -> int:
             "admin_truth_v2": admin,
             "user_footprint": footprint,
         },
-        "legacy_snapshots_demoted": legacy,
+        "retired_runtime_records_demoted": legacy,
         "summary": {
             "live_product_access_available": product.get("trust_state") == "live_truth_available",
             "live_product_access_status": product.get("status"),
-            "legacy_snapshot_count": len(legacy),
-            "legacy_snapshots_demoted_from_website_truth": True,
+            "retired_runtime_record_count": len(legacy),
+            "retired_runtime_records_demoted_from_website_truth": True,
         },
     }
     DATA.mkdir(parents=True, exist_ok=True)
@@ -156,4 +156,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

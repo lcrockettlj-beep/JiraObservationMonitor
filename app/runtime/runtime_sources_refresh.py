@@ -1,6 +1,6 @@
-# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+﻿# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
 # Legacy/static truth references in this file have been neutralised.
-# This code must not silently read legacy snapshots as website/backend truth.
+# This code must not silently read retired runtime records as website/backend truth.
 # Unavailable live/runtime data must be reported as unavailable.
 import json
 import subprocess
@@ -10,8 +10,8 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "runtime_refresh_status.json"
-LATEST_RUN_PATH = PROJECT_ROOT / "runtime_contract_unavailable_latest_run_json"
-LATEST_ADMIN_ENRICHED_PATH = PROJECT_ROOT / "admin_truth_v2.json"
+RUNTIME_STATUS_PATH = PROJECT_ROOT / "retired_runtime_marker"
+ADMIN_TRUTH_STATUS_PATH = PROJECT_ROOT / "admin_truth_v2.json"
 FRESHNESS_PATH = PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json"
 
 CURRENT_HOURS = 24
@@ -20,7 +20,6 @@ STEPS = [
     {"key": "site_registry", "label": "Site Registry rebuild", "command": [sys.executable, "scripts/build_site_registry.py", "--project-root", "."], "required": True},
     {"key": "product_access", "label": "Live Product Access refresh", "command": [sys.executable, "app/builders/product_access_sources.py"], "required": False},
     {"key": "source_freshness", "label": "Source Freshness rebuild", "command": [sys.executable, "scripts/audit_source_freshness.py"], "required": False},
-    {"key": "runtime_live_truth_status", "label": "Runtime Live Truth Status rebuild", "command": [sys.executable, "scripts/backend_runtime_freshness_snapshot_elimination_v1.py"], "required": False},
 ]
 
 OPTIONAL_COLLECTOR_CANDIDATES = [
@@ -75,7 +74,7 @@ def nested(data, dotted):
     return cur
 
 
-def latest_run_freshness(path):
+def retired_runtime_marker_freshness(path):
     payload = read_json(path)
     if not payload:
         return {"exists": path.exists(), "freshness_state": "MISSING" if not path.exists() else "UNKNOWN_TIMESTAMP", "age_hours": None, "timestamp": None}
@@ -117,20 +116,20 @@ def find_collector():
     return None
 
 
-def collector_state_from_latest_run():
-    runtime = latest_run_freshness(LATEST_RUN_PATH)
-    admin = latest_run_freshness(LATEST_ADMIN_ENRICHED_PATH)
+def collector_state_from_retired_runtime_marker():
+    runtime = retired_runtime_marker_freshness(RUNTIME_STATUS_PATH)
+    admin = retired_runtime_marker_freshness(ADMIN_TRUTH_STATUS_PATH)
     state = 'review'
-    note = 'Runtime collector was not requested. Status inferred from runtime_contract_unavailable_latest_run_json freshness.'
+    note = 'Runtime collector was not requested. Status inferred from retired_runtime_marker freshness.'
     if runtime.get('freshness_state') == 'CURRENT':
         state = 'ok'
-        note = 'Runtime collector not requested, but runtime_contract_unavailable_latest_run_json is CURRENT; treating runtime source as refreshed.'
+        note = 'Runtime collector not requested, but retired_runtime_marker is CURRENT; treating runtime source as refreshed.'
     elif runtime.get('freshness_state') == 'STALE':
         state = 'stale'
-        note = 'Runtime collector not requested and runtime_contract_unavailable_latest_run_json is stale.'
+        note = 'Runtime collector not requested and retired_runtime_marker is stale.'
     elif runtime.get('freshness_state') in ('MISSING', 'UNKNOWN_TIMESTAMP'):
         state = 'review'
-        note = 'Runtime collector not requested and runtime_contract_unavailable_latest_run_json freshness cannot be proven.'
+        note = 'Runtime collector not requested and retired_runtime_marker freshness cannot be proven.'
     return state, note, runtime, admin
 
 
@@ -147,10 +146,10 @@ def main(run_collector=False):
     elif run_collector and not collector_cmd:
         collector_record["status"] = "missing"; collector_record["finished_at_utc"] = now_utc(); collector_record["note"] = "Collector requested but no collector script was found."
     else:
-        inferred_state, note, runtime_freshness, admin_freshness = collector_state_from_latest_run()
+        inferred_state, note, runtime_freshness, admin_freshness = collector_state_from_retired_runtime_marker()
         collector_record["status"] = inferred_state
         collector_record["note"] = note
-        collector_record["latest_run_freshness"] = runtime_freshness
+        collector_record["retired_runtime_marker_freshness"] = runtime_freshness
         collector_record["latest_admin_enriched_freshness"] = admin_freshness
         collector_record["finished_at_utc"] = now_utc()
 

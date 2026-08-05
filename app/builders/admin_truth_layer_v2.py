@@ -1,6 +1,6 @@
-# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+﻿# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
 # Remaining legacy/static truth references in this file have been neutralised.
-# This file must not treat legacy snapshots as backend or website truth.
+# This file must not treat retired runtime records as backend or website truth.
 from __future__ import annotations
 
 import argparse
@@ -51,9 +51,7 @@ def admin_candidates(project_root: Path) -> List[Path]:
     return [
         project_root / 'admin_truth_v2.json',
         project_root / 'admin_truth_v2.json',
-        project_root / 'runtime_contract_unavailable_latest_run_pretty_json',
-        project_root / 'runtime_contract_unavailable_latest_run_json',
-    ]
+                    ]
 
 
 def first_existing(paths: List[Path]) -> Optional[Path]:

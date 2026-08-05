@@ -1,6 +1,6 @@
-# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+﻿# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
 # Legacy/static truth references in this file have been neutralised.
-# This code must not silently read legacy snapshots as website/backend truth.
+# This code must not silently read retired runtime records as website/backend truth.
 # Unavailable live/runtime data must be reported as unavailable.
 import json
 import subprocess
@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "admin_enriched_refresh_status.json"
 ADMIN_ENRICHED = PROJECT_ROOT / "admin_truth_v2.json"
 ADMIN_ENRICHED_PRETTY = PROJECT_ROOT / "admin_truth_v2.json"
-LATEST_RUN = PROJECT_ROOT / "runtime_contract_unavailable_latest_run_json"
+RUNTIME_STATUS = PROJECT_ROOT / "runtime" / "data" / "runtime_execution_status.json"
 
 # Candidate scripts are intentionally conservative. The pack will not invent admin-enriched data.
 # It will run a detected existing project script only, otherwise it records manual action required.
@@ -118,9 +118,9 @@ def find_admin_script():
 
 def main():
     before = {
-        "latest_run": file_freshness(LATEST_RUN),
-        "latest_run_admin_enriched": file_freshness(ADMIN_ENRICHED),
-        "latest_run_admin_enriched_pretty": file_freshness(ADMIN_ENRICHED_PRETTY),
+        "retired_runtime_marker": file_freshness(RUNTIME_STATUS),
+        "retired_admin_enriched": file_freshness(ADMIN_ENRICHED),
+        "retired_admin_enriched_pretty": file_freshness(ADMIN_ENRICHED_PRETTY),
     }
     steps = []
     admin_cmd = find_admin_script()
@@ -145,12 +145,12 @@ def main():
         steps.append(run_command(step['command'], step['key'], step['label']))
 
     after = {
-        "latest_run": file_freshness(LATEST_RUN),
-        "latest_run_admin_enriched": file_freshness(ADMIN_ENRICHED),
-        "latest_run_admin_enriched_pretty": file_freshness(ADMIN_ENRICHED_PRETTY),
+        "retired_runtime_marker": file_freshness(RUNTIME_STATUS),
+        "retired_admin_enriched": file_freshness(ADMIN_ENRICHED),
+        "retired_admin_enriched_pretty": file_freshness(ADMIN_ENRICHED_PRETTY),
     }
 
-    admin_state = after['latest_run_admin_enriched']['freshness_state']
+    admin_state = after['retired_admin_enriched']['freshness_state']
     if any(s.get('status') == 'failed' for s in steps):
         overall = 'failed'
     elif admin_state == 'CURRENT':

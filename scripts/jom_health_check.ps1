@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$BaseUrl = "http://127.0.0.1:5000",
     [string]$ProjectRoot = "C:\Users\Luke_C\Desktop\JiraObservationMonitor",
     [string]$OutputDir = ""
@@ -44,7 +44,7 @@ function Test-Url {
     }
 }
 
-function Get-HomeLegacy recordLine {
+function Get-HomeLegacyRecordLine {
     param([string]$Html)
     if ([string]::IsNullOrWhiteSpace($Html)) { return $null }
     $match = [regex]::Match($Html, 'Last verified legacy record:</strong>\s*([^<\r\n]+)')
@@ -157,11 +157,11 @@ try {
 } catch {}
 
 $homeHtml = $null
-$homeLegacy recordText = $null
+$homeLegacy$homeLegacyRecordText = $null
 try {
     $homeResponse = Invoke-WebRequest "$BaseUrl/" -TimeoutSec 8 -UseBasicParsing
     $homeHtml = $homeResponse.Content
-    $homeLegacy recordText = Get-HomeLegacy recordLine -Html $homeHtml
+    $homeLegacy$homeLegacyRecordText = Get-HomeLegacyRecordLine -Html $homeHtml
 } catch {}
 
 $backupSummary = Get-BackupSummary -Root $ProjectRoot
@@ -228,7 +228,7 @@ $summary = [PSCustomObject]@{
     last_sync_time = if ($sourceState) { $sourceState.last_sync_time } else { $null }
     last_sync_age_seconds = if ($sourceState) { $sourceState.last_sync_age_seconds } else { $null }
     anchors_today = if ($sourceState) { $sourceState.anchors_today } else { $null }
-    home_last_verified_legacy_record_text = $homeLegacy recordText
+    home_last_verified_legacy_record_text = $homeLegacy$homeLegacyRecordText
     backup_manifest_exists = $backupSummary.manifest_exists
     backup_manifest_created_at_local = $backupSummary.created_at_local
     backup_age_seconds = $backupSummary.age_seconds

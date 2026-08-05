@@ -1,6 +1,6 @@
-# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+﻿# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
 # Remaining legacy/static truth references in this file have been neutralised.
-# This file must not treat legacy snapshots as backend or website truth.
+# This file must not treat retired runtime records as backend or website truth.
 from __future__ import annotations
 import argparse, json, os, urllib.request, urllib.error
 from pathlib import Path
@@ -60,7 +60,7 @@ def drill_rows(payload:Dict[str,Any],key:str)->List[Dict[str,Any]]:
     return [r for r in rows if isinstance(r,dict)] if isinstance(rows,list) else []
 
 def human_users(root:Path, limit:int)->List[Dict[str,Any]]:
-    for n in ['admin_truth_v2.json','admin_truth_v2.json','runtime_contract_unavailable_latest_run_pretty_json','runtime_contract_unavailable_latest_run_json']:
+    for n in ['admin_truth_v2.json']:
         payload=read_json(root/n)
         if not payload: continue
         rows=drill_rows(payload,'admin::human_accounts')

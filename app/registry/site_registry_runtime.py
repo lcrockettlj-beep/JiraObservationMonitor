@@ -1,6 +1,6 @@
-# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+﻿# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
 # Remaining legacy/static truth references in this file have been neutralised.
-# This file must not treat legacy snapshots as backend or website truth.
+# This file must not treat retired runtime records as backend or website truth.
 from __future__ import annotations
 
 import json
@@ -96,7 +96,7 @@ def primary_identity(site: Dict[str, Any]) -> str:
 
 def load_runtime_sites(project_root: Path) -> List[Dict[str, Any]]:
     output: List[Dict[str, Any]] = []
-    for filename in ["admin_truth_v2.json", "admin_truth_v2.json", "runtime_contract_unavailable_latest_run_pretty_json", "runtime_contract_unavailable_latest_run_json"]:
+    for filename in ["admin_truth_v2.json", "admin_truth_v2.json", "retired_runtime_pretty_marker", "retired_runtime_marker"]:
         payload = read_json(project_root / filename, {})
         sites = payload.get("sites") if isinstance(payload, dict) else []
         if not isinstance(sites, list) or not sites:
@@ -393,4 +393,3 @@ def unmonitor_site(project_root: Path, payload: Dict[str, Any], removed_by: str 
     write_json(queue_path, queue)
 
     return build_registry(project_root)
-

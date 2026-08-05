@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
-from app.runtime.admin_enriched_chain import run_pipeline as run_snapshot
+from app.runtime.admin_enriched_chain import run_pipeline as run_admin_enriched_pipeline
 from app.runtime.operational_source_recovery import run_pipeline as run_recovery
 from app.operational.operator_surface import build_alerts, build_operator_surface, build_operator_summary
 from app.runtime.runtime_data_paths import runtime_data_path, runtime_read_json, runtime_write_json, runtime_path_status
@@ -53,13 +53,13 @@ def load_json(filename, default=None):
 
 
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 START ---
-# Website-facing backend routes must not use legacy/manual snapshot files as truth.
+# Website-facing backend routes must not use legacy/manual retired_record files as truth.
 # Runtime-generated/live contracts may be used, but they must remain explicitly labelled
 # by the route contract freshness/status logic.
 LEGACY_NON_WEBSITE_TRUTH_FILES = {
-    "latest_run.json",
-    "latest_run_admin_enriched.json",
-    "latest_run_admin_enriched_pretty.json",
+    "retired_runtime_marker.json",
+    "retired_admin_enriched.json",
+    "retired_admin_enriched_pretty.json",
     "billing_seats.json",
     "admin_named_access.json",
     "named_access_truth_v2.json",
@@ -94,7 +94,7 @@ def website_truth_classification(filename: str) -> Dict[str, Any]:
         return {
             "website_truth_allowed": False,
             "truth_class": "blocked_legacy_static_input",
-            "reason": "Legacy/manual snapshot inputs must not feed website-facing routes.",
+            "reason": "Legacy/manual retired_record inputs must not feed website-facing routes.",
         }
     if name in LIVE_WEBSITE_TRUTH_FILES:
         return {
@@ -312,9 +312,9 @@ def base_template_context() -> Dict[str, Any]:
             "discovered_sites": registry_parts.get("registry_discovered_sites", []),
         },
         "estate": operator_surface.get("estate", {}) if isinstance(operator_surface, dict) else {},
-        "latest_snapshot": load_json("admin_enriched_refresh_status.json", {}),
-        "latest_snapshot_entry": runtime_status,
-        "latest_snapshot_timestamp": runtime_status.get("last_finished_at_utc"),
+        "runtime_refresh_status": load_json("admin_enriched_refresh_status.json", {}),
+        "runtime_refresh_entry": runtime_status,
+        "runtime_refresh_timestamp": runtime_status.get("last_finished_at_utc"),
         "critical_sites": [],
         "warning_sites": build_alerts(),
         "stable_sites": registry_parts.get("registry_monitored_sites", []),
@@ -500,7 +500,7 @@ def _build_registry_contract() -> Dict[str, Any]:
     )
 
 
-def _live_product_access_snapshot() -> Dict[str, Any]:
+def _live_product_access_retired_record() -> Dict[str, Any]:
     """Use the live product-access route as the current product truth."""
     try:
         response = estate_product_access()
@@ -524,7 +524,7 @@ def _load_admin_truth_contract() -> Dict[str, Any]:
         contract_type="generated_cache_contract_with_live_product_access_overlay",
         live_builder="runtime refresh/admin enriched chain plus live /estate/product-access overlay",
     )
-    live_product = _live_product_access_snapshot()
+    live_product = _live_product_access_retired_record()
     live_summary = live_product.get("summary", {}) if isinstance(live_product, dict) else {}
     cached_summary = ((payload.get("summary") or {}) if isinstance(payload, dict) else {})
     cached_product_users = cached_summary.get("api_product_users")
@@ -555,7 +555,7 @@ def _load_source_state_contract() -> Dict[str, Any]:
     freshness = load_json("source_freshness_audit.json", {})
     reliability = load_json("source_reliability_status.json", {})
     live_truth = load_json({})
-    live_product = _live_product_access_snapshot()
+    live_product = _live_product_access_retired_record()
     product_summary = live_product.get("summary", {}) if isinstance(live_product, dict) else {}
     product_truth_status = {
         "schema": "jom-live-product-source-status-v1",
@@ -574,17 +574,17 @@ def _load_source_state_contract() -> Dict[str, Any]:
         "source_freshness": _contract_payload("source_freshness", freshness, source_file="runtime/data/source_freshness_audit.json", contract_type="generated_status_cache"),
         "source_reliability": _contract_payload("source_reliability", reliability, source_file="runtime/data/source_reliability_status.json", contract_type="generated_status_cache"),
         "live_product_access": product_truth_status,
-        "legacy_snapshot_policy": {
-            "latest_run_json_is_legacy_reference_only": True,
-            "latest_run_admin_enriched_json_is_legacy_reference_only": True,
+        "retired_runtime_record_policy": {
+            "retired_runtime_marker_json_is_legacy_reference_only": True,
+            "retired_admin_enriched_json_is_legacy_reference_only": True,
             "billing_seats_json_is_legacy_reference_only": True,
             "product_access_static_files_are_cache_only": True,
         },
         "runtime_status": compact_runtime_status(),
         "operator_summary": build_operator_summary(),
         "notes": [
-            "Live product access status is reported separately so stale generated snapshots do not override current endpoint truth.",
-            "Legacy runtime snapshots are explicitly demoted from website truth.",
+            "Live product access status is reported separately so stale generated retired_records do not override current endpoint truth.",
+            "Retired runtime records are explicitly demoted from website truth.",
         ],
     }
 
@@ -618,7 +618,7 @@ def estate_product_access():
     """Return current live product-access truth.
 
     This route is website-facing and must not silently serve stale static
-    snapshots. It attempts live collection every time it is requested, writes
+    retired_records. It attempts live collection every time it is requested, writes
     the resulting generated cache for freshness/audit visibility, and returns
     the same live payload to the caller. If live collection fails, the response
     exposes the live error instead of falling back to old static JSON.
@@ -685,7 +685,7 @@ def runtime_history():
 
 @app.route("/runtime/refresh")
 def runtime_refresh():
-    return execute_guarded("refresh", run_snapshot)
+    return execute_guarded("refresh", run_admin_enriched_pipeline)
 
 
 @app.route("/runtime/recover")

@@ -104,7 +104,7 @@ def main() -> Dict[str, Any]:
     steps.append(run([
         {"type": "module", "value": "app.builders.admin_enriched_sources"},
         {"type": "script", "value": "admin_api_enrichment.py"},
-    ], "admin_api_enrichment", "Refresh latest_run_admin_enriched from current latest_run"))
+    ], "admin_api_enrichment", "Refresh admin_truth_refresh from current retired_runtime_marker"))
 
     steps.append(run([
         {"type": "module", "value": "app.builders.admin_truth_layer_v2"},
@@ -133,7 +133,7 @@ def main() -> Dict[str, Any]:
         "schema": "jom-admin-enriched-refresh-status-v2",
         "generated_at_utc": now(),
         "overall_status": overall,
-        "latest_run_admin_enriched": freshness(ROOT / "admin_truth_v2.json"),
+        "admin_truth_refresh": freshness(ROOT / "admin_truth_v2.json"),
         "steps": steps,
     }
     STATUS.parent.mkdir(parents=True, exist_ok=True)

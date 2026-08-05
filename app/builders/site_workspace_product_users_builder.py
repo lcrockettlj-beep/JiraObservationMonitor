@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -104,7 +104,7 @@ def build_site_workspace_product_users(project_root: Path | None = None) -> Dict
     Source policy:
     - site_registry.json decides the monitored estate scope.
     - estate_product_access.json provides Jira product-user counts.
-    - no legacy snapshots, no static/data, no inferred values.
+    - no retired runtime records, no static/data, no inferred values.
     """
     root = project_root or ROOT
     global DATA_DIR
@@ -191,7 +191,7 @@ def build_site_workspace_product_users(project_root: Path | None = None) -> Dict
             "scope_truth": "runtime/data/site_registry.json monitored sites only",
             "metric_truth": "runtime/data/estate_product_access.json Jira application-role user counts",
             "static_fallback_used": False,
-            "legacy_snapshot_used": False,
+            "retired_runtime_record_used": False,
             "unmatched_sites_are_not_guessed": True,
         },
         "source_files": {
