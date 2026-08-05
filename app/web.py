@@ -953,6 +953,174 @@ def api_admin_licensing_billing_authority_v1():
     return jsonify(_jom_admin_licensing_billing_contract_v1())
 # --- JOM_ADMIN_LICENSING_BILLING_AUTHORITY_V1 END ---
 
+
+# --- JOM_ADMIN_USERS_ACCESS_AUTHORITY_V1 START ---
+# Owner contract for Admin > Users & Access.
+# Truth rule: active-user truth stays unavailable unless OAuth/Admin authority proves unique active users.
+def _jom_admin_ua_int_v1(value, default=0):
+    try:
+        if value is None or value == "":
+            return default
+        return int(float(value))
+    except Exception:
+        return default
+
+def _jom_admin_ua_list_v1(value):
+    return value if isinstance(value, list) else []
+
+def _jom_admin_ua_dict_v1(value):
+    return value if isinstance(value, dict) else {}
+
+def _jom_admin_ua_key_v1(row):
+    if not isinstance(row, dict):
+        return ""
+    for field in ("site_key", "key", "site_name", "name", "site_url", "url", "cloud_id"):
+        value = row.get(field)
+        if value:
+            text = str(value).strip().lower()
+            if text.startswith("http") and ".atlassian.net" in text:
+                text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
+            return text.rstrip("/")
+    return ""
+
+def _jom_admin_ua_name_v1(row):
+    if not isinstance(row, dict):
+        return "Unknown"
+    return row.get("site_name") or row.get("name") or row.get("site_key") or row.get("key") or "Unknown"
+
+def _jom_admin_ua_is_monitored_v1(row):
+    if not isinstance(row, dict):
+        return False
+    state = str(row.get("classification") or row.get("lifecycle") or row.get("collector_onboarding_status") or row.get("status") or "").strip().lower()
+    return bool(row.get("is_monitored") is True or row.get("monitored") is True or row.get("approved_monitored") is True or state in {"monitored", "monitoring_enabled"})
+
+def _jom_admin_ua_user_records_v1(payload):
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if not isinstance(payload, dict):
+        return []
+    for key in ("users", "items", "records", "entries", "accounts", "data", "results", "members"):
+        rows = payload.get(key)
+        if isinstance(rows, list):
+            return [row for row in rows if isinstance(row, dict)]
+    return []
+
+def _jom_admin_ua_products_v1(product_access, registry):
+    registry_sites = _jom_admin_ua_list_v1(registry.get("sites"))
+    monitored = {_jom_admin_ua_key_v1(row) for row in registry_sites if _jom_admin_ua_is_monitored_v1(row)}
+    sites = []
+    for row in _jom_admin_ua_list_v1(product_access.get("sites")):
+        if not isinstance(row, dict):
+            continue
+        key = _jom_admin_ua_key_v1(row)
+        if monitored and key not in monitored:
+            continue
+        sites.append({
+            "site_key": key,
+            "site_name": _jom_admin_ua_name_v1(row),
+            "product_users": _jom_admin_ua_int_v1(row.get("jira_product_user_count"), 0),
+            "role_count": _jom_admin_ua_int_v1(row.get("jira_role_count"), 0),
+            "status": row.get("status") or "ok",
+            "authority": "OAuth application role",
+        })
+    return sorted(sites, key=lambda item: (-item.get("product_users", 0), item.get("site_key") or ""))
+
+def _jom_admin_ua_source_health_v1(label, payload):
+    if isinstance(payload, dict) and payload:
+        summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+        status = payload.get("status") or payload.get("overall_status") or summary.get("overall_state") or "available"
+        return {"label": label, "available": True, "status": status, "generated_at_utc": payload.get("generated_at_utc") or payload.get("served_at_utc") or payload.get("updated_at_utc")}
+    return {"label": label, "available": False, "status": "unavailable", "generated_at_utc": None}
+
+def _jom_admin_ua_actions_v1(authority, summary, source_health):
+    actions = []
+    if authority.get("active_user_authority") == "unavailable":
+        actions.append({
+            "level": "review",
+            "title": "Active-user authority unavailable",
+            "reason": "Current OAuth/Admin sources do not prove unique active users. Product-access assignments are shown separately.",
+            "action": "Keep headline active users unavailable until a proven active-user authority source exists.",
+            "source": "users_metric_contract",
+        })
+    if summary.get("product_access_assignments") is None:
+        actions.append({"level": "review", "title": "Product-access assignments unavailable", "reason": "No product access assignment total was available from authority.", "action": "Refresh product access authority before reporting access allocation.", "source": "estate_product_access"})
+    for key, item in source_health.items():
+        if isinstance(item, dict) and item.get("status") in {"critical", "failed", "unavailable"}:
+            actions.append({"level": "review", "title": "Source health requires review", "reason": (item.get("label") or key) + " is " + str(item.get("status")), "action": "Open Source Health and refresh the affected authority source.", "source": key})
+    return actions[:8]
+
+def _jom_admin_users_access_contract_v1():
+    registry = _jom_admin_ua_dict_v1(load_json("site_registry.json", {}))
+    product_access = _jom_admin_ua_dict_v1(load_json("estate_product_access.json", {}))
+    user_footprint = load_json("user_footprint.json", {})
+    admin_insights = _jom_admin_ua_dict_v1(load_json("admin_insights.json", {}))
+    source_freshness = load_json("source_freshness_audit.json", {})
+    source_reliability = load_json("source_reliability_status.json", {})
+    product_refresh = load_json("product_access_refresh_status.json", {})
+
+    registry_sites = _jom_admin_ua_list_v1(registry.get("sites"))
+    monitored_sites = [row for row in registry_sites if _jom_admin_ua_is_monitored_v1(row)]
+    product_summary = _jom_admin_ua_dict_v1(product_access.get("summary"))
+    footprint_records = _jom_admin_ua_user_records_v1(user_footprint)
+    insights_summary = _jom_admin_ua_dict_v1(admin_insights.get("summary"))
+    capabilities = _jom_admin_ua_dict_v1(admin_insights.get("capabilities"))
+    product_sites = _jom_admin_ua_products_v1(product_access, registry)
+    role_rows = _jom_admin_ua_list_v1(product_access.get("roles"))
+
+    active_user_authority_available = False
+    summary = {
+        "monitored_sites": len(monitored_sites) if monitored_sites else len(product_sites),
+        "active_users": None,
+        "active_users_display": "Unavailable",
+        "product_access_assignments": product_summary.get("total_jira_product_user_count"),
+        "role_rows": product_summary.get("jira_role_rows") or len(role_rows),
+        "footprint_records": len(footprint_records) if footprint_records else insights_summary.get("user_records_evaluated"),
+        "issue_count": insights_summary.get("total_issues"),
+        "critical_count": insights_summary.get("critical"),
+        "risk_count": insights_summary.get("risk"),
+        "waste_count": insights_summary.get("waste"),
+        "drift_count": insights_summary.get("drift"),
+    }
+    authority = {
+        "oauth": "live" if product_access.get("live_collection") is True or product_access.get("status") in {"ok", "partial"} else "unavailable",
+        "admin": "available" if admin_insights else "unavailable",
+        "active_user_authority": "live" if active_user_authority_available else "unavailable",
+        "product_access_authority": "live" if product_access.get("status") in {"ok", "partial"} or product_access.get("live_collection") is True else "unavailable",
+        "truth_policy": "Active users require proven unique active-user authority. Product-access assignments are separate and must not be labelled as active users.",
+    }
+    source_health = {
+        "source_freshness": _jom_admin_ua_source_health_v1("Source freshness", source_freshness),
+        "source_reliability": _jom_admin_ua_source_health_v1("Source reliability", source_reliability),
+        "product_access_refresh": _jom_admin_ua_source_health_v1("Product access refresh", product_refresh),
+    }
+    return {
+        "schema": "jom-admin-users-access-authority-v1",
+        "generated_at_utc": now_utc(),
+        "status": "ok" if authority.get("product_access_authority") == "live" else "review",
+        "authority": authority,
+        "summary": summary,
+        "actions": _jom_admin_ua_actions_v1(authority, summary, source_health),
+        "site_access": product_sites,
+        "capabilities": capabilities,
+        "source_health": source_health,
+        "source_files": {
+            "site_registry": "runtime/data/site_registry.json",
+            "estate_product_access": "runtime/data/estate_product_access.json",
+            "user_footprint": "runtime/data/user_footprint.json",
+            "admin_insights": "runtime/data/admin_insights.json",
+        },
+        "notes": [
+            "Headline active users are unavailable until OAuth/Admin authority proves unique active users.",
+            "Product-access assignments are shown separately and are not labelled as active users.",
+            "No static user data, no estimates, and no inferred active-user totals are used.",
+        ],
+    }
+
+@app.route("/api/admin/users-access")
+def api_admin_users_access_authority_v1():
+    return jsonify(_jom_admin_users_access_contract_v1())
+# --- JOM_ADMIN_USERS_ACCESS_AUTHORITY_V1 END ---
+
 # --- JOM OAUTH OWNER PAGE ROUTES v1 START ---
 # Owner-file page shell routes. OAuth/Admin is the only current authority pipeline.
 @app.route('/admin')
