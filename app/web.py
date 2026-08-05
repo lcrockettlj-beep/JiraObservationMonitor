@@ -1121,6 +1121,183 @@ def api_admin_users_access_authority_v1():
     return jsonify(_jom_admin_users_access_contract_v1())
 # --- JOM_ADMIN_USERS_ACCESS_AUTHORITY_V1 END ---
 
+
+# --- JOM_ADMIN_MONITORING_AUTHORITY_V1 START ---
+# Owner contract for Admin > Monitoring.
+# Truth rule: runtime/OAuth/Admin authority only. Monitoring health is unavailable/review when not proven.
+def _jom_admin_mon_int_v1(value, default=0):
+    try:
+        if value is None or value == "":
+            return default
+        return int(float(value))
+    except Exception:
+        return default
+
+def _jom_admin_mon_list_v1(value):
+    return value if isinstance(value, list) else []
+
+def _jom_admin_mon_dict_v1(value):
+    return value if isinstance(value, dict) else {}
+
+def _jom_admin_mon_key_v1(row):
+    if not isinstance(row, dict):
+        return ""
+    for field in ("site_key", "key", "site_name", "name", "site_url", "url", "cloud_id"):
+        value = row.get(field)
+        if value:
+            text = str(value).strip().lower()
+            if text.startswith("http") and ".atlassian.net" in text:
+                text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
+            return text.rstrip("/")
+    return ""
+
+def _jom_admin_mon_name_v1(row):
+    if not isinstance(row, dict):
+        return "Unknown"
+    return row.get("site_name") or row.get("name") or row.get("site_key") or row.get("key") or "Unknown"
+
+def _jom_admin_mon_is_monitored_v1(row):
+    if not isinstance(row, dict):
+        return False
+    state = str(row.get("classification") or row.get("lifecycle") or row.get("collector_onboarding_status") or row.get("status") or "").strip().lower()
+    return bool(row.get("is_monitored") is True or row.get("monitored") is True or row.get("approved_monitored") is True or state in {"monitored", "monitoring_enabled"} or "monitoring enabled" in state)
+
+def _jom_admin_mon_health_v1(label, payload):
+    if isinstance(payload, dict) and payload:
+        summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+        status = payload.get("status") or payload.get("overall_status") or payload.get("overall_state") or summary.get("overall_state") or summary.get("status") or "available"
+        return {"label": label, "available": True, "status": status, "generated_at_utc": payload.get("generated_at_utc") or payload.get("served_at_utc") or payload.get("updated_at_utc")}
+    return {"label": label, "available": False, "status": "unavailable", "generated_at_utc": None}
+
+def _jom_admin_mon_product_map_v1(product_access):
+    out = {}
+    for row in _jom_admin_mon_list_v1(product_access.get("sites")):
+        if not isinstance(row, dict):
+            continue
+        key = _jom_admin_mon_key_v1(row)
+        if key:
+            out[key] = row
+    return out
+
+def _jom_admin_mon_site_rows_v1(registry, product_access):
+    product_by_key = _jom_admin_mon_product_map_v1(product_access)
+    rows = []
+    for row in _jom_admin_mon_list_v1(registry.get("sites")):
+        if not isinstance(row, dict) or not _jom_admin_mon_is_monitored_v1(row):
+            continue
+        key = _jom_admin_mon_key_v1(row)
+        product = product_by_key.get(key, {})
+        rows.append({
+            "site_key": key,
+            "site_name": _jom_admin_mon_name_v1(row),
+            "monitoring": "enabled",
+            "product_access_status": product.get("status") or ("unavailable" if not product else "ok"),
+            "product_users": product.get("jira_product_user_count") if isinstance(product, dict) else None,
+            "role_count": product.get("jira_role_count") if isinstance(product, dict) else None,
+            "authority": "runtime site registry + OAuth product access",
+        })
+    if not rows:
+        for row in _jom_admin_mon_list_v1(product_access.get("sites")):
+            if not isinstance(row, dict):
+                continue
+            rows.append({
+                "site_key": _jom_admin_mon_key_v1(row),
+                "site_name": _jom_admin_mon_name_v1(row),
+                "monitoring": "unproven",
+                "product_access_status": row.get("status") or "ok",
+                "product_users": row.get("jira_product_user_count"),
+                "role_count": row.get("jira_role_count"),
+                "authority": "OAuth product access; monitored registry row unavailable",
+            })
+    return sorted(rows, key=lambda item: item.get("site_key") or "")
+
+def _jom_admin_mon_actions_v1(summary, source_health, site_rows):
+    actions = []
+    if summary.get("monitoring_coverage_percent") is None:
+        actions.append({"level": "review", "title": "Monitoring coverage unavailable", "reason": "Site registry authority did not expose enough monitored-site scope to prove coverage.", "action": "Refresh registry authority and validate monitored-site lifecycle state.", "source": "site_registry"})
+    elif summary.get("monitoring_coverage_percent") < 100:
+        actions.append({"level": "review", "title": "Monitoring coverage below 100%", "reason": str(summary.get("monitored_sites")) + " of " + str(summary.get("total_sites")) + " sites are monitored.", "action": "Review Estate lifecycle and approve or remove outstanding sites.", "source": "site_registry"})
+    failed = []
+    for key, item in source_health.items():
+        if isinstance(item, dict) and str(item.get("status") or "").lower() in {"failed", "error", "critical", "unavailable"}:
+            failed.append(item.get("label") or key)
+    if failed:
+        actions.append({"level": "review", "title": "Monitoring source health requires review", "reason": ", ".join(failed) + " requires attention.", "action": "Open Source Health and refresh the failed source(s).", "source": "source_health"})
+    unavailable_sites = [row for row in site_rows if row.get("product_access_status") in {"unavailable", "error", "failed"}]
+    if unavailable_sites:
+        actions.append({"level": "review", "title": "Product access monitoring gaps", "reason": str(len(unavailable_sites)) + " monitored site(s) have unavailable or failed product-access status.", "action": "Refresh product access and review site-level authority coverage.", "source": "estate_product_access"})
+    if not actions:
+        actions.append({"level": "ok", "title": "No immediate monitoring actions", "reason": "Current monitoring authority did not report priority action items.", "action": "Continue routine monitoring and source freshness checks.", "source": "admin_monitoring"})
+    return actions[:8]
+
+def _jom_admin_monitoring_contract_v1():
+    registry = _jom_admin_mon_dict_v1(load_json("site_registry.json", {}))
+    product_access = _jom_admin_mon_dict_v1(load_json("estate_product_access.json", {}))
+    source_freshness = load_json("source_freshness_audit.json", {})
+    source_reliability = load_json("source_reliability_status.json", {})
+    product_refresh = load_json("product_access_refresh_status.json", {})
+    runtime_status = load_json("runtime_execution_status.json", {})
+
+    registry_sites = _jom_admin_mon_list_v1(registry.get("sites"))
+    monitored_sites = [row for row in registry_sites if _jom_admin_mon_is_monitored_v1(row)]
+    registry_summary = _jom_admin_mon_dict_v1(registry.get("summary"))
+    total_sites = registry_summary.get("total_sites") or registry_summary.get("site_count") or len(registry_sites)
+    monitored_count = registry_summary.get("monitored_count") or len(monitored_sites)
+    coverage = round((float(monitored_count) / float(total_sites)) * 100) if total_sites else None
+    product_summary = _jom_admin_mon_dict_v1(product_access.get("summary"))
+    site_rows = _jom_admin_mon_site_rows_v1(registry, product_access)
+    source_health = {
+        "source_freshness": _jom_admin_mon_health_v1("Source freshness", source_freshness),
+        "source_reliability": _jom_admin_mon_health_v1("Source reliability", source_reliability),
+        "product_access_refresh": _jom_admin_mon_health_v1("Product access refresh", product_refresh),
+        "runtime_execution": _jom_admin_mon_health_v1("Runtime execution", runtime_status),
+    }
+    failed_sources = [key for key, item in source_health.items() if isinstance(item, dict) and str(item.get("status") or "").lower() in {"failed", "error", "critical", "unavailable"}]
+    summary = {
+        "total_sites": total_sites,
+        "monitored_sites": monitored_count,
+        "monitoring_coverage_percent": coverage,
+        "product_access_sites": product_summary.get("sites_with_jira_roles") or product_summary.get("accessible_jira_resource_count"),
+        "product_users": product_summary.get("total_jira_product_user_count"),
+        "role_rows": product_summary.get("jira_role_rows"),
+        "failed_sources": len(failed_sources),
+        "site_rows": len(site_rows),
+    }
+    authority = {
+        "runtime": "available" if registry else "unavailable",
+        "oauth": "live" if product_access.get("live_collection") is True or product_access.get("status") in {"ok", "partial"} else "unavailable",
+        "monitoring_scope": "live" if registry_sites or site_rows else "unavailable",
+        "truth_policy": "Monitoring authority uses runtime site registry plus OAuth/Admin source health. Unproven source health is shown as unavailable or review.",
+    }
+    return {
+        "schema": "jom-admin-monitoring-authority-v1",
+        "generated_at_utc": now_utc(),
+        "status": "ok" if coverage == 100 and not failed_sources else "review",
+        "authority": authority,
+        "summary": summary,
+        "actions": _jom_admin_mon_actions_v1(summary, source_health, site_rows),
+        "sites": site_rows,
+        "source_health": source_health,
+        "source_files": {
+            "site_registry": "runtime/data/site_registry.json",
+            "estate_product_access": "runtime/data/estate_product_access.json",
+            "source_freshness": "runtime/data/source_freshness_audit.json",
+            "source_reliability": "runtime/data/source_reliability_status.json",
+            "product_access_refresh": "runtime/data/product_access_refresh_status.json",
+            "runtime_execution": "runtime/data/runtime_execution_status.json",
+        },
+        "notes": [
+            "Monitoring coverage is derived from current runtime site registry authority.",
+            "Product access monitoring is derived from OAuth product access authority.",
+            "Unavailable or failed source health is not treated as healthy.",
+        ],
+    }
+
+@app.route("/api/admin/monitoring")
+def api_admin_monitoring_authority_v1():
+    return jsonify(_jom_admin_monitoring_contract_v1())
+# --- JOM_ADMIN_MONITORING_AUTHORITY_V1 END ---
+
 # --- JOM OAUTH OWNER PAGE ROUTES v1 START ---
 # Owner-file page shell routes. OAuth/Admin is the only current authority pipeline.
 @app.route('/admin')

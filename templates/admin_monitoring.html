@@ -6,31 +6,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_admin_monitoring_v1.css') }}">
 </head>
-<body data-jom-page="page-shell">
+<body data-jom-page="admin-monitoring">
 {% include "_nav.html" %}
-<main class="jom-shell" id="jom-page-shell">
-  <section class="jom-card jom-hero" aria-label="Monitoring overview">
-    <div>
-      <p class="jom-kicker">Admin</p>
-      <h1>Monitoring</h1>
-      <p class="jom-lede">Monitoring configuration, collection scope, enabled collectors, thresholds, and alert rules.</p>
-    </div>
-    <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
-    </div>
+
+<main class="jom-admin-monitoring-v1" id="jom-page-shell" data-owner="JOM_ADMIN_MONITORING_AUTHORITY_V1">
+  <section class="admin-mon-hero" aria-label="Monitoring overview">
+    <p class="jom-kicker">Admin / Monitoring</p>
+    <h1>Monitoring</h1>
+    <p class="admin-mon-lede">Action-led monitoring authority view. The centre shows monitoring decisions, coverage, site status, and source health. The right rail summarises monitoring status only.</p>
   </section>
-  <section class="jom-card" aria-label="Monitoring sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Scope</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Collectors</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Thresholds</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Alert Rules</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-    </div>
+
+  <section class="admin-mon-main" aria-label="Monitoring actions">
+    <section class="admin-mon-card">
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Action Required</p><h2>Operational decisions</h2></div>
+      <div id="mon-action-list" class="admin-mon-action-list"><article class="admin-mon-action-card"><strong>Loading</strong><p>Checking monitoring authority.</p></article></div>
+    </section>
+
+    <section class="admin-mon-card">
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Monitoring Coverage</p><h2>Current scope</h2></div>
+      <div class="admin-mon-metric-grid">
+        <article class="admin-mon-metric"><span>Total Sites</span><strong id="mon-total-sites">--</strong><p>Current site registry scope.</p></article>
+        <article class="admin-mon-metric"><span>Monitored Sites</span><strong id="mon-monitored-sites">--</strong><p>Sites currently enabled for monitoring.</p></article>
+        <article class="admin-mon-metric"><span>Coverage</span><strong id="mon-coverage">--</strong><p>Monitored-site coverage from runtime authority.</p></article>
+        <article class="admin-mon-metric"><span>Product Sites</span><strong id="mon-product-sites">--</strong><p>Product access sites returned by OAuth authority.</p></article>
+        <article class="admin-mon-metric"><span>Product Users</span><strong id="mon-product-users">--</strong><p>Product-access assignments, not active users.</p></article>
+        <article class="admin-mon-metric"><span>Failed Sources</span><strong id="mon-failed-sources">--</strong><p>Source health items requiring review.</p></article>
+      </div>
+    </section>
+
+    <section class="admin-mon-card">
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Monitored Site Status</p><h2>Site coverage</h2></div>
+      <div class="admin-mon-table-wrap">
+        <table class="admin-mon-table">
+          <thead><tr><th>Site</th><th>Monitoring</th><th>Product Access</th><th>Product Users</th><th>Roles</th></tr></thead>
+          <tbody id="mon-sites-body"><tr><td colspan="5">Loading monitored sites.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-mon-card">
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Collector / Source Health</p><h2>Authority checks</h2></div>
+      <div id="mon-source-health" class="admin-mon-source-grid"></div>
+    </section>
   </section>
 </main>
+
+<aside class="admin-mon-rail" aria-label="Monitoring summary">
+  <section class="admin-mon-rail-card admin-mon-rail-authority">
+    <p class="jom-kicker">Monitoring Status</p>
+    <strong id="mon-authority-status">Loading</strong>
+    <p id="mon-authority-note">Runtime/OAuth authority only.</p>
+  </section>
+  <section class="admin-mon-rail-card">
+    <h2>Coverage</h2>
+    <dl class="admin-mon-rail-list">
+      <div><dt>Coverage</dt><dd id="mon-rail-coverage">--</dd></div>
+      <div><dt>Sites</dt><dd id="mon-rail-sites">--</dd></div>
+      <div><dt>Failed Sources</dt><dd id="mon-rail-failed">--</dd></div>
+      <div><dt>Action Items</dt><dd id="mon-rail-actions">--</dd></div>
+    </dl>
+  </section>
+</aside>
+
+<script src="{{ url_for('static', filename='js/jom_admin_monitoring_v1.js') }}" defer></script>
 </body>
 </html>
