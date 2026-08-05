@@ -6,31 +6,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_admin_system_configuration_v1.css') }}">
 </head>
-<body data-jom-page="page-shell">
+<body data-jom-page="admin-system-configuration">
 {% include "_nav.html" %}
-<main class="jom-shell" id="jom-page-shell">
-  <section class="jom-card jom-hero" aria-label="System Configuration overview">
-    <div>
-      <p class="jom-kicker">Admin</p>
-      <h1>System Configuration</h1>
-      <p class="jom-lede">JOM environment settings, retention rules, reports, integrations, and current platform configuration.</p>
-    </div>
-    <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
-    </div>
+
+<main class="jom-admin-system-v1" id="jom-page-shell" data-owner="JOM_ADMIN_SYSTEM_CONFIGURATION_AUTHORITY_V1">
+  <section class="admin-system-hero" aria-label="System configuration overview">
+    <p class="jom-kicker">Admin / System Configuration</p>
+    <h1>System Configuration</h1>
+    <p class="admin-system-lede">Action-led view of JOM configuration authority, runtime source state, and operating guardrails. Unproven configuration is unavailable, not inferred.</p>
   </section>
-  <section class="jom-card" aria-label="System Configuration sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Retention</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Reports</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Integrations</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Environment</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-    </div>
+
+  <section class="admin-system-main" aria-label="System configuration actions">
+    <section class="admin-system-card">
+      <div class="admin-system-card-heading"><p class="jom-kicker">Action Required</p><h2>Operational decisions</h2></div>
+      <div id="sys-action-list" class="admin-system-action-list"><article class="admin-system-action-card"><strong>Loading</strong><p>Checking system configuration authority.</p></article></div>
+    </section>
+
+    <section class="admin-system-card">
+      <div class="admin-system-card-heading"><p class="jom-kicker">Configuration Overview</p><h2>Current operating state</h2></div>
+      <div class="admin-system-metric-grid">
+        <article class="admin-system-metric"><span>Environment</span><strong id="sys-environment">--</strong><p>Current operator environment label.</p></article>
+        <article class="admin-system-metric"><span>Runtime Mode</span><strong id="sys-runtime-mode">--</strong><p>JOM operating mode.</p></article>
+        <article class="admin-system-metric"><span>Monitored Sites</span><strong id="sys-monitored-sites">--</strong><p>Current monitored estate scope.</p></article>
+        <article class="admin-system-metric"><span>Coverage</span><strong id="sys-coverage">--</strong><p>Monitoring coverage from runtime registry.</p></article>
+        <article class="admin-system-metric"><span>Sources</span><strong id="sys-configured-sources">--</strong><p>Configured authority checks on this page.</p></article>
+        <article class="admin-system-metric"><span>Failed Sources</span><strong id="sys-failed-sources">--</strong><p>Configured sources requiring review.</p></article>
+      </div>
+    </section>
+
+    <section class="admin-system-card">
+      <div class="admin-system-card-heading"><p class="jom-kicker">Authority Sources</p><h2>Configured source state</h2></div>
+      <div id="sys-source-health" class="admin-system-source-grid"></div>
+    </section>
+
+    <section class="admin-system-card">
+      <div class="admin-system-card-heading"><p class="jom-kicker">System Guardrails</p><h2>Truth controls</h2></div>
+      <div id="sys-guardrails" class="admin-system-guardrail-grid"></div>
+    </section>
   </section>
 </main>
+
+<aside class="admin-system-rail" aria-label="System configuration summary">
+  <section class="admin-system-rail-card admin-system-rail-authority">
+    <p class="jom-kicker">System Status</p>
+    <strong id="sys-authority-status">Loading</strong>
+    <p id="sys-authority-note">Runtime/OAuth/Admin authority only.</p>
+  </section>
+  <section class="admin-system-rail-card">
+    <h2>Configuration</h2>
+    <dl class="admin-system-rail-list">
+      <div><dt>Environment</dt><dd id="sys-rail-environment">--</dd></div>
+      <div><dt>Sources</dt><dd id="sys-rail-sources">--</dd></div>
+      <div><dt>Failed</dt><dd id="sys-rail-failed">--</dd></div>
+      <div><dt>Guardrails</dt><dd id="sys-rail-guardrails">--</dd></div>
+      <div><dt>Action Items</dt><dd id="sys-rail-actions">--</dd></div>
+    </dl>
+  </section>
+</aside>
+
+<script src="{{ url_for('static', filename='js/jom_admin_system_configuration_v1.js') }}" defer></script>
 </body>
 </html>
