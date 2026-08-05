@@ -6,31 +6,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_executive_report_v1.css') }}">
 </head>
-<body data-jom-page="page-shell">
+<body data-jom-page="executive-report">
 {% include "_nav.html" %}
-<main class="jom-shell" id="jom-page-shell">
-  <section class="jom-card jom-hero" aria-label="Executive Report overview">
-    <div>
-      <p class="jom-kicker">Reporting</p>
-      <h1>Executive Report</h1>
-      <p class="jom-lede">Leadership view of estate health, major risks, business impact, significant changes, and recommendations.</p>
-    </div>
-    <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
-    </div>
+
+<main class="jom-executive-report-v1" id="jom-page-shell" data-owner="JOM_EXECUTIVE_REPORT_AUTHORITY_V1">
+  <section class="exec-hero" aria-label="Executive report overview">
+    <p class="jom-kicker">Reporting / Executive Report</p>
+    <h1>Executive Report</h1>
+    <p class="exec-lede">Board-level authority view of JOM estate monitoring, access posture, source health, and key decisions. Unproven metrics are displayed as unavailable.</p>
   </section>
-  <section class="jom-card" aria-label="Executive Report sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Estate Health</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Major Risks</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Business Impact</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Recommendations</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-    </div>
+
+  <section class="exec-main" aria-label="Executive reporting content">
+    <section class="exec-card">
+      <div class="exec-card-heading"><p class="jom-kicker">Executive Actions</p><h2>Board-level decisions</h2></div>
+      <div id="exec-action-list" class="exec-action-list"><article class="exec-action-card"><strong>Loading</strong><p>Checking executive action items.</p></article></div>
+    </section>
+
+    <section class="exec-card">
+      <div class="exec-card-heading"><p class="jom-kicker">Estate Position</p><h2>Current operational summary</h2></div>
+      <div class="exec-metric-grid">
+        <article class="exec-metric"><span>Total Sites</span><strong id="exec-total-sites">--</strong><p>Runtime site registry scope.</p></article>
+        <article class="exec-metric"><span>Monitored Sites</span><strong id="exec-monitored-sites">--</strong><p>Approved monitored estate scope.</p></article>
+        <article class="exec-metric"><span>Coverage</span><strong id="exec-coverage">--</strong><p>Monitoring coverage from runtime authority.</p></article>
+        <article class="exec-metric"><span>Product Access</span><strong id="exec-product-access">--</strong><p>Product-access assignments, not active users.</p></article>
+        <article class="exec-metric"><span>Active Users</span><strong id="exec-active-users">--</strong><p>Unavailable until unique active-user authority is proven.</p></article>
+        <article class="exec-metric"><span>Commercial Billing</span><strong id="exec-billing">--</strong><p>Unavailable until billing authority is proven.</p></article>
+      </div>
+    </section>
+
+    <section class="exec-card">
+      <div class="exec-card-heading"><p class="jom-kicker">Leadership Messages</p><h2>Current narrative</h2></div>
+      <div id="exec-board-messages" class="exec-message-list"></div>
+    </section>
+
+    <section class="exec-card">
+      <div class="exec-card-heading"><p class="jom-kicker">Source Assurance</p><h2>Evidence state</h2></div>
+      <div id="exec-source-health" class="exec-source-grid"></div>
+    </section>
   </section>
 </main>
+
+<aside class="exec-rail" aria-label="Executive report summary">
+  <section class="exec-rail-card exec-rail-status">
+    <p class="jom-kicker">Executive Status</p>
+    <strong id="exec-status">Loading</strong>
+    <p id="exec-authority-note">Runtime/OAuth/Admin authority only.</p>
+  </section>
+  <section class="exec-rail-card">
+    <h2>Snapshot</h2>
+    <dl class="exec-rail-list">
+      <div><dt>Coverage</dt><dd id="exec-rail-coverage">--</dd></div>
+      <div><dt>Sites</dt><dd id="exec-rail-sites">--</dd></div>
+      <div><dt>Product Access</dt><dd id="exec-rail-product-access">--</dd></div>
+      <div><dt>Source Issues</dt><dd id="exec-rail-failed">--</dd></div>
+      <div><dt>Actions</dt><dd id="exec-rail-actions">--</dd></div>
+    </dl>
+  </section>
+</aside>
+
+<script src="{{ url_for('static', filename='js/jom_executive_report_v1.js') }}" defer></script>
 </body>
 </html>
