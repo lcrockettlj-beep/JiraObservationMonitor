@@ -743,6 +743,122 @@ def api_workspace_product_users_v1():
     return jsonify(build_site_workspace_product_users(ROOT))
 # JOM_SITE_WORKSPACE_PRODUCT_USERS_PACK_V1 END
 
+
+# --- JOM OAUTH OWNER PAGE ROUTES v1 START ---
+# Owner-file page shell routes. OAuth/Admin is the only current authority pipeline.
+@app.route('/admin')
+def page_admin():
+    return render_template('admin.html')
+
+@app.route('/admin/estate-configuration')
+def page_admin_estate_configuration():
+    return render_template('admin_estate_configuration.html')
+
+@app.route('/admin/discovery')
+def page_admin_discovery():
+    return render_template('admin_discovery.html')
+
+@app.route('/admin/monitoring')
+def page_admin_monitoring():
+    return render_template('admin_monitoring.html')
+
+@app.route('/admin/licensing-billing')
+def page_admin_licensing_billing():
+    return render_template('admin_licensing_billing.html')
+
+@app.route('/admin/users-access')
+def page_admin_users_access():
+    return render_template('admin_users_access.html')
+
+@app.route('/admin/system-configuration')
+def page_admin_system_configuration():
+    return render_template('admin_system_configuration.html')
+
+@app.route('/executive-report')
+def page_executive_report():
+    return render_template('executive_report.html')
+
+@app.route('/estate-report')
+def page_estate_report():
+    return render_template('estate_report.html')
+
+@app.route('/reports/governance')
+def page_reports_governance():
+    return render_template('governance_report.html')
+
+@app.route('/reports/governance/users')
+def page_reports_governance_users():
+    return render_template('governance_users.html')
+
+@app.route('/reports/governance/projects')
+def page_reports_governance_projects():
+    return render_template('governance_projects.html')
+
+@app.route('/reports/governance/configuration')
+def page_reports_governance_configuration():
+    return render_template('governance_configuration.html')
+
+@app.route('/reports/governance/permissions')
+def page_reports_governance_permissions():
+    return render_template('governance_permissions.html')
+
+@app.route('/reports/governance/policy-compliance')
+def page_reports_governance_policy_compliance():
+    return render_template('governance_policy_compliance.html')
+
+@app.route('/runtime-status')
+def page_runtime_status():
+    return render_template('runtime_status.html')
+
+@app.route('/system/runtime-status/application')
+def page_system_runtime_status_application():
+    return render_template('runtime_application.html')
+
+@app.route('/system/runtime-status/api')
+def page_system_runtime_status_api():
+    return render_template('runtime_api.html')
+
+@app.route('/system/runtime-status/collectors')
+def page_system_runtime_status_collectors():
+    return render_template('runtime_collectors.html')
+
+@app.route('/system/runtime-status/jobs')
+def page_system_runtime_status_jobs():
+    return render_template('runtime_jobs.html')
+
+@app.route('/system/runtime-status/errors')
+def page_system_runtime_status_errors():
+    return render_template('runtime_errors.html')
+
+@app.route('/source-health')
+def page_source_health():
+    return render_template('source_health.html')
+
+@app.route('/system/source-health/connections')
+def page_system_source_health_connections():
+    return render_template('source_connections.html')
+
+@app.route('/system/source-health/authentication')
+def page_system_source_health_authentication():
+    return render_template('source_authentication.html')
+
+@app.route('/system/source-health/freshness')
+def page_system_source_health_freshness():
+    return render_template('source_freshness.html')
+
+@app.route('/system/source-health/completeness')
+def page_system_source_health_completeness():
+    return render_template('source_completeness.html')
+
+@app.route('/system/source-health/failures')
+def page_system_source_health_failures():
+    return render_template('source_failures.html')
+
+@app.route('/site-review')
+def page_site_review_redirect_to_estate():
+    return redirect('/estate', code=302)
+# --- JOM OAUTH OWNER PAGE ROUTES v1 END ---
+
 @app.route("/site-workspace")
 def page_site_workspace_shell_index():
     site_key = request.args.get("site", "")

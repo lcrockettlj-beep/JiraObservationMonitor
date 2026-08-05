@@ -445,3 +445,20 @@ body {
 }
 /* === Estate Subnav Collapse v1 END === */
 
+/* JOM_NAV_ADMIN_ALIGNMENT_OWNER_CSS_FIX_V1 START */
+/* Keep primary navigation links left-aligned. The global action-button rule must not make Admin look like a centred action button inside the sidebar. */
+.jom-side-nav .jom-nav-link {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+.jom-side-nav .jom-nav-subnav a {
+  display: block !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+/* JOM_NAV_ADMIN_ALIGNMENT_OWNER_CSS_FIX_V1 END */
+

@@ -432,3 +432,57 @@ body[data-jom-page="command-centre"] .jom-command-centre-main {
   }
 }
 /* JOM_RIGHT_RAIL_NO_INTERNAL_SCROLL_V1 END */
+
+/* JOM_NAV_ADMIN_ALIGNMENT_VISUAL_CONSISTENCY_OWNER_FIX_V1 START */
+/* Override global action-button treatment for sidebar links. Admin must behave as a navigation item, not a centred action button. */
+body[data-jom-page] .jom-side-nav a.jom-nav-link,
+body[data-jom-page] .jom-side-nav .jom-nav-subnav a,
+body[data-jom-page] .jom-side-nav a[href^="/admin"].jom-nav-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  height: auto !important;
+  padding: 10px 12px !important;
+  text-align: left !important;
+  white-space: normal !important;
+}
+body[data-jom-page] .jom-side-nav .jom-nav-subnav a {
+  display: block !important;
+  min-height: 0 !important;
+  padding: 6px 8px !important;
+}
+/* JOM_NAV_ADMIN_ALIGNMENT_VISUAL_CONSISTENCY_OWNER_FIX_V1 END */
+
+/* JOM_NAV_ADMIN_FONT_ALIGNMENT_OWNER_FIX_V1 START */
+/* Sidebar admin links are navigation items, not global action buttons. */
+body[data-jom-page] .jom-side-nav a[href^="/admin"],
+body[data-jom-page] .jom-side-nav a.jom-nav-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 40px !important;
+  padding: 10px 12px !important;
+  text-align: left !important;
+  font-size: 15px !important;
+  font-weight: 750 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  white-space: normal !important;
+}
+
+/* Subnav keeps its smaller style. */
+body[data-jom-page] .jom-side-nav .jom-nav-subnav a {
+  display: block !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 6px 8px !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+  line-height: 1.25 !important;
+  text-align: left !important;
+}
+/* JOM_NAV_ADMIN_FONT_ALIGNMENT_OWNER_FIX_V1 END */

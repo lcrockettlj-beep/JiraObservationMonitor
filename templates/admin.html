@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admin - Jira Observation Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+</head>
+<body data-jom-page="page-shell">
+{% include "_nav.html" %}
+<main class="jom-shell" id="jom-page-shell">
+  <section class="jom-card jom-hero" aria-label="Admin overview">
+    <div>
+      <p class="jom-kicker">Operations / Admin</p>
+      <h1>Admin</h1>
+      <p class="jom-lede">Configure JOM platform rules, estate administration areas, access controls, monitoring rules, and consolidated OAuth-backed administration views.</p>
+    </div>
+    <div class="jom-health-card">
+      <span>Authority</span>
+      <strong>OAuth</strong>
+      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
+    </div>
+  </section>
+  <section class="jom-card" aria-label="Admin sections">
+    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
+    <div class="jom-grid jom-grid--three">
+      <article class="jom-state-card"><span>Estate Configuration</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
+      <article class="jom-state-card"><span>Discovery</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
+      <article class="jom-state-card"><span>Monitoring</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
+      <article class="jom-state-card"><span>Licensing & Billing</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
+      <article class="jom-state-card"><span>Users & Access</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
+      <article class="jom-state-card"><span>System Configuration</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
+    </div>
+  </section>
+</main>
+</body>
+</html>
