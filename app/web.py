@@ -577,7 +577,7 @@ def _load_source_state_contract() -> Dict[str, Any]:
         "retired_runtime_record_policy": {
             "retired_runtime_marker_json_is_legacy_reference_only": True,
             "retired_admin_enriched_json_is_legacy_reference_only": True,
-            "billing_seats_json_is_legacy_reference_only": True,
+            "estate_product_access_json_is_current_authority": True,
             "product_access_static_files_are_cache_only": True,
         },
         "runtime_status": compact_runtime_status(),
