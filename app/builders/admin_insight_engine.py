@@ -416,8 +416,8 @@ def extract_registry_summary(site_registry: Any) -> dict[str, Any]:
     if not isinstance(site_registry, dict):
         return {
             "status": "unknown",
-            "monitored_sites": [],
-            "unmonitored_sites": [],
+            "site_registry": [],
+            "unsite_registry": [],
         }
 
     monitored: list[str] = []
@@ -441,8 +441,8 @@ def extract_registry_summary(site_registry: Any) -> dict[str, Any]:
 
     return {
         "status": "loaded",
-        "monitored_sites": sorted(set(monitored)),
-        "unmonitored_sites": sorted(set(unmonitored)),
+        "site_registry": sorted(set(monitored)),
+        "unsite_registry": sorted(set(unmonitored)),
     }
 
 

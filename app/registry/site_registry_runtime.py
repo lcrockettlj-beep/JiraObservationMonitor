@@ -1,4 +1,4 @@
-﻿# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
 # Remaining legacy/static truth references in this file have been neutralised.
 # This file must not treat retired runtime records as backend or website truth.
 from __future__ import annotations
@@ -175,7 +175,7 @@ def approved_config() -> Dict[str, Any]:
             "approval_triggers_onboarding_queue": True,
             "new_sites_default_status": "discovered",
         },
-        "monitored_sites": monitored,
+        "site_registry": monitored,
         "ignored_sites": [],
     }
 
@@ -189,7 +189,7 @@ def reset_to_approved_scope(project_root: Path) -> Dict[str, Any]:
 def load_config(project_root: Path) -> Dict[str, Any]:
     path = project_root / MONITORED_CONFIG
     config = read_json(path, None)
-    if not isinstance(config, dict) or "monitored_sites" not in config:
+    if not isinstance(config, dict) or "site_registry" not in config:
         config = approved_config()
         write_json(path, config)
     return config
@@ -226,7 +226,7 @@ def queue_onboarding(project_root: Path, entry: Dict[str, Any], requested_by: st
 
 def build_registry(project_root: Path) -> Dict[str, Any]:
     config = load_config(project_root)
-    monitored_index = index_config_sites(config.get("monitored_sites", []))
+    monitored_index = index_config_sites(config.get("site_registry", []))
     ignored_index = index_config_sites(config.get("ignored_sites", []))
     queue = read_json(project_root / ONBOARDING_QUEUE, {"requests": []})
     queued_index = index_config_sites(queue.get("requests", []))
@@ -322,9 +322,9 @@ def approve_site(project_root: Path, payload: Dict[str, Any], approved_by: str =
         "approved_by": approved_by,
     }
     entry_aliases = set(aliases(entry))
-    config["monitored_sites"] = [s for s in config.get("monitored_sites", []) if not entry_aliases.intersection(set(aliases(s)))]
+    config["site_registry"] = [s for s in config.get("site_registry", []) if not entry_aliases.intersection(set(aliases(s)))]
     config["ignored_sites"] = [s for s in config.get("ignored_sites", []) if not entry_aliases.intersection(set(aliases(s)))]
-    config["monitored_sites"].append(entry)
+    config["site_registry"].append(entry)
     config["updated_at_utc"] = now_utc()
     write_json(project_root / MONITORED_CONFIG, config)
     queue_onboarding(project_root, entry, approved_by)
@@ -347,7 +347,7 @@ def ignore_site(project_root: Path, payload: Dict[str, Any], ignored_by: str = "
         "reason": str(payload.get("reason") or "Manually ignored from JOM monitoring scope"),
     }
     entry_aliases = set(aliases(entry))
-    config["monitored_sites"] = [s for s in config.get("monitored_sites", []) if not entry_aliases.intersection(set(aliases(s)))]
+    config["site_registry"] = [s for s in config.get("site_registry", []) if not entry_aliases.intersection(set(aliases(s)))]
     config["ignored_sites"] = [s for s in config.get("ignored_sites", []) if not entry_aliases.intersection(set(aliases(s)))]
     config["ignored_sites"].append(entry)
     config["updated_at_utc"] = now_utc()
@@ -373,8 +373,8 @@ def unmonitor_site(project_root: Path, payload: Dict[str, Any], removed_by: str 
     }
     entry_aliases = set(aliases(entry))
 
-    config["monitored_sites"] = [
-        s for s in config.get("monitored_sites", [])
+    config["site_registry"] = [
+        s for s in config.get("site_registry", [])
         if not entry_aliases.intersection(set(aliases(s)))
     ]
     # Deliberately do not add to ignored_sites. The rediscovery path should put

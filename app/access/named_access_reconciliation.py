@@ -174,7 +174,7 @@ def build(project_root: Path) -> Dict[str, Any]:
             'admin_named_access': str(named_path),
             'admin_truth_v2': str(admin_truth_path),
             'estate_product_access': str(product_path),
-            'billing_seats': str(billing_path),
+            'estate_product_access': str(billing_path),
             'billing_screenshot_counts_used': EXPECTED_BILLING_SITE_COUNTS,
         },
         'summary': {

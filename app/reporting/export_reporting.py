@@ -104,7 +104,7 @@ def registry_summary(registry: Dict[str, Any]) -> Dict[str, Any]:
         monitored = sum(1 for s in sites if is_site_monitored(s))
     if discovered is None:
         discovered = max(0, total - int(monitored or 0))
-    return {"total_sites": total, "monitored_sites": int(monitored or 0), "discovered_sites": int(discovered or 0)}
+    return {"total_sites": total, "site_registry": int(monitored or 0), "discovered_sites": int(discovered or 0)}
 
 
 def product_access_summary(data: Dict[str, Any]) -> Dict[str, Any]:
@@ -190,7 +190,7 @@ def executive_report() -> Dict[str, Any]:
         "runtime_status": snap["runtime"].get("runtime_status"),
         "active_alerts": snap["active_alerts"],
         "total_sites": snap["registry"]["total_sites"],
-        "monitored_sites": snap["registry"]["monitored_sites"],
+        "site_registry": snap["registry"]["site_registry"],
         "discovered_sites": snap["registry"]["discovered_sites"],
         "users_analyzed": snap["users"]["users_analyzed"],
         "key_findings": findings,
@@ -330,7 +330,7 @@ def to_html(report: Dict[str, Any]) -> str:
           {_report_card('Estate health', report.get('estate_health_score', '-'), 'Composite operational score')}
           {_report_card('Runtime status', report.get('runtime_status', '-'), 'Live reporting/runtime signal')}
           {_report_card('Active alerts', report.get('active_alerts', '-'), 'Review before stakeholder output')}
-          {_report_card('Sites', report.get('total_sites', '-'), f"{report.get('monitored_sites','-')} monitored - {report.get('discovered_sites','-')} awaiting review")}
+          {_report_card('Sites', report.get('total_sites', '-'), f"{report.get('site_registry','-')} monitored - {report.get('discovered_sites','-')} awaiting review")}
           {_report_card('Users analysed', report.get('users_analyzed', '-'), 'Footprint source')}
         </section>
         <section class='jom-report-section'><h2>Key findings</h2>{_findings(report.get('key_findings') or [])}</section>
@@ -346,7 +346,7 @@ def to_html(report: Dict[str, Any]) -> str:
         </section>
         <section class='jom-report-grid'>
           {_report_card('Total sites', summary.get('total_sites', '-'), 'Registry scope')}
-          {_report_card('Monitored', summary.get('monitored_sites', '-'), 'Actively in monitoring scope')}
+          {_report_card('Monitored', summary.get('site_registry', '-'), 'Actively in monitoring scope')}
           {_report_card('Awaiting review', summary.get('discovered_sites', '-'), 'Discovered / unmonitored')}
         </section>
         <section class='jom-report-section'><h2>Site inventory</h2>{_site_table(report.get('sites') or [])}</section>
@@ -366,7 +366,7 @@ def to_html(report: Dict[str, Any]) -> str:
           {_report_card('Users analysed', users.get('users_analyzed', '-'), 'User footprint')}
           {_report_card('Product assignments', users.get('total_product_access_assignments', '-'), 'Product access truth')}
           {_report_card('Named users', users.get('named_unique_users', '-'), 'Named access truth')}
-          {_report_card('Total sites', registry.get('total_sites', '-'), f"{registry.get('monitored_sites','-')} monitored - {registry.get('discovered_sites','-')} awaiting review")}
+          {_report_card('Total sites', registry.get('total_sites', '-'), f"{registry.get('site_registry','-')} monitored - {registry.get('discovered_sites','-')} awaiting review")}
           {_report_card('Runtime', runtime.get('runtime_status', '-'), 'Live report generation time')}
           {_report_card('Product access sites', product.get('product_access_sites', '-'), 'Source-backed access coverage')}
         </section>

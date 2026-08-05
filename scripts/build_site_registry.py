@@ -107,7 +107,7 @@ def build_registry(project_root: Path) -> Dict[str, Any]:
     for source in [monitored, decisions, access_validation]:
         if not isinstance(source, dict):
             continue
-        for key in source.get("monitored_sites", []) if isinstance(source.get("monitored_sites"), list) else []:
+        for key in source.get("site_registry", []) if isinstance(source.get("site_registry"), list) else []:
             monitored_keys.add(norm(key))
         for key, value in source.get("sites", {}).items() if isinstance(source.get("sites"), dict) else []:
             if isinstance(value, dict) and (value.get("monitored") or value.get("classification") == "monitored"):

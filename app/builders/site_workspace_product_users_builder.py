@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
@@ -86,7 +86,7 @@ def _product_site_map(product: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
     return out
 
 
-def _roles_for_monitored_sites(product: Dict[str, Any], monitored_keys: set[str]) -> List[Dict[str, Any]]:
+def _roles_for_site_registry(product: Dict[str, Any], monitored_keys: set[str]) -> List[Dict[str, Any]]:
     rows = product.get("roles") if isinstance(product.get("roles"), list) else []
     out: List[Dict[str, Any]] = []
     for row in rows:
@@ -113,9 +113,9 @@ def build_site_workspace_product_users(project_root: Path | None = None) -> Dict
     registry = _read_json("site_registry.json", {})
     product = _read_json("estate_product_access.json", {})
 
-    monitored_sites = _monitored_registry_sites(registry if isinstance(registry, dict) else {})
+    site_registry = _monitored_registry_sites(registry if isinstance(registry, dict) else {})
     product_sites = _product_site_map(product if isinstance(product, dict) else {})
-    monitored_keys = {_site_key(site) for site in monitored_sites if _site_key(site)}
+    monitored_keys = {_site_key(site) for site in site_registry if _site_key(site)}
 
     site_rows: List[Dict[str, Any]] = []
     missing_count = 0
@@ -123,7 +123,7 @@ def build_site_workspace_product_users(project_root: Path | None = None) -> Dict
     total_seat_limit = 0
     total_remaining = 0
 
-    for site in monitored_sites:
+    for site in site_registry:
         key = _site_key(site)
         product_row = product_sites.get(key)
         if isinstance(product_row, dict):
@@ -159,10 +159,10 @@ def build_site_workspace_product_users(project_root: Path | None = None) -> Dict
         })
 
     site_rows.sort(key=lambda row: (-1 if row.get("product_users") is None else -int(row.get("product_users") or 0), str(row.get("site_key") or "")))
-    role_rows = _roles_for_monitored_sites(product if isinstance(product, dict) else {}, monitored_keys)
+    role_rows = _roles_for_site_registry(product if isinstance(product, dict) else {}, monitored_keys)
     product_summary = product.get("summary") if isinstance(product, dict) and isinstance(product.get("summary"), dict) else {}
 
-    available = bool(monitored_sites) and missing_count < len(monitored_sites)
+    available = bool(site_registry) and missing_count < len(site_registry)
     status = "ok" if missing_count == 0 and available else "partial" if available else "unavailable"
 
     return {
@@ -176,8 +176,8 @@ def build_site_workspace_product_users(project_root: Path | None = None) -> Dict
             "display": f"{total_users:,}" if available else "Unavailable",
         },
         "summary": {
-            "monitored_site_count": len(monitored_sites),
-            "matched_product_site_count": len(monitored_sites) - missing_count,
+            "monitored_site_count": len(site_registry),
+            "matched_product_site_count": len(site_registry) - missing_count,
             "missing_product_site_count": missing_count,
             "total_product_users": total_users if available else None,
             "total_seat_limit": total_seat_limit if available else None,

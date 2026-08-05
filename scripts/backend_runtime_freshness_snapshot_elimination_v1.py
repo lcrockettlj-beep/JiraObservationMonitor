@@ -1,4 +1,4 @@
-﻿# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
+# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
 # Legacy/static truth references in this file have been neutralised.
 # This code must not silently read retired runtime records as website/backend truth.
 # Unavailable live/runtime data must be reported as unavailable.
@@ -120,7 +120,7 @@ def main() -> int:
     )
 
     legacy = [
-        source_record("billing_seats", DATA / "estate_access_truth.json", "blocked legacy input; not website truth"),
+        source_record("estate_product_access", DATA / "estate_access_truth.json", "blocked legacy input; not website truth"),
         source_record("retired_runtime_marker", ROOT / "retired_runtime_marker", "blocked legacy input; not website truth"),
         source_record("retired_admin_enriched", ROOT / "admin_truth_v2.json", "blocked legacy input; not website truth"),
     ]

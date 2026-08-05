@@ -110,7 +110,7 @@ def monitored_resource_map():
     registry = read_json(SITE_REGISTRY, {}) or {}
     mappings = {}
     monitored_site_keys = set()
-    monitored_sites = []
+    site_registry = []
     for site in registry.get("sites", []):
         if str(site.get("classification") or "").lower() != "monitored":
             continue
@@ -118,7 +118,7 @@ def monitored_resource_map():
         if site_key:
             monitored_site_keys.add(str(site_key))
         cloud_id = site.get("cloud_id") or site.get("resource_id") or site.get("id") or site.get("site_id")
-        monitored_sites.append({"site_key": site_key, "cloud_id": cloud_id, "url": site.get("url") or site.get("site_url")})
+        site_registry.append({"site_key": site_key, "cloud_id": cloud_id, "url": site.get("url") or site.get("site_url")})
         for field in ("cloud_id", "resource_id", "id", "site_id", "url", "site_url", "site_key", "site_name", "name"):
             add_mapping(mappings, site.get(field), site_key)
         if cloud_id:
@@ -133,7 +133,7 @@ def monitored_resource_map():
                 if nested_id:
                     for variant in ari_variants(nested_id):
                         add_mapping(mappings, variant, site_key)
-    return mappings, monitored_site_keys, monitored_sites
+    return mappings, monitored_site_keys, site_registry
 
 
 def normalise_resource_candidates(resource_id):
@@ -239,10 +239,10 @@ def main():
     if not directory_ids:
         return guarded("ATLASSIAN_DIRECTORY_ID or ATLASSIAN_DIRECTORY_IDS is not set. Admin v2 group APIs are directory-scoped.")
 
-    resource_map, monitored_site_keys, monitored_sites = monitored_resource_map()
+    resource_map, monitored_site_keys, site_registry = monitored_resource_map()
     collected_groups = []
     errors = []
-    diagnostics = {"monitored_sites": monitored_sites, "resource_map_key_count": len(resource_map), "unmapped_role_resource_ids": []}
+    diagnostics = {"site_registry": site_registry, "resource_map_key_count": len(resource_map), "unmapped_role_resource_ids": []}
     unmapped_role_resource_ids = set()
 
     for directory_id in directory_ids:

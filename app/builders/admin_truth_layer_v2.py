@@ -1,4 +1,4 @@
-﻿# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
+# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
 # Remaining legacy/static truth references in this file have been neutralised.
 # This file must not treat retired runtime records as backend or website truth.
 from __future__ import annotations
@@ -148,23 +148,23 @@ def product_access_summary(project_root: Path) -> Dict[str, Any]:
 
 def compare_truth(admin: Dict[str, Any], billing: Dict[str, Any], product: Dict[str, Any]) -> Dict[str, Any]:
     humans = safe_int(admin.get('human_users'))
-    billing_seats = safe_int(billing.get('jira_seats'))
+    estate_product_access = safe_int(billing.get('jira_seats'))
     product_users = safe_int(product.get('api_product_users'))
-    billing_to_human = round(billing_seats / humans, 2) if humans else 0
+    billing_to_human = round(estate_product_access / humans, 2) if humans else 0
     product_to_human = round(product_users / humans, 2) if humans else 0
-    variance = product_users - billing_seats
+    variance = product_users - estate_product_access
     variance_abs = abs(variance)
-    aligned = product_users > 0 and billing_seats > 0 and variance_abs == 0
+    aligned = product_users > 0 and estate_product_access > 0 and variance_abs == 0
 
     if aligned:
         status = 'aligned'
         severity = 'ok'
         interpretation = 'API product access users match Atlassian billing seats exactly. Billing and API product-count truth are aligned.'
-    elif product_users <= 0 and billing_seats > 0:
+    elif product_users <= 0 and estate_product_access > 0:
         status = 'api_missing'
         severity = 'warning'
         interpretation = 'Billing seats are available but API product access users are missing or blocked. Use billing as commercial truth until product API is restored.'
-    elif billing_seats <= 0 and product_users > 0:
+    elif estate_product_access <= 0 and product_users > 0:
         status = 'billing_missing'
         severity = 'warning'
         interpretation = 'API product access users are available but billing seats are missing. Use API as operational count and review billing source.'
@@ -178,7 +178,7 @@ def compare_truth(admin: Dict[str, Any], billing: Dict[str, Any], product: Dict[
         'severity': severity,
         'interpretation': interpretation,
         'admin_human_users': humans,
-        'billing_jira_seats': billing_seats,
+        'billing_jira_seats': estate_product_access,
         'api_product_users': product_users,
         'api_minus_billing': variance,
         'api_billing_variance_abs': variance_abs,
