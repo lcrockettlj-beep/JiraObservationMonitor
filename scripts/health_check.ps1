@@ -1,6 +1,6 @@
 # JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
 # Legacy/static truth references in this file have been neutralised.
-# This script must not silently read legacy snapshots as website/backend truth.
+# This script must not silently read legacy legacy_records as website/backend truth.
 # Unavailable live/runtime data must be reported as unavailable.
 # ============================================================
 # health_check.ps1 - JOM Quick Smoke Test
@@ -87,7 +87,7 @@ function Test-Warning {
 function Get-BackupManifestSummary {
     param([string]$Root)
 
-    $manifestPath = Join-Path $Root "backups\latest_runtime\latest_manifest.json"
+    $manifestPath = Join-Path $Root "backups\legacy_recovery_area\latest_manifest.json"
     if (-not (Test-Path $manifestPath)) {
         return $null
     }
@@ -128,17 +128,17 @@ function Get-BackupManifestSummary {
 
 function Get-ExpectedBackupFileNames {
     return @(
-        "runtime_contract_unavailable_latest_run_json",
+        "retired_runtime_contract_marker_json",
         "latest_run_pretty.json",
-        "latest_run_safe_partial.json",
-        "runtime_contract_unavailable_latest_run_admin_enriched_json",
-        "runtime_contract_unavailable_latest_run_admin_enriched_pretty_json",
-        "latest_run_alerted.json",
-        "latest_run_alerted_pretty.json",
-        "latest_run_intelligence.json",
-        "latest_run_intelligence_pretty.json",
-        "latest_snapshot.json",
-        "snapshot_index.json"
+        "retired_safe_partial.json",
+        "retired_runtime_contract_marker_admin_enriched_json",
+        "retired_runtime_contract_marker_admin_enriched_pretty_json",
+        "retired_alerted_file.json",
+        "retired_alerted_file_pretty.json",
+        "retired_intelligence_file.json",
+        "retired_intelligence_file_pretty.json",
+        "legacy_recovery_marker.json",
+        "legacy_recovery_index.json"
     )
 }
 
@@ -176,8 +176,8 @@ $criticalFiles = @(
     "intelligence_rules_engine.py",
     "config\feature_flags.py",
     
-    "scripts\backup_runtime_chain.py",
-    "scripts\restore_runtime_from_backup.ps1"
+    "scripts\legacy_recovery_component.py",
+    "scripts\legacy_recovery_component.ps1"
 )
 $missing = @()
 foreach ($f in $criticalFiles) {
@@ -273,9 +273,9 @@ try {
 # ------------------------------------------------------------
 if ($script:apiResponse) {
     $sourceFile = $script:apiResponse.source_file
-    if ($sourceFile -like "latest_run_intelligence.json") {
+    if ($sourceFile -like "retired_intelligence_file.json") {
         Test-Result 7 "Runtime chain" $true "$sourceFile is highest-order (best case)"
-    } elseif ($sourceFile -like "latest_run_alerted.json") {
+    } elseif ($sourceFile -like "retired_alerted_file.json") {
         Test-Warning 7 "Runtime chain" "Using $sourceFile (intelligence layer not active)" "Check intelligence_rules_engine.py"
     } else {
         Test-Result 7 "Runtime chain" $false "Source is $sourceFile (low order)" "Investigate why higher-order files arent loading"
@@ -303,27 +303,27 @@ try {
 }
 
 # ------------------------------------------------------------
-# Check 9: Snapshot retention
+# Check 9: Legacy record retention
 # ------------------------------------------------------------
-$snapshots = Get-ChildItem snapshots\snapshot_*.json -ErrorAction SilentlyContinue
-$regular = $snapshots | Where-Object { $_.Name -notmatch "anchor" }
-$anchors = $snapshots | Where-Object { $_.Name -match "anchor" }
+$legacy_records = Get-ChildItem legacy_records\legacy_record_*.json -ErrorAction SilentlyContinue
+$regular = $legacy_records | Where-Object { $_.Name -notmatch "anchor" }
+$anchors = $legacy_records | Where-Object { $_.Name -match "anchor" }
 $regCount = $regular.Count
 $anchCount = $anchors.Count
 if ($regCount -le 22 -and $regCount -ge 15) {
-    Test-Result 9 "Snapshot retention" $true "$regCount regular + $anchCount anchor (in policy)"
+    Test-Result 9 "Legacy record retention" $true "$regCount regular + $anchCount anchor (in policy)"
 } elseif ($regCount -gt 22) {
-    Test-Warning 9 "Snapshot retention" "$regCount regular (over target 20)" "Controller will prune on next run"
+    Test-Warning 9 "Legacy record retention" "$regCount regular (over target 20)" "Controller will prune on next run"
 } else {
-    Test-Result 9 "Snapshot retention" $false "Only $regCount regular snapshots" "Check snapshot_controller.py"
+    Test-Result 9 "Legacy record retention" $false "Only $regCount regular legacy_records" "Check legacy_recovery_component.py"
 }
 
 # ------------------------------------------------------------
-# Check 10: Today's anchor snapshots
+# Check 10: Today's anchor legacy_records
 # ------------------------------------------------------------
 $today = Get-Date -Format "yyyy-MM-dd"
-$morningAnchor = Get-ChildItem snapshots\snapshot_${today}*_anchor_morning.json -ErrorAction SilentlyContinue
-$eveningAnchor = Get-ChildItem snapshots\snapshot_${today}*_anchor_evening.json -ErrorAction SilentlyContinue
+$morningAnchor = Get-ChildItem legacy_records\legacy_record_${today}*_anchor_morning.json -ErrorAction SilentlyContinue
+$eveningAnchor = Get-ChildItem legacy_records\legacy_record_${today}*_anchor_evening.json -ErrorAction SilentlyContinue
 $currentHour = (Get-Date).Hour
 if ($morningAnchor -and $eveningAnchor) {
     Test-Result 10 "Anchors today" $true "Morning + evening both present"
@@ -338,29 +338,29 @@ if ($morningAnchor -and $eveningAnchor) {
 }
 
 # ------------------------------------------------------------
-# Check 11: Backup manifest freshness
+# Check 11: Legacy recovery manifest freshness
 # ------------------------------------------------------------
 $backupSummary = Get-BackupManifestSummary -Root $ProjectRoot
 $script:backupSummary = $backupSummary
 if (-not $backupSummary) {
-    Test-Result 11 "Backup manifest" $false "latest_manifest.json not found" "Use current runtime refresh flow"
+    Test-Result 11 "Legacy recovery manifest" $false "latest_manifest.json not found" "Use current runtime refresh flow"
 } elseif (-not $backupSummary.parse_ok) {
-    Test-Result 11 "Backup manifest" $false "Manifest unreadable: $($backupSummary.error)" "Inspect backups\latest_runtime\latest_manifest.json"
+    Test-Result 11 "Legacy recovery manifest" $false "Manifest unreadable: $($backupSummary.error)" "Inspect backups\legacy_recovery_area\latest_manifest.json"
 } elseif ($null -eq $backupSummary.age_seconds) {
-    Test-Warning 11 "Backup manifest" "Manifest found but backup timestamp could not be parsed" "Inspect created_at_local in latest_manifest.json"
+    Test-Warning 11 "Legacy recovery manifest" "Manifest found but backup timestamp could not be parsed" "Inspect created_at_local in latest_manifest.json"
 } elseif ($backupSummary.age_seconds -le 1200) {
-    Test-Result 11 "Backup manifest" $true "Latest backup age $($backupSummary.age_seconds)s"
+    Test-Result 11 "Legacy recovery manifest" $true "Latest backup age $($backupSummary.age_seconds)s"
 } elseif ($backupSummary.age_seconds -le 3600) {
-    Test-Warning 11 "Backup manifest" "Latest backup age $($backupSummary.age_seconds)s (stale)" "Confirm scheduled sync is still running"
+    Test-Warning 11 "Legacy recovery manifest" "Latest backup age $($backupSummary.age_seconds)s (stale)" "Legacy recovery is retired"
 } else {
-    Test-Result 11 "Backup manifest" $false "Latest backup age $($backupSummary.age_seconds)s (too old)" "Use current runtime refresh flow"
+    Test-Result 11 "Legacy recovery manifest" $false "Latest backup age $($backupSummary.age_seconds)s (too old)" "Use current runtime refresh flow"
 }
 
 # ------------------------------------------------------------
 # Check 12: Backup coverage
 # ------------------------------------------------------------
 $expectedBackupFiles = Get-ExpectedBackupFileNames
-$currentBackupDir = Join-Path $ProjectRoot "backups\latest_runtime\current"
+$currentBackupDir = Join-Path $ProjectRoot "backups\legacy_recovery_area\current"
 $missingBackupMembers = @()
 foreach ($name in $expectedBackupFiles) {
     if (-not (Test-Path (Join-Path $currentBackupDir $name))) {
@@ -368,13 +368,13 @@ foreach ($name in $expectedBackupFiles) {
     }
 }
 if (-not (Test-Path $currentBackupDir)) {
-    Test-Result 12 "Backup coverage" $false "Current backup directory missing" "Run python scripts\backup_runtime_chain.py"
+    Test-Result 12 "Backup coverage" $false "Current backup directory missing" "Use current runtime refresh flow"
 } elseif ($missingBackupMembers.Count -eq 0) {
     Test-Result 12 "Backup coverage" $true "All $($expectedBackupFiles.Count) backup members present"
 } elseif ($missingBackupMembers.Count -le 2) {
     Test-Warning 12 "Backup coverage" "Partial coverage - missing: $($missingBackupMembers -join ', ')" "Check whether pretty runtime layers are expected in this environment"
 } else {
-    Test-Result 12 "Backup coverage" $false "Too many backup members missing: $($missingBackupMembers -join ', ')" "Investigate backup_runtime_chain.py outputs"
+    Test-Result 12 "Backup coverage" $false "Too many backup members missing: $($missingBackupMembers -join ', ')" "Legacy recovery component retired"
 }
 
 # ------------------------------------------------------------

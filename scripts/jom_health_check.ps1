@@ -44,10 +44,10 @@ function Test-Url {
     }
 }
 
-function Get-HomeSnapshotLine {
+function Get-HomeLegacy recordLine {
     param([string]$Html)
     if ([string]::IsNullOrWhiteSpace($Html)) { return $null }
-    $match = [regex]::Match($Html, 'Last verified snapshot:</strong>\s*([^<\r\n]+)')
+    $match = [regex]::Match($Html, 'Last verified legacy record:</strong>\s*([^<\r\n]+)')
     if ($match.Success) { return $match.Groups[1].Value.Trim() }
     return $null
 }
@@ -65,11 +65,11 @@ function Add-RouteIfLiteral {
 function Get-BackupSummary {
     param([string]$Root)
 
-    $manifestPath = Join-Path $Root "backups\latest_runtime\latest_manifest.json"
+    $manifestPath = Join-Path $Root "backups\legacy_recovery_area\latest_manifest.json"
     if (-not (Test-Path $manifestPath)) {
         return [PSCustomObject]@{
             manifest_exists = $false
-            current_backup_dir_exists = (Test-Path (Join-Path $Root "backups\latest_runtime\current"))
+            current_backup_dir_exists = (Test-Path (Join-Path $Root "backups\legacy_recovery_area\current"))
             age_seconds = $null
             copied_count = 0
             missing_count = 0
@@ -86,7 +86,7 @@ function Get-BackupSummary {
             manifest_exists = $true
             parse_ok = $false
             error = $_.Exception.Message
-            current_backup_dir_exists = (Test-Path (Join-Path $Root "backups\latest_runtime\current"))
+            current_backup_dir_exists = (Test-Path (Join-Path $Root "backups\legacy_recovery_area\current"))
             age_seconds = $null
             copied_count = 0
             missing_count = 0
@@ -105,7 +105,7 @@ function Get-BackupSummary {
     [PSCustomObject]@{
         manifest_exists = $true
         parse_ok = $true
-        current_backup_dir_exists = (Test-Path (Join-Path $Root "backups\latest_runtime\current"))
+        current_backup_dir_exists = (Test-Path (Join-Path $Root "backups\legacy_recovery_area\current"))
         age_seconds = $ageSeconds
         copied_count = [int]$manifest.copied_count
         missing_count = [int]$manifest.missing_count
@@ -157,11 +157,11 @@ try {
 } catch {}
 
 $homeHtml = $null
-$homeSnapshotText = $null
+$homeLegacy recordText = $null
 try {
     $homeResponse = Invoke-WebRequest "$BaseUrl/" -TimeoutSec 8 -UseBasicParsing
     $homeHtml = $homeResponse.Content
-    $homeSnapshotText = Get-HomeSnapshotLine -Html $homeHtml
+    $homeLegacy recordText = Get-HomeLegacy recordLine -Html $homeHtml
 } catch {}
 
 $backupSummary = Get-BackupSummary -Root $ProjectRoot
@@ -228,7 +228,7 @@ $summary = [PSCustomObject]@{
     last_sync_time = if ($sourceState) { $sourceState.last_sync_time } else { $null }
     last_sync_age_seconds = if ($sourceState) { $sourceState.last_sync_age_seconds } else { $null }
     anchors_today = if ($sourceState) { $sourceState.anchors_today } else { $null }
-    home_last_verified_snapshot_text = $homeSnapshotText
+    home_last_verified_legacy_record_text = $homeLegacy recordText
     backup_manifest_exists = $backupSummary.manifest_exists
     backup_manifest_created_at_local = $backupSummary.created_at_local
     backup_age_seconds = $backupSummary.age_seconds
@@ -258,9 +258,9 @@ $lines.Add("- Source mode: $($summary.source_mode)")
 $lines.Add("- Auto sync active: $($summary.auto_sync_active)")
 $lines.Add("- Last sync time: $($summary.last_sync_time)")
 $lines.Add("- Last sync age seconds: $($summary.last_sync_age_seconds)")
-$lines.Add("- Homepage Last verified snapshot text: $($summary.home_last_verified_snapshot_text)")
-$lines.Add("- Backup manifest exists: $($summary.backup_manifest_exists)")
-$lines.Add("- Backup manifest created at: $($summary.backup_manifest_created_at_local)")
+$lines.Add("- Homepage Last verified legacy record text: $($summary.home_last_verified_legacy_record_text)")
+$lines.Add("- Legacy recovery manifest exists: $($summary.backup_manifest_exists)")
+$lines.Add("- Legacy recovery manifest created at: $($summary.backup_manifest_created_at_local)")
 $lines.Add("- Backup age seconds: $($summary.backup_age_seconds)")
 $lines.Add("- Backup copied count: $($summary.backup_copied_count)")
 $lines.Add("- Backup missing count: $($summary.backup_missing_count)")
@@ -293,7 +293,7 @@ Write-Host "OK: $($summary.ok_count)" -ForegroundColor Green
 Write-Host "FAILED: $($summary.failed_count)" -ForegroundColor $(if ($summary.failed_count -gt 0) { 'Red' } else { 'Green' })
 Write-Host "Source mode: $($summary.source_mode)"
 Write-Host "Auto sync active: $($summary.auto_sync_active)"
-Write-Host "Homepage Last verified snapshot text: $($summary.home_last_verified_snapshot_text)"
+Write-Host "Homepage Last verified legacy record text: $($summary.home_last_verified_legacy_record_text)"
 Write-Host "Backup readiness: $($summary.backup_readiness)"
 Write-Host "Backup age seconds: $($summary.backup_age_seconds)"
 Write-Host "Backup missing count: $($summary.backup_missing_count)"

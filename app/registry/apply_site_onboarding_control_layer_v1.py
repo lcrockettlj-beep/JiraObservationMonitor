@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STATUS = ROOT / "reports" / "site_onboarding_control_layer_v1_status.json"
 CONTROL_MODULE = ROOT / "app" / "registry" / "site_onboarding_control.py"
 REGISTRY_BUILDER = ROOT / "app" / "registry" / "site_registry_builder.py"
-SNAPSHOT_SCRIPT = None
+LEGACY_RECORD_SCRIPT = None
 
 
 def now_utc():
@@ -61,7 +61,7 @@ def main():
     backup_root.mkdir(parents=True, exist_ok=True)
     changes = []
     errors = []
-    for path in [CONTROL_MODULE, REGISTRY_BUILDER, SNAPSHOT_SCRIPT]:
+    for path in [CONTROL_MODULE, REGISTRY_BUILDER, LEGACY_RECORD_SCRIPT]:
         if path.exists():
             backup = backup_root / path.relative_to(ROOT)
             backup.parent.mkdir(parents=True, exist_ok=True)
@@ -76,7 +76,7 @@ except Exception:
     def is_site_approved(site_key):
         return False
 """
-    snapshot_hook = """
+    legacy_record_hook = """
 # JOM_SITE_ONBOARDING_CONTROL_V1
 try:
     from app.registry.site_onboarding_control import load_decisions, normalise_legacy_decisions
@@ -89,9 +89,9 @@ except Exception:
     except Exception as exc:
         errors.append({"file": str(REGISTRY_BUILDER), "error": str(exc)})
     try:
-        changes.append(patch_file_once(SNAPSHOT_SCRIPT, "JOM_SITE_ONBOARDING_CONTROL_V1", snapshot_hook))
+        changes.append(patch_file_once(LEGACY_RECORD_SCRIPT, "JOM_SITE_ONBOARDING_CONTROL_V1", legacy_record_hook))
     except Exception as exc:
-        errors.append({"file": str(SNAPSHOT_SCRIPT), "error": str(exc)})
+        errors.append({"file": str(LEGACY_RECORD_SCRIPT), "error": str(exc)})
     decisions = read_json(ROOT / "config" / "site_onboarding_decisions.json", {})
     if not isinstance(decisions, dict):
         decisions = {}

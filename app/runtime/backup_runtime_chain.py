@@ -1,10 +1,25 @@
 from __future__ import annotations
 
-from _project_bootstrap import ensure_project_root_on_path
-ensure_project_root_on_path()
+from datetime import datetime, timezone
+from typing import Dict
 
-from app.runtime.runtime_backup_chain import main
+
+def now_utc() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def retired_status() -> Dict[str, object]:
+    return {
+        "status": "retired",
+        "available": False,
+        "retired_at_utc": now_utc(),
+        "message": "Legacy file recovery component retired. Current JOM authority uses OAuth/current-runtime outputs.",
+    }
+
+
+def main() -> Dict[str, object]:
+    return retired_status()
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    print(retired_status())
