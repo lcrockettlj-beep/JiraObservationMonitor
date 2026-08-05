@@ -6,31 +6,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_admin_licensing_billing_v1.css') }}">
 </head>
-<body data-jom-page="page-shell">
+<body data-jom-page="admin-licensing-billing">
 {% include "_nav.html" %}
-<main class="jom-shell" id="jom-page-shell">
-  <section class="jom-card jom-hero" aria-label="Licensing & Billing overview">
-    <div>
-      <p class="jom-kicker">Admin</p>
-      <h1>Licensing & Billing</h1>
-      <p class="jom-lede">Consolidated product access, licence allocation, utilisation, and billing evidence available from current Atlassian OAuth/Admin authority.</p>
-    </div>
-    <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
-    </div>
+
+<main class="jom-admin-licensing-v1" id="jom-page-shell" data-owner="JOM_ADMIN_LICENSING_BILLING_RAIL_REFOCUS_V1">
+  <section class="admin-lb-hero" aria-label="Licensing and billing overview">
+    <p class="jom-kicker">Admin / Licensing & Billing</p>
+    <h1>Licensing & Billing</h1>
+    <p class="admin-lb-lede">Action-led licensing and billing authority view. The centre shows decisions and operational evidence. The right rail summarises the same estate licensing position without duplicating full sections.</p>
   </section>
-  <section class="jom-card" aria-label="Licensing & Billing sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Product Access</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Licence Allocation</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Utilisation</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Billing Evidence</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-    </div>
+
+  <section class="admin-lb-main" aria-label="Licensing and billing actions">
+    <section class="admin-lb-card">
+      <div class="admin-lb-card-heading">
+        <p class="jom-kicker">Action Required</p>
+        <h2>Operational decisions</h2>
+      </div>
+      <div id="lb-action-list" class="admin-lb-action-list">
+        <article class="admin-lb-action-card"><strong>Loading</strong><p>Checking authority-backed actions.</p></article>
+      </div>
+    </section>
+
+    <section class="admin-lb-card">
+      <div class="admin-lb-card-heading">
+        <p class="jom-kicker">Estate Licensing</p>
+        <h2>Overview</h2>
+      </div>
+      <div class="admin-lb-metric-grid">
+        <article class="admin-lb-metric"><span>Organisations</span><strong id="lb-org-count">--</strong><p>Admin organisation authority.</p></article>
+        <article class="admin-lb-metric"><span>Monitored Sites</span><strong id="lb-site-count">--</strong><p>Current monitored estate scope.</p></article>
+        <article class="admin-lb-metric"><span>Product Users</span><strong id="lb-product-users">--</strong><p>Product-access assignments, not headline unique users.</p></article>
+        <article class="admin-lb-metric"><span>Role Rows</span><strong id="lb-role-rows">--</strong><p>Application-role rows returned by authority.</p></article>
+        <article class="admin-lb-metric"><span>Seat Limit</span><strong id="lb-seat-limit">--</strong><p>Only shown when exposed by Atlassian authority.</p></article>
+        <article class="admin-lb-metric"><span>Remaining Seats</span><strong id="lb-remaining-seats">--</strong><p>Only shown when verified by source data.</p></article>
+      </div>
+    </section>
+
+    <section class="admin-lb-card">
+      <div class="admin-lb-card-heading">
+        <p class="jom-kicker">Product Access</p>
+        <h2>Estate breakdown</h2>
+      </div>
+      <div class="admin-lb-table-wrap">
+        <table class="admin-lb-table">
+          <thead><tr><th>Product</th><th>Users</th><th>Seat Limit</th><th>Remaining</th><th>Status</th></tr></thead>
+          <tbody id="lb-products-body"><tr><td colspan="5">Loading product access.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-lb-card">
+      <div class="admin-lb-card-heading">
+        <p class="jom-kicker">Site Licensing</p>
+        <h2>Monitored site view</h2>
+      </div>
+      <div class="admin-lb-table-wrap">
+        <table class="admin-lb-table">
+          <thead><tr><th>Site</th><th>Users</th><th>Seat Limit</th><th>Remaining</th><th>Roles</th><th>Status</th></tr></thead>
+          <tbody id="lb-sites-body"><tr><td colspan="6">Loading site licensing.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- JOM_ADMIN_LB_REMOVE_OWNERSHIP_SECTION_V1: Administrative Ownership Coverage removed from Licensing & Billing page. -->
+
+    </section>
+
+    <section class="admin-lb-card">
+      <div class="admin-lb-card-heading">
+        <p class="jom-kicker">Billing Evidence</p>
+        <h2>Commercial authority</h2>
+      </div>
+      <div id="lb-billing-evidence" class="admin-lb-billing-grid"></div>
+    </section>
   </section>
 </main>
+
+<aside class="admin-lb-rail" aria-label="Licensing and billing summary">
+  <section class="admin-lb-rail-card admin-lb-rail-authority">
+    <p class="jom-kicker">Authority Status</p>
+    <strong id="lb-authority-status">Loading</strong>
+    <p id="lb-authority-note">OAuth/Admin authority only.</p>
+  </section>
+
+  <section class="admin-lb-rail-card">
+    <h2>Licensing Coverage</h2>
+    <dl class="admin-lb-rail-list">
+      <div><dt>Organisations</dt><dd id="lb-rail-orgs">--</dd></div>
+      <div><dt>Sites</dt><dd id="lb-rail-sites">--</dd></div>
+      <div><dt>Products</dt><dd id="lb-rail-products">--</dd></div>
+      <div><dt>Seat Capacity</dt><dd id="lb-rail-seat-limit">--</dd></div>
+      <div><dt>Used Seats</dt><dd id="lb-rail-users">--</dd></div>
+      <div><dt>Available Seats</dt><dd id="lb-rail-remaining">--</dd></div>
+    </dl>
+  </section>
+
+  <section class="admin-lb-rail-card">
+    <h2>Commercial Billing</h2>
+    <dl class="admin-lb-rail-list">
+      <div><dt>Status</dt><dd id="lb-rail-billing">--</dd></div>
+      <div><dt>Action Items</dt><dd id="lb-rail-actions">--</dd></div>
+    </dl>
+  </section>
+</aside>
+
+<script src="{{ url_for('static', filename='js/jom_admin_licensing_billing_v1.js') }}" defer></script>
 </body>
 </html>

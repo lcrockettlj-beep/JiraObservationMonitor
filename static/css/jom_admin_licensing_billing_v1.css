@@ -1,0 +1,336 @@
+/* JOM_ADMIN_LICENSING_BILLING_COMMAND_LAYOUT_V1
+   Owner CSS for Admin > Licensing & Billing.
+   Matches Command Centre rhythm: fixed left navigation, fixed right rail, centre content owns action items. */
+:root {
+  --admin-lb-ink: #092957;
+  --admin-lb-muted: #44546f;
+  --admin-lb-border: #dfe1e6;
+  --admin-lb-card: #ffffff;
+  --admin-lb-blue: #0c66e4;
+  --admin-lb-rail-width: var(--jom-layout-rail-width, 260px);
+  --admin-lb-edge: var(--jom-layout-edge, 16px);
+  --admin-lb-gap: var(--jom-layout-gap, 28px);
+  --admin-lb-top: var(--jom-layout-top, 16px);
+  --admin-lb-bottom: var(--jom-layout-bottom, 16px);
+}
+
+body[data-jom-page="admin-licensing-billing"] .jom-side-nav {
+  position: fixed;
+  left: var(--admin-lb-edge);
+  top: var(--admin-lb-top);
+  bottom: var(--admin-lb-bottom);
+  width: var(--admin-lb-rail-width);
+  height: auto;
+  max-height: none;
+}
+
+body[data-jom-page="admin-licensing-billing"] .jom-admin-licensing-v1 {
+  color: var(--admin-lb-ink);
+  margin-left: calc(var(--admin-lb-edge) + var(--admin-lb-rail-width) + var(--admin-lb-gap));
+  margin-right: calc(var(--admin-lb-edge) + var(--admin-lb-rail-width) + var(--admin-lb-gap));
+  padding-top: var(--admin-lb-top);
+  padding-bottom: 80px;
+  width: auto;
+  max-width: none;
+  display: grid;
+  gap: 22px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-main {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-hero,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-card {
+  background: var(--admin-lb-card);
+  border: 1px solid var(--admin-lb-border);
+  border-radius: 18px;
+  box-shadow: 0 16px 34px rgba(9,30,66,.08);
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-hero {
+  min-height: 220px;
+  display: grid;
+  align-content: center;
+  padding: 30px 34px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-hero h1 {
+  margin: 8px 0 10px;
+  color: var(--admin-lb-ink);
+  font-size: clamp(36px, 3.3vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -.03em;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-lede {
+  max-width: 820px;
+  margin: 0;
+  color: var(--admin-lb-muted);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-card {
+  padding: 28px 30px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-card-heading {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(9,30,66,.08);
+  text-align: left;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-card-heading h2 {
+  margin: 0;
+  color: var(--admin-lb-ink);
+  font-size: clamp(25px, 2.1vw, 32px);
+  line-height: 1.08;
+  letter-spacing: -.02em;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-action-list {
+  display: grid;
+  gap: 12px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-action-card,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-metric,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-billing-grid .jom-state-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--admin-lb-border);
+  border-radius: 14px;
+  background: #fbfcff;
+  padding: 18px 20px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-action-card strong,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-metric strong,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-billing-grid .jom-state-card strong {
+  margin: 0;
+  color: var(--admin-lb-ink);
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-action-card p,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-metric p,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-billing-grid .jom-state-card p {
+  margin: 0;
+  color: var(--admin-lb-muted);
+  line-height: 1.45;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-metric-grid,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-billing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-metric span,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-action-card span,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-billing-grid .jom-state-card span {
+  color: #5e6c84;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--admin-lb-border);
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-table th,
+body[data-jom-page="admin-licensing-billing"] .admin-lb-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(9,30,66,.08);
+  text-align: left;
+  vertical-align: middle;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-table th {
+  background: #f7f9fc;
+  color: #5e6c84;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail {
+  position: fixed;
+  top: var(--admin-lb-top);
+  right: var(--admin-lb-edge);
+  bottom: var(--admin-lb-bottom);
+  width: var(--admin-lb-rail-width);
+  z-index: 24;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px;
+  background: rgba(255,255,255,.94);
+  border: 1px solid rgba(223,225,230,.95);
+  border-radius: 22px;
+  box-shadow: 0 18px 45px rgba(9,30,66,.14);
+  backdrop-filter: blur(10px);
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-card {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-card + .admin-lb-rail-card {
+  border-top: 1px solid rgba(9,30,66,.10);
+  padding-top: 18px;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-card h2 {
+  margin: 0 0 12px;
+  color: var(--admin-lb-ink);
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-authority strong {
+  display: block;
+  margin: 8px 0;
+  color: var(--admin-lb-ink);
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-authority p {
+  margin: 0;
+  color: var(--admin-lb-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-list div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+  padding: 13px 14px;
+  border: 1px solid rgba(223,225,230,.98);
+  border-radius: 14px;
+  background: #fbfcff;
+  box-shadow: 0 8px 18px rgba(9,30,66,.05);
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-list dt {
+  color: var(--admin-lb-ink);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-list dd {
+  justify-self: end;
+  margin: 0;
+  min-width: 42px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #deebff;
+  color: #0052cc;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+}
+
+body[data-jom-page="admin-licensing-billing"] .site-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #deebff;
+  color: #0052cc;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+body[data-jom-page="admin-licensing-billing"] .site-badge--ok {
+  background: #e3fcef;
+  color: #006644;
+}
+
+@media(max-width:1180px){
+  body[data-jom-page="admin-licensing-billing"] .jom-side-nav {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(300px, 88vw);
+  }
+  body[data-jom-page="admin-licensing-billing"] .jom-admin-licensing-v1 {
+    margin: 0;
+    padding: 28px 18px 64px;
+  }
+  body[data-jom-page="admin-licensing-billing"] .admin-lb-rail {
+    position: static;
+    width: auto;
+    margin: 0 18px 24px;
+  }
+  body[data-jom-page="admin-licensing-billing"] .admin-lb-metric-grid,
+  body[data-jom-page="admin-licensing-billing"] .admin-lb-billing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media(max-width:680px){
+  body[data-jom-page="admin-licensing-billing"] .admin-lb-hero,
+  body[data-jom-page="admin-licensing-billing"] .admin-lb-card {
+    padding: 20px;
+  }
+  body[data-jom-page="admin-licensing-billing"] .admin-lb-metric-grid,
+  body[data-jom-page="admin-licensing-billing"] .admin-lb-billing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* JOM_ADMIN_LICENSING_BILLING_RAIL_REFOCUS_V1 START */
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail {
+  gap: 18px;
+}
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-card h2 {
+  margin-bottom: 12px;
+}
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-list div {
+  min-height: 48px;
+}
+body[data-jom-page="admin-licensing-billing"] .admin-lb-rail-list dd {
+  max-width: 112px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* JOM_ADMIN_LICENSING_BILLING_RAIL_REFOCUS_V1 END */
+

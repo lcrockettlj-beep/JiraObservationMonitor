@@ -744,6 +744,215 @@ def api_workspace_product_users_v1():
 # JOM_SITE_WORKSPACE_PRODUCT_USERS_PACK_V1 END
 
 
+
+# --- JOM_ADMIN_LICENSING_BILLING_AUTHORITY_V1 START ---
+# Owner contract for Admin > Licensing & Billing.
+# Truth rule: OAuth/Admin-backed runtime authority only. Commercial billing fields remain unavailable unless proven by authority.
+def _jom_admin_lb_int_v1(value, default=0):
+    try:
+        if value is None or value == "":
+            return default
+        return int(float(value))
+    except Exception:
+        return default
+
+def _jom_admin_lb_list_v1(value):
+    return value if isinstance(value, list) else []
+
+def _jom_admin_lb_dict_v1(value):
+    return value if isinstance(value, dict) else {}
+
+def _jom_admin_lb_key_v1(row):
+    if not isinstance(row, dict):
+        return ""
+    for field in ("site_key", "key", "site_name", "name", "site_url", "url", "cloud_id"):
+        value = row.get(field)
+        if value:
+            text = str(value).strip().lower()
+            if text.startswith("http") and ".atlassian.net" in text:
+                text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
+            return text.rstrip("/")
+    return ""
+
+def _jom_admin_lb_is_monitored_v1(row):
+    if not isinstance(row, dict):
+        return False
+    state = str(row.get("classification") or row.get("lifecycle") or row.get("collector_onboarding_status") or row.get("status") or "").strip().lower()
+    return bool(row.get("is_monitored") is True or row.get("monitored") is True or row.get("approved_monitored") is True or state in {"monitored", "monitoring_enabled"})
+
+def _jom_admin_lb_source_health_v1(label, payload):
+    if isinstance(payload, dict) and payload:
+        summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+        status = payload.get("status") or payload.get("overall_status") or summary.get("overall_state") or "available"
+        return {"label": label, "available": True, "status": status, "generated_at_utc": payload.get("generated_at_utc") or payload.get("served_at_utc") or payload.get("updated_at_utc")}
+    return {"label": label, "available": False, "status": "unavailable", "generated_at_utc": None}
+
+def _jom_admin_lb_products_v1(product_access):
+    roles = _jom_admin_lb_list_v1(product_access.get("roles"))
+    by_product = {}
+    for row in roles:
+        if not isinstance(row, dict):
+            continue
+        name = str(row.get("role_name") or row.get("role_key") or row.get("product") or "Atlassian product").strip() or "Atlassian product"
+        rec = by_product.setdefault(name, {"product": name, "users": 0, "seat_limit": 0, "remaining_seats": 0, "role_rows": 0, "status": "ok", "authority": "OAuth application role"})
+        rec["users"] += _jom_admin_lb_int_v1(row.get("user_count") or row.get("jira_product_user_count"), 0)
+        rec["seat_limit"] += _jom_admin_lb_int_v1(row.get("seat_limit") or row.get("jira_product_seat_limit"), 0)
+        rec["remaining_seats"] += _jom_admin_lb_int_v1(row.get("remaining_seats") or row.get("jira_product_remaining_seats"), 0)
+        rec["role_rows"] += 1
+    return sorted(by_product.values(), key=lambda item: (-item.get("users", 0), item.get("product", "")))
+
+def _jom_admin_lb_sites_v1(product_access, registry):
+    product_sites = _jom_admin_lb_list_v1(product_access.get("sites"))
+    registry_sites = _jom_admin_lb_list_v1(registry.get("sites"))
+    monitored_keys = {_jom_admin_lb_key_v1(row) for row in registry_sites if _jom_admin_lb_is_monitored_v1(row)}
+    if not monitored_keys:
+        monitored_keys = {_jom_admin_lb_key_v1(row) for row in product_sites if _jom_admin_lb_key_v1(row)}
+    out = []
+    for row in product_sites:
+        if not isinstance(row, dict):
+            continue
+        key = _jom_admin_lb_key_v1(row)
+        if monitored_keys and key and key not in monitored_keys:
+            continue
+        users = _jom_admin_lb_int_v1(row.get("jira_product_user_count"), 0)
+        seat_limit = _jom_admin_lb_int_v1(row.get("jira_product_seat_limit"), 0)
+        remaining = _jom_admin_lb_int_v1(row.get("jira_product_remaining_seats"), 0)
+        out.append({
+            "site_key": key,
+            "site_name": row.get("site_name") or row.get("name") or key,
+            "site_url": row.get("site_url") or row.get("url") or "",
+            "cloud_id": row.get("cloud_id"),
+            "product_users": users,
+            "seat_limit": seat_limit if seat_limit else None,
+            "remaining_seats": remaining if seat_limit else None,
+            "role_count": _jom_admin_lb_int_v1(row.get("jira_role_count"), 0),
+            "status": row.get("status") or "ok",
+            "authority": "OAuth application role",
+        })
+    return sorted(out, key=lambda item: (-_jom_admin_lb_int_v1(item.get("product_users"), 0), item.get("site_key") or ""))
+
+def _jom_admin_lb_actions_v1(authority, estate, sites, products, admin_contacts, source_health):
+    actions = []
+    if authority.get("commercial_billing") == "unavailable":
+        actions.append({
+            "level": "info",
+            "title": "Commercial billing authority unavailable",
+            "reason": "Current OAuth/Admin authority does not prove invoice, payment method, renewal date, or commercial contract values.",
+            "action": "Keep commercial billing fields unavailable until a proven billing authority source is added.",
+            "source": "truth_policy",
+        })
+    if estate.get("product_users") is None:
+        actions.append({"level": "review", "title": "Product user authority unavailable", "reason": "No product access total was available from the current authority contract.", "action": "Refresh product access authority and source health before reporting licensing totals.", "source": "estate_product_access"})
+    low_capacity = []
+    for site in sites:
+        limit = site.get("seat_limit")
+        rem = site.get("remaining_seats")
+        if isinstance(limit, int) and limit > 0 and isinstance(rem, int) and rem <= max(5, round(limit * 0.1)):
+            low_capacity.append(site)
+    if low_capacity:
+        actions.append({"level": "warning", "title": "Seat capacity review required", "reason": str(len(low_capacity)) + " site(s) are near exposed seat capacity.", "action": "Review product allocation and licence capacity for the affected site(s).", "source": "estate_product_access"})
+    if admin_contacts.get("status") in {"unavailable", "available_no_contacts_mapped"}:
+        actions.append({"level": "review", "title": "Admin ownership evidence incomplete", "reason": admin_contacts.get("reason") or "No mapped admin contacts were available.", "action": "Review Admin authority and role-assignment coverage.", "source": "estate_admin_contacts"})
+    for key, item in source_health.items():
+        if isinstance(item, dict) and item.get("status") in {"critical", "failed", "unavailable"}:
+            actions.append({"level": "review", "title": "Source health requires review", "reason": (item.get("label") or key) + " is " + str(item.get("status")), "action": "Open Source Health and refresh the affected authority source.", "source": key})
+    return actions[:8]
+
+def _jom_admin_licensing_billing_contract_v1():
+    registry = load_json("site_registry.json", {})
+    product_access = load_json("estate_product_access.json", {})
+    org_discovery = load_json("organisation_discovery.json", {})
+    admin_truth = load_json("admin_truth_v2.json", {})
+    admin_contacts = load_json("estate_admin_contacts_v1.json", {})
+    source_freshness = load_json("source_freshness_audit.json", {})
+    source_reliability = load_json("source_reliability_status.json", {})
+    product_refresh = load_json("product_access_refresh_status.json", {})
+
+    registry = _jom_admin_lb_dict_v1(registry)
+    product_access = _jom_admin_lb_dict_v1(product_access)
+    org_discovery = _jom_admin_lb_dict_v1(org_discovery)
+    admin_truth = _jom_admin_lb_dict_v1(admin_truth)
+    admin_contacts = _jom_admin_lb_dict_v1(admin_contacts)
+
+    registry_sites = _jom_admin_lb_list_v1(registry.get("sites"))
+    monitored_sites = [row for row in registry_sites if _jom_admin_lb_is_monitored_v1(row)]
+    product_summary = _jom_admin_lb_dict_v1(product_access.get("summary"))
+    products = _jom_admin_lb_products_v1(product_access)
+    sites = _jom_admin_lb_sites_v1(product_access, registry)
+    contacts = _jom_admin_lb_list_v1(admin_contacts.get("contacts"))
+    org_count = org_discovery.get("organisation_count")
+    if org_count is None:
+        orgs = org_discovery.get("organisations")
+        org_count = len(orgs) if isinstance(orgs, list) else None
+
+    authority = {
+        "oauth": "live" if product_access.get("live_collection") is True or product_access.get("status") in {"ok", "partial"} else "unavailable",
+        "admin": "live" if org_discovery.get("live_collection") is True or admin_contacts.get("status") in {"live", "available_no_contacts_mapped"} else "unavailable",
+        "commercial_billing": "unavailable",
+        "truth_policy": "OAuth/Admin authority only. Unproven commercial billing remains unavailable.",
+    }
+    estate = {
+        "organisations": org_count,
+        "monitored_sites": len(monitored_sites) if monitored_sites else len(sites),
+        "product_users": product_summary.get("total_jira_product_user_count"),
+        "seat_limit": product_summary.get("total_jira_seat_limit") if product_summary.get("total_jira_seat_limit") else None,
+        "remaining_seats": product_summary.get("total_jira_remaining_seats") if product_summary.get("total_jira_seat_limit") else None,
+        "role_rows": product_summary.get("jira_role_rows") or len(_jom_admin_lb_list_v1(product_access.get("roles"))),
+        "accessible_jira_resources": product_summary.get("accessible_jira_resource_count"),
+    }
+    source_health = {
+        "source_freshness": _jom_admin_lb_source_health_v1("Source freshness", source_freshness),
+        "source_reliability": _jom_admin_lb_source_health_v1("Source reliability", source_reliability),
+        "product_access_refresh": _jom_admin_lb_source_health_v1("Product access refresh", product_refresh),
+    }
+    admin_contact_payload = {
+        "status": admin_contacts.get("status") or "unavailable",
+        "reason": admin_contacts.get("reason") or "Admin contact authority has not returned mapped contacts.",
+        "contact_count": len(contacts),
+        "contacts": contacts[:25],
+        "summary": admin_contacts.get("summary") if isinstance(admin_contacts.get("summary"), dict) else {},
+        "authority": admin_contacts.get("source") or "atlassian_admin_role_assignments",
+    }
+    billing_evidence = {
+        "invoice_data": "unavailable",
+        "payment_methods": "unavailable",
+        "renewal_dates": "unavailable",
+        "commercial_contract": "unavailable",
+        "billing_account": "unavailable",
+        "reason": "Current OAuth/Admin authority does not prove invoice, payment method, renewal date, billing account, or commercial contract values.",
+        "future_authority_required": ["Billing admin API/export", "Invoice export", "Billing account authority", "Approved manual upload workflow"],
+    }
+    return {
+        "schema": "jom-admin-licensing-billing-authority-v1",
+        "generated_at_utc": now_utc(),
+        "status": "ok" if authority.get("oauth") == "live" else "review",
+        "authority": authority,
+        "estate": estate,
+        "actions": _jom_admin_lb_actions_v1(authority, estate, sites, products, admin_contact_payload, source_health),
+        "products": products,
+        "sites": sites,
+        "admin_contacts": admin_contact_payload,
+        "billing_evidence": billing_evidence,
+        "source_health": source_health,
+        "source_files": {
+            "site_registry": "runtime/data/site_registry.json",
+            "estate_product_access": "runtime/data/estate_product_access.json",
+            "organisation_discovery": "runtime/data/organisation_discovery.json",
+            "estate_admin_contacts": "runtime/data/estate_admin_contacts_v1.json",
+            "admin_truth": "runtime/data/admin_truth_v2.json",
+        },
+        "notes": [
+            "Product access and seat values are shown only when exposed by OAuth/Admin authority.",
+            "Commercial billing facts are unavailable until a proven billing authority source exists.",
+            "No static billing data, no estimates, and no inferred commercial values are used.",
+        ],
+    }
+
+@app.route("/api/admin/licensing-billing")
+def api_admin_licensing_billing_authority_v1():
+    return jsonify(_jom_admin_licensing_billing_contract_v1())
+# --- JOM_ADMIN_LICENSING_BILLING_AUTHORITY_V1 END ---
+
 # --- JOM OAUTH OWNER PAGE ROUTES v1 START ---
 # Owner-file page shell routes. OAuth/Admin is the only current authority pipeline.
 @app.route('/admin')
