@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect 
 import json
@@ -60,7 +60,7 @@ LEGACY_NON_WEBSITE_TRUTH_FILES = {
     "retired_runtime_marker.json",
     "retired_admin_enriched.json",
     "retired_admin_enriched_pretty.json",
-    "billing_seats.json",
+    "estate_product_access.json",
     "admin_named_access.json",
     "named_access_truth_v2.json",
 }
@@ -69,14 +69,14 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "admin_enriched_refresh_status.json",
     "admin_truth_v2.json",
     "backend_final_truth_chain_status.json",
-    "backend_legacy_truth_eradication_status.json",
+    "backend_final_truth_chain_status.json",
     "estate_access_truth.json",
     "estate_admin_site_inventory_v1.json",
     "estate_discovery_authority_v1.json",
     "estate_product_access.json",
     "organisation_auth_source_audit.json",
     "organisation_discovery.json",
-    "operational_source_recovery_status.json",
+    "runtime_execution_status.json",
     "product_access_refresh_status.json",
     "runtime_execution_history.json",
     "runtime_execution_status.json",
@@ -3233,7 +3233,7 @@ def write_runtime_json(filename, payload):
 def api_runtime_data_path_status():
     files = [
         "admin_enriched_refresh_status.json", "admin_truth_v2.json",
-        "backend_final_truth_chain_status.json", "backend_legacy_truth_eradication_status.json",
+        "backend_final_truth_chain_status.json", "backend_final_truth_chain_status.json",
         "estate_access_truth.json", "estate_access_truth.json",
         "estate_admin_site_inventory_v1.json", "estate_product_access.json",
         "runtime_execution_history.json",
