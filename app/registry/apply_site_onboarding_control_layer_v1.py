@@ -116,7 +116,6 @@ except Exception:
     rollback_content += f'$BackupRoot = "{backup_root}"\n'
     rollback_content += '$ProjectRoot = "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor"\n'
     rollback_content += 'Copy-Item (Join-Path $BackupRoot "app\\registry\\site_registry_builder.py") (Join-Path $ProjectRoot "app\\registry\\site_registry_builder.py") -Force -ErrorAction SilentlyContinue\n'
-        rollback_content += 'Remove-Item (Join-Path $ProjectRoot "app\\registry\\site_onboarding_control.py") -Force -ErrorAction SilentlyContinue\n'
     rollback_content += 'Write-Host "Site onboarding control layer rollback complete." -ForegroundColor Green\n'
     rollback.write_text(rollback_content, encoding="utf-8")
     status = {
