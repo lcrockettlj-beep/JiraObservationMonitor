@@ -1,37 +1,10 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Governance Report - Jira Observation Monitor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
-</head>
-<body data-jom-page="page-shell">
-{% include "_nav.html" %}
-<main class="jom-shell" id="jom-page-shell">
-  <section class="jom-card jom-hero" aria-label="Governance Report overview">
-    <div>
-      <p class="jom-kicker">Reporting</p>
-      <h1>Governance Report</h1>
-      <p class="jom-lede">Governance, control, compliance, permission, project, user, and configuration evidence available from OAuth-backed contracts.</p>
-    </div>
-    <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
-    </div>
-  </section>
-  <section class="jom-card" aria-label="Governance Report sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Users</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Projects</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Configuration</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Permissions</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Policy Compliance</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-    </div>
-  </section>
-</main>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><title>Governance Report - Jira Observation Monitor</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_governance_report_v1.css') }}"></head>
+<body data-jom-page="governance-report">{% include "_nav.html" %}
+<main class="jom-governance-report-v1" id="jom-page-shell" data-owner="JOM_GOVERNANCE_REPORT_AUTHORITY_V1">
+<section class="report-hero"><p class="jom-kicker">Reporting / Governance Report</p><h1>Governance Report</h1><p class="report-lede">Authority-backed reporting view using runtime/OAuth/Admin data only. Unproven metrics are shown as unavailable.</p></section>
+<section class="report-main"><section class="report-card"><div class="report-card-heading"><p class="jom-kicker">Actions</p><h2>Required decisions</h2></div><div id="report-action-list" class="report-action-list"><article class="report-action-card"><strong>Loading</strong><p>Checking report actions.</p></article></div></section>
+<section class="report-card"><div class="report-card-heading"><p class="jom-kicker">Summary</p><h2>Authority snapshot</h2></div><div class="report-metric-grid"><article class="report-metric"><span>Total Sites</span><strong id="report-total-sites">--</strong><p>Runtime site registry scope.</p></article><article class="report-metric"><span>Monitored Sites</span><strong id="report-monitored-sites">--</strong><p>Approved monitored estate scope.</p></article><article class="report-metric"><span>Coverage</span><strong id="report-coverage">--</strong><p>Monitoring coverage from runtime authority.</p></article><article class="report-metric"><span>Product Access</span><strong id="report-product-access">--</strong><p>Product-access assignments, not active users.</p></article><article class="report-metric"><span>Active Users</span><strong id="report-active-users">--</strong><p>Unavailable until proven.</p></article><article class="report-metric"><span>Commercial Billing</span><strong id="report-billing">--</strong><p>Unavailable until proven.</p></article></div></section>
+<section class="report-card"><div class="report-card-heading"><p class="jom-kicker">Source Assurance</p><h2>Evidence state</h2></div><div id="report-source-health" class="report-source-grid"></div></section></section></main>
+<aside class="report-rail"><section class="report-rail-card report-rail-status"><p class="jom-kicker">Report Status</p><strong id="report-status">Loading</strong><p id="report-authority-note">Runtime/OAuth/Admin authority only.</p></section><section class="report-rail-card"><h2>Snapshot</h2><dl class="report-rail-list"><div><dt>Coverage</dt><dd id="report-rail-coverage">--</dd></div><div><dt>Sites</dt><dd id="report-rail-sites">--</dd></div><div><dt>Product Access</dt><dd id="report-rail-product-access">--</dd></div><div><dt>Source Issues</dt><dd id="report-rail-failed">--</dd></div><div><dt>Actions</dt><dd id="report-rail-actions">--</dd></div></dl></section></aside>
+<script src="{{ url_for('static', filename='js/jom_governance_report_v1.js') }}" defer></script></body></html>
