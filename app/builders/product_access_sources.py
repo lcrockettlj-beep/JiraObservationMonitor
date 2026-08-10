@@ -9,8 +9,18 @@ STATUS = ROOT / "runtime" / "data" / "product_access_refresh_status.json"
 
 def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
 
+def command_exists(cmd):
+    if not cmd:
+        return False
+    if len(cmd) > 2 and cmd[1] == '-m':
+        return True
+    if len(cmd) > 1:
+        return Path(cmd[1]).exists()
+    return True
+
+
 def run(cmd, key, label):
-    exists = Path(cmd[1]).exists() if len(cmd) > 1 else True
+    exists = command_exists(cmd)
     rec = {"key": key, "label": label, "command": " ".join(cmd), "exists": exists, "started_at_utc": now(), "finished_at_utc": None, "status": "missing", "returncode": None, "stdout_tail": "", "stderr_tail": ""}
     if not exists:
         rec["finished_at_utc"] = now(); return rec
@@ -19,6 +29,7 @@ def run(cmd, key, label):
     rec["stdout_tail"]=(proc.stdout or "")[-4000:]; rec["stderr_tail"]=(proc.stderr or "")[-4000:]
     rec["status"]="ok" if proc.returncode == 0 else "failed"
     return rec
+
 
 def source(path):
     if not path.exists(): return {"exists": False, "timestamp": None}
@@ -30,7 +41,7 @@ def main():
     steps=[]
     builder = Path('app/builders/estate_product_access.py')
     if builder.exists():
-        steps.append(run([sys.executable, 'app/builders/estate_product_access.py', '--project-root', '.'], 'estate_product_access', 'Refresh Estate Product Access and Estate Access Truth'))
+        steps.append(run([sys.executable, '-m', 'app.builders.estate_product_access', '--project-root', '.'], 'estate_product_access', 'Refresh Estate Product Access and Estate Access Truth'))
     else:
         steps.append({"key":"estate_product_access", "label":"Refresh Estate Product Access and Estate Access Truth", "command":None, "exists":False, "started_at_utc":now(), "finished_at_utc":now(), "status":"manual_required", "returncode":None, "stdout_tail":"", "stderr_tail":"", "note":"app/builders/estate_product_access.py was not found. Product access data was not faked."})
     if Path('scripts/build_admin_truth_layer_v2.py').exists(): steps.append(run([sys.executable,'scripts/build_admin_truth_layer_v2.py'], 'admin_truth_v2', 'Rebuild Admin Truth v2 after product access refresh'))
@@ -45,3 +56,4 @@ def main():
     print(json.dumps({"overall_status":overall,"output":str(STATUS)}, indent=2))
 
 if __name__=='__main__': main()
+
