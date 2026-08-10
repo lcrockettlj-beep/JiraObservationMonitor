@@ -15,8 +15,7 @@ SOURCES = [
     {"key":"estate_access_truth", "label":"Estate Access Truth", "path":"runtime/data/estate_access_truth.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
     {"key":"estate_product_access", "label":"Product Access Authority", "path":"runtime/data/estate_access_truth.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate","Admin"]},
     {"key":"user_footprint", "label":"User Footprint", "path":"runtime/data/user_footprint.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
-    {"key":"latest_run", "label":"Latest Jira Runtime Run", "path":"runtime_contract_unavailable_latest_run_json", "timestamp_fields":["raw_collection_summary.collected_at_utc","run_timestamp_local"], "source_type":"LATEST_RUN", "pages":["Home","Estate","Site"]},
-    {"key":"latest_run_admin_enriched", "label":"Latest Admin Enriched Run", "path":"admin_truth_v2.json", "timestamp_fields":["raw_collection_summary.collected_at_utc","run_timestamp_local"], "source_type":"LATEST_RUN", "pages":["Home","Estate","Admin","Site"]},
+    {"key":"runtime_execution", "label":"Runtime Execution", "path":"runtime/data/runtime_execution_status.json", "timestamp_fields":["generated_at_utc","last_finished_at_utc","last_started_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Home","Estate","Admin","Runtime"]},
 ]
 
 def read_json(path):

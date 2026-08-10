@@ -17,13 +17,12 @@ OUT_RELIABILITY = DATA / "source_reliability_status.json"
 SOURCES = [
     ("site_registry", DATA / "site_registry.json", "Site Registry", "LIVE_OR_AUTO_REFRESHED"),
     ("admin_truth_v2", DATA / "admin_truth_v2.json", "Admin Truth Layer v2", "LIVE_OR_AUTO_REFRESHED"),
+    ("runtime_execution", DATA / "runtime_execution_status.json", "Runtime Execution", "LIVE_OR_AUTO_REFRESHED"),
     ("estate_product_access", DATA / "estate_product_access.json", "Estate Product Access", "LIVE_OR_AUTO_REFRESHED"),
     ("estate_access_truth", DATA / "estate_access_truth.json", "Estate Access Truth", "LIVE_OR_AUTO_REFRESHED"),
     ("runtime_live_truth_status", DATA / "runtime_live_truth_status.json", "Runtime Live Truth Status", "LIVE_STATUS"),
     ("user_footprint", DATA / "user_footprint.json", "User Footprint", "LIVE_OR_AUTO_REFRESHED_GUARDED"),
     ("estate_product_access", DATA / "runtime_contract_unavailable_estate_product_access_json", "Product Access Authority", "BLOCKED_LEGACY_INPUT"),
-    ("latest_run", ROOT / "runtime_contract_unavailable_latest_run_json", "Latest Jira Runtime Run", "BLOCKED_LEGACY_INPUT"),
-    ("latest_run_admin_enriched", ROOT / "runtime_contract_unavailable_latest_run_admin_enriched_json", "Latest Admin Enriched Run", "BLOCKED_LEGACY_INPUT"),
 ]
 
 

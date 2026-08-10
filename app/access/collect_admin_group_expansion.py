@@ -9,7 +9,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "runtime" / "data" / "admin_group_expansion.json"
 STATUS = ROOT / "runtime" / "data" / "admin_group_expansion_status.json"
 SITE_REGISTRY = ROOT / "runtime" / "data" / "site_registry.json"
@@ -28,6 +28,19 @@ def read_json(path, default=None):
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         return {"_read_error": str(exc)}
+
+
+def load_env():
+    values = dict(os.environ)
+    env_path = ROOT / ".env"
+    if env_path.exists():
+        for raw in env_path.read_text(encoding="utf-8-sig", errors="ignore").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
 
 
 def write_json(path, payload):
@@ -225,9 +238,10 @@ def collect_members_by_users_filter(org_id, directory_id, group_id, token):
 
 def main():
     parser = argparse.ArgumentParser(description="Collect Atlassian group-derived product access for JOM named access recovery with ARI site mapping.")
-    parser.add_argument("--org-id", default=os.getenv("ATLASSIAN_ORG_ID") or os.getenv("ATLASSIAN_ADMIN_ORG_ID") or "")
-    parser.add_argument("--directory-ids", default=os.getenv("ATLASSIAN_DIRECTORY_IDS") or os.getenv("ATLASSIAN_DIRECTORY_ID", ""))
-    parser.add_argument("--token", default=os.getenv("ATLASSIAN_ADMIN_TOKEN") or os.getenv("ATLASSIAN_ADMIN_API_KEY") or "")
+    env = load_env()
+    parser.add_argument("--org-id", default=env.get("ATLASSIAN_ORG_ID") or env.get("ATLASSIAN_ADMIN_ORG_ID") or "")
+    parser.add_argument("--directory-ids", default=env.get("ATLASSIAN_DIRECTORY_IDS") or env.get("ATLASSIAN_DIRECTORY_ID") or "")
+    parser.add_argument("--token", default=env.get("ATLASSIAN_SERVICE_ACCOUNT_ADMIN_API_KEY") or env.get("ATLASSIAN_SERVICE_ACCOUNT_ADMIN_TOKEN") or env.get("ATLASSIAN_ADMIN_TOKEN") or env.get("ATLASSIAN_ADMIN_API_KEY") or "")
     parser.add_argument("--max-groups", type=int, default=int(os.getenv("JOM_GROUP_EXPANSION_MAX_GROUPS", "500")))
     args = parser.parse_args()
 
