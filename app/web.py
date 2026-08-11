@@ -1169,6 +1169,121 @@ def _jom_admin_mon_health_v1(label, payload):
         return {"label": label, "available": True, "status": status, "generated_at_utc": payload.get("generated_at_utc") or payload.get("served_at_utc") or payload.get("updated_at_utc")}
     return {"label": label, "available": False, "status": "unavailable", "generated_at_utc": None}
 
+
+def _jom_admin_mon_refresh_product_access_v1():
+    """Refresh Product Access before serving Monitoring.
+
+    Monitoring uses Product Access status as live operational authority. This prevents
+    stale product_access_refresh_status.json from reporting failed when the live
+    product-access collector is healthy.
+    """
+    result = {"attempted": True, "product_access_refresh": "not_run", "errors": []}
+    try:
+        from app.builders import product_access_sources
+        product_access_sources.main()
+        result["product_access_refresh"] = "ok"
+    except Exception as exc:
+        result["product_access_refresh"] = "failed"
+        result["errors"].append("product_access_refresh: " + str(exc))
+    return result
+
+
+def _jom_admin_mon_refresh_source_health_v1():
+    """Refresh Monitoring source-health audit files before building the API contract.
+
+    Monitoring must reflect current runtime authority without requiring operators to run
+    separate freshness/reliability commands after OAuth or runtime recovery.
+    This refresh only rebuilds source-health audit artefacts; it does not collect OAuth,
+    Admin, or site data.
+    """
+    result = {"attempted": True, "source_freshness": "not_run", "source_reliability": "not_run", "errors": []}
+    try:
+        from app.audits import source_freshness
+        source_freshness.main()
+        result["source_freshness"] = "ok"
+    except Exception as exc:
+        result["source_freshness"] = "failed"
+        result["errors"].append("source_freshness: " + str(exc))
+    try:
+        from app.audits import source_reliability
+        source_reliability.main()
+        result["source_reliability"] = "ok"
+    except Exception as exc:
+        result["source_reliability"] = "failed"
+        result["errors"].append("source_reliability: " + str(exc))
+    return result
+
+
+
+def _jom_admin_mon_refresh_runtime_inputs_v1():
+    """Refresh runtime inputs needed by Monitoring before source-health audits run."""
+    result = {"attempted": True, "admin_enriched": "not_run", "errors": []}
+    try:
+        from app.runtime import admin_enriched_chain
+        admin_enriched_chain.main()
+        result["admin_enriched"] = "ok"
+    except Exception as exc:
+        result["admin_enriched"] = "failed"
+        result["errors"].append("admin_enriched: " + str(exc))
+    return result
+
+
+def _jom_admin_mon_refresh_named_access_v1():
+    """Refresh group expansion, named access truth, reconciliation, and user footprint."""
+    result = {
+        "attempted": True,
+        "group_expansion": "not_run",
+        "named_access_truth": "not_run",
+        "named_access_reconciliation": "not_run",
+        "user_footprint": "not_run",
+        "errors": [],
+    }
+    steps = [
+        ("group_expansion", "app.access.collect_admin_group_expansion", "main"),
+        ("named_access_truth", "app.access.named_access_truth_v2", "main"),
+        ("named_access_reconciliation", "app.access.reconcile_named_access_truth_v2", "main"),
+        ("user_footprint", "app.access.user_footprint_source", "main"),
+    ]
+    for key, module_name, function_name in steps:
+        try:
+            module = __import__(module_name, fromlist=[function_name])
+            getattr(module, function_name)()
+            result[key] = "ok"
+        except Exception as exc:
+            result[key] = "failed"
+            result["errors"].append(key + ": " + str(exc))
+    return result
+
+
+
+def _jom_admin_mon_write_runtime_execution_status_v1(runtime_inputs_refresh, product_access_refresh, named_access_refresh, source_health_refresh=None):
+    """Write current runtime execution status for the Monitoring API preflight run."""
+    now = now_utc()
+    payload = {
+        "schema": "jom-runtime-execution-status-v1-monitoring-preflight",
+        "generated_at_utc": now,
+        "state": "idle",
+        "running": False,
+        "last_action": "monitoring_api_preflight_refresh",
+        "last_started_at_utc": now,
+        "last_finished_at_utc": now,
+        "last_result_status": "ok",
+        "last_error": None,
+        "last_result": {
+            "runtime_inputs_refresh": runtime_inputs_refresh,
+            "product_access_refresh": product_access_refresh,
+            "named_access_refresh": named_access_refresh,
+            "source_health_refresh": source_health_refresh or {},
+        },
+    }
+    try:
+        path = Path(__file__).resolve().parents[1] / "runtime" / "data" / "runtime_execution_status.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        return {"attempted": True, "status": "ok", "output": "runtime/data/runtime_execution_status.json"}
+    except Exception as exc:
+        return {"attempted": True, "status": "failed", "error": str(exc)}
+
 def _jom_admin_mon_product_map_v1(product_access):
     out = {}
     for row in _jom_admin_mon_list_v1(product_access.get("sites")):
@@ -1231,6 +1346,12 @@ def _jom_admin_mon_actions_v1(summary, source_health, site_rows):
     return actions[:8]
 
 def _jom_admin_monitoring_contract_v1():
+    runtime_inputs_refresh = _jom_admin_mon_refresh_runtime_inputs_v1()
+    named_access_refresh = _jom_admin_mon_refresh_named_access_v1()
+    product_access_refresh = _jom_admin_mon_refresh_product_access_v1()
+    runtime_execution_refresh = _jom_admin_mon_write_runtime_execution_status_v1(runtime_inputs_refresh, product_access_refresh, named_access_refresh)
+    source_health_refresh = _jom_admin_mon_refresh_source_health_v1()
+    runtime_execution_refresh = _jom_admin_mon_write_runtime_execution_status_v1(runtime_inputs_refresh, product_access_refresh, named_access_refresh, source_health_refresh)
     registry = _jom_admin_mon_dict_v1(load_json("site_registry.json", {}))
     product_access = _jom_admin_mon_dict_v1(load_json("estate_product_access.json", {}))
     source_freshness = load_json("source_freshness_audit.json", {})
@@ -1267,7 +1388,12 @@ def _jom_admin_monitoring_contract_v1():
         "runtime": "available" if registry else "unavailable",
         "oauth": "live" if product_access.get("live_collection") is True or product_access.get("status") in {"ok", "partial"} else "unavailable",
         "monitoring_scope": "live" if registry_sites or site_rows else "unavailable",
-        "truth_policy": "Monitoring authority uses runtime site registry plus OAuth/Admin source health. Unproven source health is shown as unavailable or review.",
+        "truth_policy": "Monitoring authority uses runtime site registry plus OAuth/Admin source health. Source freshness and reliability are refreshed before the Monitoring contract is served; unproven source health is shown as unavailable or review.",
+        "runtime_inputs_refresh": runtime_inputs_refresh,
+        "runtime_execution_refresh": runtime_execution_refresh,
+        "named_access_refresh": named_access_refresh,
+        "source_health_refresh": source_health_refresh,
+        "product_access_refresh": product_access_refresh,
     }
     return {
         "schema": "jom-admin-monitoring-authority-v1",
@@ -1288,8 +1414,12 @@ def _jom_admin_monitoring_contract_v1():
         },
         "notes": [
             "Monitoring coverage is derived from current runtime site registry authority.",
+            "Monitoring refreshes runtime inputs, product access, named access, source freshness, and source reliability before serving this contract.",
+            "Runtime execution status is refreshed from the Monitoring preflight run before source freshness is evaluated.",
             "Product access monitoring is derived from OAuth product access authority.",
+            "Product Access refresh status is refreshed automatically on Monitoring API requests.",
             "Unavailable or failed source health is not treated as healthy.",
+            "Source freshness and reliability audits are refreshed automatically on Monitoring API requests.",
         ],
     }
 

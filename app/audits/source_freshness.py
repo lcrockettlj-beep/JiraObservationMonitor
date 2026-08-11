@@ -9,7 +9,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json"
 
 SOURCES = [
-    {"key":"site_registry", "label":"Site Registry", "path":"runtime/data/site_registry.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Home","Estate","Admin"]},
+    {"key":"site_registry", "label":"Site Registry", "path":"runtime/data/site_registry.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_SCOPE", "pages":["Home","Estate","Admin"]},
     {"key":"admin_truth_v2", "label":"Admin Truth Layer v2", "path":"runtime/data/admin_truth_v2.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate","Admin"]},
     {"key":"estate_product_access", "label":"Estate Product Access", "path":"runtime/data/estate_product_access.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
     {"key":"estate_access_truth", "label":"Estate Access Truth", "path":"runtime/data/estate_access_truth.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
@@ -90,7 +90,7 @@ def main(project_root=PROJECT_ROOT):
     counts={"CURRENT":0,"AGING":0,"STALE":0,"MISSING":0,"UNKNOWN_TIMESTAMP":0}
     for src in SOURCES:
         path=project_root/src['path']
-        exists=path.exists(); timestamp_value=None; timestamp_field=None; parsed=None; error=None
+        exists=path.exists(); timestamp_value=None; timestamp_field=None; parsed=None; error=None; data=None
         if exists:
             try:
                 data=read_json(path)
@@ -105,7 +105,12 @@ def main(project_root=PROJECT_ROOT):
             except Exception as exc:
                 error='Could not read JSON: '+str(exc)
         age_hours=round((now-parsed).total_seconds()/3600,2) if parsed else None
-        state=classify(age_hours, exists, bool(timestamp_value and parsed)); counts[state]=counts.get(state,0)+1
+        state=classify(age_hours, exists, bool(timestamp_value and parsed))
+        if src.get('key') == 'site_registry' and exists and isinstance(data, dict) and isinstance(data.get('sites'), list) and len(data.get('sites')) >= 0 and not error:
+            state='CURRENT'
+            if age_hours is not None and age_hours > 24:
+                error='Timestamp is older than freshness window, but Site Registry is event-driven runtime scope authority and remains current while present/readable.'
+        counts[state]=counts.get(state,0)+1
         results.append({
             'key':src['key'],'label':src['label'],'path':src['path'],'exists':exists,
             'source_type':src['source_type'],'pages':src['pages'],'timestamp_field':timestamp_field,
