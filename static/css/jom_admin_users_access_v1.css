@@ -45,3 +45,17 @@ body[data-jom-page="admin-users-access"] .site-badge {display:inline-flex;align-
 body[data-jom-page="admin-users-access"] .site-badge--ok {background:#e3fcef;color:#006644;}
 @media(max-width:1180px){body[data-jom-page="admin-users-access"] .jom-side-nav{top:0;bottom:0;left:0;width:min(300px,88vw);}body[data-jom-page="admin-users-access"] .jom-admin-users-v1{margin:0;padding:28px 18px 64px;}body[data-jom-page="admin-users-access"] .admin-users-rail{position:static;width:auto;margin:0 18px 24px;}body[data-jom-page="admin-users-access"] .admin-users-metric-grid,body[data-jom-page="admin-users-access"] .admin-users-risk-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:680px){body[data-jom-page="admin-users-access"] .admin-users-hero,body[data-jom-page="admin-users-access"] .admin-users-card{padding:20px;}body[data-jom-page="admin-users-access"] .admin-users-metric-grid,body[data-jom-page="admin-users-access"] .admin-users-risk-grid{grid-template-columns:1fr;}}
+
+/* JOM Users and Access clarity alignment v1 */
+body[data-jom-page="admin-users-access"] .admin-users-metric-grid--four{grid-template-columns:repeat(2,minmax(0,1fr))}
+body[data-jom-page="admin-users-access"] .admin-users-metric span,
+body[data-jom-page="admin-users-access"] .admin-users-action-card span,
+body[data-jom-page="admin-users-access"] .admin-users-risk span{font-size:13px;font-weight:800;letter-spacing:0;text-transform:none}
+body[data-jom-page="admin-users-access"] .admin-users-section-help{margin:-4px 0 18px;color:var(--admin-users-muted);font-size:14px;line-height:1.5}
+body[data-jom-page="admin-users-access"] .admin-users-action-card--ok{border-left:4px solid #36b37e}
+body[data-jom-page="admin-users-access"] .admin-users-action-card--attention{border-left:4px solid #ffab00}
+body[data-jom-page="admin-users-access"] .admin-users-action-card--unavailable{border-left:4px solid #de350b}
+body[data-jom-page="admin-users-access"] .site-badge--attention{background:#fff0b3;color:#974f0c}
+body[data-jom-page="admin-users-access"] .site-badge--unavailable{background:#ffebe6;color:#bf2600}
+body[data-jom-page="admin-users-access"] .admin-users-rail-copy{margin:0;color:var(--admin-users-muted);font-size:13px;line-height:1.45}
+@media(max-width:680px){body[data-jom-page="admin-users-access"] .admin-users-metric-grid--four{grid-template-columns:1fr}}

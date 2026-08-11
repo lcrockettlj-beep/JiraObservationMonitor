@@ -3,84 +3,65 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+.pytest_cache/
 
 # Virtual environments
 .venv/
 venv/
 env/
 
-# Secrets / auth
+# Secrets and authentication
 .env
 tokens.json
 .auth_state.json
 
-# Runtime / generated outputs
-latest_run.json
-latest_run_pretty.json
-reports/
-snapshots/
-
-# Editors / OS
+# Editors and operating system
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 
-# Test / cache
-.pytest_cache/
+# Flask and local instance data
 instance/
 
-# Sprint 9 — Runtime contract snapshot (regenerated on every sync)
-docs/control/runtime_contract_snapshot.json
-
-# Sprint 9 — Scheduled task log (rotates frequently)
-docs/control/logs/# temporary delivery scripts
-scripts/installers/temp/
-
-latest_run_admin_enriched.json
-latest_run_admin_enriched_pretty.json
-latest_run_alerted.json
-latest_run_alerted_pretty.json
-latest_run_intelligence.json
-latest_run_intelligence_pretty.json
-latest_run_safe_partial.json
-backups/
-__pycache__/
-*.pyc
-reports/runtime_restore_*.txt
-reports/sprint10_phase2_audit_*.txt
-reports/sprint11_phase1_release_audit.txt
-reports/review_*.txt
-
-
-latest_run_admin_enriched.json
-latest_run_admin_enriched_pretty.json
-latest_run_alerted.json
-latest_run_alerted_pretty.json
-latest_run_intelligence.json
-latest_run_intelligence_pretty.json
-latest_run_safe_partial.json
-backups/
-__pycache__/
-*.pyc
-reports/runtime_restore_*.txt
-reports/sprint10_phase2_audit_*.txt
-reports/sprint11_phase1_release_audit.txt
-reports/review_*.txt
-
-# Runtime / snapshots
+# Runtime and generated top-level outputs
 latest_run*.json
+snapshots/
 snapshots/*.json
 
+# Reports and generated audit outputs
+reports/
+reports/runtime_restore_*.txt
+reports/sprint10_phase2_audit_*.txt
+reports/sprint11_phase1_release_audit.txt
+reports/review_*.txt
+
 # Backup system
+backups/
 backups/latest_runtime/history/*
 backups/latest_runtime/current/*
 backups/latest_runtime/latest_manifest.json
 
 # Logs
 docs/control/logs/
-
-# Temp backups
-*.bak_*
 DisabledUsersPack/logs/
 DisabledUsersPack/output/
+
+# Temporary delivery scripts
+scripts/installers/temp/
+
+# Temporary backups
+*.bak_*
+
+# Sprint 9: Runtime contract snapshot, regenerated on every sync
+docs/control/runtime_contract_snapshot.json
+
+# Sprint 9: Scheduled task logs rotate frequently
+docs/control/logs/
+
+# Identity-bearing runtime authority contracts
+# These files are required locally at runtime but contain stable identity keys
+# or member-level records and must not be committed to source control.
+runtime/data/admin_directory_users.json
+runtime/data/admin_group_expansion.json
+runtime/data/live_named_access_contract

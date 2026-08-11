@@ -1,22 +1,40 @@
 {
   "schema": "jom-admin-enriched-refresh-status-v2",
-  "generated_at_utc": "2026-07-30T13:47:29.534112Z",
+  "generated_at_utc": "2026-08-11T13:51:17.618620Z",
   "overall_status": "ok",
-  "latest_run_admin_enriched": {
-    "exists": false,
-    "state": "MISSING"
+  "admin_directory_users_refresh": {
+    "exists": true,
+    "state": "PRESENT",
+    "timestamp": "2026-08-11T13:51:15Z"
+  },
+  "admin_truth_refresh": {
+    "exists": true,
+    "state": "PRESENT",
+    "timestamp": "2026-08-11T13:51:17Z"
   },
   "steps": [
     {
       "key": "admin_api_enrichment",
-      "label": "Refresh latest_run_admin_enriched from current latest_run",
+      "label": "Refresh admin_truth_refresh from current retired_runtime_marker",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_enriched_sources",
       "exists": true,
-      "started_at_utc": "2026-07-30T13:47:29.020602Z",
-      "finished_at_utc": "2026-07-30T13:47:29.131563Z",
+      "started_at_utc": "2026-08-11T13:51:15.242000Z",
+      "finished_at_utc": "2026-08-11T13:51:15.384096Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"overall_status\": \"manual_required\",\n  \"admin_enriched_state\": \"MISSING\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_enriched_refresh_status.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "admin_directory_users",
+      "label": "Refresh privacy-safe paginated Admin Directory user authority",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.admin_named_access_endpoint_probe",
+      "exists": true,
+      "started_at_utc": "2026-08-11T13:51:15.384823Z",
+      "finished_at_utc": "2026-08-11T13:51:17.400213Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "Admin Directory users authority collected.\n{\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_directory_users.json\",\n  \"status\": \"ok\",\n  \"pagination_complete\": true,\n  \"directory_count\": 1,\n  \"unique_accounts\": 141,\n  \"errors\": 0\n}\n",
       "stderr_tail": ""
     },
     {
@@ -24,11 +42,11 @@
       "label": "Rebuild Admin Truth Layer v2",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_truth_layer_v2",
       "exists": true,
-      "started_at_utc": "2026-07-30T13:47:29.131682Z",
-      "finished_at_utc": "2026-07-30T13:47:29.383586Z",
+      "started_at_utc": "2026-08-11T13:51:17.400399Z",
+      "finished_at_utc": "2026-08-11T13:51:17.478978Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "Admin Truth Layer v2 generated.\n{\n  \"status\": \"billing_missing\",\n  \"severity\": \"warning\",\n  \"interpretation\": \"API product access users are available but billing seats are missing. Use API as operational count and review billing source.\",\n  \"admin_human_users\": 0,\n  \"billing_jira_seats\": 0,\n  \"api_product_users\": 161,\n  \"api_minus_billing\": 161,\n  \"api_billing_variance_abs\": 161,\n  \"billing_to_human_ratio\": 0,\n  \"api_product_to_human_ratio\": 0,\n  \"confirmed_product_site_count\": 5,\n  \"accessible_jira_resource_count\": 5,\n  \"blocked_resource_count\": 0\n}\nJSON: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\admin_truth_v2.json\nReport: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\admin_truth_v2.md\n",
+      "stdout_tail": "Admin Truth Layer v2 generated.\n{\n  \"status\": \"billing_missing\",\n  \"severity\": \"warning\",\n  \"interpretation\": \"API product access users are available but billing seats are missing. Use API as operational count and review billing source.\",\n  \"admin_human_users\": 141,\n  \"billing_jira_seats\": 0,\n  \"api_product_users\": 162,\n  \"api_minus_billing\": 162,\n  \"api_billing_variance_abs\": 162,\n  \"billing_to_human_ratio\": 0.0,\n  \"api_product_to_human_ratio\": 1.15,\n  \"confirmed_product_site_count\": 5,\n  \"accessible_jira_resource_count\": 6,\n  \"blocked_resource_count\": 1\n}\nJSON: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\admin_truth_v2.json\nReport: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\admin_truth_v2.md\n",
       "stderr_tail": ""
     },
     {
@@ -36,11 +54,11 @@
       "label": "Rebuild source freshness audit",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_freshness",
       "exists": true,
-      "started_at_utc": "2026-07-30T13:47:29.384317Z",
-      "finished_at_utc": "2026-07-30T13:47:29.435936Z",
+      "started_at_utc": "2026-08-11T13:51:17.479732Z",
+      "finished_at_utc": "2026-08-11T13:51:17.527703Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"source_count\": 8,\n  \"counts\": {\n    \"CURRENT\": 6,\n    \"AGING\": 0,\n    \"STALE\": 0,\n    \"MISSING\": 2,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_freshness_audit.json\n",
+      "stdout_tail": "{\n  \"overall_state\": \"OK\",\n  \"source_count\": 7,\n  \"counts\": {\n    \"CURRENT\": 7,\n    \"AGING\": 0,\n    \"STALE\": 0,\n    \"MISSING\": 0,\n    \"UNKNOWN_TIMESTAMP\": 0\n  },\n  \"billing_timestamp_added\": false\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_freshness_audit.json\n",
       "stderr_tail": ""
     },
     {
@@ -48,8 +66,8 @@
       "label": "Rebuild guarded user footprint source",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.user_footprint_source",
       "exists": true,
-      "started_at_utc": "2026-07-30T13:47:29.436959Z",
-      "finished_at_utc": "2026-07-30T13:47:29.484764Z",
+      "started_at_utc": "2026-08-11T13:51:17.527868Z",
+      "finished_at_utc": "2026-08-11T13:51:17.573508Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"source_status\": \"unavailable\",\n  \"safe\": false,\n  \"reason\": \"No named access reconciliation file is available.\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\user_footprint.json\"\n}\n",
@@ -60,11 +78,11 @@
       "label": "Rebuild source reliability status",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_reliability",
       "exists": true,
-      "started_at_utc": "2026-07-30T13:47:29.484895Z",
-      "finished_at_utc": "2026-07-30T13:47:29.534085Z",
+      "started_at_utc": "2026-08-11T13:51:17.573642Z",
+      "finished_at_utc": "2026-08-11T13:51:17.618588Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"issue_count\": 3,\n  \"freshness_overall\": \"ATTENTION\",\n  \"runtime_refresh_overall\": null,\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_reliability_status.json\n",
+      "stdout_tail": "{\n  \"issue_count\": 1,\n  \"freshness_overall\": \"OK\",\n  \"runtime_refresh_overall\": null,\n  \"user_footprint_status\": \"unavailable\"\n}\nOutput: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\source_reliability_status.json\n",
       "stderr_tail": ""
     }
   ]

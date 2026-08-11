@@ -1,16 +1,16 @@
 {
   "schema": "jom-product-access-refresh-status-v1",
-  "generated_at_utc": "2026-07-30T13:47:29.725839Z",
-  "overall_status": "failed",
+  "generated_at_utc": "2026-08-11T13:52:07.537484Z",
+  "overall_status": "ok",
   "sources": {
     "estate_product_access": {
       "exists": true,
-      "timestamp": "2026-07-30T13:45:24Z",
+      "timestamp": "2026-08-11T13:52:07Z",
       "schema": "jom-estate-product-access-v2-live"
     },
     "estate_access_truth": {
       "exists": true,
-      "timestamp": "2026-07-30T13:45:24Z",
+      "timestamp": "2026-08-11T13:52:07Z",
       "schema": "jom-estate-access-truth-v2-live"
     }
   },
@@ -18,22 +18,22 @@
     {
       "key": "estate_product_access",
       "label": "Refresh Estate Product Access and Estate Access Truth",
-      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe app/builders/estate_product_access.py --project-root .",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.estate_product_access --project-root .",
       "exists": true,
-      "started_at_utc": "2026-07-30T13:47:29.585024Z",
-      "finished_at_utc": "2026-07-30T13:47:29.652241Z",
-      "status": "failed",
-      "returncode": 1,
-      "stdout_tail": "",
-      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\app\\builders\\estate_product_access.py\", line 3, in <module>\n    from app.shared._project_bootstrap import ensure_project_root_on_path\nModuleNotFoundError: No module named 'app'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\app\\builders\\estate_product_access.py\", line 5, in <module>\n    from _project_bootstrap import ensure_project_root_on_path\nModuleNotFoundError: No module named '_project_bootstrap'\n"
+      "started_at_utc": "2026-08-11T13:52:03.898111Z",
+      "finished_at_utc": "2026-08-11T13:52:07.487030Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"product_access_status\": \"partial\",\n  \"summary\": {\n    \"accessible_jira_resource_count\": 6,\n    \"sites_with_jira_roles\": 5,\n    \"total_jira_product_user_count\": 162,\n    \"total_jira_seat_limit\": 108150,\n    \"total_jira_remaining_seats\": 107988,\n    \"jira_role_rows\": 5,\n    \"error_site_count\": 1\n  }\n}\n",
+      "stderr_tail": ""
     },
     {
       "key": "source_freshness",
       "label": "Rebuild source freshness audit",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
       "exists": true,
-      "started_at_utc": "2026-07-30T13:47:29.652357Z",
-      "finished_at_utc": "2026-07-30T13:47:29.725759Z",
+      "started_at_utc": "2026-08-11T13:52:07.487150Z",
+      "finished_at_utc": "2026-08-11T13:52:07.537412Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"freshness\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_freshness_audit.json\",\n  \"reliability\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_reliability_status.json\",\n  \"issues\": 3\n}\n",

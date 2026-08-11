@@ -10,66 +10,64 @@
 </head>
 <body data-jom-page="admin-monitoring">
 {% include "_nav.html" %}
-
 <main class="jom-admin-monitoring-v1" id="jom-page-shell" data-owner="JOM_ADMIN_MONITORING_AUTHORITY_V1">
   <section class="admin-mon-hero" aria-label="Monitoring overview">
     <p class="jom-kicker">Admin / Monitoring</p>
     <h1>Monitoring</h1>
-    <p class="admin-mon-lede">Action-led monitoring authority view. The centre shows monitoring decisions, coverage, site status, and source health. The right rail summarises monitoring status only.</p>
+    <p class="admin-mon-lede">Monitor the coverage, operational health, and data quality of the Jira estate. Use this page to confirm that monitoring is working and identify sources or sites that need attention.</p>
   </section>
-
   <section class="admin-mon-main" aria-label="Monitoring actions">
     <section class="admin-mon-card">
-      <div class="admin-mon-card-heading"><p class="jom-kicker">Action Required</p><h2>Operational decisions</h2></div>
-      <div id="mon-action-list" class="admin-mon-action-list"><article class="admin-mon-action-card"><strong>Loading</strong><p>Checking monitoring authority.</p></article></div>
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Current position</p><h2>Operational decisions</h2></div>
+      <div id="mon-action-list" class="admin-mon-action-list"><article class="admin-mon-action-card"><strong>Loading</strong><p>Checking current monitoring health.</p></article></div>
     </section>
-
     <section class="admin-mon-card">
-      <div class="admin-mon-card-heading"><p class="jom-kicker">Monitoring Coverage</p><h2>Current scope</h2></div>
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Estate monitoring</p><h2>Monitoring scope</h2></div>
       <div class="admin-mon-metric-grid">
-        <article class="admin-mon-metric"><span>Total Sites</span><strong id="mon-total-sites">--</strong><p>Current site registry scope.</p></article>
-        <article class="admin-mon-metric"><span>Monitored Sites</span><strong id="mon-monitored-sites">--</strong><p>Sites currently enabled for monitoring.</p></article>
-        <article class="admin-mon-metric"><span>Coverage</span><strong id="mon-coverage">--</strong><p>Monitored-site coverage from runtime authority.</p></article>
-        <article class="admin-mon-metric"><span>Product Sites</span><strong id="mon-product-sites">--</strong><p>Product access sites returned by OAuth authority.</p></article>
-        <article class="admin-mon-metric"><span>Product Users</span><strong id="mon-product-users">--</strong><p>Product-access assignments, not active users.</p></article>
-        <article class="admin-mon-metric"><span>Failed Sources</span><strong id="mon-failed-sources">--</strong><p>Source health items requiring review.</p></article>
+        <article class="admin-mon-metric"><span>Estate sites</span><strong id="mon-total-sites">--</strong><p>Sites currently included in the JOM estate scope.</p></article>
+        <article class="admin-mon-metric"><span>Monitored sites</span><strong id="mon-monitored-sites">--</strong><p>Estate sites actively included in monitoring collection.</p></article>
+        <article class="admin-mon-metric"><span>Monitoring coverage</span><strong id="mon-coverage">--</strong><p>Percentage of estate sites currently covered by monitoring.</p></article>
+        <article class="admin-mon-metric"><span>Accessible Jira sites</span><strong id="mon-product-sites">--</strong><p>Jira sites visible to the current OAuth authority. This can include sites outside the monitored JOM scope.</p></article>
+        <article class="admin-mon-metric"><span>Jira access assignments</span><strong id="mon-product-users">--</strong><p>Jira product-access assignments across accessible sites. This is not a unique-user or active-user count, and one person can be counted more than once.</p></article>
+        <article class="admin-mon-metric"><span>Monitoring issues</span><strong id="mon-failed-sources">--</strong><p>Monitoring sources currently reporting a failure, error, or unavailable authority.</p></article>
       </div>
     </section>
-
     <section class="admin-mon-card">
-      <div class="admin-mon-card-heading"><p class="jom-kicker">Monitored Site Status</p><h2>Site coverage</h2></div>
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Monitored estate</p><h2>Site monitoring status</h2></div>
       <div class="admin-mon-table-wrap">
         <table class="admin-mon-table">
-          <thead><tr><th>Site</th><th>Monitoring</th><th>Product Access</th><th>Product Users</th><th>Roles</th></tr></thead>
-          <tbody id="mon-sites-body"><tr><td colspan="5">Loading monitored sites.</td></tr></tbody>
+          <thead><tr><th>Site</th><th>Monitoring</th><th>Product access</th><th>Jira access assignments</th></tr></thead>
+          <tbody id="mon-sites-body"><tr><td colspan="4">Loading monitored sites.</td></tr></tbody>
         </table>
       </div>
     </section>
-
     <section class="admin-mon-card">
-      <div class="admin-mon-card-heading"><p class="jom-kicker">Collector / Source Health</p><h2>Authority checks</h2></div>
+      <div class="admin-mon-card-heading"><p class="jom-kicker">Operational source checks</p><h2>Monitoring health</h2></div>
+      <p class="admin-mon-section-help">Each check confirms whether a required monitoring source was refreshed and is safe to use. Statuses are presented consistently as Healthy, Attention, or Unavailable.</p>
       <div id="mon-source-health" class="admin-mon-source-grid"></div>
     </section>
   </section>
 </main>
-
 <aside class="admin-mon-rail" aria-label="Monitoring summary">
   <section class="admin-mon-rail-card admin-mon-rail-authority">
-    <p class="jom-kicker">Monitoring Status</p>
+    <p class="jom-kicker">Monitoring status</p>
     <strong id="mon-authority-status">Loading</strong>
-    <p id="mon-authority-note">Runtime/OAuth authority only.</p>
+    <p id="mon-authority-note">Checking monitored-site coverage and source health.</p>
   </section>
   <section class="admin-mon-rail-card">
-    <h2>Coverage</h2>
+    <h2>Current summary</h2>
     <dl class="admin-mon-rail-list">
       <div><dt>Coverage</dt><dd id="mon-rail-coverage">--</dd></div>
-      <div><dt>Sites</dt><dd id="mon-rail-sites">--</dd></div>
-      <div><dt>Failed Sources</dt><dd id="mon-rail-failed">--</dd></div>
-      <div><dt>Action Items</dt><dd id="mon-rail-actions">--</dd></div>
+      <div><dt>Monitored sites</dt><dd id="mon-rail-sites">--</dd></div>
+      <div><dt>Issues</dt><dd id="mon-rail-failed">--</dd></div>
+      <div><dt>Required actions</dt><dd id="mon-rail-actions">--</dd></div>
     </dl>
   </section>
+  <section class="admin-mon-rail-card">
+    <h2>Last validation</h2>
+    <p class="admin-mon-rail-copy" id="mon-last-validation">Unavailable</p>
+  </section>
 </aside>
-
 <script src="{{ url_for('static', filename='js/jom_admin_monitoring_v1.js') }}" defer></script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 {
   "schema": "jom-admin-truth-layer-v2",
-  "generated_at_utc": "2026-07-30T13:47:29Z",
+  "generated_at_utc": "2026-08-11T13:51:17Z",
   "source_policy": {
     "identity_truth": "Atlassian Admin API enriched runtime payload",
     "commercial_billing_truth": "runtime/data/estate_access_truth.json",
     "product_count_truth": "runtime/data/estate_product_access.json from Jira application roles",
-    "named_access_truth": "not active; user-to-site mapping remains hidden until Directory/export source is verified",
+    "named_access_truth": "runtime/data/admin_directory_users.json; privacy-minimised, fully paginated Atlassian Directory account authority",
     "excluded_sources": [
       "Jira /rest/api/3/users/search for named access",
       "site visibility as a proxy for product access",
@@ -16,34 +16,37 @@
     "status": "billing_missing",
     "severity": "warning",
     "interpretation": "API product access users are available but billing seats are missing. Use API as operational count and review billing source.",
-    "admin_human_users": 0,
+    "admin_human_users": 141,
     "billing_jira_seats": 0,
-    "api_product_users": 161,
-    "api_minus_billing": 161,
-    "api_billing_variance_abs": 161,
-    "billing_to_human_ratio": 0,
-    "api_product_to_human_ratio": 0,
+    "api_product_users": 162,
+    "api_minus_billing": 162,
+    "api_billing_variance_abs": 162,
+    "billing_to_human_ratio": 0.0,
+    "api_product_to_human_ratio": 1.15,
     "confirmed_product_site_count": 5,
-    "accessible_jira_resource_count": 5,
-    "blocked_resource_count": 0
+    "accessible_jira_resource_count": 6,
+    "blocked_resource_count": 1
   },
   "admin_identity": {
-    "org_users": 0,
-    "active_users": 0,
-    "managed_users": 0,
-    "human_users": 0,
+    "org_users": 141,
+    "active_users": null,
+    "managed_users": 136,
+    "human_users": 141,
     "app_accounts": 0,
     "suspended_users": 0,
+    "mfa_enabled": 23,
+    "mfa_disabled": 118,
+    "mfa_unknown": 0,
+    "platform_role_assignments": 44,
     "source_fields": {
-      "human_rows": 0,
-      "managed_rows": 0,
-      "app_rows": 0,
-      "disabled_rows": 0,
-      "admin_summary_present": false,
-      "estate_summary_present": false
+      "user_rows": 141,
+      "pagination_complete": true,
+      "directory_count": 1,
+      "page_count": 3,
+      "privacy_minimised": true
     },
-    "source_file": "",
-    "payload_available": false
+    "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\admin_directory_users.json",
+    "payload_available": true
   },
   "billing_truth": {
     "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\estate_access_truth.json",
@@ -55,24 +58,74 @@
   "product_access_truth": {
     "source_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\estate_product_access.json",
     "truth_file": "C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\estate_access_truth.json",
-    "api_product_users": 161,
-    "api_product_seat_limit": 104160,
-    "api_product_remaining_seats": 103999,
-    "accessible_jira_resource_count": 5,
+    "api_product_users": 162,
+    "api_product_seat_limit": 108150,
+    "api_product_remaining_seats": 107988,
+    "accessible_jira_resource_count": 6,
     "confirmed_product_site_count": 5,
-    "blocked_resource_count": 0,
+    "blocked_resource_count": 1,
     "payload_available": true
   },
-  "blocked_resources": [],
+  "confirmed_product_sites": [
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "jira_product_user_count": 63,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "jira_product_user_count": 57,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "jira_product_user_count": 31,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "jira_product_user_count": 6,
+      "jira_role_count": 1,
+      "status": "ok"
+    },
+    {
+      "site_key": "netdev-jira",
+      "site_name": "netdev-jira",
+      "site_url": "https://netdev-jira.atlassian.net",
+      "jira_product_user_count": 5,
+      "jira_role_count": 1,
+      "status": "ok"
+    }
+  ],
+  "blocked_resources": [
+    {
+      "site_key": "gli-usa",
+      "site_name": "gli-usa",
+      "site_url": "https://gli-usa.atlassian.net",
+      "status": "error",
+      "reason": "{\"code\":403,\"message\":\"Tenant is restricted: user-cancellation\"}"
+    }
+  ],
   "controls": {
     "named_user_footprint_visible": false,
-    "named_user_footprint_guard_reason": "Current verified source supports product counts, not per-user site entitlement. Named-user footprint remains hidden.",
+    "named_user_footprint_guard_reason": "Directory account authority is verified, but named per-site entitlement remains hidden until resource-level product access mapping is proven.",
     "safe_to_show_estate_totals": true,
     "safe_to_show_named_site_access": false
   },
   "next_actions": [
-    "Locate Atlassian Directory export or Admin API source that matches the Directory Apps tab per user.",
-    "Validate a sample of users against Atlassian Directory before re-enabling named footprint.",
+    "Keep active-user reporting unavailable until last-active authority and an activity policy are proven.",
+    "Keep named per-site entitlement hidden until resource-level product access mapping is proven.",
     "Do not use /users/search output as named licence truth."
   ]
 }

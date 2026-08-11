@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import importlib.util
 import json
@@ -107,6 +107,10 @@ def main() -> Dict[str, Any]:
     ], "admin_api_enrichment", "Refresh admin_truth_refresh from current retired_runtime_marker"))
 
     steps.append(run([
+        {"type": "module", "value": "app.access.admin_named_access_endpoint_probe"},
+    ], "admin_directory_users", "Refresh privacy-safe paginated Admin Directory user authority"))
+
+    steps.append(run([
         {"type": "module", "value": "app.builders.admin_truth_layer_v2"},
         {"type": "script", "value": "scripts/build_admin_truth_layer_v2.py"},
     ], "admin_truth_v2", "Rebuild Admin Truth Layer v2"))
@@ -133,7 +137,8 @@ def main() -> Dict[str, Any]:
         "schema": "jom-admin-enriched-refresh-status-v2",
         "generated_at_utc": now(),
         "overall_status": overall,
-        "admin_truth_refresh": freshness(ROOT / "admin_truth_v2.json"),
+        "admin_directory_users_refresh": freshness(ROOT / "runtime" / "data" / "admin_directory_users.json"),
+        "admin_truth_refresh": freshness(ROOT / "runtime" / "data" / "admin_truth_v2.json"),
         "steps": steps,
     }
     STATUS.parent.mkdir(parents=True, exist_ok=True)

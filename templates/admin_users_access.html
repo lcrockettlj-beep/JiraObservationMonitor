@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Users & Access - Jira Observation Monitor</title>
+  <title>Users &amp; Access - Jira Observation Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
@@ -10,63 +10,62 @@
 </head>
 <body data-jom-page="admin-users-access">
 {% include "_nav.html" %}
-
 <main class="jom-admin-users-v1" id="jom-page-shell" data-owner="JOM_ADMIN_USERS_ACCESS_AUTHORITY_V1">
   <section class="admin-users-hero" aria-label="Users and access overview">
-    <p class="jom-kicker">Admin / Users & Access</p>
-    <h1>Users & Access</h1>
-    <p class="admin-users-lede">Action-led view of user and product-access authority. Active users remain unavailable unless proven by OAuth/Admin authority. Product-access assignments are shown separately.</p>
+    <p class="jom-kicker">Admin / Users &amp; Access</p>
+    <h1>Users &amp; Access</h1>
+    <p class="admin-users-lede">Review the user records and Jira access assignments currently proven by JOM authority. Active-user totals remain unavailable until a source can prove unique active users.</p>
   </section>
 
   <section class="admin-users-main" aria-label="Users and access actions">
     <section class="admin-users-card">
       <div class="admin-users-card-heading">
-        <p class="jom-kicker">Action Required</p>
+        <p class="jom-kicker">Current position</p>
         <h2>Operational decisions</h2>
       </div>
       <div id="ua-action-list" class="admin-users-action-list">
-        <article class="admin-users-action-card"><strong>Loading</strong><p>Checking user and access authority.</p></article>
+        <article class="admin-users-action-card"><strong>Loading</strong><p>Checking current user and access authority.</p></article>
       </div>
     </section>
 
     <section class="admin-users-card">
       <div class="admin-users-card-heading">
-        <p class="jom-kicker">Authority Summary</p>
-        <h2>Current user truth</h2>
+        <p class="jom-kicker">Current authority</p>
+        <h2>User and access summary</h2>
       </div>
-      <div class="admin-users-metric-grid">
-        <article class="admin-users-metric"><span>Active Users</span><strong id="ua-active-users">--</strong><p>Unavailable until unique active-user authority is proven.</p></article>
-        <article class="admin-users-metric"><span>Product Access</span><strong id="ua-product-access">--</strong><p>Product-access assignments from OAuth application roles.</p></article>
-        <article class="admin-users-metric"><span>Monitored Sites</span><strong id="ua-monitored-sites">--</strong><p>Current monitored estate scope.</p></article>
-        <article class="admin-users-metric"><span>Role Rows</span><strong id="ua-role-rows">--</strong><p>Application-role rows returned by authority.</p></article>
-        <article class="admin-users-metric"><span>Footprint Records</span><strong id="ua-footprint-records">--</strong><p>User records observed by current available sources.</p></article>
-        <article class="admin-users-metric"><span>Issue Signals</span><strong id="ua-issue-count">--</strong><p>Conservative admin insight issue signals.</p></article>
+      <div class="admin-users-metric-grid admin-users-metric-grid--four">
+        <article class="admin-users-metric"><span>Active users</span><strong id="ua-active-users">--</strong><p>Unique users proven to be active. This remains unavailable until suitable activity authority exists.</p></article>
+        <article class="admin-users-metric"><span>Observed users</span><strong id="ua-footprint-records">--</strong><p>Unique user records produced by the current named-access reconciliation. This does not prove that every observed user is active.</p></article>
+        <article class="admin-users-metric"><span>Jira access assignments</span><strong id="ua-product-access">--</strong><p>Jira product-access assignments across accessible sites. One person can be counted more than once.</p></article>
+        <article class="admin-users-metric"><span>Monitored sites</span><strong id="ua-monitored-sites">--</strong><p>Estate sites currently included in JOM monitoring.</p></article>
       </div>
     </section>
 
     <section class="admin-users-card">
       <div class="admin-users-card-heading">
-        <p class="jom-kicker">Product Access</p>
-        <h2>Monitored site allocation</h2>
+        <p class="jom-kicker">Monitored estate</p>
+        <h2>Jira access by site</h2>
       </div>
+      <p class="admin-users-section-help">Assignment counts are access allocations, not unique-user or active-user totals.</p>
       <div class="admin-users-table-wrap">
         <table class="admin-users-table">
-          <thead><tr><th>Site</th><th>Product Access</th><th>Roles</th><th>Status</th></tr></thead>
-          <tbody id="ua-sites-body"><tr><td colspan="4">Loading site access.</td></tr></tbody>
+          <thead><tr><th>Site</th><th>Jira access assignments</th><th>Access status</th></tr></thead>
+          <tbody id="ua-sites-body"><tr><td colspan="3">Loading site access.</td></tr></tbody>
         </table>
       </div>
     </section>
 
     <section class="admin-users-card">
       <div class="admin-users-card-heading">
-        <p class="jom-kicker">Access Risk Signals</p>
-        <h2>Conservative checks</h2>
+        <p class="jom-kicker">Evidence-dependent checks</p>
+        <h2>Access risk signals</h2>
       </div>
+      <p class="admin-users-section-help">Unavailable means the current sources do not expose enough evidence to run the check safely. It does not mean zero issues were found.</p>
       <div class="admin-users-risk-grid">
-        <article class="admin-users-risk"><span>Critical</span><strong id="ua-critical-count">--</strong><p>Disabled or inactive users with access, when source fields prove it.</p></article>
-        <article class="admin-users-risk"><span>Risk</span><strong id="ua-risk-count">--</strong><p>Access without explicit licence signal, when source fields prove it.</p></article>
-        <article class="admin-users-risk"><span>Waste</span><strong id="ua-waste-count">--</strong><p>Licensed inactive or unused users, only when both fields exist.</p></article>
-        <article class="admin-users-risk"><span>Drift</span><strong id="ua-drift-count">--</strong><p>Users present in one source but absent from another.</p></article>
+        <article class="admin-users-risk"><span>Disabled or inactive access</span><strong id="ua-critical-count">--</strong><p>Requires reliable account status or activity evidence alongside access assignments.</p></article>
+        <article class="admin-users-risk"><span>Unlicensed access</span><strong id="ua-risk-count">--</strong><p>Requires an explicit licence signal that can be compared with access authority.</p></article>
+        <article class="admin-users-risk"><span>Potential licence waste</span><strong id="ua-waste-count">--</strong><p>Requires both licence allocation and proven inactivity or non-use evidence.</p></article>
+        <article class="admin-users-risk"><span>Source mismatch</span><strong id="ua-drift-count">--</strong><p>Requires comparable user identities across two proven authority sources.</p></article>
       </div>
     </section>
   </section>
@@ -74,30 +73,31 @@
 
 <aside class="admin-users-rail" aria-label="Users and access summary">
   <section class="admin-users-rail-card admin-users-rail-authority">
-    <p class="jom-kicker">Authority Status</p>
+    <p class="jom-kicker">Authority status</p>
     <strong id="ua-authority-status">Loading</strong>
-    <p id="ua-authority-note">Product-access assignments are not active-user truth.</p>
+    <p id="ua-authority-note">Checking current user and access authority.</p>
   </section>
-
   <section class="admin-users-rail-card">
-    <h2>Access Coverage</h2>
+    <h2>Current summary</h2>
     <dl class="admin-users-rail-list">
-      <div><dt>Active Users</dt><dd id="ua-rail-active-users">--</dd></div>
-      <div><dt>Product Access</dt><dd id="ua-rail-product-access">--</dd></div>
-      <div><dt>Sites</dt><dd id="ua-rail-sites">--</dd></div>
-      <div><dt>Role Rows</dt><dd id="ua-rail-role-rows">--</dd></div>
+      <div><dt>Active users</dt><dd id="ua-rail-active-users">--</dd></div>
+      <div><dt>Observed users</dt><dd id="ua-rail-observed-users">--</dd></div>
+      <div><dt>Access assignments</dt><dd id="ua-rail-product-access">--</dd></div>
+      <div><dt>Monitored sites</dt><dd id="ua-rail-sites">--</dd></div>
     </dl>
   </section>
-
   <section class="admin-users-rail-card">
-    <h2>Risk Signals</h2>
+    <h2>Review position</h2>
     <dl class="admin-users-rail-list">
-      <div><dt>Issues</dt><dd id="ua-rail-issues">--</dd></div>
-      <div><dt>Action Items</dt><dd id="ua-rail-actions">--</dd></div>
+      <div><dt>Proven issues</dt><dd id="ua-rail-issues">--</dd></div>
+      <div><dt>Required actions</dt><dd id="ua-rail-actions">--</dd></div>
     </dl>
+  </section>
+  <section class="admin-users-rail-card">
+    <h2>Last validation</h2>
+    <p class="admin-users-rail-copy" id="ua-last-validation">Unavailable</p>
   </section>
 </aside>
-
 <script src="{{ url_for('static', filename='js/jom_admin_users_access_v1.js') }}" defer></script>
 </body>
 </html>

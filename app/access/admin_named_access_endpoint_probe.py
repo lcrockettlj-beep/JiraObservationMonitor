@@ -1,149 +1,321 @@
-﻿# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
-# Remaining legacy/static truth references in this file have been neutralised.
-# This file must not treat retired runtime records as backend or website truth.
+# JOM Admin Directory Users safe paginated collector v1
+# Collects privacy-minimised Atlassian directory authority without raw responses,
+# names, email addresses, avatars, tokens, or authorization headers.
 from __future__ import annotations
-import argparse, json, os, urllib.request, urllib.error
-from pathlib import Path
+
+import argparse
+import json
+import os
+import urllib.error
+import urllib.parse
+import urllib.request
+from collections import Counter
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-API_HOST='https://api.atlassian.com/admin'
+API_HOST = "https://api.atlassian.com/admin"
+OUTPUT_RELATIVE = Path("runtime/data/admin_directory_users.json")
 
-def utc_now(): return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
 
-def load_env(root: Path)->Dict[str,str]:
-    env=dict(os.environ); p=root/'.env'
-    if p.exists():
-        for raw in p.read_text(encoding='utf-8').splitlines():
-            line=raw.strip()
-            if not line or line.startswith('#') or '=' not in line: continue
-            k,v=line.split('=',1); env[k.strip()]=v.strip().strip('"').strip("'")
+def utc_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def load_env(root: Path) -> Dict[str, str]:
+    env = dict(os.environ)
+    path = root / ".env"
+    if path.exists():
+        for raw in path.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            env[key.strip()] = value.strip().strip('"').strip("'")
     return env
 
-def read_json(p: Path)->Dict[str,Any]:
-    if not p.exists(): return {}
-    try:
-        x=json.loads(p.read_text(encoding='utf-8'))
-        return x if isinstance(x,dict) else {}
-    except Exception: return {}
 
-def write_json(p: Path, payload: Dict[str,Any]):
-    p.parent.mkdir(parents=True,exist_ok=True); p.write_text(json.dumps(payload,indent=2,ensure_ascii=False),encoding='utf-8')
+def write_json(path: Path, payload: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
-def req(method: str, url: str, token: str, body: Optional[Dict[str,Any]]=None)->Dict[str,Any]:
-    data=None
-    headers={'Authorization':f'Bearer {token}','Accept':'application/json'}
+
+def request_json(method: str, url: str, token: str, body: Optional[Dict[str, Any]] = None) -> Tuple[int, Any]:
+    data = json.dumps(body).encode("utf-8") if body is not None else None
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
     if body is not None:
-        data=json.dumps(body).encode('utf-8'); headers['Content-Type']='application/json'
-    r=urllib.request.Request(url=url,data=data,headers=headers,method=method)
+        headers["Content-Type"] = "application/json"
+    request = urllib.request.Request(url=url, data=data, headers=headers, method=method)
     try:
-        with urllib.request.urlopen(r,timeout=45) as resp:
-            raw=resp.read().decode('utf-8')
-            parsed=json.loads(raw) if raw else {}
-            return {'ok':True,'status':resp.status,'url':url,'method':method,'json':parsed}
-    except urllib.error.HTTPError as e:
-        raw=e.read().decode('utf-8',errors='ignore')
-        return {'ok':False,'status':e.code,'url':url,'method':method,'body':raw[:4000]}
-    except Exception as e:
-        return {'ok':False,'status':0,'url':url,'method':method,'body':str(e)}
+        with urllib.request.urlopen(request, timeout=60) as response:
+            raw = response.read().decode("utf-8")
+            return response.status, json.loads(raw) if raw else {}
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="ignore")[:500]
+        raise RuntimeError(f"Atlassian endpoint returned HTTP {exc.code}: {detail}") from exc
 
-def get_first(row:Dict[str,Any], names:List[str])->str:
-    folded={str(k).lower().replace(' ','_').replace('-','_'):v for k,v in row.items()}
+
+def data_rows(payload: Any) -> List[Dict[str, Any]]:
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if isinstance(payload, dict):
+        for key in ("data", "values", "users", "directories"):
+            rows = payload.get(key)
+            if isinstance(rows, list):
+                return [row for row in rows if isinstance(row, dict)]
+    return []
+
+
+def next_url(payload: Any, current_url: str) -> Optional[str]:
+    if not isinstance(payload, dict):
+        return None
+    links = payload.get("links") if isinstance(payload.get("links"), dict) else {}
+    value = links.get("next") or payload.get("next") or payload.get("nextPage")
+    if isinstance(value, str) and value.strip():
+        next_value = value.strip()
+        if next_value.startswith(("http://", "https://", "/", "?")):
+            return urllib.parse.urljoin(current_url, next_value)
+        parsed = urllib.parse.urlsplit(current_url)
+        query = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
+        query["cursor"] = [next_value]
+        return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urllib.parse.urlencode(query, doseq=True), parsed.fragment))
+    cursor = payload.get("nextCursor") or payload.get("next_cursor")
+    if not cursor and isinstance(payload.get("meta"), dict):
+        cursor = payload["meta"].get("nextCursor") or payload["meta"].get("next_cursor")
+    if cursor:
+        parsed = urllib.parse.urlsplit(current_url)
+        query = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
+        query["cursor"] = [str(cursor)]
+        return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urllib.parse.urlencode(query, doseq=True), parsed.fragment))
+    return None
+
+
+def get_all(url: str, token: str, max_pages: int = 1000) -> Tuple[List[Dict[str, Any]], int, bool]:
+    rows: List[Dict[str, Any]] = []
+    seen_urls = set()
+    page_count = 0
+    current = url
+    while current:
+        if current in seen_urls:
+            raise RuntimeError("Pagination loop detected")
+        if page_count >= max_pages:
+            raise RuntimeError(f"Pagination exceeded safety limit of {max_pages} pages")
+        seen_urls.add(current)
+        status, payload = request_json("GET", current, token)
+        if status != 200:
+            raise RuntimeError(f"Unexpected HTTP {status}")
+        rows.extend(data_rows(payload))
+        page_count += 1
+        current = next_url(payload, current)
+    return rows, page_count, True
+
+
+def value(row: Dict[str, Any], *names: str) -> Any:
     for name in names:
-        if row.get(name): return str(row.get(name)).strip()
-        v=folded.get(name.lower().replace(' ','_').replace('-','_'))
-        if v: return str(v).strip()
-    return ''
+        if name in row and row[name] is not None:
+            return row[name]
+    return None
 
-def drill_rows(payload:Dict[str,Any],key:str)->List[Dict[str,Any]]:
-    rows=((payload.get('drilldowns') or {}).get(key) or {}).get('rows') or []
-    return [r for r in rows if isinstance(r,dict)] if isinstance(rows,list) else []
 
-def human_users(root:Path, limit:int)->List[Dict[str,Any]]:
-    for n in ['admin_truth_v2.json']:
-        payload=read_json(root/n)
-        if not payload: continue
-        rows=drill_rows(payload,'admin::human_accounts')
-        out=[]; seen=set()
-        for r in rows:
-            aid=get_first(r,['account_id','accountId','Atlassian ID','User id','id'])
-            email=get_first(r,['email','Email','emailAddress'])
-            key=aid or email
-            if key and key not in seen:
-                seen.add(key); out.append({'account_id':aid,'email':email})
-        if out: return out[:limit]
-    return []
+def norm(value_in: Any) -> str:
+    return str(value_in or "").strip().lower().replace("-", "_").replace(" ", "_")
 
-def extract_data_list(x:Any)->List[Dict[str,Any]]:
-    if isinstance(x,dict):
-        for k in ['data','values','directories','workspaces']:
-            if isinstance(x.get(k),list): return [i for i in x[k] if isinstance(i,dict)]
-    if isinstance(x,list): return [i for i in x if isinstance(i,dict)]
-    return []
 
-def ids_from(items:List[Dict[str,Any]], names:List[str])->List[str]:
-    out=[]
-    for item in items:
-        for n in names:
-            v=item.get(n)
-            if v and str(v) not in out: out.append(str(v))
-    return out
+def bool_value(value_in: Any) -> Optional[bool]:
+    if isinstance(value_in, bool):
+        return value_in
+    text = norm(value_in)
+    if text in {"true", "yes", "1", "enabled"}:
+        return True
+    if text in {"false", "no", "0", "disabled"}:
+        return False
+    return None
 
-def main()->int:
-    ap=argparse.ArgumentParser()
-    ap.add_argument('--project-root',default='.')
-    ap.add_argument('--sample-users',type=int,default=3)
-    args=ap.parse_args(); root=Path(args.project_root).resolve(); env=load_env(root)
-    org=env.get('ATLASSIAN_ADMIN_ORG_ID','').strip(); token=env.get('ATLASSIAN_ADMIN_API_KEY','').strip()
-    if not org or not token: raise SystemExit('Missing ATLASSIAN_ADMIN_ORG_ID or ATLASSIAN_ADMIN_API_KEY')
-    users=human_users(root,args.sample_users)
-    probes=[]
-    def add(name,method,path,body=None):
-        res=req(method,f'{API_HOST}{path}',token,body); res['name']=name; probes.append(res); return res
-    org_v1=add('v1 org details','GET',f'/v1/orgs/{org}')
-    org_users=add('v1 org users page','GET',f'/v1/orgs/{org}/users?limit=5')
-    directories=add('v2 directories','GET',f'/v2/orgs/{org}/directories?limit=20')
-    workspaces=add('v2 workspaces','POST',f'/v2/orgs/{org}/workspaces',{})
-    directory_ids=ids_from(extract_data_list(directories.get('json')),['id','directoryId','directory_id'])
-    if not directory_ids:
-        # Also inspect workspace directory field if directories call shape differs or is unavailable.
-        for w in extract_data_list(workspaces.get('json')):
-            d=w.get('directory')
-            if isinstance(d,dict):
-                v=d.get('id') or d.get('directoryId')
-            else:
-                v=d
-            if v and str(v) not in directory_ids: directory_ids.append(str(v))
-    for d in directory_ids[:3]:
-        add(f'v2 directory users {d}','GET',f'/v2/orgs/{org}/directories/{d}/users?limit=5')
-        add(f'v2 directory groups {d}','GET',f'/v2/orgs/{org}/directories/{d}/groups?limit=5')
-        for u in users[:2]:
-            aid=u.get('account_id')
-            if aid:
-                add(f'v2 role assignments user {aid} dir {d}','GET',f'/v2/orgs/{org}/directories/{d}/users/{aid}/role-assignments?limit=20')
-    for u in users[:3]:
-        aid=u.get('account_id')
-        if aid:
-            add(f'v1 last active {aid}','GET',f'/v1/orgs/{org}/directory/users/{aid}/last-active-dates')
-    summary={
-        'generated_at_utc':utc_now(),
-        'org_id_present':bool(org),
-        'sample_user_count':len(users),
-        'directory_ids_discovered':directory_ids,
-        'successful_probe_count':sum(1 for p in probes if p.get('ok')),
-        'failed_probe_count':sum(1 for p in probes if not p.get('ok')),
-        'candidate_next_step':'Use successful v2 directory/role assignment or last-active response shape to build verified named access collector.'
+
+def list_strings(value_in: Any) -> List[str]:
+    if not isinstance(value_in, list):
+        return []
+    result = []
+    for item in value_in:
+        if isinstance(item, str) and item.strip():
+            result.append(item.strip())
+        elif isinstance(item, dict):
+            candidate = value(item, "id", "key", "name", "roleId", "resourceId", "productId")
+            if candidate:
+                result.append(str(candidate))
+    return sorted(set(result))
+
+
+def product_access_count(row: Dict[str, Any]) -> int:
+    access = value(row, "productAccess", "product_access")
+    if isinstance(access, list):
+        return len(access)
+    if isinstance(access, dict):
+        return len(access)
+    counts = row.get("counts") if isinstance(row.get("counts"), dict) else {}
+    candidate = counts.get("resources") or counts.get("productAccess")
+    try:
+        return int(candidate) if candidate is not None else 0
+    except (TypeError, ValueError):
+        return 0
+
+
+def minimise_user(row: Dict[str, Any], directory_id: str) -> Optional[Dict[str, Any]]:
+    account_id = value(row, "accountId", "account_id", "userId", "user_id", "id")
+    if not account_id:
+        return None
+    platform_roles = list_strings(value(row, "platformRoles", "platform_roles"))
+    group_ids = list_strings(value(row, "groups", "groupIds", "group_ids"))
+    return {
+        "account_id": str(account_id),
+        "directory_id": directory_id,
+        "account_type": norm(value(row, "accountType", "account_type")) or "unknown",
+        "account_status": norm(value(row, "accountStatus", "account_status", "status")) or "unknown",
+        "membership_status": norm(value(row, "membershipStatus", "membership_status")) or "unknown",
+        "claim_status": norm(value(row, "claimStatus", "claim_status")) or "unknown",
+        "management_source": norm(value(row, "managementSource", "management_source", "managedBy")) or "unknown",
+        "mfa_enabled": bool_value(value(row, "mfaEnabled", "mfa_enabled")),
+        "email_verified": bool_value(value(row, "emailVerified", "email_verified")),
+        "platform_roles": platform_roles,
+        "group_ids": group_ids,
+        "product_access_count": product_access_count(row),
     }
-    payload={'schema':'jom-admin-named-access-endpoint-probe','summary':summary,'sample_users':users,'probes':probes}
-    out=root/'reports/admin_named_access_endpoint_probe.json'; write_json(out,payload)
-    md=root/'reports/admin_named_access_endpoint_probe.md'
-    lines=['# Admin Named Access Endpoint Probe','',f"Generated: `{summary['generated_at_utc']}`",'',f"Successful probes: **{summary['successful_probe_count']}**",f"Failed probes: **{summary['failed_probe_count']}**",f"Directory IDs discovered: `{', '.join(directory_ids) if directory_ids else 'none'}`",'','## Probe Results','']
-    for p in probes:
-        lines.append(f"- {'✅' if p.get('ok') else '❌'} **{p.get('name')}** — {p.get('method')} {p.get('url')} — HTTP {p.get('status')}")
-    md.write_text('\n'.join(lines),encoding='utf-8')
-    print('Endpoint probe complete.')
-    print(json.dumps(summary,indent=2))
-    print(f'JSON: {out}')
-    print(f'Report: {md}')
-    return 0
-if __name__=='__main__': raise SystemExit(main())
+
+
+def count_values(users: Iterable[Dict[str, Any]], key: str) -> Dict[str, int]:
+    counts = Counter(str(user.get(key, "unknown")) for user in users)
+    return dict(sorted(counts.items()))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Collect privacy-safe, fully paginated Atlassian directory user authority.")
+    parser.add_argument("--project-root", default=".")
+    parser.add_argument("--sample-users", type=int, default=0, help="Compatibility option retained; full pagination is always used.")
+    args = parser.parse_args()
+
+    root = Path(args.project_root).resolve()
+    env = load_env(root)
+    org_id = env.get("ATLASSIAN_ADMIN_ORG_ID", "").strip()
+    token = env.get("ATLASSIAN_ADMIN_API_KEY", "").strip()
+    if not org_id or not token:
+        raise SystemExit("Missing ATLASSIAN_ADMIN_ORG_ID or ATLASSIAN_ADMIN_API_KEY")
+
+    output = root / OUTPUT_RELATIVE
+    generated = utc_now()
+    errors: List[Dict[str, Any]] = []
+    directories: List[Dict[str, Any]] = []
+    users_by_id: Dict[str, Dict[str, Any]] = {}
+    total_pages = 0
+    complete = True
+
+    directory_url = f"{API_HOST}/v2/orgs/{urllib.parse.quote(org_id)}/directories?limit=100"
+    directory_rows, pages, directory_complete = get_all(directory_url, token)
+    total_pages += pages
+    complete = complete and directory_complete
+
+    for directory in directory_rows:
+        directory_id = value(directory, "id", "directoryId", "directory_id")
+        if not directory_id:
+            continue
+        directory_id = str(directory_id)
+        users_url = f"{API_HOST}/v2/orgs/{urllib.parse.quote(org_id)}/directories/{urllib.parse.quote(directory_id)}/users?limit=100"
+        try:
+            rows, pages, users_complete = get_all(users_url, token)
+            total_pages += pages
+            complete = complete and users_complete
+            retained = 0
+            for row in rows:
+                user = minimise_user(row, directory_id)
+                if not user:
+                    continue
+                existing = users_by_id.get(user["account_id"])
+                if existing is None:
+                    users_by_id[user["account_id"]] = user
+                else:
+                    existing["platform_roles"] = sorted(set(existing["platform_roles"] + user["platform_roles"]))
+                    existing["group_ids"] = sorted(set(existing["group_ids"] + user["group_ids"]))
+                    existing["product_access_count"] = max(existing["product_access_count"], user["product_access_count"])
+                retained += 1
+            directories.append({"directory_id": directory_id, "pages": pages, "rows_received": len(rows), "rows_retained": retained, "complete": users_complete})
+        except Exception as exc:
+            complete = False
+            errors.append({"directory_id": directory_id, "stage": "directory_users", "error": str(exc)[:500]})
+
+    users = sorted(users_by_id.values(), key=lambda item: item["account_id"])
+    account_types = count_values(users, "account_type")
+    account_statuses = count_values(users, "account_status")
+    membership_statuses = count_values(users, "membership_status")
+    claim_statuses = count_values(users, "claim_status")
+    management_sources = count_values(users, "management_source")
+    mfa_enabled = sum(1 for user in users if user.get("mfa_enabled") is True)
+    mfa_disabled = sum(1 for user in users if user.get("mfa_enabled") is False)
+    mfa_unknown = len(users) - mfa_enabled - mfa_disabled
+    email_verified = sum(1 for user in users if user.get("email_verified") is True)
+    email_unverified = sum(1 for user in users if user.get("email_verified") is False)
+    email_verification_unknown = len(users) - email_verified - email_unverified
+    platform_role_assignments = sum(len(user.get("platform_roles", [])) for user in users)
+    product_access_assignments = sum(int(user.get("product_access_count", 0)) for user in users)
+
+    payload: Dict[str, Any] = {
+        "schema": "jom-admin-directory-users-authority-v1",
+        "generated_at_utc": generated,
+        "status": "ok" if complete and not errors else "attention",
+        "source": {
+            "authority": "Atlassian Admin Organizations API",
+            "endpoint_templates": [
+                "/admin/v2/orgs/{orgId}/directories",
+                "/admin/v2/orgs/{orgId}/directories/{directoryId}/users",
+            ],
+            "live_collection": True,
+            "pagination_complete": complete,
+            "page_count": total_pages,
+            "directory_count": len(directories),
+            "credential_present": True,
+        },
+        "privacy": {
+            "raw_responses_stored": False,
+            "names_stored": False,
+            "emails_stored": False,
+            "avatars_stored": False,
+            "account_ids_stored": True,
+            "account_id_reason": "Required as the stable Atlassian identity key for reconciliation and drill-down authority.",
+        },
+        "summary": {
+            "unique_accounts": len(users),
+            "account_types": account_types,
+            "account_statuses": account_statuses,
+            "membership_statuses": membership_statuses,
+            "claim_statuses": claim_statuses,
+            "management_sources": management_sources,
+            "mfa_enabled": mfa_enabled,
+            "mfa_disabled": mfa_disabled,
+            "mfa_unknown": mfa_unknown,
+            "email_verified": email_verified,
+            "email_unverified": email_unverified,
+            "email_verification_unknown": email_verification_unknown,
+            "platform_role_assignments": platform_role_assignments,
+            "product_access_assignments": product_access_assignments,
+            "active_users": None,
+            "active_users_reason": "Account status does not prove user activity. Last-active authority is not collected by this contract.",
+        },
+        "directories": directories,
+        "users": users,
+        "errors": errors,
+        "safe_to_use_for_account_authority": bool(complete and users),
+        "safe_to_use_for_active_user_authority": False,
+    }
+    write_json(output, payload)
+    print("Admin Directory users authority collected.")
+    print(json.dumps({
+        "output": str(output),
+        "status": payload["status"],
+        "pagination_complete": complete,
+        "directory_count": len(directories),
+        "unique_accounts": len(users),
+        "errors": len(errors),
+    }, indent=2))
+    return 0 if complete and users else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

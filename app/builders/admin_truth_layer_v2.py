@@ -48,10 +48,7 @@ def write_json(path: Path, payload: Dict[str, Any]) -> None:
 
 
 def admin_candidates(project_root: Path) -> List[Path]:
-    return [
-        project_root / 'admin_truth_v2.json',
-        project_root / 'admin_truth_v2.json',
-                    ]
+    return [project_root / 'runtime' / 'data' / 'admin_directory_users.json']
 
 
 def first_existing(paths: List[Path]) -> Optional[Path]:
@@ -67,40 +64,45 @@ def drill_rows(payload: Dict[str, Any], key: str) -> List[Dict[str, Any]]:
     return [row for row in rows if isinstance(row, dict)] if isinstance(rows, list) else []
 
 
+def _summary_count(summary: Dict[str, Any], section: str, *keys: str) -> int:
+    values = summary.get(section) if isinstance(summary.get(section), dict) else {}
+    return sum(safe_int(values.get(key)) for key in keys)
+
+
 def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
-    estate = payload.get('estate') if isinstance(payload.get('estate'), dict) else {}
-    admin_enrichment = payload.get('admin_enrichment') if isinstance(payload.get('admin_enrichment'), dict) else {}
-    admin_summary = admin_enrichment.get('summary') if isinstance(admin_enrichment.get('summary'), dict) else {}
+    summary = payload.get('summary') if isinstance(payload.get('summary'), dict) else {}
+    users = payload.get('users') if isinstance(payload.get('users'), list) else []
+    source = payload.get('source') if isinstance(payload.get('source'), dict) else {}
+    complete = bool(source.get('pagination_complete')) and bool(payload.get('safe_to_use_for_account_authority'))
 
-    human_rows = drill_rows(payload, 'admin::human_accounts')
-    managed_rows = drill_rows(payload, 'admin::managed_accounts')
-    app_rows = drill_rows(payload, 'admin::app_accounts')
-    disabled_rows = drill_rows(payload, 'admin::disabled_accounts') or drill_rows(payload, 'admin::suspended_accounts')
+    account_types = summary.get('account_types') if isinstance(summary.get('account_types'), dict) else {}
+    account_statuses = summary.get('account_statuses') if isinstance(summary.get('account_statuses'), dict) else {}
+    claim_statuses = summary.get('claim_statuses') if isinstance(summary.get('claim_statuses'), dict) else {}
 
-    human_users = len(human_rows) or safe_int(admin_summary.get('human_user_count') or estate.get('human_user_count'))
-    managed_users = len(managed_rows) or safe_int(admin_summary.get('managed_user_count') or estate.get('managed_user_count'))
-    app_accounts = len(app_rows) or safe_int(admin_summary.get('app_account_count') or estate.get('app_account_count'))
-    suspended_users = len(disabled_rows) or safe_int(admin_summary.get('suspended_user_count') or estate.get('managed_disabled_accounts'))
-    org_users = safe_int(admin_summary.get('org_user_count') or estate.get('total_users') or estate.get('organisation_users'))
-    active_users = safe_int(admin_summary.get('active_user_count') or estate.get('total_active_users'))
+    app_accounts = sum(safe_int(value) for key, value in account_types.items() if key in {'app', 'service_account', 'service', 'bot'})
+    human_users = sum(safe_int(value) for key, value in account_types.items() if key in {'atlassian', 'customer', 'human', 'user'})
+    suspended_users = sum(safe_int(value) for key, value in account_statuses.items() if key in {'suspended', 'disabled', 'deactivated', 'inactive'})
+    managed_users = sum(safe_int(value) for key, value in claim_statuses.items() if key in {'managed', 'claimed'})
 
     return {
-        'org_users': org_users,
-        'active_users': active_users,
-        'managed_users': managed_users,
-        'human_users': human_users,
-        'app_accounts': app_accounts,
-        'suspended_users': suspended_users,
+        'org_users': safe_int(summary.get('unique_accounts')) if complete else 0,
+        'active_users': None,
+        'managed_users': managed_users if complete else 0,
+        'human_users': human_users if complete else 0,
+        'app_accounts': app_accounts if complete else 0,
+        'suspended_users': suspended_users if complete else 0,
+        'mfa_enabled': safe_int(summary.get('mfa_enabled')) if complete else 0,
+        'mfa_disabled': safe_int(summary.get('mfa_disabled')) if complete else 0,
+        'mfa_unknown': safe_int(summary.get('mfa_unknown')) if complete else 0,
+        'platform_role_assignments': safe_int(summary.get('platform_role_assignments')) if complete else 0,
         'source_fields': {
-            'human_rows': len(human_rows),
-            'managed_rows': len(managed_rows),
-            'app_rows': len(app_rows),
-            'disabled_rows': len(disabled_rows),
-            'admin_summary_present': bool(admin_summary),
-            'estate_summary_present': bool(estate),
+            'user_rows': len(users),
+            'pagination_complete': bool(source.get('pagination_complete')),
+            'directory_count': safe_int(source.get('directory_count')),
+            'page_count': safe_int(source.get('page_count')),
+            'privacy_minimised': bool((payload.get('privacy') or {}).get('raw_responses_stored') is False),
         },
     }
-
 
 def billing_summary(project_root: Path) -> Dict[str, Any]:
     billing_path = project_root / 'runtime' / 'data' / 'estate_access_truth.json'
@@ -232,7 +234,7 @@ def build_admin_truth_v2(project_root: Path) -> Dict[str, Any]:
             'identity_truth': 'Atlassian Admin API enriched runtime payload',
             'commercial_billing_truth': 'runtime/data/estate_access_truth.json',
             'product_count_truth': 'runtime/data/estate_product_access.json from Jira application roles',
-            'named_access_truth': 'not active; user-to-site mapping remains hidden until Directory/export source is verified',
+            'named_access_truth': 'runtime/data/admin_directory_users.json; privacy-minimised, fully paginated Atlassian Directory account authority',
             'excluded_sources': [
                 'Jira /rest/api/3/users/search for named access',
                 'site visibility as a proxy for product access',
@@ -263,13 +265,13 @@ def build_admin_truth_v2(project_root: Path) -> Dict[str, Any]:
         'blocked_resources': blocked_rows,
         'controls': {
             'named_user_footprint_visible': False,
-            'named_user_footprint_guard_reason': 'Current verified source supports product counts, not per-user site entitlement. Named-user footprint remains hidden.',
+            'named_user_footprint_guard_reason': 'Directory account authority is verified, but named per-site entitlement remains hidden until resource-level product access mapping is proven.',
             'safe_to_show_estate_totals': comparison.get('status') in {'aligned', 'billing_missing', 'api_missing', 'variance'},
             'safe_to_show_named_site_access': False,
         },
         'next_actions': [
-            'Locate Atlassian Directory export or Admin API source that matches the Directory Apps tab per user.',
-            'Validate a sample of users against Atlassian Directory before re-enabling named footprint.',
+            'Keep active-user reporting unavailable until last-active authority and an activity policy are proven.',
+            'Keep named per-site entitlement hidden until resource-level product access mapping is proven.',
             'Do not use /users/search output as named licence truth.',
         ],
     }

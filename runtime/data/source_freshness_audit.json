@@ -1,7 +1,7 @@
 {
   "schema": "jom-source-freshness-audit-v1.1",
-  "generated_at_utc": "2026-07-30T13:47:29.819856Z",
-  "display_generated_at_utc": "2026-07-30 13:47 UTC",
+  "generated_at_utc": "2026-08-11T13:52:07.540287Z",
+  "display_generated_at_utc": "2026-08-11 13:52 UTC",
   "policy": {
     "current_hours": 24,
     "aging_hours": 72,
@@ -9,13 +9,13 @@
     "rule": "No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero."
   },
   "summary": {
-    "overall_state": "ATTENTION",
-    "source_count": 8,
+    "overall_state": "OK",
+    "source_count": 7,
     "counts": {
-      "CURRENT": 6,
+      "CURRENT": 7,
       "AGING": 0,
       "STALE": 0,
-      "MISSING": 2,
+      "MISSING": 0,
       "UNKNOWN_TIMESTAMP": 0
     },
     "billing_timestamp_added": false
@@ -26,20 +26,20 @@
       "label": "Site Registry",
       "path": "runtime/data/site_registry.json",
       "exists": true,
-      "source_type": "RUNTIME_CONTRACT",
+      "source_type": "RUNTIME_SCOPE",
       "pages": [
         "Home",
         "Estate",
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-30T13:45:18Z",
-      "parsed_timestamp_utc": "2026-07-30T13:45:18Z",
-      "display_timestamp_utc": "2026-07-30 13:45 UTC",
-      "age_hours": 0.04,
+      "timestamp_value": "2026-08-04T13:27:44.052039Z",
+      "parsed_timestamp_utc": "2026-08-04T13:27:44.052039Z",
+      "display_timestamp_utc": "2026-08-04 13:27 UTC",
+      "age_hours": 168.41,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
-      "error": null
+      "error": "Timestamp is older than freshness window, but Site Registry is event-driven runtime scope authority and remains current while present/readable."
     },
     {
       "key": "admin_truth_v2",
@@ -52,10 +52,10 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-30T13:47:29Z",
-      "parsed_timestamp_utc": "2026-07-30T13:47:29Z",
-      "display_timestamp_utc": "2026-07-30 13:47 UTC",
-      "age_hours": 0.0,
+      "timestamp_value": "2026-08-11T13:51:17Z",
+      "parsed_timestamp_utc": "2026-08-11T13:51:17Z",
+      "display_timestamp_utc": "2026-08-11 13:51 UTC",
+      "age_hours": 0.01,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -70,10 +70,10 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-30T13:45:24Z",
-      "parsed_timestamp_utc": "2026-07-30T13:45:24Z",
-      "display_timestamp_utc": "2026-07-30 13:45 UTC",
-      "age_hours": 0.03,
+      "timestamp_value": "2026-08-11T13:52:07Z",
+      "parsed_timestamp_utc": "2026-08-11T13:52:07Z",
+      "display_timestamp_utc": "2026-08-11 13:52 UTC",
+      "age_hours": 0.0,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -88,17 +88,17 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-30T13:45:24Z",
-      "parsed_timestamp_utc": "2026-07-30T13:45:24Z",
-      "display_timestamp_utc": "2026-07-30 13:45 UTC",
-      "age_hours": 0.03,
+      "timestamp_value": "2026-08-11T13:52:07Z",
+      "parsed_timestamp_utc": "2026-08-11T13:52:07Z",
+      "display_timestamp_utc": "2026-08-11 13:52 UTC",
+      "age_hours": 0.0,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
     },
     {
-      "key": "billing_seats",
-      "label": "Billing Seats",
+      "key": "estate_product_access",
+      "label": "Product Access Authority",
       "path": "runtime/data/estate_access_truth.json",
       "exists": true,
       "source_type": "RUNTIME_CONTRACT",
@@ -107,10 +107,10 @@
         "Admin"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-30T13:45:24Z",
-      "parsed_timestamp_utc": "2026-07-30T13:45:24Z",
-      "display_timestamp_utc": "2026-07-30 13:45 UTC",
-      "age_hours": 0.03,
+      "timestamp_value": "2026-08-11T13:52:07Z",
+      "parsed_timestamp_utc": "2026-08-11T13:52:07Z",
+      "display_timestamp_utc": "2026-08-11 13:52 UTC",
+      "age_hours": 0.0,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
@@ -125,53 +125,33 @@
         "Estate"
       ],
       "timestamp_field": "generated_at_utc",
-      "timestamp_value": "2026-07-30T13:47:29.479073Z",
-      "parsed_timestamp_utc": "2026-07-30T13:47:29.479073Z",
-      "display_timestamp_utc": "2026-07-30 13:47 UTC",
+      "timestamp_value": "2026-08-11T13:52:03.896496Z",
+      "parsed_timestamp_utc": "2026-08-11T13:52:03.896496Z",
+      "display_timestamp_utc": "2026-08-11 13:52 UTC",
       "age_hours": 0.0,
       "freshness_state": "CURRENT",
       "operator_label": "CURRENT",
       "error": null
     },
     {
-      "key": "latest_run",
-      "label": "Latest Jira Runtime Run",
-      "path": "latest_run.json",
-      "exists": false,
-      "source_type": "LATEST_RUN",
-      "pages": [
-        "Home",
-        "Estate",
-        "Site"
-      ],
-      "timestamp_field": null,
-      "timestamp_value": null,
-      "parsed_timestamp_utc": null,
-      "display_timestamp_utc": null,
-      "age_hours": null,
-      "freshness_state": "MISSING",
-      "operator_label": "MISSING SOURCE",
-      "error": null
-    },
-    {
-      "key": "latest_run_admin_enriched",
-      "label": "Latest Admin Enriched Run",
-      "path": "admin_truth_v2.json",
-      "exists": false,
-      "source_type": "LATEST_RUN",
+      "key": "runtime_execution",
+      "label": "Runtime Execution",
+      "path": "runtime/data/runtime_execution_status.json",
+      "exists": true,
+      "source_type": "RUNTIME_CONTRACT",
       "pages": [
         "Home",
         "Estate",
         "Admin",
-        "Site"
+        "Runtime"
       ],
-      "timestamp_field": null,
-      "timestamp_value": null,
-      "parsed_timestamp_utc": null,
-      "display_timestamp_utc": null,
-      "age_hours": null,
-      "freshness_state": "MISSING",
-      "operator_label": "MISSING SOURCE",
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-08-11T13:52:07.538782Z",
+      "parsed_timestamp_utc": "2026-08-11T13:52:07.538782Z",
+      "display_timestamp_utc": "2026-08-11 13:52 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
       "error": null
     }
   ]

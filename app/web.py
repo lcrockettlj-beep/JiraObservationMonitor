@@ -1054,6 +1054,7 @@ def _jom_admin_users_access_contract_v1():
     product_access = _jom_admin_ua_dict_v1(load_json("estate_product_access.json", {}))
     user_footprint = load_json("user_footprint.json", {})
     admin_insights = _jom_admin_ua_dict_v1(load_json("admin_insights.json", {}))
+    admin_truth = _jom_admin_ua_dict_v1(load_json("admin_truth_v2.json", {}))
     source_freshness = load_json("source_freshness_audit.json", {})
     source_reliability = load_json("source_reliability_status.json", {})
     product_refresh = load_json("product_access_refresh_status.json", {})
@@ -1067,11 +1068,58 @@ def _jom_admin_users_access_contract_v1():
     product_sites = _jom_admin_ua_products_v1(product_access, registry)
     role_rows = _jom_admin_ua_list_v1(product_access.get("roles"))
 
+    admin_identity = _jom_admin_ua_dict_v1(admin_truth.get("admin_identity"))
+    admin_controls = _jom_admin_ua_dict_v1(admin_truth.get("controls"))
+    identity_source_fields = _jom_admin_ua_dict_v1(admin_identity.get("source_fields"))
+    account_authority_available = bool(
+        admin_identity.get("payload_available") is True
+        and identity_source_fields.get("pagination_complete") is True
+        and identity_source_fields.get("privacy_minimised") is True
+    )
+
+    def account_value(field):
+        if not account_authority_available or admin_identity.get(field) is None:
+            return None
+        return _jom_admin_ua_int_v1(admin_identity.get(field), 0)
+
+    account_authority = {
+        "available": account_authority_available,
+        "status": "live" if account_authority_available else "unavailable",
+        "authority": "Atlassian Admin Organizations API via Admin Truth",
+        "source_file": "runtime/data/admin_truth_v2.json",
+        "pagination_complete": identity_source_fields.get("pagination_complete") is True,
+        "privacy_minimised": identity_source_fields.get("privacy_minimised") is True,
+        "directory_count": identity_source_fields.get("directory_count"),
+        "page_count": identity_source_fields.get("page_count"),
+        "named_user_footprint_visible": admin_controls.get("named_user_footprint_visible") is True,
+        "safe_to_show_named_site_access": admin_controls.get("safe_to_show_named_site_access") is True,
+        "fields": {
+            "org_users": account_value("org_users"),
+            "managed_users": account_value("managed_users"),
+            "human_users": account_value("human_users"),
+            "app_accounts": account_value("app_accounts"),
+            "suspended_users": account_value("suspended_users"),
+            "mfa_enabled": account_value("mfa_enabled"),
+            "mfa_disabled": account_value("mfa_disabled"),
+            "mfa_unknown": account_value("mfa_unknown"),
+            "platform_role_assignments": account_value("platform_role_assignments"),
+        },
+    }
+
     active_user_authority_available = False
     summary = {
         "monitored_sites": len(monitored_sites) if monitored_sites else len(product_sites),
         "active_users": None,
         "active_users_display": "Unavailable",
+        "org_users": account_authority["fields"]["org_users"],
+        "managed_users": account_authority["fields"]["managed_users"],
+        "human_users": account_authority["fields"]["human_users"],
+        "app_accounts": account_authority["fields"]["app_accounts"],
+        "suspended_users": account_authority["fields"]["suspended_users"],
+        "mfa_enabled": account_authority["fields"]["mfa_enabled"],
+        "mfa_disabled": account_authority["fields"]["mfa_disabled"],
+        "mfa_unknown": account_authority["fields"]["mfa_unknown"],
+        "platform_role_assignments": account_authority["fields"]["platform_role_assignments"],
         "product_access_assignments": product_summary.get("total_jira_product_user_count"),
         "role_rows": product_summary.get("jira_role_rows") or len(role_rows),
         "footprint_records": len(footprint_records) if footprint_records else insights_summary.get("user_records_evaluated"),
@@ -1083,12 +1131,14 @@ def _jom_admin_users_access_contract_v1():
     }
     authority = {
         "oauth": "live" if product_access.get("live_collection") is True or product_access.get("status") in {"ok", "partial"} else "unavailable",
-        "admin": "available" if admin_insights else "unavailable",
+        "admin": "live" if account_authority_available else ("available" if admin_insights else "unavailable"),
+        "account_authority": "live" if account_authority_available else "unavailable",
         "active_user_authority": "live" if active_user_authority_available else "unavailable",
         "product_access_authority": "live" if product_access.get("status") in {"ok", "partial"} or product_access.get("live_collection") is True else "unavailable",
-        "truth_policy": "Active users require proven unique active-user authority. Product-access assignments are separate and must not be labelled as active users.",
+        "truth_policy": "Organisation account authority is separate from active-user authority. Active users require proven activity evidence; product-access assignments are separate and must not be labelled as active users.",
     }
     source_health = {
+        "admin_truth": _jom_admin_ua_source_health_v1("Admin Truth account authority", admin_truth),
         "source_freshness": _jom_admin_ua_source_health_v1("Source freshness", source_freshness),
         "source_reliability": _jom_admin_ua_source_health_v1("Source reliability", source_reliability),
         "product_access_refresh": _jom_admin_ua_source_health_v1("Product access refresh", product_refresh),
@@ -1096,8 +1146,9 @@ def _jom_admin_users_access_contract_v1():
     return {
         "schema": "jom-admin-users-access-authority-v1",
         "generated_at_utc": now_utc(),
-        "status": "ok" if authority.get("product_access_authority") == "live" else "review",
+        "status": "ok" if authority.get("product_access_authority") == "live" and authority.get("account_authority") == "live" else "review",
         "authority": authority,
+        "account_authority": account_authority,
         "summary": summary,
         "actions": _jom_admin_ua_actions_v1(authority, summary, source_health),
         "site_access": product_sites,
@@ -1108,11 +1159,14 @@ def _jom_admin_users_access_contract_v1():
             "estate_product_access": "runtime/data/estate_product_access.json",
             "user_footprint": "runtime/data/user_footprint.json",
             "admin_insights": "runtime/data/admin_insights.json",
+            "admin_truth": "runtime/data/admin_truth_v2.json",
         },
         "notes": [
-            "Headline active users are unavailable until OAuth/Admin authority proves unique active users.",
+            "Organisation account totals are sourced from privacy-minimised, fully paginated Admin Truth authority.",
+            "Headline active users remain unavailable because account status does not prove activity.",
             "Product-access assignments are shown separately and are not labelled as active users.",
-            "No static user data, no estimates, and no inferred active-user totals are used.",
+            "Names, email addresses, account IDs, and raw Directory records are not exposed by this contract.",
+            "Named per-site access remains hidden until resource-level entitlement mapping is proven.",
         ],
     }
 
@@ -1346,12 +1400,7 @@ def _jom_admin_mon_actions_v1(summary, source_health, site_rows):
     return actions[:8]
 
 def _jom_admin_monitoring_contract_v1():
-    runtime_inputs_refresh = _jom_admin_mon_refresh_runtime_inputs_v1()
-    named_access_refresh = _jom_admin_mon_refresh_named_access_v1()
-    product_access_refresh = _jom_admin_mon_refresh_product_access_v1()
-    runtime_execution_refresh = _jom_admin_mon_write_runtime_execution_status_v1(runtime_inputs_refresh, product_access_refresh, named_access_refresh)
-    source_health_refresh = _jom_admin_mon_refresh_source_health_v1()
-    runtime_execution_refresh = _jom_admin_mon_write_runtime_execution_status_v1(runtime_inputs_refresh, product_access_refresh, named_access_refresh, source_health_refresh)
+    refresh_status = _jom_admin_mon_background_status_v1()
     registry = _jom_admin_mon_dict_v1(load_json("site_registry.json", {}))
     product_access = _jom_admin_mon_dict_v1(load_json("estate_product_access.json", {}))
     source_freshness = load_json("source_freshness_audit.json", {})
@@ -1388,12 +1437,8 @@ def _jom_admin_monitoring_contract_v1():
         "runtime": "available" if registry else "unavailable",
         "oauth": "live" if product_access.get("live_collection") is True or product_access.get("status") in {"ok", "partial"} else "unavailable",
         "monitoring_scope": "live" if registry_sites or site_rows else "unavailable",
-        "truth_policy": "Monitoring authority uses runtime site registry plus OAuth/Admin source health. Source freshness and reliability are refreshed before the Monitoring contract is served; unproven source health is shown as unavailable or review.",
-        "runtime_inputs_refresh": runtime_inputs_refresh,
-        "runtime_execution_refresh": runtime_execution_refresh,
-        "named_access_refresh": named_access_refresh,
-        "source_health_refresh": source_health_refresh,
-        "product_access_refresh": product_access_refresh,
+        "truth_policy": "Monitoring serves the latest generated runtime authority immediately. A guarded background refresh updates the authority chain without blocking the page.",
+        "refresh": refresh_status,
     }
     return {
         "schema": "jom-admin-monitoring-authority-v1",
@@ -1414,7 +1459,7 @@ def _jom_admin_monitoring_contract_v1():
         },
         "notes": [
             "Monitoring coverage is derived from current runtime site registry authority.",
-            "Monitoring refreshes runtime inputs, product access, named access, source freshness, and source reliability before serving this contract.",
+            "Monitoring serves current generated authority immediately and refreshes the authority chain in the background.",
             "Runtime execution status is refreshed from the Monitoring preflight run before source freshness is evaluated.",
             "Product access monitoring is derived from OAuth product access authority.",
             "Product Access refresh status is refreshed automatically on Monitoring API requests.",
@@ -1423,9 +1468,49 @@ def _jom_admin_monitoring_contract_v1():
         ],
     }
 
+_jom_admin_mon_background_lock_v1 = threading.Lock()
+_jom_admin_mon_background_state_v1 = {"running": False, "status": "idle", "started_at_utc": None, "finished_at_utc": None, "last_error": None}
+
+def _jom_admin_mon_background_status_v1():
+    return dict(_jom_admin_mon_background_state_v1)
+
+def _jom_admin_mon_background_worker_v1():
+    state = _jom_admin_mon_background_state_v1
+    try:
+        runtime_inputs_refresh = _jom_admin_mon_refresh_runtime_inputs_v1()
+        named_access_refresh = _jom_admin_mon_refresh_named_access_v1()
+        product_access_refresh = _jom_admin_mon_refresh_product_access_v1()
+        _jom_admin_mon_write_runtime_execution_status_v1(runtime_inputs_refresh, product_access_refresh, named_access_refresh)
+        source_health_refresh = _jom_admin_mon_refresh_source_health_v1()
+        runtime_execution_refresh = _jom_admin_mon_write_runtime_execution_status_v1(runtime_inputs_refresh, product_access_refresh, named_access_refresh, source_health_refresh)
+        errors = []
+        for result in (runtime_inputs_refresh, named_access_refresh, product_access_refresh, source_health_refresh, runtime_execution_refresh):
+            if isinstance(result, dict):
+                errors.extend(result.get("errors") or [])
+                if result.get("status") == "failed" and result.get("error"):
+                    errors.append(str(result.get("error")))
+        state["status"] = "ok" if not errors else "attention"
+        state["last_error"] = "; ".join(errors) if errors else None
+    except Exception as exc:
+        state["status"] = "failed"
+        state["last_error"] = str(exc)
+    finally:
+        state["running"] = False
+        state["finished_at_utc"] = now_utc()
+        _jom_admin_mon_background_lock_v1.release()
+
 @app.route("/api/admin/monitoring")
 def api_admin_monitoring_authority_v1():
     return jsonify(_jom_admin_monitoring_contract_v1())
+
+@app.route("/api/admin/monitoring/refresh", methods=["POST"])
+def api_admin_monitoring_refresh_v1():
+    if not _jom_admin_mon_background_lock_v1.acquire(blocking=False):
+        return jsonify({"accepted": False, "reason": "refresh_already_running", "refresh": _jom_admin_mon_background_status_v1()}), 202
+    state = _jom_admin_mon_background_state_v1
+    state.update({"running": True, "status": "refreshing", "started_at_utc": now_utc(), "finished_at_utc": None, "last_error": None})
+    threading.Thread(target=_jom_admin_mon_background_worker_v1, daemon=True).start()
+    return jsonify({"accepted": True, "refresh": _jom_admin_mon_background_status_v1()}), 202
 # --- JOM_ADMIN_MONITORING_AUTHORITY_V1 END ---
 
 
