@@ -1,0 +1,85 @@
+{
+  "schema": "jom-named-site-access-authority-v1",
+  "generated_at_utc": "2026-08-12T13:06:25.830296Z",
+  "status": "live",
+  "authority": "Privacy-minimised named access footprint reconciled with Site Registry and Jira product-access authority",
+  "privacy": {
+    "aggregate_only": true,
+    "names_exposed": false,
+    "emails_exposed": false,
+    "account_ids_exposed": false,
+    "identity_rows_exposed": false
+  },
+  "capabilities": {
+    "aggregate_site_user_counts": true,
+    "identity_drilldown": false,
+    "identity_drilldown_reason": "Requires separate privacy and operational approval."
+  },
+  "summary": {
+    "unique_users_with_access": 124,
+    "named_access_assignments": 148,
+    "site_count": 4,
+    "invalid_source_rows": 0
+  },
+  "gates": {
+    "source_generated": true,
+    "source_safe": true,
+    "all_rows_valid": true,
+    "unique_users_reconciled": true,
+    "assignments_reconciled": true,
+    "all_sites_registry_mapped": true,
+    "all_sites_product_mapped": true,
+    "all_named_counts_within_product_counts": true
+  },
+  "sites": [
+    {
+      "site_key": "gli-delivery-tm",
+      "named_unique_users": 28,
+      "named_access_assignments": 28,
+      "product_access_assignments": 31,
+      "registry_match": true,
+      "product_authority_match": true,
+      "named_count_within_product_count": true,
+      "assignment_gap": 3,
+      "status": "live"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "named_unique_users": 57,
+      "named_access_assignments": 57,
+      "product_access_assignments": 57,
+      "registry_match": true,
+      "product_authority_match": true,
+      "named_count_within_product_count": true,
+      "assignment_gap": 0,
+      "status": "live"
+    },
+    {
+      "site_key": "gli-it-project",
+      "named_unique_users": 62,
+      "named_access_assignments": 62,
+      "product_access_assignments": 64,
+      "registry_match": true,
+      "product_authority_match": true,
+      "named_count_within_product_count": true,
+      "assignment_gap": 2,
+      "status": "live"
+    },
+    {
+      "site_key": "gli-tracker",
+      "named_unique_users": 1,
+      "named_access_assignments": 1,
+      "product_access_assignments": 6,
+      "registry_match": true,
+      "product_authority_match": true,
+      "named_count_within_product_count": true,
+      "assignment_gap": 5,
+      "status": "live"
+    }
+  ],
+  "source_files": {
+    "user_footprint": "runtime/data/user_footprint.json",
+    "product_access": "runtime/data/estate_product_access.json",
+    "site_registry": "runtime/data/site_registry.json"
+  }
+}
