@@ -7,3 +7,6 @@
 
 /* Final Users & Access refinement v1 */
 .admin-users-rail dl div.rail-limit{grid-template-columns:minmax(0,1fr) auto;align-items:start}.admin-users-rail dl div.rail-limit dd{display:inline-block;justify-self:end;width:auto;max-width:96px;min-width:0;padding:4px 8px;white-space:normal;line-height:1.2;text-align:center;overflow-wrap:anywhere}.admin-users-grid.four{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:1180px){.admin-users-grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.admin-users-grid.four{grid-template-columns:1fr}}
+
+/* Named Site Access integration v1 */
+.admin-users-grid.limitations{grid-template-columns:repeat(2,minmax(0,1fr))}.data-limitations-detail .admin-users-grid article{border-left:4px solid #6554c0}.admin-users-table td:nth-child(n+2),table td:nth-child(n+2){font-variant-numeric:tabular-nums}@media(max-width:680px){.admin-users-grid.limitations{grid-template-columns:1fr}}

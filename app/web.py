@@ -1054,6 +1054,7 @@ def _jom_admin_users_access_contract_v1():
     registry = _jom_admin_ua_dict_v1(load_json("site_registry.json", {}))
     product_access = _jom_admin_ua_dict_v1(load_json("estate_product_access.json", {}))
     user_footprint = _jom_admin_ua_dict_v1(load_json("user_footprint.json", {}))
+    named_site_access_source = _jom_admin_ua_dict_v1(load_json("named_site_access_authority_v1.json", {}))
     admin_insights = _jom_admin_ua_dict_v1(load_json("admin_insights.json", {}))
     admin_truth = _jom_admin_ua_dict_v1(load_json("admin_truth_v2.json", {}))
     source_freshness = load_json("source_freshness_audit.json", {})
@@ -1120,6 +1121,41 @@ def _jom_admin_users_access_contract_v1():
         "medium_access_concentration_users": _jom_admin_ua_int_v1(footprint_summary.get("medium_duplication_users"), 0) if footprint_available else None,
         "average_sites_per_user": footprint_summary.get("average_sites_per_user") if footprint_available else None,
     }
+
+    named_site_summary = _jom_admin_ua_dict_v1(named_site_access_source.get("summary"))
+    named_site_capabilities = _jom_admin_ua_dict_v1(named_site_access_source.get("capabilities"))
+    named_site_rows = _jom_admin_ua_list_v1(named_site_access_source.get("sites"))
+    named_site_live = bool(
+        named_site_access_source.get("status") == "live"
+        and named_site_capabilities.get("aggregate_site_user_counts") is True
+        and named_site_rows
+    )
+    named_site_index = {
+        str(row.get("site_key")): row
+        for row in named_site_rows
+        if isinstance(row, dict) and row.get("site_key")
+    }
+    site_level_access = {
+        "available": named_site_live,
+        "status": "live" if named_site_live else "unavailable",
+        "authority": named_site_access_source.get("authority"),
+        "aggregate_only": True,
+        "unique_users_with_access": named_site_summary.get("unique_users_with_access") if named_site_live else None,
+        "named_access_assignments": named_site_summary.get("named_access_assignments") if named_site_live else None,
+        "site_count": named_site_summary.get("site_count") if named_site_live else None,
+        "identity_drilldown": named_site_capabilities.get("identity_drilldown") is True,
+        "identity_drilldown_status": "available" if named_site_capabilities.get("identity_drilldown") is True else "restricted",
+        "identity_drilldown_reason": named_site_capabilities.get("identity_drilldown_reason") or "Requires separate privacy and operational approval.",
+    }
+    for row in product_sites:
+        if not isinstance(row, dict):
+            continue
+        key = str(row.get("site_key") or "")
+        named = _jom_admin_ua_dict_v1(named_site_index.get(key))
+        row["named_unique_users"] = named.get("named_unique_users") if named_site_live else None
+        row["named_access_assignments"] = named.get("named_access_assignments") if named_site_live else None
+        row["assignment_gap"] = named.get("assignment_gap") if named_site_live else None
+        row["site_level_access_status"] = named.get("status") if named_site_live else "unavailable"
 
     account_authority = {
         "available": account_authority_available,
@@ -1188,6 +1224,7 @@ def _jom_admin_users_access_contract_v1():
         "account_authority": "live" if account_authority_available else "unavailable",
         "administrative_access_authority": "live" if role_breakdown_complete else "unavailable",
         "user_footprint_authority": "live" if footprint_available else "unavailable",
+        "site_level_access_authority": "live" if named_site_live else "unavailable",
         "active_user_authority": "unavailable",
         "product_access_authority": "live" if product_access.get("status") in {"ok", "partial"} or product_access.get("live_collection") is True else "unavailable",
         "truth_policy": "Account, administrative-role, user-footprint and product-access aggregates are separate authorities. None proves active-user status.",
@@ -1216,6 +1253,7 @@ def _jom_admin_users_access_contract_v1():
         "account_authority": account_authority,
         "administrative_access": administrative_access,
         "user_footprint": user_footprint_authority,
+        "site_level_access": site_level_access,
         "summary": summary,
         "actions": actions,
         "site_access": product_sites,
@@ -1225,6 +1263,7 @@ def _jom_admin_users_access_contract_v1():
             "site_registry": "runtime/data/site_registry.json",
             "estate_product_access": "runtime/data/estate_product_access.json",
             "user_footprint": "runtime/data/user_footprint.json",
+            "named_site_access": "runtime/data/named_site_access_authority_v1.json",
             "admin_insights": "runtime/data/admin_insights.json",
             "admin_truth": "runtime/data/admin_truth_v2.json",
         },
@@ -1232,9 +1271,10 @@ def _jom_admin_users_access_contract_v1():
             "User footprint values are aggregate access observations, not active-user counts.",
             "No names, emails, account IDs, or raw user rows are exposed by this contract.",
             "Administrative role values are assignments, not unique administrators.",
-            "Named per-site access remains hidden until resource-level entitlement mapping is proven.",
+            "Aggregate site-level user access is live. Identity drill-down remains restricted pending separate privacy and operational approval.",
         ],
     }
+
 
 
 

@@ -1,6 +1,6 @@
 {
   "source": "Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole",
-  "generated_at_utc": "2026-08-12T09:21:23Z",
+  "generated_at_utc": "2026-08-12T13:15:34Z",
   "schema": "jom-estate-product-access-v2-live",
   "live_collection": true,
   "status": "partial",
