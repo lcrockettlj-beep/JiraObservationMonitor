@@ -1053,7 +1053,7 @@ def _jom_admin_ua_actions_v1(authority, summary, source_health):
 def _jom_admin_users_access_contract_v1():
     registry = _jom_admin_ua_dict_v1(load_json("site_registry.json", {}))
     product_access = _jom_admin_ua_dict_v1(load_json("estate_product_access.json", {}))
-    user_footprint = load_json("user_footprint.json", {})
+    user_footprint = _jom_admin_ua_dict_v1(load_json("user_footprint.json", {}))
     admin_insights = _jom_admin_ua_dict_v1(load_json("admin_insights.json", {}))
     admin_truth = _jom_admin_ua_dict_v1(load_json("admin_truth_v2.json", {}))
     source_freshness = load_json("source_freshness_audit.json", {})
@@ -1063,7 +1063,7 @@ def _jom_admin_users_access_contract_v1():
     registry_sites = _jom_admin_ua_list_v1(registry.get("sites"))
     monitored_sites = [row for row in registry_sites if _jom_admin_ua_is_monitored_v1(row)]
     product_summary = _jom_admin_ua_dict_v1(product_access.get("summary"))
-    footprint_records = _jom_admin_ua_user_records_v1(user_footprint)
+    footprint_summary = _jom_admin_ua_dict_v1(user_footprint.get("summary"))
     insights_summary = _jom_admin_ua_dict_v1(admin_insights.get("summary"))
     capabilities = _jom_admin_ua_dict_v1(admin_insights.get("capabilities"))
     product_sites = _jom_admin_ua_products_v1(product_access, registry)
@@ -1104,6 +1104,23 @@ def _jom_admin_users_access_contract_v1():
         },
     }
 
+    footprint_available = bool(
+        user_footprint.get("source_status") == "generated"
+        and user_footprint.get("safe_to_show_named_access_ui") is True
+        and footprint_summary
+    )
+    user_footprint_authority = {
+        "available": footprint_available,
+        "status": "live" if footprint_available else "unavailable",
+        "authority": "Privacy-minimised named-access reconciliation aggregate",
+        "definition": "Aggregate access footprint only. No names, emails, account IDs, or user rows are exposed.",
+        "unique_users_with_access": _jom_admin_ua_int_v1(footprint_summary.get("users_analyzed"), 0) if footprint_available else None,
+        "access_assignments": _jom_admin_ua_int_v1(footprint_summary.get("total_product_access_assignments"), 0) if footprint_available else None,
+        "high_access_concentration_users": _jom_admin_ua_int_v1(footprint_summary.get("high_duplication_users"), 0) if footprint_available else None,
+        "medium_access_concentration_users": _jom_admin_ua_int_v1(footprint_summary.get("medium_duplication_users"), 0) if footprint_available else None,
+        "average_sites_per_user": footprint_summary.get("average_sites_per_user") if footprint_available else None,
+    }
+
     account_authority = {
         "available": account_authority_available,
         "status": "live" if account_authority_available else "unavailable",
@@ -1128,7 +1145,6 @@ def _jom_admin_users_access_contract_v1():
         },
     }
 
-    active_user_authority_available = False
     summary = {
         "monitored_sites": len(monitored_sites) if monitored_sites else len(product_sites),
         "active_users": None,
@@ -1144,7 +1160,7 @@ def _jom_admin_users_access_contract_v1():
         "platform_role_assignments": account_authority["fields"]["platform_role_assignments"],
         "product_access_assignments": product_summary.get("total_jira_product_user_count"),
         "role_rows": product_summary.get("jira_role_rows") or len(role_rows),
-        "footprint_records": len(footprint_records) if footprint_records else insights_summary.get("user_records_evaluated"),
+        "footprint_records": user_footprint_authority["unique_users_with_access"],
         "issue_count": insights_summary.get("total_issues"),
         "critical_count": insights_summary.get("critical"),
         "risk_count": insights_summary.get("risk"),
@@ -1156,23 +1172,26 @@ def _jom_admin_users_access_contract_v1():
         "admin": "live" if account_authority_available else ("available" if admin_insights else "unavailable"),
         "account_authority": "live" if account_authority_available else "unavailable",
         "administrative_access_authority": "live" if role_breakdown_complete else "unavailable",
-        "active_user_authority": "live" if active_user_authority_available else "unavailable",
+        "user_footprint_authority": "live" if footprint_available else "unavailable",
+        "active_user_authority": "unavailable",
         "product_access_authority": "live" if product_access.get("status") in {"ok", "partial"} or product_access.get("live_collection") is True else "unavailable",
-        "truth_policy": "Organisation account authority is separate from active-user authority. Administrative access is reported as aggregate role assignments; product-access assignments are separate and must not be labelled as active users.",
+        "truth_policy": "Account, administrative-role, user-footprint and product-access aggregates are separate authorities. None proves active-user status.",
     }
     source_health = {
         "admin_truth": _jom_admin_ua_source_health_v1("Admin Truth account authority", admin_truth),
+        "user_footprint": _jom_admin_ua_source_health_v1("User footprint", user_footprint),
         "source_freshness": _jom_admin_ua_source_health_v1("Source freshness", source_freshness),
         "source_reliability": _jom_admin_ua_source_health_v1("Source reliability", source_reliability),
         "product_access_refresh": _jom_admin_ua_source_health_v1("Product access refresh", product_refresh),
     }
     return {
-        "schema": "jom-admin-users-access-authority-v1.1",
+        "schema": "jom-admin-users-access-authority-v1.2",
         "generated_at_utc": now_utc(),
         "status": "ok" if authority.get("product_access_authority") == "live" and authority.get("account_authority") == "live" else "review",
         "authority": authority,
         "account_authority": account_authority,
         "administrative_access": administrative_access,
+        "user_footprint": user_footprint_authority,
         "summary": summary,
         "actions": _jom_admin_ua_actions_v1(authority, summary, source_health),
         "site_access": product_sites,
@@ -1186,13 +1205,13 @@ def _jom_admin_users_access_contract_v1():
             "admin_truth": "runtime/data/admin_truth_v2.json",
         },
         "notes": [
-            "Organisation account totals and administrative role breakdowns are sourced from privacy-minimised, fully paginated Admin Truth authority.",
-            "Administrative role values are assignments, not unique administrators; no names, emails, or account IDs are exposed.",
-            "Headline active users remain unavailable because account status does not prove activity.",
-            "Product-access assignments are shown separately and are not labelled as active users.",
+            "User footprint values are aggregate access observations, not active-user counts.",
+            "No names, emails, account IDs, or raw user rows are exposed by this contract.",
+            "Administrative role values are assignments, not unique administrators.",
             "Named per-site access remains hidden until resource-level entitlement mapping is proven.",
         ],
     }
+
 
 
 @app.route("/api/admin/users-access")
