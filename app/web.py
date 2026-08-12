@@ -1049,6 +1049,7 @@ def _jom_admin_ua_actions_v1(authority, summary, source_health):
             actions.append({"level": "review", "title": "Source health requires review", "reason": (item.get("label") or key) + " is " + str(item.get("status")), "action": "Open Source Health and refresh the affected authority source.", "source": key})
     return actions[:8]
 
+
 def _jom_admin_users_access_contract_v1():
     registry = _jom_admin_ua_dict_v1(load_json("site_registry.json", {}))
     product_access = _jom_admin_ua_dict_v1(load_json("estate_product_access.json", {}))
@@ -1081,6 +1082,27 @@ def _jom_admin_users_access_contract_v1():
         if not account_authority_available or admin_identity.get(field) is None:
             return None
         return _jom_admin_ua_int_v1(admin_identity.get(field), 0)
+
+    role_breakdown_source = _jom_admin_ua_dict_v1(admin_identity.get("administrative_role_breakdown"))
+    role_breakdown_complete = bool(
+        account_authority_available
+        and admin_identity.get("administrative_role_breakdown_complete") is True
+        and _jom_admin_ua_int_v1(role_breakdown_source.get("total"), -1) == account_value("platform_role_assignments")
+    )
+    administrative_access = {
+        "available": role_breakdown_complete,
+        "status": "live" if role_breakdown_complete else "unavailable",
+        "authority": "Atlassian Admin Directory platform roles via Admin Truth",
+        "assignment_definition": "Role assignments, not unique administrators. One account may hold more than one role.",
+        "privacy_minimised": True,
+        "total_assignments": account_value("platform_role_assignments"),
+        "roles": {
+            "user_access_admin": _jom_admin_ua_int_v1(role_breakdown_source.get("user_access_admin"), 0) if role_breakdown_complete else None,
+            "organisation_admin": _jom_admin_ua_int_v1(role_breakdown_source.get("organisation_admin"), 0) if role_breakdown_complete else None,
+            "site_admin": _jom_admin_ua_int_v1(role_breakdown_source.get("site_admin"), 0) if role_breakdown_complete else None,
+            "other": _jom_admin_ua_int_v1(role_breakdown_source.get("other"), 0) if role_breakdown_complete else None,
+        },
+    }
 
     account_authority = {
         "available": account_authority_available,
@@ -1133,9 +1155,10 @@ def _jom_admin_users_access_contract_v1():
         "oauth": "live" if product_access.get("live_collection") is True or product_access.get("status") in {"ok", "partial"} else "unavailable",
         "admin": "live" if account_authority_available else ("available" if admin_insights else "unavailable"),
         "account_authority": "live" if account_authority_available else "unavailable",
+        "administrative_access_authority": "live" if role_breakdown_complete else "unavailable",
         "active_user_authority": "live" if active_user_authority_available else "unavailable",
         "product_access_authority": "live" if product_access.get("status") in {"ok", "partial"} or product_access.get("live_collection") is True else "unavailable",
-        "truth_policy": "Organisation account authority is separate from active-user authority. Active users require proven activity evidence; product-access assignments are separate and must not be labelled as active users.",
+        "truth_policy": "Organisation account authority is separate from active-user authority. Administrative access is reported as aggregate role assignments; product-access assignments are separate and must not be labelled as active users.",
     }
     source_health = {
         "admin_truth": _jom_admin_ua_source_health_v1("Admin Truth account authority", admin_truth),
@@ -1144,11 +1167,12 @@ def _jom_admin_users_access_contract_v1():
         "product_access_refresh": _jom_admin_ua_source_health_v1("Product access refresh", product_refresh),
     }
     return {
-        "schema": "jom-admin-users-access-authority-v1",
+        "schema": "jom-admin-users-access-authority-v1.1",
         "generated_at_utc": now_utc(),
         "status": "ok" if authority.get("product_access_authority") == "live" and authority.get("account_authority") == "live" else "review",
         "authority": authority,
         "account_authority": account_authority,
+        "administrative_access": administrative_access,
         "summary": summary,
         "actions": _jom_admin_ua_actions_v1(authority, summary, source_health),
         "site_access": product_sites,
@@ -1162,13 +1186,14 @@ def _jom_admin_users_access_contract_v1():
             "admin_truth": "runtime/data/admin_truth_v2.json",
         },
         "notes": [
-            "Organisation account totals are sourced from privacy-minimised, fully paginated Admin Truth authority.",
+            "Organisation account totals and administrative role breakdowns are sourced from privacy-minimised, fully paginated Admin Truth authority.",
+            "Administrative role values are assignments, not unique administrators; no names, emails, or account IDs are exposed.",
             "Headline active users remain unavailable because account status does not prove activity.",
             "Product-access assignments are shown separately and are not labelled as active users.",
-            "Names, email addresses, account IDs, and raw Directory records are not exposed by this contract.",
             "Named per-site access remains hidden until resource-level entitlement mapping is proven.",
         ],
     }
+
 
 @app.route("/api/admin/users-access")
 def api_admin_users_access_authority_v1():

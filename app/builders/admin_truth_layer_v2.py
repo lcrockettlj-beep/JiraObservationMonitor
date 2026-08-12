@@ -69,6 +69,7 @@ def _summary_count(summary: Dict[str, Any], section: str, *keys: str) -> int:
     return sum(safe_int(values.get(key)) for key in keys)
 
 
+
 def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     summary = payload.get('summary') if isinstance(payload.get('summary'), dict) else {}
     users = payload.get('users') if isinstance(payload.get('users'), list) else []
@@ -84,6 +85,29 @@ def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     suspended_users = sum(safe_int(value) for key, value in account_statuses.items() if key in {'suspended', 'disabled', 'deactivated', 'inactive'})
     managed_users = sum(safe_int(value) for key, value in claim_statuses.items() if key in {'managed', 'claimed'})
 
+    role_key_map = {
+        'atlassian/user-access-admin': 'user_access_admin',
+        'atlassian/org-admin': 'organisation_admin',
+        'atlassian/site-admin': 'site_admin',
+    }
+    role_breakdown = {value: 0 for value in role_key_map.values()}
+    unknown_role_assignments = 0
+    for user in users:
+        if not isinstance(user, dict):
+            continue
+        roles = user.get('platform_roles') if isinstance(user.get('platform_roles'), list) else []
+        for role in roles:
+            normalised = str(role or '').strip().lower()
+            category = role_key_map.get(normalised)
+            if category:
+                role_breakdown[category] += 1
+            elif normalised:
+                unknown_role_assignments += 1
+    role_breakdown['other'] = unknown_role_assignments
+    role_breakdown['total'] = sum(role_breakdown.values())
+    summary_role_total = safe_int(summary.get('platform_role_assignments'))
+    role_breakdown_complete = complete and role_breakdown['total'] == summary_role_total
+
     return {
         'org_users': safe_int(summary.get('unique_accounts')) if complete else 0,
         'active_users': None,
@@ -94,7 +118,9 @@ def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         'mfa_enabled': safe_int(summary.get('mfa_enabled')) if complete else 0,
         'mfa_disabled': safe_int(summary.get('mfa_disabled')) if complete else 0,
         'mfa_unknown': safe_int(summary.get('mfa_unknown')) if complete else 0,
-        'platform_role_assignments': safe_int(summary.get('platform_role_assignments')) if complete else 0,
+        'platform_role_assignments': summary_role_total if complete else 0,
+        'administrative_role_breakdown': role_breakdown if role_breakdown_complete else {},
+        'administrative_role_breakdown_complete': role_breakdown_complete,
         'source_fields': {
             'user_rows': len(users),
             'pagination_complete': bool(source.get('pagination_complete')),
@@ -103,6 +129,7 @@ def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
             'privacy_minimised': bool((payload.get('privacy') or {}).get('raw_responses_stored') is False),
         },
     }
+
 
 def billing_summary(project_root: Path) -> Dict[str, Any]:
     billing_path = project_root / 'runtime' / 'data' / 'estate_access_truth.json'

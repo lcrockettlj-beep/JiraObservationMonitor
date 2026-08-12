@@ -1,6 +1,6 @@
 {
   "schema": "jom-admin-truth-layer-v2",
-  "generated_at_utc": "2026-08-12T09:20:38Z",
+  "generated_at_utc": "2026-08-12T10:21:37Z",
   "source_policy": {
     "identity_truth": "Atlassian Admin API enriched runtime payload",
     "commercial_billing_truth": "runtime/data/estate_access_truth.json",
@@ -38,6 +38,14 @@
     "mfa_disabled": 118,
     "mfa_unknown": 0,
     "platform_role_assignments": 44,
+    "administrative_role_breakdown": {
+      "user_access_admin": 36,
+      "organisation_admin": 4,
+      "site_admin": 4,
+      "other": 0,
+      "total": 44
+    },
+    "administrative_role_breakdown_complete": true,
     "source_fields": {
       "user_rows": 142,
       "pagination_complete": true,
