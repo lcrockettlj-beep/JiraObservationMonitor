@@ -1,6 +1,6 @@
 {
   "source": "Atlassian Cloud API live collector: accessible-resources + /rest/api/3/applicationrole",
-  "generated_at_utc": "2026-08-11T13:52:07Z",
+  "generated_at_utc": "2026-08-12T09:21:23Z",
   "schema": "jom-estate-product-access-v2-live",
   "live_collection": true,
   "status": "partial",
@@ -8,9 +8,9 @@
   "summary": {
     "accessible_jira_resource_count": 6,
     "sites_with_jira_roles": 5,
-    "total_jira_product_user_count": 162,
+    "total_jira_product_user_count": 163,
     "total_jira_seat_limit": 108150,
-    "total_jira_remaining_seats": 107988,
+    "total_jira_remaining_seats": 107987,
     "jira_role_rows": 5,
     "error_site_count": 1
   },
@@ -64,9 +64,9 @@
       "site_name": "gli-it-project",
       "site_url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "jira_product_user_count": 63,
+      "jira_product_user_count": 64,
       "jira_product_seat_limit": 100,
-      "jira_product_remaining_seats": 37,
+      "jira_product_remaining_seats": 36,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -132,9 +132,9 @@
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 63,
+      "user_count": 64,
       "seat_limit": 100,
-      "remaining_seats": 37,
+      "remaining_seats": 36,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false

@@ -1,77 +1,145 @@
-(function(){
+(function () {
   'use strict';
-  const ENDPOINT = '/api/admin/users-access';
-  const text = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value === null || value === undefined || value === '' ? 'Unavailable' : String(value); };
-  const html = (id, value) => { const el = document.getElementById(id); if (el) el.innerHTML = value; };
-  const esc = value => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  const fmt = value => value === null || value === undefined || value === '' ? 'Unavailable' : (Number.isFinite(Number(value)) ? Number(value).toLocaleString() : String(value));
-  const status = value => {
-    const raw = String(value ?? '').trim().toLowerCase();
-    if (['ok','healthy','available','enabled','current','generated','aligned','live'].includes(raw)) return {label:'Healthy', tone:'ok'};
-    if (['attention','review','warning','aging','partial','stale'].includes(raw)) return {label:'Attention', tone:'attention'};
-    if (['failed','failure','error','critical','unavailable','missing','blocked'].includes(raw)) return {label:'Unavailable', tone:'unavailable'};
-    return {label: raw ? raw.replace(/[_-]+/g,' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Unavailable', tone:'unavailable'};
-  };
-  const badge = value => { const item = status(value); return '<span class="site-badge site-badge--' + item.tone + '">' + esc(item.label) + '</span>'; };
-  const formatTime = value => {
-    if (!value) return 'Validation time unavailable';
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString([], {dateStyle:'medium', timeStyle:'short'});
-  };
-  function renderActions(actions){
-    const items = Array.isArray(actions) ? actions : [];
-    const required = items.filter(item => String(item.level || '').toLowerCase() !== 'ok');
-    if (!required.length) {
-      html('ua-action-list', '<article class="admin-users-action-card admin-users-action-card--ok"><span>Healthy</span><strong>No action required</strong><p>Current user and access authority did not return a priority action.</p></article>');
-      return 0;
-    }
-    html('ua-action-list', required.map(item => {
-      const shown = status(item.level);
-      return '<article class="admin-users-action-card admin-users-action-card--' + shown.tone + '"><span>' + esc(shown.label) + '</span><strong>' + esc(item.title || 'Action required') + '</strong><p>' + esc(item.reason || '') + '</p><p><b>Next:</b> ' + esc(item.action || 'Review the affected authority source.') + '</p></article>';
-    }).join(''));
-    return required.length;
+
+  var ENDPOINT = '/api/admin/users-access';
+
+  function getElement(id) {
+    return document.getElementById(id);
   }
-  function renderSites(rows){
+
+  function setText(id, value) {
+    var element = getElement(id);
+    if (!element) return;
+    element.textContent = value === null || value === undefined || value === '' ? 'Unavailable' : String(value);
+  }
+
+  function setHtml(id, value) {
+    var element = getElement(id);
+    if (element) element.innerHTML = value;
+  }
+
+  function escapeHtml(value) {
+    return String(value === null || value === undefined ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function formatValue(value) {
+    if (value === null || value === undefined || value === '') return 'Unavailable';
+    return isFinite(Number(value)) ? Number(value).toLocaleString() : String(value);
+  }
+
+  function authorityLabel(value) {
+    var raw = String(value === null || value === undefined ? '' : value).toLowerCase();
+    return ['ok', 'live', 'healthy', 'available'].indexOf(raw) >= 0 ? 'Live' : 'Unavailable';
+  }
+
+  function formatTime(value) {
+    if (!value) return 'Unavailable';
+    var date = new Date(value);
+    return isNaN(date.getTime()) ? String(value) : date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+  }
+
+  function renderSites(rows) {
     if (!Array.isArray(rows) || !rows.length) {
-      html('ua-sites-body', '<tr><td colspan="3">No monitored site access rows are available.</td></tr>');
+      setHtml('ua-sites-body', '<tr><td colspan="3">No site access rows available.</td></tr>');
       return;
     }
-    html('ua-sites-body', rows.map(row => '<tr><td><strong>' + esc(row.site_name || row.site_key) + '</strong><br><small>' + esc(row.site_key || '') + '</small></td><td>' + esc(fmt(row.product_users)) + '</td><td>' + badge(row.status) + '</td></tr>').join(''));
+
+    setHtml('ua-sites-body', rows.map(function (row) {
+      return '<tr>' +
+        '<td><strong>' + escapeHtml(row.site_name || row.site_key || 'Unknown') + '</strong><br><small>' + escapeHtml(row.site_key || '') + '</small></td>' +
+        '<td>' + escapeHtml(formatValue(row.product_users)) + '</td>' +
+        '<td><span class="badge">' + escapeHtml(authorityLabel(row.status)) + '</span></td>' +
+        '</tr>';
+    }).join(''));
   }
-  function render(data){
-    const authority = data.authority || {};
-    const summary = data.summary || {};
-    const overall = status(data.status);
-    const actionCount = renderActions(data.actions);
-    text('ua-authority-status', overall.label);
-    text('ua-authority-note', authority.active_user_authority === 'unavailable' ? 'Jira access assignments are available, but unique active users are not currently proven.' : (authority.truth_policy || 'Current user and access authority is available.'));
-    text('ua-active-users', summary.active_users_display || 'Unavailable');
-    text('ua-product-access', fmt(summary.product_access_assignments));
-    text('ua-monitored-sites', fmt(summary.monitored_sites));
-    text('ua-footprint-records', fmt(summary.footprint_records));
-    text('ua-critical-count', fmt(summary.critical_count));
-    text('ua-risk-count', fmt(summary.risk_count));
-    text('ua-waste-count', fmt(summary.waste_count));
-    text('ua-drift-count', fmt(summary.drift_count));
-    text('ua-rail-active-users', summary.active_users_display || 'Unavailable');
-    text('ua-rail-observed-users', fmt(summary.footprint_records));
-    text('ua-rail-product-access', fmt(summary.product_access_assignments));
-    text('ua-rail-sites', fmt(summary.monitored_sites));
-    text('ua-rail-issues', fmt(summary.issue_count));
-    text('ua-rail-actions', fmt(actionCount));
-    text('ua-last-validation', formatTime(data.generated_at_utc));
+
+  function renderActions(data) {
+    var actions = Array.isArray(data.actions) ? data.actions.filter(function (item) {
+      return String(item.level || '').toLowerCase() !== 'ok';
+    }) : [];
+    var summary = data.summary || {};
+
+    if (Number(summary.mfa_disabled) > 0) {
+      actions.unshift({
+        title: 'MFA coverage requires review',
+        reason: formatValue(summary.mfa_disabled) + ' account(s) are reported without MFA enabled.',
+        action: 'Review MFA policy and account exceptions in Atlassian Administration.'
+      });
+    }
+
+    if (Number(summary.suspended_users) > 0) {
+      actions.unshift({
+        title: 'Suspended accounts require access review',
+        reason: formatValue(summary.suspended_users) + ' suspended account(s) are reported.',
+        action: 'Review product and platform-role access for suspended accounts.'
+      });
+    }
+
+    if (!actions.length) {
+      setHtml('ua-action-list', '<article class="action ok"><strong>No immediate account actions</strong><p>Current proven account authority did not return a priority action.</p></article>');
+      return;
+    }
+
+    setHtml('ua-action-list', actions.slice(0, 8).map(function (item) {
+      return '<article class="action">' +
+        '<strong>' + escapeHtml(item.title || 'Action required') + '</strong>' +
+        '<p>' + escapeHtml(item.reason || '') + '</p>' +
+        '<p><b>Next:</b> ' + escapeHtml(item.action || 'Review the affected authority source.') + '</p>' +
+        '</article>';
+    }).join(''));
+  }
+
+  function accountValue(summary, fields, key) {
+    return summary[key] !== null && summary[key] !== undefined ? summary[key] : fields[key];
+  }
+
+  function render(data) {
+    var account = data.account_authority || {};
+    var summary = data.summary || {};
+    var fields = account.fields || {};
+    var authority = data.authority || {};
+    var keys = ['org_users', 'managed_users', 'human_users', 'app_accounts', 'mfa_enabled', 'mfa_disabled', 'mfa_unknown', 'suspended_users', 'platform_role_assignments'];
+
+    setText('ua-account-authority', authorityLabel(authority.account_authority));
+    setText('ua-authority-note', account.available === true ? 'Privacy-minimised Directory authority is live and fully paginated.' : 'Account authority is unavailable or incomplete.');
+
+    keys.forEach(function (key) {
+      setText('ua-' + key.replace(/_/g, '-'), formatValue(accountValue(summary, fields, key)));
+    });
+
+    setText('ua-pagination', account.pagination_complete === true ? 'Complete' : 'Unavailable');
+    setText('ua-privacy', account.privacy_minimised === true ? 'Enabled' : 'Unavailable');
+    setText('ua-directories', formatValue(account.directory_count));
+    setText('ua-pages', formatValue(account.page_count));
+    setText('ua-active-users', summary.active_users_display || 'Unavailable');
+    setText('ua-named-site-access', account.safe_to_show_named_site_access === true ? 'Available' : 'Guarded');
+    setText('ua-last-validation', formatTime(data.generated_at_utc));
+
     renderSites(data.site_access);
+    renderActions(data);
   }
-  function fail(error){
-    text('ua-authority-status', 'Unavailable');
-    text('ua-authority-note', error && error.message ? error.message : 'Users and Access contract unavailable.');
-    html('ua-action-list', '<article class="admin-users-action-card admin-users-action-card--unavailable"><strong>Users and Access unavailable</strong><p>The authority contract could not be loaded.</p></article>');
+
+  function fail(error) {
+    setText('ua-account-authority', 'Unavailable');
+    setText('ua-authority-note', error && error.message ? error.message : 'Contract unavailable');
+    setHtml('ua-action-list', '<article class="action unavailable"><strong>Users &amp; Access unavailable</strong><p>The authority contract could not be loaded.</p></article>');
   }
-  function boot(){
-    fetch(ENDPOINT, {cache:'no-store', headers:{'Accept':'application/json'}})
-      .then(response => { if (!response.ok) throw new Error(ENDPOINT + ' returned HTTP ' + response.status); return response.json(); })
+
+  function boot() {
+    fetch(ENDPOINT, { cache: 'no-store', headers: { Accept: 'application/json' } })
+      .then(function (response) {
+        if (!response.ok) throw new Error(ENDPOINT + ' returned HTTP ' + response.status);
+        return response.json();
+      })
       .then(render)
       .catch(fail);
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 }());
