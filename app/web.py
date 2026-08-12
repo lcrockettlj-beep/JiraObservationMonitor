@@ -1145,18 +1145,33 @@ def _jom_admin_users_access_contract_v1():
         },
     }
 
+    org_users_value = account_authority["fields"]["org_users"]
+    managed_users_value = account_authority["fields"]["managed_users"]
+    unmanaged_accounts = None
+    managed_coverage_percent = None
+    if isinstance(org_users_value, int) and isinstance(managed_users_value, int) and org_users_value >= managed_users_value:
+        unmanaged_accounts = org_users_value - managed_users_value
+        managed_coverage_percent = round((managed_users_value / org_users_value) * 100, 1) if org_users_value else None
+
+    mfa_values = [account_authority["fields"]["mfa_enabled"], account_authority["fields"]["mfa_disabled"], account_authority["fields"]["mfa_unknown"]]
+    mfa_denominator = sum(value for value in mfa_values if isinstance(value, int))
+    mfa_coverage_percent = round((account_authority["fields"]["mfa_enabled"] / mfa_denominator) * 100, 1) if mfa_denominator and isinstance(account_authority["fields"]["mfa_enabled"], int) else None
+
     summary = {
         "monitored_sites": len(monitored_sites) if monitored_sites else len(product_sites),
         "active_users": None,
         "active_users_display": "Unavailable",
         "org_users": account_authority["fields"]["org_users"],
-        "managed_users": account_authority["fields"]["managed_users"],
+        "managed_users": managed_users_value,
+        "unmanaged_accounts": unmanaged_accounts,
+        "managed_coverage_percent": managed_coverage_percent,
         "human_users": account_authority["fields"]["human_users"],
         "app_accounts": account_authority["fields"]["app_accounts"],
         "suspended_users": account_authority["fields"]["suspended_users"],
         "mfa_enabled": account_authority["fields"]["mfa_enabled"],
         "mfa_disabled": account_authority["fields"]["mfa_disabled"],
         "mfa_unknown": account_authority["fields"]["mfa_unknown"],
+        "mfa_coverage_percent": mfa_coverage_percent,
         "platform_role_assignments": account_authority["fields"]["platform_role_assignments"],
         "product_access_assignments": product_summary.get("total_jira_product_user_count"),
         "role_rows": product_summary.get("jira_role_rows") or len(role_rows),
@@ -1184,6 +1199,15 @@ def _jom_admin_users_access_contract_v1():
         "source_reliability": _jom_admin_ua_source_health_v1("Source reliability", source_reliability),
         "product_access_refresh": _jom_admin_ua_source_health_v1("Product access refresh", product_refresh),
     }
+    generated_actions = _jom_admin_ua_actions_v1(authority, summary, source_health)
+    actions = []
+    for action in generated_actions if isinstance(generated_actions, list) else []:
+        if not isinstance(action, dict):
+            continue
+        title = str(action.get("title") or "").strip().lower()
+        if "active-user authority" in title or "active user authority" in title:
+            continue
+        actions.append(action)
     return {
         "schema": "jom-admin-users-access-authority-v1.2",
         "generated_at_utc": now_utc(),
@@ -1193,7 +1217,7 @@ def _jom_admin_users_access_contract_v1():
         "administrative_access": administrative_access,
         "user_footprint": user_footprint_authority,
         "summary": summary,
-        "actions": _jom_admin_ua_actions_v1(authority, summary, source_health),
+        "actions": actions,
         "site_access": product_sites,
         "capabilities": capabilities,
         "source_health": source_health,
@@ -1211,6 +1235,7 @@ def _jom_admin_users_access_contract_v1():
             "Named per-site access remains hidden until resource-level entitlement mapping is proven.",
         ],
     }
+
 
 
 
