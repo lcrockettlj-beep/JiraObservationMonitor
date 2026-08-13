@@ -85,6 +85,7 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "source_freshness_audit.json",
     "source_reliability_status.json",
     "user_footprint.json",
+    "verified_active_jira_users_v1.json",
 }
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
 
@@ -956,7 +957,7 @@ def api_admin_licensing_billing_authority_v1():
 
 # --- JOM_ADMIN_USERS_ACCESS_AUTHORITY_V1 START ---
 # Owner contract for Admin > Users & Access.
-# Truth rule: active-user truth stays unavailable unless OAuth/Admin authority proves unique active users.
+# Truth rule: active-user truth is published only from the approved Verified Active Jira Users runtime authority.
 def _jom_admin_ua_int_v1(value, default=0):
     try:
         if value is None or value == "":
@@ -1032,6 +1033,53 @@ def _jom_admin_ua_source_health_v1(label, payload):
         return {"label": label, "available": True, "status": status, "generated_at_utc": payload.get("generated_at_utc") or payload.get("served_at_utc") or payload.get("updated_at_utc")}
     return {"label": label, "available": False, "status": "unavailable", "generated_at_utc": None}
 
+def _jom_admin_ua_active_jira_authority_v1(payload):
+    payload = _jom_admin_ua_dict_v1(payload)
+    scope = _jom_admin_ua_dict_v1(payload.get("scope"))
+    source = _jom_admin_ua_dict_v1(payload.get("source"))
+    summary = _jom_admin_ua_dict_v1(payload.get("summary"))
+    quality = _jom_admin_ua_dict_v1(payload.get("quality"))
+    freshness = _jom_admin_ua_dict_v1(payload.get("freshness"))
+    authority = _jom_admin_ua_dict_v1(payload.get("authority"))
+    maximum_age_hours = _jom_admin_ua_int_v1(freshness.get("maximum_age_hours"), 26)
+    generated_at_utc = payload.get("generated_at_utc")
+    parsed = _contract_parse_time(generated_at_utc)
+    age_hours = round((datetime.now(timezone.utc) - parsed).total_seconds() / 3600, 2) if parsed else None
+    active_value = summary.get("verified_active_jira_users")
+    gates = {
+        "schema": payload.get("schema") == "jom-verified-active-jira-users-v1",
+        "status": payload.get("status") == "ok",
+        "product_scope": scope.get("product_key") == "jira-software",
+        "activity_window": scope.get("activity_window_days") == 30,
+        "maximum_age": maximum_age_hours == 26 and age_hours is not None and 0 <= age_hours <= maximum_age_hours,
+        "full_success": quality.get("full_success") is True,
+        "no_request_failures": source.get("failed_requests") == 0 and source.get("successful_requests") == source.get("authoritative_accounts"),
+        "timestamp_quality": quality.get("timestamp_parse_failures") == 0 and quality.get("future_timestamps") == 0,
+        "safe_to_publish": authority.get("safe_to_publish") is True,
+        "numeric_value": isinstance(active_value, int) and active_value >= 0,
+    }
+    available = all(gates.values())
+    reason = authority.get("reason") or "Verified Active Jira Users authority is unavailable."
+    if not gates["maximum_age"]:
+        reason = "Verified Active Jira Users authority is missing, invalid, or older than the approved 26-hour maximum age."
+    elif not available:
+        reason = "Verified Active Jira Users authority did not pass every approved publish gate. " + str(reason)
+    return {
+        "available": available,
+        "status": "live" if available else "unavailable",
+        "value": active_value if available else None,
+        "display": str(active_value) if available else "Unavailable",
+        "metric_label": "Verified Active Jira Users",
+        "product_key": "jira-software",
+        "activity_window_days": 30,
+        "maximum_age_hours": 26,
+        "generated_at_utc": generated_at_utc,
+        "age_hours": age_hours,
+        "reason": reason,
+        "gates": gates,
+    }
+
+
 def _jom_admin_ua_actions_v1(authority, summary, source_health):
     actions = []
     if authority.get("active_user_authority") == "unavailable":
@@ -1060,6 +1108,8 @@ def _jom_admin_users_access_contract_v1():
     source_freshness = load_json("source_freshness_audit.json", {})
     source_reliability = load_json("source_reliability_status.json", {})
     product_refresh = load_json("product_access_refresh_status.json", {})
+    verified_active_jira_source = _jom_admin_ua_dict_v1(load_json("verified_active_jira_users_v1.json", {}))
+    verified_active_jira = _jom_admin_ua_active_jira_authority_v1(verified_active_jira_source)
 
     registry_sites = _jom_admin_ua_list_v1(registry.get("sites"))
     monitored_sites = [row for row in registry_sites if _jom_admin_ua_is_monitored_v1(row)]
@@ -1195,8 +1245,10 @@ def _jom_admin_users_access_contract_v1():
 
     summary = {
         "monitored_sites": len(monitored_sites) if monitored_sites else len(product_sites),
-        "active_users": None,
-        "active_users_display": "Unavailable",
+        "active_users": verified_active_jira["value"],
+        "active_users_display": verified_active_jira["display"],
+        "active_users_metric_label": verified_active_jira["metric_label"],
+        "active_users_activity_window_days": verified_active_jira["activity_window_days"],
         "org_users": account_authority["fields"]["org_users"],
         "managed_users": managed_users_value,
         "unmanaged_accounts": unmanaged_accounts,
@@ -1225,9 +1277,9 @@ def _jom_admin_users_access_contract_v1():
         "administrative_access_authority": "live" if role_breakdown_complete else "unavailable",
         "user_footprint_authority": "live" if footprint_available else "unavailable",
         "site_level_access_authority": "live" if named_site_live else "unavailable",
-        "active_user_authority": "unavailable",
+        "active_user_authority": verified_active_jira["status"],
         "product_access_authority": "live" if product_access.get("status") in {"ok", "partial"} or product_access.get("live_collection") is True else "unavailable",
-        "truth_policy": "Account, administrative-role, user-footprint and product-access aggregates are separate authorities. None proves active-user status.",
+        "truth_policy": "Verified Active Jira Users is a separate Jira Software activity authority with an approved 30-day window and 26-hour freshness gate. Account, access and product-assignment aggregates remain separate.",
     }
     source_health = {
         "admin_truth": _jom_admin_ua_source_health_v1("Admin Truth account authority", admin_truth),
@@ -1235,6 +1287,7 @@ def _jom_admin_users_access_contract_v1():
         "source_freshness": _jom_admin_ua_source_health_v1("Source freshness", source_freshness),
         "source_reliability": _jom_admin_ua_source_health_v1("Source reliability", source_reliability),
         "product_access_refresh": _jom_admin_ua_source_health_v1("Product access refresh", product_refresh),
+        "verified_active_jira_users": _jom_admin_ua_source_health_v1("Verified Active Jira Users", verified_active_jira_source),
     }
     generated_actions = _jom_admin_ua_actions_v1(authority, summary, source_health)
     actions = []
@@ -1254,6 +1307,7 @@ def _jom_admin_users_access_contract_v1():
         "administrative_access": administrative_access,
         "user_footprint": user_footprint_authority,
         "site_level_access": site_level_access,
+        "verified_active_jira_users": verified_active_jira,
         "summary": summary,
         "actions": actions,
         "site_access": product_sites,
@@ -1264,6 +1318,7 @@ def _jom_admin_users_access_contract_v1():
             "estate_product_access": "runtime/data/estate_product_access.json",
             "user_footprint": "runtime/data/user_footprint.json",
             "named_site_access": "runtime/data/named_site_access_authority_v1.json",
+            "verified_active_jira_users": "runtime/data/verified_active_jira_users_v1.json",
             "admin_insights": "runtime/data/admin_insights.json",
             "admin_truth": "runtime/data/admin_truth_v2.json",
         },
