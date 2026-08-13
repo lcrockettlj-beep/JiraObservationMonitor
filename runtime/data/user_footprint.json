@@ -1,6 +1,6 @@
 {
   "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-08-12T13:15:31.441317Z",
+  "generated_at_utc": "2026-08-13T11:19:27.582207Z",
   "source_status": "generated",
   "reason": "Named access footprint generated from named_access_truth_v2 after reconciliation_v2 passed safe_to_enable_named_access_ui=true.",
   "safe_to_show_named_access_ui": true,
@@ -8,11 +8,11 @@
   "truth_source": "runtime\\data\\live_named_access_contract",
   "summary": {
     "users_analyzed": 124,
-    "average_sites_per_user": 1.19,
-    "high_duplication_users": 2,
-    "medium_duplication_users": 19,
-    "total_product_access_assignments": 148,
-    "reconciled_api_product_users": 163,
+    "average_sites_per_user": 1.2,
+    "high_duplication_users": 3,
+    "medium_duplication_users": 18,
+    "total_product_access_assignments": 149,
+    "reconciled_api_product_users": 164,
     "named_minus_api_product": -15,
     "named_unique_users": 124
   },
@@ -40,6 +40,25 @@
     {
       "account_id": "5b1539719595132534bc28a4",
       "name": "5b1539719595132534bc28a4",
+      "email": "",
+      "sites": [
+        "gli-delivery-tm",
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 3,
+      "products": [
+        "jira-software"
+      ],
+      "product_access_assignments": 3,
+      "access_sources": [
+        "group"
+      ],
+      "category": "high"
+    },
+    {
+      "account_id": "640f54de2cee496759e9ca64",
+      "name": "640f54de2cee496759e9ca64",
       "email": "",
       "sites": [
         "gli-delivery-tm",
@@ -260,24 +279,6 @@
       "email": "",
       "sites": [
         "gli-global-technology",
-        "gli-it-project"
-      ],
-      "site_count": 2,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 2,
-      "access_sources": [
-        "group"
-      ],
-      "category": "medium"
-    },
-    {
-      "account_id": "640f54de2cee496759e9ca64",
-      "name": "640f54de2cee496759e9ca64",
-      "email": "",
-      "sites": [
-        "gli-delivery-tm",
         "gli-it-project"
       ],
       "site_count": 2,

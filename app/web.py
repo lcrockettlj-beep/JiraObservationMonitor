@@ -1209,7 +1209,7 @@ def _jom_admin_users_access_contract_v1():
         "mfa_unknown": account_authority["fields"]["mfa_unknown"],
         "mfa_coverage_percent": mfa_coverage_percent,
         "platform_role_assignments": account_authority["fields"]["platform_role_assignments"],
-        "product_access_assignments": product_summary.get("total_jira_product_user_count"),
+        "product_access_assignments": sum(_jom_admin_ua_int_v1(row.get("product_users"), 0) for row in product_sites),
         "role_rows": product_summary.get("jira_role_rows") or len(role_rows),
         "footprint_records": user_footprint_authority["unique_users_with_access"],
         "issue_count": insights_summary.get("total_issues"),

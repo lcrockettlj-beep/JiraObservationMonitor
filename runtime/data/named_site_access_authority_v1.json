@@ -1,6 +1,6 @@
 {
   "schema": "jom-named-site-access-authority-v1",
-  "generated_at_utc": "2026-08-12T13:06:25.830296Z",
+  "generated_at_utc": "2026-08-13T11:29:39.622353Z",
   "status": "live",
   "authority": "Privacy-minimised named access footprint reconciled with Site Registry and Jira product-access authority",
   "privacy": {
@@ -17,7 +17,7 @@
   },
   "summary": {
     "unique_users_with_access": 124,
-    "named_access_assignments": 148,
+    "named_access_assignments": 149,
     "site_count": 4,
     "invalid_source_rows": 0
   },
@@ -45,9 +45,9 @@
     },
     {
       "site_key": "gli-global-technology",
-      "named_unique_users": 57,
-      "named_access_assignments": 57,
-      "product_access_assignments": 57,
+      "named_unique_users": 58,
+      "named_access_assignments": 58,
+      "product_access_assignments": 58,
       "registry_match": true,
       "product_authority_match": true,
       "named_count_within_product_count": true,

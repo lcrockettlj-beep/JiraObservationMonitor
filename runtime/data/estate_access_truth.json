@@ -1,19 +1,19 @@
 {
   "source": "Derived from live estate_product_access payload; billing is not used as website truth",
-  "generated_at_utc": "2026-08-12T13:15:34Z",
+  "generated_at_utc": "2026-08-13T11:19:29Z",
   "schema": "jom-estate-access-truth-v2-live",
   "live_collection": true,
   "summary": {
-    "api_product_user_count": 163,
+    "api_product_user_count": 164,
     "accessible_jira_resource_count": 6,
     "sites_with_jira_roles": 5
   },
   "product_summary": {
     "accessible_jira_resource_count": 6,
     "sites_with_jira_roles": 5,
-    "total_jira_product_user_count": 163,
+    "total_jira_product_user_count": 164,
     "total_jira_seat_limit": 108150,
-    "total_jira_remaining_seats": 107987,
+    "total_jira_remaining_seats": 107986,
     "jira_role_rows": 5,
     "error_site_count": 1
   },
@@ -45,9 +45,9 @@
       "site_name": "gli-global-technology",
       "site_url": "https://gli-global-technology.atlassian.net",
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "jira_product_user_count": 57,
+      "jira_product_user_count": 58,
       "jira_product_seat_limit": 100000,
-      "jira_product_remaining_seats": 99943,
+      "jira_product_remaining_seats": 99942,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -121,9 +121,9 @@
       "cloud_id": "aaa90a93-f0af-47ba-98d6-47829cc032b7",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 57,
+      "user_count": 58,
       "seat_limit": 100000,
-      "remaining_seats": 99943,
+      "remaining_seats": 99942,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
