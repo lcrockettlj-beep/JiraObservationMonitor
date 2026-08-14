@@ -1,0 +1,1309 @@
+{
+  "schema": "jom-named-user-display-identity-v1",
+  "generated_at_utc": "2026-08-14T09:35:48Z",
+  "status": "ok",
+  "source": {
+    "authority": "Atlassian Admin Directory users plus JOM named-access authority",
+    "authoritative_accounts": 142,
+    "named_access_accounts": 124,
+    "matched_accounts": 124,
+    "unmatched_accounts": 0,
+    "directory_pages": 2
+  },
+  "quality": {
+    "pagination_complete": true,
+    "display_name_coverage_complete": true,
+    "email_stored": false,
+    "raw_responses_stored": false,
+    "synthetic_labels_created": false
+  },
+  "freshness": {
+    "maximum_age_hours": 26,
+    "state": "current"
+  },
+  "retention": {
+    "mode": "current_authority_only",
+    "atomic_replacement": true
+  },
+  "access": {
+    "authorized_role": "Organisation administrator",
+    "deny_by_default": true,
+    "server_endpoint_only": true,
+    "access_logging_required": true,
+    "export_allowed": false,
+    "download_allowed": false,
+    "bulk_copy_allowed": false,
+    "email_exposure_allowed": false
+  },
+  "authority": {
+    "safe_to_serve": true,
+    "reason": "Full live Directory identity coverage and named-access reconciliation passed all approved builder gates."
+  },
+  "users": [
+    {
+      "account_id": "5d13ed74b7ebec0c5dbc7de3",
+      "display_name": "Aamer Sardar",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:c8882688-c37c-431d-ac3d-2416e828c706",
+      "display_name": "Ahnuar Ramirez",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:44d14faa-e9c5-47a1-9044-b4125dc39f62",
+      "display_name": "Ajil Joseph Olickal",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:79b0b4fc-de3d-4876-8e43-99739ff5aa6c",
+      "display_name": "Alejandro Ojeda",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "5c867a42bd78bf5ae58d1726",
+      "display_name": "Alexander Nestico",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:2a35164b-bddc-4234-a9f0-a1a4a2f38dd4",
+      "display_name": "Ali El-Farou",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "62962f2d2eafc9006eebc736",
+      "display_name": "Ali Heydary",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c867a5b3bee527de33cbb92",
+      "display_name": "Aliya Ahmed",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:cbc1b86c-8a82-4f0c-b15d-73ac1370414f",
+      "display_name": "Amanda Angel",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a53054f2-911f-4bb9-aecf-868f8aef6fcf",
+      "display_name": "Amie Lacson",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:3e9f6b9e-3ba9-40d9-87ba-4610d4b9222e",
+      "display_name": "Amruthasindhu Channal",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:c34981e4-6784-47c1-9a24-437125dabe94",
+      "display_name": "Anne Stone",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c867aca88f9ec6ae0afabcf",
+      "display_name": "Antonio Duenas",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "61df7f1ae67ea2006b42bda9",
+      "display_name": "Anu Kapoor",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:ff320150-5fd5-49d3-b782-b57debd506d7",
+      "display_name": "Anurag Rawat",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a3ae965f-a490-484d-afda-0036560a1fe8",
+      "display_name": "Baljeet Singh",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c867ae45db2976adad4515f",
+      "display_name": "Barbara Seehausen",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:95c0100d-f959-4342-8ada-fcbbde1184fa",
+      "display_name": "Ben Paglia",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:0b972f1a-0e65-4d36-92be-233d13e6d9fb",
+      "display_name": "Brendan Keeley",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:42c04347-4bc2-462e-adbc-9a2619f614ae",
+      "display_name": "brendan.keeley",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5d387eaef8be2f0c20bb7d8f",
+      "display_name": "Brian Williams",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:09079bb8-3ffa-49ca-8d82-44d5b8803d25",
+      "display_name": "Camilo Betancourt",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:b72df024-eda1-4b08-b918-ba32fe40454f",
+      "display_name": "carl",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:b50c4888-42bc-40c4-817b-daea96188c38",
+      "display_name": "Carl Ponsford",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:ee48ab1a-bd3c-4830-9da7-89960a673638",
+      "display_name": "Cecil MacNeil",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:2d37241a-cdbc-4754-970d-59a58f845024",
+      "display_name": "Cheryl Nauss",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c867b46ee8793790affe42f",
+      "display_name": "Chris Gallo",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "621e03d5a12450006886adae",
+      "display_name": "Christian Peretto",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "61a4f0a36d002b006bc29dde",
+      "display_name": "Christopher Galante",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:af546d80-a2b0-4844-91bc-bea782420c57",
+      "display_name": "Christopher Lewicki",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c867b68f63c96739fd921e6",
+      "display_name": "Christopher Steeger",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:091af781-b284-42eb-aef8-c45ef364e4c8",
+      "display_name": "Christopher Yerves",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:f3b47464-8559-426d-ae85-4dd15cc5ab36",
+      "display_name": "Conner Lucero",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "63735807fde064eda2ec1d04",
+      "display_name": "Courtney Cloudman",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:0e422967-609b-44b6-a414-2e9e2234117e",
+      "display_name": "Daniel Hedigan",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "60dc3c2a22c0920071aa2e86",
+      "display_name": "Daniel L. Jones",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:60b7ab80-ec73-4c12-a424-c0286a005733",
+      "display_name": "Daniel R Jones",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:573c60d0-ab00-44d9-9760-ca2e10ef35ac",
+      "display_name": "Danielle Beal",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:4253fc48-cab4-4928-94fb-8974d8e5f77b",
+      "display_name": "Dave Daniels",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c98b2d038f7806371d15a16",
+      "display_name": "David Bartholomew",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:03dda04d-391e-41ad-baa9-f7d28994695b",
+      "display_name": "David Ludewig",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:ad92688b-af26-4d57-b0e0-dd74e35d2c15",
+      "display_name": "Dinesh Shakya",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
+      "display_name": "Donald Meyer",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "621fca7f49c90000701f5cf5",
+      "display_name": "Dylan Martin",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:771bf8e7-280d-4c0d-812f-18a3be7a52e5",
+      "display_name": "Evelyn Diaz",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:da5d225b-d05b-413e-b380-a9c111f16deb",
+      "display_name": "G.Negi",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a3d1c069-a0b5-4b46-b3f0-c56bee1dcfce",
+      "display_name": "Gabriel Esguerra",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:9aa1ad13-1d53-4448-9c4d-82aa2a71b7af",
+      "display_name": "Gift Sebashe",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:f1a9d02b-dcc1-4448-bb30-1175d7cc174f",
+      "display_name": "Grijesh Chauhan",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5d42dad4f764920da7cccbd3",
+      "display_name": "Guy Barlow",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "5df79618336e9e0cad168e00",
+      "display_name": "Harry Cartwright",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:697465f4-0cbe-47d2-bdae-85291ffec9d5",
+      "display_name": "Ishan Dabra",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a2992214-dacd-4f06-a998-0487bb2fff4b",
+      "display_name": "Jason Gartner",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a637e624-1e26-4ffc-9acc-5ce93ea8d7c2",
+      "display_name": "Jennifer Comeau",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c86958ba329a40b8555bdc0",
+      "display_name": "Jennifer McDonald",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "616701a307ac3c0068913946",
+      "display_name": "Jesse R Peterson",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:52eef3c6-45c7-4c20-83ca-40449c455868",
+      "display_name": "JiaCheng Pua",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "640f54de2cee496759e9ca64",
+      "display_name": "Jim Wiltshire",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm",
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 3,
+      "product_access_assignments": 3
+    },
+    {
+      "account_id": "712020:da25c2ce-ed4c-4eea-b392-2d8f4a6a3e7d",
+      "display_name": "John Dillon",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:5fb6f7a9-916a-4530-a53c-f44424b9c23f",
+      "display_name": "John E Sleeper",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",
+      "display_name": "John Owen",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:39848a6d-2460-4317-985a-2bdf7b6df869",
+      "display_name": "Jordan Shefman",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:c9dcb854-cc83-427b-87bc-edd472329170",
+      "display_name": "k.mohd",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
+      "display_name": "Kale Bystrom",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "60dc69db1613d50069d35c5a",
+      "display_name": "Karah Hakika",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:25eab072-55fc-43ec-8604-46f8eae07bb4",
+      "display_name": "Khushalkumar Gondaliya",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a10364a6-3af7-4b08-95e6-ab1aa06fd849",
+      "display_name": "Khushnoor Mansuri",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:c4e1ef45-3025-4dfa-8d58-cb8e3a5755f8",
+      "display_name": "Ksenia Daich",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:6c453bd2-be0d-48ca-85c1-20156926dc2e",
+      "display_name": "Leon Currie",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:b7fcc038-a225-4c0f-97bd-346decea6e00",
+      "display_name": "Lisa Longstaff",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c8696b05db2976adad45256",
+      "display_name": "Lori Servis",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
+      "display_name": "Luke Crockett",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm",
+        "gli-global-technology",
+        "gli-it-project",
+        "gli-tracker"
+      ],
+      "site_count": 4,
+      "product_access_assignments": 4
+    },
+    {
+      "account_id": "557058:c6ec4742-681f-4743-bde1-2d3d8e055b6a",
+      "display_name": "Mackenzie Haugh",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "61f3c908875fc100705a2ba9",
+      "display_name": "Mahima Jain",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "63dcd8eb790148a180951d19",
+      "display_name": "Manish Jatwani",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:34715ba4-0832-458f-86ad-4e6770981191",
+      "display_name": "MarioGauvin",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:f2f5142e-b806-477c-8885-de60007ec8ce",
+      "display_name": "Mark DeWolfe",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a3a2e726-8b4c-4279-8229-24af4ff4e901",
+      "display_name": "Mark Rice",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:2b2d29a3-f75a-46b8-b2a5-aa627cba18b5",
+      "display_name": "Martin Eddy",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5b1539719595132534bc28a4",
+      "display_name": "Matt Pinzino",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm",
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 3,
+      "product_access_assignments": 3
+    },
+    {
+      "account_id": "712020:517e85e6-6bee-4b7f-88e0-d0a5cc9803f2",
+      "display_name": "Max Osmulski",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5a9d73cd7cbc742a5c1deda0",
+      "display_name": "Michael Gentilello",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:b4265525-e011-41b0-a993-d06e6fc91fb1",
+      "display_name": "Michael Mullins",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:8be0b0b8-d9b0-4f34-b777-041070602b7d",
+      "display_name": "Mohit Gandhi",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "630e318ab433b060db555ea1",
+      "display_name": "Mohit Sethi",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:9cdfb4b2-a8ed-4732-be8a-d1ba41c2e304",
+      "display_name": "Muhammad H Ikram",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:2bc76e64-3e73-4a9d-ae74-4bd5ba33723c",
+      "display_name": "muhammad.h.ikram",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:e1f38c99-d926-4169-a2b0-dc8cb63cbae6",
+      "display_name": "Narjes Mehrdad",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:7af1b11f-935e-45b6-a810-deec26746cf7",
+      "display_name": "Nicholas Stroughair",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:424661fd-685e-4f3a-8025-91733ad8297a",
+      "display_name": "Nidhi Dave",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:7ebaf502-a1b1-453a-9bbc-c0a602d39d38",
+      "display_name": "Nita Sinah Das",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5a9d73f0c164262a8392ae11",
+      "display_name": "Oscar R Menendez Guerra",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "60e41471c0db53006aa8e93d",
+      "display_name": "Owen Evans",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:b7cfccab-c274-42e0-9a6a-adc8f35f6c62",
+      "display_name": "Paras Soni",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5aeb1ccf91bc312e6a4ac202",
+      "display_name": "Patrick Parish",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:31a6e2c8-b8aa-447b-8ce1-6d074e475713",
+      "display_name": "Perry Hogan",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:4c73fb68-9d2f-4fa9-aa05-825947a73306",
+      "display_name": "Pinal Amin",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:a4e31cbc-809f-4a74-bdd1-8e9e8406d519",
+      "display_name": "Prithiviraj Raju",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:1818f819-69d6-48af-af80-80ed9d6aa968",
+      "display_name": "Rainera Quinn",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:7a80202a-6bba-4d09-bb81-002d0355d377",
+      "display_name": "Rick Jones",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
+      "display_name": "Robert Nyman",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
+      "display_name": "Rodger Sherman",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "63fdcbee81de11a1adf93df8",
+      "display_name": "Ron Wing",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:b0d92f2f-8bf9-494c-988a-2db8b4b6a918",
+      "display_name": "Ryan Owens",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:3bfdc65c-8c8d-4df4-ab1a-83bdb873f686",
+      "display_name": "S.Negi",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:ee25c9e9-0009-4093-b52d-e097d3912385",
+      "display_name": "Samantha Wilson",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:f8b747ad-61f7-47d7-b8b5-bdc96a29ce9a",
+      "display_name": "Sangeeta Reddy",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "712020:3680915e-2163-4460-b067-6a430c97b7ce",
+      "display_name": "Sara Gjorgjieva",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:54b1509e-0678-4912-8d7f-df224774bf6a",
+      "display_name": "Service Now Integration",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:cb410439-a068-4508-bbb3-a79b31a3b5cd",
+      "display_name": "Siya Vilakazi",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:f7c0a677-cb62-4990-81f2-7a684c278256",
+      "display_name": "Steve Allport",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:37c9add3-ae6c-48b9-835e-2704f4e88c50",
+      "display_name": "Steven Bulaun",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5c8699380c61c37ea81dcea8",
+      "display_name": "Steven Cook",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:3bc19c9d-7794-4c5c-8811-822372b96969",
+      "display_name": "steven.bulaun",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5e3d91953f647d0c99d826ee",
+      "display_name": "Sukhveer Matharu",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "63d8e047fb75f8568f5ee9cd",
+      "display_name": "Sushma Rani Agarwal",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "5c86995186c36970e81298b1",
+      "display_name": "Sven Klasen",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "557058:205f5205-4f26-48ff-85fe-22c22f46f04e",
+      "display_name": "Tim Reigel",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "5b7c44319e14d92a56be45d8",
+      "display_name": "Tom Drew",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology",
+        "gli-it-project"
+      ],
+      "site_count": 2,
+      "product_access_assignments": 2
+    },
+    {
+      "account_id": "5c8699979d7fc173a5952b64",
+      "display_name": "Troy Thorson",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "61659125198b4f0068dd01d6",
+      "display_name": "Tyler Truong",
+      "account_status": "active",
+      "sites": [
+        "gli-global-technology"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "712020:748728f2-09fc-482d-8859-41f60b8356dc",
+      "display_name": "Vaquas Mohammed",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "5ec6cd2c3434a20c34a883c8",
+      "display_name": "Willson Liang",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    },
+    {
+      "account_id": "6168c27e2f6aed00683dcd6d",
+      "display_name": "Zachary Stolinski",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "site_count": 1,
+      "product_access_assignments": 1
+    }
+  ]
+}
