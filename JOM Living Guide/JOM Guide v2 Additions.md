@@ -1,0 +1,22 @@
+# JOM Guide v2 Additions
+
+This file records the full v2 additions applied to the Word guide: GitHub Repository Authority, Full System Architecture Document, Full Technical Specification, Evidence Classification and Assurance, Deployment Readiness, and BOOKSYNC v2 Control. The original full Markdown guide remains included without summarising its detailed appendices or change history.
+
+## GitHub Repository Record
+
+```json
+{
+  "name": "JiraObservationMonitor",
+  "full_name": "lcrockettlj-beep/JiraObservationMonitor",
+  "visibility": "public",
+  "private": false,
+  "html_url": "https://github.com/lcrockettlj-beep/JiraObservationMonitor",
+  "default_branch": "main",
+  "created_at": "2026-06-11T10:14:13Z",
+  "updated_at": "2026-08-14T14:26:01Z",
+  "pushed_at": "2026-08-14T14:25:57Z",
+  "size": 4421,
+  "language": "Python",
+  "open_issues_count": 0
+}
+```
