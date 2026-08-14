@@ -1,4 +1,4 @@
-# JOM Change History
+﻿# JOM Change History
 
 Baseline: `29d1166b10da980da847f3ae8978e1191b24b8b9`
 
@@ -202,3 +202,12 @@ Baseline: `29d1166b10da980da847f3ae8978e1191b24b8b9`
 - * 4104ebd add visual consistency layer across core workspaces
 - * 4d3c721 remove duplicate command centre intelligence block
 - * 9bf5f34 expand admin workspace into intelligence centre
+
+## 14 August 2026 - Estate Configuration authority
+- Replaced the static Estate Configuration page shell with an authority-backed operational view.
+- Added `GET /api/admin/estate-configuration`.
+- Added dedicated template, JavaScript, CSS and validation ownership.
+- Validated 4 estate sites, 4 monitored sites, 4 tenant identities, 3 resource-mapped sites, 3 ownership-covered sites and 97 role assignments.
+- Recorded seven authority gaps and zero failed sources.
+- Confirmed `gli-tracker` ownership and resource mapping are unavailable rather than zero.
+- Confirmed no live collection occurs during page load and personal identity fields are excluded.

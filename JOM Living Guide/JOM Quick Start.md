@@ -1,4 +1,4 @@
-# JOM Quick Start
+﻿# JOM Quick Start
 
 Jira Observation Monitor (JOM) is a read-only operational console for observing an Atlassian estate through authenticated and runtime-backed authority. This guide records the system as built at branch `main` and commit `29d1166b10da980da847f3ae8978e1191b24b8b9` on 14 August 2026. The repository evidence identifies 184 tracked paths, 67 Python files, 34 HTML templates, 14 JavaScript files and 14 CSS files.
 
@@ -22,3 +22,9 @@ The defining engineering principle is truth before appearance. JOM must not inve
 4. Identify the current workstream.
 5. Inspect current owner files before change.
 6. Follow Audit -> Build -> Install -> Validate -> Live test -> Clean -> BOOKSYNC -> Stage -> Commit -> Push.
+
+### Current project position
+- Latest published documentation milestone before this change: `339f04b`.
+- Current validated workstream: Estate Configuration authority.
+- Current uncommitted product scope: five Estate Configuration owner files.
+- Required next gate: install this BOOKSYNC pack, validate the combined diff, then commit and push the product and documentation milestone.

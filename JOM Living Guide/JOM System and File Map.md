@@ -98,3 +98,13 @@
 - Visual styling: `Shared visual styles`
 - Page address: `/source-health`
 - Main information address: `/api/source-state`
+
+### Estate Configuration
+- Visible page: `templates/admin_estate_configuration.html`
+- Browser behaviour: `static/js/jom_admin_estate_configuration_v1.js`
+- Visual styling: `static/css/jom_admin_estate_configuration_v1.css`
+- Page address: `/admin/estate-configuration`
+- Main information address: `/api/admin/estate-configuration`
+- Backend owner: `app/web.py`
+- Validation owner: `scripts/validate_estate_configuration_v1.py`
+- Authority state: live validated, review status because seven authority gaps remain

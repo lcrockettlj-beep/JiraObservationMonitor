@@ -1876,6 +1876,158 @@ def api_admin_monitoring_refresh_v1():
 # --- JOM_ADMIN_MONITORING_AUTHORITY_V1 END ---
 
 
+# --- JOM_ADMIN_ESTATE_CONFIGURATION_AUTHORITY_V1 START ---
+# Owner contract for Admin > Estate Configuration.
+# Truth rule: compose current runtime authorities only. No live collection on page load.
+def _jom_admin_ec_dict_v1(value):
+    return value if isinstance(value, dict) else {}
+
+
+def _jom_admin_ec_list_v1(value):
+    return value if isinstance(value, list) else []
+
+
+def _jom_admin_ec_generated_v1(payload):
+    payload = _jom_admin_ec_dict_v1(payload)
+    return payload.get("generated_at_utc") or payload.get("generated_utc")
+
+
+def _jom_admin_ec_source_v1(label, filename, payload):
+    payload = _jom_admin_ec_dict_v1(payload)
+    return {
+        "label": label,
+        "runtime_file": "runtime/data/" + filename,
+        "available": bool(payload),
+        "status": payload.get("status") or ("available" if payload else "unavailable"),
+        "schema": payload.get("schema") or payload.get("contract"),
+        "generated_at_utc": _jom_admin_ec_generated_v1(payload),
+    }
+
+
+def _jom_admin_estate_configuration_contract_v1():
+    registry = _jom_admin_ec_dict_v1(load_json("site_registry.json", {}))
+    inventory = _jom_admin_ec_dict_v1(load_json("estate_admin_site_inventory_v1.json", {}))
+    discovery = _jom_admin_ec_dict_v1(load_json("estate_discovery_authority_v1.json", {}))
+    contacts = _jom_admin_ec_dict_v1(load_json("estate_admin_contacts_v1.json", {}))
+    resource_mapping = _jom_admin_ec_dict_v1(load_json("estate_site_resource_mapping_v1.json", {}))
+    tenant_identity = _jom_admin_ec_dict_v1(load_json("estate_site_tenant_identity_v1.json", {}))
+
+    registry_sites = _jom_admin_ec_list_v1(registry.get("sites"))
+    inventory_sites = _jom_admin_ec_list_v1(inventory.get("sites"))
+    tenant_sites = _jom_admin_ec_list_v1(tenant_identity.get("sites"))
+    mappings = _jom_admin_ec_list_v1(resource_mapping.get("mappings"))
+    contact_rows = _jom_admin_ec_list_v1(contacts.get("contacts"))
+
+    site_keys = set()
+    for row in registry_sites or inventory_sites or tenant_sites:
+        if not isinstance(row, dict):
+            continue
+        key = str(row.get("site_key") or row.get("key") or row.get("name") or "").strip().lower()
+        if key:
+            site_keys.add(key)
+
+    monitored_keys = set()
+    for row in registry_sites or inventory_sites:
+        if not isinstance(row, dict):
+            continue
+        key = str(row.get("site_key") or row.get("key") or row.get("name") or "").strip().lower()
+        monitored = row.get("is_monitored") is True or row.get("monitored") is True or row.get("approved_monitored") is True or str(row.get("lifecycle") or "").lower() == "monitored"
+        if key and monitored:
+            monitored_keys.add(key)
+
+    tenant_keys = {str(row.get("site_key") or "").strip().lower() for row in tenant_sites if isinstance(row, dict) and row.get("site_key")}
+    mapped_keys = {str(row.get("site_key") or "").strip().lower() for row in mappings if isinstance(row, dict) and row.get("site_key")}
+    owned_keys = {str(row.get("site_key") or "").strip().lower() for row in contact_rows if isinstance(row, dict) and row.get("site_key")}
+
+    ownership_by_site = []
+    for key in sorted(site_keys):
+        site_contacts = [row for row in contact_rows if isinstance(row, dict) and str(row.get("site_key") or "").strip().lower() == key]
+        products = sorted({str(row.get("product") or "unavailable") for row in site_contacts})
+        mapping_rows = [row for row in mappings if isinstance(row, dict) and str(row.get("site_key") or "").strip().lower() == key]
+        ownership_by_site.append({
+            "site_key": key,
+            "tenant_identity": "available" if key in tenant_keys else "unavailable",
+            "resource_mapping": "available" if key in mapped_keys else "unavailable",
+            "ownership_authority": "available" if key in owned_keys else "unavailable",
+            "assignment_count": len(site_contacts) if key in owned_keys else None,
+            "products": products,
+            "mapping_confidence": sorted({str(row.get("confidence") or "unavailable") for row in mapping_rows}),
+        })
+
+    total_sites = len(site_keys) if site_keys else None
+    def coverage(keys):
+        return round((len(keys) / total_sites) * 100, 1) if total_sites else None
+
+    sources = {
+        "site_registry": _jom_admin_ec_source_v1("Site registry", "site_registry.json", registry),
+        "estate_inventory": _jom_admin_ec_source_v1("Estate admin inventory", "estate_admin_site_inventory_v1.json", inventory),
+        "discovery_authority": _jom_admin_ec_source_v1("Estate discovery", "estate_discovery_authority_v1.json", discovery),
+        "admin_contacts": _jom_admin_ec_source_v1("Administrative ownership", "estate_admin_contacts_v1.json", contacts),
+        "resource_mapping": _jom_admin_ec_source_v1("Site resource mapping", "estate_site_resource_mapping_v1.json", resource_mapping),
+        "tenant_identity": _jom_admin_ec_source_v1("Site tenant identity", "estate_site_tenant_identity_v1.json", tenant_identity),
+    }
+    failed_sources = [name for name, item in sources.items() if item.get("available") is not True]
+
+    gaps = [
+        {"area": "Business classification", "status": "unavailable", "reason": "The available classification field reflects monitoring lifecycle, not a proven business classification."},
+        {"area": "Criticality", "status": "unavailable", "reason": "No inspected authority contract exposes a proven criticality field."},
+        {"area": "Region", "status": "unavailable", "reason": "No inspected authority contract exposes a proven region field."},
+        {"area": "Business unit", "status": "unavailable", "reason": "No inspected authority contract exposes a proven business-unit field."},
+        {"area": "Tags", "status": "unavailable", "reason": "No inspected authority contract exposes proven estate tags."},
+    ]
+    if mapped_keys != site_keys:
+        missing = sorted(site_keys - mapped_keys)
+        gaps.append({"area": "Resource mapping coverage", "status": "partial", "reason": str(len(missing)) + " estate site(s) have tenant identity but no proven product-resource mapping.", "site_keys": missing})
+    if owned_keys != site_keys:
+        missing = sorted(site_keys - owned_keys)
+        gaps.append({"area": "Administrative ownership coverage", "status": "partial", "reason": "Ownership is unavailable where no safe resource mapping and verified role assignment evidence exists.", "site_keys": missing})
+
+    actions = []
+    for gap in gaps:
+        actions.append({"level": "review", "title": gap["area"], "reason": gap["reason"], "action": "Preserve unavailable state until authenticated authority proves this configuration area."})
+
+    return {
+        "schema": "jom-admin-estate-configuration-authority-v1",
+        "generated_at_utc": now_utc(),
+        "status": "review" if failed_sources or gaps else "ok",
+        "summary": {
+            "estate_sites": total_sites,
+            "monitored_sites": len(monitored_keys) if total_sites is not None else None,
+            "tenant_identity_sites": len(tenant_keys) if total_sites is not None else None,
+            "resource_mapped_sites": len(mapped_keys) if total_sites is not None else None,
+            "ownership_covered_sites": len(owned_keys) if total_sites is not None else None,
+            "ownership_assignments": len(contact_rows) if contacts else None,
+            "tenant_identity_coverage_percent": coverage(tenant_keys),
+            "resource_mapping_coverage_percent": coverage(mapped_keys),
+            "ownership_coverage_percent": coverage(owned_keys),
+            "configuration_gaps": len(gaps),
+            "failed_sources": len(failed_sources),
+        },
+        "sites": ownership_by_site,
+        "configuration_gaps": gaps,
+        "actions": actions,
+        "source_health": sources,
+        "authority": {
+            "runtime": "available" if registry or inventory else "unavailable",
+            "oauth_admin": "available" if tenant_identity or contacts else "unavailable",
+            "truth_policy": "Estate Configuration composes current runtime/OAuth/Admin authority only. Unsupported metadata is unavailable, not inferred.",
+            "privacy_policy": "Only aggregate assignment counts and non-personal site/product mapping state are returned. Names, email addresses, account IDs and directory IDs are excluded.",
+            "live_collection_on_page_load": False,
+        },
+        "notes": [
+            "Site Registry and Estate Inventory have separate evidence timestamps and may report different lifecycle snapshots.",
+            "Administrative ownership counts are role assignments, not unique people.",
+            "A missing ownership mapping is unavailable, not zero.",
+        ],
+    }
+
+
+@app.route("/api/admin/estate-configuration")
+def api_admin_estate_configuration_authority_v1():
+    return jsonify(_jom_admin_estate_configuration_contract_v1())
+# --- JOM_ADMIN_ESTATE_CONFIGURATION_AUTHORITY_V1 END ---
+
+
 # --- JOM_ADMIN_SYSTEM_CONFIGURATION_AUTHORITY_V1 START ---
 # Owner contract for Admin > System Configuration.
 # Truth rule: runtime/OAuth/Admin authority only. Unproven configuration is unavailable, not inferred.

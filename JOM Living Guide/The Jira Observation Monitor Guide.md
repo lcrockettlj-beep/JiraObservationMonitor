@@ -679,3 +679,66 @@ This edition is based on uploaded repository inventories, Git evidence and the e
 - * 4104ebd add visual consistency layer across core workspaces
 - * 4d3c721 remove duplicate command centre intelligence block
 - * 9bf5f34 expand admin workspace into intelligence centre
+
+# Estate Configuration Authority Milestone
+
+**Validation date:** 14 August 2026
+**Implementation status:** Live validated, pending BOOKSYNC commit
+**Authority contract:** `jom-admin-estate-configuration-authority-v1`
+**Page:** `/admin/estate-configuration`
+**API:** `/api/admin/estate-configuration`
+
+### Validated authority
+
+- Estate sites: 4
+- Monitored sites: 4
+- Tenant identity: 4 sites, 100% coverage
+- Resource mapping: 3 sites, 75% coverage
+- Administrative ownership: 3 sites, 75% coverage
+- Verified role assignments: 97
+- Authority gaps: 7
+- Failed sources: 0
+- Live collection during page load: disabled
+
+### Site-level authority
+
+- `gli-delivery-tm`: tenant identity available; resource mapping available; ownership available; 13 Jira Software role assignments.
+- `gli-global-technology`: tenant identity available; resource mapping available; ownership available; 29 Jira Software role assignments.
+- `gli-it-project`: tenant identity available; resource mapping available; ownership available; 55 role assignments across Confluence and Jira Software.
+- `gli-tracker`: tenant identity available; resource mapping unavailable; ownership unavailable; assignment count and products unavailable.
+
+### Configuration gaps
+
+1. Business classification is unavailable. The existing `classification` field represents monitoring lifecycle rather than proven business classification.
+2. Criticality is unavailable.
+3. Region is unavailable.
+4. Business unit is unavailable.
+5. Tags are unavailable.
+6. Resource mapping coverage is partial because `gli-tracker` has tenant identity but no proven product-resource mapping.
+7. Administrative ownership coverage is partial because `gli-tracker` has no safe mapped resource and verified role-assignment evidence.
+
+### Authority sources
+
+- `runtime/data/site_registry.json`
+- `runtime/data/estate_admin_site_inventory_v1.json`
+- `runtime/data/estate_discovery_authority_v1.json`
+- `runtime/data/estate_admin_contacts_v1.json`
+- `runtime/data/estate_site_resource_mapping_v1.json`
+- `runtime/data/estate_site_tenant_identity_v1.json`
+
+### Owner files
+
+- `app/web.py`
+- `templates/admin_estate_configuration.html`
+- `static/js/jom_admin_estate_configuration_v1.js`
+- `static/css/jom_admin_estate_configuration_v1.css`
+- `scripts/validate_estate_configuration_v1.py`
+
+### Truth and privacy controls
+
+- The page composes current runtime, OAuth and Admin authority only.
+- No collector runs during page load.
+- Missing ownership is reported as unavailable, not zero.
+- Role-assignment counts are not represented as unique people.
+- Names, email addresses, account IDs and directory IDs are excluded from the page contract.
+- Differing source evidence timestamps remain visible.
