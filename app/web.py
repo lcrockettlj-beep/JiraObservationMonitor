@@ -86,6 +86,7 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "source_reliability_status.json",
     "user_footprint.json",
     "verified_active_jira_users_v1.json",
+    "named_user_display_identity_v1.json",
 }
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
 
@@ -1337,6 +1338,64 @@ def _jom_admin_users_access_contract_v1():
 @app.route("/api/admin/users-access")
 def api_admin_users_access_authority_v1():
     return jsonify(_jom_admin_users_access_contract_v1())
+
+def _jom_phase1_named_users_audit_v1(action, filters, result_count, outcome, reason=None):
+    event = {"recorded_at_utc": now_utc(), "actor": "phase1_local_operator", "authorization_mode": "phase1_trusted_local_operator", "future_authorized_role": "Organisation administrator", "action": str(action or "named_user_drilldown"), "filters": filters if isinstance(filters, dict) else {}, "result_count": int(result_count or 0), "outcome": str(outcome or "unknown")}
+    if reason:
+        event["reason"] = str(reason)
+    path = DATA_PATH / "named_user_drilldown_access_audit_v1.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(event, ensure_ascii=False) + "\n")
+    return event
+
+
+def _jom_phase1_named_users_authority_v1():
+    payload = _jom_admin_ua_dict_v1(load_json("named_user_display_identity_v1.json", {}))
+    source = _jom_admin_ua_dict_v1(payload.get("source")); quality = _jom_admin_ua_dict_v1(payload.get("quality")); freshness = _jom_admin_ua_dict_v1(payload.get("freshness")); access = _jom_admin_ua_dict_v1(payload.get("access")); authority = _jom_admin_ua_dict_v1(payload.get("authority"))
+    generated_at_utc = payload.get("generated_at_utc"); parsed = _contract_parse_time(generated_at_utc); maximum_age_hours = _jom_admin_ua_int_v1(freshness.get("maximum_age_hours"), 26)
+    age_hours = round((datetime.now(timezone.utc) - parsed).total_seconds() / 3600, 2) if parsed else None
+    users = payload.get("users") if isinstance(payload.get("users"), list) else []
+    gates = {"schema": payload.get("schema") == "jom-named-user-display-identity-v1", "status": payload.get("status") == "ok", "full_coverage": source.get("named_access_accounts") == source.get("matched_accounts") and source.get("unmatched_accounts") == 0, "pagination_complete": quality.get("pagination_complete") is True, "display_name_coverage_complete": quality.get("display_name_coverage_complete") is True, "email_not_stored": quality.get("email_stored") is False, "raw_responses_not_stored": quality.get("raw_responses_stored") is False, "maximum_age": maximum_age_hours == 26 and age_hours is not None and 0 <= age_hours <= maximum_age_hours, "safe_to_serve": authority.get("safe_to_serve") is True, "approved_future_role": access.get("authorized_role") == "Organisation administrator", "export_disabled": access.get("export_allowed") is False and access.get("download_allowed") is False and access.get("bulk_copy_allowed") is False, "records_complete": len(users) == source.get("named_access_accounts") and all(isinstance(row, dict) and row.get("display_name") for row in users)}
+    return {"available": all(gates.values()), "users": users, "generated_at_utc": generated_at_utc, "age_hours": age_hours, "maximum_age_hours": maximum_age_hours, "gates": gates}
+
+
+def _jom_phase1_named_users_loopback_v1():
+    return str(request.remote_addr or "").strip().lower() in {"127.0.0.1", "::1", "localhost"}
+
+
+@app.route("/api/admin/users-access/named-users")
+def api_admin_users_access_named_users_phase1_v1():
+    from config.feature_flags import get_phase
+    filters = {"site": str(request.args.get("site") or "").strip(), "status": str(request.args.get("status") or "").strip().lower(), "query_present": bool(str(request.args.get("q") or "").strip()), "page": max(1, _jom_admin_ua_int_v1(request.args.get("page"), 1)), "page_size": min(100, max(1, _jom_admin_ua_int_v1(request.args.get("page_size"), 50)))}
+    if get_phase() != "phase1":
+        reason = "Phase 1 trusted-local authorization is disabled when multi-user mode is enabled. Entra authentication and server-side role enforcement are required."
+        _jom_phase1_named_users_audit_v1("named_user_drilldown", filters, 0, "denied", reason)
+        return jsonify({"status": "restricted", "reason": reason, "authorization_mode": "phase2_authentication_required"}), 403
+    if not _jom_phase1_named_users_loopback_v1():
+        reason = "Named-user drill-down is restricted to the local Phase 1 operator."
+        _jom_phase1_named_users_audit_v1("named_user_drilldown", filters, 0, "denied", reason)
+        return jsonify({"status": "restricted", "reason": reason, "authorization_mode": "phase1_trusted_local_operator"}), 403
+    if request.args.get("export") is not None or request.args.get("download") is not None:
+        reason = "Export and download are disabled by the approved identity contract."
+        _jom_phase1_named_users_audit_v1("named_user_drilldown", filters, 0, "denied", reason)
+        return jsonify({"status": "restricted", "reason": reason, "export_allowed": False}), 403
+    contract = _jom_phase1_named_users_authority_v1()
+    if not contract["available"]:
+        reason = "Named-user identity authority did not pass every approved freshness, privacy, and coverage gate."
+        _jom_phase1_named_users_audit_v1("named_user_drilldown", filters, 0, "unavailable", reason)
+        return jsonify({"status": "unavailable", "reason": reason, "generated_at_utc": contract["generated_at_utc"], "age_hours": contract["age_hours"], "gates": contract["gates"]}), 503
+    query = str(request.args.get("q") or "").strip().casefold(); site_filter = filters["site"].casefold(); status_filter = filters["status"]; selected = []
+    for row in contract["users"]:
+        if not isinstance(row, dict): continue
+        sites = [str(value) for value in (row.get("sites") or [])]
+        if site_filter and site_filter not in {value.casefold() for value in sites}: continue
+        if status_filter and str(row.get("account_status") or "").casefold() != status_filter: continue
+        if query and query not in str(row.get("display_name") or "").casefold(): continue
+        selected.append({"display_name": row.get("display_name"), "account_status": row.get("account_status"), "sites": sites, "site_count": row.get("site_count"), "product_access_assignments": row.get("product_access_assignments")})
+    total = len(selected); page = filters["page"]; page_size = filters["page_size"]; start = (page - 1) * page_size; paged = selected[start:start + page_size]
+    _jom_phase1_named_users_audit_v1("named_user_drilldown", filters, len(paged), "allowed")
+    return jsonify({"schema": "jom-phase1-named-user-drilldown-endpoint-v1", "status": "ok", "authorization": {"mode": "phase1_trusted_local_operator", "local_only": True, "future_enforced_role": "Organisation administrator", "role_enforcement_active": False, "reason": "Phase 1 is an intentional single-user local build. Organisation administrator enforcement is required before Phase 2 multi-user enablement."}, "privacy": {"display_name_only": True, "account_id_exposed": False, "email_exposed": False, "export_allowed": False, "download_allowed": False, "bulk_copy_allowed": False}, "authority": {"generated_at_utc": contract["generated_at_utc"], "age_hours": contract["age_hours"], "maximum_age_hours": contract["maximum_age_hours"], "all_gates_passed": True}, "filters": {"site": filters["site"] or None, "status": filters["status"] or None, "query_applied": filters["query_present"]}, "pagination": {"page": page, "page_size": page_size, "total_records": total, "returned_records": len(paged)}, "users": paged})
 # --- JOM_ADMIN_USERS_ACCESS_AUTHORITY_V1 END ---
 
 
