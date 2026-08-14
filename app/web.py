@@ -87,6 +87,7 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "user_footprint.json",
     "verified_active_jira_users_v1.json",
     "named_user_display_identity_v1.json",
+    "users_access_actionable_drilldown_v1.json",
 }
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
 
@@ -1396,6 +1397,144 @@ def api_admin_users_access_named_users_phase1_v1():
     total = len(selected); page = filters["page"]; page_size = filters["page_size"]; start = (page - 1) * page_size; paged = selected[start:start + page_size]
     _jom_phase1_named_users_audit_v1("named_user_drilldown", filters, len(paged), "allowed")
     return jsonify({"schema": "jom-phase1-named-user-drilldown-endpoint-v1", "status": "ok", "authorization": {"mode": "phase1_trusted_local_operator", "local_only": True, "future_enforced_role": "Organisation administrator", "role_enforcement_active": False, "reason": "Phase 1 is an intentional single-user local build. Organisation administrator enforcement is required before Phase 2 multi-user enablement."}, "privacy": {"display_name_only": True, "account_id_exposed": False, "email_exposed": False, "export_allowed": False, "download_allowed": False, "bulk_copy_allowed": False}, "authority": {"generated_at_utc": contract["generated_at_utc"], "age_hours": contract["age_hours"], "maximum_age_hours": contract["maximum_age_hours"], "all_gates_passed": True}, "filters": {"site": filters["site"] or None, "status": filters["status"] or None, "query_applied": filters["query_present"]}, "pagination": {"page": page, "page_size": page_size, "total_records": total, "returned_records": len(paged)}, "users": paged})
+
+def _jom_phase1_actionable_audit_v1(category, filters, result_count, outcome, reason=None):
+    event = {
+        "recorded_at_utc": now_utc(),
+        "actor": "phase1_local_operator",
+        "authorization_mode": "phase1_trusted_local_operator",
+        "future_authorized_role": "Organisation administrator",
+        "action": "users_access_actionable_drilldown",
+        "category": str(category or ""),
+        "filters": filters if isinstance(filters, dict) else {},
+        "result_count": int(result_count or 0),
+        "outcome": str(outcome or "unknown"),
+    }
+    if reason:
+        event["reason"] = str(reason)
+    path = DATA_PATH / "users_access_actionable_drilldown_access_audit_v1.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(event, ensure_ascii=False) + "\n")
+    return event
+
+
+def _jom_phase1_actionable_authority_v1():
+    payload = _jom_admin_ua_dict_v1(load_json("users_access_actionable_drilldown_v1.json", {}))
+    freshness = _jom_admin_ua_dict_v1(payload.get("freshness"))
+    privacy = _jom_admin_ua_dict_v1(payload.get("privacy"))
+    access = _jom_admin_ua_dict_v1(payload.get("access"))
+    authority = _jom_admin_ua_dict_v1(payload.get("authority"))
+    source = _jom_admin_ua_dict_v1(payload.get("source"))
+    categories = _jom_admin_ua_dict_v1(payload.get("categories"))
+    generated_at_utc = payload.get("generated_at_utc")
+    parsed = _contract_parse_time(generated_at_utc)
+    maximum_age_hours = _jom_admin_ua_int_v1(freshness.get("maximum_age_hours"), 26)
+    age_hours = round((datetime.now(timezone.utc) - parsed).total_seconds() / 3600, 2) if parsed else None
+    required = {"mfa_disabled", "mfa_unknown", "organisation_administrators", "site_administrators", "user_access_administrators", "high_access_concentration", "for_deletion", "unmanaged_accounts", "suspended_accounts", "deactivated_accounts", "not_invited"}
+    gates = {
+        "schema": payload.get("schema") == "jom-users-access-actionable-drilldown-v1",
+        "status": payload.get("status") == "ok",
+        "organisation_population": _jom_admin_ua_int_v1(source.get("organisation_accounts"), 0) >= 1200,
+        "directory_population": _jom_admin_ua_int_v1(source.get("directory_accounts"), 0) >= 140,
+        "pagination_complete": source.get("organisation_pagination_complete") is True and source.get("directory_pagination_complete") is True,
+        "maximum_age": maximum_age_hours == 26 and age_hours is not None and 0 <= age_hours <= maximum_age_hours,
+        "email_not_stored": privacy.get("email_stored") is False,
+        "raw_responses_not_stored": privacy.get("raw_responses_stored") is False,
+        "account_id_ui_blocked": privacy.get("account_id_ui_exposure_allowed") is False,
+        "safe_to_serve": authority.get("safe_to_serve") is True,
+        "phase1_mode": access.get("phase1_mode") == "trusted_local_operator",
+        "approved_future_role": access.get("future_authorized_role") == "Organisation administrator",
+        "write_actions_disabled": access.get("write_actions_allowed") is False,
+        "export_disabled": access.get("export_allowed") is False and access.get("download_allowed") is False,
+        "categories_complete": required <= set(categories),
+    }
+    return {"available": all(gates.values()), "payload": payload, "categories": categories, "generated_at_utc": generated_at_utc, "age_hours": age_hours, "maximum_age_hours": maximum_age_hours, "gates": gates}
+
+
+def _jom_phase1_actionable_safe_record_v1(row):
+    row = row if isinstance(row, dict) else {}
+    return {
+        "display_name": row.get("display_name"),
+        "account_status": row.get("account_status"),
+        "role": row.get("role"),
+        "sites": row.get("sites") if isinstance(row.get("sites"), list) else [],
+        "site_count": row.get("site_count"),
+        "product_access_assignments": row.get("product_access_assignments"),
+        "reason": row.get("reason"),
+        "recommended_action": row.get("recommended_action"),
+        "management_url": row.get("management_url"),
+    }
+
+
+@app.route("/api/admin/users-access/actionable/<category>")
+def api_admin_users_access_actionable_phase1_v1(category):
+    from config.feature_flags import get_phase
+    category = str(category or "").strip().lower()
+    query = str(request.args.get("q") or "").strip().casefold()
+    site_filter = str(request.args.get("site") or "").strip().casefold()
+    status_filter = str(request.args.get("status") or "").strip().casefold()
+    page = max(1, _jom_admin_ua_int_v1(request.args.get("page"), 1))
+    page_size = min(100, max(1, _jom_admin_ua_int_v1(request.args.get("page_size"), 25)))
+    filters = {"query_present": bool(query), "site": site_filter, "status": status_filter, "page": page, "page_size": page_size}
+    if get_phase() != "phase1":
+        reason = "Phase 1 trusted-local authorization is disabled when multi-user mode is enabled."
+        _jom_phase1_actionable_audit_v1(category, filters, 0, "denied", reason)
+        return jsonify({"status": "restricted", "reason": reason, "authorization_mode": "phase2_authentication_required"}), 403
+    if not _jom_phase1_named_users_loopback_v1():
+        reason = "Actionable Users & Access drill-downs are restricted to the local Phase 1 operator."
+        _jom_phase1_actionable_audit_v1(category, filters, 0, "denied", reason)
+        return jsonify({"status": "restricted", "reason": reason, "authorization_mode": "phase1_trusted_local_operator"}), 403
+    if request.args.get("export") is not None or request.args.get("download") is not None:
+        reason = "Export and download are disabled by the approved actionable drill-down contract."
+        _jom_phase1_actionable_audit_v1(category, filters, 0, "denied", reason)
+        return jsonify({"status": "restricted", "reason": reason, "export_allowed": False, "download_allowed": False}), 403
+    contract = _jom_phase1_actionable_authority_v1()
+    if not contract["available"]:
+        reason = "Actionable drill-down authority did not pass every freshness, privacy, population, and safety gate."
+        _jom_phase1_actionable_audit_v1(category, filters, 0, "unavailable", reason)
+        return jsonify({"status": "unavailable", "reason": reason, "generated_at_utc": contract["generated_at_utc"], "age_hours": contract["age_hours"], "gates": contract["gates"]}), 503
+    category_data = contract["categories"].get(category)
+    if not isinstance(category_data, dict):
+        reason = "Unsupported actionable drill-down category."
+        _jom_phase1_actionable_audit_v1(category, filters, 0, "denied", reason)
+        return jsonify({"status": "unsupported", "reason": reason, "available_categories": sorted(contract["categories"])}), 404
+    if category_data.get("available") is not True:
+        reason = category_data.get("reason") or "This category is not proven by the current live authority."
+        _jom_phase1_actionable_audit_v1(category, filters, 0, "unavailable", reason)
+        return jsonify({"schema": "jom-phase1-users-access-actionable-endpoint-v1", "status": "unavailable", "category": category, "label": category_data.get("label"), "reason": reason, "count": None, "records": [], "management_url": category_data.get("management_url"), "not_inferred": True}), 503
+    selected = []
+    for source_row in category_data.get("records") if isinstance(category_data.get("records"), list) else []:
+        safe = _jom_phase1_actionable_safe_record_v1(source_row)
+        sites = [str(value) for value in safe.get("sites") or []]
+        if query and query not in str(safe.get("display_name") or "").casefold():
+            continue
+        if site_filter and site_filter not in {value.casefold() for value in sites}:
+            continue
+        if status_filter and status_filter != str(safe.get("account_status") or "").casefold():
+            continue
+        selected.append(safe)
+    total = len(selected)
+    start = (page - 1) * page_size
+    paged = selected[start:start + page_size]
+    _jom_phase1_actionable_audit_v1(category, filters, len(paged), "allowed")
+    return jsonify({
+        "schema": "jom-phase1-users-access-actionable-endpoint-v1",
+        "status": "ok",
+        "category": category,
+        "label": category_data.get("label"),
+        "count": category_data.get("count"),
+        "management_url": category_data.get("management_url"),
+        "read_only": True,
+        "authorization": {"mode": "phase1_trusted_local_operator", "local_only": True, "future_enforced_role": "Organisation administrator", "role_enforcement_active": False},
+        "privacy": {"account_id_exposed": False, "email_exposed": False, "export_allowed": False, "download_allowed": False, "write_actions_allowed": False},
+        "authority": {"generated_at_utc": contract["generated_at_utc"], "age_hours": contract["age_hours"], "maximum_age_hours": contract["maximum_age_hours"], "all_gates_passed": True},
+        "filters": {"query_applied": bool(query), "site": site_filter or None, "status": status_filter or None},
+        "pagination": {"page": page, "page_size": page_size, "total_records": total, "returned_records": len(paged)},
+        "records": paged,
+    })
+
+
 # --- JOM_ADMIN_USERS_ACCESS_AUTHORITY_V1 END ---
 
 
