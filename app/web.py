@@ -1881,7 +1881,7 @@ def api_admin_monitoring_refresh_v1():
 
 # --- JOM_ADMIN_ESTATE_CONFIGURATION_AUTHORITY_V3 START ---
 # Owner contract for Admin > Estate Configuration.
-# Operator meaning: estate-wide monitored products, Marketplace App authority state and ownership coverage.
+# Operator meaning: estate-wide monitored products and ownership coverage.
 def _jom_admin_ec_dict_v3(value):
     return value if isinstance(value, dict) else {}
 
@@ -1912,29 +1912,23 @@ def _jom_admin_ec_is_monitored_v3(row):
 def _jom_admin_estate_configuration_contract_v3():
     registry = _jom_admin_ec_dict_v3(load_json("site_registry.json", {}))
     products = _jom_admin_ec_dict_v3(load_json("estate_monitored_product_authority_v1.json", {}))
-    apps = _jom_admin_ec_dict_v3(load_json("estate_marketplace_app_authority_v1.json", {}))
     contacts = _jom_admin_ec_dict_v3(load_json("estate_admin_contacts_v1.json", {}))
     registry_sites = [row for row in _jom_admin_ec_list_v3(registry.get("sites")) if _jom_admin_ec_is_monitored_v3(row)]
     site_keys = sorted({str(row.get("site_key") or row.get("key") or "").strip().lower() for row in registry_sites if row.get("site_key") or row.get("key")})
     product_rows = {str(row.get("site_key") or "").lower(): row for row in _jom_admin_ec_list_v3(products.get("sites")) if row.get("site_key")}
-    app_rows = {str(row.get("site_key") or "").lower(): row for row in _jom_admin_ec_list_v3(apps.get("sites")) if row.get("site_key")}
     contact_rows = _jom_admin_ec_list_v3(contacts.get("contacts"))
     rows = []
     product_covered = set()
     ownership_covered = set()
-    app_unavailable = set()
     for key in site_keys:
         product = _jom_admin_ec_dict_v3(product_rows.get(key))
-        app_state = _jom_admin_ec_dict_v3(app_rows.get(key))
         site_contacts = [row for row in contact_rows if str(row.get("site_key") or "").lower() == key]
         product_items = [{"product_key": item.get("product_key"), "display_name": item.get("display_name"), "monitoring_state": item.get("monitoring_state")} for item in _jom_admin_ec_list_v3(product.get("products"))]
         if product.get("status") == "available" and product_items:
             product_covered.add(key)
         if site_contacts:
             ownership_covered.add(key)
-        if app_state.get("status") == "unavailable":
-            app_unavailable.add(key)
-        rows.append({"site_key": key, "monitored_products": product_items, "monitored_product_count": len(product_items) if product_items else None, "marketplace_apps": {"status": app_state.get("status") or "unavailable", "count": app_state.get("marketplace_app_count"), "reason": app_state.get("reason") or apps.get("authority", {}).get("reason"), "action": app_state.get("action")}, "ownership_coverage": "available" if site_contacts else "unavailable", "assignment_count": len(site_contacts) if site_contacts else None, "action": {"label": "View Site", "href": "/site-workspace/" + key}})
+        rows.append({"site_key": key, "monitored_products": product_items, "monitored_product_count": len(product_items) if product_items else None, "ownership_coverage": "available" if site_contacts else "unavailable", "assignment_count": len(site_contacts) if site_contacts else None, "action": {"label": "View Site", "href": "/site-workspace/" + key}})
     total = len(site_keys)
     ownership_pct = round((len(ownership_covered) / total) * 100, 1) if total else None
     product_pct = round((len(product_covered) / total) * 100, 1) if total else None
@@ -1943,13 +1937,11 @@ def _jom_admin_estate_configuration_contract_v3():
         actions.append({"area": "Monitored Products", "status": "review", "reason": "One or more monitored sites do not have current monitored-product authority.", "site_keys": sorted(set(site_keys) - product_covered)})
     if ownership_covered != set(site_keys):
         actions.append({"area": "Ownership Coverage", "status": "review", "reason": "One or more monitored sites do not have current administrative ownership authority.", "site_keys": sorted(set(site_keys) - ownership_covered)})
-    if app_unavailable:
-        actions.append({"area": "Marketplace Apps", "status": "unavailable", "reason": apps.get("authority", {}).get("reason") or "Installed Marketplace app inventory is unavailable through the current JOM integration.", "site_keys": sorted(app_unavailable), "action": {"label": "Review Connected Apps", "href": "https://admin.atlassian.com/", "external": True}})
-    sources = {"site_registry": _jom_admin_ec_source_v3("Site registry", "site_registry.json", registry), "monitored_products": _jom_admin_ec_source_v3("Monitored products", "estate_monitored_product_authority_v1.json", products), "marketplace_apps": _jom_admin_ec_source_v3("Marketplace apps", "estate_marketplace_app_authority_v1.json", apps, unavailable_is_failure=False), "admin_contacts": _jom_admin_ec_source_v3("Administrative ownership", "estate_admin_contacts_v1.json", contacts)}
+    sources = {"site_registry": _jom_admin_ec_source_v3("Site registry", "site_registry.json", registry), "monitored_products": _jom_admin_ec_source_v3("Monitored products", "estate_monitored_product_authority_v1.json", products), "admin_contacts": _jom_admin_ec_source_v3("Administrative ownership", "estate_admin_contacts_v1.json", contacts)}
     failed = [key for key, value in sources.items() if value.get("failed")]
-    blocking_actions = [row for row in actions if row.get("status") not in {"unavailable"}]
-    status = "ok_with_limitations" if not blocking_actions and not failed and app_unavailable else ("ok" if not actions and not failed else "review")
-    return {"schema": "jom-admin-estate-configuration-authority-v3", "generated_at_utc": now_utc(), "status": status, "summary": {"monitored_sites": total, "monitored_product_assignments": products.get("summary", {}).get("monitored_product_assignment_count"), "unique_monitored_products": len(products.get("summary", {}).get("unique_monitored_products") or []), "product_covered_sites": len(product_covered), "product_coverage_percent": product_pct, "marketplace_app_count": apps.get("summary", {}).get("marketplace_app_count"), "marketplace_app_authority_status": apps.get("status") or "unavailable", "marketplace_app_unavailable_sites": len(app_unavailable), "ownership_covered_sites": len(ownership_covered), "ownership_assignments": len(contact_rows) if contacts else None, "ownership_coverage_percent": ownership_pct, "action_items": len(actions), "blocking_action_items": len(blocking_actions), "failed_sources": len(failed)}, "sites": rows, "actions": actions, "source_health": sources, "authority": {"truth_policy": "Current monitored Site Registry, dedicated Monitored Product Authority, Marketplace App Authority and aggregate Administrative Ownership Authority.", "privacy_policy": "No personal ownership records, resource identifiers, cloud IDs or fabricated Marketplace app values are returned.", "live_collection_on_page_load": False, "automatic_post_approval_refresh": True, "marketplace_apps_safe_to_publish": apps.get("authority", {}).get("safe_to_publish_marketplace_apps") is True}, "notes": ["Estate is the site registry and Site Workspace is the selected-site drill-down.", "Estate Configuration is the estate-wide sites, monitored products, Marketplace Apps and ownership collection.", "Marketplace Apps remain Unavailable rather than zero until a supported non-browser collector is proven.", "Licensing and Billing remains the commercial entitlement and cost view."]}
+    blocking_actions = list(actions)
+    status = "ok" if not actions and not failed else "review"
+    return {"schema": "jom-admin-estate-configuration-authority-v3", "generated_at_utc": now_utc(), "status": status, "summary": {"monitored_sites": total, "monitored_product_assignments": products.get("summary", {}).get("monitored_product_assignment_count"), "unique_monitored_products": len(products.get("summary", {}).get("unique_monitored_products") or []), "product_covered_sites": len(product_covered), "product_coverage_percent": product_pct, "ownership_covered_sites": len(ownership_covered), "ownership_assignments": len(contact_rows) if contacts else None, "ownership_coverage_percent": ownership_pct, "action_items": len(actions), "blocking_action_items": len(blocking_actions), "failed_sources": len(failed)}, "sites": rows, "actions": actions, "source_health": sources, "authority": {"truth_policy": "Current monitored Site Registry, dedicated Monitored Product Authority and aggregate Administrative Ownership Authority.", "privacy_policy": "No personal ownership records, resource identifiers or cloud IDs are returned.", "live_collection_on_page_load": False, "automatic_post_approval_refresh": True, }, "notes": ["Estate is the site registry and Site Workspace is the selected-site drill-down.", "Estate Configuration is the estate-wide sites, monitored products and ownership collection.", "Licensing and Billing remains the commercial entitlement and cost view."]}
 
 
 @app.route("/api/admin/estate-configuration")

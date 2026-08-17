@@ -71,3 +71,61 @@ Marketplace App discovery and limitation owners exist, but no supported non-brow
 ### Continuation rule
 
 Do not redesign organisation, directory user, group, product access, resource, ownership, named-access, display-identity, active-user or actionable-drilldown collectors without evidence that the current owner is unsuitable. Continue the Marketplace App Authority Build from the existing discovery audits and limitation contract. Build a new collector only through a supported source, explicit contract, site-binding validation, completeness gates and safe publication approval.
+
+## 2026-08-17 16:41:25 +01:00 - Estate Configuration Marketplace presentation removed
+
+### Decision
+
+Marketplace App inventory has been removed from the Estate Configuration presentation because no supported non-browser authority was proven.
+
+### Evidence
+
+- Four monitored sites tested.
+- Sixteen expected probes completed.
+- Zero probes succeeded.
+- Eight direct-site UPM probes returned HTTP 406.
+- Eight scoped Jira API probes returned HTTP 401.
+- Marketplace App installation authority remains unproven.
+- Marketplace App inventory remains unsafe to publish.
+- No zero or inferred app values are displayed.
+
+### Implementation
+
+Removed Marketplace Apps from:
+
+- Estate Configuration headline metrics.
+- Site configuration table.
+- Authority status rail.
+- Operational actions.
+- Authority source cards.
+- Estate Configuration API presentation contract.
+
+Retained:
+
+- Marketplace limitation builder.
+- Marketplace runtime limitation contract.
+- Audit and discovery evidence.
+- Future authority requirements.
+
+Estate Configuration now presents only:
+
+- Monitored sites.
+- Monitored products.
+- Administrative ownership coverage.
+- Configuration actions.
+- Site registry, monitored-product and administrative-ownership sources.
+
+### Validation
+
+- Marketplace UI removal validator: PASS.
+- Estate Configuration lifecycle validator: PASS.
+- Live API response: HTTP 200.
+- Live page visual validation: PASS.
+- Marketplace presentation negative-reference audit: PASS.
+- Git whitespace validation: PASS.
+
+### Authentication cleanup
+
+- Temporary Marketplace service-account token revoked.
+- Temporary Marketplace service-account settings removed from .env.
+- Established svc-atlassian-jom service identity retained.
