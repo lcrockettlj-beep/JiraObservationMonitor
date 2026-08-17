@@ -742,3 +742,64 @@ This edition is based on uploaded repository inventories, Git evidence and the e
 - Role-assignment counts are not represented as unique people.
 - Names, email addresses, account IDs and directory IDs are excluded from the page contract.
 - Differing source evidence timestamps remain visible.
+
+## Estate Configuration, completed authority v3
+
+**Acceptance date:** 17 August 2026
+**Status:** Completed and accepted, pending BOOKSYNC milestone commit
+**Runtime status:** `ok_with_limitations`
+
+Estate Configuration is the estate-wide inventory of monitored sites, proven monitored products, Marketplace App authority state and aggregate administrative ownership. Estate remains the monitored site registry and lifecycle view. Site Workspace remains the selected-site drill-down. Licensing & Billing remains the separate commercial entitlement, subscription and cost view.
+
+### Accepted live evidence
+- 4 monitored sites.
+- 2 unique monitored products: Confluence and Jira Software.
+- 6 proven site-product assignments.
+- 4 product-covered sites and 100% product coverage.
+- 4 ownership-covered sites, 33 current role-assignment rows and 100% ownership coverage.
+- 0 failed sources and 0 blocking actions.
+- Marketplace App count is unavailable, not zero.
+
+### Current site evidence
+- `gli-delivery-tm`: Confluence and Jira Software; Marketplace Apps unavailable; ownership available; 14 assignments.
+- `gli-global-technology`: Jira Software; Marketplace Apps unavailable; ownership available; 2 assignments.
+- `gli-it-project`: Confluence and Jira Software; Marketplace Apps unavailable; ownership available; 13 assignments.
+- `gli-tracker`: Jira Software; Marketplace Apps unavailable; ownership available; 4 assignments.
+
+The API summary total, site-row sum, authority summary, actual authority rows and grouped authority rows were reconciled at 33. The accepted `estate_admin_contacts_v1.json` evidence was generated at `2026-08-17T12:26:28Z`. Earlier totals are superseded rather than silently preserved.
+
+### Connected Apps limitation
+Atlassian Administration exposed two meaningful Jira gateway candidates in authenticated browser evidence: the full plugins endpoint and `installed-marketplace`. Browser responses returned HTTP 200 and both shapes reported 204 rows. Equal counts did not prove Marketplace-only filtering, installation semantics, system-app exclusion, pagination or completeness.
+
+A privacy-safe non-browser audit tested four monitored sites, two endpoints and two configured authentication modes, producing 16 probes. Admin Bearer returned eight HTTP 406 responses. OAuth Bearer returned eight HTTP 401 responses. Successful probes were zero. Confluence authority was not proven. JOM therefore records Marketplace Apps as unavailable, provides an Atlassian Administration review action and keeps `safe_to_publish_marketplace_apps` false. Browser cookies and private session automation are not accepted collector authority.
+
+### Owner map
+- Backend and route: `app/web.py`
+- Page: `templates/admin_estate_configuration.html`
+- Browser owner: `static/js/jom_admin_estate_configuration_v1.js`
+- Styling owner: `static/css/jom_admin_estate_configuration_v1.css`
+- Administrative ownership builder: `app/builders/estate_admin_contacts.py`
+- Resource authority builder: `app/builders/estate_resource_authority.py`
+- Monitored product builder: `app/builders/estate_monitored_product_authority.py`
+- Marketplace limitation builder: `app/builders/estate_marketplace_app_authority.py`
+- Post-approval chain: `app/runtime/admin_enriched_chain.py`
+
+### Runtime contracts
+- `runtime/data/site_registry.json`
+- `runtime/data/estate_site_resource_mapping_v1.json`
+- `runtime/data/estate_admin_contacts_v1.json`
+- `runtime/data/estate_monitored_product_authority_v1.json`
+- `runtime/data/estate_marketplace_app_authority_v1.json`
+- `runtime/data/estate_resource_authority_refresh_status_v1.json`
+
+### Discovery and audit owners
+- `app/audits/connected_apps_authority_discovery.py`
+- `app/audits/connected_apps_discovery_privacy_correction.py`
+- `app/audits/jira_connected_apps_endpoint_contract_audit.py`
+- `app/audits/marketplace_app_authority_discovery.py`
+
+### Validation evidence
+The lifecycle, API v3, compact UI, resource ARI, monitored product and Marketplace limitation validators passed. `app/web.py` and relevant builders compiled. The health endpoint returned healthy. API v3 returned `ok_with_limitations`. Live totals reconciled. Visual review accepted the compact product chips, separate Marketplace and ownership columns, single-location limitation explanation, aligned actions and unobstructed rails. `git diff --check` returned line-ending warnings only and no whitespace defect.
+
+### Continuation rule
+Do not repeat the completed Estate Configuration authority audit after a chat reset unless new runtime evidence, a failed validator or a changed owner creates a real reason. Resume with repository status, current branch and HEAD, validate the staged milestone, commit and push. Only then select the next incomplete Admin page. Preserve the audit-first rules: evidence first, unavailable means unavailable, no fabricated authority, full owner replacements, repository hygiene and BOOKSYNC with every milestone.

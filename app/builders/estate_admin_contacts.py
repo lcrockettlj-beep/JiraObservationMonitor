@@ -251,55 +251,12 @@ def contacts_from_assignments(assignments: list[dict[str, Any]], users_seen: lis
 
 
 def collect_admin_contacts(root: Path | None = None, write_output: bool = True) -> dict[str, Any]:
-    root = root or ROOT
-    env = load_env(root)
-    org_id = (env.get("ATLASSIAN_ADMIN_ORG_ID") or env.get("ATLASSIAN_ORG_ID") or "").strip()
-    token = (env.get("ATLASSIAN_ADMIN_API_KEY") or env.get("ATLASSIAN_ADMIN_TOKEN") or "").strip()
-    sites = site_records(root)
+    """Compatibility entrypoint owned by the current estate resource authority builder."""
+    from app.builders.estate_resource_authority import refresh_estate_resource_authority
+    result = refresh_estate_resource_authority(root=root or ROOT, write_output=write_output)
+    return result.get("contacts", result)
 
-    if not org_id or not token:
-        payload = {
-            "schema": "jom-estate-admin-contacts-v1",
-            "generated_at_utc": now_utc(),
-            "status": "unavailable",
-            "contacts": [],
-            "reason": "ATLASSIAN_ADMIN_ORG_ID and ATLASSIAN_ADMIN_API_KEY are required for live collection.",
-            "fabricated_contacts": False,
-            "source": "atlassian_admin_v2_role_assignments",
-        }
-        if write_output:
-            write_json(root / CONTACTS_OUT, payload)
-        return payload
 
-    directory_ids, directory_diagnostics = directory_ids_from_admin(org_id, token)
-    account_ids = sample_account_ids(root, 20)
-    assignments, users_seen, probes = collect_role_assignments(org_id, token, directory_ids, account_ids)
-    contacts = contacts_from_assignments(assignments, users_seen, sites)
-
-    status = "live" if contacts else "available_no_contacts_mapped"
-    reason = "Live Atlassian Admin role assignments collected and mapped to known sites." if contacts else "Live role assignment endpoint is available, but no admin-role assignments mapped to known sites yet."
-    payload = {
-        "schema": "jom-estate-admin-contacts-v1",
-        "generated_at_utc": now_utc(),
-        "status": status,
-        "contacts": contacts,
-        "reason": reason,
-        "fabricated_contacts": False,
-        "source": "atlassian_admin_v2_user_role_assignments",
-        "summary": {
-            "known_site_count": len(sites),
-            "directory_id_count": len(directory_ids),
-            "assignment_count": len(assignments),
-            "user_hint_count": len(users_seen),
-            "contact_count": len(contacts),
-            "successful_role_probe_count": sum(1 for p in probes if p.get("endpoint") == "role_assignments" and p.get("ok")),
-        },
-        "diagnostics": {
-            "directory_discovery": directory_diagnostics,
-            "probe_count": len(probes),
-            "failed_probe_count": sum(1 for p in probes if not p.get("ok")),
-        },
-    }
-    if write_output:
-        write_json(root / CONTACTS_OUT, payload)
-    return payload
+if __name__ == "__main__":
+    payload = collect_admin_contacts()
+    print(json.dumps({"status": payload.get("status"), "summary": payload.get("summary", {})}, indent=2))

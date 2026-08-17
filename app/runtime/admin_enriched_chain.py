@@ -116,6 +116,9 @@ def main() -> Dict[str, Any]:
     ], "admin_truth_v2", "Rebuild Admin Truth Layer v2"))
 
     steps.append(run([
+        {"type": "module", "value": "app.builders.estate_resource_authority"},
+    ], "estate_resource_authority", "Refresh current site-resource mapping and administrative ownership authority"))
+    steps.append(run([
         {"type": "module", "value": "app.audits.source_freshness"},
         {"type": "script", "value": "scripts/audit_source_freshness.py"},
     ], "source_freshness", "Rebuild source freshness audit"))

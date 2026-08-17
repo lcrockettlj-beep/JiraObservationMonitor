@@ -1,38 +1,65 @@
 {
-  "schema": "jom-estate-site-resource-mapping-v1",
-  "generated_at_utc": "2026-07-30T10:25:06Z",
+  "schema": "jom-estate-site-resource-mapping-v2",
+  "generated_at_utc": "2026-08-17T12:26:28Z",
   "status": "mapped",
   "safe_to_populate_contacts": true,
   "fabricated_mappings": false,
   "mappings": [
     {
       "site_key": "gli-delivery-tm",
-      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
-      "product": "jira-software",
+      "product": "confluence",
+      "resource_id": "ari:cloud:confluence::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
       "confidence": "high",
-      "reason": "tenant cloud_id matched live role assignment resource token"
+      "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
+      "evidence_rows": 4
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "product": "jira-software",
+      "resource_id": "ari:cloud:jira-software::site/de2de731-c6ae-4e15-a2cf-92d976f0fb7c",
+      "confidence": "high",
+      "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
+      "evidence_rows": 10
     },
     {
       "site_key": "gli-global-technology",
+      "product": "jira-software",
       "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
-      "product": "jira-software",
       "confidence": "high",
-      "reason": "tenant cloud_id matched live role assignment resource token"
+      "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
+      "evidence_rows": 24
     },
     {
       "site_key": "gli-it-project",
-      "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "product": "confluence",
+      "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "confidence": "high",
-      "reason": "tenant cloud_id matched live role assignment resource token"
+      "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
+      "evidence_rows": 10
     },
     {
       "site_key": "gli-it-project",
-      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "product": "jira-software",
+      "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "confidence": "high",
-      "reason": "tenant cloud_id matched live role assignment resource token"
+      "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
+      "evidence_rows": 21
+    },
+    {
+      "site_key": "gli-tracker",
+      "product": "jira-software",
+      "resource_id": "ari:cloud:jira-software::site/5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
+      "confidence": "high",
+      "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
+      "evidence_rows": 4
     }
   ],
-  "source": "tenant_info_cloud_id_to_role_assignment_resource_token"
+  "source": "live_atlassian_admin_v2_role_assignments_current_tenant_cloud_identity",
+  "summary": {
+    "monitored_site_count": 4,
+    "mapped_site_count": 4,
+    "mapping_count": 6,
+    "ambiguous_role_rows": 0,
+    "unmatched_accepted_product_rows": 9
+  }
 }

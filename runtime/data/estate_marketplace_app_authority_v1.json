@@ -1,0 +1,111 @@
+{
+  "schema": "jom-estate-marketplace-app-authority-v1",
+  "generated_at_utc": "2026-08-17T11:56:45Z",
+  "status": "unavailable",
+  "scope": {
+    "definition": "Installed Marketplace apps by monitored site.",
+    "commercial_entitlements_included": false,
+    "host_product_licensing_included": false
+  },
+  "authority": {
+    "safe_to_publish_marketplace_apps": false,
+    "app_records_collected": false,
+    "fabricated_apps": false,
+    "browser_route_exists": true,
+    "non_browser_authentication_proven": false,
+    "reason": "Atlassian Administration exposes Connected Apps through an authenticated browser-session gateway, but JOM's current non-browser Admin Bearer and OAuth Bearer credentials cannot access that gateway. Installed Marketplace app inventory is therefore unavailable through the current JOM integration."
+  },
+  "summary": {
+    "monitored_site_count": 4,
+    "available_site_count": 0,
+    "unavailable_site_count": 4,
+    "marketplace_app_count": null,
+    "successful_non_browser_probe_count": 0
+  },
+  "sites": [
+    {
+      "site_key": "gli-delivery-tm",
+      "status": "unavailable",
+      "marketplace_app_count": null,
+      "apps": [],
+      "jira_authority": "unavailable",
+      "confluence_authority": "unavailable",
+      "reason": "Atlassian Administration exposes Connected Apps through an authenticated browser-session gateway, but JOM's current non-browser Admin Bearer and OAuth Bearer credentials cannot access that gateway. Installed Marketplace app inventory is therefore unavailable through the current JOM integration.",
+      "action": {
+        "label": "Review Connected Apps in Atlassian Administration",
+        "href": "https://admin.atlassian.com/",
+        "external": true
+      },
+      "site_reference": {
+        "site_url": "https://gli-delivery-tm.atlassian.net"
+      }
+    },
+    {
+      "site_key": "gli-global-technology",
+      "status": "unavailable",
+      "marketplace_app_count": null,
+      "apps": [],
+      "jira_authority": "unavailable",
+      "confluence_authority": "unavailable",
+      "reason": "Atlassian Administration exposes Connected Apps through an authenticated browser-session gateway, but JOM's current non-browser Admin Bearer and OAuth Bearer credentials cannot access that gateway. Installed Marketplace app inventory is therefore unavailable through the current JOM integration.",
+      "action": {
+        "label": "Review Connected Apps in Atlassian Administration",
+        "href": "https://admin.atlassian.com/",
+        "external": true
+      },
+      "site_reference": {
+        "site_url": "https://gli-global-technology.atlassian.net"
+      }
+    },
+    {
+      "site_key": "gli-it-project",
+      "status": "unavailable",
+      "marketplace_app_count": null,
+      "apps": [],
+      "jira_authority": "unavailable",
+      "confluence_authority": "unavailable",
+      "reason": "Atlassian Administration exposes Connected Apps through an authenticated browser-session gateway, but JOM's current non-browser Admin Bearer and OAuth Bearer credentials cannot access that gateway. Installed Marketplace app inventory is therefore unavailable through the current JOM integration.",
+      "action": {
+        "label": "Review Connected Apps in Atlassian Administration",
+        "href": "https://admin.atlassian.com/",
+        "external": true
+      },
+      "site_reference": {
+        "site_url": "https://gli-it-project.atlassian.net"
+      }
+    },
+    {
+      "site_key": "gli-tracker",
+      "status": "unavailable",
+      "marketplace_app_count": null,
+      "apps": [],
+      "jira_authority": "unavailable",
+      "confluence_authority": "unavailable",
+      "reason": "Atlassian Administration exposes Connected Apps through an authenticated browser-session gateway, but JOM's current non-browser Admin Bearer and OAuth Bearer credentials cannot access that gateway. Installed Marketplace app inventory is therefore unavailable through the current JOM integration.",
+      "action": {
+        "label": "Review Connected Apps in Atlassian Administration",
+        "href": "https://admin.atlassian.com/",
+        "external": true
+      },
+      "site_reference": {
+        "site_url": "https://gli-tracker.atlassian.net"
+      }
+    }
+  ],
+  "evidence": {
+    "connected_apps_discovery_schema": "jom-connected-apps-authority-discovery-v1.1",
+    "endpoint_contract_audit_schema": "jom-jira-connected-apps-endpoint-contract-audit-v1",
+    "endpoint_contract_status": "browser_session_only_or_unsupported_with_current_credentials",
+    "cloud_ids_stored": false,
+    "raw_payloads_stored": false
+  },
+  "future_authority_requirements": [
+    "Supported non-browser authentication",
+    "Proven site binding",
+    "Proven installation and enabled-state semantics",
+    "System-app exclusion",
+    "Pagination and completeness",
+    "Cross-site validation",
+    "Separate Confluence validation"
+  ]
+}

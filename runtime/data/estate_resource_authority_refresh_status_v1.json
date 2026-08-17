@@ -1,0 +1,34 @@
+{
+  "schema": "jom-estate-resource-authority-refresh-status-v1",
+  "generated_at_utc": "2026-08-17T12:26:28Z",
+  "status": "ok",
+  "summary": {
+    "monitored_site_count": 4,
+    "assignment_rows": 201,
+    "mapped_site_count": 4,
+    "mapping_count": 6,
+    "contact_count": 33,
+    "successful_role_probe_count": 30,
+    "not_found_probe_count": 124,
+    "unexpected_failed_probe_count": 0
+  },
+  "privacy": {
+    "personal_records_returned": false,
+    "resource_ids_returned": false,
+    "probe_account_ids_redacted": true
+  },
+  "directory_discovery": [
+    {
+      "name": "directories",
+      "ok": true,
+      "status": 200,
+      "row_count": 1
+    },
+    {
+      "name": "workspaces",
+      "ok": true,
+      "status": 200,
+      "row_count": 20
+    }
+  ]
+}

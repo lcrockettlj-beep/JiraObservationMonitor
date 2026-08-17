@@ -1,0 +1,101 @@
+{
+  "schema": "jom-estate-monitored-product-authority-v1",
+  "generated_at_utc": "2026-08-17T11:25:54Z",
+  "status": "ok",
+  "scope": {
+    "definition": "Products actively monitored by JOM and proven for each monitored site. This is not a commercial subscription or billing inventory.",
+    "commercial_licensing_included": false,
+    "marketplace_apps_included": false
+  },
+  "authority": {
+    "site_scope": "runtime/data/site_registry.json monitored lifecycle",
+    "product_scope": "runtime/data/estate_site_resource_mapping_v1.json high-confidence site-scoped ARI mapping",
+    "safe_to_publish": true,
+    "fabricated_products": false
+  },
+  "summary": {
+    "monitored_site_count": 4,
+    "covered_site_count": 4,
+    "monitored_product_assignment_count": 6,
+    "unique_monitored_products": [
+      "confluence",
+      "jira-software"
+    ],
+    "uncovered_site_count": 0,
+    "rejected_mapping_count": 0
+  },
+  "sites": [
+    {
+      "site_key": "gli-delivery-tm",
+      "status": "available",
+      "products": [
+        {
+          "product_key": "confluence",
+          "display_name": "Confluence",
+          "monitoring_state": "monitored",
+          "authority": "current high-confidence site-scoped Atlassian ARI mapping"
+        },
+        {
+          "product_key": "jira-software",
+          "display_name": "Jira Software",
+          "monitoring_state": "monitored",
+          "authority": "current high-confidence site-scoped Atlassian ARI mapping"
+        }
+      ],
+      "product_count": 2,
+      "reason": "Current monitored products proven by site-scoped Atlassian ARI mappings."
+    },
+    {
+      "site_key": "gli-global-technology",
+      "status": "available",
+      "products": [
+        {
+          "product_key": "jira-software",
+          "display_name": "Jira Software",
+          "monitoring_state": "monitored",
+          "authority": "current high-confidence site-scoped Atlassian ARI mapping"
+        }
+      ],
+      "product_count": 1,
+      "reason": "Current monitored products proven by site-scoped Atlassian ARI mappings."
+    },
+    {
+      "site_key": "gli-it-project",
+      "status": "available",
+      "products": [
+        {
+          "product_key": "confluence",
+          "display_name": "Confluence",
+          "monitoring_state": "monitored",
+          "authority": "current high-confidence site-scoped Atlassian ARI mapping"
+        },
+        {
+          "product_key": "jira-software",
+          "display_name": "Jira Software",
+          "monitoring_state": "monitored",
+          "authority": "current high-confidence site-scoped Atlassian ARI mapping"
+        }
+      ],
+      "product_count": 2,
+      "reason": "Current monitored products proven by site-scoped Atlassian ARI mappings."
+    },
+    {
+      "site_key": "gli-tracker",
+      "status": "available",
+      "products": [
+        {
+          "product_key": "jira-software",
+          "display_name": "Jira Software",
+          "monitoring_state": "monitored",
+          "authority": "current high-confidence site-scoped Atlassian ARI mapping"
+        }
+      ],
+      "product_count": 1,
+      "reason": "Current monitored products proven by site-scoped Atlassian ARI mappings."
+    }
+  ],
+  "diagnostics": {
+    "uncovered_site_keys": [],
+    "rejected_mappings": []
+  }
+}
