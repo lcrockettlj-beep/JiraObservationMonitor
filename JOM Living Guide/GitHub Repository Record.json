@@ -56,5 +56,18 @@
     "configuration_timestamp_rule": "configuration authorities must identify last authority change rather than imply daily refresh",
     "project_inventory": "authority_proven_but_deferred_until_foundation_recovery",
     "continuation_gate": "read_completion_matrix_defects_and_owner_catalogue_before_new_work"
+  },
+  "estate_configuration_validator_hygiene": {
+    "recorded_at": "2026-08-18T14:19:00+01:00",
+    "repository_baseline": "760d21b",
+    "status": "dead_validators_deleted_pending_commit",
+    "deleted_validators": [
+      "scripts/validate_estate_configuration_inventory_v3.py",
+      "scripts/validate_estate_configuration_ui_refinement_v1.py"
+    ],
+    "archive_retained": false,
+    "recovery_authority": "Git history",
+    "current_workstream": "Foundation Recovery Audit",
+    "next_finding": "FR-001_users_access_drilldowns_blocked"
   }
 }

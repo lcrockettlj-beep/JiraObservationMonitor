@@ -118,7 +118,7 @@
 - Marketplace Apps: unavailable through the current JOM integration. Browser-session Jira gateway candidates existed, but Admin Bearer returned HTTP 406 and OAuth Bearer returned HTTP 401 across the four-site endpoint audit. No app records or fabricated counts are published.
 - Runtime status: `ok_with_limitations`; Marketplace Apps is the single non-blocking limitation; blocking actions: 0.
 - Privacy boundary: no personal ownership records, email addresses, account IDs, directory IDs, resource identifiers, cloud IDs, credentials, headers or raw Connected Apps payloads are returned by the page contract.
-- Validation owners: `scripts/validate_estate_configuration_v1.py`, `scripts/validate_estate_configuration_inventory_v3.py`, `scripts/validate_estate_configuration_ui_refinement_v1.py`, `scripts/validate_estate_resource_ari_correction_v1.py`, `scripts/validate_monitored_product_authority_v1.py`, `scripts/validate_marketplace_app_limitation_authority_v1.py`.
+- Validation owners: `scripts/validate_estate_configuration_v1.py`, ``, ``, `scripts/validate_estate_resource_ari_correction_v1.py`, `scripts/validate_monitored_product_authority_v1.py`, `scripts/validate_marketplace_app_limitation_authority_v1.py`.
 - Commit gate: install these BOOKSYNC owners, validate product and documentation together, inspect staged scope, then commit and push.
 - Next workstream: choose the next incomplete Admin page only after this milestone is clean and pushed. Discovery remains parked unless explicitly selected.
 ## Collector Inventory Authority Audit, 17 August 2026
@@ -294,3 +294,30 @@ A new chat must not restart broad discovery or select a new feature from old ass
 Do not call Command Centre, Estate, Site Workspace, Reports, Runtime Status or Source Health operational. Do not call an Admin page complete until automatic refresh and all offered drill-downs have been proven in normal operation. Do not repeat already recorded authority audits unless a relevant owner changed, a validator failed, or new live evidence contradicts this guide.
 
 <!-- JOM_FOUNDATION_RECOVERY_BOOKSYNC_V1_END -->
+
+### 18 August 2026 - Estate Configuration validator hygiene
+
+#### Decision
+
+Two obsolete Estate Configuration validators were deleted as dead code rather than archived:
+- `scripts/validate_estate_configuration_inventory_v3.py`
+- `scripts/validate_estate_configuration_ui_refinement_v1.py`
+
+#### Evidence and reason
+
+The inventory v3 validator required Marketplace Apps presentation, `marketplace_app_count`, `estate_marketplace_app_authority_v1.json` and `ok_with_limitations` inside the active Estate Configuration presentation owner. The approved Marketplace authority audit subsequently proved that installed Marketplace App inventory could not be safely published, and the presentation was intentionally removed.
+
+The earlier UI-refinement validator required `ec-products-note`, while the approved two-metric refinement explicitly removed that element. Both validators therefore contradicted the current accepted owner files and the passing Marketplace UI-removal validator. They no longer tested the approved implementation.
+
+#### Current validation ownership
+
+The current Estate Configuration validation set is:
+- `scripts/validate_estate_configuration_v1.py`
+- `scripts/validate_estate_configuration_marketplace_ui_removal_v1.py`
+- `scripts/validate_estate_resource_ari_correction_v1.py`
+- `scripts/validate_monitored_product_authority_v1.py`
+- `scripts/validate_marketplace_app_limitation_authority_v1.py`
+- `scripts/validate_estate_configuration_booksync_v3.py`
+- `scripts/validate_estate_configuration_refinement_booksync_v1.py`
+
+No archive copy is retained in the active repository. Git history remains the recovery authority for deleted code. The Foundation Recovery Audit remains the current workstream, with FR-001 Users & Access drill-down gates next.
