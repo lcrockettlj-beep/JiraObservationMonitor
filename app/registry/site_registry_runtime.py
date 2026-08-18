@@ -34,15 +34,24 @@ APPROVED_OPERATIONAL_SITES = [
         "status": "monitored",
         "approved_by": "approved_operational_scope",
     },
+    {
+        "site_key": "gli-tracker",
+        "site_name": "gli-tracker",
+        "site_url": "https://gli-tracker.atlassian.net",
+        "status": "monitored",
+        "approved_by": "site_review_lifecycle_completion_2026_08_04",
+    },
 ]
 
+# Identity-only mappings for named-access rows whose site identity is a Cloud ID.
+# Monitoring lifecycle authority remains APPROVED_OPERATIONAL_SITES and the
+# current runtime site registry. These mappings must not assign lifecycle state.
 KNOWN_RESOURCE_OVERRIDES = {
     "5e39f28e-6ff4-44ff-82b7-d0746cee8db5": {
         "site_key": "gli-tracker",
         "site_name": "gli-tracker",
         "site_url": "https://gli-tracker.atlassian.net",
-        "classification": "discovered",
-        "reason": "Discovered by Atlassian Admin role assignments/billing; not part of monitored operational estate until approved.",
+        "reason": "Identity mapping for the approved monitored gli-tracker site.",
     }
 }
 
