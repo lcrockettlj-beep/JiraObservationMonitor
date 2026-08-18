@@ -313,3 +313,97 @@ Estate Configuration now presents only:
 - Temporary Marketplace service-account token revoked.
 - Temporary Marketplace service-account settings removed from .env.
 - Established svc-atlassian-jom service identity retained.
+
+## 18 August 2026 - Estate Configuration inventory and evidence refinement
+
+### Decision
+
+Estate Configuration was refined to improve information architecture and evidence readability without changing authority contracts, backend collectors or runtime truth sources.
+
+### Review outcome
+
+- The Monitored Products headline metric duplicated product authority already presented in the Products and ownership table.
+- Authority Source cards displayed full runtime paths, which reduced readability and created overflow risk.
+- The hero description no longer accurately described the revised page emphasis.
+
+### Implementation
+
+Configuration Inventory changed from:
+
+- Monitored Sites
+- Monitored Products
+- Ownership Coverage
+
+To:
+
+- Monitored Sites
+- Ownership Coverage
+
+Product authority remains visible through:
+
+- the Products and ownership table;
+- the Products coverage rail;
+- the Estate Configuration API authority contract; and
+- the monitored-product Authority Source.
+
+Authority Sources now display filenames rather than full runtime paths:
+
+- `site_registry.json`
+- `estate_monitored_product_authority_v1.json`
+- `estate_admin_contacts_v1.json`
+
+The complete runtime path remains in the API response and is available as hover evidence in the UI.
+
+The hero description changed from:
+
+`Estate-wide monitored products and administrative ownership.`
+
+To:
+
+`Estate-wide site configuration and administrative ownership.`
+
+### Authority position
+
+- No collectors changed.
+- No runtime contracts changed.
+- No backend owner changed.
+- No authority contract changed.
+- This refinement is presentation-only.
+
+The Estate Configuration authority contract continues to publish and use:
+
+- `unique_monitored_products`
+- `monitored_product_assignments`
+- `monitored_products`
+- `product_coverage_percent`
+
+### Validation
+
+- Estate Configuration two-metric and source-filename validator: PASS.
+- Estate Configuration lifecycle validator: PASS.
+- Visual page review: PASS.
+- Product authority retained: PASS.
+- Marketplace presentation remains absent: PASS.
+- Approved four-owner change boundary: PASS.
+- Repository hygiene restored after removal of the generated named-user audit artefact: PASS.
+
+### Architectural direction
+
+Estate Configuration remains focused on:
+
+- monitored sites;
+- administrative ownership;
+- site-level product configuration;
+- configuration actions; and
+- readable authority evidence.
+
+Do not duplicate information in headline tiles when the same authority is already presented more usefully in the detailed section below. Preserve complete technical source paths in authority contracts, but present concise filenames in the operator UI when the path itself adds no operational meaning.
+
+### Current state and continuation
+
+- Estate Configuration remains accepted.
+- Marketplace App inventory remains unavailable and intentionally absent from the page.
+- Marketplace limitation builders, runtime contracts and audit evidence remain retained outside the page.
+- Current uncommitted implementation scope is the four approved presentation owners plus these two BOOKSYNC owners.
+- Next action: install this complete BOOKSYNC owner replacement, run both Estate Configuration validators, run `git diff --check`, inspect the six-file scope, stage, commit and push.
+- After a chat reset, resume from BOOKSYNC installation and commit validation. Do not reopen Marketplace discovery or redesign Estate Configuration authority unless new supported evidence is available.
