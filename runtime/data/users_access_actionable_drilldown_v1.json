@@ -1,10 +1,10 @@
 {
   "schema": "jom-users-access-actionable-drilldown-v1",
-  "generated_at_utc": "2026-08-14T12:08:02Z",
+  "generated_at_utc": "2026-08-18T16:02:53Z",
   "status": "ok",
   "source": {
     "organisation_accounts": 1221,
-    "directory_accounts": 141,
+    "directory_accounts": 143,
     "organisation_pages": 25,
     "directory_pages": 2,
     "organisation_pagination_complete": true,
@@ -132,11 +132,9 @@
           "account_id": "712020:cbc1b86c-8a82-4f0c-b15d-73ac1370414f",
           "display_name": "Amanda Angel",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -145,11 +143,9 @@
           "account_id": "712020:a53054f2-911f-4bb9-aecf-868f8aef6fcf",
           "display_name": "Amie Lacson",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -158,11 +154,9 @@
           "account_id": "712020:3e9f6b9e-3ba9-40d9-87ba-4610d4b9222e",
           "display_name": "Amruthasindhu Channal",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -171,11 +165,9 @@
           "account_id": "712020:c34981e4-6784-47c1-9a24-437125dabe94",
           "display_name": "Anne Stone",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -271,11 +263,9 @@
           "account_id": "712020:42c04347-4bc2-462e-adbc-9a2619f614ae",
           "display_name": "brendan.keeley",
           "account_status": "active",
-          "sites": [
-            "gli-global-technology"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -334,11 +324,9 @@
           "account_id": "712020:2d37241a-cdbc-4754-970d-59a58f845024",
           "display_name": "Cheryl Nauss",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -396,19 +384,6 @@
         {
           "account_id": "5c867b68f63c96739fd921e6",
           "display_name": "Christopher Steeger",
-          "account_status": "active",
-          "sites": [
-            "gli-global-technology"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
-          "reason": "Directory authority reports MFA is not enabled.",
-          "recommended_action": "Review the approved authentication policy and account exception.",
-          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
-        },
-        {
-          "account_id": "712020:091af781-b284-42eb-aef8-c45ef364e4c8",
-          "display_name": "Christopher Yerves",
           "account_status": "active",
           "sites": [
             "gli-global-technology"
@@ -487,24 +462,9 @@
           "account_id": "712020:573c60d0-ab00-44d9-9760-ca2e10ef35ac",
           "display_name": "Danielle Beal",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
-          "reason": "Directory authority reports MFA is not enabled.",
-          "recommended_action": "Review the approved authentication policy and account exception.",
-          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
-        },
-        {
-          "account_id": "5c98b2d038f7806371d15a16",
-          "display_name": "David Bartholomew",
-          "account_status": "active",
-          "sites": [
-            "gli-it-project"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -590,11 +550,9 @@
           "account_id": "712020:a3d1c069-a0b5-4b46-b3f0-c56bee1dcfce",
           "display_name": "Gabriel Esguerra",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -657,6 +615,19 @@
           ],
           "site_count": 2,
           "product_access_assignments": 2,
+          "reason": "Directory authority reports MFA is not enabled.",
+          "recommended_action": "Review the approved authentication policy and account exception.",
+          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
+        },
+        {
+          "account_id": "712020:0c6ad2e9-c78a-4d36-b56e-2e9756efbddc",
+          "display_name": "guy_b",
+          "account_status": "active",
+          "sites": [
+            "gli-tracker"
+          ],
+          "site_count": 1,
+          "product_access_assignments": 1,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -740,12 +711,11 @@
           "display_name": "Jim Wiltshire",
           "account_status": "active",
           "sites": [
-            "gli-delivery-tm",
             "gli-global-technology",
             "gli-it-project"
           ],
-          "site_count": 3,
-          "product_access_assignments": 3,
+          "site_count": 2,
+          "product_access_assignments": 2,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -754,11 +724,9 @@
           "account_id": "712020:da25c2ce-ed4c-4eea-b392-2d8f4a6a3e7d",
           "display_name": "John Dillon",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -841,11 +809,9 @@
           "account_id": "712020:b7fcc038-a225-4c0f-97bd-346decea6e00",
           "display_name": "Lisa Longstaff",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -880,11 +846,10 @@
           "display_name": "Mackenzie Haugh",
           "account_status": "active",
           "sites": [
-            "gli-delivery-tm",
             "gli-it-project"
           ],
-          "site_count": 2,
-          "product_access_assignments": 2,
+          "site_count": 1,
+          "product_access_assignments": 1,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -919,24 +884,9 @@
           "account_id": "712020:34715ba4-0832-458f-86ad-4e6770981191",
           "display_name": "MarioGauvin",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
-          "reason": "Directory authority reports MFA is not enabled.",
-          "recommended_action": "Review the approved authentication policy and account exception.",
-          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
-        },
-        {
-          "account_id": "712020:f2f5142e-b806-477c-8885-de60007ec8ce",
-          "display_name": "Mark DeWolfe",
-          "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -958,11 +908,9 @@
           "account_id": "712020:2b2d29a3-f75a-46b8-b2a5-aa627cba18b5",
           "display_name": "Martin Eddy",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -972,12 +920,11 @@
           "display_name": "Matt Pinzino",
           "account_status": "active",
           "sites": [
-            "gli-delivery-tm",
             "gli-global-technology",
             "gli-it-project"
           ],
-          "site_count": 3,
-          "product_access_assignments": 3,
+          "site_count": 2,
+          "product_access_assignments": 2,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1038,11 +985,9 @@
           "account_id": "712020:8be0b0b8-d9b0-4f34-b777-041070602b7d",
           "display_name": "Mohit Gandhi",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1077,11 +1022,9 @@
           "account_id": "712020:2bc76e64-3e73-4a9d-ae74-4bd5ba33723c",
           "display_name": "muhammad.h.ikram",
           "account_status": "active",
-          "sites": [
-            "gli-global-technology"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1101,11 +1044,9 @@
           "account_id": "712020:7af1b11f-935e-45b6-a810-deec26746cf7",
           "display_name": "Nicholas Stroughair",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1181,19 +1122,6 @@
           "account_status": "active",
           "sites": [
             "gli-it-project"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
-          "reason": "Directory authority reports MFA is not enabled.",
-          "recommended_action": "Review the approved authentication policy and account exception.",
-          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
-        },
-        {
-          "account_id": "712020:31a6e2c8-b8aa-447b-8ce1-6d074e475713",
-          "display_name": "Perry Hogan",
-          "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
           ],
           "site_count": 1,
           "product_access_assignments": 1,
@@ -1294,11 +1222,9 @@
           "account_id": "712020:b0d92f2f-8bf9-494c-988a-2db8b4b6a918",
           "display_name": "Ryan Owens",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1320,11 +1246,9 @@
           "account_id": "712020:ee25c9e9-0009-4093-b52d-e097d3912385",
           "display_name": "Samantha Wilson",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1385,11 +1309,9 @@
           "account_id": "5c8699380c61c37ea81dcea8",
           "display_name": "Steven Cook",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1398,11 +1320,9 @@
           "account_id": "712020:3bc19c9d-7794-4c5c-8811-822372b96969",
           "display_name": "steven.bulaun",
           "account_status": "active",
-          "sites": [
-            "gli-global-technology"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1459,6 +1379,19 @@
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
         },
         {
+          "account_id": "712020:6b747ad1-bf21-400a-bc22-ec70701c7def",
+          "display_name": "Test External User",
+          "account_status": "active",
+          "sites": [
+            "gli-tracker"
+          ],
+          "site_count": 1,
+          "product_access_assignments": 1,
+          "reason": "Directory authority reports MFA is not enabled.",
+          "recommended_action": "Review the approved authentication policy and account exception.",
+          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
+        },
+        {
           "account_id": "557058:205f5205-4f26-48ff-85fe-22c22f46f04e",
           "display_name": "Tim Reigel",
           "account_status": "active",
@@ -1490,11 +1423,9 @@
           "account_id": "5c8699979d7fc173a5952b64",
           "display_name": "Troy Thorson",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority reports MFA is not enabled.",
           "recommended_action": "Review the approved authentication policy and account exception.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies"
@@ -1527,7 +1458,7 @@
         }
       ],
       "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/security/authentication-policies",
-      "count": 116,
+      "count": 114,
       "read_only": true
     },
     "mfa_unknown": {
@@ -1717,11 +1648,9 @@
           "account_id": "712020:cbc1b86c-8a82-4f0c-b15d-73ac1370414f",
           "display_name": "Amanda Angel",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1731,11 +1660,9 @@
           "account_id": "712020:a53054f2-911f-4bb9-aecf-868f8aef6fcf",
           "display_name": "Amie Lacson",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1745,11 +1672,9 @@
           "account_id": "712020:3e9f6b9e-3ba9-40d9-87ba-4610d4b9222e",
           "display_name": "Amruthasindhu Channal",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1759,11 +1684,9 @@
           "account_id": "712020:c34981e4-6784-47c1-9a24-437125dabe94",
           "display_name": "Anne Stone",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1773,11 +1696,9 @@
           "account_id": "712020:ee48ab1a-bd3c-4830-9da7-89960a673638",
           "display_name": "Cecil MacNeil",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1787,11 +1708,9 @@
           "account_id": "712020:2d37241a-cdbc-4754-970d-59a58f845024",
           "display_name": "Cheryl Nauss",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1813,11 +1732,9 @@
           "account_id": "712020:573c60d0-ab00-44d9-9760-ca2e10ef35ac",
           "display_name": "Danielle Beal",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1827,11 +1744,9 @@
           "account_id": "712020:a3d1c069-a0b5-4b46-b3f0-c56bee1dcfce",
           "display_name": "Gabriel Esguerra",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1856,11 +1771,9 @@
           "account_id": "712020:a637e624-1e26-4ffc-9acc-5ce93ea8d7c2",
           "display_name": "Jennifer Comeau",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1871,12 +1784,11 @@
           "display_name": "Jim Wiltshire",
           "account_status": "active",
           "sites": [
-            "gli-delivery-tm",
             "gli-global-technology",
             "gli-it-project"
           ],
-          "site_count": 3,
-          "product_access_assignments": 3,
+          "site_count": 2,
+          "product_access_assignments": 2,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1886,11 +1798,9 @@
           "account_id": "712020:da25c2ce-ed4c-4eea-b392-2d8f4a6a3e7d",
           "display_name": "John Dillon",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1927,11 +1837,9 @@
           "account_id": "712020:6c453bd2-be0d-48ca-85c1-20156926dc2e",
           "display_name": "Leon Currie",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1941,11 +1849,9 @@
           "account_id": "712020:b7fcc038-a225-4c0f-97bd-346decea6e00",
           "display_name": "Lisa Longstaff",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1973,11 +1879,10 @@
           "display_name": "Mackenzie Haugh",
           "account_status": "active",
           "sites": [
-            "gli-delivery-tm",
             "gli-it-project"
           ],
-          "site_count": 2,
-          "product_access_assignments": 2,
+          "site_count": 1,
+          "product_access_assignments": 1,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -1987,11 +1892,9 @@
           "account_id": "712020:34715ba4-0832-458f-86ad-4e6770981191",
           "display_name": "MarioGauvin",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2015,11 +1918,9 @@
           "account_id": "712020:2b2d29a3-f75a-46b8-b2a5-aa627cba18b5",
           "display_name": "Martin Eddy",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2030,12 +1931,11 @@
           "display_name": "Matt Pinzino",
           "account_status": "active",
           "sites": [
-            "gli-delivery-tm",
             "gli-global-technology",
             "gli-it-project"
           ],
-          "site_count": 3,
-          "product_access_assignments": 3,
+          "site_count": 2,
+          "product_access_assignments": 2,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2060,11 +1960,9 @@
           "account_id": "712020:8be0b0b8-d9b0-4f34-b777-041070602b7d",
           "display_name": "Mohit Gandhi",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2074,11 +1972,9 @@
           "account_id": "712020:7af1b11f-935e-45b6-a810-deec26746cf7",
           "display_name": "Nicholas Stroughair",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2088,8 +1984,20 @@
           "account_id": "712020:31a6e2c8-b8aa-447b-8ce1-6d074e475713",
           "display_name": "Perry Hogan",
           "account_status": "active",
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
+          "reason": "Directory authority assigns the atlassian/user-access-admin role.",
+          "recommended_action": "Review administrative role assignment in Atlassian Administration.",
+          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
+          "role": "atlassian/user-access-admin"
+        },
+        {
+          "account_id": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
+          "display_name": "Robert Nyman",
+          "account_status": "active",
           "sites": [
-            "gli-delivery-tm"
+            "gli-it-project"
           ],
           "site_count": 1,
           "product_access_assignments": 1,
@@ -2102,11 +2010,9 @@
           "account_id": "712020:b0d92f2f-8bf9-494c-988a-2db8b4b6a918",
           "display_name": "Ryan Owens",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2116,11 +2022,9 @@
           "account_id": "712020:ee25c9e9-0009-4093-b52d-e097d3912385",
           "display_name": "Samantha Wilson",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2131,11 +2035,10 @@
           "display_name": "Sangeeta Reddy",
           "account_status": "active",
           "sites": [
-            "gli-delivery-tm",
             "gli-it-project"
           ],
-          "site_count": 2,
-          "product_access_assignments": 2,
+          "site_count": 1,
+          "product_access_assignments": 1,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2145,11 +2048,9 @@
           "account_id": "5c8699380c61c37ea81dcea8",
           "display_name": "Steven Cook",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2174,11 +2075,9 @@
           "account_id": "5c8699979d7fc173a5952b64",
           "display_name": "Troy Thorson",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2188,11 +2087,9 @@
           "account_id": "712020:748728f2-09fc-482d-8859-41f60b8356dc",
           "display_name": "Vaquas Mohammed",
           "account_status": "active",
-          "sites": [
-            "gli-delivery-tm"
-          ],
-          "site_count": 1,
-          "product_access_assignments": 1,
+          "sites": [],
+          "site_count": 0,
+          "product_access_assignments": 0,
           "reason": "Directory authority assigns the atlassian/user-access-admin role.",
           "recommended_action": "Review administrative role assignment in Atlassian Administration.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
@@ -2200,28 +2097,13 @@
         }
       ],
       "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/admin-roles",
-      "count": 36,
+      "count": 37,
       "read_only": true
     },
     "high_access_concentration": {
       "label": "High access concentration",
       "available": true,
       "records": [
-        {
-          "account_id": "640f54de2cee496759e9ca64",
-          "display_name": "Jim Wiltshire",
-          "account_status": "active",
-          "sites": [
-            "gli-delivery-tm",
-            "gli-global-technology",
-            "gli-it-project"
-          ],
-          "site_count": 3,
-          "product_access_assignments": 3,
-          "reason": "User Footprint authority classifies this account as high access concentration.",
-          "recommended_action": "Review multi-site and product access for least-privilege alignment.",
-          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users"
-        },
         {
           "account_id": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
           "display_name": "Luke Crockett",
@@ -2237,25 +2119,10 @@
           "reason": "User Footprint authority classifies this account as high access concentration.",
           "recommended_action": "Review multi-site and product access for least-privilege alignment.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users"
-        },
-        {
-          "account_id": "5b1539719595132534bc28a4",
-          "display_name": "Matt Pinzino",
-          "account_status": "active",
-          "sites": [
-            "gli-delivery-tm",
-            "gli-global-technology",
-            "gli-it-project"
-          ],
-          "site_count": 3,
-          "product_access_assignments": 3,
-          "reason": "User Footprint authority classifies this account as high access concentration.",
-          "recommended_action": "Review multi-site and product access for least-privilege alignment.",
-          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users"
         }
       ],
       "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users",
-      "count": 3,
+      "count": 1,
       "read_only": true
     },
     "for_deletion": {
@@ -2289,6 +2156,19 @@
           "account_status": "active",
           "sites": [
             "gli-it-project"
+          ],
+          "site_count": 1,
+          "product_access_assignments": 1,
+          "reason": "Directory claim status does not identify this account as managed.",
+          "recommended_action": "Review account claiming and managed-domain settings.",
+          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users"
+        },
+        {
+          "account_id": "712020:0c6ad2e9-c78a-4d36-b56e-2e9756efbddc",
+          "display_name": "guy_b",
+          "account_status": "active",
+          "sites": [
+            "gli-tracker"
           ],
           "site_count": 1,
           "product_access_assignments": 1,
@@ -2334,10 +2214,23 @@
           "reason": "Directory claim status does not identify this account as managed.",
           "recommended_action": "Review account claiming and managed-domain settings.",
           "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users"
+        },
+        {
+          "account_id": "712020:6b747ad1-bf21-400a-bc22-ec70701c7def",
+          "display_name": "Test External User",
+          "account_status": "active",
+          "sites": [
+            "gli-tracker"
+          ],
+          "site_count": 1,
+          "product_access_assignments": 1,
+          "reason": "Directory claim status does not identify this account as managed.",
+          "recommended_action": "Review account claiming and managed-domain settings.",
+          "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users"
         }
       ],
       "management_url": "https://admin.atlassian.com/o/b1k0jbk1-kb07-108c-kb98-d47bk4k33j05/users",
-      "count": 5,
+      "count": 7,
       "read_only": true
     },
     "suspended_accounts": {

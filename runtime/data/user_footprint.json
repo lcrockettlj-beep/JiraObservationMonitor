@@ -1,20 +1,20 @@
 {
   "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-08-17T12:27:06.349305Z",
+  "generated_at_utc": "2026-08-18T16:01:11.055017Z",
   "source_status": "generated",
   "reason": "Named access footprint generated from named_access_truth_v2 after reconciliation_v2 passed safe_to_enable_named_access_ui=true.",
   "safe_to_show_named_access_ui": true,
   "reconciliation_source": "reports\\named_access_reconciliation_v2.json",
   "truth_source": "runtime\\data\\live_named_access_contract",
   "summary": {
-    "users_analyzed": 98,
+    "users_analyzed": 100,
     "average_sites_per_user": 1.21,
     "high_duplication_users": 1,
     "medium_duplication_users": 18,
-    "total_product_access_assignments": 119,
-    "reconciled_api_product_users": 163,
+    "total_product_access_assignments": 121,
+    "reconciled_api_product_users": 165,
     "named_minus_api_product": -44,
-    "named_unique_users": 98
+    "named_unique_users": 100
   },
   "users": [
     {
@@ -1093,6 +1093,23 @@
       "category": "low"
     },
     {
+      "account_id": "712020:0c6ad2e9-c78a-4d36-b56e-2e9756efbddc",
+      "name": "712020:0c6ad2e9-c78a-4d36-b56e-2e9756efbddc",
+      "email": "",
+      "sites": [
+        "gli-tracker"
+      ],
+      "site_count": 1,
+      "products": [
+        "jira-software"
+      ],
+      "product_access_assignments": 1,
+      "access_sources": [
+        "group"
+      ],
+      "category": "low"
+    },
+    {
       "account_id": "712020:1818f819-69d6-48af-af80-80ed9d6aa968",
       "name": "712020:1818f819-69d6-48af-af80-80ed9d6aa968",
       "email": "",
@@ -1336,6 +1353,23 @@
       "email": "",
       "sites": [
         "gli-it-project"
+      ],
+      "site_count": 1,
+      "products": [
+        "jira-software"
+      ],
+      "product_access_assignments": 1,
+      "access_sources": [
+        "group"
+      ],
+      "category": "low"
+    },
+    {
+      "account_id": "712020:6b747ad1-bf21-400a-bc22-ec70701c7def",
+      "name": "712020:6b747ad1-bf21-400a-bc22-ec70701c7def",
+      "email": "",
+      "sites": [
+        "gli-tracker"
       ],
       "site_count": 1,
       "products": [

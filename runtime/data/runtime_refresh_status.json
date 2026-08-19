@@ -1,0 +1,16 @@
+{
+  "schema": "jom-runtime-refresh-status-v2",
+  "generated_at_utc": "2026-08-19T07:19:44.638752Z",
+  "started_at_utc": "2026-08-19T07:19:44.633639Z",
+  "finished_at_utc": null,
+  "running": true,
+  "overall_status": "running",
+  "current_step": "admin_enriched_chain",
+  "automatic_refresh_contract": {
+    "maximum_interval_hours": 12,
+    "fail_closed": true,
+    "dependency_order_enforced": true
+  },
+  "contracts": {},
+  "steps": []
+}

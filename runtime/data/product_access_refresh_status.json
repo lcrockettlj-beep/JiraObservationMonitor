@@ -1,16 +1,16 @@
 {
   "schema": "jom-product-access-refresh-status-v1",
-  "generated_at_utc": "2026-08-17T12:27:08.741125Z",
+  "generated_at_utc": "2026-08-18T16:02:55.873652Z",
   "overall_status": "ok",
   "sources": {
     "estate_product_access": {
       "exists": true,
-      "timestamp": "2026-08-17T12:27:08Z",
+      "timestamp": "2026-08-18T16:02:55Z",
       "schema": "jom-estate-product-access-v2-live"
     },
     "estate_access_truth": {
       "exists": true,
-      "timestamp": "2026-08-17T12:27:08Z",
+      "timestamp": "2026-08-18T16:02:55Z",
       "schema": "jom-estate-access-truth-v2-live"
     }
   },
@@ -20,11 +20,11 @@
       "label": "Refresh Estate Product Access and Estate Access Truth",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.estate_product_access --project-root .",
       "exists": true,
-      "started_at_utc": "2026-08-17T12:27:06.351828Z",
-      "finished_at_utc": "2026-08-17T12:27:08.675791Z",
+      "started_at_utc": "2026-08-18T16:02:53.486953Z",
+      "finished_at_utc": "2026-08-18T16:02:55.822125Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"product_access_status\": \"partial\",\n  \"summary\": {\n    \"accessible_jira_resource_count\": 6,\n    \"sites_with_jira_roles\": 5,\n    \"total_jira_product_user_count\": 163,\n    \"total_jira_seat_limit\": 108150,\n    \"total_jira_remaining_seats\": 107987,\n    \"jira_role_rows\": 5,\n    \"error_site_count\": 1\n  }\n}\n",
+      "stdout_tail": "{\n  \"product_access_status\": \"partial\",\n  \"summary\": {\n    \"accessible_jira_resource_count\": 6,\n    \"sites_with_jira_roles\": 5,\n    \"total_jira_product_user_count\": 165,\n    \"total_jira_seat_limit\": 108150,\n    \"total_jira_remaining_seats\": 107985,\n    \"jira_role_rows\": 5,\n    \"error_site_count\": 1\n  }\n}\n",
       "stderr_tail": ""
     },
     {
@@ -32,11 +32,11 @@
       "label": "Rebuild source freshness audit",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
       "exists": true,
-      "started_at_utc": "2026-08-17T12:27:08.675985Z",
-      "finished_at_utc": "2026-08-17T12:27:08.741034Z",
+      "started_at_utc": "2026-08-18T16:02:55.822243Z",
+      "finished_at_utc": "2026-08-18T16:02:55.873580Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"freshness\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_freshness_audit.json\",\n  \"reliability\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_reliability_status.json\",\n  \"issues\": 3\n}\n",
+      "stdout_tail": "{\n  \"freshness\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_freshness_audit.json\",\n  \"reliability\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_reliability_status.json\",\n  \"issues\": 2\n}\n",
       "stderr_tail": ""
     }
   ]

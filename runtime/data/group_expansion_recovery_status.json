@@ -1,0 +1,42 @@
+{
+  "schema": "jom-group-expansion-recovery-status-v1.2",
+  "generated_at_utc": "2026-08-18T15:30:42.894187Z",
+  "overall_status": "ok",
+  "group_expansion_safe": true,
+  "safe_to_enable_named_access_ui": false,
+  "group_summary": {
+    "group_count": 26,
+    "product_group_count": 26,
+    "member_assignment_count": 278,
+    "mapped_site_count": 4,
+    "error_count": 7
+  },
+  "reconciliation_summary": {},
+  "reconciliation_blockers": [],
+  "steps": [
+    {
+      "key": "group_expansion_collector",
+      "label": "Collect group-derived product access with ARI mapping",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/collect_admin_group_expansion.py",
+      "exists": false,
+      "started_at_utc": "2026-08-18T15:30:42.829749Z",
+      "finished_at_utc": "2026-08-18T15:30:42.829766Z",
+      "status": "missing",
+      "returncode": null,
+      "stdout_tail": "",
+      "stderr_tail": ""
+    },
+    {
+      "key": "source_freshness",
+      "label": "Rebuild source freshness",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
+      "exists": true,
+      "started_at_utc": "2026-08-18T15:30:42.829831Z",
+      "finished_at_utc": "2026-08-18T15:30:42.893023Z",
+      "status": "ok",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"freshness\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_freshness_audit.json\",\n  \"reliability\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_reliability_status.json\",\n  \"issues\": 2\n}\n",
+      "stderr_tail": ""
+    }
+  ]
+}

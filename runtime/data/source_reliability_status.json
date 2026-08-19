@@ -1,18 +1,24 @@
 {
-  "schema": "jom-source-reliability-status-v1.1",
-  "generated_at_utc": "2026-08-17T12:27:08.751129Z",
-  "overall_status": "ok",
+  "schema": "jom-source-reliability-status-v2-live-truth-aware",
+  "generated_at_utc": "2026-08-19T07:19:46Z",
+  "overall_status": "attention",
+  "issues": [
+    {
+      "source": "Runtime Live Truth Status",
+      "path": "runtime\\data\\runtime_live_truth_status.json",
+      "state": "MISSING"
+    },
+    {
+      "source": "Product Access Authority",
+      "path": "runtime\\data\\runtime_contract_unavailable_estate_product_access_json",
+      "state": "MISSING"
+    }
+  ],
   "summary": {
-    "issue_count": 0,
-    "freshness_overall": "OK",
-    "runtime_refresh_overall": null,
-    "user_footprint_status": "generated"
+    "issue_count": 2,
+    "freshness_overall": "ATTENTION"
   },
-  "issues": [],
   "inputs": {
-    "source_freshness": "runtime\\data\\source_freshness_audit.json",
-    "runtime_refresh": "runtime\\data\\runtime_refresh_status.json",
-    "user_footprint": "runtime\\data\\user_footprint.json",
-    "site_registry": "runtime\\data\\site_registry.json"
+    "source_freshness": "runtime\\data\\source_freshness_audit.json"
   }
 }

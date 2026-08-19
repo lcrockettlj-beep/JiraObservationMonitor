@@ -1,173 +1,53 @@
-﻿# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
-# Legacy/static truth references in this file have been neutralised.
-# This code must not silently read retired runtime records as website/backend truth.
-# Unavailable live/runtime data must be reported as unavailable.
-import json
-import subprocess
-import sys
+from __future__ import annotations
+import json, subprocess, sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any, Dict, List
+ROOT=Path(__file__).resolve().parents[2]
+STATUS=ROOT/'runtime/data/runtime_refresh_status.json'
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-STATUS_PATH = PROJECT_ROOT / "runtime" / "data" / "runtime_refresh_status.json"
-RUNTIME_STATUS_PATH = PROJECT_ROOT / "retired_runtime_marker"
-ADMIN_TRUTH_STATUS_PATH = PROJECT_ROOT / "admin_truth_v2.json"
-FRESHNESS_PATH = PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json"
+def now(): return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
+def tail(v,n=2000): return (v or '')[-n:]
+def write(payload):
+ STATUS.parent.mkdir(parents=True,exist_ok=True); tmp=STATUS.with_suffix('.json.tmp'); tmp.write_text(json.dumps(payload,indent=2,ensure_ascii=False),encoding='utf-8'); tmp.replace(STATUS)
+def ev(name):
+ p=ROOT/'runtime/data'/name
+ if not p.exists(): return {'exists':False,'state':'MISSING'}
+ try: d=json.loads(p.read_text(encoding='utf-8-sig'))
+ except Exception as exc: return {'exists':True,'state':'INVALID_JSON','error':str(exc)}
+ return {'exists':True,'state':'PRESENT','schema':d.get('schema'),'status':d.get('status') or d.get('overall_status'),'timestamp':d.get('generated_at_utc') or d.get('updated_at_utc')}
+def run(cmd:List[str],key:str,label:str,required:bool,steps:List[Dict[str,Any]],blocked_by=None,timeout=3600):
+ blockers=sorted({s.get('key') for s in steps if s.get('status')!='ok'}.intersection(blocked_by or []))
+ if blockers: return {'key':key,'label':label,'command':' '.join(cmd),'required':required,'status':'blocked','started_at_utc':now(),'finished_at_utc':now(),'returncode':None,'blocked_by':blockers,'stdout_tail':'','stderr_tail':''}
+ rec={'key':key,'label':label,'command':' '.join(cmd),'required':required,'status':'running','started_at_utc':now(),'finished_at_utc':None,'returncode':None,'stdout_tail':'','stderr_tail':''}
+ try:
+  p=subprocess.run(cmd,cwd=ROOT,capture_output=True,text=True,timeout=timeout)
+  rec.update(status='ok' if p.returncode==0 else 'failed',finished_at_utc=now(),returncode=p.returncode,stdout_tail=tail(p.stdout),stderr_tail=tail(p.stderr))
+ except subprocess.TimeoutExpired as exc: rec.update(status='timeout',finished_at_utc=now(),error=f'timeout_after_{timeout}_seconds',stdout_tail=tail(exc.stdout or ''),stderr_tail=tail(exc.stderr or ''))
+ except BaseException as exc: rec.update(status='exception',finished_at_utc=now(),error=f'{type(exc).__name__}: {exc}')
+ return rec
 
-CURRENT_HOURS = 24
+def main()->Dict[str,Any]:
+ started=now(); steps=[]; overall='failed'
+ payload={'schema':'jom-runtime-refresh-status-v2','generated_at_utc':started,'started_at_utc':started,'finished_at_utc':None,'running':True,'overall_status':'running','current_step':None,'automatic_refresh_contract':{'maximum_interval_hours':12,'fail_closed':True,'dependency_order_enforced':True},'contracts':{},'steps':steps}
+ write(payload)
+ definitions=[
+  ([sys.executable,'-m','app.runtime.admin_enriched_chain'],'admin_enriched_chain','Refresh complete Admin authority chain',True,[]),
+  ([sys.executable,'scripts/build_site_registry.py','--project-root','.'],'site_registry','Rebuild Site Registry',True,[]),
+  ([sys.executable,'-m','app.builders.product_access_sources'],'product_access','Refresh Product Access',False,[]),
+  ([sys.executable,'scripts/audit_source_freshness.py'],'source_freshness','Rebuild Source Freshness',False,['admin_enriched_chain'])]
+ try:
+  for cmd,key,label,required,blocked in definitions:
+   payload['current_step']=key; payload['generated_at_utc']=now(); write(payload); print('START '+key,flush=True)
+   rec=run(cmd,key,label,required,steps,blocked_by=blocked); steps.append(rec); payload['steps']=steps; payload['generated_at_utc']=now(); write(payload); print('FINISH '+key+'='+rec['status'],flush=True)
+  required_steps=[s for s in steps if s.get('required')]; overall='ok' if required_steps and all(s.get('status')=='ok' for s in required_steps) else 'attention'
+ except BaseException as exc:
+  payload['fatal_error']=f'{type(exc).__name__}: {exc}'; overall='failed'
+ finally:
+  names=['admin_enriched_refresh_status.json','users_access_actionable_drilldown_v1.json','named_user_display_identity_v1.json','verified_active_jira_users_v1.json','admin_directory_users.json']
+  payload.update(generated_at_utc=now(),finished_at_utc=now(),running=False,current_step=None,overall_status=overall,contracts={n:ev(n) for n in names}); write(payload)
+ return payload
 
-STEPS = [
-    {"key": "site_registry", "label": "Site Registry rebuild", "command": [sys.executable, "scripts/build_site_registry.py", "--project-root", "."], "required": True},
-    {"key": "product_access", "label": "Live Product Access refresh", "command": [sys.executable, "app/builders/product_access_sources.py"], "required": False},
-    {"key": "source_freshness", "label": "Source Freshness rebuild", "command": [sys.executable, "scripts/audit_source_freshness.py"], "required": False},
-]
-
-OPTIONAL_COLLECTOR_CANDIDATES = [
-    [sys.executable, "data_collector.py"],
-    [sys.executable, "scripts/data_collector.py"],
-    [sys.executable, "collectors/data_collector.py"],
-]
-
-
-def now_dt():
-    return datetime.now(timezone.utc)
-
-
-def now_utc():
-    return now_dt().isoformat().replace('+00:00', 'Z')
-
-
-def parse_time(value):
-    if not value:
-        return None
-    text = str(value).strip()
-    if text.endswith('Z'):
-        text = text[:-1] + '+00:00'
-    try:
-        dt = datetime.fromisoformat(text)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return dt.astimezone(timezone.utc)
-    except Exception:
-        pass
-    try:
-        return datetime.strptime(str(value).strip(), '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone.utc)
-    except Exception:
-        return None
-
-
-def read_json(path):
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text(encoding='utf-8'))
-    except Exception:
-        return None
-
-
-def nested(data, dotted):
-    cur = data
-    for part in dotted.split('.'):
-        if not isinstance(cur, dict) or part not in cur:
-            return None
-        cur = cur[part]
-    return cur
-
-
-def retired_runtime_marker_freshness(path):
-    payload = read_json(path)
-    if not payload:
-        return {"exists": path.exists(), "freshness_state": "MISSING" if not path.exists() else "UNKNOWN_TIMESTAMP", "age_hours": None, "timestamp": None}
-    timestamp = nested(payload, 'raw_collection_summary.collected_at_utc') or payload.get('generated_at_utc') or payload.get('run_timestamp_local')
-    parsed = parse_time(timestamp)
-    if not parsed:
-        return {"exists": True, "freshness_state": "UNKNOWN_TIMESTAMP", "age_hours": None, "timestamp": timestamp}
-    age = round((now_dt() - parsed).total_seconds() / 3600, 2)
-    if age <= CURRENT_HOURS:
-        state = 'CURRENT'
-    elif age <= 72:
-        state = 'AGING'
-    else:
-        state = 'STALE'
-    return {"exists": True, "freshness_state": state, "age_hours": age, "timestamp": parsed.isoformat().replace('+00:00','Z')}
-
-
-def run_step(step):
-    cmd = step["command"]
-    exists = Path(cmd[1]).exists() if len(cmd) > 1 else False
-    record = {
-        "key": step["key"], "label": step["label"], "command": " ".join(cmd), "exists": exists,
-        "started_at_utc": now_utc(), "finished_at_utc": None, "status": "skipped",
-        "returncode": None, "stdout_tail": "", "stderr_tail": "",
-    }
-    if not exists:
-        record["status"] = "missing"; record["finished_at_utc"] = now_utc(); return record
-    proc = subprocess.run(cmd, cwd=PROJECT_ROOT, capture_output=True, text=True)
-    record["finished_at_utc"] = now_utc(); record["returncode"] = proc.returncode
-    record["stdout_tail"] = (proc.stdout or "")[-4000:]; record["stderr_tail"] = (proc.stderr or "")[-4000:]
-    record["status"] = "ok" if proc.returncode == 0 else "failed"
-    return record
-
-
-def find_collector():
-    for cmd in OPTIONAL_COLLECTOR_CANDIDATES:
-        if Path(cmd[1]).exists():
-            return cmd
-    return None
-
-
-def collector_state_from_retired_runtime_marker():
-    runtime = retired_runtime_marker_freshness(RUNTIME_STATUS_PATH)
-    admin = retired_runtime_marker_freshness(ADMIN_TRUTH_STATUS_PATH)
-    state = 'review'
-    note = 'Runtime collector was not requested. Status inferred from retired_runtime_marker freshness.'
-    if runtime.get('freshness_state') == 'CURRENT':
-        state = 'ok'
-        note = 'Runtime collector not requested, but retired_runtime_marker is CURRENT; treating runtime source as refreshed.'
-    elif runtime.get('freshness_state') == 'STALE':
-        state = 'stale'
-        note = 'Runtime collector not requested and retired_runtime_marker is stale.'
-    elif runtime.get('freshness_state') in ('MISSING', 'UNKNOWN_TIMESTAMP'):
-        state = 'review'
-        note = 'Runtime collector not requested and retired_runtime_marker freshness cannot be proven.'
-    return state, note, runtime, admin
-
-
-def main(run_collector=False):
-    results = [run_step(step) for step in STEPS]
-    collector_cmd = find_collector()
-    collector_record = {
-        "key": "runtime_collector", "label": "Runtime collector", "command": " ".join(collector_cmd) if collector_cmd else None,
-        "exists": bool(collector_cmd), "run_requested": bool(run_collector), "status": "not_requested",
-        "started_at_utc": None, "finished_at_utc": None, "returncode": None, "stdout_tail": "", "stderr_tail": "", "note": ""
-    }
-    if run_collector and collector_cmd:
-        collector_record.update(run_step({"key": "runtime_collector", "label": "Runtime collector", "command": collector_cmd, "required": False}))
-    elif run_collector and not collector_cmd:
-        collector_record["status"] = "missing"; collector_record["finished_at_utc"] = now_utc(); collector_record["note"] = "Collector requested but no collector script was found."
-    else:
-        inferred_state, note, runtime_freshness, admin_freshness = collector_state_from_retired_runtime_marker()
-        collector_record["status"] = inferred_state
-        collector_record["note"] = note
-        collector_record["retired_runtime_marker_freshness"] = runtime_freshness
-        collector_record["latest_admin_enriched_freshness"] = admin_freshness
-        collector_record["finished_at_utc"] = now_utc()
-
-    results.append(collector_record)
-
-    if any(r.get('status') == 'failed' for r in results):
-        overall = 'failed'
-    elif collector_record.get('status') == 'ok' and all(r.get('status') in ('ok', 'skipped') for r in results if r.get('key') != 'runtime_collector'):
-        overall = 'ok'
-    elif collector_record.get('status') == 'stale':
-        overall = 'attention'
-    else:
-        overall = 'review'
-
-    payload = {"schema":"jom-runtime-refresh-status-v1.1", "generated_at_utc":now_utc(), "overall_status":overall, "run_collector_requested":bool(run_collector), "steps":results}
-    STATUS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    STATUS_PATH.write_text(json.dumps(payload, indent=2), encoding='utf-8')
-    print(json.dumps({"overall_status": overall, "runtime_collector_status": collector_record.get('status'), "output": str(STATUS_PATH)}, indent=2))
-
-if __name__ == '__main__':
-    main(run_collector='--run-collector' in sys.argv)
+def run_pipeline(): return main()
+if __name__=='__main__':
+ result=main(); raise SystemExit(0 if result.get('overall_status')=='ok' else 2)
