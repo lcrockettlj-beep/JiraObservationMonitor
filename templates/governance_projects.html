@@ -2,35 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Governance: Projects - Jira Observation Monitor</title>
+  <title>Projects - Jira Observation Monitor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_governance_projects_v1.css') }}">
 </head>
-<body data-jom-page="page-shell">
+<body data-jom-page="governance-projects">
 {% include "_nav.html" %}
-<main class="jom-shell" id="jom-page-shell">
-  <section class="jom-card jom-hero" aria-label="Governance: Projects overview">
-    <div>
-      <p class="jom-kicker">Governance</p>
-      <h1>Governance: Projects</h1>
-      <p class="jom-lede">Orphaned projects, missing owners, inactive projects, and project-level control evidence.</p>
-    </div>
-    <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
-    </div>
+<main class="jom-shell gp" id="governance-projects" data-owner="JOM_PROJECT_INVENTORY_GOVERNANCE_API_V1" aria-labelledby="gp-title">
+  <header class="gp__hero">
+    <div><p class="gp__eyebrow">Governance / Projects</p><h1 id="gp-title">Projects</h1><p>Read-only project inventory across monitored Jira sites. Values are served only when every authority gate passes.</p></div>
+    <div class="gp__metric"><span id="gp-count">Unavailable</span><small>Visible projects</small></div>
+  </header>
+  <section id="gp-status" class="gp__status" role="status">Loading Project Inventory authority...</section>
+  <section class="gp__filters" aria-label="Project filters">
+    <label>Search<input id="gp-search" type="search" placeholder="Project name or key"></label>
+    <label>Site<select id="gp-site"><option value="">All sites</option></select></label>
+    <label>Type<select id="gp-type"><option value="">All types</option></select></label>
+    <label>Style<select id="gp-style"><option value="">All styles</option></select></label>
+    <label>Privacy<select id="gp-privacy"><option value="">All privacy states</option><option value="private">Private</option><option value="open">Not private</option><option value="unavailable">Unavailable</option></select></label>
+    <label>Simplified state<select id="gp-simplified"><option value="">All states</option><option value="simplified">Simplified</option><option value="standard">Standard</option><option value="unavailable">Unavailable</option></select></label>
+    <label>Category<select id="gp-category"><option value="">All categories</option></select></label>
   </section>
-  <section class="jom-card" aria-label="Governance: Projects sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Orphaned Projects</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Missing Owners</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Inactive Projects</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Project Controls</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-    </div>
-  </section>
+  <section class="gp__unavailable" aria-labelledby="gp-unavailable-title"><h2 id="gp-unavailable-title">Areas not available from current authority</h2><div id="gp-capabilities" class="gp__capabilities"></div></section>
+  <section class="gp__results"><div class="gp__results-head"><h2>Project inventory</h2><span id="gp-filter-count"></span></div><div class="gp__table-wrap"><table><thead><tr><th>Project</th><th>Key</th><th>Site</th><th>Type</th><th>Style</th><th>Privacy</th><th>Simplified</th><th>Category</th></tr></thead><tbody id="gp-rows"></tbody></table></div><p id="gp-empty" hidden>No projects match the selected filters.</p></section>
 </main>
+<script src="{{ url_for('static', filename='js/jom_governance_projects_v1.js') }}" defer></script>
 </body>
 </html>

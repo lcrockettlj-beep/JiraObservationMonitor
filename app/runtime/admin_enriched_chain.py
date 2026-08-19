@@ -250,6 +250,36 @@ def validate_actionable(record: Dict[str, Any]) -> Dict[str, Any]:
     }, "Actionable Users & Access authority did not pass publish gates.")
 
 
+
+def validate_project_inventory(record: Dict[str, Any]) -> Dict[str, Any]:
+    payload = read(ROOT / "runtime/data/project_inventory_authority_v1.json")
+    summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+    authority = payload.get("authority") if isinstance(payload.get("authority"), dict) else {}
+    projects = payload.get("projects") if isinstance(payload.get("projects"), list) else []
+    sites = payload.get("sites") if isinstance(payload.get("sites"), list) else []
+    monitored = summary.get("monitored_site_count")
+    successful = summary.get("successful_site_count")
+    visible = summary.get("visible_project_count")
+    unique_pairs = {
+        (str(row.get("site_key") or "").strip().lower(), str(row.get("project_key") or "").strip().upper())
+        for row in projects if isinstance(row, dict)
+    }
+    gates = {
+        "contract_present": bool(payload),
+        "schema_valid": payload.get("schema") == "jom-project-inventory-authority-v1",
+        "status_ok": payload.get("status") == "ok",
+        "safe_to_publish": authority.get("safe_to_publish_project_inventory") is True,
+        "all_site_pagination_complete": authority.get("pagination_complete_all_sites") is True and all(
+            isinstance(site, dict) and site.get("status") == "ok" and site.get("pagination_complete") is True
+            for site in sites
+        ),
+        "all_monitored_sites_successful": isinstance(monitored, int) and monitored > 0 and monitored == successful == len(sites),
+        "project_count_reconciled": isinstance(visible, int) and visible == len(projects) == summary.get("collected_project_rows"),
+        "no_duplicate_site_project_keys": summary.get("duplicate_site_project_key_count") == 0 and len(unique_pairs) == len(projects),
+        "project_keys_complete": all(pair[0] and pair[1] for pair in unique_pairs),
+    }
+    return enforce(record, gates, "Project Inventory failed monitored-site, pagination, reconciliation, uniqueness, or completeness gates.")
+
 def evidence(name: str) -> Dict[str, Any]:
     path = ROOT / "runtime/data" / name
     if not path.exists():
@@ -288,6 +318,7 @@ def main() -> Dict[str, Any]:
         ("admin_directory_users", "Refresh privacy-safe paginated Admin Directory authority", [{"type": "module", "value": "app.access.admin_named_access_endpoint_probe"}], [], None),
         ("admin_truth_v2", "Rebuild Admin Truth v2", [{"type": "module", "value": "app.builders.admin_truth_layer_v2"}, {"type": "script", "value": "scripts/build_admin_truth_layer_v2.py"}], ["admin_directory_users"], None),
         ("estate_resource_authority", "Refresh site-resource and ownership authority", [{"type": "module", "value": "app.builders.estate_resource_authority"}], [], classify_estate_resource_authority),
+        ("project_inventory_authority", "Refresh read-only Project Inventory authority", [{"type": "module", "value": "app.builders.project_inventory_authority_v1"}], [], validate_project_inventory),
         ("admin_group_expansion", "Collect group-derived product access", [{"type": "module", "value": "app.access.collect_admin_group_expansion"}], ["admin_directory_users"], validate_group_expansion),
         ("named_access_truth_v2", "Build Named Access Truth v2", [{"type": "module", "value": "app.access.named_access_truth_v2"}], ["admin_group_expansion"], validate_named_truth),
         ("named_access_reconciliation_v2", "Reconcile Named Access Truth v2", [{"type": "module", "value": "app.access.reconcile_named_access_truth_v2"}], ["admin_truth_v2", "named_access_truth_v2"], validate_reconciliation),
@@ -345,6 +376,7 @@ def main() -> Dict[str, Any]:
             "named_user_display_identity_v1.json",
             "verified_active_jira_users_v1.json",
             "users_access_actionable_drilldown_v1.json",
+            "project_inventory_authority_v1.json",
         ]
         payload.update(
             generated_at_utc=now(),

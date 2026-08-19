@@ -576,3 +576,105 @@ The current Estate Configuration validation set is:
 - `scripts/validate_estate_configuration_refinement_booksync_v1.py`
 
 No archive copy is retained in the active repository. Git history remains the recovery authority for deleted code. The Foundation Recovery Audit remains the current workstream, with FR-001 Users & Access drill-down gates next.
+
+<!-- JOM_PROJECT_INVENTORY_GOVERNANCE_PHASE2_BOOKSYNC_V1_START -->
+
+## 19 August 2026 - Project Inventory and Governance Projects Phase 2
+
+### Decision and delivered architecture
+
+Project Inventory is now an authority-backed, read-only operational capability in JOM. The approved collector owner is `app/builders/project_inventory_authority_v1.py`, and the generated contract is `runtime/data/project_inventory_authority_v1.json`.
+
+The automatic Admin refresh owner, `app/runtime/admin_enriched_chain.py`, now executes `app.builders.project_inventory_authority_v1` and validates the generated contract immediately after collection. The chain fails closed when any monitored site fails, pagination is incomplete, counts do not reconcile, site/project key pairs are incomplete, or duplicate site/project keys exist.
+
+The dedicated read-only API is `/api/governance/projects`. The Governance Projects page is `/reports/governance/projects`, owned by:
+
+- `templates/governance_projects.html`
+- `static/js/jom_governance_projects_v1.js`
+- `static/css/jom_governance_projects_v1.css`
+- `scripts/validate_project_inventory_governance_integration_v1.py`
+
+The existing Governance Report page and JavaScript remain untouched.
+
+### Proven runtime evidence
+
+The accepted Project Inventory contract passed all static, runtime, privacy, Flask-render, and shared-layout gates:
+
+- Contract status: `ok`
+- Monitored sites: 4
+- Successful sites: 4
+- Failed sites: 0
+- Visible projects: 92
+- Collected project rows: 92
+- Duplicate site/project keys: 0
+- Pagination complete for every monitored site: true
+- Safe to publish Project Inventory: true
+- Read-only API: true
+- Forbidden response fields detected: 0
+
+The API returned 92 records and exposed no cloud IDs, access tokens, refresh tokens, authorization headers, account IDs, email addresses, or unsupported identity data.
+
+### User interface
+
+The placeholder Governance Projects page was replaced with the live 92-project inventory. The page provides search and filters for site, project type, style, privacy, simplified state, and category. The page uses the established standalone JOM HTML shell, includes `_nav.html`, and applies the shared `jom-shell` layout contract so the fixed navigation does not overlap page content.
+
+### Honest unavailable areas
+
+The following remain explicitly unavailable because the current authority does not prove them:
+
+- Project Leads
+- Project Owners
+- Archived Projects
+- Inactive Projects
+- Project Permissions
+- Project Governance
+
+Project owner semantics are not inferred from project lead. Archive state, inactivity, permissions, and governance will require separate authority collectors and validated contracts before they can be displayed as truth.
+
+### Validation ownership
+
+The active validators are:
+
+- `scripts/validate_project_inventory_authority_v1.py`
+- `scripts/validate_project_inventory_governance_integration_v1.py`
+
+The integration validator verifies the collector-chain registration, fail-closed postconditions, API privacy boundary, page assets, standalone Jinja shell, Flask HTTP 200 rendering, shared navigation-offset shell, and live contract reconciliation.
+
+### Clean implementation boundary at the commit gate
+
+The intended implementation boundary is exactly:
+
+- `app/runtime/admin_enriched_chain.py`
+- `app/web.py`
+- `app/builders/project_inventory_authority_v1.py`
+- `templates/governance_projects.html`
+- `static/js/jom_governance_projects_v1.js`
+- `static/css/jom_governance_projects_v1.css`
+- `scripts/validate_project_inventory_authority_v1.py`
+- `scripts/validate_project_inventory_governance_integration_v1.py`
+- `runtime/data/project_inventory_authority_v1.json`
+
+Unrelated runtime drift was restored before BOOKSYNC. Extracted delivery folders were removed from the repository root. Nothing was staged before the BOOKSYNC gate.
+
+### Working rules preserved
+
+Continue using Luke's audit-first workflow:
+
+1. Surface repository and live/runtime evidence before conclusions.
+2. Do not present assumptions as truth.
+3. Report unavailable data as unavailable.
+4. Create missing authority only through a real collector, contract, and validation gates.
+5. Use full owner-file replacements delivered as downloadable packs, not patches, snippets, or manual edits.
+6. Use Windows PowerShell commands with actual repository paths and visible single-line commands.
+7. Keep reports and temporary evidence out of the repository root.
+8. Validate, BOOKSYNC, inspect the exact Git boundary, then stage and commit.
+
+### Current and next workstream
+
+Current workstream: Project Inventory and Governance Projects Phase 2 is implemented and validated, pending BOOKSYNC installation and final commit-gate validation.
+
+Immediate next step: install this BOOKSYNC pack, validate the documentation boundary, stage only the approved implementation and BOOKSYNC owners, inspect the staged diff, then commit and push.
+
+After the commit: continue Project Governance only by auditing for new supported authorities. Do not infer Project Leads, Project Owners, Archived Projects, Inactive Projects, Project Permissions, or Project Governance from existing Project Inventory fields.
+
+<!-- JOM_PROJECT_INVENTORY_GOVERNANCE_PHASE2_BOOKSYNC_V1_END -->

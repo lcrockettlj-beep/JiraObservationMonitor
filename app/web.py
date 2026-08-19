@@ -91,6 +91,7 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "verified_active_jira_users_v1.json",
     "named_user_display_identity_v1.json",
     "users_access_actionable_drilldown_v1.json",
+    "project_inventory_authority_v1.json",
 }
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
 
@@ -4999,6 +5000,95 @@ def api_site_review_stop_monitoring_v2(site_key):
         "inventory_record": inventory_record,
     })
 # === JOM SITE REVIEW STOP MONITORING ROUTE v2 END ===
+
+
+
+# --- JOM PROJECT INVENTORY GOVERNANCE API v1 START ---
+def _jom_project_inventory_public_contract_v1():
+    payload = load_json("project_inventory_authority_v1.json", {})
+    payload = payload if isinstance(payload, dict) else {}
+    summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+    authority = payload.get("authority") if isinstance(payload.get("authority"), dict) else {}
+    capabilities = payload.get("capabilities") if isinstance(payload.get("capabilities"), dict) else {}
+    sites = payload.get("sites") if isinstance(payload.get("sites"), list) else []
+    projects = payload.get("projects") if isinstance(payload.get("projects"), list) else []
+    monitored = summary.get("monitored_site_count")
+    successful = summary.get("successful_site_count")
+    visible = summary.get("visible_project_count")
+    safe_rows = []
+    pairs = set()
+    duplicate = False
+    for row in projects:
+        if not isinstance(row, dict):
+            continue
+        site_key = str(row.get("site_key") or "").strip().lower()
+        project_key = str(row.get("project_key") or "").strip().upper()
+        pair = (site_key, project_key)
+        if pair in pairs:
+            duplicate = True
+        pairs.add(pair)
+        category = row.get("project_category") if isinstance(row.get("project_category"), dict) else None
+        safe_rows.append({
+            "site_key": site_key,
+            "site_name": row.get("site_name"),
+            "site_url": row.get("site_url"),
+            "project_id": row.get("project_id"),
+            "project_key": project_key,
+            "project_name": row.get("project_name"),
+            "project_type_key": row.get("project_type_key"),
+            "style": row.get("style"),
+            "simplified": row.get("simplified") if isinstance(row.get("simplified"), bool) else None,
+            "is_private": row.get("is_private") if isinstance(row.get("is_private"), bool) else None,
+            "project_category": {"id": category.get("id"), "name": category.get("name")} if category else None,
+        })
+    gates = {
+        "contract_present": bool(payload),
+        "schema_valid": payload.get("schema") == "jom-project-inventory-authority-v1",
+        "status_ok": payload.get("status") == "ok",
+        "safe_to_publish": authority.get("safe_to_publish_project_inventory") is True,
+        "pagination_complete": authority.get("pagination_complete_all_sites") is True and all(
+            isinstance(site, dict) and site.get("status") == "ok" and site.get("pagination_complete") is True
+            for site in sites
+        ),
+        "all_monitored_sites_successful": isinstance(monitored, int) and monitored > 0 and monitored == successful == len(sites),
+        "counts_reconcile": isinstance(visible, int) and visible == len(projects) == len(safe_rows) == summary.get("collected_project_rows"),
+        "no_duplicate_site_project_keys": not duplicate and summary.get("duplicate_site_project_key_count") == 0 and len(pairs) == len(safe_rows),
+        "keys_complete": all(site_key and project_key for site_key, project_key in pairs),
+    }
+    available = all(gates.values())
+    unavailable = {
+        key: value for key, value in capabilities.items()
+        if key in {"project_leads", "project_owners", "archived_projects", "inactive_projects", "project_permissions", "project_governance"}
+    }
+    return {
+        "schema": "jom-project-inventory-governance-api-v1",
+        "generated_at_utc": payload.get("generated_at_utc"),
+        "served_at_utc": now_utc(),
+        "status": "ok" if available else "unavailable",
+        "read_only": True,
+        "available": available,
+        "reason": None if available else "Project Inventory did not pass every monitored-site, pagination, reconciliation, uniqueness, and completeness gate.",
+        "gates": gates,
+        "summary": {
+            "monitored_site_count": monitored if available else None,
+            "visible_project_count": visible if available else None,
+        },
+        "capabilities": unavailable,
+        "privacy": {
+            "cloud_ids_exposed": False,
+            "tokens_exposed": False,
+            "authorization_headers_exposed": False,
+            "unsupported_identity_data_exposed": False,
+        },
+        "projects": safe_rows if available else [],
+    }
+
+@app.route("/api/governance/projects")
+def api_governance_projects_inventory_v1():
+    contract = _jom_project_inventory_public_contract_v1()
+    return jsonify(contract), 200 if contract.get("available") else 503
+# --- JOM PROJECT INVENTORY GOVERNANCE API v1 END ---
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

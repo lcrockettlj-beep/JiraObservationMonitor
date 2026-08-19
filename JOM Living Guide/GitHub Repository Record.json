@@ -69,5 +69,34 @@
     "recovery_authority": "Git history",
     "current_workstream": "Foundation Recovery Audit",
     "next_finding": "FR-001_users_access_drilldowns_blocked"
+  },
+  "project_inventory_governance_phase2": {
+    "recorded_at": "2026-08-19T11:10:00+01:00",
+    "status": "implemented_validated_pending_commit",
+    "project_inventory_contract": "runtime/data/project_inventory_authority_v1.json",
+    "monitored_sites": 4,
+    "successful_sites": 4,
+    "failed_sites": 0,
+    "visible_projects": 92,
+    "collected_project_rows": 92,
+    "duplicate_site_project_keys": 0,
+    "pagination_complete_all_sites": true,
+    "safe_to_publish": true,
+    "api": "/api/governance/projects",
+    "page": "/reports/governance/projects",
+    "read_only": true,
+    "forbidden_response_matches": 0,
+    "governance_report_owners_modified": false,
+    "unavailable_areas": [
+      "Project Leads",
+      "Project Owners",
+      "Archived Projects",
+      "Inactive Projects",
+      "Project Permissions",
+      "Project Governance"
+    ],
+    "current_workstream": "Project Inventory and Governance Projects Phase 2 commit gate",
+    "next_step": "validate BOOKSYNC boundary, stage approved owners only, inspect staged diff, commit and push",
+    "working_rule": "Audit -> Build -> Validate -> BOOKSYNC -> Commit -> Push; full owner replacements only; no inferred authority."
   }
 }

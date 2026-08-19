@@ -1,0 +1,1713 @@
+{
+  "schema": "jom-project-inventory-authority-v1",
+  "generated_at_utc": "2026-08-19T09:31:45Z",
+  "status": "ok",
+  "read_only": true,
+  "scope": {
+    "definition": "Visible Jira projects across current monitored Site Registry sites.",
+    "site_scope": "runtime/data/site_registry.json monitored sites only",
+    "endpoint": "Jira Cloud REST API v3 project search",
+    "historical_expected_count_used": false
+  },
+  "authority": {
+    "safe_to_publish_project_inventory": true,
+    "fabricated_projects": false,
+    "inferred_fields": false,
+    "pagination_complete_all_sites": true,
+    "reason": "All monitored sites returned complete paginated project-search results."
+  },
+  "privacy": {
+    "authorization_headers_stored": false,
+    "tokens_stored": false,
+    "raw_responses_stored": false,
+    "project_lead_identity_stored": false,
+    "cloud_ids_in_project_rows": false
+  },
+  "capabilities": {
+    "project_inventory": {
+      "available": true,
+      "authority": "Jira Cloud REST API v3 project search"
+    },
+    "project_leads": {
+      "available": false,
+      "reason": "Not proven by the current Project Inventory Authority v1 collector."
+    },
+    "project_owners": {
+      "available": false,
+      "reason": "Project owner semantics are not proven and are not inferred from project lead."
+    },
+    "archived_projects": {
+      "available": false,
+      "reason": "Not proven by the current Project Inventory Authority v1 collector."
+    },
+    "inactive_projects": {
+      "available": false,
+      "reason": "No validated project activity contract exists."
+    },
+    "project_permissions": {
+      "available": false,
+      "reason": "Permission scheme and role completeness are not proven."
+    },
+    "project_governance": {
+      "available": false,
+      "reason": "Governance requires separately proven ownership, lifecycle, activity and permissions authorities."
+    }
+  },
+  "summary": {
+    "monitored_site_count": 4,
+    "successful_site_count": 4,
+    "failed_site_count": 0,
+    "visible_project_count": 92,
+    "collected_project_rows": 92,
+    "duplicate_site_project_key_count": 0
+  },
+  "sites": [
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "status": "ok",
+      "http_statuses": [
+        200
+      ],
+      "pagination_complete": true,
+      "page_count": 1,
+      "visible_project_count": 22,
+      "projects_collected": 22,
+      "raw_responses_stored": false
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "status": "ok",
+      "http_statuses": [
+        200
+      ],
+      "pagination_complete": true,
+      "page_count": 1,
+      "visible_project_count": 9,
+      "projects_collected": 9,
+      "raw_responses_stored": false
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "status": "ok",
+      "http_statuses": [
+        200,
+        200
+      ],
+      "pagination_complete": true,
+      "page_count": 2,
+      "visible_project_count": 56,
+      "projects_collected": 56,
+      "raw_responses_stored": false
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "status": "ok",
+      "http_statuses": [
+        200
+      ],
+      "pagination_complete": true,
+      "page_count": 1,
+      "visible_project_count": 5,
+      "projects_collected": 5,
+      "raw_responses_stored": false
+    }
+  ],
+  "projects": [
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10006",
+      "project_key": "AGLC",
+      "project_name": "AGLC",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10018",
+      "project_key": "AUT",
+      "project_name": "Automation",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10001",
+        "name": "Delivery Innovation and Improvements",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10014",
+      "project_key": "DCL",
+      "project_name": "DC Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10185",
+      "project_key": "DYN",
+      "project_name": "Dynamic365",
+      "project_type_key": "business",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10019",
+      "project_key": "ENGTEST",
+      "project_name": "Test Approach",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10001",
+        "name": "Delivery Innovation and Improvements",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10012",
+      "project_key": "GDT",
+      "project_name": "GLI Dev Testing",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10007",
+      "project_key": "HLII",
+      "project_name": "Hoosier Lottery - IGT-IN",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10015",
+      "project_key": "LAN",
+      "project_name": "Landbased Projects",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10009",
+      "project_key": "LAPI",
+      "project_name": "Lazlo - API",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10000",
+      "project_key": "LAT",
+      "project_name": "Lottery Acceptance Testing",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10008",
+      "project_key": "LAZ",
+      "project_name": "Lazlo",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10017",
+      "project_key": "MATH",
+      "project_name": "Math",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10001",
+        "name": "Delivery Innovation and Improvements",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10053",
+      "project_key": "NHL",
+      "project_name": "New Hampshire Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10218",
+      "project_key": "NJL",
+      "project_name": "New Jersey Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10020",
+      "project_key": "NYL",
+      "project_name": "New York Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10086",
+      "project_key": "OLTT",
+      "project_name": "Ohio Lottery - Tech Testing",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10013",
+      "project_key": "OSLE",
+      "project_name": "Oregon State Lottery - EIP",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10005",
+      "project_key": "OSLT",
+      "project_name": "Oregon State Lottery - Traditional Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10004",
+      "project_key": "OSLVL",
+      "project_name": "Oregon State Lottery - Video Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10152",
+      "project_key": "PAL",
+      "project_name": "PA Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10010",
+      "project_key": "WLC",
+      "project_name": "Wyoming Lottery Corp",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10016",
+      "project_key": "WVL",
+      "project_name": "West Virginia Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10000",
+        "name": "Moncton Test Management",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10548",
+      "project_key": "CIR",
+      "project_name": "Continual Improvement Register",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10136",
+        "name": "IT Global",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10648",
+      "project_key": "FTS",
+      "project_name": "Follow The Sun",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10071",
+      "project_key": "IGS",
+      "project_name": "Global IT Operations Service",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10200",
+      "project_key": "MT",
+      "project_name": "Management Tasks",
+      "project_type_key": "business",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10411",
+      "project_key": "POL",
+      "project_name": "IT Policy Register",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10136",
+        "name": "IT Global",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10482",
+      "project_key": "PUR",
+      "project_name": "IT Purchasing",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10136",
+        "name": "IT Global",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10414",
+      "project_key": "RD",
+      "project_name": "Reporting & Dashboard",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10137",
+        "name": "Technical Data",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10132",
+      "project_key": "SEC",
+      "project_name": "Security",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-global-technology",
+      "site_name": "gli-global-technology",
+      "site_url": "https://gli-global-technology.atlassian.net",
+      "project_id": "10515",
+      "project_key": "TT",
+      "project_name": "Task Templates",
+      "project_type_key": "business",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10069",
+        "name": "IT Planning & Governance",
+        "description": "For the Global Planning pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10096",
+      "project_key": "ACCESS",
+      "project_name": "GLI Access",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10094",
+      "project_key": "ACU",
+      "project_name": "Acumatica Integrations",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10550",
+      "project_key": "AE",
+      "project_name": "Agentic Engineering",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10084",
+      "project_key": "BRS",
+      "project_name": "Binary Request Site",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10087",
+      "project_key": "CDI",
+      "project_name": "Certification Document Interface",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10107",
+      "project_key": "CER",
+      "project_name": "Ceridian Integrations",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10106",
+      "project_key": "CHRON",
+      "project_name": "CHRONOS",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10098",
+      "project_key": "DEVINF",
+      "project_name": "Software Development Infrastructure / Technical Debt",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10059",
+      "project_key": "DEVPMO",
+      "project_name": "Dev PMO",
+      "project_type_key": "business",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10058",
+      "project_key": "DEVQA",
+      "project_name": "Dev QA",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10551",
+      "project_key": "DHI",
+      "project_name": "Deel HR Integrations",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10019",
+        "name": "GLI Software Development",
+        "description": "Development of External GLI Applications"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10285",
+      "project_key": "DPT",
+      "project_name": "Dev Project Timelines",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10052",
+        "name": "IT Software Development Management",
+        "description": "Restricted access Software Development projects for managers."
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10099",
+      "project_key": "EXTJIRA",
+      "project_name": "External Jira Integrations",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10484",
+      "project_key": "FUWTWO",
+      "project_name": "Modernized File Upload Wizard",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10111",
+      "project_key": "GLAM",
+      "project_name": "Glamour",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10097",
+      "project_key": "GLIDE",
+      "project_name": "Description Manager",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10082",
+      "project_key": "GPSFUW",
+      "project_name": "GLI Project Suite",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10086",
+      "project_key": "GTS",
+      "project_name": "GLI Test Suite",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10045",
+      "project_key": "HACK",
+      "project_name": "Hackstreet Team",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10092",
+      "project_key": "HAM",
+      "project_name": "Aamer and Hammer",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10124",
+      "project_key": "IBIS",
+      "project_name": "IT Business Support",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10009",
+        "name": "IT Planning & Governance",
+        "description": "For the Global Planning pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10104",
+      "project_key": "IF",
+      "project_name": "ICT & FIRM",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10010",
+      "project_key": "IPJ",
+      "project_name": "IT Project JIRA",
+      "project_type_key": "business",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10009",
+        "name": "IT Planning & Governance",
+        "description": "For the Global Planning pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10044",
+      "project_key": "IRIS",
+      "project_name": "IRIS Online",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10019",
+        "name": "GLI Software Development",
+        "description": "Development of External GLI Applications"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10385",
+      "project_key": "IRISNEXT",
+      "project_name": "IRIS Next",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10019",
+        "name": "GLI Software Development",
+        "description": "Development of External GLI Applications"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10136",
+      "project_key": "IS",
+      "project_name": "IT Security",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10013",
+        "name": "IT Security",
+        "description": "For the Global Security pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10116",
+      "project_key": "ITTSK",
+      "project_name": "IT Tasks",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10011",
+        "name": "IT Operations",
+        "description": "For the Global Operations pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10109",
+      "project_key": "JA",
+      "project_name": "Japan Access",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10066",
+      "project_key": "JMS",
+      "project_name": "Japan Math Simulator",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10062",
+      "project_key": "JSD",
+      "project_name": "Japan Submissions Database",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10065",
+      "project_key": "JSRL",
+      "project_name": "Japan Slot Reel Logger",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10064",
+      "project_key": "JW",
+      "project_name": "Japan Work",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10085",
+      "project_key": "KONN",
+      "project_name": "Kobetron Konnect",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10019",
+        "name": "GLI Software Development",
+        "description": "Development of External GLI Applications"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10093",
+      "project_key": "LAN",
+      "project_name": "LAN Down Under",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10103",
+      "project_key": "LETGEN",
+      "project_name": "Letter Generation",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10133",
+      "project_key": "LUT",
+      "project_name": "Legacy Tools",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10108",
+      "project_key": "MA",
+      "project_name": "Math API",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10148",
+      "project_key": "MAINS",
+      "project_name": "Math Analysis Internal Navigation System",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10095",
+      "project_key": "MAST",
+      "project_name": "Maths Analysis and Statistical Tool",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10137",
+      "project_key": "NVS",
+      "project_name": "Network Vulnerability Scanning",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10013",
+        "name": "IT Security",
+        "description": "For the Global Security pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10418",
+      "project_key": "ONB",
+      "project_name": "ONBOARDING",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10145",
+      "project_key": "ORT",
+      "project_name": "Over Run Tool",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10219",
+      "project_key": "PKR",
+      "project_name": "Public Knowledge Realignment",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10140",
+      "project_key": "PKT",
+      "project_name": "Public Knowledge Tools",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10088",
+      "project_key": "PRO",
+      "project_name": "Protrack",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10091",
+      "project_key": "RUN",
+      "project_name": "Runtime Terrors",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10113",
+      "project_key": "SCALE",
+      "project_name": "GLI SCALE",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10584",
+      "project_key": "SNI",
+      "project_name": "ServiceNow Integration",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10117",
+      "project_key": "STEP",
+      "project_name": "GLI Training Delivery System",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10100",
+      "project_key": "SUBS",
+      "project_name": "Submissions",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10252",
+      "project_key": "TA",
+      "project_name": "TTN-Access",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10517",
+      "project_key": "TJCMI",
+      "project_name": "Tracker JIRA CLOUD Migration | Integrations",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10019",
+        "name": "GLI Software Development",
+        "description": "Development of External GLI Applications"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10090",
+      "project_key": "TSM",
+      "project_name": "Test Suite Manager",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10015",
+        "name": "IT Software Development",
+        "description": "For the Global Software Development pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10149",
+      "project_key": "VMB",
+      "project_name": "Vulnerability Management Board",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10083",
+      "project_key": "VRFY",
+      "project_name": "Verify",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10019",
+        "name": "GLI Software Development",
+        "description": "Development of External GLI Applications"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-it-project",
+      "site_name": "gli-it-project",
+      "site_url": "https://gli-it-project.atlassian.net",
+      "project_id": "10138",
+      "project_key": "VSEC",
+      "project_name": "Voting Security",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": {
+        "id": "10013",
+        "name": "IT Security",
+        "description": "For the Global Security pillar"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "project_id": "10133",
+      "project_key": "ARI",
+      "project_name": "Aristocrat",
+      "project_type_key": "business",
+      "style": "classic",
+      "simplified": false,
+      "is_private": true,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "project_id": "10066",
+      "project_key": "CLX",
+      "project_name": "COMPLIANCE - LAB",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": true,
+      "project_category": {
+        "id": "10000",
+        "name": "GLI Internal",
+        "description": "These projects are GLI Internal only"
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "project_id": "10000",
+      "project_key": "KAN",
+      "project_name": "My Team",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "project_id": "10201",
+      "project_key": "PTC",
+      "project_name": "Playtech",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": true,
+      "project_category": {
+        "id": "10001",
+        "name": "Supplier",
+        "description": ""
+      },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "site_url": "https://gli-tracker.atlassian.net",
+      "project_id": "10033",
+      "project_key": "TES",
+      "project_name": "Testbed",
+      "project_type_key": "software",
+      "style": "classic",
+      "simplified": false,
+      "is_private": false,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    }
+  ],
+  "notes": [
+    "Visible project count is operational visibility, not proof of every historical or inaccessible project.",
+    "Project lead, owner, archive, activity, permissions and governance remain unavailable until separately proven."
+  ]
+}
