@@ -99,33 +99,21 @@
     "next_step": "validate BOOKSYNC boundary, stage approved owners only, inspect staged diff, commit and push",
     "working_rule": "Audit -> Build -> Validate -> BOOKSYNC -> Commit -> Push; full owner replacements only; no inferred authority."
   },
-  "pgni_booksync": {
-    "recorded_at": "2026-09-02T10:48:00+01:00",
-    "source_commit_before_milestone": "302da71665e6301529bf709babf426368df3cdc6",
-    "milestone": "Project Governance Named Identity Authority v1 proven closeout",
-    "milestone_status": "proven_validated_pending_commit",
-    "authority_contract": "runtime/data/project_governance_named_identity_authority_v1.json",
-    "authority_status": "ok",
-    "capability_state": "PROVEN",
+  "project_lead_authority_v1": {
+    "recorded_at": "2026-09-02T14:04:00+01:00",
+    "baseline_commit": "23dd533ec8e76e968ba7a8d60676bdead35c5748",
+    "status": "implemented_validated_pending_booksync_commit",
+    "authority_status": "partial",
+    "contract": "runtime/data/project_lead_authority_v1.json",
+    "projects": 92,
+    "projects_with_supported_active_lead": 69,
+    "projects_without_supported_active_lead_published": 23,
+    "lead_coverage_percent": 75.0,
+    "distinct_supported_active_leads": 20,
     "safe_to_serve": true,
-    "named_principals": 67,
-    "assignment_count": 270,
-    "project_coverage_percent": 100.0,
-    "role_coverage_percent": 100.0,
-    "request_failures": 0,
-    "supersedes": {
-      "authority_status": "partial",
-      "assignment_count": 281,
-      "request_failures": 240
-    },
-    "consumer_states": {
-      "ok": "safe fully proven authority",
-      "partial": "safe threshold-backed authority with recorded exceptions"
-    },
-    "partial_thresholds": {
-      "minimum_project_coverage_percent": 95.0,
-      "minimum_role_coverage_percent": 75.0
-    },
+    "project_owner_semantics_proven": false,
+    "api": "/api/governance/projects/leads",
+    "page": "/reports/governance/projects",
     "privacy": {
       "account_ids_stored": false,
       "email_stored": false,
@@ -135,9 +123,9 @@
       "bulk_copy_allowed": false
     },
     "access": {
-      "phase1": "trusted_local_loopback_operator",
+      "phase1": "trusted_local_operator",
       "future_required_role": "Organisation administrator"
     },
-    "next_gate": "install_validate_restore_audited_runtime_drift_inspect_stage_commit_push"
+    "next_gate": "validate_stage_exact_16_file_boundary_commit_push"
   }
 }

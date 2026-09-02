@@ -1106,32 +1106,36 @@ After the commit: continue Project Governance only by auditing for new supported
 
 <!-- JOM_PROJECT_INVENTORY_GOVERNANCE_PHASE2_BOOKSYNC_V1_END -->
 
-### 2 September 2026 - Project Governance Named Identity Authority v1 proven closeout
+### 2 September 2026 - Project Lead Authority v1
 
-#### Current validated authority
-Project Governance Named Identity Authority v1 is implemented and validated as a separate privacy-minimised governance authority. The current live contract is `runtime/data/project_governance_named_identity_authority_v1.json` with status `ok`, capability state `PROVEN`, `safe_to_serve: true`, 100.0% project-detail coverage, 100.0% role-detail coverage and zero recorded request failures. The accepted live result contains 67 named governance principals and 270 supported governance assignments. These figures supersede the earlier partial run of 281 assignments and 240 exceptions.
+#### Current validated state
+Project Lead Authority v1 is implemented and validated, pending BOOKSYNC installation and final commit. The authority is deliberately `partial`, safe to serve, and derived from the separately proven Project Inventory and Project Governance Named Identity authorities. Current evidence reconciles 92 projects: 69 have a supported active lead published, 23 have no supported active lead published, lead coverage is 75.0%, and 20 distinct supported active leads are represented.
 
-#### Architecture and owners
-- Builder: `app/builders/project_governance_named_identity_authority_v1.py`.
-- Runtime authority: `runtime/data/project_governance_named_identity_authority_v1.json`.
-- Admin refresh orchestration: `app/runtime/admin_enriched_chain.py`.
-- Unified runtime evidence: `app/runtime/runtime_sources_refresh.py`.
-- Flask consumer and restricted API: `app/web.py` at `/api/governance/projects/named-identities`.
-- Page consumer: `templates/governance_projects.html` and `static/js/jom_governance_projects_v1.js` at `/reports/governance/projects`.
-- Validators: `scripts/validate_project_governance_named_identity_builder_v1.py`, `scripts/validate_project_governance_named_identity_publish_gate_v1.py`, `scripts/validate_project_governance_named_identity_consumer_alignment_v1.py`, `scripts/validate_project_inventory_governance_integration_v1.py`, and `scripts/validate_users_access_automatic_refresh_v4_1.py`.
+A project with no supported active lead published remains an explicit authority gap. It does not mean Jira has no configured lead. Project Lead is not Project Owner, and Project Owner semantics remain unproven.
 
-The builder uses bounded 15-second requests, visible project progress, unique site/account lookup caching, handled request failures and atomic publishable-only replacement. Failed runs write evidence under `reports/` and do not replace a publishable authority.
+#### Owner and contract map
+- Builder: `app/builders/project_lead_authority_v1.py`.
+- Runtime contract: `runtime/data/project_lead_authority_v1.json`.
+- Source authorities: `runtime/data/project_inventory_authority_v1.json` and `runtime/data/project_governance_named_identity_authority_v1.json`.
+- Automatic Admin chain: `app/runtime/admin_enriched_chain.py`.
+- Unified runtime registration: `app/runtime/runtime_sources_refresh.py`.
+- Read-only API owner: `app/web.py`.
+- API: `/api/governance/projects/leads`.
+- Page: `/reports/governance/projects`.
+- Page owners: `templates/governance_projects.html` and `static/js/jom_governance_projects_v1.js`.
+- Validation owner: `scripts/validate_project_lead_authority_v1.py`.
 
-#### Consumer status model
-Consumers support both valid contract states. `ok` requires a safe, fully proven authority. `partial` is allowed only when the contract is safe to serve, contains privacy-safe rows, records every exception, has at least 95% project-detail coverage and at least 75% role-detail coverage. The current accepted authority is `ok`, not `partial`. Missing identities or assignments are never inferred.
+#### Publication, privacy and access rules
+The contract publishes display names and supported project-lead relationships only. It stores no account IDs, email addresses, or raw responses. Export, download and bulk copy remain disabled. Phase 1 is restricted to the trusted local operator, and Organisation administrator remains the required role boundary before multi-user enablement. The API is read-only and denies non-loopback requests.
 
-#### Privacy and access boundary
-Account IDs remain internal reconciliation keys and are not stored in published identity rows. Email addresses and raw responses are not stored. Export, download and bulk copy are disabled. Phase 1 access remains restricted to the trusted local loopback operator. Organisation administrator remains the approved role boundary before multi-user enablement. The API is read-only.
+#### Validation evidence
+The authority builder produced a `partial` contract with 92 reconciled project rows, 69 supported leads, 23 explicit gaps, 75.0% coverage and 20 distinct leads. Python compilation, authority validation, loopback API validation, privacy checks, Project Owner separation, Project Inventory regression, Users & Access regression and `git diff --check` passed. LF-to-CRLF messages are informational Git warnings, not validation failures.
 
-#### Limitations
-This authority proves the identities and assignments returned by the successful current collection. It does not establish Project Owner semantics and does not prove permission schemes, workflow schemes, archived state or inactivity. Those areas remain unavailable until separate collectors and contracts pass validation. Counts are live authority results and must not be hard-coded.
+#### Known limitations
+- Twenty-three projects have no supported active lead published by the current source authority.
+- Missing lead evidence is unavailable, not zero and not proof of an unconfigured Jira lead.
+- Project Owner, archived state, inactivity, permission schemes, workflow schemes and broader Project Governance remain unavailable until separate collectors and contracts pass validation.
+- Runtime counts are evidence-time results and must not be hard-coded into consumers.
 
-#### Validation and commit gate
-Builder, publish-gate, consumer, loopback API, privacy, refresh-chain, Users & Access regression, Project Inventory regression and BOOKSYNC validation passed. The earlier exact `partial` assertion was invalid because a later complete refresh legitimately promoted the authority to `ok`; the closeout validator accepts either approved state and applies state-specific gates.
-
-Current workstream: PGNI proven-authority closeout. Immediate next step: install this pack, restore only the explicitly audited unrelated runtime refresh drift, retain the PGNI authority, run all packaged checks, inspect the exact combined implementation and eight-owner BOOKSYNC boundary, then stage, commit and push. After the commit, select the next Project Governance authority through a fresh evidence-first audit.
+#### Current gate and continuation
+Current workstream: Project Lead Authority v1 BOOKSYNC and commit closeout. Install the eight documentation owner replacements, run combined product and BOOKSYNC validation, inspect the exact sixteen-file milestone boundary, stage only that boundary, commit and push. After the push, begin the next governance capability only through a fresh authority audit. Do not reopen Project Lead collection unless current runtime evidence changes or a validation gate fails.

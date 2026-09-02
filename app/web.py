@@ -5112,6 +5112,15 @@ def _jom_project_governance_named_identity_contract_v1():
     }
     return {"available": all(gates.values()), "generated_at_utc": generated, "age_hours": age, "gates": gates, "summary": payload.get("summary",{}), "identities": identities if all(gates.values()) else []}
 
+def _jom_project_lead_contract_v1():
+    payload=load_json("project_lead_authority_v1.json", {})
+    return {"schema":"jom-project-lead-api-v1","status":"ok" if payload.get("status") in {"ok","partial"} and payload.get("authority",{}).get("safe_to_serve") is True else "unavailable","authority_status":payload.get("status"),"summary":payload.get("summary",{}),"projects":payload.get("projects",[]),"limitations":payload.get("limitations",[]),"privacy":{"account_id_exposed":False,"email_exposed":False,"export_allowed":False},"access":{"future_enforced_role":"Organisation administrator","phase1_mode":"trusted_local_operator"}}
+
+@app.route("/api/governance/projects/leads")
+def jom_project_leads_v1():
+    if request.remote_addr not in {"127.0.0.1","::1"}: return jsonify({"status":"forbidden","reason":"Trusted local operator access required."}),403
+    contract=_jom_project_lead_contract_v1(); return jsonify(contract),200 if contract["status"]=="ok" else 503
+
 @app.route("/api/governance/projects/named-identities")
 def api_governance_project_named_identities_v1():
     from config.feature_flags import get_phase

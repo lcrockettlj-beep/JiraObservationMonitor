@@ -1,0 +1,1117 @@
+{
+  "schema": "jom-project-lead-authority-v1",
+  "generated_at_utc": "2026-09-02T13:20:35Z",
+  "status": "partial",
+  "summary": {
+    "projects": 92,
+    "projects_with_supported_active_lead": 69,
+    "projects_without_supported_active_lead_published": 23,
+    "lead_coverage_percent": 75.0,
+    "distinct_supported_active_leads": 20
+  },
+  "authority": {
+    "safe_to_serve": true,
+    "project_owner_semantics_proven": false,
+    "reason": "Every Project Inventory row was reconciled against publishable PGNI project-lead assignments; gaps are explicit and not inferred."
+  },
+  "privacy": {
+    "account_ids_stored": false,
+    "email_stored": false,
+    "raw_responses_stored": false,
+    "export_allowed": false,
+    "download_allowed": false,
+    "bulk_copy_allowed": false
+  },
+  "access": {
+    "authorized_role": "Organisation administrator",
+    "phase1_mode": "trusted_local_operator",
+    "deny_by_default": true
+  },
+  "projects": [
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "AGLC",
+      "project_name": "AGLC",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Ryan Owens",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "AUT",
+      "project_name": "Automation",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Sangeeta Reddy",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "DCL",
+      "project_name": "DC Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "DYN",
+      "project_name": "Dynamic365",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "ENGTEST",
+      "project_name": "Test Approach",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Sangeeta Reddy",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "GDT",
+      "project_name": "GLI Dev Testing",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "HLII",
+      "project_name": "Hoosier Lottery - IGT-IN",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAN",
+      "project_name": "Landbased Projects",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAPI",
+      "project_name": "Lazlo - API",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAT",
+      "project_name": "Lottery Acceptance Testing",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAZ",
+      "project_name": "Lazlo",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "MATH",
+      "project_name": "Math",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Sangeeta Reddy",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "NHL",
+      "project_name": "New Hampshire Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "NJL",
+      "project_name": "New Jersey Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "NYL",
+      "project_name": "New York Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OLTT",
+      "project_name": "Ohio Lottery - Tech Testing",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Samantha Wilson",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OSLE",
+      "project_name": "Oregon State Lottery - EIP",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Samantha Wilson",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OSLT",
+      "project_name": "Oregon State Lottery - Traditional Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OSLVL",
+      "project_name": "Oregon State Lottery - Video Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Martin Eddy",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "PAL",
+      "project_name": "PA Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "WLC",
+      "project_name": "Wyoming Lottery Corp",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "WVL",
+      "project_name": "West Virginia Lottery",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "CIR",
+      "project_name": "Continual Improvement Register",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Steve Allport",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "FTS",
+      "project_name": "Follow The Sun",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "IGS",
+      "project_name": "Global IT Operations Service",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "MT",
+      "project_name": "Management Tasks",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "POL",
+      "project_name": "IT Policy Register",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "John Owen",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "PUR",
+      "project_name": "IT Purchasing",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "John Owen",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "RD",
+      "project_name": "Reporting & Dashboard",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Sushma Rani Agarwal",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "SEC",
+      "project_name": "Security",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "TT",
+      "project_name": "Task Templates",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "ACCESS",
+      "project_name": "GLI Access",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Robert Nyman",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "ACU",
+      "project_name": "Acumatica Integrations",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "AE",
+      "project_name": "Agentic Engineering",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "BRS",
+      "project_name": "Binary Request Site",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "CDI",
+      "project_name": "Certification Document Interface",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "CER",
+      "project_name": "Ceridian Integrations",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Robert Nyman",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "CHRON",
+      "project_name": "CHRONOS",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Robert Nyman",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DEVINF",
+      "project_name": "Software Development Infrastructure / Technical Debt",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DEVPMO",
+      "project_name": "Dev PMO",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DEVQA",
+      "project_name": "Dev QA",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DHI",
+      "project_name": "Deel HR Integrations",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DPT",
+      "project_name": "Dev Project Timelines",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "EXTJIRA",
+      "project_name": "External Jira Integrations",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "FUWTWO",
+      "project_name": "Modernized File Upload Wizard",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GLAM",
+      "project_name": "Glamour",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Courtney Cloudman",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GLIDE",
+      "project_name": "Description Manager",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Rodger Sherman",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GPSFUW",
+      "project_name": "GLI Project Suite",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GTS",
+      "project_name": "GLI Test Suite",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "HACK",
+      "project_name": "Hackstreet Team",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "HAM",
+      "project_name": "Aamer and Hammer",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Daniel R Jones",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IBIS",
+      "project_name": "IT Business Support",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IF",
+      "project_name": "ICT & FIRM",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IPJ",
+      "project_name": "IT Project JIRA",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IRIS",
+      "project_name": "IRIS Online",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IRISNEXT",
+      "project_name": "IRIS Next",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IS",
+      "project_name": "IT Security",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "ITTSK",
+      "project_name": "IT Tasks",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JA",
+      "project_name": "Japan Access",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JMS",
+      "project_name": "Japan Math Simulator",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JSD",
+      "project_name": "Japan Submissions Database",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Daniel R Jones",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JSRL",
+      "project_name": "Japan Slot Reel Logger",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Sukhveer Matharu",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JW",
+      "project_name": "Japan Work",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "KONN",
+      "project_name": "Kobetron Konnect",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "LAN",
+      "project_name": "LAN Down Under",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Rodger Sherman",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "LETGEN",
+      "project_name": "Letter Generation",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "LUT",
+      "project_name": "Legacy Tools",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "MA",
+      "project_name": "Math API",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "MAINS",
+      "project_name": "Math Analysis Internal Navigation System",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "MAST",
+      "project_name": "Maths Analysis and Statistical Tool",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "NVS",
+      "project_name": "Network Vulnerability Scanning",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "ONB",
+      "project_name": "ONBOARDING",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "ORT",
+      "project_name": "Over Run Tool",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "PKR",
+      "project_name": "Public Knowledge Realignment",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "PKT",
+      "project_name": "Public Knowledge Tools",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "PRO",
+      "project_name": "Protrack",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "RUN",
+      "project_name": "Runtime Terrors",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Daniel Hedigan",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "SCALE",
+      "project_name": "GLI SCALE",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "SNI",
+      "project_name": "ServiceNow Integration",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "STEP",
+      "project_name": "GLI Training Delivery System",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "SUBS",
+      "project_name": "Submissions",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "TA",
+      "project_name": "TTN-Access",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "TJCMI",
+      "project_name": "Tracker JIRA CLOUD Migration | Integrations",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "TSM",
+      "project_name": "Test Suite Manager",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "VMB",
+      "project_name": "Vulnerability Management Board",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "VRFY",
+      "project_name": "Verify",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "VSEC",
+      "project_name": "Voting Security",
+      "lead_state": "no_supported_active_atlassian_lead_published",
+      "supported_lead_count": 0,
+      "leads": []
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "ARI",
+      "project_name": "Aristocrat",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "CLX",
+      "project_name": "COMPLIANCE - LAB",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "KAN",
+      "project_name": "My Team",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Tim Reigel",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "PTC",
+      "project_name": "Playtech",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "TES",
+      "project_name": "Testbed",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "No supported active lead published does not prove Jira has no configured lead.",
+    "Project Lead is not Project Owner."
+  ]
+}
