@@ -44,7 +44,7 @@ def main()->Dict[str,Any]:
  except BaseException as exc:
   payload['fatal_error']=f'{type(exc).__name__}: {exc}'; overall='failed'
  finally:
-  names=['admin_enriched_refresh_status.json','users_access_actionable_drilldown_v1.json','named_user_display_identity_v1.json','verified_active_jira_users_v1.json','admin_directory_users.json']
+  names=['admin_enriched_refresh_status.json','users_access_actionable_drilldown_v1.json','named_user_display_identity_v1.json','verified_active_jira_users_v1.json','admin_directory_users.json','project_governance_named_identity_authority_v1.json']
   payload.update(generated_at_utc=now(),finished_at_utc=now(),running=False,current_step=None,overall_status=overall,contracts={n:ev(n) for n in names}); write(payload)
  return payload
 

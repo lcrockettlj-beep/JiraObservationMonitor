@@ -251,6 +251,22 @@ def validate_actionable(record: Dict[str, Any]) -> Dict[str, Any]:
 
 
 
+def validate_project_governance_named_identity(record: Dict[str, Any]) -> Dict[str, Any]:
+    payload = read(ROOT / "runtime/data/project_governance_named_identity_authority_v1.json")
+    quality = payload.get("quality") if isinstance(payload.get("quality"), dict) else {}
+    access = payload.get("access") if isinstance(payload.get("access"), dict) else {}
+    authority = payload.get("authority") if isinstance(payload.get("authority"), dict) else {}
+    identities = payload.get("identities") if isinstance(payload.get("identities"), list) else []
+    return enforce(record, {
+        "schema_valid": payload.get("schema") == "jom-project-governance-named-identity-authority-v1",
+        "status_publishable": payload.get("status") in {"ok", "partial"},
+        "safe_to_serve": authority.get("safe_to_serve") is True,
+        "coverage_publishable": quality.get("publishable_with_recorded_exceptions") is True and quality.get("project_coverage_percent", 0) >= 95.0 and quality.get("role_coverage_percent", 0) >= 75.0,
+        "privacy_boundary": quality.get("account_ids_stored") is False and quality.get("email_stored") is False and quality.get("raw_responses_stored") is False,
+        "access_boundary": access.get("authorized_role") == "Organisation administrator" and access.get("export_allowed") is False,
+        "identities_present": len(identities) > 0,
+    }, "Project Governance Named Identity authority failed completeness, privacy, access, or population gates.")
+
 def validate_project_inventory(record: Dict[str, Any]) -> Dict[str, Any]:
     payload = read(ROOT / "runtime/data/project_inventory_authority_v1.json")
     summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
@@ -319,6 +335,7 @@ def main() -> Dict[str, Any]:
         ("admin_truth_v2", "Rebuild Admin Truth v2", [{"type": "module", "value": "app.builders.admin_truth_layer_v2"}, {"type": "script", "value": "scripts/build_admin_truth_layer_v2.py"}], ["admin_directory_users"], None),
         ("estate_resource_authority", "Refresh site-resource and ownership authority", [{"type": "module", "value": "app.builders.estate_resource_authority"}], [], classify_estate_resource_authority),
         ("project_inventory_authority", "Refresh read-only Project Inventory authority", [{"type": "module", "value": "app.builders.project_inventory_authority_v1"}], [], validate_project_inventory),
+        ("project_governance_named_identity", "Refresh Project Governance Named Identity authority", [{"type": "module", "value": "app.builders.project_governance_named_identity_authority_v1"}], ["project_inventory_authority", "named_user_display_identity"], validate_project_governance_named_identity),
         ("admin_group_expansion", "Collect group-derived product access", [{"type": "module", "value": "app.access.collect_admin_group_expansion"}], ["admin_directory_users"], validate_group_expansion),
         ("named_access_truth_v2", "Build Named Access Truth v2", [{"type": "module", "value": "app.access.named_access_truth_v2"}], ["admin_group_expansion"], validate_named_truth),
         ("named_access_reconciliation_v2", "Reconcile Named Access Truth v2", [{"type": "module", "value": "app.access.reconcile_named_access_truth_v2"}], ["admin_truth_v2", "named_access_truth_v2"], validate_reconciliation),
@@ -377,6 +394,7 @@ def main() -> Dict[str, Any]:
             "verified_active_jira_users_v1.json",
             "users_access_actionable_drilldown_v1.json",
             "project_inventory_authority_v1.json",
+            "project_governance_named_identity_authority_v1.json",
         ]
         payload.update(
             generated_at_utc=now(),

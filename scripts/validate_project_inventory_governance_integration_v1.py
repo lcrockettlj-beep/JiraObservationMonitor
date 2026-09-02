@@ -30,4 +30,7 @@ if "--contract" in sys.argv:
  assert s.get("monitored_site_count")==s.get("successful_site_count")==len(sites)
  assert s.get("visible_project_count")==s.get("collected_project_rows")==len(projects)
  assert s.get("duplicate_site_project_key_count")==0 and len(pairs)==len(projects)
+for value in ["/api/governance/projects/named-identities","jom-project-governance-named-identity-api-v1","account_id_exposed","future_enforced_role"]: assert value in web,value
+for value in ["gp-identity-rows","gp-identity-count","Project governance named identities"]: assert value in html,value
+for value in ["loadIdentities","/api/governance/projects/named-identities"]: assert value in js,value
 print("PASS: Project Inventory Governance Phase 2 contract, Flask render, and shared navigation-offset shell validated.")

@@ -36,5 +36,10 @@
       fill("gp-site",projects.map(p=>p.site_key)); fill("gp-type",projects.map(p=>p.project_type_key)); fill("gp-style",projects.map(p=>p.style)); fill("gp-category",projects.map(p=>p.project_category&&p.project_category.name)); render();
     } catch(error) { projects=[]; $("gp-status").textContent=error.message; $("gp-status").classList.add("gp__status--blocked"); $("gp-count").textContent="Unavailable"; render(); }
   }
-  fields.forEach(f => $("gp-"+f).addEventListener(f==="search"?"input":"change",render)); load();
+
+  async function loadIdentities() {
+    const status=$("gp-identity-status"), body=$("gp-identity-rows");
+    try { const response=await fetch("/api/governance/projects/named-identities",{headers:{Accept:"application/json"}}); const data=await response.json(); if(!response.ok||data.status!=="ok") throw new Error(data.reason||"Named identity authority unavailable."); const rows=Array.isArray(data.identities)?data.identities:[]; body.replaceChildren(); rows.forEach(item=>{const tr=document.createElement("tr"); [item.display_name,item.account_status,(item.sites||[]).join(", "),item.project_count,item.assignment_count,(item.sources||[]).join(", ")].forEach(v=>tr.appendChild(cell(v))); body.appendChild(tr);}); $("gp-identity-count").textContent=`${rows.length} identities`; status.textContent="Restricted read-only authority validated."; status.classList.add("gp__status--ok"); } catch(error) { body.replaceChildren(); $("gp-identity-count").textContent="Unavailable"; status.textContent=error.message; status.classList.add("gp__status--blocked"); }
+  }
+  fields.forEach(f => $("gp-"+f).addEventListener(f==="search"?"input":"change",render)); load(); loadIdentities();
 })();

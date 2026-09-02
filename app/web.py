@@ -92,6 +92,7 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "named_user_display_identity_v1.json",
     "users_access_actionable_drilldown_v1.json",
     "project_inventory_authority_v1.json",
+"project_governance_named_identity_authority_v1.json",
 }
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
 
@@ -5089,6 +5090,39 @@ def api_governance_projects_inventory_v1():
     return jsonify(contract), 200 if contract.get("available") else 503
 # --- JOM PROJECT INVENTORY GOVERNANCE API v1 END ---
 
+
+# --- JOM PROJECT GOVERNANCE NAMED IDENTITY API v1 START ---
+def _jom_project_governance_named_identity_contract_v1():
+    payload = load_json("project_governance_named_identity_authority_v1.json", {})
+    quality = payload.get("quality") if isinstance(payload.get("quality"), dict) else {}
+    access = payload.get("access") if isinstance(payload.get("access"), dict) else {}
+    authority = payload.get("authority") if isinstance(payload.get("authority"), dict) else {}
+    identities = payload.get("identities") if isinstance(payload.get("identities"), list) else []
+    generated = payload.get("generated_at_utc")
+    parsed = _contract_parse_time(generated)
+    age = round((datetime.now(timezone.utc)-parsed).total_seconds()/3600,2) if parsed else None
+    gates = {
+        "schema": payload.get("schema") == "jom-project-governance-named-identity-authority-v1",
+        "status": payload.get("status") in {"ok", "partial"},
+        "safe_to_serve": authority.get("safe_to_serve") is True,
+        "coverage_publishable": quality.get("publishable_with_recorded_exceptions") is True and quality.get("project_coverage_percent", 0) >= 95.0 and quality.get("role_coverage_percent", 0) >= 75.0,
+        "fresh": age is not None and 0 <= age <= 26,
+        "privacy": quality.get("account_ids_stored") is False and quality.get("email_stored") is False and quality.get("raw_responses_stored") is False,
+        "access": access.get("authorized_role") == "Organisation administrator" and access.get("export_allowed") is False and access.get("download_allowed") is False,
+    }
+    return {"available": all(gates.values()), "generated_at_utc": generated, "age_hours": age, "gates": gates, "summary": payload.get("summary",{}), "identities": identities if all(gates.values()) else []}
+
+@app.route("/api/governance/projects/named-identities")
+def api_governance_project_named_identities_v1():
+    from config.feature_flags import get_phase
+    if get_phase() != "phase1" or not _jom_phase1_named_users_loopback_v1():
+        return jsonify({"status":"restricted","reason":"Project governance named identities require the trusted local Phase 1 operator now and Organisation administrator enforcement before multi-user enablement."}), 403
+    if request.args.get("export") is not None or request.args.get("download") is not None:
+        return jsonify({"status":"restricted","reason":"Export and download are disabled.","export_allowed":False,"download_allowed":False}), 403
+    contract=_jom_project_governance_named_identity_contract_v1()
+    if not contract["available"]: return jsonify({"status":"unavailable","reason":"Authority gates failed.","gates":contract["gates"]}),503
+    return jsonify({"schema":"jom-project-governance-named-identity-api-v1","status":"ok","read_only":True,"authorization":{"mode":"phase1_trusted_local_operator","future_enforced_role":"Organisation administrator"},"privacy":{"account_id_exposed":False,"email_exposed":False,"export_allowed":False,"download_allowed":False},"generated_at_utc":contract["generated_at_utc"],"summary":contract["summary"],"identities":contract["identities"]})
+# --- JOM PROJECT GOVERNANCE NAMED IDENTITY API v1 END ---
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -343,3 +343,33 @@ Immediate next step: install this BOOKSYNC pack, validate the documentation boun
 After the commit: continue Project Governance only by auditing for new supported authorities. Do not infer Project Leads, Project Owners, Archived Projects, Inactive Projects, Project Permissions, or Project Governance from existing Project Inventory fields.
 
 <!-- JOM_PROJECT_INVENTORY_GOVERNANCE_PHASE2_BOOKSYNC_V1_END -->
+
+### 2 September 2026 - Project Governance Named Identity Authority v1 proven closeout
+
+#### Current validated authority
+Project Governance Named Identity Authority v1 is implemented and validated as a separate privacy-minimised governance authority. The current live contract is `runtime/data/project_governance_named_identity_authority_v1.json` with status `ok`, capability state `PROVEN`, `safe_to_serve: true`, 100.0% project-detail coverage, 100.0% role-detail coverage and zero recorded request failures. The accepted live result contains 67 named governance principals and 270 supported governance assignments. These figures supersede the earlier partial run of 281 assignments and 240 exceptions.
+
+#### Architecture and owners
+- Builder: `app/builders/project_governance_named_identity_authority_v1.py`.
+- Runtime authority: `runtime/data/project_governance_named_identity_authority_v1.json`.
+- Admin refresh orchestration: `app/runtime/admin_enriched_chain.py`.
+- Unified runtime evidence: `app/runtime/runtime_sources_refresh.py`.
+- Flask consumer and restricted API: `app/web.py` at `/api/governance/projects/named-identities`.
+- Page consumer: `templates/governance_projects.html` and `static/js/jom_governance_projects_v1.js` at `/reports/governance/projects`.
+- Validators: `scripts/validate_project_governance_named_identity_builder_v1.py`, `scripts/validate_project_governance_named_identity_publish_gate_v1.py`, `scripts/validate_project_governance_named_identity_consumer_alignment_v1.py`, `scripts/validate_project_inventory_governance_integration_v1.py`, and `scripts/validate_users_access_automatic_refresh_v4_1.py`.
+
+The builder uses bounded 15-second requests, visible project progress, unique site/account lookup caching, handled request failures and atomic publishable-only replacement. Failed runs write evidence under `reports/` and do not replace a publishable authority.
+
+#### Consumer status model
+Consumers support both valid contract states. `ok` requires a safe, fully proven authority. `partial` is allowed only when the contract is safe to serve, contains privacy-safe rows, records every exception, has at least 95% project-detail coverage and at least 75% role-detail coverage. The current accepted authority is `ok`, not `partial`. Missing identities or assignments are never inferred.
+
+#### Privacy and access boundary
+Account IDs remain internal reconciliation keys and are not stored in published identity rows. Email addresses and raw responses are not stored. Export, download and bulk copy are disabled. Phase 1 access remains restricted to the trusted local loopback operator. Organisation administrator remains the approved role boundary before multi-user enablement. The API is read-only.
+
+#### Limitations
+This authority proves the identities and assignments returned by the successful current collection. It does not establish Project Owner semantics and does not prove permission schemes, workflow schemes, archived state or inactivity. Those areas remain unavailable until separate collectors and contracts pass validation. Counts are live authority results and must not be hard-coded.
+
+#### Validation and commit gate
+Builder, publish-gate, consumer, loopback API, privacy, refresh-chain, Users & Access regression, Project Inventory regression and BOOKSYNC validation passed. The earlier exact `partial` assertion was invalid because a later complete refresh legitimately promoted the authority to `ok`; the closeout validator accepts either approved state and applies state-specific gates.
+
+Current workstream: PGNI proven-authority closeout. Immediate next step: install this pack, restore only the explicitly audited unrelated runtime refresh drift, retain the PGNI authority, run all packaged checks, inspect the exact combined implementation and eight-owner BOOKSYNC boundary, then stage, commit and push. After the commit, select the next Project Governance authority through a fresh evidence-first audit.
