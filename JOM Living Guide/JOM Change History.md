@@ -679,36 +679,46 @@ After the commit: continue Project Governance only by auditing for new supported
 
 <!-- JOM_PROJECT_INVENTORY_GOVERNANCE_PHASE2_BOOKSYNC_V1_END -->
 
-### 2 September 2026 - Project Lead Authority v1
+### 3 September 2026 - Project Owner Live Authority Correction v1
 
-#### Current validated state
-Project Lead Authority v1 is implemented and validated, pending BOOKSYNC installation and final commit. The authority is deliberately `partial`, safe to serve, and derived from the separately proven Project Inventory and Project Governance Named Identity authorities. Current evidence reconciles 92 projects: 69 have a supported active lead published, 23 have no supported active lead published, lead coverage is 75.0%, and 20 distinct supported active leads are represented.
+#### Correction reason
+The first Project Owner integration validator and BOOKSYNC record retained the earlier evidence-time totals of 92 projects, 69 governance-defined owners, 23 owner gaps, 75.0% coverage, and 20 distinct owners. A later automatic live refresh changed the current authority. The fixed-count validator correctly exposed that the documentation no longer matched runtime truth, but fixed historical totals are not valid long-term acceptance criteria for a live operational console.
 
-A project with no supported active lead published remains an explicit authority gap. It does not mean Jira has no configured lead. Project Lead is not Project Owner, and Project Owner semantics remain unproven.
+#### Current live authority
+The current Project Owner Authority contract was generated at `2026-09-03T08:18:37Z` and reports:
+- Authority status: `partial`.
+- Projects reconciled: 76.
+- Projects with governance-defined owner: 73.
+- Projects without a published governance-defined owner: 3.
+- Owner coverage: 96.1%.
+- Distinct governance-defined owners: 21.
+- Owner source: `runtime/data/project_lead_authority_v1.json`.
+- Owner type: `governance_defined_space_owner`.
+- Native Jira owner field present: false.
 
-#### Owner and contract map
-- Builder: `app/builders/project_lead_authority_v1.py`.
-- Runtime contract: `runtime/data/project_lead_authority_v1.json`.
-- Source authorities: `runtime/data/project_inventory_authority_v1.json` and `runtime/data/project_governance_named_identity_authority_v1.json`.
-- Automatic Admin chain: `app/runtime/admin_enriched_chain.py`.
-- Unified runtime registration: `app/runtime/runtime_sources_refresh.py`.
-- Read-only API owner: `app/web.py`.
-- API: `/api/governance/projects/leads`.
-- Page: `/reports/governance/projects`.
-- Page owners: `templates/governance_projects.html` and `static/js/jom_governance_projects_v1.js`.
-- Validation owner: `scripts/validate_project_lead_authority_v1.py`.
+These values supersede the earlier 92-project snapshot as current operational evidence. They remain time-sensitive and must not be hard-coded into future consumers or validators.
 
-#### Publication, privacy and access rules
-The contract publishes display names and supported project-lead relationships only. It stores no account IDs, email addresses, or raw responses. Export, download and bulk copy remain disabled. Phase 1 is restricted to the trusted local operator, and Organisation administrator remains the required role boundary before multi-user enablement. The API is read-only and denies non-loopback requests.
+#### Dynamic validation rule
+Project Owner validation now proves relationships rather than historical totals. The validator requires:
+- Project Inventory, Project Lead, and Project Owner contracts to be present and publishable.
+- Project Owner project count to equal the current Project Lead project count.
+- Project Owner site/project key pairs to equal the current Project Lead key pairs.
+- Every published owner to derive only from the matching Project Lead display name.
+- Owner count, gap count, coverage percentage, and distinct-owner total to reconcile to current rows.
+- Governance owner semantics to remain proven.
+- Native Jira owner semantics and native owner-field presence to remain false.
+- Account IDs, emails, and raw responses to remain absent.
+- The loopback API to reconcile to the current runtime contract and remote access to remain denied.
 
-#### Validation evidence
-The authority builder produced a `partial` contract with 92 reconciled project rows, 69 supported leads, 23 explicit gaps, 75.0% coverage and 20 distinct leads. Python compilation, authority validation, loopback API validation, privacy checks, Project Owner separation, Project Inventory regression, Users & Access regression and `git diff --check` passed. LF-to-CRLF messages are informational Git warnings, not validation failures.
+The validator does not require the current counts to remain 76, 73, 3, 96.1%, and 21. Legitimate live changes are accepted only when all contracts and relationships reconcile.
 
-#### Known limitations
-- Twenty-three projects have no supported active lead published by the current source authority.
-- Missing lead evidence is unavailable, not zero and not proof of an unconfigured Jira lead.
-- Project Owner, archived state, inactivity, permission schemes, workflow schemes and broader Project Governance remain unavailable until separate collectors and contracts pass validation.
-- Runtime counts are evidence-time results and must not be hard-coded into consumers.
+#### Live dependency order
+The required authority order remains:
+1. Project Inventory refreshes from current Jira project authority.
+2. Project Lead refreshes against the current Project Inventory and approved named identity authority.
+3. Project Owner derives from the current Project Lead authority under the GLI rule that Project Lead is the owner of the project space.
 
-#### Current gate and continuation
-Current workstream: Project Lead Authority v1 BOOKSYNC and commit closeout. Install the eight documentation owner replacements, run combined product and BOOKSYNC validation, inspect the exact sixteen-file milestone boundary, stage only that boundary, commit and push. After the push, begin the next governance capability only through a fresh authority audit. Do not reopen Project Lead collection unless current runtime evidence changes or a validation gate fails.
+An old report, retained project list, or historical count must never be used as current Project Owner truth.
+
+#### Current boundary and next gate
+Current workstream: install the Project Owner Live Authority Correction v1 pack, validate the dynamic authority chain and eight BOOKSYNC owners, run `git diff --check`, inspect the exact milestone boundary, then stage, commit, and push. After clean closeout, continue with Governance Projects UX Phase 1 using live authority contracts rather than fixed evidence-time counts.

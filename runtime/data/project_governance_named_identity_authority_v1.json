@@ -1,18 +1,18 @@
 {
   "schema": "jom-project-governance-named-identity-authority-v1",
-  "generated_at_utc": "2026-09-02T11:04:35Z",
+  "generated_at_utc": "2026-09-03T09:11:59Z",
   "status": "ok",
   "summary": {
     "named_principals": 67,
-    "assignment_count": 270,
+    "assignment_count": 276,
     "existing_named_user_identities": 48,
     "additional_governance_identities": 19,
-    "projects": 73,
-    "project_requests": 73,
-    "project_success": 73,
+    "projects": 76,
+    "project_requests": 76,
+    "project_success": 76,
     "unique_user_requests": 137,
-    "role_requests": 806,
-    "role_success": 806
+    "role_requests": 818,
+    "role_success": 818
   },
   "quality": {
     "full_success": true,
@@ -790,7 +790,10 @@
         "gli-delivery-tm"
       ],
       "projects": [
-        "gli-delivery-tm:DAT"
+        "gli-delivery-tm:DAT",
+        "gli-delivery-tm:IA",
+        "gli-delivery-tm:LCC",
+        "gli-delivery-tm:UA"
       ],
       "roles": [
         "Administrator",
@@ -812,10 +815,46 @@
           "project_key": "DAT",
           "source_type": "project_role",
           "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "IA",
+          "source_type": "project_lead",
+          "role_name": "Project Lead"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "IA",
+          "source_type": "project_role",
+          "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "LCC",
+          "source_type": "project_lead",
+          "role_name": "Project Lead"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "LCC",
+          "source_type": "project_role",
+          "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "UA",
+          "source_type": "project_lead",
+          "role_name": "Project Lead"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "UA",
+          "source_type": "project_role",
+          "role_name": "Administrator"
         }
       ],
-      "assignment_count": 2,
-      "project_count": 1,
+      "assignment_count": 8,
+      "project_count": 4,
       "existing_named_user_identity": false
     },
     {

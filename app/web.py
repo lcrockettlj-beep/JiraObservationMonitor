@@ -93,6 +93,8 @@ LIVE_WEBSITE_TRUTH_FILES = {
     "users_access_actionable_drilldown_v1.json",
     "project_inventory_authority_v1.json",
 "project_governance_named_identity_authority_v1.json",
+"project_lead_authority_v1.json",
+"project_owner_authority_v1.json",
 }
 # --- JOM LIVE WEBSITE TRUTH POLICY v1 END ---
 
@@ -5111,6 +5113,16 @@ def _jom_project_governance_named_identity_contract_v1():
         "access": access.get("authorized_role") == "Organisation administrator" and access.get("export_allowed") is False and access.get("download_allowed") is False,
     }
     return {"available": all(gates.values()), "generated_at_utc": generated, "age_hours": age, "gates": gates, "summary": payload.get("summary",{}), "identities": identities if all(gates.values()) else []}
+
+def _jom_project_owner_contract_v1():
+    payload=load_json("project_owner_authority_v1.json", {})
+    authority=payload.get("authority") if isinstance(payload.get("authority"),dict) else {}
+    publishable=payload.get("status") in {"ok","partial"} and authority.get("safe_to_serve") is True
+    return {"schema":"jom-project-owner-api-v1","status":"ok" if publishable else "unavailable","authority_status":payload.get("status"),"definition":payload.get("definition",{}),"summary":payload.get("summary",{}),"projects":payload.get("projects",[]) if publishable else [],"limitations":payload.get("limitations",[]),"privacy":{"account_id_exposed":False,"email_exposed":False,"export_allowed":False},"access":{"future_enforced_role":"Organisation administrator","phase1_mode":"trusted_local_operator"}}
+@app.route("/api/governance/projects/owners")
+def jom_project_owners_v1():
+    if request.remote_addr not in {"127.0.0.1","::1"}: return jsonify({"status":"forbidden","reason":"Trusted local operator access required."}),403
+    contract=_jom_project_owner_contract_v1(); return jsonify(contract),200 if contract["status"]=="ok" else 503
 
 def _jom_project_lead_contract_v1():
     payload=load_json("project_lead_authority_v1.json", {})

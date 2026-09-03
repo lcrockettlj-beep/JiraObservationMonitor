@@ -99,33 +99,28 @@
     "next_step": "validate BOOKSYNC boundary, stage approved owners only, inspect staged diff, commit and push",
     "working_rule": "Audit -> Build -> Validate -> BOOKSYNC -> Commit -> Push; full owner replacements only; no inferred authority."
   },
-  "project_lead_authority_v1": {
-    "recorded_at": "2026-09-02T14:04:00+01:00",
-    "baseline_commit": "23dd533ec8e76e968ba7a8d60676bdead35c5748",
-    "status": "implemented_validated_pending_booksync_commit",
+  "project_owner_live_authority_correction_v1": {
+    "recorded_at": "2026-09-03T08:24:00+01:00",
+    "baseline_commit": "b8001cde157f3839830c17ca31174c996c74f89c",
+    "status": "live_authority_corrected_pending_commit",
     "authority_status": "partial",
-    "contract": "runtime/data/project_lead_authority_v1.json",
-    "projects": 92,
-    "projects_with_supported_active_lead": 69,
-    "projects_without_supported_active_lead_published": 23,
-    "lead_coverage_percent": 75.0,
-    "distinct_supported_active_leads": 20,
-    "safe_to_serve": true,
-    "project_owner_semantics_proven": false,
-    "api": "/api/governance/projects/leads",
-    "page": "/reports/governance/projects",
-    "privacy": {
-      "account_ids_stored": false,
-      "email_stored": false,
-      "raw_responses_stored": false,
-      "export_allowed": false,
-      "download_allowed": false,
-      "bulk_copy_allowed": false
-    },
-    "access": {
-      "phase1": "trusted_local_operator",
-      "future_required_role": "Organisation administrator"
-    },
-    "next_gate": "validate_stage_exact_16_file_boundary_commit_push"
+    "current_generated_at_utc": "2026-09-03T08:18:37Z",
+    "current_projects": 76,
+    "current_projects_with_governance_defined_owner": 73,
+    "current_projects_without_governance_defined_owner_published": 3,
+    "current_owner_coverage_percent": 96.1,
+    "current_distinct_governance_defined_owners": 21,
+    "owner_source": "project_lead_authority_v1",
+    "owner_type": "governance_defined_space_owner",
+    "native_jira_owner_field_present": false,
+    "validation_model": "dynamic_contract_and_relationship_reconciliation",
+    "historical_fixed_counts_prohibited": true,
+    "live_dependency_order": [
+      "project_inventory_authority_v1",
+      "project_lead_authority_v1",
+      "project_owner_authority_v1"
+    ],
+    "next_gate": "validate_stage_exact_boundary_commit_push",
+    "next_workstream": "Governance Projects UX Phase 1"
   }
 }

@@ -274,6 +274,15 @@ def validate_project_lead_authority(record: Dict[str, Any]) -> Dict[str, Any]:
     privacy = payload.get("privacy") if isinstance(payload.get("privacy"), dict) else {}
     return enforce(record, {"schema_valid": payload.get("schema") == "jom-project-lead-authority-v1", "status_publishable": payload.get("status") in {"ok", "partial"}, "safe_to_serve": authority.get("safe_to_serve") is True, "projects_reconciled": summary.get("projects", 0) > 0, "privacy_boundary": privacy.get("account_ids_stored") is False and privacy.get("email_stored") is False and privacy.get("raw_responses_stored") is False, "owner_semantics_separate": authority.get("project_owner_semantics_proven") is False}, "Project Lead authority failed source, privacy, or semantic gates.")
 
+def validate_project_owner_authority(record: Dict[str, Any]) -> Dict[str, Any]:
+    payload = read(ROOT / "runtime/data/project_owner_authority_v1.json")
+    definition = payload.get("definition") if isinstance(payload.get("definition"), dict) else {}
+    summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+    authority = payload.get("authority") if isinstance(payload.get("authority"), dict) else {}
+    privacy = payload.get("privacy") if isinstance(payload.get("privacy"), dict) else {}
+    access = payload.get("access") if isinstance(payload.get("access"), dict) else {}
+    return enforce(record, {"schema_valid": payload.get("schema") == "jom-project-owner-authority-v1", "status_publishable": payload.get("status") in {"ok", "partial"}, "safe_to_serve": authority.get("safe_to_serve") is True, "governance_semantics": authority.get("governance_owner_semantics_proven") is True, "native_jira_separation": authority.get("native_jira_owner_semantics_proven") is False and definition.get("native_jira_owner_field_present") is False, "source_explicit": definition.get("owner_source") == "project_lead_authority_v1", "projects_reconciled": summary.get("projects", 0) > 0, "privacy_boundary": privacy.get("account_ids_stored") is False and privacy.get("email_stored") is False and privacy.get("raw_responses_stored") is False, "access_boundary": access.get("authorized_role") == "Organisation administrator" and access.get("deny_by_default") is True}, "Project Owner authority failed source, semantic, privacy, access, or population gates.")
+
 def validate_project_inventory(record: Dict[str, Any]) -> Dict[str, Any]:
     payload = read(ROOT / "runtime/data/project_inventory_authority_v1.json")
     summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
@@ -344,6 +353,7 @@ def main() -> Dict[str, Any]:
         ("project_inventory_authority", "Refresh read-only Project Inventory authority", [{"type": "module", "value": "app.builders.project_inventory_authority_v1"}], [], validate_project_inventory),
         ("project_governance_named_identity", "Refresh Project Governance Named Identity authority", [{"type": "module", "value": "app.builders.project_governance_named_identity_authority_v1"}], ["project_inventory_authority", "named_user_display_identity"], validate_project_governance_named_identity),
         ("project_lead_authority", "Derive Project Lead authority", [{"type": "module", "value": "app.builders.project_lead_authority_v1"}], ["project_inventory_authority", "project_governance_named_identity"], validate_project_lead_authority),
+        ("project_owner_authority", "Derive governance-defined Project Owner authority", [{"type": "module", "value": "app.builders.project_owner_authority_v1"}], ["project_lead_authority"], validate_project_owner_authority),
         ("admin_group_expansion", "Collect group-derived product access", [{"type": "module", "value": "app.access.collect_admin_group_expansion"}], ["admin_directory_users"], validate_group_expansion),
         ("named_access_truth_v2", "Build Named Access Truth v2", [{"type": "module", "value": "app.access.named_access_truth_v2"}], ["admin_group_expansion"], validate_named_truth),
         ("named_access_reconciliation_v2", "Reconcile Named Access Truth v2", [{"type": "module", "value": "app.access.reconcile_named_access_truth_v2"}], ["admin_truth_v2", "named_access_truth_v2"], validate_reconciliation),
@@ -403,6 +413,8 @@ def main() -> Dict[str, Any]:
             "users_access_actionable_drilldown_v1.json",
             "project_inventory_authority_v1.json",
             "project_governance_named_identity_authority_v1.json",
+            "project_lead_authority_v1.json",
+            "project_owner_authority_v1.json",
         ]
         payload.update(
             generated_at_utc=now(),

@@ -1,0 +1,1181 @@
+{
+  "schema": "jom-project-owner-authority-v1",
+  "generated_at_utc": "2026-09-03T09:14:13Z",
+  "status": "partial",
+  "definition": {
+    "owner_type": "governance_defined_space_owner",
+    "owner_source": "project_lead_authority_v1",
+    "governance_rule": "Project Lead is the owner of the project space.",
+    "native_jira_owner_field_present": false,
+    "native_jira_owner_authority_available": false,
+    "authority_class": "derived_governance_authority"
+  },
+  "source": {
+    "contract": "runtime/data/project_lead_authority_v1.json",
+    "schema": "jom-project-lead-authority-v1",
+    "status": "partial",
+    "generated_at_utc": "2026-09-03T09:11:59Z",
+    "gates": {
+      "schema_valid": true,
+      "status_publishable": true,
+      "safe_to_serve": true,
+      "project_owner_not_claimed_by_source": true,
+      "project_population_present": true,
+      "project_rows_reconcile": true,
+      "source_privacy_safe": true
+    }
+  },
+  "summary": {
+    "projects": 76,
+    "projects_with_governance_defined_owner": 73,
+    "projects_without_governance_defined_owner_published": 3,
+    "owner_coverage_percent": 96.1,
+    "distinct_governance_defined_owners": 21
+  },
+  "authority": {
+    "safe_to_serve": true,
+    "governance_owner_semantics_proven": true,
+    "native_jira_owner_semantics_proven": false,
+    "reason": "GLI defines the Project Lead as the owner of the project space. Owner rows are derived only from the publishable Project Lead Authority; missing lead evidence remains unavailable."
+  },
+  "privacy": {
+    "display_name_only": true,
+    "account_ids_stored": false,
+    "email_stored": false,
+    "raw_responses_stored": false,
+    "export_allowed": false,
+    "download_allowed": false,
+    "bulk_copy_allowed": false
+  },
+  "access": {
+    "authorized_role": "Organisation administrator",
+    "phase1_mode": "trusted_local_operator",
+    "deny_by_default": true
+  },
+  "limitations": [
+    "This is a GLI governance-defined space-owner authority, not a Jira-native owner field.",
+    "No supported Project Lead publication means the governance-defined owner is unavailable, not zero.",
+    "Project lifecycle changes require a refreshed Project Inventory and Project Lead Authority before this authority is derived again."
+  ],
+  "projects": [
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "AGLC",
+      "project_name": "AGLC",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Ryan Owens",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "AUT",
+      "project_name": "Automation",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Sangeeta Reddy",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "DAT",
+      "project_name": "Delivery Acumatica Translator",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Gabriel John Zafra",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "DCL",
+      "project_name": "DC Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "DYN",
+      "project_name": "Dynamic365",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "ENGTEST",
+      "project_name": "Test Approach",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Sangeeta Reddy",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "GDT",
+      "project_name": "GLI Dev Testing",
+      "owner_state": "no_supported_project_lead_owner_published",
+      "supported_owner_count": 0,
+      "owners": []
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "HLII",
+      "project_name": "Hoosier Lottery - IGT-IN",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "IA",
+      "project_name": "Invoice Audit",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Gabriel John Zafra",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAN",
+      "project_name": "Landbased Projects",
+      "owner_state": "no_supported_project_lead_owner_published",
+      "supported_owner_count": 0,
+      "owners": []
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAPI",
+      "project_name": "Lazlo - API",
+      "owner_state": "no_supported_project_lead_owner_published",
+      "supported_owner_count": 0,
+      "owners": []
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAT",
+      "project_name": "Lottery Acceptance Testing",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LAZ",
+      "project_name": "Lazlo",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "LCC",
+      "project_name": "LetterGen Compliance Checks",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Gabriel John Zafra",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "MATH",
+      "project_name": "Math",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Sangeeta Reddy",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "NHL",
+      "project_name": "New Hampshire Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "NJL",
+      "project_name": "New Jersey Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "NYL",
+      "project_name": "New York Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OLTT",
+      "project_name": "Ohio Lottery - Tech Testing",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Samantha Wilson",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OSLE",
+      "project_name": "Oregon State Lottery - EIP",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Samantha Wilson",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OSLT",
+      "project_name": "Oregon State Lottery - Traditional Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "OSLVL",
+      "project_name": "Oregon State Lottery - Video Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Martin Eddy",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "PAL",
+      "project_name": "PA Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "UA",
+      "project_name": "Unbilled Aging",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Gabriel John Zafra",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "WLC",
+      "project_name": "Wyoming Lottery Corp",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "WVL",
+      "project_name": "West Virginia Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "CIR",
+      "project_name": "Continual Improvement Register",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Steve Allport",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "FTS",
+      "project_name": "Follow The Sun",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "IGS",
+      "project_name": "Global IT Operations Service",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "MT",
+      "project_name": "Management Tasks",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "POL",
+      "project_name": "IT Policy Register",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "John Owen",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "PUR",
+      "project_name": "IT Purchasing",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "John Owen",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "RD",
+      "project_name": "Reporting & Dashboard",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Sushma Rani Agarwal",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "SEC",
+      "project_name": "Security",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Luke Crockett",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-global-technology",
+      "project_key": "TT",
+      "project_name": "Task Templates",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "ACCESS",
+      "project_name": "GLI Access",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Robert Nyman",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "ACU",
+      "project_name": "Acumatica Integrations",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "BRS",
+      "project_name": "Binary Request Site",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "CDI",
+      "project_name": "Certification Document Interface",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "CER",
+      "project_name": "Ceridian Integrations",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Robert Nyman",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "CHRON",
+      "project_name": "CHRONOS",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Robert Nyman",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DEVINF",
+      "project_name": "Software Development Infrastructure / Technical Debt",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DEVPMO",
+      "project_name": "Dev PMO",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DEVQA",
+      "project_name": "Dev QA",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DHI",
+      "project_name": "Deel HR Integrations",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "EXTJIRA",
+      "project_name": "External Jira Integrations",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "FUWTWO",
+      "project_name": "Modernized File Upload Wizard",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GLAM",
+      "project_name": "Glamour",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Courtney Cloudman",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GLIDE",
+      "project_name": "Description Manager",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Rodger Sherman",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GPSFUW",
+      "project_name": "GLI Project Suite",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "GTS",
+      "project_name": "GLI Test Suite",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "HACK",
+      "project_name": "Hackstreet Team",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "HAM",
+      "project_name": "Aamer and Hammer",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Daniel R Jones",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IRIS",
+      "project_name": "IRIS Online",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "IRISNEXT",
+      "project_name": "IRIS Next",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JA",
+      "project_name": "Japan Access",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JSD",
+      "project_name": "Japan Submissions Database",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Daniel R Jones",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "JSRL",
+      "project_name": "Japan Slot Reel Logger",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Sukhveer Matharu",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "KONN",
+      "project_name": "Kobetron Konnect",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "LAN",
+      "project_name": "LAN Down Under",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Rodger Sherman",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "LETGEN",
+      "project_name": "Letter Generation",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "MAINS",
+      "project_name": "Math Analysis Internal Navigation System",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "MAST",
+      "project_name": "Maths Analysis and Statistical Tool",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "PRO",
+      "project_name": "Protrack",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "RUN",
+      "project_name": "Runtime Terrors",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Daniel Hedigan",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "SNI",
+      "project_name": "ServiceNow Integration",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "SUBS",
+      "project_name": "Submissions",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "TA",
+      "project_name": "TTN-Access",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "TJCMI",
+      "project_name": "Tracker JIRA CLOUD Migration | Integrations",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "TSM",
+      "project_name": "Test Suite Manager",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Aamer Sardar",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "VRFY",
+      "project_name": "Verify",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Michael Gentilello",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "ARI",
+      "project_name": "Aristocrat",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "CLX",
+      "project_name": "COMPLIANCE - LAB",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "KAN",
+      "project_name": "My Team",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Tim Reigel",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "PTC",
+      "project_name": "Playtech",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-tracker",
+      "project_key": "TES",
+      "project_name": "Testbed",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Guy Barlow",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    }
+  ]
+}
