@@ -1,18 +1,18 @@
 {
   "schema": "jom-project-governance-named-identity-authority-v1",
-  "generated_at_utc": "2026-09-03T09:11:59Z",
+  "generated_at_utc": "2026-09-04T14:22:53Z",
   "status": "ok",
   "summary": {
-    "named_principals": 67,
-    "assignment_count": 276,
-    "existing_named_user_identities": 48,
-    "additional_governance_identities": 19,
-    "projects": 76,
-    "project_requests": 76,
-    "project_success": 76,
-    "unique_user_requests": 137,
-    "role_requests": 818,
-    "role_success": 818
+    "named_principals": 70,
+    "assignment_count": 275,
+    "existing_named_user_identities": 44,
+    "additional_governance_identities": 26,
+    "projects": 73,
+    "project_requests": 73,
+    "project_success": 73,
+    "unique_user_requests": 140,
+    "role_requests": 805,
+    "role_success": 805
   },
   "quality": {
     "full_success": true,
@@ -387,7 +387,61 @@
       ],
       "assignment_count": 1,
       "project_count": 1,
-      "existing_named_user_identity": true
+      "existing_named_user_identity": false
+    },
+    {
+      "display_name": "Brendan Grant",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "projects": [
+        "gli-delivery-tm:AUT"
+      ],
+      "roles": [
+        "Member"
+      ],
+      "sources": [
+        "project_role"
+      ],
+      "assignments": [
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "AUT",
+          "source_type": "project_role",
+          "role_name": "Member"
+        }
+      ],
+      "assignment_count": 1,
+      "project_count": 1,
+      "existing_named_user_identity": false
+    },
+    {
+      "display_name": "Brian Shaw",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "projects": [
+        "gli-delivery-tm:AUT"
+      ],
+      "roles": [
+        "Member"
+      ],
+      "sources": [
+        "project_role"
+      ],
+      "assignments": [
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "AUT",
+          "source_type": "project_role",
+          "role_name": "Member"
+        }
+      ],
+      "assignment_count": 1,
+      "project_count": 1,
+      "existing_named_user_identity": false
     },
     {
       "display_name": "Cecil MacNeil",
@@ -790,13 +844,12 @@
         "gli-delivery-tm"
       ],
       "projects": [
-        "gli-delivery-tm:DAT",
-        "gli-delivery-tm:IA",
-        "gli-delivery-tm:LCC",
-        "gli-delivery-tm:UA"
+        "gli-delivery-tm:AUT",
+        "gli-delivery-tm:GPQ"
       ],
       "roles": [
         "Administrator",
+        "Member",
         "Project Lead"
       ],
       "sources": [
@@ -806,55 +859,25 @@
       "assignments": [
         {
           "site_key": "gli-delivery-tm",
-          "project_key": "DAT",
-          "source_type": "project_lead",
-          "role_name": "Project Lead"
-        },
-        {
-          "site_key": "gli-delivery-tm",
-          "project_key": "DAT",
+          "project_key": "AUT",
           "source_type": "project_role",
-          "role_name": "Administrator"
+          "role_name": "Member"
         },
         {
           "site_key": "gli-delivery-tm",
-          "project_key": "IA",
+          "project_key": "GPQ",
           "source_type": "project_lead",
           "role_name": "Project Lead"
         },
         {
           "site_key": "gli-delivery-tm",
-          "project_key": "IA",
-          "source_type": "project_role",
-          "role_name": "Administrator"
-        },
-        {
-          "site_key": "gli-delivery-tm",
-          "project_key": "LCC",
-          "source_type": "project_lead",
-          "role_name": "Project Lead"
-        },
-        {
-          "site_key": "gli-delivery-tm",
-          "project_key": "LCC",
-          "source_type": "project_role",
-          "role_name": "Administrator"
-        },
-        {
-          "site_key": "gli-delivery-tm",
-          "project_key": "UA",
-          "source_type": "project_lead",
-          "role_name": "Project Lead"
-        },
-        {
-          "site_key": "gli-delivery-tm",
-          "project_key": "UA",
+          "project_key": "GPQ",
           "source_type": "project_role",
           "role_name": "Administrator"
         }
       ],
-      "assignment_count": 8,
-      "project_count": 4,
+      "assignment_count": 3,
+      "project_count": 2,
       "existing_named_user_identity": false
     },
     {
@@ -1131,6 +1154,40 @@
       "existing_named_user_identity": true
     },
     {
+      "display_name": "James Lloyd",
+      "account_status": "active",
+      "sites": [
+        "gli-delivery-tm"
+      ],
+      "projects": [
+        "gli-delivery-tm:AUT"
+      ],
+      "roles": [
+        "Administrator",
+        "Member"
+      ],
+      "sources": [
+        "project_role"
+      ],
+      "assignments": [
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "AUT",
+          "source_type": "project_role",
+          "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "AUT",
+          "source_type": "project_role",
+          "role_name": "Member"
+        }
+      ],
+      "assignment_count": 2,
+      "project_count": 1,
+      "existing_named_user_identity": false
+    },
+    {
       "display_name": "Jennifer Comeau",
       "account_status": "active",
       "sites": [
@@ -1402,7 +1459,7 @@
       ],
       "assignment_count": 1,
       "project_count": 1,
-      "existing_named_user_identity": true
+      "existing_named_user_identity": false
     },
     {
       "display_name": "Ksenia Daich",
@@ -2742,7 +2799,7 @@
       ],
       "assignment_count": 9,
       "project_count": 8,
-      "existing_named_user_identity": true
+      "existing_named_user_identity": false
     },
     {
       "display_name": "Rodger Sherman",
@@ -3072,7 +3129,7 @@
       ],
       "assignment_count": 1,
       "project_count": 1,
-      "existing_named_user_identity": true
+      "existing_named_user_identity": false
     },
     {
       "display_name": "Sushma Rani Agarwal",

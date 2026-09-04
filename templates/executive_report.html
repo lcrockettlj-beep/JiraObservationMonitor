@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_executive_report_v1.css') }}">
-</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_navigation_remediation_phase1_v1.css') }}"></head>
 <body data-jom-page="executive-report">
 {% include "_nav.html" %}
 
@@ -46,7 +46,7 @@
       <div id="exec-source-health" class="exec-source-grid"></div>
     </section>
   </section>
-</main>
+<section class="jom-related-navigation" aria-label="Related operational pages"><div class="jom-related-navigation__heading"><p class="jom-kicker">Operational navigation</p><h2>Continue to operational detail</h2><p>Move from the report summary to the relevant working area.</p></div><div class="jom-related-navigation__grid"><a class="jom-related-action" href="/estate"><strong>Open Estate</strong><span>Review estate scope and lifecycle state.</span></a><a class="jom-related-action" href="/reports/governance"><strong>Open Governance</strong><span>Review governance reporting and decisions.</span></a><a class="jom-related-action" href="/runtime-status"><strong>Open Runtime Status</strong><span>Review current JOM execution health.</span></a><a class="jom-related-action" href="/source-health"><strong>Open Source Health</strong><span>Review freshness and reliability evidence.</span></a></div></section></main>
 
 <aside class="exec-rail" aria-label="Executive report summary">
   <section class="exec-rail-card exec-rail-status">

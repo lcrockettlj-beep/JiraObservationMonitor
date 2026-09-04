@@ -1,6 +1,6 @@
 {
   "schema": "jom-estate-site-resource-mapping-v2",
-  "generated_at_utc": "2026-08-18T16:00:32Z",
+  "generated_at_utc": "2026-09-04T14:19:20Z",
   "status": "mapped",
   "safe_to_populate_contacts": true,
   "fabricated_mappings": false,
@@ -27,7 +27,7 @@
       "resource_id": "ari:cloud:jira-software::site/aaa90a93-f0af-47ba-98d6-47829cc032b7",
       "confidence": "high",
       "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
-      "evidence_rows": 24
+      "evidence_rows": 23
     },
     {
       "site_key": "gli-it-project",

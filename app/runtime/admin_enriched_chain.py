@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
+import uuid
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -89,8 +91,14 @@ def resolve(
     blocked_by: List[str] | None = None,
     timeout: int = 3600,
 ) -> Dict[str, Any]:
-    failed = {step.get("key") for step in steps if step.get("status") != "ok"}
-    blockers = sorted(failed.intersection(blocked_by or []))
+    declared = list(blocked_by or [])
+    completed = {step.get("key"): step for step in steps}
+    pending = sorted(key for key in declared if key not in completed)
+    failed = sorted(
+        key for key in declared
+        if key in completed and completed[key].get("status") != "ok"
+    )
+    blockers = sorted(set(pending + failed))
     if blockers:
         return {
             "key": key,
@@ -104,6 +112,8 @@ def resolve(
             "stdout_tail": "",
             "stderr_tail": "",
             "blocked_by": blockers,
+            "pending_dependencies": pending,
+            "failed_dependencies": failed,
         }
     for candidate in candidates:
         value = candidate.get("value", "")
@@ -328,10 +338,22 @@ def evidence(name: str) -> Dict[str, Any]:
 
 def main() -> Dict[str, Any]:
     started = now()
+    parent_execution_id = os.environ.get("JOM_REFRESH_EXECUTION_ID")
+    execution_id = parent_execution_id or ("jom-admin-refresh-" + uuid.uuid4().hex)
+    execution_scope = "canonical_runtime_refresh_child" if parent_execution_id else "standalone_admin_refresh"
     steps: List[Dict[str, Any]] = []
     overall = "failed"
     payload: Dict[str, Any] = {
-        "schema": "jom-admin-enriched-refresh-status-v5.1",
+        "schema": "jom-admin-enriched-refresh-status-v6",
+        "execution_id": execution_id,
+        "parent_execution_id": parent_execution_id,
+        "execution_scope": execution_scope,
+        "timestamp_semantics": {
+            "started_at_utc": "Admin child execution start",
+            "finished_at_utc": "Admin child execution finish",
+            "generated_at_utc": "status document write time",
+            "contract_timestamps": "producer generation time unless the contract explicitly declares collection semantics",
+        },
         "generated_at_utc": started,
         "started_at_utc": started,
         "finished_at_utc": None,
@@ -348,22 +370,21 @@ def main() -> Dict[str, Any]:
     definitions = [
         ("admin_api_enrichment", "Refresh Admin enrichment", [{"type": "module", "value": "app.builders.admin_enriched_sources"}, {"type": "script", "value": "admin_api_enrichment.py"}], [], None),
         ("admin_directory_users", "Refresh privacy-safe paginated Admin Directory authority", [{"type": "module", "value": "app.access.admin_named_access_endpoint_probe"}], [], None),
-        ("admin_truth_v2", "Rebuild Admin Truth v2", [{"type": "module", "value": "app.builders.admin_truth_layer_v2"}, {"type": "script", "value": "scripts/build_admin_truth_layer_v2.py"}], ["admin_directory_users"], None),
+        ("admin_truth_v2", "Rebuild Admin Truth v2 from current outer-chain Product Access", [{"type": "module", "value": "app.builders.admin_truth_layer_v2"}, {"type": "script", "value": "scripts/build_admin_truth_layer_v2.py"}], ["admin_directory_users"], None),
         ("estate_resource_authority", "Refresh site-resource and ownership authority", [{"type": "module", "value": "app.builders.estate_resource_authority"}], [], classify_estate_resource_authority),
-        ("project_inventory_authority", "Refresh read-only Project Inventory authority", [{"type": "module", "value": "app.builders.project_inventory_authority_v1"}], [], validate_project_inventory),
-        ("project_governance_named_identity", "Refresh Project Governance Named Identity authority", [{"type": "module", "value": "app.builders.project_governance_named_identity_authority_v1"}], ["project_inventory_authority", "named_user_display_identity"], validate_project_governance_named_identity),
-        ("project_lead_authority", "Derive Project Lead authority", [{"type": "module", "value": "app.builders.project_lead_authority_v1"}], ["project_inventory_authority", "project_governance_named_identity"], validate_project_lead_authority),
-        ("project_owner_authority", "Derive governance-defined Project Owner authority", [{"type": "module", "value": "app.builders.project_owner_authority_v1"}], ["project_lead_authority"], validate_project_owner_authority),
+        ("estate_monitored_product_authority", "Rebuild monitored-product authority from current registry and resource mapping", [{"type": "module", "value": "app.builders.estate_monitored_product_authority_v1"}], ["estate_resource_authority"], None),
         ("admin_group_expansion", "Collect group-derived product access", [{"type": "module", "value": "app.access.collect_admin_group_expansion"}], ["admin_directory_users"], validate_group_expansion),
         ("named_access_truth_v2", "Build Named Access Truth v2", [{"type": "module", "value": "app.access.named_access_truth_v2"}], ["admin_group_expansion"], validate_named_truth),
         ("named_access_reconciliation_v2", "Reconcile Named Access Truth v2", [{"type": "module", "value": "app.access.reconcile_named_access_truth_v2"}], ["admin_truth_v2", "named_access_truth_v2"], validate_reconciliation),
         ("user_footprint", "Rebuild guarded User Footprint", [{"type": "module", "value": "app.access.user_footprint_source"}], ["named_access_reconciliation_v2"], validate_footprint),
         ("named_site_access_authority", "Rebuild privacy-minimised Named Site Access authority", [{"type": "module", "value": "app.builders.named_site_access_authority_v1"}], ["user_footprint"], validate_named_site),
         ("named_user_display_identity", "Refresh privacy-approved display identity", [{"type": "module", "value": "app.builders.named_user_display_identity_v1"}], ["admin_directory_users", "user_footprint", "named_site_access_authority"], validate_identity),
+        ("project_inventory_authority", "Refresh read-only Project Inventory authority", [{"type": "module", "value": "app.builders.project_inventory_authority_v1"}], [], validate_project_inventory),
+        ("project_governance_named_identity", "Refresh Project Governance Named Identity authority", [{"type": "module", "value": "app.builders.project_governance_named_identity_authority_v1"}], ["project_inventory_authority", "named_user_display_identity"], validate_project_governance_named_identity),
+        ("project_lead_authority", "Derive Project Lead authority", [{"type": "module", "value": "app.builders.project_lead_authority_v1"}], ["project_inventory_authority", "project_governance_named_identity"], validate_project_lead_authority),
+        ("project_owner_authority", "Derive governance-defined Project Owner authority", [{"type": "module", "value": "app.builders.project_owner_authority_v1"}], ["project_lead_authority"], validate_project_owner_authority),
         ("verified_active_jira_users", "Refresh verified active Jira users", [{"type": "module", "value": "app.builders.verified_active_jira_users_v1"}], ["admin_directory_users"], None),
         ("users_access_actionable_drilldown", "Refresh actionable Users & Access drill-down authority", [{"type": "module", "value": "app.builders.users_access_actionable_drilldown_v1"}], ["admin_directory_users", "user_footprint", "named_site_access_authority", "named_user_display_identity"], validate_actionable),
-        ("source_freshness", "Rebuild source freshness", [{"type": "module", "value": "app.audits.source_freshness"}, {"type": "script", "value": "scripts/audit_source_freshness.py"}], [], None),
-        ("source_reliability", "Rebuild source reliability", [{"type": "module", "value": "app.audits.source_reliability"}, {"type": "script", "value": "scripts/source_reliability_audit.py"}], ["source_freshness"], None),
     ]
     try:
         for key, label, candidates, blocked_by, postcondition in definitions:
@@ -405,6 +426,7 @@ def main() -> Dict[str, Any]:
     finally:
         names = [
             "admin_directory_users.json",
+            "estate_monitored_product_authority_v1.json",
             "admin_group_expansion.json",
             "user_footprint.json",
             "named_site_access_authority_v1.json",

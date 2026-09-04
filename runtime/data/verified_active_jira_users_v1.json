@@ -1,6 +1,6 @@
 {
   "schema": "jom-verified-active-jira-users-v1",
-  "generated_at_utc": "2026-08-18T16:01:12Z",
+  "generated_at_utc": "2026-09-04T14:22:53Z",
   "status": "ok",
   "scope": {
     "product_key": "jira-software",
@@ -8,14 +8,14 @@
   },
   "source": {
     "authority": "Atlassian Admin Organizations API last-active-dates",
-    "authoritative_accounts": 143,
-    "successful_requests": 143,
+    "authoritative_accounts": 145,
+    "successful_requests": 145,
     "failed_requests": 0
   },
   "summary": {
-    "verified_active_jira_users": 108,
-    "accounts_with_jira_product_rows": 125,
-    "accounts_without_jira_product_rows": 18
+    "verified_active_jira_users": 113,
+    "accounts_with_jira_product_rows": 129,
+    "accounts_without_jira_product_rows": 16
   },
   "quality": {
     "timestamp_parse_failures": 0,

@@ -1,6 +1,6 @@
 {
   "schema": "jom-project-inventory-authority-v1",
-  "generated_at_utc": "2026-09-03T09:08:28Z",
+  "generated_at_utc": "2026-09-04T14:19:50Z",
   "status": "ok",
   "read_only": true,
   "scope": {
@@ -57,8 +57,8 @@
     "monitored_site_count": 4,
     "successful_site_count": 4,
     "failed_site_count": 0,
-    "visible_project_count": 76,
-    "collected_project_rows": 76,
+    "visible_project_count": 73,
+    "collected_project_rows": 73,
     "duplicate_site_project_key_count": 0
   },
   "sites": [
@@ -72,8 +72,8 @@
       ],
       "pagination_complete": true,
       "page_count": 1,
-      "visible_project_count": 26,
-      "projects_collected": 26,
+      "visible_project_count": 23,
+      "projects_collected": 23,
       "raw_responses_stored": false
     },
     {
@@ -144,7 +144,7 @@
       "site_url": "https://gli-delivery-tm.atlassian.net",
       "project_id": "10018",
       "project_key": "AUT",
-      "project_name": "Automation",
+      "project_name": "Innovation_Automation",
       "project_type_key": "software",
       "style": "next-gen",
       "simplified": true,
@@ -154,20 +154,6 @@
         "name": "Delivery Innovation and Improvements",
         "description": ""
       },
-      "source": "jira_cloud_rest_api_v3_project_search"
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "site_name": "gli-delivery-tm",
-      "site_url": "https://gli-delivery-tm.atlassian.net",
-      "project_id": "10284",
-      "project_key": "DAT",
-      "project_name": "Delivery Acumatica Translator",
-      "project_type_key": "software",
-      "style": "next-gen",
-      "simplified": true,
-      "is_private": false,
-      "project_category": null,
       "source": "jira_cloud_rest_api_v3_project_search"
     },
     {
@@ -242,6 +228,20 @@
       "site_key": "gli-delivery-tm",
       "site_name": "gli-delivery-tm",
       "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10416",
+      "project_key": "GPQ",
+      "project_name": "GZ - Project Queue",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": true,
+      "project_category": null,
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
       "project_id": "10007",
       "project_key": "HLII",
       "project_name": "Hoosier Lottery - IGT-IN",
@@ -254,20 +254,6 @@
         "name": "Moncton Test Management",
         "description": ""
       },
-      "source": "jira_cloud_rest_api_v3_project_search"
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "site_name": "gli-delivery-tm",
-      "site_url": "https://gli-delivery-tm.atlassian.net",
-      "project_id": "10383",
-      "project_key": "IA",
-      "project_name": "Invoice Audit",
-      "project_type_key": "software",
-      "style": "next-gen",
-      "simplified": true,
-      "is_private": false,
-      "project_category": null,
       "source": "jira_cloud_rest_api_v3_project_search"
     },
     {
@@ -346,23 +332,9 @@
       "site_key": "gli-delivery-tm",
       "site_name": "gli-delivery-tm",
       "site_url": "https://gli-delivery-tm.atlassian.net",
-      "project_id": "10317",
-      "project_key": "LCC",
-      "project_name": "LetterGen Compliance Checks",
-      "project_type_key": "software",
-      "style": "next-gen",
-      "simplified": true,
-      "is_private": false,
-      "project_category": null,
-      "source": "jira_cloud_rest_api_v3_project_search"
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "site_name": "gli-delivery-tm",
-      "site_url": "https://gli-delivery-tm.atlassian.net",
       "project_id": "10017",
       "project_key": "MATH",
-      "project_name": "Math",
+      "project_name": "Math Orchestrator",
       "project_type_key": "software",
       "style": "next-gen",
       "simplified": true,
@@ -504,20 +476,6 @@
         "name": "Moncton Test Management",
         "description": ""
       },
-      "source": "jira_cloud_rest_api_v3_project_search"
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "site_name": "gli-delivery-tm",
-      "site_url": "https://gli-delivery-tm.atlassian.net",
-      "project_id": "10350",
-      "project_key": "UA",
-      "project_name": "Unbilled Aging",
-      "project_type_key": "software",
-      "style": "next-gen",
-      "simplified": true,
-      "is_private": false,
-      "project_category": null,
       "source": "jira_cloud_rest_api_v3_project_search"
     },
     {

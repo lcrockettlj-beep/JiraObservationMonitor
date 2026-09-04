@@ -1,12 +1,12 @@
 {
   "schema": "jom-project-lead-authority-v1",
-  "generated_at_utc": "2026-09-03T09:11:59Z",
+  "generated_at_utc": "2026-09-04T14:22:53Z",
   "status": "partial",
   "summary": {
-    "projects": 76,
-    "projects_with_supported_active_lead": 73,
+    "projects": 73,
+    "projects_with_supported_active_lead": 70,
     "projects_without_supported_active_lead_published": 3,
-    "lead_coverage_percent": 96.1,
+    "lead_coverage_percent": 95.9,
     "distinct_supported_active_leads": 21
   },
   "authority": {
@@ -44,25 +44,12 @@
     {
       "site_key": "gli-delivery-tm",
       "project_key": "AUT",
-      "project_name": "Automation",
+      "project_name": "Innovation_Automation",
       "lead_state": "supported_active_lead",
       "supported_lead_count": 1,
       "leads": [
         {
           "display_name": "Sangeeta Reddy",
-          "account_status": "active"
-        }
-      ]
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "project_key": "DAT",
-      "project_name": "Delivery Acumatica Translator",
-      "lead_state": "supported_active_lead",
-      "supported_lead_count": 1,
-      "leads": [
-        {
-          "display_name": "Gabriel John Zafra",
           "account_status": "active"
         }
       ]
@@ -116,6 +103,19 @@
     },
     {
       "site_key": "gli-delivery-tm",
+      "project_key": "GPQ",
+      "project_name": "GZ - Project Queue",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Gabriel John Zafra",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
       "project_key": "HLII",
       "project_name": "Hoosier Lottery - IGT-IN",
       "lead_state": "supported_active_lead",
@@ -123,19 +123,6 @@
       "leads": [
         {
           "display_name": "Mark DeWolfe",
-          "account_status": "active"
-        }
-      ]
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "project_key": "IA",
-      "project_name": "Invoice Audit",
-      "lead_state": "supported_active_lead",
-      "supported_lead_count": 1,
-      "leads": [
-        {
-          "display_name": "Gabriel John Zafra",
           "account_status": "active"
         }
       ]
@@ -184,21 +171,8 @@
     },
     {
       "site_key": "gli-delivery-tm",
-      "project_key": "LCC",
-      "project_name": "LetterGen Compliance Checks",
-      "lead_state": "supported_active_lead",
-      "supported_lead_count": 1,
-      "leads": [
-        {
-          "display_name": "Gabriel John Zafra",
-          "account_status": "active"
-        }
-      ]
-    },
-    {
-      "site_key": "gli-delivery-tm",
       "project_key": "MATH",
-      "project_name": "Math",
+      "project_name": "Math Orchestrator",
       "lead_state": "supported_active_lead",
       "supported_lead_count": 1,
       "leads": [
@@ -308,19 +282,6 @@
       "leads": [
         {
           "display_name": "Mark DeWolfe",
-          "account_status": "active"
-        }
-      ]
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "project_key": "UA",
-      "project_name": "Unbilled Aging",
-      "lead_state": "supported_active_lead",
-      "supported_lead_count": 1,
-      "leads": [
-        {
-          "display_name": "Gabriel John Zafra",
           "account_status": "active"
         }
       ]

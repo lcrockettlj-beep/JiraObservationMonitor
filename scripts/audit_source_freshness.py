@@ -1,138 +1,34 @@
-# JOM_BACKEND_STATIC_TRUTH_REMEDIATION_V1
-# Legacy/static truth references in this file have been neutralised.
-# This code must not silently read legacy snapshots as website/backend truth.
-# Unavailable live/runtime data must be reported as unavailable.
 from __future__ import annotations
-
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
-
-ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "runtime" / "data"
-OUT_FRESHNESS = DATA / "source_freshness_audit.json"
-OUT_RELIABILITY = DATA / "source_reliability_status.json"
-
-SOURCES = [
-    ("site_registry", DATA / "site_registry.json", "Site Registry", "LIVE_OR_AUTO_REFRESHED"),
-    ("admin_truth_v2", DATA / "admin_truth_v2.json", "Admin Truth Layer v2", "LIVE_OR_AUTO_REFRESHED"),
-    ("runtime_execution", DATA / "runtime_execution_status.json", "Runtime Execution", "LIVE_OR_AUTO_REFRESHED"),
-    ("estate_product_access", DATA / "estate_product_access.json", "Estate Product Access", "LIVE_OR_AUTO_REFRESHED"),
-    ("estate_access_truth", DATA / "estate_access_truth.json", "Estate Access Truth", "LIVE_OR_AUTO_REFRESHED"),
-    ("runtime_live_truth_status", DATA / "runtime_live_truth_status.json", "Runtime Live Truth Status", "LIVE_STATUS"),
-    ("user_footprint", DATA / "user_footprint.json", "User Footprint", "LIVE_OR_AUTO_REFRESHED_GUARDED"),
-    ("estate_product_access", DATA / "runtime_contract_unavailable_estate_product_access_json", "Product Access Authority", "BLOCKED_LEGACY_INPUT"),
-]
-
-
-def now_utc() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-
-
-def read_json(path: Path) -> Any:
-    try:
-        return json.loads(path.read_text(encoding="utf-8-sig"))
-    except Exception as exc:
-        return {"_json_error": str(exc)}
-
-
-def parse_time(value: Any):
-    if not value:
-        return None
-    text = str(value).strip()
-    if text.endswith("Z"):
-        text = text[:-1] + "+00:00"
-    try:
-        dt = datetime.fromisoformat(text)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return dt.astimezone(timezone.utc)
-    except Exception:
-        return None
-
-
-def get_timestamp(payload: Any) -> str:
-    if not isinstance(payload, dict):
-        return ""
-    return str(payload.get("generated_at_utc") or payload.get("updated_at_utc") or payload.get("served_at_utc") or payload.get("raw_collection_summary", {}).get("collected_at_utc") or "")
-
-
-def classify(path: Path, source_type: str, payload: Any) -> Dict[str, Any]:
-    exists = path.exists()
-    timestamp = get_timestamp(payload) if exists else ""
-    parsed = parse_time(timestamp)
-    age = None
-    if parsed:
-        age = round((datetime.now(timezone.utc) - parsed).total_seconds() / 3600, 2)
-    if not exists:
-        state = "MISSING"
-    elif source_type == "BLOCKED_LEGACY_INPUT":
-        state = "REFERENCE_ONLY"
-    elif isinstance(payload, dict) and payload.get("live_collection") and payload.get("status") in ("ok", "partial"):
-        state = "LIVE"
-    elif age is None:
-        state = "UNKNOWN_TIMESTAMP"
-    elif age <= 24:
-        state = "CURRENT"
-    elif age <= 72:
-        state = "AGING"
-    else:
-        state = "STALE_CACHE"
-    return {"state": state, "timestamp": timestamp, "parsed": parsed.isoformat().replace("+00:00", "Z") if parsed else None, "age_hours": age}
-
-
-def main() -> int:
-    records: List[Dict[str, Any]] = []
-    issues: List[Dict[str, Any]] = []
-    counts: Dict[str, int] = {}
-    for key, path, label, source_type in SOURCES:
-        payload = read_json(path) if path.exists() else {}
-        state = classify(path, source_type, payload)
-        counts[state["state"]] = counts.get(state["state"], 0) + 1
-        row = {
-            "key": key,
-            "label": label,
-            "path": str(path.relative_to(ROOT)),
-            "exists": path.exists(),
-            "source_type": source_type,
-            "freshness_state": state["state"],
-            "timestamp_value": state["timestamp"],
-            "parsed_timestamp_utc": state["parsed"],
-            "age_hours": state["age_hours"],
-            "operator_label": state["state"],
-        }
-        records.append(row)
-        if state["state"] in {"MISSING", "UNKNOWN_TIMESTAMP", "STALE_CACHE"}:
-            issues.append({"source": label, "path": str(path.relative_to(ROOT)), "state": state["state"]})
-
-    freshness = {
-        "schema": "jom-source-freshness-audit-v2-live-truth-aware",
-        "generated_at_utc": now_utc(),
-        "policy": {
-            "rule": "Live endpoints and explicit route contracts are truth; legacy snapshots are reference-only.",
-            "legacy_reference_is_not_failure": True,
-            "current_hours": 24,
-            "aging_hours": 72,
-        },
-        "sources": records,
-        "summary": {"source_count": len(records), "counts": counts, "overall_state": "OK" if not issues else "ATTENTION"},
-    }
-    reliability = {
-        "schema": "jom-source-reliability-status-v2-live-truth-aware",
-        "generated_at_utc": now_utc(),
-        "overall_status": "ok" if not issues else "attention",
-        "issues": issues,
-        "summary": {"issue_count": len(issues), "freshness_overall": freshness["summary"]["overall_state"]},
-        "inputs": {"source_freshness": str(OUT_FRESHNESS.relative_to(ROOT))},
-    }
-    DATA.mkdir(parents=True, exist_ok=True)
-    OUT_FRESHNESS.write_text(json.dumps(freshness, indent=2), encoding="utf-8")
-    OUT_RELIABILITY.write_text(json.dumps(reliability, indent=2), encoding="utf-8")
-    print(json.dumps({"freshness": str(OUT_FRESHNESS), "reliability": str(OUT_RELIABILITY), "issues": len(issues)}, indent=2))
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
-
+ROOT=Path(__file__).resolve().parents[1];DATA=ROOT/'runtime'/'data';OUT=DATA/'source_freshness_audit.json'
+SOURCES=[('runtime_refresh_status','runtime_refresh_status.json','Canonical Runtime Refresh','EXECUTION_STATUS','execution_finish'),('admin_enriched_refresh_status','admin_enriched_refresh_status.json','Admin Enriched Refresh','CHILD_EXECUTION_STATUS','execution_finish'),('site_registry','site_registry.json','Site Registry','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('admin_truth_v2','admin_truth_v2.json','Admin Truth Layer v2','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('estate_product_access','estate_product_access.json','Estate Product Access','LIVE_COLLECTION','contract_generation'),('product_access_refresh_status','product_access_refresh_status.json','Product Access Refresh','EXECUTION_STATUS','status_generation'),('estate_admin_contacts','estate_admin_contacts_v1.json','Estate Admin Contacts','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('estate_monitored_products','estate_monitored_product_authority_v1.json','Estate Monitored Products','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('named_site_access','named_site_access_authority_v1.json','Named Site Access','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('named_user_display_identity','named_user_display_identity_v1.json','Named User Display Identity','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('user_footprint','user_footprint.json','User Footprint','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('users_access_actionable','users_access_actionable_drilldown_v1.json','Users Access Actionable Drilldown','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('verified_active_jira_users','verified_active_jira_users_v1.json','Verified Active Jira Users','LIVE_DERIVED_ACTIVITY_AUTHORITY','contract_generation'),('project_inventory','project_inventory_authority_v1.json','Project Inventory','LIVE_COLLECTION','contract_generation'),('project_governance_identity','project_governance_named_identity_authority_v1.json','Project Governance Named Identity','LIVE_DERIVED_AUTHORITY','contract_generation'),('project_lead','project_lead_authority_v1.json','Project Lead Authority','DERIVED_RUNTIME_AUTHORITY','contract_generation'),('project_owner','project_owner_authority_v1.json','Project Owner Authority','GOVERNANCE_DERIVED_AUTHORITY','contract_generation')]
+def now():return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+def read(p):
+ try:return json.loads(p.read_text(encoding='utf-8-sig'))
+ except Exception as e:return {'_json_error':str(e)}
+def parse(v):
+ if not v:return None
+ s=str(v);s=s[:-1]+'+00:00' if s.endswith('Z') else s
+ try:
+  d=datetime.fromisoformat(s);return (d.replace(tzinfo=timezone.utc) if d.tzinfo is None else d).astimezone(timezone.utc)
+ except:return None
+def main():
+ rows=[];issues=[];counts={}
+ for key,name,label,kind,meaning in SOURCES:
+  p=DATA/name;d=read(p) if p.exists() else {};running=d.get('running') is True;field='finished_at_utc' if meaning=='execution_finish' else next((x for x in ('generated_at_utc','updated_at_utc','collected_at_utc') if d.get(x)),None);value=d.get(field) if field else None;dt=parse(value);age=round((datetime.now(timezone.utc)-dt).total_seconds()/3600,2) if dt else None;decl=str(d.get('status') or d.get('overall_status') or '').lower()
+  if not p.exists():state='MISSING'
+  elif d.get('_json_error'):state='INVALID_JSON'
+  elif running:state='IN_PROGRESS'
+  elif age is None:state='UNKNOWN_TIMESTAMP'
+  elif age>72:state='STALE'
+  elif age>24:state='AGING'
+  elif decl in {'failed','error','unavailable'}:state='FAILED_OR_UNAVAILABLE'
+  elif decl in {'partial','review','attention'}:state='CURRENT_WITH_REVIEW'
+  else:state='CURRENT'
+  row={'key':key,'label':label,'path':str(p.relative_to(ROOT)).replace('\\','/'),'exists':p.exists(),'state':state,'freshness_state':state,'operator_label':state.replace('_',' '),'timestamp_field':field,'timestamp_value':value or '','timestamp_meaning':meaning,'parsed_timestamp_utc':dt.isoformat().replace('+00:00','Z') if dt else None,'age_hours':age,'declared_status':decl or None,'source_class':kind};rows.append(row);counts[state]=counts.get(state,0)+1
+  if state!='CURRENT':issues.append({'source':label,'path':row['path'],'state':state,'declared_status':row['declared_status']})
+ payload={'schema':'jom-source-freshness-audit-v3.1-runtime-finalization-aligned','generated_at_utc':now(),'coverage':{'scope':'website_authority_contracts','expected_source_count':len(SOURCES),'checked_source_count':len(rows),'complete':len(rows)==len(SOURCES)},'policy':{'current_hours':24,'aging_hours':72,'whole_platform_ok_requires_complete_coverage':True,'partial_review_is_not_healthy':True,'in_progress_is_not_unknown':True,'file_mtime_is_not_collection_time':True},'sources':rows,'summary':{'source_count':len(rows),'counts':counts,'issue_count':len(issues),'overall_state':'OK' if not issues else 'ATTENTION'},'issues':issues}
+ t=OUT.with_suffix('.json.tmp');t.write_text(json.dumps(payload,indent=2),encoding='utf-8');t.replace(OUT);print(json.dumps(payload['summary'],indent=2));return 0
+if __name__=='__main__':raise SystemExit(main())

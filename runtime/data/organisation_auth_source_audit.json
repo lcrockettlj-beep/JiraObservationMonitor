@@ -1,6 +1,6 @@
 {
   "schema": "jom-atlassian-organisation-auth-source-audit-v1",
-  "generated_at_utc": "2026-07-30T15:50:16Z",
+  "generated_at_utc": "2026-09-04T10:24:35Z",
   "status": "oauth_token_candidate_present",
   "admin_token_sources_configured": [],
   "oauth_client_configured": true,

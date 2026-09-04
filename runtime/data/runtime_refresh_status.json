@@ -1,16 +1,255 @@
 {
-  "schema": "jom-runtime-refresh-status-v2",
-  "generated_at_utc": "2026-08-19T07:19:44.638752Z",
-  "started_at_utc": "2026-08-19T07:19:44.633639Z",
-  "finished_at_utc": null,
-  "running": true,
-  "overall_status": "running",
-  "current_step": "admin_enriched_chain",
+  "schema": "jom-runtime-refresh-status-v3.1",
+  "execution_id": "jom-refresh-07a13281722b4242bd98e6e431066227",
+  "execution_scope": "canonical_runtime_refresh",
+  "parent_execution_id": null,
+  "generated_at_utc": "2026-09-04T14:10:17.850289Z",
+  "started_at_utc": "2026-09-04T14:04:38.512796Z",
+  "finished_at_utc": "2026-09-04T14:10:17.691641Z",
+  "running": false,
+  "overall_status": "ok",
+  "current_step": null,
   "automatic_refresh_contract": {
     "maximum_interval_hours": 12,
     "fail_closed": true,
-    "dependency_order_enforced": true
+    "dependency_order_enforced": true,
+    "normal_operation_trigger": "external_scheduler_or_explicit_runtime_refresh_route",
+    "trigger_proof": "REQUIRES_RUNTIME_OR_SCHEDULER_EVIDENCE"
   },
-  "contracts": {},
-  "steps": []
+  "timestamp_semantics": {
+    "started_at_utc": "canonical execution start",
+    "finished_at_utc": "canonical execution finish before final health assessment",
+    "generated_at_utc": "status document write time",
+    "contracts.contract_generated_at_utc": "producer generation time; not automatically source collection time",
+    "contracts.file_last_write_utc": "filesystem write evidence only"
+  },
+  "final_health_assessment": {
+    "status": "complete",
+    "freshness": {
+      "key": "source_freshness_final",
+      "label": "Evaluate Freshness against finalized canonical execution",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
+      "required": true,
+      "scope": "canonical_runtime_refresh_step",
+      "parent_execution_id": "jom-refresh-07a13281722b4242bd98e6e431066227",
+      "status": "ok",
+      "started_at_utc": "2026-09-04T14:10:17.705905Z",
+      "finished_at_utc": "2026-09-04T14:10:17.770451Z",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"source_count\": 17,\n  \"counts\": {\n    \"CURRENT\": 14,\n    \"CURRENT_WITH_REVIEW\": 3\n  },\n  \"issue_count\": 3,\n  \"overall_state\": \"ATTENTION\"\n}\n",
+      "stderr_tail": ""
+    },
+    "reliability": {
+      "key": "source_reliability_final",
+      "label": "Evaluate Reliability from finalized Freshness and Runtime",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_reliability",
+      "required": true,
+      "scope": "canonical_runtime_refresh_step",
+      "parent_execution_id": "jom-refresh-07a13281722b4242bd98e6e431066227",
+      "status": "ok",
+      "started_at_utc": "2026-09-04T14:10:17.770527Z",
+      "finished_at_utc": "2026-09-04T14:10:17.833985Z",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"issue_count\": 3,\n  \"freshness_overall\": \"ATTENTION\",\n  \"runtime_refresh_overall\": \"ok\",\n  \"runtime_refresh_running\": false,\n  \"user_footprint_status\": \"generated\"\n}\n",
+      "stderr_tail": ""
+    }
+  },
+  "contracts": {
+    "site_registry.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-site-registry-v4-runtime-consolidated",
+      "status": null,
+      "contract_generated_at_utc": "2026-09-04T14:04:38Z",
+      "file_last_write_utc": "2026-09-04T14:04:38.590746Z"
+    },
+    "estate_product_access.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-estate-product-access-v2-live",
+      "status": "partial",
+      "contract_generated_at_utc": "2026-09-04T14:04:40Z",
+      "file_last_write_utc": "2026-09-04T14:04:40.977701Z"
+    },
+    "product_access_refresh_status.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-product-access-refresh-status-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:04:41.051035Z",
+      "file_last_write_utc": "2026-09-04T14:04:41.051913Z"
+    },
+    "admin_enriched_refresh_status.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-admin-enriched-refresh-status-v6",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:10:17.671016Z",
+      "file_last_write_utc": "2026-09-04T14:10:17.680998Z"
+    },
+    "estate_monitored_product_authority_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-estate-monitored-product-authority-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:05:03Z",
+      "file_last_write_utc": "2026-09-04T14:05:03.728757Z"
+    },
+    "users_access_actionable_drilldown_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-users-access-actionable-drilldown-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:10:17Z",
+      "file_last_write_utc": "2026-09-04T14:10:17.647797Z"
+    },
+    "named_user_display_identity_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-named-user-display-identity-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:05:32Z",
+      "file_last_write_utc": "2026-09-04T14:05:33.411403Z"
+    },
+    "verified_active_jira_users_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-verified-active-jira-users-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:08:42Z",
+      "file_last_write_utc": "2026-09-04T14:10:09.505809Z"
+    },
+    "admin_directory_users.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-admin-directory-users-authority-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:04:41Z",
+      "file_last_write_utc": "2026-09-04T14:04:42.644100Z"
+    },
+    "admin_truth_v2.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-admin-truth-layer-v2",
+      "status": null,
+      "contract_generated_at_utc": "2026-09-04T14:04:42Z",
+      "file_last_write_utc": "2026-09-04T14:04:42.726196Z"
+    },
+    "estate_admin_contacts_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-estate-admin-contacts-v2",
+      "status": "live_mapped",
+      "contract_generated_at_utc": "2026-09-04T14:05:03Z",
+      "file_last_write_utc": "2026-09-04T14:05:03.668918Z"
+    },
+    "named_site_access_authority_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-named-site-access-authority-v1",
+      "status": "live",
+      "contract_generated_at_utc": "2026-09-04T14:05:32.333639Z",
+      "file_last_write_utc": "2026-09-04T14:05:32.333208Z"
+    },
+    "user_footprint.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-user-footprint-v2",
+      "status": null,
+      "contract_generated_at_utc": "2026-09-04T14:05:32.257618Z",
+      "file_last_write_utc": "2026-09-04T14:05:32.257610Z"
+    },
+    "project_inventory_authority_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-project-inventory-authority-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:05:34Z",
+      "file_last_write_utc": "2026-09-04T14:05:34.531909Z"
+    },
+    "project_governance_named_identity_authority_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-project-governance-named-identity-authority-v1",
+      "status": "ok",
+      "contract_generated_at_utc": "2026-09-04T14:08:42Z",
+      "file_last_write_utc": "2026-09-04T14:08:42.023115Z"
+    },
+    "project_lead_authority_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-project-lead-authority-v1",
+      "status": "partial",
+      "contract_generated_at_utc": "2026-09-04T14:08:42Z",
+      "file_last_write_utc": "2026-09-04T14:08:42.085051Z"
+    },
+    "project_owner_authority_v1.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-project-owner-authority-v1",
+      "status": "partial",
+      "contract_generated_at_utc": "2026-09-04T14:08:42Z",
+      "file_last_write_utc": "2026-09-04T14:08:42.134387Z"
+    },
+    "source_freshness_audit.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-source-freshness-audit-v3.1-runtime-finalization-aligned",
+      "status": null,
+      "contract_generated_at_utc": "2026-09-04T14:10:17Z",
+      "file_last_write_utc": "2026-09-04T14:10:17.760398Z"
+    },
+    "source_reliability_status.json": {
+      "exists": true,
+      "state": "PRESENT",
+      "schema": "jom-source-reliability-status-v1.2-runtime-finalization-aligned",
+      "status": "attention",
+      "contract_generated_at_utc": "2026-09-04T14:10:17.824757Z",
+      "file_last_write_utc": "2026-09-04T14:10:17.825178Z"
+    }
+  },
+  "steps": [
+    {
+      "key": "site_registry",
+      "label": "Rebuild Site Registry",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_site_registry.py --project-root .",
+      "required": true,
+      "scope": "canonical_runtime_refresh_step",
+      "parent_execution_id": "jom-refresh-07a13281722b4242bd98e6e431066227",
+      "status": "ok",
+      "started_at_utc": "2026-09-04T14:04:38.514715Z",
+      "finished_at_utc": "2026-09-04T14:04:38.599797Z",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\site_registry.json\",\n  \"summary\": {\n    \"total_sites\": 6,\n    \"monitored_count\": 4,\n    \"discovered_count\": 2,\n    \"pending_onboarding_count\": 0,\n    \"ignored_count\": 0\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "product_access",
+      "label": "Refresh Product Access",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.product_access_sources",
+      "required": true,
+      "scope": "canonical_runtime_refresh_step",
+      "parent_execution_id": "jom-refresh-07a13281722b4242bd98e6e431066227",
+      "status": "ok",
+      "started_at_utc": "2026-09-04T14:04:38.601885Z",
+      "finished_at_utc": "2026-09-04T14:04:41.057286Z",
+      "returncode": 0,
+      "stdout_tail": "{\n  \"overall_status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\product_access_refresh_status.json\"\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "key": "admin_enriched_chain",
+      "label": "Refresh complete Admin authority chain",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.runtime.admin_enriched_chain",
+      "required": true,
+      "scope": "canonical_runtime_refresh_step",
+      "parent_execution_id": "jom-refresh-07a13281722b4242bd98e6e431066227",
+      "status": "ok",
+      "started_at_utc": "2026-09-04T14:04:41.059156Z",
+      "finished_at_utc": "2026-09-04T14:10:17.690016Z",
+      "returncode": 0,
+      "stdout_tail": "START admin_api_enrichment\nFINISH admin_api_enrichment=ok\nSTART admin_directory_users\nFINISH admin_directory_users=ok\nSTART admin_truth_v2\nFINISH admin_truth_v2=ok\nSTART estate_resource_authority\nFINISH estate_resource_authority=ok\nSTART estate_monitored_product_authority\nFINISH estate_monitored_product_authority=ok\nSTART admin_group_expansion\nFINISH admin_group_expansion=ok\nSTART named_access_truth_v2\nFINISH named_access_truth_v2=ok\nSTART named_access_reconciliation_v2\nFINISH named_access_reconciliation_v2=ok\nSTART user_footprint\nFINISH user_footprint=ok\nSTART named_site_access_authority\nFINISH named_site_access_authority=ok\nSTART named_user_display_identity\nFINISH named_user_display_identity=ok\nSTART project_inventory_authority\nFINISH project_inventory_authority=ok\nSTART project_governance_named_identity\nFINISH project_governance_named_identity=ok\nSTART project_lead_authority\nFINISH project_lead_authority=ok\nSTART project_owner_authority\nFINISH project_owner_authority=ok\nSTART verified_active_jira_users\nFINISH verified_active_jira_users=ok\nSTART users_access_actionable_drilldown\nFINISH users_access_actionable_drilldown=ok\n",
+      "stderr_tail": ""
+    }
+  ]
 }

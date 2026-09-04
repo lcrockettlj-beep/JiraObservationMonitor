@@ -1,20 +1,20 @@
 {
   "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-08-18T16:01:11.055017Z",
+  "generated_at_utc": "2026-09-04T14:24:57.694502Z",
   "source_status": "generated",
   "reason": "Named access footprint generated from named_access_truth_v2 after reconciliation_v2 passed safe_to_enable_named_access_ui=true.",
   "safe_to_show_named_access_ui": true,
   "reconciliation_source": "reports\\named_access_reconciliation_v2.json",
   "truth_source": "runtime\\data\\live_named_access_contract",
   "summary": {
-    "users_analyzed": 100,
-    "average_sites_per_user": 1.21,
+    "users_analyzed": 85,
+    "average_sites_per_user": 1.24,
     "high_duplication_users": 1,
     "medium_duplication_users": 18,
-    "total_product_access_assignments": 121,
-    "reconciled_api_product_users": 165,
-    "named_minus_api_product": -44,
-    "named_unique_users": 100
+    "total_product_access_assignments": 105,
+    "reconciled_api_product_users": 169,
+    "named_minus_api_product": -64,
+    "named_unique_users": 85
   },
   "users": [
     {
@@ -22,16 +22,15 @@
       "name": "712020:fafc2b1b-7fe9-4986-96b3-42e0ac19cbf7",
       "email": "",
       "sites": [
-        "gli-delivery-tm",
         "gli-global-technology",
         "gli-it-project",
         "gli-tracker"
       ],
-      "site_count": 4,
+      "site_count": 3,
       "products": [
         "jira-software"
       ],
-      "product_access_assignments": 4,
+      "product_access_assignments": 3,
       "access_sources": [
         "group"
       ],
@@ -396,23 +395,6 @@
       "category": "low"
     },
     {
-      "account_id": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
-      "name": "557058:288381a0-3b59-4fe2-ac54-242442ff1751",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
       "name": "557058:41dd90bb-4756-41be-8bef-d5222244d88d",
       "email": "",
@@ -500,23 +482,6 @@
     {
       "account_id": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
       "name": "557058:c0cd862e-dad3-4c40-a51a-57d2b1c56ee1",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
-      "name": "557058:c0f3faaf-09cc-4e08-ad32-bfdd3e011c3d",
       "email": "",
       "sites": [
         "gli-it-project"
@@ -770,23 +735,6 @@
       "category": "low"
     },
     {
-      "account_id": "5e3d91953f647d0c99d826ee",
-      "name": "5e3d91953f647d0c99d826ee",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "5ec6cd2c3434a20c34a883c8",
       "name": "5ec6cd2c3434a20c34a883c8",
       "email": "",
@@ -906,40 +854,6 @@
       "category": "low"
     },
     {
-      "account_id": "61df7f1ae67ea2006b42bda9",
-      "name": "61df7f1ae67ea2006b42bda9",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "61f3c908875fc100705a2ba9",
-      "name": "61f3c908875fc100705a2ba9",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "621e03d5a12450006886adae",
       "name": "621e03d5a12450006886adae",
       "email": "",
@@ -993,23 +907,6 @@
     {
       "account_id": "63735807fde064eda2ec1d04",
       "name": "63735807fde064eda2ec1d04",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "63dcd8eb790148a180951d19",
-      "name": "63dcd8eb790148a180951d19",
       "email": "",
       "sites": [
         "gli-it-project"
@@ -1110,23 +1007,6 @@
       "category": "low"
     },
     {
-      "account_id": "712020:1818f819-69d6-48af-af80-80ed9d6aa968",
-      "name": "712020:1818f819-69d6-48af-af80-80ed9d6aa968",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "712020:25eab072-55fc-43ec-8604-46f8eae07bb4",
       "name": "712020:25eab072-55fc-43ec-8604-46f8eae07bb4",
       "email": "",
@@ -1212,62 +1092,11 @@
       "category": "low"
     },
     {
-      "account_id": "712020:3bfdc65c-8c8d-4df4-ab1a-83bdb873f686",
-      "name": "712020:3bfdc65c-8c8d-4df4-ab1a-83bdb873f686",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "712020:424661fd-685e-4f3a-8025-91733ad8297a",
       "name": "712020:424661fd-685e-4f3a-8025-91733ad8297a",
       "email": "",
       "sites": [
         "gli-global-technology"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "712020:44d14faa-e9c5-47a1-9044-b4125dc39f62",
-      "name": "712020:44d14faa-e9c5-47a1-9044-b4125dc39f62",
-      "email": "",
-      "sites": [
-        "gli-global-technology"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "712020:517e85e6-6bee-4b7f-88e0-d0a5cc9803f2",
-      "name": "712020:517e85e6-6bee-4b7f-88e0-d0a5cc9803f2",
-      "email": "",
-      "sites": [
-        "gli-it-project"
       ],
       "site_count": 1,
       "products": [
@@ -1382,23 +1211,6 @@
       "category": "low"
     },
     {
-      "account_id": "712020:771bf8e7-280d-4c0d-812f-18a3be7a52e5",
-      "name": "712020:771bf8e7-280d-4c0d-812f-18a3be7a52e5",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "712020:7ebaf502-a1b1-453a-9bbc-c0a602d39d38",
       "name": "712020:7ebaf502-a1b1-453a-9bbc-c0a602d39d38",
       "email": "",
@@ -1501,23 +1313,6 @@
       "category": "low"
     },
     {
-      "account_id": "712020:a3ae965f-a490-484d-afda-0036560a1fe8",
-      "name": "712020:a3ae965f-a490-484d-afda-0036560a1fe8",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "712020:a4e31cbc-809f-4a74-bdd1-8e9e8406d519",
       "name": "712020:a4e31cbc-809f-4a74-bdd1-8e9e8406d519",
       "email": "",
@@ -1535,11 +1330,11 @@
       "category": "low"
     },
     {
-      "account_id": "712020:ad92688b-af26-4d57-b0e0-dd74e35d2c15",
-      "name": "712020:ad92688b-af26-4d57-b0e0-dd74e35d2c15",
+      "account_id": "712020:ab30a0c8-c74a-4ca0-a0a5-b2c43808fc0c",
+      "name": "712020:ab30a0c8-c74a-4ca0-a0a5-b2c43808fc0c",
       "email": "",
       "sites": [
-        "gli-it-project"
+        "gli-global-technology"
       ],
       "site_count": 1,
       "products": [
@@ -1620,62 +1415,11 @@
       "category": "low"
     },
     {
-      "account_id": "712020:c9dcb854-cc83-427b-87bc-edd472329170",
-      "name": "712020:c9dcb854-cc83-427b-87bc-edd472329170",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "712020:cb410439-a068-4508-bbb3-a79b31a3b5cd",
       "name": "712020:cb410439-a068-4508-bbb3-a79b31a3b5cd",
       "email": "",
       "sites": [
         "gli-global-technology"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "712020:da5d225b-d05b-413e-b380-a9c111f16deb",
-      "name": "712020:da5d225b-d05b-413e-b380-a9c111f16deb",
-      "email": "",
-      "sites": [
-        "gli-it-project"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "712020:f1a9d02b-dcc1-4448-bb30-1175d7cc174f",
-      "name": "712020:f1a9d02b-dcc1-4448-bb30-1175d7cc174f",
-      "email": "",
-      "sites": [
-        "gli-it-project"
       ],
       "site_count": 1,
       "products": [

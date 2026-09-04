@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-v4-runtime-consolidated",
-  "generated_at_utc": "2026-08-18T16:02:53Z",
+  "generated_at_utc": "2026-09-04T14:04:38Z",
   "summary": {
     "total_sites": 6,
     "monitored_count": 4,
@@ -34,7 +34,7 @@
       "is_monitored": true,
       "can_approve": false,
       "metrics": {
-        "jira_product_user_count": 31,
+        "jira_product_user_count": 35,
         "jira_product_seat_limit": 50,
         "jira_role_count": 1
       },
@@ -76,7 +76,7 @@
       "can_approve": false,
       "metrics": {
         "jira_product_user_count": 57,
-        "jira_product_seat_limit": 100000,
+        "jira_product_seat_limit": 4000,
         "jira_role_count": 1
       },
       "key": "gli-global-technology",

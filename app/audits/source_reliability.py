@@ -1,63 +1,22 @@
-# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
-# Remaining legacy/static truth references in this file have been neutralised.
-# This file must not treat legacy snapshots as backend or website truth.
+from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-OUT_PATH = PROJECT_ROOT / "runtime" / "data" / "source_reliability_status.json"
-INPUTS = {
-    "source_freshness": PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json",
-    "runtime_refresh": PROJECT_ROOT / "runtime" / "data" / "runtime_refresh_status.json",
-    "user_footprint": PROJECT_ROOT / "runtime" / "data" / "user_footprint.json",
-    "site_registry": PROJECT_ROOT / "runtime" / "data" / "site_registry.json",
-}
-
-def now_utc():
-    return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
-
-def read_json(path):
-    if not path.exists(): return None
-    try: return json.loads(path.read_text(encoding='utf-8'))
-    except Exception as exc: return {"_read_error": str(exc)}
-
+ROOT=Path(__file__).resolve().parents[2];OUT=ROOT/'runtime/data/source_reliability_status.json';INPUTS={'source_freshness':ROOT/'runtime/data/source_freshness_audit.json','runtime_refresh':ROOT/'runtime/data/runtime_refresh_status.json','user_footprint':ROOT/'runtime/data/user_footprint.json','site_registry':ROOT/'runtime/data/site_registry.json'}
+def now():return datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
+def read(p):
+ try:return json.loads(p.read_text(encoding='utf-8-sig')) if p.exists() else None
+ except Exception as e:return {'_read_error':str(e)}
 def main():
-    data = {k: read_json(v) for k, v in INPUTS.items()}
-    issues = []
-    freshness = data.get('source_freshness') or {}
-    runtime = data.get('runtime_refresh') or {}
-    footprint = data.get('user_footprint') or {}
-    runtime_overall = runtime.get('overall_status')
-
-    # Runtime collector status is now authoritative for runtime_contract_unavailable_latest_run_json, so avoid duplicate Latest Jira Runtime issue.
-    for src in freshness.get('sources', []):
-        label = src.get('label')
-        state = src.get('freshness_state')
-        if label == 'Latest Jira Runtime Run' and runtime_overall == 'ok':
-            continue
-        if state in ('STALE', 'MISSING', 'UNKNOWN_TIMESTAMP'):
-            issues.append({"source": label, "state": src.get('operator_label') or state, "path": src.get('path')})
-
-    if footprint.get('source_status') == 'unavailable':
-        issues.append({"source":"User Footprint", "state":"GUARDED UNAVAILABLE", "path":"runtime/data/user_footprint.json", "reason":footprint.get('reason')})
-
-    if runtime_overall in ('failed', 'attention', 'review'):
-        # review is only an issue if latest_run was not current or collector script missing.
-        steps = runtime.get('steps') or []
-        collector = next((s for s in steps if s.get('key') == 'runtime_collector'), {})
-        if runtime_overall != 'review' or collector.get('status') != 'ok':
-            issues.append({"source":"Runtime Refresh", "state":runtime_overall, "path":"runtime/data/runtime_refresh_status.json", "reason":collector.get('note')})
-
-    hard_states = {'STALE SNAPSHOT', 'MISSING SOURCE', 'UNAVAILABLE', 'failed', 'attention'}
-    if any(i.get('state') in hard_states for i in issues): overall = 'attention'
-    elif issues: overall = 'review'
-    else: overall = 'ok'
-
-    payload = {"schema":"jom-source-reliability-status-v1.1", "generated_at_utc":now_utc(), "overall_status":overall,
-        "summary":{"issue_count":len(issues), "freshness_overall":(freshness.get('summary') or {}).get('overall_state'), "runtime_refresh_overall":runtime_overall, "user_footprint_status":footprint.get('source_status')},
-        "issues":issues, "inputs":{k:str(v.relative_to(PROJECT_ROOT)) for k,v in INPUTS.items()}}
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(json.dumps(payload, indent=2), encoding='utf-8')
-    print(json.dumps(payload['summary'], indent=2)); print('Output:', OUT_PATH)
-if __name__ == '__main__': main()
+ data={k:read(v) for k,v in INPUTS.items()};f=data.get('source_freshness') or {};r=data.get('runtime_refresh') or {};fp=data.get('user_footprint') or {};issues=[]
+ for src in f.get('sources',[]):
+  state=src.get('state') or src.get('freshness_state')
+  if state!='CURRENT':issues.append({'source':src.get('label'),'state':state,'path':src.get('path'),'reason':'Freshness source is not fully current.'})
+ ro=r.get('overall_status');running=r.get('running') is True
+ if running:issues.append({'source':'Runtime Refresh','state':'IN_PROGRESS','path':'runtime/data/runtime_refresh_status.json'})
+ elif ro not in {'ok','ok_with_advisory'}:issues.append({'source':'Runtime Refresh','state':ro or 'UNAVAILABLE','path':'runtime/data/runtime_refresh_status.json'})
+ if fp.get('source_status')=='unavailable':issues.append({'source':'User Footprint','state':'GUARDED_UNAVAILABLE','path':'runtime/data/user_footprint.json','reason':fp.get('reason')})
+ fo=(f.get('summary') or {}).get('overall_state');overall='attention' if fo=='ATTENTION' or running or ro not in {'ok','ok_with_advisory'} else ('review' if issues else 'ok')
+ payload={'schema':'jom-source-reliability-status-v1.2-runtime-finalization-aligned','generated_at_utc':now(),'overall_status':overall,'summary':{'issue_count':len(issues),'freshness_overall':fo,'runtime_refresh_overall':ro,'runtime_refresh_running':running,'user_footprint_status':fp.get('source_status')},'issues':issues,'inputs':{k:str(v.relative_to(ROOT)).replace('\\','/') for k,v in INPUTS.items()}}
+ t=OUT.with_suffix('.json.tmp');t.write_text(json.dumps(payload,indent=2),encoding='utf-8');t.replace(OUT);print(json.dumps(payload['summary'],indent=2));return 0
+if __name__=='__main__':raise SystemExit(main())

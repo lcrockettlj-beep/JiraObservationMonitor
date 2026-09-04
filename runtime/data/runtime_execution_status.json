@@ -1,11 +1,11 @@
 {
   "schema": "jom-runtime-execution-status-v1-monitoring-preflight",
-  "generated_at_utc": "2026-08-18T15:47:05.842755Z",
+  "generated_at_utc": "2026-09-04T14:24:59.709109Z",
   "state": "idle",
   "running": false,
   "last_action": "monitoring_api_preflight_refresh",
-  "last_started_at_utc": "2026-08-18T15:47:05.842755Z",
-  "last_finished_at_utc": "2026-08-18T15:47:05.842755Z",
+  "last_started_at_utc": "2026-09-04T14:24:59.709109Z",
+  "last_finished_at_utc": "2026-09-04T14:24:59.709109Z",
   "last_result_status": "ok",
   "last_error": null,
   "last_result": {

@@ -7,32 +7,63 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
 </head>
-<body data-jom-page="page-shell">
+<body data-jom-page="admin-home">
 {% include "_nav.html" %}
 <main class="jom-shell" id="jom-page-shell">
   <section class="jom-card jom-hero" aria-label="Admin overview">
     <div>
       <p class="jom-kicker">Operations / Admin</p>
       <h1>Admin</h1>
-      <p class="jom-lede">Configure JOM platform rules, estate administration areas, access controls, monitoring rules, and consolidated OAuth-backed administration views.</p>
+      <p class="jom-lede">Current administration posture from the established Estate Configuration, Monitoring, Licensing and Billing, Users and Access, and System Configuration authorities.</p>
     </div>
     <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
+      <span>Current authority state</span>
+      <strong id="admin-home-status">Loading</strong>
+      <p id="admin-home-status-note">Reading the existing Admin authority contracts.</p>
     </div>
   </section>
-  <section class="jom-card" aria-label="Admin sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
+
+  <p id="admin-home-error" class="jom-card" role="status" hidden></p>
+
+  <section class="jom-card" aria-labelledby="admin-home-areas-title">
+    <div class="jom-section-head">
+      <div><p class="jom-kicker">Administration</p><h2 id="admin-home-areas-title">Live authority areas</h2></div>
+      <span id="admin-home-updated">Loading current contracts</span>
+    </div>
     <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Estate Configuration</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Discovery</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Monitoring</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Licensing & Billing</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Users & Access</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>System Configuration</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
+      <article class="jom-state-card" data-admin-card="estate-configuration">
+        <span>Estate Configuration</span><strong id="admin-estate-primary">Loading</strong>
+        <p id="admin-estate-detail">Reading monitored-site and ownership authority.</p>
+        <a href="/admin/estate-configuration">Open Estate Configuration</a>
+      </article>
+      <article class="jom-state-card" data-admin-card="discovery">
+        <span>Discovery</span><strong>Unavailable</strong>
+        <p>Admin Discovery remains pending operationalisation. No status or count is inferred.</p>
+        <a href="/admin/discovery">Open Discovery</a>
+      </article>
+      <article class="jom-state-card" data-admin-card="monitoring">
+        <span>Monitoring</span><strong id="admin-monitoring-primary">Loading</strong>
+        <p id="admin-monitoring-detail">Reading monitoring coverage and source health.</p>
+        <a href="/admin/monitoring">Open Monitoring</a>
+      </article>
+      <article class="jom-state-card" data-admin-card="licensing-billing">
+        <span>Licensing &amp; Billing</span><strong id="admin-licensing-primary">Loading</strong>
+        <p id="admin-licensing-detail">Reading product-access authority. Commercial billing remains unavailable unless proven.</p>
+        <a href="/admin/licensing-billing">Open Licensing &amp; Billing</a>
+      </article>
+      <article class="jom-state-card" data-admin-card="users-access">
+        <span>Users &amp; Access</span><strong id="admin-users-primary">Loading</strong>
+        <p id="admin-users-detail">Reading account, management and MFA authority.</p>
+        <a href="/admin/users-access">Open Users &amp; Access</a>
+      </article>
+      <article class="jom-state-card" data-admin-card="system-configuration">
+        <span>System Configuration</span><strong id="admin-system-primary">Loading</strong>
+        <p id="admin-system-detail">Reading runtime guardrails and configured-source health.</p>
+        <a href="/admin/system-configuration">Open System Configuration</a>
+      </article>
     </div>
   </section>
 </main>
+<script src="{{ url_for('static', filename='js/jom_admin_home_v1.js') }}" defer></script>
 </body>
 </html>

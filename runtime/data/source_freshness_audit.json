@@ -1,117 +1,158 @@
 {
-  "schema": "jom-source-freshness-audit-v2-live-truth-aware",
-  "generated_at_utc": "2026-08-19T07:19:46Z",
+  "schema": "jom-source-freshness-audit-v1.1",
+  "generated_at_utc": "2026-09-04T14:24:59.700362Z",
+  "display_generated_at_utc": "2026-09-04 14:24 UTC",
   "policy": {
-    "rule": "Live endpoints and explicit route contracts are truth; legacy snapshots are reference-only.",
-    "legacy_reference_is_not_failure": true,
     "current_hours": 24,
-    "aging_hours": 72
+    "aging_hours": 72,
+    "stale_after_hours": 72,
+    "rule": "No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero."
+  },
+  "summary": {
+    "overall_state": "OK",
+    "source_count": 7,
+    "counts": {
+      "CURRENT": 7,
+      "AGING": 0,
+      "STALE": 0,
+      "MISSING": 0,
+      "UNKNOWN_TIMESTAMP": 0
+    },
+    "billing_timestamp_added": false
   },
   "sources": [
     {
       "key": "site_registry",
       "label": "Site Registry",
-      "path": "runtime\\data\\site_registry.json",
+      "path": "runtime/data/site_registry.json",
       "exists": true,
-      "source_type": "LIVE_OR_AUTO_REFRESHED",
+      "source_type": "RUNTIME_SCOPE",
+      "pages": [
+        "Home",
+        "Estate",
+        "Admin"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-09-04T14:04:38Z",
+      "parsed_timestamp_utc": "2026-09-04T14:04:38Z",
+      "display_timestamp_utc": "2026-09-04 14:04 UTC",
+      "age_hours": 0.34,
       "freshness_state": "CURRENT",
-      "timestamp_value": "2026-08-18T16:02:53Z",
-      "parsed_timestamp_utc": "2026-08-18T16:02:53Z",
-      "age_hours": 15.28,
-      "operator_label": "CURRENT"
+      "operator_label": "CURRENT",
+      "error": null
     },
     {
       "key": "admin_truth_v2",
       "label": "Admin Truth Layer v2",
-      "path": "runtime\\data\\admin_truth_v2.json",
+      "path": "runtime/data/admin_truth_v2.json",
       "exists": true,
-      "source_type": "LIVE_OR_AUTO_REFRESHED",
+      "source_type": "RUNTIME_CONTRACT",
+      "pages": [
+        "Estate",
+        "Admin"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-09-04T14:18:58Z",
+      "parsed_timestamp_utc": "2026-09-04T14:18:58Z",
+      "display_timestamp_utc": "2026-09-04 14:18 UTC",
+      "age_hours": 0.1,
       "freshness_state": "CURRENT",
-      "timestamp_value": "2026-08-18T16:00:06Z",
-      "parsed_timestamp_utc": "2026-08-18T16:00:06Z",
-      "age_hours": 15.33,
-      "operator_label": "CURRENT"
-    },
-    {
-      "key": "runtime_execution",
-      "label": "Runtime Execution",
-      "path": "runtime\\data\\runtime_execution_status.json",
-      "exists": true,
-      "source_type": "LIVE_OR_AUTO_REFRESHED",
-      "freshness_state": "CURRENT",
-      "timestamp_value": "2026-08-18T15:47:05.842755Z",
-      "parsed_timestamp_utc": "2026-08-18T15:47:05.842755Z",
-      "age_hours": 15.54,
-      "operator_label": "CURRENT"
+      "operator_label": "CURRENT",
+      "error": null
     },
     {
       "key": "estate_product_access",
       "label": "Estate Product Access",
-      "path": "runtime\\data\\estate_product_access.json",
+      "path": "runtime/data/estate_product_access.json",
       "exists": true,
-      "source_type": "LIVE_OR_AUTO_REFRESHED",
-      "freshness_state": "LIVE",
-      "timestamp_value": "2026-08-18T16:02:55Z",
-      "parsed_timestamp_utc": "2026-08-18T16:02:55Z",
-      "age_hours": 15.28,
-      "operator_label": "LIVE"
+      "source_type": "RUNTIME_CONTRACT",
+      "pages": [
+        "Estate"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-09-04T14:24:59Z",
+      "parsed_timestamp_utc": "2026-09-04T14:24:59Z",
+      "display_timestamp_utc": "2026-09-04 14:24 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
+      "error": null
     },
     {
       "key": "estate_access_truth",
       "label": "Estate Access Truth",
-      "path": "runtime\\data\\estate_access_truth.json",
+      "path": "runtime/data/estate_access_truth.json",
       "exists": true,
-      "source_type": "LIVE_OR_AUTO_REFRESHED",
+      "source_type": "RUNTIME_CONTRACT",
+      "pages": [
+        "Estate"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-09-04T14:24:59Z",
+      "parsed_timestamp_utc": "2026-09-04T14:24:59Z",
+      "display_timestamp_utc": "2026-09-04 14:24 UTC",
+      "age_hours": 0.0,
       "freshness_state": "CURRENT",
-      "timestamp_value": "2026-08-18T16:02:55Z",
-      "parsed_timestamp_utc": "2026-08-18T16:02:55Z",
-      "age_hours": 15.28,
-      "operator_label": "CURRENT"
-    },
-    {
-      "key": "runtime_live_truth_status",
-      "label": "Runtime Live Truth Status",
-      "path": "runtime\\data\\runtime_live_truth_status.json",
-      "exists": false,
-      "source_type": "LIVE_STATUS",
-      "freshness_state": "MISSING",
-      "timestamp_value": "",
-      "parsed_timestamp_utc": null,
-      "age_hours": null,
-      "operator_label": "MISSING"
-    },
-    {
-      "key": "user_footprint",
-      "label": "User Footprint",
-      "path": "runtime\\data\\user_footprint.json",
-      "exists": true,
-      "source_type": "LIVE_OR_AUTO_REFRESHED_GUARDED",
-      "freshness_state": "CURRENT",
-      "timestamp_value": "2026-08-18T16:01:11.055017Z",
-      "parsed_timestamp_utc": "2026-08-18T16:01:11.055017Z",
-      "age_hours": 15.31,
-      "operator_label": "CURRENT"
+      "operator_label": "CURRENT",
+      "error": null
     },
     {
       "key": "estate_product_access",
       "label": "Product Access Authority",
-      "path": "runtime\\data\\runtime_contract_unavailable_estate_product_access_json",
-      "exists": false,
-      "source_type": "BLOCKED_LEGACY_INPUT",
-      "freshness_state": "MISSING",
-      "timestamp_value": "",
-      "parsed_timestamp_utc": null,
-      "age_hours": null,
-      "operator_label": "MISSING"
-    }
-  ],
-  "summary": {
-    "source_count": 8,
-    "counts": {
-      "CURRENT": 5,
-      "LIVE": 1,
-      "MISSING": 2
+      "path": "runtime/data/estate_access_truth.json",
+      "exists": true,
+      "source_type": "RUNTIME_CONTRACT",
+      "pages": [
+        "Estate",
+        "Admin"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-09-04T14:24:59Z",
+      "parsed_timestamp_utc": "2026-09-04T14:24:59Z",
+      "display_timestamp_utc": "2026-09-04 14:24 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
+      "error": null
     },
-    "overall_state": "ATTENTION"
-  }
+    {
+      "key": "user_footprint",
+      "label": "User Footprint",
+      "path": "runtime/data/user_footprint.json",
+      "exists": true,
+      "source_type": "RUNTIME_CONTRACT",
+      "pages": [
+        "Estate"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-09-04T14:24:57.694502Z",
+      "parsed_timestamp_utc": "2026-09-04T14:24:57.694502Z",
+      "display_timestamp_utc": "2026-09-04 14:24 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
+      "error": null
+    },
+    {
+      "key": "runtime_execution",
+      "label": "Runtime Execution",
+      "path": "runtime/data/runtime_execution_status.json",
+      "exists": true,
+      "source_type": "RUNTIME_CONTRACT",
+      "pages": [
+        "Home",
+        "Estate",
+        "Admin",
+        "Runtime"
+      ],
+      "timestamp_field": "generated_at_utc",
+      "timestamp_value": "2026-09-04T14:24:59.698300Z",
+      "parsed_timestamp_utc": "2026-09-04T14:24:59.698300Z",
+      "display_timestamp_utc": "2026-09-04 14:24 UTC",
+      "age_hours": 0.0,
+      "freshness_state": "CURRENT",
+      "operator_label": "CURRENT",
+      "error": null
+    }
+  ]
 }

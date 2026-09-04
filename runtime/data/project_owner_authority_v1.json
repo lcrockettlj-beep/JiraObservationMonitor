@@ -1,6 +1,6 @@
 {
   "schema": "jom-project-owner-authority-v1",
-  "generated_at_utc": "2026-09-03T09:14:13Z",
+  "generated_at_utc": "2026-09-04T14:22:53Z",
   "status": "partial",
   "definition": {
     "owner_type": "governance_defined_space_owner",
@@ -14,7 +14,7 @@
     "contract": "runtime/data/project_lead_authority_v1.json",
     "schema": "jom-project-lead-authority-v1",
     "status": "partial",
-    "generated_at_utc": "2026-09-03T09:11:59Z",
+    "generated_at_utc": "2026-09-04T14:22:53Z",
     "gates": {
       "schema_valid": true,
       "status_publishable": true,
@@ -26,10 +26,10 @@
     }
   },
   "summary": {
-    "projects": 76,
-    "projects_with_governance_defined_owner": 73,
+    "projects": 73,
+    "projects_with_governance_defined_owner": 70,
     "projects_without_governance_defined_owner_published": 3,
-    "owner_coverage_percent": 96.1,
+    "owner_coverage_percent": 95.9,
     "distinct_governance_defined_owners": 21
   },
   "authority": {
@@ -76,27 +76,12 @@
     {
       "site_key": "gli-delivery-tm",
       "project_key": "AUT",
-      "project_name": "Automation",
+      "project_name": "Innovation_Automation",
       "owner_state": "governance_defined_space_owner_available",
       "supported_owner_count": 1,
       "owners": [
         {
           "display_name": "Sangeeta Reddy",
-          "account_status": "active",
-          "owner_type": "governance_defined_space_owner",
-          "owner_source": "project_lead_authority_v1"
-        }
-      ]
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "project_key": "DAT",
-      "project_name": "Delivery Acumatica Translator",
-      "owner_state": "governance_defined_space_owner_available",
-      "supported_owner_count": 1,
-      "owners": [
-        {
-          "display_name": "Gabriel John Zafra",
           "account_status": "active",
           "owner_type": "governance_defined_space_owner",
           "owner_source": "project_lead_authority_v1"
@@ -158,13 +143,13 @@
     },
     {
       "site_key": "gli-delivery-tm",
-      "project_key": "HLII",
-      "project_name": "Hoosier Lottery - IGT-IN",
+      "project_key": "GPQ",
+      "project_name": "GZ - Project Queue",
       "owner_state": "governance_defined_space_owner_available",
       "supported_owner_count": 1,
       "owners": [
         {
-          "display_name": "Mark DeWolfe",
+          "display_name": "Gabriel John Zafra",
           "account_status": "active",
           "owner_type": "governance_defined_space_owner",
           "owner_source": "project_lead_authority_v1"
@@ -173,13 +158,13 @@
     },
     {
       "site_key": "gli-delivery-tm",
-      "project_key": "IA",
-      "project_name": "Invoice Audit",
+      "project_key": "HLII",
+      "project_name": "Hoosier Lottery - IGT-IN",
       "owner_state": "governance_defined_space_owner_available",
       "supported_owner_count": 1,
       "owners": [
         {
-          "display_name": "Gabriel John Zafra",
+          "display_name": "Mark DeWolfe",
           "account_status": "active",
           "owner_type": "governance_defined_space_owner",
           "owner_source": "project_lead_authority_v1"
@@ -234,23 +219,8 @@
     },
     {
       "site_key": "gli-delivery-tm",
-      "project_key": "LCC",
-      "project_name": "LetterGen Compliance Checks",
-      "owner_state": "governance_defined_space_owner_available",
-      "supported_owner_count": 1,
-      "owners": [
-        {
-          "display_name": "Gabriel John Zafra",
-          "account_status": "active",
-          "owner_type": "governance_defined_space_owner",
-          "owner_source": "project_lead_authority_v1"
-        }
-      ]
-    },
-    {
-      "site_key": "gli-delivery-tm",
       "project_key": "MATH",
-      "project_name": "Math",
+      "project_name": "Math Orchestrator",
       "owner_state": "governance_defined_space_owner_available",
       "supported_owner_count": 1,
       "owners": [
@@ -376,21 +346,6 @@
       "owners": [
         {
           "display_name": "Mark DeWolfe",
-          "account_status": "active",
-          "owner_type": "governance_defined_space_owner",
-          "owner_source": "project_lead_authority_v1"
-        }
-      ]
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "project_key": "UA",
-      "project_name": "Unbilled Aging",
-      "owner_state": "governance_defined_space_owner_available",
-      "supported_owner_count": 1,
-      "owners": [
-        {
-          "display_name": "Gabriel John Zafra",
           "account_status": "active",
           "owner_type": "governance_defined_space_owner",
           "owner_source": "project_lead_authority_v1"

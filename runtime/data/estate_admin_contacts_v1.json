@@ -1,6 +1,6 @@
 {
   "schema": "jom-estate-admin-contacts-v2",
-  "generated_at_utc": "2026-08-18T16:00:32Z",
+  "generated_at_utc": "2026-09-04T14:19:20Z",
   "status": "live_mapped",
   "contacts": [
     {
@@ -441,6 +441,6 @@
     "safe_mapping_count": 6,
     "mapped_site_count": 4,
     "contact_count": 33,
-    "role_rows_inspected": 201
+    "role_rows_inspected": 213
   }
 }

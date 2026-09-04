@@ -2417,6 +2417,106 @@ def api_governance_report_authority_v1():
     return jsonify(_jom_governance_contract_v1())
 # --- JOM_GOVERNANCE_REPORT_AUTHORITY_V1 END ---
 
+# --- JOM RUNTIME STATUS SOURCE HEALTH OPERATIONAL UX V1 START ---
+def _jom_system_truth_dict_v1(value):
+    return value if isinstance(value, dict) else {}
+
+def _jom_system_truth_list_v1(value):
+    return value if isinstance(value, list) else []
+
+def _jom_system_truth_timestamp_v1(payload):
+    payload = _jom_system_truth_dict_v1(payload)
+    return payload.get("generated_at_utc") or payload.get("finished_at_utc") or payload.get("updated_at_utc") or payload.get("collected_at_utc")
+
+def _jom_system_truth_status_v1(payload):
+    payload = _jom_system_truth_dict_v1(payload)
+    return payload.get("overall_status") or payload.get("status") or payload.get("state") or "unavailable"
+
+def _jom_system_truth_duration_v1(payload):
+    payload = _jom_system_truth_dict_v1(payload)
+    started = _contract_parse_time(payload.get("started_at_utc"))
+    finished = _contract_parse_time(payload.get("finished_at_utc"))
+    if not started or not finished:
+        return None
+    return round((finished - started).total_seconds(), 2)
+
+def _jom_runtime_operational_contract_v1():
+    outer = _jom_system_truth_dict_v1(load_json("runtime_refresh_status.json", {}))
+    inner = _jom_system_truth_dict_v1(load_json("admin_enriched_refresh_status.json", {}))
+    execution = _jom_system_truth_dict_v1(load_json("runtime_execution_status.json", {}))
+    outer_steps = _jom_system_truth_list_v1(outer.get("steps"))
+    inner_steps = _jom_system_truth_list_v1(inner.get("steps"))
+    all_steps = outer_steps + inner_steps
+    failed = [step for step in all_steps if isinstance(step, dict) and step.get("status") not in {"ok", "advisory"}]
+    blocked = [step for step in all_steps if isinstance(step, dict) and (step.get("status") == "blocked" or step.get("blocked_by"))]
+    contracts = []
+    for filename in [
+        "site_registry.json", "estate_product_access.json", "admin_truth_v2.json",
+        "named_user_display_identity_v1.json", "project_inventory_authority_v1.json",
+        "project_governance_named_identity_authority_v1.json", "project_lead_authority_v1.json",
+        "project_owner_authority_v1.json", "source_freshness_audit.json",
+        "source_reliability_status.json",
+    ]:
+        payload = _jom_system_truth_dict_v1(load_json(filename, {}))
+        contracts.append({"file": filename, "available": bool(payload), "status": _jom_system_truth_status_v1(payload), "generated_at_utc": _jom_system_truth_timestamp_v1(payload)})
+    available = bool(outer) and bool(inner)
+    return {
+        "schema": "jom-runtime-operational-dashboard-v1", "generated_at_utc": now_utc(),
+        "status": "ok" if available and not failed and outer.get("running") is not True and inner.get("running") is not True else "review",
+        "available": available, "read_only": True,
+        "summary": {
+            "outer_status": _jom_system_truth_status_v1(outer), "inner_status": _jom_system_truth_status_v1(inner),
+            "running": bool(outer.get("running") is True or inner.get("running") is True),
+            "last_refresh_utc": outer.get("finished_at_utc") or outer.get("generated_at_utc"),
+            "duration_seconds": _jom_system_truth_duration_v1(outer),
+            "outer_steps": len(outer_steps), "inner_steps": len(inner_steps),
+            "failed_steps": len(failed), "blocked_steps": len(blocked), "contract_count": len(contracts),
+        },
+        "outer_steps": outer_steps, "inner_steps": inner_steps, "failed_steps": failed,
+        "blocked_steps": blocked, "contracts": contracts, "execution": execution,
+        "source_files": ["runtime/data/runtime_refresh_status.json", "runtime/data/admin_enriched_refresh_status.json", "runtime/data/runtime_execution_status.json"],
+        "truth_policy": "Runtime Status reports JOM execution evidence. Atlassian OAuth is an upstream data authority, not the runtime status itself.",
+    }
+
+def _jom_source_health_operational_contract_v1():
+    freshness = _jom_system_truth_dict_v1(load_json("source_freshness_audit.json", {}))
+    reliability = _jom_system_truth_dict_v1(load_json("source_reliability_status.json", {}))
+    product = _jom_system_truth_dict_v1(load_json("product_access_refresh_status.json", {}))
+    outer = _jom_system_truth_dict_v1(load_json("runtime_refresh_status.json", {}))
+    sources = freshness.get("sources") if isinstance(freshness.get("sources"), list) else freshness.get("items") if isinstance(freshness.get("items"), list) else []
+    findings = reliability.get("findings") if isinstance(reliability.get("findings"), list) else reliability.get("issues") if isinstance(reliability.get("issues"), list) else []
+    freshness_summary = _jom_system_truth_dict_v1(freshness.get("summary"))
+    reliability_summary = _jom_system_truth_dict_v1(reliability.get("summary"))
+    freshness_state = freshness_summary.get("overall_state") or freshness.get("overall_state") or _jom_system_truth_status_v1(freshness)
+    reliability_state = reliability.get("status") or reliability.get("overall_status") or reliability_summary.get("status") or "unavailable"
+    available = bool(freshness) and bool(reliability)
+    return {
+        "schema": "jom-source-health-operational-dashboard-v1", "generated_at_utc": now_utc(),
+        "status": "ok" if available and str(freshness_state).lower() in {"ok", "current", "available"} and str(reliability_state).lower() in {"ok", "available"} else "review",
+        "available": available, "read_only": True,
+        "summary": {
+            "freshness_state": freshness_state, "reliability_state": reliability_state,
+            "freshness_generated_at_utc": _jom_system_truth_timestamp_v1(freshness),
+            "reliability_generated_at_utc": _jom_system_truth_timestamp_v1(reliability),
+            "runtime_generated_at_utc": _jom_system_truth_timestamp_v1(outer),
+            "source_count": len(sources), "finding_count": len(findings),
+            "product_access_status": _jom_system_truth_status_v1(product),
+        },
+        "sources": sources, "findings": findings,
+        "freshness": freshness, "reliability": reliability, "product_access_refresh": product,
+        "source_files": ["runtime/data/source_freshness_audit.json", "runtime/data/source_reliability_status.json", "runtime/data/product_access_refresh_status.json"],
+        "truth_policy": "Source Health reports generated freshness and reliability evidence. Review is preserved as review and is never converted to healthy.",
+    }
+
+@app.route("/api/system/runtime-dashboard")
+def api_system_runtime_dashboard_v1():
+    return jsonify(_jom_runtime_operational_contract_v1())
+
+@app.route("/api/system/source-health-dashboard")
+def api_system_source_health_dashboard_v1():
+    return jsonify(_jom_source_health_operational_contract_v1())
+# --- JOM RUNTIME STATUS SOURCE HEALTH OPERATIONAL UX V1 END ---
+
 # --- JOM OAUTH OWNER PAGE ROUTES v1 START ---
 # Owner-file page shell routes. OAuth/Admin is the only current authority pipeline.
 @app.route('/admin')

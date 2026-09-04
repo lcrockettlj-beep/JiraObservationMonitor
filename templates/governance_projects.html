@@ -1,36 +1,18 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Projects - Jira Observation Monitor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_governance_projects_v1.css') }}">
-</head>
-<body data-jom-page="governance-projects">
-{% include "_nav.html" %}
-<main class="jom-shell gp" id="governance-projects" data-owner="JOM_PROJECT_INVENTORY_GOVERNANCE_API_V1" aria-labelledby="gp-title">
-  <header class="gp__hero">
-    <div><p class="gp__eyebrow">Governance / Projects</p><h1 id="gp-title">Projects</h1><p>Read-only project inventory across monitored Jira sites. Values are served only when every authority gate passes.</p></div>
-    <div class="gp__metric"><span id="gp-count">Unavailable</span><small>Visible projects</small></div>
-  </header>
-  <section id="gp-status" class="gp__status" role="status">Loading Project Inventory authority...</section>
-  <section class="gp__filters" aria-label="Project filters">
-    <label>Search<input id="gp-search" type="search" placeholder="Project name or key"></label>
-    <label>Site<select id="gp-site"><option value="">All sites</option></select></label>
-    <label>Type<select id="gp-type"><option value="">All types</option></select></label>
-    <label>Style<select id="gp-style"><option value="">All styles</option></select></label>
-    <label>Privacy<select id="gp-privacy"><option value="">All privacy states</option><option value="private">Private</option><option value="open">Not private</option><option value="unavailable">Unavailable</option></select></label>
-    <label>Simplified state<select id="gp-simplified"><option value="">All states</option><option value="simplified">Simplified</option><option value="standard">Standard</option><option value="unavailable">Unavailable</option></select></label>
-    <label>Category<select id="gp-category"><option value="">All categories</option></select></label>
-  </section>
-  <section class="gp__unavailable" aria-labelledby="gp-unavailable-title"><h2 id="gp-unavailable-title">Areas not available from current authority</h2><div id="gp-capabilities" class="gp__capabilities"></div></section>
-  <section class="gp__results"><div class="gp__results-head"><h2>Project inventory</h2><span id="gp-filter-count"></span></div><div class="gp__table-wrap"><table><thead><tr><th>Project</th><th>Key</th><th>Site</th><th>Type</th><th>Style</th><th>Privacy</th><th>Simplified</th><th>Category</th></tr></thead><tbody id="gp-rows"></tbody></table></div><p id="gp-empty" hidden>No projects match the selected filters.</p></section>
-  <section class="gp__results" aria-labelledby="gp-identities-title"><div class="gp__results-head"><h2 id="gp-identities-title">Project governance named identities</h2><span id="gp-identity-count">Unavailable</span></div><p id="gp-identity-status">Loading restricted identity authority...</p><div class="gp__table-wrap"><table><thead><tr><th>Display name</th><th>Status</th><th>Sites</th><th>Projects</th><th>Assignments</th><th>Sources</th></tr></thead><tbody id="gp-identity-rows"></tbody></table></div></section>
-<section class="gp__results"><div class="gp__results-head"><div><h2>Project Leads</h2><p id="gp-lead-status">Loading restricted authority.</p></div><strong id="gp-lead-count">Loading</strong></div><div class="gp__table-wrap"><table><thead><tr><th>Site</th><th>Project</th><th>Name</th><th>Supported active lead</th><th>State</th></tr></thead><tbody id="gp-lead-rows"></tbody></table></div></section>
-<section class="gp__results" aria-labelledby="gp-owner-title"><div class="gp__results-head"><div><h2 id="gp-owner-title">Space Owners</h2><p id="gp-owner-status">Loading governance-defined owner authority.</p></div><strong id="gp-owner-count">Loading</strong></div><div class="gp__table-wrap"><table><thead><tr><th>Site</th><th>Project</th><th>Name</th><th>Space owner</th><th>Authority</th></tr></thead><tbody id="gp-owner-rows"></tbody></table></div></section>
-</main>
-<script src="{{ url_for('static', filename='js/jom_governance_projects_v1.js') }}" defer></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><title>Projects - Jira Observation Monitor</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_governance_projects_v1.css') }}"></head>
+<body data-jom-page="governance-projects">{% include "_nav.html" %}
+<main class="jom-shell gp" id="governance-projects" data-owner="JOM_GOVERNANCE_PROJECTS_UX_PHASE2_V1" aria-labelledby="gp-title">
+<nav class="gp__jump" aria-label="Project governance sections"><a href="#gp-summary">Summary</a><a href="#gp-gaps">Governance gaps</a><a href="#gp-grid-title">Projects</a><a href="#gp-owner-view-title">Owners</a><a href="#gp-health">Authority health</a><button id="gp-clear" type="button">Clear filters</button></nav>
+<header class="gp__hero"><div><p class="gp__eyebrow">Governance / Projects</p><h1 id="gp-title">Project governance</h1><p>Current read-only ownership, exceptions and authority health across monitored Jira sites.</p></div><div class="gp__metric"><span id="gp-count">Unavailable</span><small>Current projects</small></div></header>
+<section id="gp-status" class="gp__status" role="status">Loading current project authorities...</section>
+<section class="gp__provenance" aria-labelledby="gp-provenance-title"><div><p class="gp__eyebrow">Authority definition</p><h2 id="gp-provenance-title">Project Lead is the GLI Space Owner</h2><p>Space Owner is governance-defined from current Project Lead authority. Jira does not provide a native Project Owner field.</p></div><span class="gp__badge">Read-only</span></section>
+<section class="gp__summary" id="gp-summary" aria-label="Governance summary"><article><span id="gp-summary-projects">Unavailable</span><small>Projects</small></article><article><span id="gp-summary-owned">Unavailable</span><small>Space owners</small></article><article><span id="gp-summary-coverage">Unavailable</span><small>Owner coverage</small></article><article class="gp__summary-gap"><span id="gp-summary-gaps">Unavailable</span><small>Ownership gaps</small></article><article><span id="gp-summary-distinct">Unavailable</span><small>Distinct owners</small></article></section>
+<section class="gp__health" id="gp-health" aria-labelledby="gp-health-title"><div class="gp__results-head"><div><h2 id="gp-health-title">Authority health</h2><p>Status and generation time for each current authority.</p></div><strong id="gp-health-state">Loading</strong></div><div id="gp-health-grid" class="gp__health-grid"></div></section>
+<section class="gp__gaps" id="gp-gaps" aria-labelledby="gp-gaps-title"><div class="gp__results-head"><div><h2 id="gp-gaps-title">Governance gaps</h2><p>Current exceptions only. Missing evidence remains unavailable, not zero.</p></div><strong id="gp-gap-count">Loading</strong></div><div id="gp-gap-grid" class="gp__gap-grid"></div><p id="gp-gap-empty" hidden>No current Project Lead or Space Owner gaps.</p></section>
+<section class="gp__filters" aria-label="Governance filters"><label>Search<input id="gp-search" type="search" placeholder="Project, key, site or owner"></label><label>Site<select id="gp-site"><option value="">All sites</option></select></label><label>Governance state<select id="gp-governance"><option value="all">All projects</option><option value="owned">Owned projects</option><option value="gap">Projects with gaps</option></select></label><label>Owner<select id="gp-owner-filter"><option value="">All owners</option></select></label></section>
+<section class="gp__results" aria-labelledby="gp-grid-title"><div class="gp__results-head"><div><h2 id="gp-grid-title">Project governance</h2><p>Select a project for full authority detail.</p></div><strong id="gp-grid-count">Loading</strong></div><div class="gp__table-wrap"><table><thead><tr><th>Project</th><th>Key</th><th>Site</th><th>Project Lead</th><th>Space Owner</th><th>Governance state</th><th>Details</th></tr></thead><tbody id="gp-governance-rows"></tbody></table></div><p id="gp-grid-empty" hidden>No projects match the selected filters.</p></section>
+<section class="gp__results" aria-labelledby="gp-owner-view-title"><div class="gp__results-head"><div><h2 id="gp-owner-view-title">Owners and projects</h2><p>Ownership count means project relationships only, not effort or capacity.</p></div><label class="gp__sort">Sort<select id="gp-owner-sort"><option value="count">Project count</option><option value="name">Owner name</option></select></label></div><div id="gp-owner-view" class="gp__owner-grid"></div></section>
+<details class="gp__detail"><summary>Project inventory details</summary><section class="gp__detail-body"><div id="gp-capabilities" class="gp__capabilities"></div><div class="gp__table-wrap"><table><thead><tr><th>Project</th><th>Key</th><th>Site</th><th>Type</th><th>Style</th><th>Privacy</th><th>Simplified</th><th>Category</th></tr></thead><tbody id="gp-rows"></tbody></table></div></section></details>
+<details class="gp__detail"><summary>Named identity authority</summary><section class="gp__detail-body"><div class="gp__results-head"><p id="gp-identity-status">Loading restricted identity authority...</p><strong id="gp-identity-count">Unavailable</strong></div><div class="gp__table-wrap"><table><thead><tr><th>Display name</th><th>Status</th><th>Sites</th><th>Projects</th><th>Assignments</th><th>Sources</th></tr></thead><tbody id="gp-identity-rows"></tbody></table></div></section></details>
+<aside id="gp-drawer" class="gp__drawer" aria-labelledby="gp-drawer-title" aria-hidden="true"><button id="gp-drawer-close" class="gp__drawer-close" type="button" aria-label="Close project details">Close</button><p class="gp__eyebrow">Project authority detail</p><h2 id="gp-drawer-title">Project</h2><dl id="gp-drawer-fields"></dl></aside><div id="gp-drawer-backdrop" class="gp__backdrop" hidden></div>
+</main><script src="{{ url_for('static', filename='js/jom_governance_projects_v1.js') }}" defer></script></body></html>
