@@ -6,31 +6,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_admin_discovery_v1.css') }}">
 </head>
-<body data-jom-page="page-shell">
+<body data-jom-page="admin-discovery">
 {% include "_nav.html" %}
-<main class="jom-shell" id="jom-page-shell">
-  <section class="jom-card jom-hero" aria-label="Discovery overview">
-    <div>
-      <p class="jom-kicker">Admin</p>
-      <h1>Discovery</h1>
-      <p class="jom-lede">Discovered sites, sources, lifecycle review queues, approvals, rejected sites, and retired sites managed through Estate rules.</p>
-    </div>
-    <div class="jom-health-card">
-      <span>Authority</span>
-      <strong>OAuth</strong>
-      <p>Only Atlassian OAuth/Admin authority is used. Future data gaps are tracked in the continuous improvement register.</p>
-    </div>
-  </section>
-  <section class="jom-card" aria-label="Discovery sections">
-    <div class="jom-section-head"><div><p class="jom-kicker">Sections</p><h2>Page areas</h2></div></div>
-    <div class="jom-grid jom-grid--three">
-      <article class="jom-state-card"><span>Discovery Sources</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Review Queue</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Approval Rules</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-      <article class="jom-state-card"><span>Retired Sites</span><strong>OAuth-backed</strong><p>Shown here when the current Atlassian OAuth/Admin authority proves this area.</p></article>
-    </div>
-  </section>
+<main class="jom-admin-discovery-v1" id="admin-discovery" data-owner="JOM_ADMIN_DISCOVERY_AUTHORITY_INTEGRATION_V1">
+  <div class="admin-discovery-main">
+    <section class="admin-discovery-hero" aria-label="Discovery overview">
+      <div>
+        <p class="jom-kicker">Admin / Discovery</p>
+        <h1>Discovery</h1>
+        <p class="admin-discovery-lede">Current discovered Atlassian estate identities, source coverage, and lifecycle review queues. Missing evidence remains unavailable and is never inferred.</p>
+      </div>
+    </section>
+
+    <p id="discovery-error" class="admin-discovery-error" role="alert" hidden></p>
+
+    <section class="admin-discovery-card" aria-labelledby="discovery-summary-title">
+      <div class="admin-discovery-heading"><div><p class="jom-kicker">Current position</p><h2 id="discovery-summary-title">Discovery summary</h2></div><strong id="discovery-generated">Loading</strong></div>
+      <div class="admin-discovery-metrics">
+        <article><span>Discovered identities</span><strong id="discovery-identity-count">--</strong><p>Unique identities proven across current discovery sources.</p></article>
+        <article><span>Review queue</span><strong id="discovery-review-count">--</strong><p>Sites requiring an Estate lifecycle decision.</p></article>
+        <article><span>Monitored</span><strong id="discovery-monitored-count">--</strong><p>Sites currently classified as monitored by authority.</p></article>
+        <article><span>Authority sources</span><strong id="discovery-source-count">--</strong><p>Runtime sources inspected by the discovery coverage contract.</p></article>
+      </div>
+    </section>
+
+    <section class="admin-discovery-card" aria-labelledby="discovery-review-title">
+      <div class="admin-discovery-heading"><div><p class="jom-kicker">Lifecycle queue</p><h2 id="discovery-review-title">Sites requiring review</h2><p>Open Estate Review to approve, validate access, ignore, or retain a site for later review.</p></div><strong id="discovery-review-badge">Loading</strong></div>
+      <div class="admin-discovery-table-wrap"><table class="admin-discovery-table"><thead><tr><th>Site</th><th>Lifecycle</th><th>Evidence</th><th>Sources</th><th>Action</th></tr></thead><tbody id="discovery-review-rows"><tr><td colspan="5">Loading current discovery authority...</td></tr></tbody></table></div>
+      <p id="discovery-review-empty" class="admin-discovery-empty" hidden>No current sites require lifecycle review.</p>
+    </section>
+
+    <section class="admin-discovery-card" aria-labelledby="discovery-sources-title">
+      <div class="admin-discovery-heading"><div><p class="jom-kicker">Source assurance</p><h2 id="discovery-sources-title">Discovery authority coverage</h2><p>Runtime contracts used to prove current discovery identities.</p></div></div>
+      <div id="discovery-source-grid" class="admin-discovery-source-grid"><article><strong>Loading source coverage</strong></article></div>
+    </section>
+
+    <section class="admin-discovery-card" aria-labelledby="discovery-limitations-title">
+      <div class="admin-discovery-heading"><div><p class="jom-kicker">Truth guardrails</p><h2 id="discovery-limitations-title">Unavailable and excluded areas</h2></div></div>
+      <div class="admin-discovery-limitations">
+        <article><span>Retired sites</span><strong id="discovery-retired-status">Unavailable</strong><p>Shown only when a current authority contract explicitly publishes a retired lifecycle population.</p></article>
+        <article><span>Approval rules</span><strong>Estate-owned</strong><p>Lifecycle decisions remain within Estate and Site Review. Discovery is read-only and does not duplicate write controls.</p></article>
+        <article><span>Static fallback</span><strong id="discovery-static-fallback">Disabled</strong><p>Discovery must not invent sites or use unclassified static data as current truth.</p></article>
+      </div>
+    </section>
+  </div>
+
+  <aside class="admin-discovery-rail" aria-label="Discovery summary rail">
+    <section class="admin-discovery-rail-card admin-discovery-authority"><p class="jom-kicker">Authority status</p><strong id="discovery-status">Loading</strong><p id="discovery-status-note">Reading current discovery contracts.</p></section>
+    <section class="admin-discovery-rail-card"><h2>Current scope</h2><dl class="admin-discovery-rail-list">
+      <div><dt>Identities</dt><dd id="discovery-rail-identities">--</dd></div>
+      <div><dt>Review</dt><dd id="discovery-rail-review">--</dd></div>
+      <div><dt>Monitored</dt><dd id="discovery-rail-monitored">--</dd></div>
+      <div><dt>Sources</dt><dd id="discovery-rail-sources">--</dd></div>
+    </dl></section>
+    <section class="admin-discovery-rail-card"><h2>Actions</h2><div class="admin-discovery-actions"><a href="/estate#discovered-sites" class="admin-discovery-action">Open Estate Review</a><a href="/admin/estate-configuration" class="admin-discovery-action admin-discovery-action--secondary">Open Estate Configuration</a></div></section>
+  </aside>
 </main>
+<script src="{{ url_for('static', filename='js/jom_admin_discovery_v1.js') }}" defer></script>
 </body>
 </html>
