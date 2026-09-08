@@ -122,5 +122,52 @@
     ],
     "next_gate": "validate_stage_exact_boundary_commit_push",
     "next_workstream": "Governance Projects UX Phase 1"
+  },
+  "booksync_foundation_recovery_closeout_2026_09_08": {
+    "recorded_at": "2026-09-08T08:39:00+01:00",
+    "phase": "Foundation Recovery closeout and runtime-truth hardening",
+    "finding_status": {
+      "FR-001": "verified_resolved",
+      "FR-002": "verified_resolved",
+      "FR-003": "verified_resolved",
+      "FR-004": "open_current",
+      "FR-005": "open_next"
+    },
+    "product_access": {
+      "status": "partial",
+      "accessible_resources": 6,
+      "collectible_sites": 5,
+      "jira_role_rows": 5,
+      "live_product_users": 169,
+      "seat_limit": 12150,
+      "remaining_seats": 11981,
+      "restricted_site": "gli-usa",
+      "restricted_response": {
+        "http_status": 403,
+        "message": "Tenant is restricted: user-cancellation"
+      },
+      "classification": "Atlassian-controlled tenant restriction; not a JOM collector defect"
+    },
+    "users_access_drilldown": {
+      "status": "ok",
+      "safe_to_serve": true,
+      "organisation_accounts": 1218,
+      "directory_accounts": 145,
+      "mfa_disabled": 92,
+      "organisation_administrators": 4,
+      "site_administrators": 4,
+      "user_access_administrators": 41,
+      "high_access_concentration": 1,
+      "unmanaged_accounts": 7,
+      "suspended_accounts": 0,
+      "deactivated_accounts": 0,
+      "for_deletion": 0,
+      "not_invited": "unavailable",
+      "counts_time_sensitive": true
+    },
+    "current_workstream": "FR-004 Timestamp Meaning Consistency audit",
+    "next_workstream": "FR-005 Placeholder and Legacy Surface Classification audit",
+    "reopen_rule": "Reopen FR-001, FR-002 or FR-003 only when an owner changes, a retained validator fails, or new live evidence contradicts this record.",
+    "workflow": "Audit -> Build -> Install -> Validate -> Live test -> Clean -> BOOKSYNC -> Stage -> Commit -> Push; full owner replacements only."
   }
 }
