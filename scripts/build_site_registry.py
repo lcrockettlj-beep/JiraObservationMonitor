@@ -149,6 +149,11 @@ def build_registry(project_root: Path) -> Dict[str, Any]:
     return {
         "schema": "jom-site-registry-v4-runtime-consolidated",
         "generated_at_utc": now_utc(),
+        "timestamp_semantics": {
+            "generated_at_utc": "site registry contract generation time",
+            "source_collection_time": "not represented",
+            "authority_change_time": "not represented",
+        },
         "summary": summary,
         "policy": {
             "new_sites_default_status": "discovered",

@@ -149,6 +149,12 @@ def main() -> int:
     payload = {
         "schema": "jom-project-owner-authority-v1",
         "generated_at_utc": utc_now(),
+        "timestamp_semantics": {
+            "generated_at_utc": "governance owner authority derivation time",
+            "upstream_project_lead_generated_at_utc": "source authority contract generation time",
+            "source_collection_time": "not represented",
+            "authority_change_time": "not represented",
+        },
         "status": status,
         "definition": {
             "owner_type": "governance_defined_space_owner",
@@ -163,6 +169,9 @@ def main() -> int:
             "schema": lead_authority.get("schema"),
             "status": lead_status,
             "generated_at_utc": lead_authority.get("generated_at_utc"),
+            "timestamp_semantics": {
+                "generated_at_utc": "upstream Project Lead authority contract generation time"
+            },
             "gates": source_gates,
         },
         "summary": {

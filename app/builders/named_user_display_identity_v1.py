@@ -168,6 +168,11 @@ def unavailable(reason: str, generated: datetime, authoritative_accounts: int = 
     return {
         "schema": "jom-named-user-display-identity-v1",
         "generated_at_utc": iso_utc(generated),
+        "timestamp_semantics": {
+            "generated_at_utc": "named user display identity authority contract generation time",
+            "source_collection_time": "not represented",
+            "authority_change_time": "not represented",
+        },
         "status": "unavailable",
         "source": {
             "authoritative_accounts": authoritative_accounts,
@@ -298,6 +303,11 @@ def main() -> int:
     payload = {
         "schema": "jom-named-user-display-identity-v1",
         "generated_at_utc": iso_utc(generated),
+        "timestamp_semantics": {
+            "generated_at_utc": "named user display identity authority contract generation time",
+            "source_collection_time": "not represented",
+            "authority_change_time": "not represented",
+        },
         "status": "ok",
         "source": {
             "authority": "Atlassian Admin Directory users plus JOM named-access authority",
