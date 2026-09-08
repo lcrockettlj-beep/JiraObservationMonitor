@@ -169,5 +169,70 @@
     "next_workstream": "FR-005 Placeholder and Legacy Surface Classification audit",
     "reopen_rule": "Reopen FR-001, FR-002 or FR-003 only when an owner changes, a retained validator fails, or new live evidence contradicts this record.",
     "workflow": "Audit -> Build -> Install -> Validate -> Live test -> Clean -> BOOKSYNC -> Stage -> Commit -> Push; full owner replacements only."
+  },
+  "booksync_site_workspace_discovery_closeout_2026_09_08": {
+    "recorded_at": "2026-09-08T14:00:39+01:00",
+    "branch": "main",
+    "head_commit": "ec38a54d576ffb68d621df83575593146dc17d82",
+    "site_workspace_project_authority_integration": {
+      "commit": "7a51d3ec489c4405de285fe136a65f4957f950ae",
+      "status": "committed_and_accepted",
+      "owners": [
+        "templates/site_workspace.html",
+        "static/js/jom_site_workspace_shell_v1.js",
+        "static/css/jom_site_workspace_shell_v1.css",
+        "scripts/validate_site_workspace_project_integration_v1.py"
+      ],
+      "reused_routes": [
+        "/api/governance/projects",
+        "/api/governance/projects/leads",
+        "/api/governance/projects/owners"
+      ],
+      "new_collectors": false,
+      "new_runtime_contracts": false,
+      "new_backend_routes": false
+    },
+    "discovery_authority_integration": {
+      "commit": "ec38a54d576ffb68d621df83575593146dc17d82",
+      "status": "committed_and_accepted",
+      "owners": [
+        "templates/admin_discovery.html",
+        "static/js/jom_admin_discovery_v1.js",
+        "static/css/jom_admin_discovery_v1.css",
+        "scripts/validate_discovery_authority_integration_v1.py"
+      ],
+      "reused_routes": [
+        "/api/estate/discovery-authority",
+        "/api/estate/discovery-authority/coverage"
+      ],
+      "static_fallback": false,
+      "lifecycle_decision_owner": "Estate and Site Review",
+      "retired_site_population": "unavailable unless explicitly published by current authority",
+      "new_collectors": false,
+      "new_runtime_contracts": false,
+      "new_backend_routes": false
+    },
+    "foundation_recovery": {
+      "FR-001": "verified_resolved",
+      "FR-002": "verified_resolved",
+      "FR-003": "verified_resolved",
+      "FR-004": "open_evidence_controlled_limitation",
+      "FR-005": "materially_reduced_by_runtime_source_health_site_workspace_and_discovery_acceptance"
+    },
+    "current_workstream": "Controlled Repository Hygiene Classification",
+    "unstaged_state_rule": "Do not delete, stage, or commit remaining runtime drift or untracked audit artefacts until classified.",
+    "known_untracked_items": [
+      "builders.txt",
+      "scripts.txt",
+      "scripts/validate_runtime_truth_chain_alignment_v1.py",
+      "test-validator-output.txt"
+    ],
+    "classification_categories": [
+      "KEEP",
+      "COMMIT",
+      "GENERATED_RUNTIME",
+      "REPORT_ONLY",
+      "TRANSIENT"
+    ]
   }
 }
