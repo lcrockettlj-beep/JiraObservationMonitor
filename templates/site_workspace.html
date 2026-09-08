@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -18,49 +18,49 @@
       <p class="site-workspace-lede" id="workspace-site-summary">Operational workspace for one Atlassian site. Select a site from Estate or open a site-specific workspace link.</p>
     </section>
 
-
-    <!-- JOM_SITE_WORKSPACE_CONTEXT_SELECTION_V1_HTML START -->
     <section class="site-workspace-panel site-workspace-selector-panel" id="workspace-selector-panel" aria-label="Select site workspace" hidden>
-      <div class="site-workspace-heading">
-        <div>
-          <p class="jom-kicker">Select Workspace</p>
-          <h2>Choose a Site Workspace</h2>
-        </div>
-        <span class="site-workspace-pill" id="workspace-selector-count">0</span>
-      </div>
-      <p class="site-workspace-lede">Open a site-specific workspace to see users, projects, applications, automation, activity and governance context for that site.</p>
+      <div class="site-workspace-heading"><div><p class="jom-kicker">Select Workspace</p><h2>Choose a Site Workspace</h2></div><span class="site-workspace-pill" id="workspace-selector-count">0</span></div>
+      <p class="site-workspace-lede">Open a site-specific workspace to see current product access and project governance authority for that site.</p>
       <div class="site-workspace-selector-list" id="workspace-selector-list"></div>
     </section>
-    <!-- JOM_SITE_WORKSPACE_CONTEXT_SELECTION_V1_HTML END -->
-<aside class="site-workspace-rail" aria-label="Site workspace rail">
-    <div class="site-workspace-rail-brand"><span>Site Workspace</span><strong>Landing Context</strong></div>
-    <section class="site-workspace-rail-card" aria-label="Workspace status">
-      <h2>Workspace Status</h2>
-      <dl class="site-workspace-rail-list site-workspace-status-list">
-        <div><dt>Available workspaces</dt><dd id="workspace-rail-site-count">--</dd></div>
-        <div><dt>Selected site</dt><dd id="workspace-rail-selected-site">None</dd></div>
-        <div><dt>Monitoring scope</dt><dd id="workspace-rail-monitoring-scope">--</dd></div>
-      </dl>
-    </section>
-    <section class="site-workspace-rail-card" aria-label="Source coverage">
-      <h2>Source Coverage</h2>
-      <dl class="site-workspace-rail-list site-workspace-source-list">
-        <div><dt>Product users</dt><dd id="workspace-source-product-users">Checking</dd></div>
-        <div><dt>Projects</dt><dd>Not connected</dd></div>
-        <div><dt>Marketplace apps</dt><dd>Not connected</dd></div>
-        <div><dt>Automation</dt><dd>Not connected</dd></div>
-      </dl>
-    </section>
-    <section class="site-workspace-rail-card" aria-label="Workspace actions">
-      <h2>Actions</h2>
-      <div class="site-workspace-actions">
-        <a href="/estate" class="site-workspace-action">Back to Estate</a>
+
+    <section class="site-workspace-panel site-workspace-project-panel" id="workspace-project-panel" aria-labelledby="workspace-project-title" hidden>
+      <div class="site-workspace-heading"><div><p class="jom-kicker">Current authority</p><h2 id="workspace-project-title">Projects and governance</h2></div><span class="site-workspace-pill" id="workspace-project-count">Loading</span></div>
+      <p class="site-workspace-lede" id="workspace-project-status" role="status">Loading synchronized Project Inventory, Project Lead and Space Owner authority.</p>
+      <div class="site-workspace-summary-grid" aria-label="Project governance summary">
+        <article><span>Projects</span><strong id="workspace-summary-projects">--</strong></article>
+        <article><span>With owners</span><strong id="workspace-summary-owned">--</strong></article>
+        <article><span>Owner coverage</span><strong id="workspace-summary-coverage">--</strong></article>
+        <article><span>Ownership gaps</span><strong id="workspace-summary-gaps">--</strong></article>
       </div>
+      <div class="site-workspace-table-wrap">
+        <table class="site-workspace-table" aria-label="Selected site projects">
+          <thead><tr><th>Project</th><th>Key</th><th>Type</th><th>Project Lead</th><th>Space Owner</th><th>Governance</th></tr></thead>
+          <tbody id="workspace-project-rows"><tr><td colspan="6">Loading projects...</td></tr></tbody>
+        </table>
+      </div>
+      <p class="site-workspace-empty" id="workspace-project-empty" hidden>No projects are published for this site by the current synchronized authority.</p>
+      <div class="site-workspace-actions site-workspace-project-actions"><a class="site-workspace-action" id="workspace-governance-link" href="/reports/governance/projects">Open full project governance</a></div>
     </section>
+  </div>
+
+  <aside class="site-workspace-rail" aria-label="Site workspace rail">
+    <div class="site-workspace-rail-brand"><span>Site Workspace</span><strong id="workspace-rail-context">Landing Context</strong></div>
+    <section class="site-workspace-rail-card" aria-label="Workspace status"><h2>Workspace Status</h2><dl class="site-workspace-rail-list site-workspace-status-list">
+      <div><dt>Available workspaces</dt><dd id="workspace-rail-site-count">--</dd></div>
+      <div><dt>Selected site</dt><dd id="workspace-rail-selected-site">None</dd></div>
+      <div><dt>Monitoring scope</dt><dd id="workspace-rail-monitoring-scope">--</dd></div>
+    </dl></section>
+    <section class="site-workspace-rail-card" aria-label="Source coverage"><h2>Source Coverage</h2><dl class="site-workspace-rail-list site-workspace-source-list">
+      <div><dt>Product users</dt><dd id="workspace-source-product-users">Checking</dd></div>
+      <div><dt>Projects</dt><dd id="workspace-source-projects">Checking</dd></div>
+      <div><dt>Marketplace apps</dt><dd>Unavailable</dd></div>
+      <div><dt>Automation</dt><dd>Unavailable</dd></div>
+    </dl></section>
+    <section class="site-workspace-rail-card" aria-label="Workspace actions"><h2>Actions</h2><div class="site-workspace-actions"><a href="/estate" class="site-workspace-action">Back to Estate</a></div></section>
     <section class="site-workspace-rail-card" aria-label="Source status"><h2>Source Status</h2><p id="workspace-source-status">Loading workspace context...</p></section>
   </aside>
 </main>
 <script src="{{ url_for('static', filename='js/jom_site_workspace_shell_v1.js') }}" defer></script>
 </body>
 </html>
-
