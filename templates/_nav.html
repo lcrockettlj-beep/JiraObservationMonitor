@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_navigation_remediation_phase1_v1.css') }}">
 <aside class="jom-side-nav" id="jom-side-nav" aria-label="JOM primary navigation">
   <a href="/" class="jom-brand" aria-label="Command Centre home">
     <img class="jom-brand__logo" src="{{ url_for('static', filename='img/gli.svg') }}" alt="GLI">
@@ -10,30 +11,54 @@
     <section class="jom-nav-group" aria-label="Operations navigation">
       <span class="jom-nav-heading">Operations</span>
       <a href="/" class="jom-nav-link {% if request.path == '/' %}jom-nav-link--active{% endif %}">Command Centre</a>
-      <a href="/estate" class="jom-nav-link {% if request.path.startswith('/estate') or request.path.startswith('/site-workspace') %}jom-nav-link--active{% endif %}">Estate</a>
-      <div class="jom-nav-subnav {% if request.path.startswith('/estate') or request.path.startswith('/site-workspace') %}jom-nav-subnav--open{% endif %}" aria-label="Estate navigation">
+      <a href="/estate" class="jom-nav-link {% if request.path.startswith('/estate') or request.path.startswith('/site-workspace') or request.path.startswith('/site-review') %}jom-nav-link--active{% endif %}">Estate</a>
+      <div class="jom-nav-subnav {% if request.path.startswith('/estate') or request.path.startswith('/site-workspace') or request.path.startswith('/site-review') %}jom-nav-subnav--open{% endif %}" aria-label="Estate navigation">
         <a href="/site-workspace" class="{% if request.path.startswith('/site-workspace') %}jom-nav-subnav--active{% endif %}">Site Workspace</a>
       </div>
       <a href="/admin" class="jom-nav-link {% if request.path.startswith('/admin') %}jom-nav-link--active{% endif %}">Admin</a>
       <div class="jom-nav-subnav {% if request.path.startswith('/admin') %}jom-nav-subnav--open{% endif %}" aria-label="Admin navigation">
-        <a href="/admin/estate-configuration">Estate Configuration</a>
-        <a href="/admin/discovery">Discovery</a>
-        <a href="/admin/monitoring">Monitoring</a>
-        <a href="/admin/licensing-billing">Licensing & Billing</a>
-        <a href="/admin/users-access">Users & Access</a>
-        <a href="/admin/system-configuration">System Configuration</a>
+        <a href="/admin/estate-configuration" class="{% if request.path == '/admin/estate-configuration' %}jom-nav-subnav--active{% endif %}">Estate Configuration</a>
+        <a href="/admin/discovery" class="{% if request.path == '/admin/discovery' %}jom-nav-subnav--active{% endif %}">Discovery</a>
+        <a href="/admin/monitoring" class="{% if request.path == '/admin/monitoring' %}jom-nav-subnav--active{% endif %}">Monitoring</a>
+        <a href="/admin/licensing-billing" class="{% if request.path == '/admin/licensing-billing' %}jom-nav-subnav--active{% endif %}">Licensing &amp; Billing</a>
+        <a href="/admin/users-access" class="{% if request.path == '/admin/users-access' %}jom-nav-subnav--active{% endif %}">Users &amp; Access</a>
+        <a href="/admin/system-configuration" class="{% if request.path == '/admin/system-configuration' %}jom-nav-subnav--active{% endif %}">System Configuration</a>
       </div>
     </section>
     <section class="jom-nav-group" aria-label="Reporting navigation">
       <span class="jom-nav-heading">Reporting</span>
       <a href="/executive-report" class="jom-nav-link {% if request.path == '/executive-report' %}jom-nav-link--active{% endif %}">Executive Report</a>
       <a href="/estate-report" class="jom-nav-link {% if request.path == '/estate-report' %}jom-nav-link--active{% endif %}">Estate Report</a>
-      <a href="/reports/governance" class="jom-nav-link {% if request.path.startswith('/reports/governance') %}jom-nav-link--active{% endif %}">Governance Report</a>
+      <a href="/reports/governance" class="jom-nav-link {% if request.path.startswith('/reports/governance') %}jom-nav-link--active{% endif %}">Governance</a>
+      <div class="jom-nav-subnav {% if request.path.startswith('/reports/governance') %}jom-nav-subnav--open{% endif %}" aria-label="Governance navigation">
+        <a href="/reports/governance" class="{% if request.path == '/reports/governance' %}jom-nav-subnav--active{% endif %}">Overview</a>
+        <a href="/reports/governance/projects" class="{% if request.path == '/reports/governance/projects' %}jom-nav-subnav--active{% endif %}">Projects</a>
+        <a href="/reports/governance/users" class="{% if request.path == '/reports/governance/users' %}jom-nav-subnav--active{% endif %}">Users</a>
+        <a href="/reports/governance/configuration" class="{% if request.path == '/reports/governance/configuration' %}jom-nav-subnav--active{% endif %}">Configuration</a>
+        <a href="/reports/governance/permissions" class="{% if request.path == '/reports/governance/permissions' %}jom-nav-subnav--active{% endif %}">Permissions</a>
+        <a href="/reports/governance/policy-compliance" class="{% if request.path == '/reports/governance/policy-compliance' %}jom-nav-subnav--active{% endif %}">Policy Compliance</a>
+      </div>
     </section>
     <section class="jom-nav-group" aria-label="System navigation">
       <span class="jom-nav-heading">System</span>
-      <a href="/runtime-status" class="jom-nav-link {% if request.path.startswith('/runtime-status') or request.path.startswith('/system/runtime-status') %}jom-nav-link--active{% endif %}">Runtime Status</a>
+      <a href="/runtime-status" class="jom-nav-link {% if request.path.startswith('/runtime-status') or request.path.startswith('/system/runtime-status') %}jom-nav-link--active{% endif %}">Runtime</a>
+      <div class="jom-nav-subnav {% if request.path.startswith('/runtime-status') or request.path.startswith('/system/runtime-status') %}jom-nav-subnav--open{% endif %}" aria-label="Runtime navigation">
+        <a href="/runtime-status" class="{% if request.path == '/runtime-status' %}jom-nav-subnav--active{% endif %}">Overview</a>
+        <a href="/system/runtime-status/application" class="{% if request.path == '/system/runtime-status/application' %}jom-nav-subnav--active{% endif %}">Application</a>
+        <a href="/system/runtime-status/api" class="{% if request.path == '/system/runtime-status/api' %}jom-nav-subnav--active{% endif %}">API</a>
+        <a href="/system/runtime-status/collectors" class="{% if request.path == '/system/runtime-status/collectors' %}jom-nav-subnav--active{% endif %}">Collectors</a>
+        <a href="/system/runtime-status/jobs" class="{% if request.path == '/system/runtime-status/jobs' %}jom-nav-subnav--active{% endif %}">Jobs</a>
+        <a href="/system/runtime-status/errors" class="{% if request.path == '/system/runtime-status/errors' %}jom-nav-subnav--active{% endif %}">Errors</a>
+      </div>
       <a href="/source-health" class="jom-nav-link {% if request.path.startswith('/source-health') or request.path.startswith('/system/source-health') %}jom-nav-link--active{% endif %}">Source Health</a>
+      <div class="jom-nav-subnav {% if request.path.startswith('/source-health') or request.path.startswith('/system/source-health') %}jom-nav-subnav--open{% endif %}" aria-label="Source Health navigation">
+        <a href="/source-health" class="{% if request.path == '/source-health' %}jom-nav-subnav--active{% endif %}">Overview</a>
+        <a href="/system/source-health/connections" class="{% if request.path == '/system/source-health/connections' %}jom-nav-subnav--active{% endif %}">Connections</a>
+        <a href="/system/source-health/authentication" class="{% if request.path == '/system/source-health/authentication' %}jom-nav-subnav--active{% endif %}">Authentication</a>
+        <a href="/system/source-health/freshness" class="{% if request.path == '/system/source-health/freshness' %}jom-nav-subnav--active{% endif %}">Freshness</a>
+        <a href="/system/source-health/completeness" class="{% if request.path == '/system/source-health/completeness' %}jom-nav-subnav--active{% endif %}">Completeness</a>
+        <a href="/system/source-health/failures" class="{% if request.path == '/system/source-health/failures' %}jom-nav-subnav--active{% endif %}">Failures</a>
+      </div>
     </section>
   </nav>
   <footer class="jom-nav-meta">
