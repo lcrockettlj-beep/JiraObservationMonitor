@@ -1,0 +1,9 @@
+from pathlib import Path
+import sys
+R=Path(__file__).resolve().parents[1]
+h=(R/'templates/admin_discovery.html').read_text(encoding='utf-8-sig');j=(R/'static/js/jom_admin_discovery_v1.js').read_text(encoding='utf-8-sig');c=(R/'static/css/jom_admin_discovery_v1.css').read_text(encoding='utf-8-sig')
+checks={'integration owner marker retained': 'data-owner="JOM_ADMIN_DISCOVERY_AUTHORITY_INTEGRATION_V1"' in h,'workflow priority host':'discovery-priority-grid' in h,'workflow KPIs':all(x in h for x in ['discovery-access-count','discovery-ready-count','discovery-monitored-count']),'workflow rail labels':all(x in h for x in ['Review backlog','Validation blockers','Monitoring candidates','Monitoring enabled']),'workflow rail bindings':all(x in h for x in ['discovery-rail-review','discovery-rail-access','discovery-rail-ready','discovery-rail-monitored']),'passive rail labels removed':all(x not in h for x in ['<dt>Identities</dt>','<dt>Review</dt>','<dt>Monitored</dt>','<dt>Sources</dt>']),'operator columns':all(x in h for x in ['Why discovered','Authority source','Required action']),'workflow classifier':'function workflow(row)' in j,'no fabricated authority':all(x in j for x in ['lifecycle(row)','evidence(row)','sources(row)','monitored(row)']),'priority ordering':'workflow(a).priority-workflow(b).priority' in j,'existing APIs retained':all(x in j for x in ['/api/estate/discovery-authority','/api/estate/discovery-authority/coverage']),'Estate review retained':'/estate/review/' in j,'priority styling':'.admin-discovery-priority-grid' in c and '.admin-discovery-priority--access' in c,'integration marker retained':'JOM_ADMIN_DISCOVERY_AUTHORITY_INTEGRATION_V1' in c}
+f=[]
+for k,v in checks.items():print(('PASS' if v else 'FAIL')+': '+k);f.append(k) if not v else None
+if f:print('VALIDATION FAILED: '+str(len(f)));sys.exit(1)
+print('VALIDATION PASS: Discovery UX Phase 1 provides an authority-derived operator workflow without new backend authority.')

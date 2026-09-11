@@ -25,16 +25,16 @@
     <section class="admin-discovery-card" aria-labelledby="discovery-summary-title">
       <div class="admin-discovery-heading"><div><p class="jom-kicker">Current position</p><h2 id="discovery-summary-title">Discovery summary</h2></div><strong id="discovery-generated">Loading</strong></div>
       <div class="admin-discovery-metrics">
-        <article><span>Discovered identities</span><strong id="discovery-identity-count">--</strong><p>Unique identities proven across current discovery sources.</p></article>
-        <article><span>Review queue</span><strong id="discovery-review-count">--</strong><p>Sites requiring an Estate lifecycle decision.</p></article>
-        <article><span>Monitored</span><strong id="discovery-monitored-count">--</strong><p>Sites currently classified as monitored by authority.</p></article>
-        <article><span>Authority sources</span><strong id="discovery-source-count">--</strong><p>Runtime sources inspected by the discovery coverage contract.</p></article>
+        <article><span>Needs review</span><strong id="discovery-review-count">--</strong><p>Sites requiring an Estate lifecycle decision.</p></article>
+        <article><span>Access validation</span><strong id="discovery-access-count">--</strong><p>Review items whose current lifecycle evidence indicates access validation.</p></article>
+        <article><span>Ready for monitoring</span><strong id="discovery-ready-count">--</strong><p>Review items whose current lifecycle evidence indicates monitoring readiness.</p></article>
+        <article><span>Monitoring enabled</span><strong id="discovery-monitored-count">--</strong><p>Sites currently classified as monitored by authority.</p></article>
       </div>
     </section>
 
-    <section class="admin-discovery-card" aria-labelledby="discovery-review-title">
+    <section class="admin-discovery-card" aria-labelledby="discovery-priority-title"><div class="admin-discovery-heading"><div><p class="jom-kicker">Operator workflow</p><h2 id="discovery-priority-title">What needs attention</h2><p>Priority groups are derived only from current lifecycle and monitoring evidence.</p></div></div><div id="discovery-priority-grid" class="admin-discovery-priority-grid"><article><strong>Loading workflow priorities</strong></article></div></section><section class="admin-discovery-card" aria-labelledby="discovery-review-title">
       <div class="admin-discovery-heading"><div><p class="jom-kicker">Lifecycle queue</p><h2 id="discovery-review-title">Sites requiring review</h2><p>Open Estate Review to approve, validate access, ignore, or retain a site for later review.</p></div><strong id="discovery-review-badge">Loading</strong></div>
-      <div class="admin-discovery-table-wrap"><table class="admin-discovery-table"><thead><tr><th>Site</th><th>Lifecycle</th><th>Evidence</th><th>Sources</th><th>Action</th></tr></thead><tbody id="discovery-review-rows"><tr><td colspan="5">Loading current discovery authority...</td></tr></tbody></table></div>
+      <div class="admin-discovery-table-wrap"><table class="admin-discovery-table"><thead><tr><th>Site</th><th>Current state</th><th>Why discovered</th><th>Authority source</th><th>Required action</th></tr></thead><tbody id="discovery-review-rows"><tr><td colspan="5">Loading current discovery authority...</td></tr></tbody></table></div>
       <p id="discovery-review-empty" class="admin-discovery-empty" hidden>No current sites require lifecycle review.</p>
     </section>
 
@@ -56,10 +56,10 @@
   <aside class="admin-discovery-rail" aria-label="Discovery summary rail">
     <section class="admin-discovery-rail-card admin-discovery-authority"><p class="jom-kicker">Authority status</p><strong id="discovery-status">Loading</strong><p id="discovery-status-note">Reading current discovery contracts.</p></section>
     <section class="admin-discovery-rail-card"><h2>Current scope</h2><dl class="admin-discovery-rail-list">
-      <div><dt>Identities</dt><dd id="discovery-rail-identities">--</dd></div>
-      <div><dt>Review</dt><dd id="discovery-rail-review">--</dd></div>
-      <div><dt>Monitored</dt><dd id="discovery-rail-monitored">--</dd></div>
-      <div><dt>Sources</dt><dd id="discovery-rail-sources">--</dd></div>
+      <div><dt>Review backlog</dt><dd id="discovery-rail-review">--</dd></div>
+      <div><dt>Validation blockers</dt><dd id="discovery-rail-access">--</dd></div>
+      <div><dt>Monitoring candidates</dt><dd id="discovery-rail-ready">--</dd></div>
+      <div><dt>Monitoring enabled</dt><dd id="discovery-rail-monitored">--</dd></div>
     </dl></section>
     <section class="admin-discovery-rail-card"><h2>Actions</h2><div class="admin-discovery-actions"><a href="/estate#discovered-sites" class="admin-discovery-action">Open Estate Review</a><a href="/admin/estate-configuration" class="admin-discovery-action admin-discovery-action--secondary">Open Estate Configuration</a></div></section>
   </aside>

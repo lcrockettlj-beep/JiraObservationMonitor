@@ -235,32 +235,24 @@
       "TRANSIENT"
     ]
   },
-  "booksync_post_recovery_website_closeout_2026_09_10": {
-    "recorded_at": "2026-09-10T11:14:00+01:00",
-    "status": "validated_pending_closeout_boundary_review",
-    "navigation_architecture_phase1": "pass",
-    "source_health_ux": [
-      "phase1_pass",
-      "phase1_1_pass",
-      "phase1_2_pass"
+  "booksync_discovery_ux_phase1_closeout_2026_09_11": {
+    "recorded_at": "2026-09-11T09:29:00+01:00",
+    "baseline_commit_before_milestone": "794a5e4",
+    "status": "validated_visually_accepted_pending_commit",
+    "required_owner_marker": "JOM_ADMIN_DISCOVERY_AUTHORITY_INTEGRATION_V1",
+    "product_owners": [
+      "templates/admin_discovery.html",
+      "static/js/jom_admin_discovery_v1.js",
+      "static/css/jom_admin_discovery_v1.css",
+      "scripts/validate_discovery_ux_phase1_owner_marker_v1.py",
+      "scripts/validate_discovery_ux_phase1_right_rail_v1.py",
+      "scripts/validate_discovery_ux_phase1_v1.py"
     ],
-    "discovery_response_correction": "pass",
-    "validated_http_200_routes": [
-      "/api/estate/admin-site-inventory",
-      "/api/estate/discovery-authority",
-      "/api/estate/discovery-authority/coverage"
-    ],
-    "approved_shared_owner_api_endpoints": [
-      "/api/system/source-health-dashboard",
-      "/api/system/runtime-dashboard"
-    ],
-    "generated_runtime_classification": "GENERATED_RUNTIME_restore_to_git_baseline_after_patch_backup",
-    "report_only": [
-      "source-health-dashboard-audit.json"
-    ],
-    "monitoring_page_load_finding": "Opening Admin Monitoring initiated POST /api/admin/monitoring/refresh and the full authority chain; future audit required.",
-    "current_workstream": "Post-Recovery Website Milestone closeout and commit-boundary review",
-    "next_workstream": "Runtime UX page specialisation",
-    "staging": "none"
+    "new_collectors": false,
+    "new_runtime_contracts": false,
+    "new_backend_routes": false,
+    "authority_semantics_changed": false,
+    "generated_runtime_classification": "GENERATED_RUNTIME",
+    "next_workstream": "FR-005 remaining surface classification through evidence-first website capability audit"
   }
 }

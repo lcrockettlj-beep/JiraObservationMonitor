@@ -846,44 +846,14 @@ After installing this BOOKSYNC pack:
 
 Continue using full owner-file replacements and complete downloadable packs. No patches, snippets, manual editing, wrappers, or overlay layers. Conclusions must remain backed by repository, validator, API, or live runtime evidence.
 
-### 10 September 2026 - Post-Recovery Website Milestone Closeout
+### 11 September 2026 - Discovery UX Phase 1 operator workflow closeout
 
-#### Evidence-backed outcome
-- Navigation Architecture Phase 1 passed its retained validator and full browser walkthrough. Governance, Runtime Status and Source Health subnavigation expose supported operator pages, preserve active-state styling and do not expose API routes as navigation links.
-- Source Health UX Phase 1, Phase 1.1 and Phase 1.2 passed as one retained chain. Six distinct Source Health views use the shared `static/js/jom_system_truth_v1.js` and `static/css/jom_system_truth_v1.css` owners, consume explicit runtime contract fields, preserve Runtime Status rendering, retain privacy-safe wording and remove false `Unavailable` prefixes without hiding genuinely unavailable values.
-- The shared JavaScript owner is approved to call exactly `/api/system/source-health-dashboard` and `/api/system/runtime-dashboard`. The Phase 1 validator was aligned to reject any third API endpoint rather than enforcing the obsolete one-endpoint assumption.
-- The Admin Discovery walkthrough exposed HTTP 500 on `/api/estate/discovery-authority`. Runtime traceback proved `NameError: name 'Response' is not defined` in `app/web.py`. The global Flask import now includes `Response`. `/api/estate/admin-site-inventory`, `/api/estate/discovery-authority` and `/api/estate/discovery-authority/coverage` all returned HTTP 200 in the correction smoke test.
-- The full retained validator chain and `git diff --check` passed. No files were staged by the implementation or validation packs.
+Discovery UX Phase 1 is implemented, fully validated and visually accepted, pending the combined product and BOOKSYNC commit. The required owner marker remains `JOM_ADMIN_DISCOVERY_AUTHORITY_INTEGRATION_V1`. The page continues to use `/api/estate/discovery-authority` and `/api/estate/discovery-authority/coverage`; no collector, runtime contract, backend route or authority semantics changed.
 
-#### Approved milestone owners
-- `app/web.py`
-- `templates/_nav.html`
-- `templates/source_health.html`
-- `templates/source_connections.html`
-- `templates/source_authentication.html`
-- `templates/source_freshness.html`
-- `templates/source_completeness.html`
-- `templates/source_failures.html`
-- `static/css/jom_navigation_remediation_phase1_v1.css`
-- `static/css/jom_system_truth_v1.css`
-- `static/js/jom_system_truth_v1.js`
-- `scripts/validate_navigation_architecture_phase1_v1.py`
-- `scripts/validate_source_health_ux_phase1_v1.py`
-- `scripts/validate_source_health_ux_phase1_1_v1.py`
-- `scripts/validate_source_health_ux_phase1_2_v1.py`
-- `scripts/validate_source_health_validator_alignment_v1.py`
-- `scripts/validate_discovery_response_import_correction_v1.py`
+The authority-derived workflow provides Needs review, Access validation, Ready for monitoring and Monitoring enabled metrics; Current state, Why discovered, Authority source and Required action columns; and the right-rail labels Review backlog, Validation blockers, Monitoring candidates and Monitoring enabled. Lifecycle decisions remain owned by Estate and Site Review. Static fallback remains disabled. Retired-site population remains unavailable unless explicitly published.
 
-#### Repository hygiene classification
-- Modified tracked files under `runtime/data/` produced by the Monitoring refresh are `GENERATED_RUNTIME`. They are excluded from this website milestone and restored to the current Git baseline by the closeout runner after a patch is retained inside the extracted pack.
-- `source-health-dashboard-audit.json` is `REPORT_ONLY` temporary evidence and is removed by the closeout runner after a copy is retained inside the extracted pack.
-- Product, validator and BOOKSYNC owners are `COMMIT` candidates only after the closeout runner passes and the final boundary is reviewed. Nothing is staged automatically.
+Product boundary: `templates/admin_discovery.html`, `static/js/jom_admin_discovery_v1.js`, `static/css/jom_admin_discovery_v1.css`, `scripts/validate_discovery_ux_phase1_owner_marker_v1.py`, `scripts/validate_discovery_ux_phase1_right_rail_v1.py`, and `scripts/validate_discovery_ux_phase1_v1.py`. The first delivery's owner-marker regression and the later passive right-rail labels were corrected before acceptance and are protected by retained validators.
 
-#### Known operational finding
-Opening Admin Monitoring initiated `POST /api/admin/monitoring/refresh` and the full authority chain. The chain completed, but whether ordinary page navigation should initiate this substantial refresh remains an explicit future audit item. No behaviour change is included in this milestone.
+Accepted browser evidence showed four Operator review required sites and zero Access validation required, Ready for monitoring and Monitoring enabled sites. These are time-sensitive values, not fixed acceptance criteria. Live testing drift under `runtime/data` was classified as `GENERATED_RUNTIME`, preserved outside the repository, and restored before BOOKSYNC.
 
-#### Current and next workstream
-- Current workstream: Post-Recovery Website Milestone closeout, controlled cleanup and commit-boundary review.
-- Next workstream after clean commit and push: Runtime UX page specialisation, beginning with audit-first classification of each Runtime Status page against `/api/system/runtime-dashboard`.
-- FR-004 timestamp meaning consistency remains an evidence-controlled limitation. Do not claim closure without page-specific proof that collection, derivation, refresh completion and authority-change timestamps are distinguished.
-- Continue the established workflow: Audit -> Build -> Install -> Validate -> Live test -> Clean -> BOOKSYNC -> Stage -> Commit -> Push. Full owner replacements only. No manual edits, snippets, overlays or inferred authority.
+Current workstream: Discovery UX Phase 1 BOOKSYNC closeout and commit gate. Immediate next step: validate this pack, inspect the unstaged boundary, stage only approved product and BOOKSYNC owners, run `git diff --cached --check`, commit and push. Next workstream: FR-005 remaining surface classification through an evidence-first website capability audit.
