@@ -38,19 +38,25 @@
         </div>
       </article>
     </section>
-    <section class="jom-noc-wall" id="jom-command-noc-display-v1" aria-label="Live estate monitoring topology">
-      <div class="jom-noc-header">
-        <div>
-          <p class="jom-card-label">Live estate monitoring</p>
-          <h2>Organisation Monitoring Network</h2>
-        </div>
-        <div class="jom-noc-stats" aria-label="Live monitoring summary">
-          <span><strong id="jom-noc-node-count">--</strong> monitored nodes</span>
-          <span><strong id="jom-noc-coverage">--</strong> coverage</span>
-        </div>
+    <section class="jom-monitor-wall" id="jom-command-monitor-wall-v1" aria-labelledby="jom-monitor-wall-title">
+      <header class="jom-monitor-wall__header">
+        <div><p class="jom-card-label">Live estate telemetry</p><h2 id="jom-monitor-wall-title">Monitoring Wall</h2><p>Authority-backed operational traces from the current Command Centre contract. Animation visualises the loaded state and is not a network-request indicator.</p></div>
+        <div class="jom-monitor-wall__badges"><span><strong id="jom-wall-sites">--</strong> monitored sites</span><span><strong id="jom-wall-coverage">--</strong> coverage</span><span id="jom-wall-state" data-state="loading">Loading</span></div>
+      </header>
+      <div class="jom-monitor-wall__console">
+        <section class="jom-monitor-wall__telemetry" aria-label="Operational telemetry lanes">
+          <div id="jom-wall-lanes" class="jom-monitor-wall__lanes"><p class="jom-monitor-wall__loading">Loading operational telemetry...</p></div>
+        </section>
+        <aside class="jom-monitor-wall__vitals" aria-label="Current monitoring vitals">
+          <article><span>Overall</span><strong id="jom-wall-overall">--</strong><small>Command Centre posture</small></article>
+          <article><span>Runtime</span><strong id="jom-wall-runtime">--</strong><small>Latest published result</small></article>
+          <article><span>Coverage</span><strong id="jom-wall-coverage-vital">--</strong><small>Current monitored scope</small></article>
+          <article><span>Actions</span><strong id="jom-wall-actions">--</strong><small>Published operator items</small></article>
+        </aside>
       </div>
-      <div class="jom-noc-canvas" id="jom-noc-canvas" aria-live="polite">
-        <div class="jom-noc-empty">Loading live monitoring topology...</div>
+      <div class="jom-monitor-wall__lower">
+        <section aria-labelledby="jom-wall-sites-title"><h3 id="jom-wall-sites-title">Monitored estate</h3><div id="jom-wall-site-grid" class="jom-monitor-wall__site-grid"><p>Loading monitored sites...</p></div></section>
+        <section aria-labelledby="jom-wall-activity-title"><h3 id="jom-wall-activity-title">Current evidence</h3><ol id="jom-wall-activity" class="jom-monitor-wall__activity"><li>Loading current evidence...</li></ol></section>
       </div>
     </section>
   </div>
