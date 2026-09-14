@@ -498,15 +498,53 @@ After installing this BOOKSYNC pack:
 7. Do not push or clean unrelated files unless the current operator workflow explicitly reaches that gate.
 
 Continue using full owner-file replacements and complete downloadable packs. No patches, snippets, manual editing, wrappers, or overlay layers. Conclusions must remain backed by repository, validator, API, or live runtime evidence.
+### 14 September 2026 - Command Centre UX Phase 4.3 closeout
 
-### 11 September 2026 - Discovery UX Phase 1 operator workflow closeout
+#### Accepted outcome
+- Baseline commit before this uncommitted milestone: 3b8b6b9, Command Centre UX Phase 3: monitoring wall and colour harmonisation.
+- Current milestone: Command Centre UX Phase 4.3, Continuous Telemetry Recorder.
+- Status: implemented, validated and visually accepted; pending BOOKSYNC installation, exact-boundary staging, commit and push.
+- The Command Centre is now monitoring-first. A compact operational header is followed by the Monitoring Wall, monitored-estate and current-evidence areas, then the Action Required workflow.
+- The fixed right operations rail is retained and contained within the viewport. Monitoring Coverage, Estate Snapshot and Operational Status remain in one rail with internal scrolling where required.
+- Runtime, Source Health, Discovery and Users & Access use gapless continuous right-to-left recorder tracks. Each track contains two equal waveform segments in a 200 percent flex track translated exactly 50 percent, preventing blank gaps and visible restarts.
+- Travelling dots, whole-wave vertical bobbing and SVG path morphing are absent. Reduced-motion handling is retained.
+- The wall uses the established JOM blue, neutral and semantic healthy, review and critical palette.
 
-Discovery UX Phase 1 is implemented, fully validated and visually accepted, pending the combined product and BOOKSYNC commit. The required owner marker remains `JOM_ADMIN_DISCOVERY_AUTHORITY_INTEGRATION_V1`. The page continues to use `/api/estate/discovery-authority` and `/api/estate/discovery-authority/coverage`; no collector, runtime contract, backend route or authority semantics changed.
+#### Authority and operational boundary
+- Page: /home.
+- Existing read-only information route: /api/workspace/command-centre.
+- No backend route, collector, runtime contract or authority source changed.
+- Animation visualises the state loaded in the current Command Centre contract. Animation is not evidence of a network request, continuous poll or live collector execution.
+- The current-evidence Contract served value is request-serving evidence. It must not be interpreted as collection time, derived-authority time or an authority-change timestamp. FR-004 Timestamp Meaning Consistency remains open.
+- Command Centre is no longer a legacy-placeholder presentation for FR-005 purposes. This records accepted consumer presentation and operator workflow only; it does not fabricate closure of FR-004 or claim new collector authority.
 
-The authority-derived workflow provides Needs review, Access validation, Ready for monitoring and Monitoring enabled metrics; Current state, Why discovered, Authority source and Required action columns; and the right-rail labels Review backlog, Validation blockers, Monitoring candidates and Monitoring enabled. Lifecycle decisions remain owned by Estate and Site Review. Static fallback remains disabled. Retired-site population remains unavailable unless explicitly published.
+#### Current owners
+- templates/home.html
+- static/js/jom_command_centre_completion_v1.js
+- static/css/jom_command_centre_completion_v1.css
+- scripts/validate_command_centre_ux_phase1_v1.py
+- scripts/validate_command_centre_ux_phase4_3_v1.py
 
-Product boundary: `templates/admin_discovery.html`, `static/js/jom_admin_discovery_v1.js`, `static/css/jom_admin_discovery_v1.css`, `scripts/validate_discovery_ux_phase1_owner_marker_v1.py`, `scripts/validate_discovery_ux_phase1_right_rail_v1.py`, and `scripts/validate_discovery_ux_phase1_v1.py`. The first delivery's owner-marker regression and the later passive right-rail labels were corrected before acceptance and are protected by retained validators.
+#### Validator hygiene
+- Permanent validation owners for the accepted state are scripts/validate_command_centre_ux_phase1_v1.py and scripts/validate_command_centre_ux_phase4_3_v1.py.
+- The following intermediate milestone and delivery validators are obsolete after Phase 4.3 acceptance and must be removed before staging: scripts/validate_command_centre_ux_phase4_v1.py, scripts/validate_command_centre_ux_phase4_jom_colour_owner_v1.py, scripts/validate_command_centre_ux_phase4_1_v1.py, scripts/validate_command_centre_ux_phase4_1_eof_v1.py, scripts/validate_command_centre_ux_phase4_2_v1.py and scripts/validate_command_centre_ux_phase4_3_eof_v1.py.
+- Git history and the delivery packs remain the recovery evidence for those intermediate gates. They are not active repository authority.
 
-Accepted browser evidence showed four Operator review required sites and zero Access validation required, Ready for monitoring and Monitoring enabled sites. These are time-sensitive values, not fixed acceptance criteria. Live testing drift under `runtime/data` was classified as `GENERATED_RUNTIME`, preserved outside the repository, and restored before BOOKSYNC.
+#### Validation and acceptance evidence
+- Phase 1 regression validation passed.
+- Phase 4.3 continuous-recorder validation passed after the CSS terminal-newline correction.
+- /home returned HTTP 200.
+- /api/workspace/command-centre returned HTTP 200.
+- Fixed right-rail bindings and viewport containment passed.
+- JOM colour ownership, monitored-site filtering, no-polling boundary and reduced-motion handling passed.
+- Luke visually accepted the final continuous recorder on 14 September 2026.
+- Generated runtime drift was preserved outside the repository and restored before BOOKSYNC.
 
-Current workstream: Discovery UX Phase 1 BOOKSYNC closeout and commit gate. Immediate next step: validate this pack, inspect the unstaged boundary, stage only approved product and BOOKSYNC owners, run `git diff --cached --check`, commit and push. Next workstream: FR-005 remaining surface classification through an evidence-first website capability audit.
+#### Commit boundary and continuation
+- Product owners to stage: templates/home.html, static/js/jom_command_centre_completion_v1.js and static/css/jom_command_centre_completion_v1.css.
+- Retained validators to stage: scripts/validate_command_centre_ux_phase1_v1.py and scripts/validate_command_centre_ux_phase4_3_v1.py.
+- BOOKSYNC owners to stage: BOOKSYNC Guide.md, GitHub Repository Record.json, JOM Change History.md, JOM Guide v2 Additions.md, JOM Progress and Improvements.md, JOM Quick Start.md, JOM Recovery Guide.md, JOM System and File Map.md and The Jira Observation Monitor Guide.md.
+- BOOKSYNC validator to stage: scripts/validate_command_centre_ux_phase4_3_booksync_v1.py.
+- Immediate next step: install this BOOKSYNC pack, run the product and BOOKSYNC validators, delete the six obsolete untracked validators through the packaged runner, inspect git status and git diff, stage only the approved fifteen-file boundary, run git diff --cached --check, inspect staged names, commit and push.
+- Next workstream after clean push: continue FR-005 Placeholder and Legacy Surface Classification with the next unaccepted surface selected from current repository evidence. FR-004 remains open.
+- Working rule remains Audit -> Build -> Install -> Validate -> Live test -> Clean -> BOOKSYNC -> Stage -> Commit -> Push, using full owner-file replacement packs and no manual editing.

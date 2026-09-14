@@ -235,24 +235,27 @@
       "TRANSIENT"
     ]
   },
-  "booksync_discovery_ux_phase1_closeout_2026_09_11": {
-    "recorded_at": "2026-09-11T09:29:00+01:00",
-    "baseline_commit_before_milestone": "794a5e4",
-    "status": "validated_visually_accepted_pending_commit",
-    "required_owner_marker": "JOM_ADMIN_DISCOVERY_AUTHORITY_INTEGRATION_V1",
-    "product_owners": [
-      "templates/admin_discovery.html",
-      "static/js/jom_admin_discovery_v1.js",
-      "static/css/jom_admin_discovery_v1.css",
-      "scripts/validate_discovery_ux_phase1_owner_marker_v1.py",
-      "scripts/validate_discovery_ux_phase1_right_rail_v1.py",
-      "scripts/validate_discovery_ux_phase1_v1.py"
-    ],
+  "booksync_command_centre_ux_phase4_3_2026_09_14": {
+    "recorded_at": "2026-09-14T10:12:00+01:00",
+    "branch": "main",
+    "baseline_commit": "3b8b6b9",
+    "status": "implemented_validated_visually_accepted_pending_commit_push",
+    "page": "/home",
+    "api": "/api/workspace/command-centre",
+    "architecture": "monitoring_first",
+    "fixed_right_rail": true,
+    "continuous_recorder": "two_equal_segments_200_percent_track_translate_negative_50_percent",
+    "new_backend_routes": false,
     "new_collectors": false,
     "new_runtime_contracts": false,
-    "new_backend_routes": false,
-    "authority_semantics_changed": false,
-    "generated_runtime_classification": "GENERATED_RUNTIME",
-    "next_workstream": "FR-005 remaining surface classification through evidence-first website capability audit"
+    "authority_changes": false,
+    "FR_004": "open",
+    "FR_005_command_centre": "accepted_consumer_surface",
+    "retained_validators": [
+      "scripts/validate_command_centre_ux_phase1_v1.py",
+      "scripts/validate_command_centre_ux_phase4_3_v1.py"
+    ],
+    "next_gate": "install_booksync_validate_remove_obsolete_validators_stage_exact_boundary_commit_push",
+    "next_workstream": "FR-005 Placeholder and Legacy Surface Classification"
   }
 }

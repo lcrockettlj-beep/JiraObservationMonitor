@@ -10,82 +10,25 @@
 </head>
 <body data-jom-page="command-centre">
 {% include "_nav.html" %}
-<main class="jom-command-centre-final jom-command-centre-rail-layout" id="jom-command-centre">
-  <div class="jom-command-centre-main">
-    <section class="jom-final-hero" aria-label="Command Centre overview">
-      <div class="jom-final-hero__copy">
-        <p class="jom-kicker">Operations / Command Centre</p>
-        <h1>Command Centre</h1>
-        <p class="jom-lede">What needs attention across the Atlassian estate right now?</p>
-      </div>
-    </section>
+<main class="jom-command-centre-final jom-command-centre-monitoring-first" id="jom-command-centre">
+  <header class="jom-command-header" aria-label="Command Centre operational summary">
+    <div><p class="jom-kicker">Operations / Command Centre</p><h1>Command Centre</h1><p>Live authority-backed monitoring across the Atlassian estate.</p></div>
 
-    <section class="jom-final-attention-grid" aria-label="Attention and actions">
-      <article class="jom-card jom-attention-card">
-        <div class="jom-card-heading">
-          <p class="jom-card-label">Live actions</p>
-          <h2>Action Required</h2>
-        </div>
-        <div class="jom-priority-summary" aria-label="Priority summary">
-          <div>
-            <span>Overall Health</span>
-            <strong id="jom-rail-overall-health">--</strong>
-          </div>
-          <p id="jom-hero-health-note">Live estate attention status.</p>
-        </div>
-        <div class="jom-command-priority-metrics" aria-label="Action categories"><article><span>Immediate attention</span><strong id="jom-priority-immediate">--</strong></article><article><span>Requires review</span><strong id="jom-priority-review">--</strong></article><article><span>Healthy services</span><strong id="jom-priority-healthy">--</strong></article></div><div id="jom-final-risk-list" class="jom-risk-list" aria-live="polite">
-          <div class="jom-final-empty">Loading current actions...</div>
-        </div>
-      </article>
-    </section>
-    <section class="jom-monitor-wall" id="jom-command-monitor-wall-v1" aria-labelledby="jom-monitor-wall-title">
-      <header class="jom-monitor-wall__header">
-        <div><p class="jom-card-label">Live estate telemetry</p><h2 id="jom-monitor-wall-title">Monitoring Wall</h2><p>Authority-backed operational traces from the current Command Centre contract. Animation visualises the loaded state and is not a network-request indicator.</p></div>
-        <div class="jom-monitor-wall__badges"><span><strong id="jom-wall-sites">--</strong> monitored sites</span><span><strong id="jom-wall-coverage">--</strong> coverage</span><span id="jom-wall-state" data-state="loading">Loading</span></div>
-      </header>
-      <div class="jom-monitor-wall__console">
-        <section class="jom-monitor-wall__telemetry" aria-label="Operational telemetry lanes">
-          <div id="jom-wall-lanes" class="jom-monitor-wall__lanes"><p class="jom-monitor-wall__loading">Loading operational telemetry...</p></div>
-        </section>
-        <aside class="jom-monitor-wall__vitals" aria-label="Current monitoring vitals">
-          <article><span>Overall</span><strong id="jom-wall-overall">--</strong><small>Command Centre posture</small></article>
-          <article><span>Runtime</span><strong id="jom-wall-runtime">--</strong><small>Latest published result</small></article>
-          <article><span>Coverage</span><strong id="jom-wall-coverage-vital">--</strong><small>Current monitored scope</small></article>
-          <article><span>Actions</span><strong id="jom-wall-actions">--</strong><small>Published operator items</small></article>
-        </aside>
-      </div>
-      <div class="jom-monitor-wall__lower">
-        <section aria-labelledby="jom-wall-sites-title"><h3 id="jom-wall-sites-title">Monitored estate</h3><div id="jom-wall-site-grid" class="jom-monitor-wall__site-grid"><p>Loading monitored sites...</p></div></section>
-        <section aria-labelledby="jom-wall-activity-title"><h3 id="jom-wall-activity-title">Current evidence</h3><ol id="jom-wall-activity" class="jom-monitor-wall__activity"><li>Loading current evidence...</li></ol></section>
-      </div>
-    </section>
-  </div>
-
+  </header>
+  <section class="jom-monitor-wall" id="jom-command-monitor-wall-v1" aria-labelledby="jom-monitor-wall-title">
+    <header class="jom-monitor-wall__header"><div><p class="jom-card-label">Live estate telemetry</p><h2 id="jom-monitor-wall-title">Monitoring Wall</h2><p>Animated EKG traces visualise the authority state loaded by Command Centre. The waveform is a status presentation, not a network-request indicator.</p></div><div class="jom-monitor-wall__badges"><span><strong id="jom-wall-sites">--</strong> monitored sites</span><span><strong id="jom-wall-coverage">--</strong> coverage</span><span id="jom-wall-state" data-state="loading">Loading</span></div></header>
+    <div class="jom-monitor-wall__console"><section class="jom-monitor-wall__telemetry" aria-label="Operational EKG telemetry lanes"><div id="jom-wall-lanes" class="jom-monitor-wall__lanes"><p>Loading operational telemetry...</p></div></section><aside class="jom-monitor-wall__vitals" aria-label="Current monitoring vitals"><article><span>Overall</span><strong id="jom-wall-overall">--</strong><small>Command Centre posture</small></article><article><span>Runtime</span><strong id="jom-wall-runtime">--</strong><small>Latest published result</small></article><article><span>Coverage</span><strong id="jom-wall-coverage-vital">--</strong><small>Current monitored scope</small></article><article><span>Data confidence</span><strong id="jom-wall-data-confidence">--</strong><small>Published authority confidence</small></article></aside></div>
+    <div class="jom-monitor-wall__lower"><section><h3>Monitored estate</h3><div id="jom-wall-site-grid" class="jom-monitor-wall__site-grid"><p>Loading monitored sites...</p></div></section><section><h3>Current evidence</h3><ol id="jom-wall-activity" class="jom-monitor-wall__activity"><li>Loading current evidence...</li></ol></section></div>
+  </section>
+  <section class="jom-command-actions" aria-labelledby="jom-actions-title">
+    <header><div><p class="jom-card-label">Operator workflow</p><h2 id="jom-actions-title">Action Required</h2></div><p id="jom-hero-health-note">Live estate attention status.</p></header>
+    <div class="jom-command-priority-metrics" aria-label="Action categories"><article><span>Immediate attention</span><strong id="jom-priority-immediate">--</strong></article><article><span>Requires review</span><strong id="jom-priority-review">--</strong></article><article><span>Healthy services</span><strong id="jom-priority-healthy">--</strong></article></div>
+    <div id="jom-final-risk-list" class="jom-risk-list" aria-live="polite"><div class="jom-final-empty">Loading current actions...</div></div>
+  </section>
   <aside class="jom-operations-rail" aria-label="Command Centre operations rail">
-    <section class="jom-rail-card jom-rail-coverage" aria-label="Monitoring coverage">
-      <p class="jom-rail-kicker">Monitoring Coverage</p>
-      <div class="jom-coverage-ring" aria-hidden="true"><span id="jom-rail-monitoring-coverage">--</span></div>
-      <div class="jom-rail-coverage-bar" aria-hidden="true"><span id="jom-rail-coverage-monitored"></span><span id="jom-rail-coverage-review"></span></div>
-      <p id="jom-rail-coverage-reason">Calculating monitored estate coverage.</p>
-    </section>
-    <section class="jom-rail-card" aria-label="Estate snapshot">
-      <h2>Estate Snapshot</h2>
-      <dl class="jom-rail-list jom-rail-list--tiles">
-        <div><dt>Organisations</dt><dd id="jom-rail-organisations">--</dd></div>
-        <div><dt>Total Sites</dt><dd id="jom-rail-total-sites">--</dd></div>
-        <div><dt>Monitored</dt><dd id="jom-rail-monitored-sites">--</dd></div>
-        <div><dt>Estate review</dt><dd id="jom-rail-review-items">--</dd></div>
-      </dl>
-    </section>
-    <section class="jom-rail-card" aria-label="Platform snapshot">
-      <h2>Operational Status</h2>
-      <dl class="jom-rail-list jom-rail-list--tiles">
-        <div><dt>Runtime</dt><dd id="jom-rail-runtime">--</dd></div>
-        <div><dt>Immediate actions</dt><dd id="jom-rail-alerts">--</dd></div>
-        <div><dt>Users</dt><dd id="jom-rail-users">--</dd></div>
-        <div><dt>Data Confidence</dt><dd id="jom-rail-data-health">--</dd></div>
-      </dl>
-    </section>
+    <section class="jom-rail-card jom-rail-coverage" aria-label="Monitoring coverage"><p class="jom-rail-kicker">Monitoring Coverage</p><div class="jom-coverage-ring" aria-hidden="true"><span id="jom-rail-monitoring-coverage">--</span></div><div class="jom-rail-coverage-bar" aria-hidden="true"><span id="jom-rail-coverage-monitored"></span><span id="jom-rail-coverage-review"></span></div><p id="jom-rail-coverage-reason">Calculating monitored estate coverage.</p></section>
+    <section class="jom-rail-card" aria-label="Estate snapshot"><h2>Estate Snapshot</h2><dl class="jom-rail-list jom-rail-list--tiles"><div><dt>Organisations</dt><dd id="jom-rail-organisations">--</dd></div><div><dt>Total Sites</dt><dd id="jom-rail-total-sites">--</dd></div><div><dt>Monitored</dt><dd id="jom-rail-monitored-sites">--</dd></div><div><dt>Estate review</dt><dd id="jom-rail-review-items">--</dd></div></dl></section>
+    <section class="jom-rail-card" aria-label="Platform snapshot"><h2>Operational Status</h2><dl class="jom-rail-list jom-rail-list--tiles"><div><dt>Overall</dt><dd id="jom-rail-overall-health">--</dd></div><div><dt>Runtime</dt><dd id="jom-rail-runtime">--</dd></div><div><dt>Immediate actions</dt><dd id="jom-rail-alerts">--</dd></div><div><dt>Users</dt><dd id="jom-rail-users">--</dd></div><div><dt>Data Confidence</dt><dd id="jom-rail-data-health">--</dd></div></dl></section>
   </aside>
 </main>
 <script src="{{ url_for('static', filename='js/jom_command_centre_completion_v1.js') }}" defer></script>
