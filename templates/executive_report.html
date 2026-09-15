@@ -1,71 +1,14 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Executive Report - Jira Observation Monitor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_executive_report_v1.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jom_navigation_remediation_phase1_v1.css') }}"></head>
-<body data-jom-page="executive-report">
-{% include "_nav.html" %}
-
-<main class="jom-executive-report-v1" id="jom-page-shell" data-owner="JOM_EXECUTIVE_REPORT_AUTHORITY_V1">
-  <section class="exec-hero" aria-label="Executive report overview">
-    <p class="jom-kicker">Reporting / Executive Report</p>
-    <h1>Executive Report</h1>
-    <p class="exec-lede">Board-level authority view of JOM estate monitoring, access posture, source health, and key decisions. Unproven metrics are displayed as unavailable.</p>
-  </section>
-
-  <section class="exec-main" aria-label="Executive reporting content">
-    <section class="exec-card">
-      <div class="exec-card-heading"><p class="jom-kicker">Executive Actions</p><h2>Board-level decisions</h2></div>
-      <div id="exec-action-list" class="exec-action-list"><article class="exec-action-card"><strong>Loading</strong><p>Checking executive action items.</p></article></div>
-    </section>
-
-    <section class="exec-card">
-      <div class="exec-card-heading"><p class="jom-kicker">Estate Position</p><h2>Current operational summary</h2></div>
-      <div class="exec-metric-grid">
-        <article class="exec-metric"><span>Total Sites</span><strong id="exec-total-sites">--</strong><p>Runtime site registry scope.</p></article>
-        <article class="exec-metric"><span>Monitored Sites</span><strong id="exec-monitored-sites">--</strong><p>Approved monitored estate scope.</p></article>
-        <article class="exec-metric"><span>Coverage</span><strong id="exec-coverage">--</strong><p>Monitoring coverage from runtime authority.</p></article>
-        <article class="exec-metric"><span>Product Access</span><strong id="exec-product-access">--</strong><p>Product-access assignments, not active users.</p></article>
-        <article class="exec-metric"><span>Active Users</span><strong id="exec-active-users">--</strong><p>Unavailable until unique active-user authority is proven.</p></article>
-        <article class="exec-metric"><span>Commercial Billing</span><strong id="exec-billing">--</strong><p>Unavailable until billing authority is proven.</p></article>
-      </div>
-    </section>
-
-    <section class="exec-card">
-      <div class="exec-card-heading"><p class="jom-kicker">Leadership Messages</p><h2>Current narrative</h2></div>
-      <div id="exec-board-messages" class="exec-message-list"></div>
-    </section>
-
-    <section class="exec-card">
-      <div class="exec-card-heading"><p class="jom-kicker">Source Assurance</p><h2>Evidence state</h2></div>
-      <div id="exec-source-health" class="exec-source-grid"></div>
-    </section>
-  </section>
-<section class="jom-related-navigation" aria-label="Related operational pages"><div class="jom-related-navigation__heading"><p class="jom-kicker">Operational navigation</p><h2>Continue to operational detail</h2><p>Move from the report summary to the relevant working area.</p></div><div class="jom-related-navigation__grid"><a class="jom-related-action" href="/estate"><strong>Open Estate</strong><span>Review estate scope and lifecycle state.</span></a><a class="jom-related-action" href="/reports/governance"><strong>Open Governance</strong><span>Review governance reporting and decisions.</span></a><a class="jom-related-action" href="/runtime-status"><strong>Open Runtime Status</strong><span>Review current JOM execution health.</span></a><a class="jom-related-action" href="/source-health"><strong>Open Source Health</strong><span>Review freshness and reliability evidence.</span></a></div></section></main>
-
-<aside class="exec-rail" aria-label="Executive report summary">
-  <section class="exec-rail-card exec-rail-status">
-    <p class="jom-kicker">Executive Status</p>
-    <strong id="exec-status">Loading</strong>
-    <p id="exec-authority-note">Runtime/OAuth/Admin authority only.</p>
-  </section>
-  <section class="exec-rail-card">
-    <h2>Snapshot</h2>
-    <dl class="exec-rail-list">
-      <div><dt>Coverage</dt><dd id="exec-rail-coverage">--</dd></div>
-      <div><dt>Sites</dt><dd id="exec-rail-sites">--</dd></div>
-      <div><dt>Product Access</dt><dd id="exec-rail-product-access">--</dd></div>
-      <div><dt>Source Issues</dt><dd id="exec-rail-failed">--</dd></div>
-      <div><dt>Actions</dt><dd id="exec-rail-actions">--</dd></div>
-    </dl>
-  </section>
-</aside>
-
-<script src="{{ url_for('static', filename='js/jom_executive_report_v1.js') }}" defer></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><title>Executive Report - Jira Observation Monitor</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="{{ url_for('static',filename='css/jom_atlassian_command.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='css/jom_visual_consistency_v2.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='css/jom_executive_report_v1.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='css/jom_navigation_remediation_phase1_v1.css') }}"></head>
+<body data-jom-page="executive-report">{% include "_nav.html" %}
+<main class="xr" id="jom-page-shell" data-owner="JOM_EXECUTIVE_REPORT_UX_PHASE1_V1" aria-labelledby="xr-title">
+<header class="xr__header"><div><p class="xr__eyebrow">Reporting / Executive</p><h1 id="xr-title">Executive Report</h1><p>Board-level operating posture, current decisions and leadership narrative from the existing read-only Executive Report authority.</p></div><span class="xr__badge">Read-only</span></header>
+<section id="xr-status" class="xr__status" role="status">Loading current executive authority...</section>
+<section class="xr__summary" aria-label="Executive posture"><article><span id="xr-coverage">Unavailable</span><small>Monitoring coverage</small></article><article><span id="xr-monitored">Unavailable</span><small>Monitored sites</small></article><article><span id="xr-total">Unavailable</span><small>Estate sites</small></article><article><span id="xr-product">Unavailable</span><small>Product assignments</small></article><article><span id="xr-source-issues">Unavailable</span><small>Source issues</small></article><article class="xr__summary--attention"><span id="xr-actions">Unavailable</span><small>Executive decisions</small></article></section>
+<section class="xr__grid xr__grid--lead"><section class="xr__card"><header><div><p class="xr__eyebrow">Executive attention</p><h2>Decisions requiring review</h2></div><a href="/command-centre">Open Command Centre</a></header><div id="xr-action-list" class="xr__actions"><article><strong>Loading</strong><p>Checking current executive decisions.</p></article></div></section><section class="xr__card"><header><div><p class="xr__eyebrow">Leadership narrative</p><h2>Current board messages</h2></div></header><div id="xr-board-messages" class="xr__messages"><article><strong>Loading</strong><p>Checking current leadership messages.</p></article></div></section></section>
+<section class="xr__card"><header><div><p class="xr__eyebrow">Assurance</p><h2>Authority health</h2></div><a href="/source-health">Open Source Health</a></header><div id="xr-source-health" class="xr__sources"></div></section>
+<section class="xr__card"><header><div><p class="xr__eyebrow">Operational oversight</p><h2>Continue to accepted operating surfaces</h2></div></header><nav class="xr__navigation" aria-label="Executive operational pages"><a href="/command-centre"><strong>Command Centre</strong><span>Review live operational posture and current attention.</span></a><a href="/estate-report"><strong>Estate Report</strong><span>Review estate coverage, decisions and authority health.</span></a><a href="/estate/discovered"><strong>Discovery</strong><span>Review current discovered estate candidates.</span></a><a href="/reports/governance"><strong>Governance</strong><span>Review governance posture and ownership decisions.</span></a><a href="/runtime-status"><strong>Runtime</strong><span>Review current application execution health.</span></a></nav></section>
+<section class="xr__card"><header><div><p class="xr__eyebrow">Authority boundaries</p><h2>Not proven by this executive contract</h2></div></header><div class="xr__boundaries"><article><strong>Active-user population</strong><p id="xr-active">Unavailable</p></article><article><strong>Commercial billing detail</strong><p id="xr-billing">Unavailable</p></article><article><strong>Cross-surface health score</strong><p>The existing Executive Report contract does not publish a reconciled score across Command Centre, Discovery, Governance and Estate. No score is inferred.</p></article></div></section>
+</main>
+<aside class="xr__rail" aria-label="Executive report rail"><section><p class="xr__eyebrow">Executive status</p><strong id="xr-rail-status">Loading</strong><p id="xr-rail-note">Validating current executive authority.</p></section><section><h2>Board snapshot</h2><dl><div><dt>Coverage</dt><dd id="xr-rail-coverage">--</dd></div><div><dt>Monitored</dt><dd id="xr-rail-sites">--</dd></div><div><dt>Assignments</dt><dd id="xr-rail-product">--</dd></div><div><dt>Source issues</dt><dd id="xr-rail-failed">--</dd></div><div><dt>Decisions</dt><dd id="xr-rail-actions">--</dd></div></dl></section><section><h2>Authority</h2><p id="xr-authority-note">Runtime, OAuth and Admin authority only.</p></section></aside>
+<script src="{{ url_for('static',filename='js/jom_executive_report_v1.js') }}" defer></script></body></html>

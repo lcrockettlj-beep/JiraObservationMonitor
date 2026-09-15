@@ -1,48 +1,9 @@
-(function(){
-  'use strict';
-  const ENDPOINT = '/api/reporting/executive-report';
-  const text = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value === null || value === undefined || value === '' ? 'Unavailable' : String(value); };
-  const html = (id, value) => { const el = document.getElementById(id); if (el) el.innerHTML = value; };
-  const esc = value => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  const fmt = value => value === null || value === undefined || value === '' ? 'Unavailable' : (Number.isFinite(Number(value)) ? Number(value).toLocaleString() : String(value));
-  const pct = value => value === null || value === undefined || value === '' ? 'Unavailable' : fmt(value) + '%';
-  function renderActions(actions){
-    if (!Array.isArray(actions) || !actions.length) { html('exec-action-list', '<article class="exec-action-card"><strong>No immediate executive actions</strong><p>Current authority did not return priority executive actions.</p></article>'); return; }
-    html('exec-action-list', actions.map(item => '<article class="exec-action-card"><span>' + esc(item.level || 'review') + '</span><strong>' + esc(item.title || 'Action required') + '</strong><p>' + esc(item.reason || '') + '</p><p><strong>Next:</strong> ' + esc(item.action || 'Review authority source.') + '</p></article>').join(''));
-  }
-  function renderMessages(messages){
-    if (!Array.isArray(messages) || !messages.length) { html('exec-board-messages', '<article class="exec-message-card"><strong>No current narrative messages</strong><p>No board messages returned by authority.</p></article>'); return; }
-    html('exec-board-messages', messages.map((msg, i) => '<article class="exec-message-card"><span>Message ' + (i + 1) + '</span><strong>' + esc(msg) + '</strong></article>').join(''));
-  }
-  function renderSources(sourceHealth){
-    const items = sourceHealth && typeof sourceHealth === 'object' ? Object.values(sourceHealth) : [];
-    if (!items.length) { html('exec-source-health', '<article class="exec-source-card"><strong>Unavailable</strong><p>No source assurance state was available.</p></article>'); return; }
-    html('exec-source-health', items.map(item => '<article class="exec-source-card"><span>' + esc(item.label || 'Source') + '</span><strong>' + esc(item.status || 'unavailable') + '</strong><p>' + esc(item.generated_at_utc || 'Timestamp unavailable') + '</p></article>').join(''));
-  }
-  function render(data){
-    const summary = data.summary || {}, authority = data.authority || {}, actions = Array.isArray(data.actions) ? data.actions : [];
-    text('exec-status', data.status === 'ok' ? 'OK' : 'REVIEW');
-    text('exec-authority-note', authority.truth_policy || 'Runtime/OAuth/Admin authority only.');
-    text('exec-total-sites', fmt(summary.total_sites));
-    text('exec-monitored-sites', fmt(summary.monitored_sites));
-    text('exec-coverage', pct(summary.monitoring_coverage_percent));
-    text('exec-product-access', fmt(summary.product_access_assignments));
-    text('exec-active-users', summary.active_users_display || 'Unavailable');
-    text('exec-billing', summary.commercial_billing_display || 'Unavailable');
-    text('exec-rail-coverage', pct(summary.monitoring_coverage_percent));
-    text('exec-rail-sites', fmt(summary.monitored_sites));
-    text('exec-rail-product-access', fmt(summary.product_access_assignments));
-    text('exec-rail-failed', fmt(summary.failed_sources));
-    text('exec-rail-actions', fmt(actions.length));
-    renderActions(actions);
-    renderMessages(data.board_messages);
-    renderSources(data.source_health);
-  }
-  function fail(error){
-    text('exec-status', 'Unavailable');
-    text('exec-authority-note', error && error.message ? error.message : 'Contract unavailable');
-    html('exec-action-list', '<article class="exec-action-card"><strong>Contract unavailable</strong><p>Executive Report authority contract could not be loaded.</p></article>');
-  }
-  function boot(){ fetch(ENDPOINT, {cache:'no-store', headers:{'Accept':'application/json'}}).then(r => { if(!r.ok) throw new Error(ENDPOINT + ' returned HTTP ' + r.status); return r.json(); }).then(render).catch(fail); }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-}());
+(()=>{"use strict";const ENDPOINT="/api/reporting/executive-report",$=id=>document.getElementById(id),safe=v=>v===null||v===undefined||v===""?"Unavailable":String(v),num=v=>v===null||v===undefined||v===""?"Unavailable":Number.isFinite(Number(v))?Number(v).toLocaleString():String(v),pct=v=>v===null||v===undefined||v===""?"Unavailable":`${num(v)}%`,esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),set=(id,v)=>{const e=$(id);if(e)e.textContent=safe(v)};
+function actionCard(x){return `<article data-level="${esc(String(x.level||"review").toLowerCase())}"><span>${esc(x.level||"Review")}</span><strong>${esc(x.title||"Executive decision")}</strong><p>${esc(x.reason||"No reason was published.")}</p><p><b>Next:</b> ${esc(x.action||"Review the supporting authority.")}</p></article>`}
+function messageCard(x,i){return `<article><span>Message ${i+1}</span><strong>${esc(x)}</strong></article>`}
+function sourceCard(x){return `<article data-state="${esc(String(x.status||"unavailable").toLowerCase())}"><span>${esc(x.label||"Authority source")}</span><strong>${esc(x.status||"Unavailable")}</strong><p>${esc(x.generated_at_utc||"Timestamp unavailable")}</p></article>`}
+async function load(){const r=await fetch(ENDPOINT,{cache:"no-store",headers:{Accept:"application/json"}}),d=await r.json();if(!r.ok)throw new Error(d.reason||`${ENDPOINT} returned HTTP ${r.status}`);return d}
+function render(d){const s=d.summary||{},a=d.authority||{},actions=Array.isArray(d.actions)?d.actions:[],messages=Array.isArray(d.board_messages)?d.board_messages:[],sources=d.source_health&&typeof d.source_health==="object"?Object.values(d.source_health):[],coverage=s.monitoring_coverage_percent,status=d.status==="ok"?"OK":"REVIEW";
+[["xr-coverage",pct(coverage)],["xr-monitored",num(s.monitored_sites)],["xr-total",num(s.total_sites)],["xr-product",num(s.product_access_assignments)],["xr-source-issues",num(s.failed_sources)],["xr-actions",num(actions.length)],["xr-active",s.active_users_display||"Unavailable"],["xr-billing",s.commercial_billing_display||"Unavailable"],["xr-rail-status",status],["xr-rail-coverage",pct(coverage)],["xr-rail-sites",num(s.monitored_sites)],["xr-rail-product",num(s.product_access_assignments)],["xr-rail-failed",num(s.failed_sources)],["xr-rail-actions",num(actions.length)],["xr-authority-note",a.truth_policy||"Runtime, OAuth and Admin authority only."]].forEach(x=>set(x[0],x[1]));set("xr-status",`Current Executive Report authority loaded. ${num(actions.length)} decision${actions.length===1?"":"s"}, ${num(s.failed_sources)} source issue${Number(s.failed_sources)===1?"":"s"}, ${pct(coverage)} monitoring coverage.`);$("xr-status").classList.add(d.status==="ok"?"xr__status--ok":"xr__status--review");set("xr-rail-note",actions.length?`${actions.length} current executive decision${actions.length===1?"":"s"} published by the authority.`:"No current executive decisions were published.");$("xr-action-list").innerHTML=actions.length?actions.map(actionCard).join(""):'<article data-level="ok"><strong>No immediate executive decisions</strong><p>Current authority did not publish a priority executive action.</p></article>';$("xr-board-messages").innerHTML=messages.length?messages.map(messageCard).join(""):'<article><strong>No current leadership messages</strong><p>No board messages were published by the current authority.</p></article>';$("xr-source-health").innerHTML=sources.length?sources.map(sourceCard).join(""):'<article data-state="unavailable"><strong>Source assurance unavailable</strong><p>No source-health rows were published.</p></article>'}
+function fail(e){set("xr-status",e.message||"Executive Report authority unavailable");$("xr-status").classList.add("xr__status--blocked");set("xr-rail-status","Unavailable");set("xr-rail-note","The existing Executive Report contract could not be loaded.");$("xr-action-list").innerHTML='<article data-level="blocked"><strong>Authority unavailable</strong><p>Executive decisions cannot be published until the report contract is available.</p></article>';$("xr-board-messages").innerHTML='<article><strong>Unavailable</strong><p>Leadership messages could not be loaded.</p></article>';$("xr-source-health").innerHTML='<article data-state="unavailable"><strong>Unavailable</strong><p>Source assurance could not be loaded.</p></article>'}
+load().then(render).catch(fail)})();
