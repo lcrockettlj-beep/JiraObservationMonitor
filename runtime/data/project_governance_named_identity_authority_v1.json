@@ -1,18 +1,23 @@
 {
   "schema": "jom-project-governance-named-identity-authority-v1",
-  "generated_at_utc": "2026-09-04T14:22:53Z",
+  "generated_at_utc": "2026-09-15T11:33:37Z",
+  "timestamp_semantics": {
+    "generated_at_utc": "project governance named identity authority contract generation time",
+    "source_collection_time": "not represented",
+    "authority_change_time": "not represented"
+  },
   "status": "ok",
   "summary": {
-    "named_principals": 70,
-    "assignment_count": 275,
+    "named_principals": 71,
+    "assignment_count": 287,
     "existing_named_user_identities": 44,
-    "additional_governance_identities": 26,
-    "projects": 73,
-    "project_requests": 73,
-    "project_success": 73,
-    "unique_user_requests": 140,
-    "role_requests": 805,
-    "role_success": 805
+    "additional_governance_identities": 27,
+    "projects": 74,
+    "project_requests": 74,
+    "project_success": 74,
+    "unique_user_requests": 142,
+    "role_requests": 827,
+    "role_success": 827
   },
   "quality": {
     "full_success": true,
@@ -174,7 +179,19 @@
           "site_key": "gli-it-project",
           "project_key": "TA",
           "source_type": "project_role",
+          "role_name": "Project Administrators"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "TA",
+          "source_type": "project_role",
           "role_name": "Project Member"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "TA",
+          "source_type": "project_role",
+          "role_name": "Administrators"
         },
         {
           "site_key": "gli-it-project",
@@ -195,7 +212,7 @@
           "role_name": "Project Watcher"
         }
       ],
-      "assignment_count": 19,
+      "assignment_count": 21,
       "project_count": 15,
       "existing_named_user_identity": true
     },
@@ -844,16 +861,12 @@
         "gli-delivery-tm"
       ],
       "projects": [
-        "gli-delivery-tm:AUT",
-        "gli-delivery-tm:GPQ"
+        "gli-delivery-tm:AUT"
       ],
       "roles": [
-        "Administrator",
-        "Member",
-        "Project Lead"
+        "Member"
       ],
       "sources": [
-        "project_lead",
         "project_role"
       ],
       "assignments": [
@@ -862,22 +875,10 @@
           "project_key": "AUT",
           "source_type": "project_role",
           "role_name": "Member"
-        },
-        {
-          "site_key": "gli-delivery-tm",
-          "project_key": "GPQ",
-          "source_type": "project_lead",
-          "role_name": "Project Lead"
-        },
-        {
-          "site_key": "gli-delivery-tm",
-          "project_key": "GPQ",
-          "source_type": "project_role",
-          "role_name": "Administrator"
         }
       ],
-      "assignment_count": 3,
-      "project_count": 2,
+      "assignment_count": 1,
+      "project_count": 1,
       "existing_named_user_identity": false
     },
     {
@@ -1373,6 +1374,8 @@
         "gli-it-project"
       ],
       "projects": [
+        "gli-it-project:DC",
+        "gli-it-project:DF",
         "gli-it-project:DHI",
         "gli-it-project:SNI",
         "gli-it-project:TJCMI"
@@ -1384,6 +1387,18 @@
         "project_role"
       ],
       "assignments": [
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DC",
+          "source_type": "project_role",
+          "role_name": "Approvers"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DF",
+          "source_type": "project_role",
+          "role_name": "Approvers"
+        },
         {
           "site_key": "gli-it-project",
           "project_key": "DHI",
@@ -1403,8 +1418,8 @@
           "role_name": "Approvers"
         }
       ],
-      "assignment_count": 3,
-      "project_count": 3,
+      "assignment_count": 5,
+      "project_count": 5,
       "existing_named_user_identity": true
     },
     {
@@ -1696,8 +1711,10 @@
         "gli-it-project"
       ],
       "projects": [
+        "gli-it-project:DC",
         "gli-it-project:DEVPMO",
         "gli-it-project:DEVQA",
+        "gli-it-project:DF",
         "gli-it-project:DHI",
         "gli-it-project:FUWTWO",
         "gli-it-project:SNI",
@@ -1715,6 +1732,12 @@
       "assignments": [
         {
           "site_key": "gli-it-project",
+          "project_key": "DC",
+          "source_type": "project_role",
+          "role_name": "Browsers"
+        },
+        {
+          "site_key": "gli-it-project",
           "project_key": "DEVPMO",
           "source_type": "project_role",
           "role_name": "Administrator"
@@ -1724,6 +1747,12 @@
           "project_key": "DEVQA",
           "source_type": "project_role",
           "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DF",
+          "source_type": "project_role",
+          "role_name": "Browsers"
         },
         {
           "site_key": "gli-it-project",
@@ -1756,8 +1785,8 @@
           "role_name": "Browsers"
         }
       ],
-      "assignment_count": 7,
-      "project_count": 6,
+      "assignment_count": 9,
+      "project_count": 8,
       "existing_named_user_identity": true
     },
     {
@@ -2090,10 +2119,12 @@
         "gli-global-technology"
       ],
       "projects": [
-        "gli-global-technology:FTS"
+        "gli-global-technology:FTS",
+        "gli-global-technology:IGS"
       ],
       "roles": [
-        "Administrators"
+        "Administrators",
+        "Project Watcher"
       ],
       "sources": [
         "project_role"
@@ -2103,11 +2134,23 @@
           "site_key": "gli-global-technology",
           "project_key": "FTS",
           "source_type": "project_role",
+          "role_name": "Project Watcher"
+        },
+        {
+          "site_key": "gli-global-technology",
+          "project_key": "FTS",
+          "source_type": "project_role",
           "role_name": "Administrators"
+        },
+        {
+          "site_key": "gli-global-technology",
+          "project_key": "IGS",
+          "source_type": "project_role",
+          "role_name": "Project Watcher"
         }
       ],
-      "assignment_count": 1,
-      "project_count": 1,
+      "assignment_count": 3,
+      "project_count": 2,
       "existing_named_user_identity": true
     },
     {
@@ -2273,9 +2316,11 @@
       "projects": [
         "gli-it-project:ACU",
         "gli-it-project:CDI",
+        "gli-it-project:DC",
         "gli-it-project:DEVINF",
         "gli-it-project:DEVPMO",
         "gli-it-project:DEVQA",
+        "gli-it-project:DF",
         "gli-it-project:DHI",
         "gli-it-project:JSD",
         "gli-it-project:JSRL",
@@ -2309,6 +2354,12 @@
         },
         {
           "site_key": "gli-it-project",
+          "project_key": "DC",
+          "source_type": "project_lead",
+          "role_name": "Project Lead"
+        },
+        {
+          "site_key": "gli-it-project",
           "project_key": "DEVINF",
           "source_type": "project_lead",
           "role_name": "Project Lead"
@@ -2336,6 +2387,12 @@
           "project_key": "DEVQA",
           "source_type": "project_role",
           "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DF",
+          "source_type": "project_lead",
+          "role_name": "Project Lead"
         },
         {
           "site_key": "gli-it-project",
@@ -2392,8 +2449,8 @@
           "role_name": "Project Lead"
         }
       ],
-      "assignment_count": 16,
-      "project_count": 13,
+      "assignment_count": 18,
+      "project_count": 15,
       "existing_named_user_identity": true
     },
     {
@@ -3051,6 +3108,40 @@
       "existing_named_user_identity": true
     },
     {
+      "display_name": "Seth Katsoulas",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "projects": [
+        "gli-it-project:DC",
+        "gli-it-project:DF"
+      ],
+      "roles": [
+        "Project Member"
+      ],
+      "sources": [
+        "project_role"
+      ],
+      "assignments": [
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DC",
+          "source_type": "project_role",
+          "role_name": "Project Member"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DF",
+          "source_type": "project_role",
+          "role_name": "Project Member"
+        }
+      ],
+      "assignment_count": 2,
+      "project_count": 2,
+      "existing_named_user_identity": false
+    },
+    {
       "display_name": "Steve Allport",
       "account_status": "active",
       "sites": [
@@ -3273,6 +3364,8 @@
         "gli-it-project"
       ],
       "projects": [
+        "gli-it-project:DC",
+        "gli-it-project:DF",
         "gli-it-project:DHI",
         "gli-it-project:SNI",
         "gli-it-project:TA",
@@ -3286,6 +3379,18 @@
         "project_role"
       ],
       "assignments": [
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DC",
+          "source_type": "project_role",
+          "role_name": "Approvers"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DF",
+          "source_type": "project_role",
+          "role_name": "Approvers"
+        },
         {
           "site_key": "gli-it-project",
           "project_key": "DHI",
@@ -3311,8 +3416,8 @@
           "role_name": "Approvers"
         }
       ],
-      "assignment_count": 4,
-      "project_count": 4,
+      "assignment_count": 6,
+      "project_count": 6,
       "existing_named_user_identity": true
     },
     {

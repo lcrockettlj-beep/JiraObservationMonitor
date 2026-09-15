@@ -1,15 +1,34 @@
 {
   "schema": "jom-source-reliability-status-v1.2-runtime-finalization-aligned",
-  "generated_at_utc": "2026-09-04T14:24:59.707906Z",
-  "overall_status": "ok",
+  "generated_at_utc": "2026-09-15T11:35:26.244938Z",
+  "overall_status": "attention",
   "summary": {
-    "issue_count": 0,
-    "freshness_overall": "OK",
+    "issue_count": 3,
+    "freshness_overall": "ATTENTION",
     "runtime_refresh_overall": "ok",
     "runtime_refresh_running": false,
     "user_footprint_status": "generated"
   },
-  "issues": [],
+  "issues": [
+    {
+      "source": "Estate Product Access",
+      "state": "CURRENT_WITH_REVIEW",
+      "path": "runtime/data/estate_product_access.json",
+      "reason": "Freshness source is not fully current."
+    },
+    {
+      "source": "Project Lead Authority",
+      "state": "CURRENT_WITH_REVIEW",
+      "path": "runtime/data/project_lead_authority_v1.json",
+      "reason": "Freshness source is not fully current."
+    },
+    {
+      "source": "Project Owner Authority",
+      "state": "CURRENT_WITH_REVIEW",
+      "path": "runtime/data/project_owner_authority_v1.json",
+      "reason": "Freshness source is not fully current."
+    }
+  ],
   "inputs": {
     "source_freshness": "runtime/data/source_freshness_audit.json",
     "runtime_refresh": "runtime/data/runtime_refresh_status.json",

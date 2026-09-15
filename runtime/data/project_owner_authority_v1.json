@@ -1,6 +1,12 @@
 {
   "schema": "jom-project-owner-authority-v1",
-  "generated_at_utc": "2026-09-04T14:22:53Z",
+  "generated_at_utc": "2026-09-15T11:33:37Z",
+  "timestamp_semantics": {
+    "generated_at_utc": "governance owner authority derivation time",
+    "upstream_project_lead_generated_at_utc": "source authority contract generation time",
+    "source_collection_time": "not represented",
+    "authority_change_time": "not represented"
+  },
   "status": "partial",
   "definition": {
     "owner_type": "governance_defined_space_owner",
@@ -14,7 +20,10 @@
     "contract": "runtime/data/project_lead_authority_v1.json",
     "schema": "jom-project-lead-authority-v1",
     "status": "partial",
-    "generated_at_utc": "2026-09-04T14:22:53Z",
+    "generated_at_utc": "2026-09-15T11:33:37Z",
+    "timestamp_semantics": {
+      "generated_at_utc": "upstream Project Lead authority contract generation time"
+    },
     "gates": {
       "schema_valid": true,
       "status_publishable": true,
@@ -26,11 +35,11 @@
     }
   },
   "summary": {
-    "projects": 73,
-    "projects_with_governance_defined_owner": 70,
+    "projects": 74,
+    "projects_with_governance_defined_owner": 71,
     "projects_without_governance_defined_owner_published": 3,
     "owner_coverage_percent": 95.9,
-    "distinct_governance_defined_owners": 21
+    "distinct_governance_defined_owners": 20
   },
   "authority": {
     "safe_to_serve": true,
@@ -140,21 +149,6 @@
       "owner_state": "no_supported_project_lead_owner_published",
       "supported_owner_count": 0,
       "owners": []
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "project_key": "GPQ",
-      "project_name": "GZ - Project Queue",
-      "owner_state": "governance_defined_space_owner_available",
-      "supported_owner_count": 1,
-      "owners": [
-        {
-          "display_name": "Gabriel John Zafra",
-          "account_status": "active",
-          "owner_type": "governance_defined_space_owner",
-          "owner_source": "project_lead_authority_v1"
-        }
-      ]
     },
     {
       "site_key": "gli-delivery-tm",
@@ -609,6 +603,21 @@
     },
     {
       "site_key": "gli-it-project",
+      "project_key": "DC",
+      "project_name": "D365-CRM",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
       "project_key": "DEVINF",
       "project_name": "Software Development Infrastructure / Technical Debt",
       "owner_state": "governance_defined_space_owner_available",
@@ -641,6 +650,21 @@
       "site_key": "gli-it-project",
       "project_key": "DEVQA",
       "project_name": "Dev QA",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DF",
+      "project_name": "D365-FieldServices",
       "owner_state": "governance_defined_space_owner_available",
       "supported_owner_count": 1,
       "owners": [

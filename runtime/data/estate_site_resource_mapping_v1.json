@@ -1,6 +1,6 @@
 {
   "schema": "jom-estate-site-resource-mapping-v2",
-  "generated_at_utc": "2026-09-04T14:19:20Z",
+  "generated_at_utc": "2026-09-15T13:07:42Z",
   "status": "mapped",
   "safe_to_populate_contacts": true,
   "fabricated_mappings": false,
@@ -35,7 +35,7 @@
       "resource_id": "ari:cloud:confluence::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "confidence": "high",
       "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
-      "evidence_rows": 10
+      "evidence_rows": 11
     },
     {
       "site_key": "gli-it-project",
@@ -43,7 +43,7 @@
       "resource_id": "ari:cloud:jira-software::site/d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "confidence": "high",
       "reason": "site-scoped Atlassian ARI parsed successfully; ARI product owner matched resourceOwner and ARI site UUID exactly matched one current monitored tenant cloud_id",
-      "evidence_rows": 21
+      "evidence_rows": 22
     },
     {
       "site_key": "gli-tracker",

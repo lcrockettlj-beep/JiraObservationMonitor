@@ -1,13 +1,18 @@
 {
   "schema": "jom-project-lead-authority-v1",
-  "generated_at_utc": "2026-09-04T14:22:53Z",
+  "generated_at_utc": "2026-09-15T11:33:37Z",
+  "timestamp_semantics": {
+    "generated_at_utc": "project lead authority contract generation time",
+    "source_collection_time": "not represented; upstream authority generation times are not source collection times",
+    "authority_change_time": "not represented"
+  },
   "status": "partial",
   "summary": {
-    "projects": 73,
-    "projects_with_supported_active_lead": 70,
+    "projects": 74,
+    "projects_with_supported_active_lead": 71,
     "projects_without_supported_active_lead_published": 3,
     "lead_coverage_percent": 95.9,
-    "distinct_supported_active_leads": 21
+    "distinct_supported_active_leads": 20
   },
   "authority": {
     "safe_to_serve": true,
@@ -100,19 +105,6 @@
       "lead_state": "no_supported_active_atlassian_lead_published",
       "supported_lead_count": 0,
       "leads": []
-    },
-    {
-      "site_key": "gli-delivery-tm",
-      "project_key": "GPQ",
-      "project_name": "GZ - Project Queue",
-      "lead_state": "supported_active_lead",
-      "supported_lead_count": 1,
-      "leads": [
-        {
-          "display_name": "Gabriel John Zafra",
-          "account_status": "active"
-        }
-      ]
     },
     {
       "site_key": "gli-delivery-tm",
@@ -509,6 +501,19 @@
     },
     {
       "site_key": "gli-it-project",
+      "project_key": "DC",
+      "project_name": "D365-CRM",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
       "project_key": "DEVINF",
       "project_name": "Software Development Infrastructure / Technical Debt",
       "lead_state": "supported_active_lead",
@@ -537,6 +542,19 @@
       "site_key": "gli-it-project",
       "project_key": "DEVQA",
       "project_name": "Dev QA",
+      "lead_state": "supported_active_lead",
+      "supported_lead_count": 1,
+      "leads": [
+        {
+          "display_name": "Matt Pinzino",
+          "account_status": "active"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-it-project",
+      "project_key": "DF",
+      "project_name": "D365-FieldServices",
       "lead_state": "supported_active_lead",
       "supported_lead_count": 1,
       "leads": [

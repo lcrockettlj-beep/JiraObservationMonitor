@@ -1,19 +1,19 @@
 {
   "source": "Derived from live estate_product_access payload; billing is not used as website truth",
-  "generated_at_utc": "2026-09-04T14:24:59Z",
+  "generated_at_utc": "2026-09-15T11:28:19Z",
   "schema": "jom-estate-access-truth-v2-live",
   "live_collection": true,
   "summary": {
-    "api_product_user_count": 169,
+    "api_product_user_count": 171,
     "accessible_jira_resource_count": 6,
     "sites_with_jira_roles": 5
   },
   "product_summary": {
     "accessible_jira_resource_count": 6,
     "sites_with_jira_roles": 5,
-    "total_jira_product_user_count": 169,
+    "total_jira_product_user_count": 171,
     "total_jira_seat_limit": 12150,
-    "total_jira_remaining_seats": 11981,
+    "total_jira_remaining_seats": 11979,
     "jira_role_rows": 5,
     "error_site_count": 1
   },
@@ -34,9 +34,9 @@
       "site_name": "gli-tracker",
       "site_url": "https://gli-tracker.atlassian.net",
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
-      "jira_product_user_count": 8,
+      "jira_product_user_count": 7,
       "jira_product_seat_limit": 4000,
-      "jira_product_remaining_seats": 3992,
+      "jira_product_remaining_seats": 3993,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -67,9 +67,9 @@
       "site_name": "gli-it-project",
       "site_url": "https://gli-it-project.atlassian.net",
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
-      "jira_product_user_count": 64,
+      "jira_product_user_count": 67,
       "jira_product_seat_limit": 100,
-      "jira_product_remaining_seats": 36,
+      "jira_product_remaining_seats": 33,
       "jira_role_count": 1,
       "status": "ok"
     },
@@ -107,9 +107,9 @@
       "cloud_id": "5e39f28e-6ff4-44ff-82b7-d0746cee8db5",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 8,
+      "user_count": 7,
       "seat_limit": 4000,
-      "remaining_seats": 3992,
+      "remaining_seats": 3993,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false
@@ -135,9 +135,9 @@
       "cloud_id": "d4b3adb4-bd39-435e-bd65-f29db2b11a37",
       "role_key": "jira-software",
       "role_name": "Jira Software",
-      "user_count": 64,
+      "user_count": 67,
       "seat_limit": 100,
-      "remaining_seats": 36,
+      "remaining_seats": 33,
       "raw_has_default_groups": true,
       "raw_platform": false,
       "raw_selected_by_default": false

@@ -1,20 +1,20 @@
 {
   "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-09-04T14:24:57.694502Z",
+  "generated_at_utc": "2026-09-15T11:29:25.853406Z",
   "source_status": "generated",
   "reason": "Named access footprint generated from named_access_truth_v2 after reconciliation_v2 passed safe_to_enable_named_access_ui=true.",
   "safe_to_show_named_access_ui": true,
   "reconciliation_source": "reports\\named_access_reconciliation_v2.json",
   "truth_source": "runtime\\data\\live_named_access_contract",
   "summary": {
-    "users_analyzed": 85,
+    "users_analyzed": 84,
     "average_sites_per_user": 1.24,
     "high_duplication_users": 1,
     "medium_duplication_users": 18,
-    "total_product_access_assignments": 105,
-    "reconciled_api_product_users": 169,
-    "named_minus_api_product": -64,
-    "named_unique_users": 85
+    "total_product_access_assignments": 104,
+    "reconciled_api_product_users": 171,
+    "named_minus_api_product": -67,
+    "named_unique_users": 84
   },
   "users": [
     {
@@ -978,23 +978,6 @@
       "email": "",
       "sites": [
         "gli-global-technology"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "712020:0c6ad2e9-c78a-4d36-b56e-2e9756efbddc",
-      "name": "712020:0c6ad2e9-c78a-4d36-b56e-2e9756efbddc",
-      "email": "",
-      "sites": [
-        "gli-tracker"
       ],
       "site_count": 1,
       "products": [

@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-lifecycle-decisions-v1",
-  "generated_at_utc": "2026-08-04T13:27:44.053958Z",
+  "generated_at_utc": "2026-09-15T13:07:45.097550Z",
   "last_residue_cleanup_audit_utc": "2026-07-27T12:55:29.144711Z",
   "notes": [
     "Registry approval residue cleanup executed; lifecycle decision history preserved."
@@ -10,15 +10,15 @@
   "decisions": {
     "gli-tracker": {
       "site_key": "gli-tracker",
-      "action": "enable_monitoring",
-      "decision": "enable_monitoring",
-      "state": "monitored",
+      "action": "oauth_access_validated",
+      "decision": "oauth_access_validated",
+      "state": "access_validated",
       "result": "ok",
-      "actor": "operator",
-      "recorded_at_utc": "2026-08-04T13:27:44.053958Z",
-      "decided_at_utc": "2026-08-04T13:27:44.053958Z",
-      "source": "site_review_enable_monitoring",
-      "message": "Monitoring enabled. Selected site promoted into Site Registry."
+      "actor": "site-review-oauth-complete",
+      "recorded_at_utc": "2026-08-04T13:10:21.236959Z",
+      "decided_at_utc": "2026-08-04T13:10:21.236959Z",
+      "source": "site_review_oauth_complete",
+      "message": "Atlassian authorization completed and access validated."
     },
     "gli-delivery-tm": {
       "site_key": "gli-delivery-tm",
@@ -223,6 +223,42 @@
       "actor": "operator",
       "recorded_at_utc": "2026-08-04T13:27:44.053958Z",
       "decided_at_utc": "2026-08-04T13:27:44.053958Z",
+      "source": "site_review_enable_monitoring",
+      "message": "Monitoring enabled. Selected site promoted into Site Registry."
+    },
+    {
+      "site_key": "gli-tracker",
+      "action": "stop_monitoring",
+      "decision": "stop_monitoring",
+      "state": "stopped_monitoring",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-09-15T13:07:01.935082Z",
+      "decided_at_utc": "2026-09-15T13:07:01.935082Z",
+      "source": "site_review_stop_monitoring",
+      "message": "Monitoring stopped. Site returned to review/discovery."
+    },
+    {
+      "site_key": "gli-tracker",
+      "action": "approve_for_monitoring",
+      "decision": "approve_for_monitoring",
+      "state": "approval_pending",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-09-15T13:07:03.657963Z",
+      "decided_at_utc": "2026-09-15T13:07:03.657963Z",
+      "source": "site_review_decision",
+      "message": "Approved for monitoring. Credential access required before enablement."
+    },
+    {
+      "site_key": "gli-tracker",
+      "action": "enable_monitoring",
+      "decision": "enable_monitoring",
+      "state": "monitored",
+      "result": "ok",
+      "actor": "operator",
+      "recorded_at_utc": "2026-09-15T13:07:15.876747Z",
+      "decided_at_utc": "2026-09-15T13:07:15.876747Z",
       "source": "site_review_enable_monitoring",
       "message": "Monitoring enabled. Selected site promoted into Site Registry."
     }

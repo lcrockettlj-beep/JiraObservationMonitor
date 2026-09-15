@@ -1,16 +1,16 @@
 {
   "schema": "jom-product-access-refresh-status-v1",
-  "generated_at_utc": "2026-09-04T14:24:59.696508Z",
+  "generated_at_utc": "2026-09-15T11:28:19.578828Z",
   "overall_status": "ok",
   "sources": {
     "estate_product_access": {
       "exists": true,
-      "timestamp": "2026-09-04T14:24:59Z",
+      "timestamp": "2026-09-15T11:28:19Z",
       "schema": "jom-estate-product-access-v2-live"
     },
     "estate_access_truth": {
       "exists": true,
-      "timestamp": "2026-09-04T14:24:59Z",
+      "timestamp": "2026-09-15T11:28:19Z",
       "schema": "jom-estate-access-truth-v2-live"
     }
   },
@@ -20,11 +20,11 @@
       "label": "Refresh Estate Product Access and Estate Access Truth",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.estate_product_access --project-root .",
       "exists": true,
-      "started_at_utc": "2026-09-04T14:24:57.696198Z",
-      "finished_at_utc": "2026-09-04T14:24:59.629259Z",
+      "started_at_utc": "2026-09-15T11:28:16.667903Z",
+      "finished_at_utc": "2026-09-15T11:28:19.522473Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"product_access_status\": \"partial\",\n  \"summary\": {\n    \"accessible_jira_resource_count\": 6,\n    \"sites_with_jira_roles\": 5,\n    \"total_jira_product_user_count\": 169,\n    \"total_jira_seat_limit\": 12150,\n    \"total_jira_remaining_seats\": 11981,\n    \"jira_role_rows\": 5,\n    \"error_site_count\": 1\n  }\n}\n",
+      "stdout_tail": "{\n  \"product_access_status\": \"partial\",\n  \"summary\": {\n    \"accessible_jira_resource_count\": 6,\n    \"sites_with_jira_roles\": 5,\n    \"total_jira_product_user_count\": 171,\n    \"total_jira_seat_limit\": 12150,\n    \"total_jira_remaining_seats\": 11979,\n    \"jira_role_rows\": 5,\n    \"error_site_count\": 1\n  }\n}\n",
       "stderr_tail": ""
     },
     {
@@ -32,11 +32,11 @@
       "label": "Rebuild source freshness audit",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
       "exists": true,
-      "started_at_utc": "2026-09-04T14:24:59.629393Z",
-      "finished_at_utc": "2026-09-04T14:24:59.696415Z",
+      "started_at_utc": "2026-09-15T11:28:19.522587Z",
+      "finished_at_utc": "2026-09-15T11:28:19.578743Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"source_count\": 17,\n  \"counts\": {\n    \"CURRENT\": 14,\n    \"CURRENT_WITH_REVIEW\": 3\n  },\n  \"issue_count\": 3,\n  \"overall_state\": \"ATTENTION\"\n}\n",
+      "stdout_tail": "{\n  \"source_count\": 17,\n  \"counts\": {\n    \"IN_PROGRESS\": 1,\n    \"CURRENT\": 13,\n    \"CURRENT_WITH_REVIEW\": 3\n  },\n  \"issue_count\": 4,\n  \"overall_state\": \"ATTENTION\"\n}\n",
       "stderr_tail": ""
     }
   ]

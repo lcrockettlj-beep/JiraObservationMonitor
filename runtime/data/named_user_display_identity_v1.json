@@ -1,12 +1,17 @@
 {
   "schema": "jom-named-user-display-identity-v1",
-  "generated_at_utc": "2026-09-04T14:19:47Z",
+  "generated_at_utc": "2026-09-15T11:29:26Z",
+  "timestamp_semantics": {
+    "generated_at_utc": "named user display identity authority contract generation time",
+    "source_collection_time": "not represented",
+    "authority_change_time": "not represented"
+  },
   "status": "ok",
   "source": {
     "authority": "Atlassian Admin Directory users plus JOM named-access authority",
-    "authoritative_accounts": 145,
-    "named_access_accounts": 85,
-    "matched_accounts": 85,
+    "authoritative_accounts": 148,
+    "named_access_accounts": 84,
+    "matched_accounts": 84,
     "unmatched_accounts": 0,
     "directory_pages": 2
   },
@@ -368,16 +373,6 @@
       "product_access_assignments": 2
     },
     {
-      "account_id": "712020:0c6ad2e9-c78a-4d36-b56e-2e9756efbddc",
-      "display_name": "guy_b",
-      "account_status": "active",
-      "sites": [
-        "gli-tracker"
-      ],
-      "site_count": 1,
-      "product_access_assignments": 1
-    },
-    {
       "account_id": "5df79618336e9e0cad168e00",
       "display_name": "Harry Cartwright",
       "account_status": "active",
@@ -400,7 +395,7 @@
     {
       "account_id": "712020:ab30a0c8-c74a-4ca0-a0a5-b2c43808fc0c",
       "display_name": "Jaime Valero",
-      "account_status": "active",
+      "account_status": "inactive",
       "sites": [
         "gli-global-technology"
       ],

@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-access-validation-v1",
-  "generated_at_utc": "2026-08-04T13:11:35Z",
+  "generated_at_utc": "2026-09-15T13:07:45Z",
   "validations": {
     "gli-tracker": {
       "access_valid": true,
@@ -8,7 +8,7 @@
       "site_key": "gli-tracker",
       "site_name": "gli-tracker",
       "method": "oauth_coverage_validation",
-      "validated_at_utc": "2026-08-04T13:11:35Z",
+      "validated_at_utc": "2026-09-15T13:07:45Z",
       "actor": "site-review-return",
       "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
       "coverage_status": "validated"
@@ -112,6 +112,61 @@
       "site_name": "gli-tracker",
       "method": "oauth_coverage_validation",
       "validated_at_utc": "2026-08-04T13:11:35Z",
+      "actor": "site-review-return",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-09-15T13:07:12Z",
+      "actor": "oauth-callback",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-09-15T13:07:13.513563Z",
+      "actor": "site-review-access-status",
+      "reason": "Current OAuth coverage validates access to this Atlassian site.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-09-15T13:07:14Z",
+      "actor": "site-review-oauth-complete",
+      "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-09-15T13:07:15.869885Z",
+      "actor": "enable-monitoring-precheck",
+      "reason": "Current OAuth coverage validates access to this Atlassian site.",
+      "coverage_status": "validated"
+    },
+    {
+      "access_valid": true,
+      "status": "ok",
+      "site_key": "gli-tracker",
+      "site_name": "gli-tracker",
+      "method": "oauth_coverage_validation",
+      "validated_at_utc": "2026-09-15T13:07:45Z",
       "actor": "site-review-return",
       "reason": "Credential access validated from OAuth coverage after Atlassian authorisation.",
       "coverage_status": "validated"
