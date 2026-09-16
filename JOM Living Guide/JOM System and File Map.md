@@ -643,33 +643,72 @@ Continue using full owner-file replacements and complete downloadable packs. No 
 
 ### 16 September 2026 - Controlled Repository Hygiene: proven duplicate-owner removal
 
-#### Completed evidence-backed cleanup
-- Repository baseline after cleanup: main at commit `3b37d87` (`repo hygiene: remove proven duplicate owners`).
-- Recovery tag created: `repo-hygiene-before-booksync-alignment`.
-- Removed duplicate runtime owners: `app/runtime/backup_runtime_chain.py` and `app/runtime/runtime_backup_chain.py`.
-- Retained runtime owner: `app/runtime/snapshot_controller.py`.
-- Removed duplicate Project Owner validator: `scripts/validate_project_owner_authority_integration_v1.py`.
-- Retained Project Owner validator: `scripts/validate_project_owner_live_authority_v1.py`.
+- Commit `3b37d87` removed duplicate runtime owners `app/runtime/backup_runtime_chain.py` and `app/runtime/runtime_backup_chain.py`, retaining `app/runtime/snapshot_controller.py`.
+- The same commit removed duplicate validator `scripts/validate_project_owner_authority_integration_v1.py`, retaining `scripts/validate_project_owner_live_authority_v1.py`.
+- SHA256 equality and repository-consumer review supplied the deletion evidence. Git history remains recovery authority.
+- Recovery tag: `repo-hygiene-before-booksync-alignment`.
 
-#### Evidence and decision basis
-- SHA256 comparison proved each removed file was byte-for-byte identical to its retained owner.
-- Repository reference checks proved `app/runtime/snapshot_controller.py` has a current consumer reference, while the removed runtime duplicates had documentation-only references.
-- The duplicate Project Owner validator had no repository references by filename; the retained live-authority name matches the current dynamic authority model.
-- No archive copies are retained. Git history remains the recovery authority for removed code.
 
-#### Authority alignment
-- Stale catalogue references to the two removed runtime files have been removed from the current BOOKSYNC owner set.
-- `JOM Living Guide/` remains the authoritative project continuity, history, state, decision and cross-chat recovery record.
-- Historical records remain historical evidence and are not silently rewritten as current state. This dated record supersedes earlier continuation instructions where they conflict.
+### 16 September 2026 - Repository Classification Model closeout
 
-#### Current repository hygiene position
-- Current workstream remains **Controlled Repository Hygiene Classification**.
-- Completed classifications: application and controlled configuration owners remain `KEEP`; `runtime/data/*` remains `GENERATED_RUNTIME`; `reports/*` remains `REPORT_ONLY`; `runtime_data/`, `snapshots/`, `__pycache__/` and `*.pyc` remain `TRANSIENT`.
-- Further deletions require positive evidence of duplication or obsolescence. Lack of a filename reference alone is not sufficient deletion authority.
-- Do not begin Docker, deployment, navigation audits, FR-004, FR-005 or feature development until repository hygiene classification and authority alignment are complete.
+#### Corrected audit rule
+Repository ownership cannot be inferred from folder names, age, or missing filename references. Classification requires filesystem evidence, content hashes, active consumers, validators, runtime behaviour and BOOKSYNC authority. A missing reference alone is not deletion authority.
 
-#### Next step
-- Continue the full repository audit using filesystem evidence, duplicate hashes, owner references, current consumers and BOOKSYNC authority.
-- Correct remaining stale catalogues as proven.
-- Revalidate the exact repository boundary, update BOOKSYNC again at hygiene closeout, then commit and push the completed hygiene milestone.
+#### Classification model
+- **AUTHORITY_CONTRACT:** Published authority inputs consumed by builders, routes, validators or downstream authority chains.
+- **LIFECYCLE_AUTHORITY:** Operator decisions, onboarding state, monitoring approvals, access validation and lifecycle history.
+- **OPERATIONAL_STATE:** Execution lifecycle, refresh telemetry, current runtime status and process state.
+- **AUDIT_EVIDENCE:** Freshness, reliability or source-authority assessment outputs that are not primary business authority.
+- **REPORT_ONLY:** Generated reports and local audit material that are not tracked repository authority.
+- **TRANSIENT:** Disposable caches, compiled files and temporary runtime or snapshot folders.
+- **HISTORICAL_RECOVERY:** Unique historical checkpoints retained because their content differs from current owners.
+- **OPERATIONAL_RECOVERY:** Current rollback and runtime-recovery material.
 
+#### Proven authority contracts in runtime/data
+`site_registry.json`, `admin_truth_v2.json`, `estate_access_truth.json`, `estate_product_access.json`, `user_footprint.json`, `named_site_access_authority_v1.json`, `named_user_display_identity_v1.json`, `verified_active_jira_users_v1.json`, `users_access_actionable_drilldown_v1.json`, `project_governance_named_identity_authority_v1.json`, `project_inventory_authority_v1.json`, `project_lead_authority_v1.json`, `project_owner_authority_v1.json`, `estate_admin_contacts_v1.json`, `estate_monitored_product_authority_v1.json`, `estate_site_resource_mapping_v1.json`, and `organisation_discovery.json`.
+
+These files regenerate in operation but also act as current authority contracts. They must not be treated as disposable solely because they reside under `runtime/data`.
+
+#### Proven lifecycle authority
+- `runtime/data/site_access_validation.json`
+- `runtime/data/site_lifecycle_decisions.json`
+- `runtime/data/site_onboarding_review.json`
+
+#### Proven operational state
+- `runtime/data/runtime_execution_status.json`
+- `runtime/data/runtime_execution_history.json`
+- `runtime/data/runtime_refresh_status.json`
+- `runtime/data/product_access_refresh_status.json`
+- `runtime/data/estate_resource_authority_refresh_status_v1.json`
+
+#### Proven audit evidence
+- `runtime/data/source_freshness_audit.json`
+- `runtime/data/source_reliability_status.json`
+- `runtime/data/organisation_auth_source_audit.json`
+
+#### Reports, transient material and recovery
+- `reports/*`: REPORT_ONLY. The audit counted 87 local report inventory lines and found no tracked files under `reports`.
+- `__pycache__/`, `*.pyc`, `runtime_data/` and `snapshots/`: TRANSIENT.
+- `backups/foundation_recovery_booksync_v1/` and `backups/estate_marketplace_ui_removal_v1/`: HISTORICAL_RECOVERY because compared content differed from current owners.
+- `backups/latest_runtime/`: OPERATIONAL_RECOVERY.
+
+#### Validator-estate result
+The Command Centre, Discovery, Governance Users, Governance Projects, Runtime UX, Runtime Truth, Source Health, Project Lead, Project Owner, Estate Configuration, Marketplace and Connected Apps validator families were reviewed. Cumulative validators proving different accepted layers remain retained.
+
+Commit `d6e5a5c` (`repo hygiene: retire obsolete command centre validators`) removed:
+- `scripts/validate_command_centre_ux_phase3_jom_colour_v1.py`
+- `scripts/validate_command_centre_ux_phase3_render_correction_v1.py`
+- `scripts/validate_command_centre_ux_phase3_v1.py`
+- `scripts/validate_command_centre_ux_phase4_3_booksync_eof_v1.py`
+
+Retained Command Centre validators remain:
+- `scripts/validate_command_centre_ux_phase1_v1.py`
+- `scripts/validate_command_centre_ux_phase4_3_v1.py`
+- `scripts/validate_command_centre_ux_phase4_3_booksync_v1.py`
+
+#### Hygiene commits and continuation
+- `3b37d87`: `repo hygiene: remove proven duplicate owners`.
+- `1c1c457`: `BOOKSYNC: repository hygiene duplicate owner cleanup`.
+- `d6e5a5c`: `repo hygiene: retire obsolete command centre validators`.
+
+The classification model is established. Further deletion requires positive duplication or obsolescence evidence plus authority, consumer, BOOKSYNC and exact-boundary review. Install this nine-owner replacement pack, run `git diff --check`, stage only the nine BOOKSYNC owners, run `git diff --cached --check`, commit the classification closeout, then reassess whether further hygiene work is justified before resuming Docker, deployment, FR-004, FR-005 or feature development.

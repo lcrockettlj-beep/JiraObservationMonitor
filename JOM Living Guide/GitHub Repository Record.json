@@ -239,9 +239,8 @@
     "recorded_at": "2026-09-16",
     "branch": "main",
     "cleanup_commit": "3b37d87",
-    "cleanup_commit_message": "repo hygiene: remove proven duplicate owners",
+    "booksync_commit": "1c1c457",
     "recovery_tag": "repo-hygiene-before-booksync-alignment",
-    "status": "controlled_repository_hygiene_classification_in_progress",
     "removed_duplicate_owners": [
       "app/runtime/backup_runtime_chain.py",
       "app/runtime/runtime_backup_chain.py",
@@ -251,23 +250,36 @@
       "app/runtime/snapshot_controller.py",
       "scripts/validate_project_owner_live_authority_v1.py"
     ],
-    "evidence": [
-      "SHA256 equality",
-      "repository reference audit",
-      "filesystem and BOOKSYNC authority review"
+    "recovery_authority": "Git history"
+  },
+  "booksync_repository_classification_closeout_2026_09_16": {
+    "recorded_at": "2026-09-16",
+    "branch": "main",
+    "head_commit": "d6e5a5c",
+    "status": "classification_model_established_pending_booksync_commit",
+    "classes": [
+      "AUTHORITY_CONTRACT",
+      "LIFECYCLE_AUTHORITY",
+      "OPERATIONAL_STATE",
+      "AUDIT_EVIDENCE",
+      "REPORT_ONLY",
+      "TRANSIENT",
+      "HISTORICAL_RECOVERY",
+      "OPERATIONAL_RECOVERY"
     ],
-    "recovery_authority": "Git history",
-    "jom_living_guide_role": "authoritative project continuity, history, state, decisions and cross-chat recovery",
-    "deletion_rule": "Delete only when duplication or obsolescence is positively proven; lack of a filename reference alone is insufficient.",
-    "current_workstream": "Controlled Repository Hygiene Classification",
-    "blocked_workstreams": [
-      "Docker",
-      "Deployment",
-      "Navigation audits",
-      "FR-004",
-      "FR-005",
-      "Feature development"
+    "authority_contract_count_proven": 17,
+    "lifecycle_authority_count_proven": 3,
+    "operational_state_count_proven": 5,
+    "audit_evidence_count_proven": 3,
+    "report_inventory_lines": 87,
+    "tracked_reports_found": 0,
+    "retired_command_centre_validators": [
+      "scripts/validate_command_centre_ux_phase3_jom_colour_v1.py",
+      "scripts/validate_command_centre_ux_phase3_render_correction_v1.py",
+      "scripts/validate_command_centre_ux_phase3_v1.py",
+      "scripts/validate_command_centre_ux_phase4_3_booksync_eof_v1.py"
     ],
-    "next_step": "Continue full repository hygiene classification, correct proven stale catalogues, revalidate the exact boundary, then BOOKSYNC and commit the completed hygiene milestone."
+    "deletion_rule": "Positive evidence of duplication or obsolescence plus authority, consumer, BOOKSYNC and exact-boundary review is required.",
+    "next_gate": "install_validate_nine_booksync_owners_stage_commit_classification_closeout"
   }
 }
