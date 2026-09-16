@@ -548,3 +548,36 @@ Continue using full owner-file replacements and complete downloadable packs. No 
 - Immediate next step: install this BOOKSYNC pack, run the product and BOOKSYNC validators, delete the six obsolete untracked validators through the packaged runner, inspect git status and git diff, stage only the approved fifteen-file boundary, run git diff --cached --check, inspect staged names, commit and push.
 - Next workstream after clean push: continue FR-005 Placeholder and Legacy Surface Classification with the next unaccepted surface selected from current repository evidence. FR-004 remains open.
 - Working rule remains Audit -> Build -> Install -> Validate -> Live test -> Clean -> BOOKSYNC -> Stage -> Commit -> Push, using full owner-file replacement packs and no manual editing.
+
+### 16 September 2026 - Controlled Repository Hygiene: proven duplicate-owner removal
+
+#### Completed evidence-backed cleanup
+- Repository baseline after cleanup: main at commit `3b37d87` (`repo hygiene: remove proven duplicate owners`).
+- Recovery tag created: `repo-hygiene-before-booksync-alignment`.
+- Removed duplicate runtime owners: `app/runtime/backup_runtime_chain.py` and `app/runtime/runtime_backup_chain.py`.
+- Retained runtime owner: `app/runtime/snapshot_controller.py`.
+- Removed duplicate Project Owner validator: `scripts/validate_project_owner_authority_integration_v1.py`.
+- Retained Project Owner validator: `scripts/validate_project_owner_live_authority_v1.py`.
+
+#### Evidence and decision basis
+- SHA256 comparison proved each removed file was byte-for-byte identical to its retained owner.
+- Repository reference checks proved `app/runtime/snapshot_controller.py` has a current consumer reference, while the removed runtime duplicates had documentation-only references.
+- The duplicate Project Owner validator had no repository references by filename; the retained live-authority name matches the current dynamic authority model.
+- No archive copies are retained. Git history remains the recovery authority for removed code.
+
+#### Authority alignment
+- Stale catalogue references to the two removed runtime files have been removed from the current BOOKSYNC owner set.
+- `JOM Living Guide/` remains the authoritative project continuity, history, state, decision and cross-chat recovery record.
+- Historical records remain historical evidence and are not silently rewritten as current state. This dated record supersedes earlier continuation instructions where they conflict.
+
+#### Current repository hygiene position
+- Current workstream remains **Controlled Repository Hygiene Classification**.
+- Completed classifications: application and controlled configuration owners remain `KEEP`; `runtime/data/*` remains `GENERATED_RUNTIME`; `reports/*` remains `REPORT_ONLY`; `runtime_data/`, `snapshots/`, `__pycache__/` and `*.pyc` remain `TRANSIENT`.
+- Further deletions require positive evidence of duplication or obsolescence. Lack of a filename reference alone is not sufficient deletion authority.
+- Do not begin Docker, deployment, navigation audits, FR-004, FR-005 or feature development until repository hygiene classification and authority alignment are complete.
+
+#### Next step
+- Continue the full repository audit using filesystem evidence, duplicate hashes, owner references, current consumers and BOOKSYNC authority.
+- Correct remaining stale catalogues as proven.
+- Revalidate the exact repository boundary, update BOOKSYNC again at hygiene closeout, then commit and push the completed hygiene milestone.
+
