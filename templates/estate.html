@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_atlassian_command.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_visual_consistency_v2.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_lifecycle_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_lifecycle_v1.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/jom_executive_ux_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_surface_alignment_v1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jom_estate_journey_v1.css') }}">
 </head>
 <body data-jom-page="estate">
 {% include "_nav.html" %}
@@ -15,7 +17,7 @@
     <section class="estate-hero-card" aria-label="Estate overview">
       <p class="jom-kicker">Estate / Central Inventory</p>
       <h1>Estate</h1>
-      <p class="estate-lede">What exists in the Atlassian estate, what state is each site in, and what lifecycle action is needed?</p>
+      <p class="estate-lede">What exists in the Atlassian estate, what state is each site in, and what lifecycle action is needed?</p><button type="button" class="jom-ex-cover-button" data-jom-exec-action="site-coverage">Explain monitoring coverage</button>
     </section>
 
     <section class="estate-panel" id="discovered-sites" aria-label="Discovery review queue">
@@ -87,14 +89,16 @@
       <dl class="estate-rail-list">
         <div><dt>Total Sites</dt><dd id="rail-total-sites">--</dd></div>
         <div><dt>Monitored</dt><dd id="rail-monitored-sites">--</dd></div>
-        <div><dt>Discovered</dt><dd id="rail-discovered-sites">--</dd></div>
+        <div><dt>Review Queue</dt><dd id="rail-review-sites">--</dd></div>
+        <div><dt>Coverage</dt><dd id="rail-coverage-percent">--</dd></div>
       </dl>
     </section>
 
     <section class="estate-rail-card" aria-label="Lifecycle status">
       <h2>Lifecycle Queue</h2>
       <dl class="estate-rail-list">
-        <div><dt>Review Queue</dt><dd id="rail-review-queue">--</dd></div>
+        <div><dt>Approval Pending</dt><dd id="rail-approval-pending">--</dd></div>
+        <div><dt>Validate Access</dt><dd id="rail-access-validated">--</dd></div>
 <div data-lifecycle-rail="ignored" hidden aria-hidden="true"><dt>Ignored</dt><dd id="rail-ignored-sites">0</dd></div>
         <div data-lifecycle-rail="deletion" hidden aria-hidden="true"><dt>Deletion Queue</dt><dd id="rail-deletion-sites">0</dd></div>
       </dl>
@@ -111,7 +115,8 @@
   </aside>
 <!-- JOM_ESTATE_REMOVE_APPROVAL_PENDING_QUEUE_V1_HTML -->
 </main>
-<script src="{{ url_for('static', filename='js/jom_estate_lifecycle_v1.js') }}" defer></script>
+<!-- Legacy Estate lifecycle consumer retired. jom_estate_journey_v1.js exclusively owns board, rail, review queue and registry table. --><script src="{{ url_for('static', filename='js/jom_executive_ux_v1.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jom_estate_journey_v1.js') }}" defer></script>
 </body>
 </html>
 

@@ -1,0 +1,17 @@
+from pathlib import Path
+html=Path('templates/estate.html').read_text(encoding='utf-8-sig')
+js=Path('static/js/jom_estate_journey_v1.js').read_text(encoding='utf-8-sig')
+checks=[]
+def c(name,value): print(('PASS' if value else 'FAIL')+': '+name); checks.append(value)
+c('legacy Estate lifecycle consumer removed','jom_estate_lifecycle_v1.js' not in html)
+c('single Estate consumer retained',html.count("filename='js/jom_estate_journey_v1.js'")==1)
+c('rail requires complete published summary',"required=['total_sites','monitored_count','review_count','coverage_percent','approval_pending_count','access_validated_count']" in js)
+c('rail total uses summary directly',"Number(s.total_sites)" in js)
+c('rail monitored uses summary directly',"Number(s.monitored_count)" in js)
+c('rail review uses summary directly',"Number(s.review_count)" in js)
+c('rail coverage uses summary directly',"Number(s.coverage_percent)+'%'" in js)
+c('registry renders payload sites directly',"const body=$('estate-registry-body'),rows=payload.sites||[]" in js)
+c('runtime row count mismatch exposed',"rendered!==expected" in js and "Row mismatch" in js)
+c('exclusive browser owner marker present',"estateConsumerOwner='jom_estate_journey_v1'" in js)
+if not all(checks): raise SystemExit(1)
+print('VALIDATION PASS: legacy writer removed; Estate rail and table have one exclusive Site Registry consumer.')
