@@ -235,27 +235,75 @@
       "TRANSIENT"
     ]
   },
-  "booksync_command_centre_ux_phase4_3_2026_09_14": {
-    "recorded_at": "2026-09-14T10:12:00+01:00",
+  "booksync_repository_hygiene_2026_09_16": {
+    "recorded_at": "2026-09-16",
     "branch": "main",
-    "baseline_commit": "3b8b6b9",
-    "status": "implemented_validated_visually_accepted_pending_commit_push",
-    "page": "/home",
-    "api": "/api/workspace/command-centre",
-    "architecture": "monitoring_first",
-    "fixed_right_rail": true,
-    "continuous_recorder": "two_equal_segments_200_percent_track_translate_negative_50_percent",
-    "new_backend_routes": false,
-    "new_collectors": false,
-    "new_runtime_contracts": false,
-    "authority_changes": false,
-    "FR_004": "open",
-    "FR_005_command_centre": "accepted_consumer_surface",
-    "retained_validators": [
-      "scripts/validate_command_centre_ux_phase1_v1.py",
-      "scripts/validate_command_centre_ux_phase4_3_v1.py"
+    "cleanup_commit": "3b37d87",
+    "booksync_commit": "1c1c457",
+    "recovery_tag": "repo-hygiene-before-booksync-alignment",
+    "removed_duplicate_owners": [
+      "app/runtime/backup_runtime_chain.py",
+      "app/runtime/runtime_backup_chain.py",
+      "scripts/validate_project_owner_authority_integration_v1.py"
     ],
-    "next_gate": "install_booksync_validate_remove_obsolete_validators_stage_exact_boundary_commit_push",
-    "next_workstream": "FR-005 Placeholder and Legacy Surface Classification"
+    "retained_owners": [
+      "app/runtime/snapshot_controller.py",
+      "scripts/validate_project_owner_live_authority_v1.py"
+    ],
+    "recovery_authority": "Git history"
+  },
+  "booksync_repository_classification_closeout_2026_09_16": {
+    "recorded_at": "2026-09-16",
+    "branch": "main",
+    "head_commit": "d6e5a5c",
+    "status": "classification_model_established_pending_booksync_commit",
+    "classes": [
+      "AUTHORITY_CONTRACT",
+      "LIFECYCLE_AUTHORITY",
+      "OPERATIONAL_STATE",
+      "AUDIT_EVIDENCE",
+      "REPORT_ONLY",
+      "TRANSIENT",
+      "HISTORICAL_RECOVERY",
+      "OPERATIONAL_RECOVERY"
+    ],
+    "authority_contract_count_proven": 17,
+    "lifecycle_authority_count_proven": 3,
+    "operational_state_count_proven": 5,
+    "audit_evidence_count_proven": 3,
+    "report_inventory_lines": 87,
+    "tracked_reports_found": 0,
+    "retired_command_centre_validators": [
+      "scripts/validate_command_centre_ux_phase3_jom_colour_v1.py",
+      "scripts/validate_command_centre_ux_phase3_render_correction_v1.py",
+      "scripts/validate_command_centre_ux_phase3_v1.py",
+      "scripts/validate_command_centre_ux_phase4_3_booksync_eof_v1.py"
+    ],
+    "deletion_rule": "Positive evidence of duplication or obsolescence plus authority, consumer, BOOKSYNC and exact-boundary review is required.",
+    "next_gate": "install_validate_nine_booksync_owners_stage_commit_classification_closeout"
+  },
+  "booksync_commerce_authority_audit_2026_09_21": {
+    "recorded_at": "2026-09-21",
+    "branch": "main",
+    "status": "discovery_proven_production_authentication_unproven",
+    "commerce_graphql_browser_authority": "proven_partial_success",
+    "active_entitlements": 7,
+    "inactive_entitlements": 0,
+    "invoice_groups": 1,
+    "pagination_complete": true,
+    "currency": "USD",
+    "payment_method_type": "DEFERRED",
+    "service_account_oauth_token_exchange": "pass",
+    "service_account_graphql_http_status": 200,
+    "commerce_schema_via_oauth": "unavailable_field_undefined",
+    "service_account_scope_catalogue_count": 519,
+    "commerce_scopes_offered": false,
+    "billing_scopes_offered": false,
+    "scoped_api_token_created": false,
+    "personal_browser_session_production_source": false,
+    "dedicated_commerce_collector_account": "candidate_only",
+    "supported_unattended_authentication": "unproven",
+    "production_collector_status": "blocked_on_supported_unattended_authentication_authority",
+    "next_gate": "install_validate_stage_commit_push_nine_booksync_owners_then_seek_atlassian_supported_authentication_authority"
   }
 }
