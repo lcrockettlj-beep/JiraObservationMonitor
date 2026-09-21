@@ -281,5 +281,29 @@
     ],
     "deletion_rule": "Positive evidence of duplication or obsolescence plus authority, consumer, BOOKSYNC and exact-boundary review is required.",
     "next_gate": "install_validate_nine_booksync_owners_stage_commit_classification_closeout"
+  },
+  "booksync_commerce_authority_audit_2026_09_21": {
+    "recorded_at": "2026-09-21",
+    "branch": "main",
+    "status": "discovery_proven_production_authentication_unproven",
+    "commerce_graphql_browser_authority": "proven_partial_success",
+    "active_entitlements": 7,
+    "inactive_entitlements": 0,
+    "invoice_groups": 1,
+    "pagination_complete": true,
+    "currency": "USD",
+    "payment_method_type": "DEFERRED",
+    "service_account_oauth_token_exchange": "pass",
+    "service_account_graphql_http_status": 200,
+    "commerce_schema_via_oauth": "unavailable_field_undefined",
+    "service_account_scope_catalogue_count": 519,
+    "commerce_scopes_offered": false,
+    "billing_scopes_offered": false,
+    "scoped_api_token_created": false,
+    "personal_browser_session_production_source": false,
+    "dedicated_commerce_collector_account": "candidate_only",
+    "supported_unattended_authentication": "unproven",
+    "production_collector_status": "blocked_on_supported_unattended_authentication_authority",
+    "next_gate": "install_validate_stage_commit_push_nine_booksync_owners_then_seek_atlassian_supported_authentication_authority"
   }
 }

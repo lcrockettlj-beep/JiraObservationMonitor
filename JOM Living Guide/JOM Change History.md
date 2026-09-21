@@ -967,3 +967,38 @@ Retained Command Centre validators remain:
 - `d6e5a5c`: `repo hygiene: retire obsolete command centre validators`.
 
 The classification model is established. Further deletion requires positive duplication or obsolescence evidence plus authority, consumer, BOOKSYNC and exact-boundary review. Install this nine-owner replacement pack, run `git diff --check`, stage only the nine BOOKSYNC owners, run `git diff --cached --check`, commit the classification closeout, then reassess whether further hygiene work is justified before resuming Docker, deployment, FR-004, FR-005 or feature development.
+
+#### 21 September 2026 - Commerce authority discovery and authentication boundary
+
+##### Proven discovery evidence
+
+An authenticated Atlassian billing-administrator browser session returned the selected transaction-account Commerce hierarchy. The response included effective permissions, one invoice group, payment-method type, invoices, seven active entitlements, products and Marketplace apps, subscription status, billing cycle, licensed quantity, pricing-plan references and tier structure, start and end timestamps, orders and billing administrators. Pagination reported `hasNextPage = false`. The selected account reported USD and DEFERRED payment method type.
+
+The GraphQL response returned useful data together with field-level errors for `displayInfo`, `billEstimateForMeteredChargeElements` and `billEstimateWithPermissionCheck`. This evidence is classified as `partial_success`. Failed resolver fields remain unavailable and must not be inferred from surrounding commercial records.
+
+##### Authentication authority audit
+
+The existing JOM service-account OAuth client successfully completed token exchange with HTTP 200 and received a one-hour Bearer token. A read-only request reached `https://api.atlassian.com/graphql` with HTTP 200, but the public OAuth schema rejected `commerceExp_queryIfAuthenticated2` as undefined. This proves service-account authentication and GraphQL gateway reachability, but does not prove Commerce schema availability or billing-account inventory through that route.
+
+The Atlassian service-account API-token scope catalogue exposed 519 selectable scopes. Searches found no Commerce or billing scopes. Subscription results were Guard-specific, and entitlement results were Jira Service Management customer-entitlement scopes rather than Atlassian Commerce billing entitlement authority. No scoped API token was created.
+
+##### Architectural decision and safety boundary
+
+- Commerce GraphQL data source: proven through a billing-admin browser session.
+- Billing-admin field authorisation: proven for the supplied transaction account.
+- Commercial data completeness: partial success.
+- Existing JOM OAuth service account: authenticated, but Commerce schema unavailable through the tested public OAuth GraphQL route.
+- Scoped service-account API token: no relevant Commerce or billing scope offered; not created.
+- Personal browser session: discovery evidence only; not an accepted production collector source.
+- Dedicated organisation-owned JOM Commerce Collector account with organisation-admin and billing-admin roles: candidate architecture only.
+- Supported unattended credential for that candidate account: unproven.
+- Production Commerce collector: blocked only on supported unattended authentication authority.
+
+Do not place browser cookies, session identifiers, copied request headers, personal credentials or private Commerce response bodies in `.env`, the repository, a container image or BOOKSYNC. Do not infer unavailable bill estimates or display information. Do not modify the Licensing & Billing product implementation until supported unattended authentication is proven and a collector, runtime contract, privacy boundary and validator set exist.
+
+##### Current workstream and next step
+
+Current workstream: Commerce GraphQL Authentication Authority Audit closeout. The evidence is discovery and audit authority, not an implemented production collector and not a completed Licensing & Billing milestone.
+
+Immediate next step: install and validate this nine-owner BOOKSYNC replacement pack, inspect the exact documentation-only Git boundary, then stage, commit and push only the approved BOOKSYNC owners. After clean closeout, seek explicit Atlassian-supported authentication authority for an organisation-owned billing-admin collector identity before provisioning a privileged account or changing JOM code.
+
