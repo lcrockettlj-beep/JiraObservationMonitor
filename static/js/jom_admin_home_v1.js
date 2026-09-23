@@ -2,6 +2,7 @@
   "use strict";
   const endpoints = {
     estate: "/api/admin/estate-configuration",
+    discovery: "/api/estate/discovery-authority/coverage",
     monitoring: "/api/admin/monitoring",
     licensing: "/api/admin/licensing-billing",
     users: "/api/admin/users-access",
@@ -31,14 +32,18 @@
   function render(results) {
     const map = Object.fromEntries(results.map((result) => [result.name, result]));
     const estate = map.estate.ok ? map.estate.payload : {};
+    const discovery = map.discovery.ok ? map.discovery.payload : {};
     const monitoring = map.monitoring.ok ? map.monitoring.payload : {};
     const licensing = map.licensing.ok ? map.licensing.payload : {};
     const users = map.users.ok ? map.users.payload : {};
     const system = map.system.ok ? map.system.payload : {};
     const es = safeSummary(estate), ms = safeSummary(monitoring), ls = licensing.estate || {}, us = safeSummary(users), ss = safeSummary(system);
+    const dc = discovery && discovery.coverage && typeof discovery.coverage === "object" ? discovery.coverage : {};
 
     text("admin-estate-primary", `${value(es.monitored_sites)} monitored sites`);
     text("admin-estate-detail", `Ownership coverage ${value(es.ownership_coverage_percent, "%")}; ${value(es.failed_sources)} failed sources.`);
+    text("admin-discovery-primary", map.discovery.ok ? (String(discovery.status || "").toLowerCase() === "success" ? "Available" : "Review") : "Unavailable");
+    text("admin-discovery-detail", map.discovery.ok ? `${value(dc.unique_identity_count)} discovered identities across ${value(discovery.source_file_count)} authority sources.` : "Discovery authority contract could not be read.");
     text("admin-monitoring-primary", `${value(ms.monitoring_coverage_percent, "%")} coverage`);
     text("admin-monitoring-detail", `${value(ms.monitored_sites)} of ${value(ms.total_sites)} sites monitored; ${value(ms.failed_sources)} failed sources.`);
     text("admin-licensing-primary", `${value(ls.product_users)} product assignments`);

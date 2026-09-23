@@ -1,16 +1,16 @@
 {
   "schema": "jom-product-access-refresh-status-v1",
-  "generated_at_utc": "2026-09-15T11:28:19.578828Z",
+  "generated_at_utc": "2026-09-23T14:21:01.353546Z",
   "overall_status": "ok",
   "sources": {
     "estate_product_access": {
       "exists": true,
-      "timestamp": "2026-09-15T11:28:19Z",
+      "timestamp": "2026-09-23T14:21:01Z",
       "schema": "jom-estate-product-access-v2-live"
     },
     "estate_access_truth": {
       "exists": true,
-      "timestamp": "2026-09-15T11:28:19Z",
+      "timestamp": "2026-09-23T14:21:01Z",
       "schema": "jom-estate-access-truth-v2-live"
     }
   },
@@ -20,8 +20,8 @@
       "label": "Refresh Estate Product Access and Estate Access Truth",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.estate_product_access --project-root .",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:16.667903Z",
-      "finished_at_utc": "2026-09-15T11:28:19.522473Z",
+      "started_at_utc": "2026-09-23T14:20:59.231796Z",
+      "finished_at_utc": "2026-09-23T14:21:01.295216Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"product_access_status\": \"partial\",\n  \"summary\": {\n    \"accessible_jira_resource_count\": 6,\n    \"sites_with_jira_roles\": 5,\n    \"total_jira_product_user_count\": 171,\n    \"total_jira_seat_limit\": 12150,\n    \"total_jira_remaining_seats\": 11979,\n    \"jira_role_rows\": 5,\n    \"error_site_count\": 1\n  }\n}\n",
@@ -30,13 +30,13 @@
     {
       "key": "source_freshness",
       "label": "Rebuild source freshness audit",
-      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/audit_source_freshness.py",
+      "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_freshness",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:19.522587Z",
-      "finished_at_utc": "2026-09-15T11:28:19.578743Z",
+      "started_at_utc": "2026-09-23T14:21:01.295299Z",
+      "finished_at_utc": "2026-09-23T14:21:01.353437Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"source_count\": 17,\n  \"counts\": {\n    \"IN_PROGRESS\": 1,\n    \"CURRENT\": 13,\n    \"CURRENT_WITH_REVIEW\": 3\n  },\n  \"issue_count\": 4,\n  \"overall_state\": \"ATTENTION\"\n}\n",
+      "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"expected\": 16,\n  \"coverage_complete\": true,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_freshness_audit.json\"\n}\n",
       "stderr_tail": ""
     }
   ]

@@ -300,3 +300,41 @@ Current workstream: Commerce GraphQL Authentication Authority Audit closeout. Th
 
 Immediate next step: install and validate this nine-owner BOOKSYNC replacement pack, inspect the exact documentation-only Git boundary, then stage, commit and push only the approved BOOKSYNC owners. After clean closeout, seek explicit Atlassian-supported authentication authority for an organisation-owned billing-admin collector identity before provisioning a privileged account or changing JOM code.
 
+## 23 September 2026 - Controlled recovery and page-by-page authority alignment milestone
+
+### Current milestone position
+- Branch at BOOKSYNC gate: ``.
+- Baseline HEAD before this milestone is committed: `ce742c4a3472a13f42750b54a5a6e9b0b3bb3645`.
+- The recovery sequence retained audit-first, read-only authority boundaries and Luke-controlled page progression.
+- Accepted/parked surfaces in this milestone: Source Health, Runtime, Governance Overview/Projects/Users, Governance unavailable capability boundaries, Estate Report, Executive Report, Admin Overview, and Admin Estate Configuration.
+- Governance Configuration, Permissions and Policy Compliance remain unavailable/not proven where no approved authority contract exists.
+- Commercial billing remains unavailable until a proven commercial authority exists.
+
+### Authority and presentation corrections
+- Runtime separates execution health from authority quality. Present status-neutral contracts are not treated as unavailable; schema-owned states such as Partial and Attention remain visible.
+- Source Health remains the detailed owner for current source-authority findings; Estate Report and Executive Report surface those findings without recreating specialist diagnosis.
+- Governance preserves Project Lead and Project Owner `partial` authority while continuing to serve valid records. Browser-owned fallback metrics and the overlapping Governance Users review total were removed from accepted consumers.
+- Estate Report and Executive Report consume the approved Verified Active Jira Users authority and keep product assignments distinct from verified-active users.
+- Executive Report no longer treats an unowned 100 percent monitoring threshold as policy.
+- Admin Overview now consumes the existing Discovery authority rather than hard-coding Discovery as unavailable.
+- Admin Estate Configuration remains scoped to monitored-product and administrative-ownership configuration gates; its 33 ownership rows are described as administrative ownership assignments, not unique people.
+
+### Runtime retention and repository hygiene
+- Controlled cleanup retained exactly five modified milestone runtime contracts: `runtime/data/runtime_refresh_status.json`, `runtime/data/site_registry.json`, `runtime/data/source_freshness_audit.json`, `runtime/data/source_reliability_status.json`, and `runtime/data/product_access_refresh_status.json`.
+- Other modified runtime snapshots and access-audit log drift were restored to HEAD after explicit classification.
+- `reports/*` remains report-only evidence and is not part of the tracked milestone.
+- Untracked `INSTALL_AND_VALIDATE.ps1` and the `JOM Living Guide Architecture & Portfolio/` directory remain outside this milestone and were not cleaned, staged or promoted by this BOOKSYNC.
+
+### Current owner and architecture direction
+- `app/web.py` remains the primary route/presentation-contract owner.
+- Specialist pages remain evidence owners; overview/reporting surfaces are thin consumers and must not duplicate authority or policy calculations in the browser.
+- Command Centre must eventually surface genuine Source Health and Runtime warnings/errors with reasons and investigation routes while Source Health/Runtime retain detailed evidence ownership.
+- The platform remains a read-only operational console. Unsupported values remain unavailable rather than inferred or hard-coded.
+
+### Current next step
+- Validate this BOOKSYNC boundary together with the current product/runtime diff.
+- Stage only the approved product owners, the five retained runtime contracts, and the nine definitive BOOKSYNC owners after exact-boundary inspection.
+- Run `git diff --cached --check` and inspect staged names before commit/push.
+- After a clean milestone closeout, resume Admin page 3 of 7, Discovery, under Luke-controlled page-by-page review.
+- Do not proceed independently to later Admin pages.
+

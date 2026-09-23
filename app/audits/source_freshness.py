@@ -1,135 +1,83 @@
-# JOM_BACKEND_STATIC_TRUTH_REMAINING_REFERENCE_REMEDIATION_V2
-# Remaining legacy/static truth references in this file have been neutralised.
-# This file must not treat legacy snapshots as backend or website truth.
-import json
-from pathlib import Path
+from __future__ import annotations
 from datetime import datetime, timezone
+from pathlib import Path
+import json
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = PROJECT_ROOT / "runtime" / "data" / "source_freshness_audit.json"
 
+# Canonical primary authority inventory. One unique key and one unique path per row.
 SOURCES = [
-    {"key":"site_registry", "label":"Site Registry", "path":"runtime/data/site_registry.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_SCOPE", "pages":["Home","Estate","Admin"]},
-    {"key":"admin_truth_v2", "label":"Admin Truth Layer v2", "path":"runtime/data/admin_truth_v2.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate","Admin"]},
-    {"key":"estate_product_access", "label":"Estate Product Access", "path":"runtime/data/estate_product_access.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
-    {"key":"estate_access_truth", "label":"Estate Access Truth", "path":"runtime/data/estate_access_truth.json", "timestamp_fields":["generated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
-    {"key":"estate_product_access", "label":"Product Access Authority", "path":"runtime/data/estate_access_truth.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate","Admin"]},
-    {"key":"user_footprint", "label":"User Footprint", "path":"runtime/data/user_footprint.json", "timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Estate"]},
-    {"key":"runtime_execution", "label":"Runtime Execution", "path":"runtime/data/runtime_execution_status.json", "timestamp_fields":["generated_at_utc","last_finished_at_utc","last_started_at_utc"], "source_type":"RUNTIME_CONTRACT", "pages":["Home","Estate","Admin","Runtime"]},
+    {"key":"site_registry","label":"Site Registry","path":"runtime/data/site_registry.json","timestamp_fields":["generated_at_utc"],"source_type":"RUNTIME_SCOPE","pages":["Home","Estate","Admin"],"connection_member":False,"authentication_member":False},
+    {"key":"admin_truth_v2","label":"Admin Truth Layer v2","path":"runtime/data/admin_truth_v2.json","timestamp_fields":["generated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Estate","Admin"],"connection_member":False,"authentication_member":True},
+    {"key":"estate_product_access","label":"Estate Product Access","path":"runtime/data/estate_product_access.json","timestamp_fields":["generated_at_utc"],"source_type":"LIVE_COLLECTION","pages":["Estate"],"connection_member":True,"authentication_member":True},
+    {"key":"estate_access_truth","label":"Estate Access Truth","path":"runtime/data/estate_access_truth.json","timestamp_fields":["generated_at_utc"],"source_type":"LIVE_COLLECTION","pages":["Estate"],"connection_member":True,"authentication_member":True},
+    {"key":"estate_admin_contacts","label":"Estate Admin Contacts","path":"runtime/data/estate_admin_contacts_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Estate","Admin"],"connection_member":False,"authentication_member":True},
+    {"key":"estate_monitored_products","label":"Estate Monitored Products","path":"runtime/data/estate_monitored_product_authority_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Estate","Admin"],"connection_member":False,"authentication_member":False},
+    {"key":"named_site_access","label":"Named Site Access","path":"runtime/data/named_site_access_authority_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Admin"],"connection_member":False,"authentication_member":True},
+    {"key":"named_user_display_identity","label":"Named User Display Identity","path":"runtime/data/named_user_display_identity_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Admin","Governance"],"connection_member":False,"authentication_member":True},
+    {"key":"user_footprint","label":"User Footprint","path":"runtime/data/user_footprint.json","timestamp_fields":["generated_at_utc","created_at_utc","updated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Estate","Admin"],"connection_member":False,"authentication_member":False},
+    {"key":"users_access_actionable","label":"Users Access Actionable Drill-down","path":"runtime/data/users_access_actionable_drilldown_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Admin"],"connection_member":False,"authentication_member":True},
+    {"key":"verified_active_jira_users","label":"Verified Active Jira Users","path":"runtime/data/verified_active_jira_users_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"LIVE_DERIVED_ACTIVITY_AUTHORITY","pages":["Admin"],"connection_member":False,"authentication_member":True},
+    {"key":"project_inventory","label":"Project Inventory","path":"runtime/data/project_inventory_authority_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"LIVE_COLLECTION","pages":["Governance"],"connection_member":True,"authentication_member":True},
+    {"key":"project_governance_identity","label":"Project Governance Named Identity","path":"runtime/data/project_governance_named_identity_authority_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"LIVE_DERIVED_AUTHORITY","pages":["Governance"],"connection_member":True,"authentication_member":True},
+    {"key":"project_lead","label":"Project Lead Authority","path":"runtime/data/project_lead_authority_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"DERIVED_RUNTIME_AUTHORITY","pages":["Governance"],"connection_member":False,"authentication_member":False},
+    {"key":"project_owner","label":"Project Owner Authority","path":"runtime/data/project_owner_authority_v1.json","timestamp_fields":["generated_at_utc"],"source_type":"GOVERNANCE_DERIVED_AUTHORITY","pages":["Governance"],"connection_member":False,"authentication_member":False},
+    {"key":"runtime_execution","label":"Runtime Execution","path":"runtime/data/runtime_execution_status.json","timestamp_fields":["generated_at_utc","last_finished_at_utc","last_started_at_utc"],"source_type":"RUNTIME_CONTRACT","pages":["Home","Estate","Admin","Runtime"],"connection_member":False,"authentication_member":False},
 ]
 
-def read_json(path):
-    with path.open('r', encoding='utf-8') as f:
-        return json.load(f)
+POLICY = {
+    "current_hours": 24,
+    "aging_hours": 72,
+    "stale_after_hours": 72,
+    "whole_platform_ok_requires_complete_coverage": True,
+    "partial_review_is_not_healthy": True,
+    "file_mtime_is_not_collection_time": True,
+    "rule": "No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero.",
+}
 
-def write_json(path, payload):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2), encoding='utf-8')
-
-def get_nested(data, dotted):
-    cur=data
-    for part in dotted.split('.'):
-        if not isinstance(cur, dict) or part not in cur: return None
-        cur=cur[part]
-    return cur
-
-def parse_time(value):
+def now_utc(): return datetime.now(timezone.utc)
+def iso(dt): return dt.isoformat().replace("+00:00","Z")
+def parse(value):
     if not value: return None
-    text=str(value).strip()
-    if text.endswith('Z'): text=text[:-1] + '+00:00'
-    try:
-        dt=datetime.fromisoformat(text)
-        if dt.tzinfo is None: dt=dt.replace(tzinfo=timezone.utc)
-        return dt.astimezone(timezone.utc)
-    except Exception:
-        pass
-    try:
-        dt=datetime.strptime(str(value).strip(), '%Y-%m-%d %H:%M:%S')
-        return dt.replace(tzinfo=timezone.utc)
-    except Exception:
-        return None
+    try: return datetime.fromisoformat(str(value).replace("Z","+00:00")).astimezone(timezone.utc)
+    except Exception: return None
 
-def display_time(dt):
-    if not dt: return None
-    return dt.strftime('%Y-%m-%d %H:%M UTC')
+def read(path):
+    try: return json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception: return None
 
-def classify(age_hours, exists, timestamp_present):
-    if not exists: return 'MISSING'
-    if not timestamp_present or age_hours is None: return 'UNKNOWN_TIMESTAMP'
-    if age_hours <= 24: return 'CURRENT'
-    if age_hours <= 72: return 'AGING'
-    return 'STALE'
+def classify(age, exists, timestamp_present):
+    if not exists: return "MISSING"
+    if not timestamp_present or age is None: return "UNKNOWN_TIMESTAMP"
+    if age > POLICY["stale_after_hours"]: return "STALE"
+    if age > POLICY["current_hours"]: return "AGING"
+    return "CURRENT"
 
-def operator_label(state):
-    return {
-        'CURRENT':'CURRENT',
-        'AGING':'AGING SNAPSHOT',
-        'STALE':'STALE SNAPSHOT',
-        'MISSING':'MISSING SOURCE',
-        'UNKNOWN_TIMESTAMP':'UNKNOWN TIMESTAMP'
-    }.get(state, 'REVIEW')
+def contract_state(payload):
+    if not isinstance(payload,dict): return "UNAVAILABLE"
+    return str(payload.get("status") or payload.get("overall_status") or (payload.get("summary") or {}).get("overall_state") or "available").upper()
 
-def maybe_stamp_billing(project_root, now):
-    path=project_root/'runtime/data/estate_access_truth.json'
-    if not path.exists(): return False
-    try:
-        data=read_json(path)
-    except Exception:
-        return False
-    if any(data.get(k) for k in ('generated_at_utc','created_at_utc','updated_at_utc')):
-        return False
-    data['generated_at_utc']=now.isoformat().replace('+00:00','Z')
-    data['source_freshness_note']='Timestamp added by Source Freshness Audit v1.1 because file existed without freshness metadata.'
-    write_json(path, data)
-    return True
-
-def main(project_root=PROJECT_ROOT):
-    now=datetime.now(timezone.utc)
-    billing_timestamp_added=maybe_stamp_billing(project_root, now)
-    results=[]
-    counts={"CURRENT":0,"AGING":0,"STALE":0,"MISSING":0,"UNKNOWN_TIMESTAMP":0}
+def main(project_root=None):
+    root=Path(project_root).resolve() if project_root else PROJECT_ROOT
+    now=now_utc(); rows=[]; counts={x:0 for x in ("CURRENT","AGING","STALE","MISSING","UNKNOWN_TIMESTAMP")}
     for src in SOURCES:
-        path=project_root/src['path']
-        exists=path.exists(); timestamp_value=None; timestamp_field=None; parsed=None; error=None; data=None
-        if exists:
-            try:
-                data=read_json(path)
-                for field in src['timestamp_fields']:
-                    candidate=get_nested(data, field)
-                    parsed_candidate=parse_time(candidate)
-                    if candidate and parsed_candidate:
-                        timestamp_value=candidate; timestamp_field=field; parsed=parsed_candidate; break
-                    if candidate and not timestamp_value:
-                        timestamp_value=candidate; timestamp_field=field
-                if timestamp_value and not parsed: error='Timestamp present but not parseable as a freshness timestamp.'
-            except Exception as exc:
-                error='Could not read JSON: '+str(exc)
-        age_hours=round((now-parsed).total_seconds()/3600,2) if parsed else None
-        state=classify(age_hours, exists, bool(timestamp_value and parsed))
-        if src.get('key') == 'site_registry' and exists and isinstance(data, dict) and isinstance(data.get('sites'), list) and len(data.get('sites')) >= 0 and not error:
-            state='CURRENT'
-            if age_hours is not None and age_hours > 24:
-                error='Timestamp is older than freshness window, but Site Registry is event-driven runtime scope authority and remains current while present/readable.'
-        counts[state]=counts.get(state,0)+1
-        results.append({
-            'key':src['key'],'label':src['label'],'path':src['path'],'exists':exists,
-            'source_type':src['source_type'],'pages':src['pages'],'timestamp_field':timestamp_field,
-            'timestamp_value':timestamp_value,
-            'parsed_timestamp_utc':parsed.isoformat().replace('+00:00','Z') if parsed else None,
-            'display_timestamp_utc':display_time(parsed),'age_hours':age_hours,
-            'freshness_state':state,'operator_label':operator_label(state),'error':error
-        })
-    overall='OK'
-    if counts.get('MISSING',0) or counts.get('STALE',0): overall='ATTENTION'
-    elif counts.get('UNKNOWN_TIMESTAMP',0): overall='REVIEW'
-    payload={
-        'schema':'jom-source-freshness-audit-v1.1',
-        'generated_at_utc':now.isoformat().replace('+00:00','Z'),
-        'display_generated_at_utc':display_time(now),
-        'policy':{'current_hours':24,'aging_hours':72,'stale_after_hours':72,'rule':'No timestamp means not trusted as current; missing files are explicit MISSING, never treated as zero.'},
-        'summary':{'overall_state':overall,'source_count':len(results),'counts':counts,'billing_timestamp_added':billing_timestamp_added},
-        'sources':results
-    }
-    write_json(OUT_PATH, payload)
-    print(json.dumps(payload['summary'], indent=2)); print('Output:', OUT_PATH)
-if __name__=='__main__': main()
+        path=root/src["path"]; exists=path.exists(); payload=read(path) if exists else None; field=None; value=None; parsed=None; error=None
+        if isinstance(payload,dict):
+            for candidate in src["timestamp_fields"]:
+                raw=payload.get(candidate)
+                if raw is not None and raw != "":
+                    field=candidate; value=raw; parsed=parse(raw); break
+        age=round((now-parsed).total_seconds()/3600,2) if parsed else None
+        state=classify(age,exists,bool(value and parsed)); counts[state]+=1
+        if value and not parsed: error="Timestamp present but not parseable as freshness evidence."
+        rows.append({**src,"exists":exists,"freshness_state":state,"operator_label":state.replace("_"," "),"timestamp_field":field,"timestamp_value":value,"parsed_timestamp_utc":iso(parsed) if parsed else None,"age_hours":age,"declared_state":contract_state(payload),"error":error})
+    keys=[x["key"] for x in SOURCES]; paths=[x["path"] for x in SOURCES]
+    unique=len(keys)==len(set(keys)) and len(paths)==len(set(paths))
+    complete=len(rows)==len(SOURCES) and all(x["exists"] for x in rows) and unique
+    non_current=sum(v for k,v in counts.items() if k!="CURRENT")
+    review_states=[x for x in rows if x["declared_state"] in {"PARTIAL","REVIEW","UNAVAILABLE","ERROR","FAILED","CRITICAL"}]
+    overall="OK" if complete and non_current==0 and not review_states else "ATTENTION"
+    payload={"schema":"jom-source-freshness-audit-v4-canonical-inventory","generated_at_utc":iso(now),"inventory":{"owner":"app/audits/source_freshness.py","expected_source_count":len(SOURCES),"checked_source_count":len(rows),"unique_keys":unique,"unique_paths":unique,"coverage_complete":complete},"membership":{"connections":[x["key"] for x in SOURCES if x["connection_member"]],"authentication":[x["key"] for x in SOURCES if x["authentication_member"]]},"policy":POLICY,"sources":rows,"summary":{"source_count":len(rows),"counts":counts,"review_state_count":len(review_states),"overall_state":overall,"coverage_complete":complete},"issues":[{"source":x["label"],"path":x["path"],"state":x["freshness_state"],"declared_state":x["declared_state"]} for x in rows if x["freshness_state"]!="CURRENT" or x["declared_state"] in {"PARTIAL","REVIEW","UNAVAILABLE","ERROR","FAILED","CRITICAL"}]}
+    out=root/"runtime/data/source_freshness_audit.json"; out.parent.mkdir(parents=True,exist_ok=True); tmp=out.with_suffix(".json.tmp"); tmp.write_text(json.dumps(payload,indent=2),encoding="utf-8"); tmp.replace(out); print(json.dumps({"overall_state":overall,"expected":len(SOURCES),"coverage_complete":complete,"output":str(out)},indent=2)); return payload
+if __name__=="__main__": main()

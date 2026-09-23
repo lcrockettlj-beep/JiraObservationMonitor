@@ -28,13 +28,28 @@ def main()->Dict[str,Any]:
  eid='jom-refresh-'+uuid.uuid4().hex;started=now();steps=[];payload={'schema':'jom-runtime-refresh-status-v3.1','execution_id':eid,'execution_scope':'canonical_runtime_refresh','parent_execution_id':None,'generated_at_utc':started,'started_at_utc':started,'finished_at_utc':None,'running':True,'overall_status':'running','current_step':None,'automatic_refresh_contract':{'maximum_interval_hours':12,'fail_closed':True,'dependency_order_enforced':True,'normal_operation_trigger':'external_scheduler_or_explicit_runtime_refresh_route','trigger_proof':'REQUIRES_RUNTIME_OR_SCHEDULER_EVIDENCE'},'timestamp_semantics':{'started_at_utc':'canonical execution start','finished_at_utc':'canonical execution finish before final health assessment','generated_at_utc':'status document write time','contracts.contract_generated_at_utc':'producer generation time; not automatically source collection time','contracts.file_last_write_utc':'filesystem write evidence only'},'final_health_assessment':{'status':'pending','freshness':None,'reliability':None},'contracts':{},'steps':steps};write(payload)
  defs=[([sys.executable,'scripts/build_site_registry.py','--project-root','.'],'site_registry','Rebuild Site Registry',True,[]),([sys.executable,'-m','app.builders.product_access_sources'],'product_access','Refresh Product Access',True,['site_registry']),([sys.executable,'-m','app.runtime.admin_enriched_chain'],'admin_enriched_chain','Refresh complete Admin authority chain',True,['site_registry','product_access'])]
  for cmd,key,label,req,blocked in defs:
-  payload['current_step']=key;payload['generated_at_utc']=now();write(payload);print('START '+key,flush=True);r=run(cmd,key,label,req,steps,eid,blocked);steps.append(r);payload['steps']=steps;write(payload);print('FINISH '+key+'='+r['status'],flush=True)
+  payload['current_step']=key
+  payload['generated_at_utc']=now()
+  write(payload)
+  print('START '+key,flush=True)
+  r=run(cmd,key,label,req,steps,eid,blocked)
+  if key=='product_access' and r.get('status')=='ok':
+   child=ev('product_access_refresh_status.json')
+   child_status=str(child.get('status') or '').lower()
+   if child_status!='ok':
+    r['status']='failed'
+    r['child_status_contract']=child
+    r['error']='child_status_contract_'+(child_status or 'unavailable')
+  steps.append(r)
+  payload['steps']=steps
+  write(payload)
+  print('FINISH '+key+'='+r['status'],flush=True)
  required=[x for x in steps if x.get('required')];base_status='ok' if required and all(x.get('status')=='ok' for x in required) else 'attention'
  # Finalize canonical execution before health processes read it.
  finished=now();payload.update(generated_at_utc=finished,finished_at_utc=finished,running=False,current_step=None,overall_status=base_status,contracts={n:ev(n) for n in CONTRACT_NAMES});write(payload)
  health=[]
  if base_status=='ok':
-  for cmd,key,label in [([sys.executable,'scripts/audit_source_freshness.py'],'source_freshness_final','Evaluate Freshness against finalized canonical execution'),([sys.executable,'-m','app.audits.source_reliability'],'source_reliability_final','Evaluate Reliability from finalized Freshness and Runtime')]:
+  for cmd,key,label in [([sys.executable,'-m','app.audits.source_freshness'],'source_freshness_final','Evaluate Freshness against finalized canonical execution'),([sys.executable,'-m','app.audits.source_reliability'],'source_reliability_final','Evaluate Reliability from finalized Freshness and Runtime')]:
    print('START '+key,flush=True);r=run(cmd,key,label,True,health,eid,[],600);health.append(r);print('FINISH '+key+'='+r['status'],flush=True)
  payload['final_health_assessment']={'status':'complete' if health and all(x.get('status')=='ok' for x in health) else 'attention','freshness':next((x for x in health if x['key']=='source_freshness_final'),None),'reliability':next((x for x in health if x['key']=='source_reliability_final'),None)}
  payload['contracts']={n:ev(n) for n in CONTRACT_NAMES};payload['generated_at_utc']=now();write(payload)

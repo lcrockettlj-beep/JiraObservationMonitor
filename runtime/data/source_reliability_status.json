@@ -1,38 +1,85 @@
 {
-  "schema": "jom-source-reliability-status-v1.2-runtime-finalization-aligned",
-  "generated_at_utc": "2026-09-15T11:35:26.244938Z",
+  "schema": "jom-source-reliability-status-v2-canonical-inventory",
+  "generated_at_utc": "2026-09-23T14:21:01.373253Z",
   "overall_status": "attention",
   "summary": {
     "issue_count": 3,
     "freshness_overall": "ATTENTION",
-    "runtime_refresh_overall": "ok",
-    "runtime_refresh_running": false,
-    "user_footprint_status": "generated"
+    "expected_source_coverage_complete": true,
+    "status_input_count": 7
   },
   "issues": [
     {
       "source": "Estate Product Access",
-      "state": "CURRENT_WITH_REVIEW",
+      "state": "PARTIAL",
       "path": "runtime/data/estate_product_access.json",
-      "reason": "Freshness source is not fully current."
+      "reason": "Authority contract publishes a non-healthy state."
     },
     {
       "source": "Project Lead Authority",
-      "state": "CURRENT_WITH_REVIEW",
+      "state": "PARTIAL",
       "path": "runtime/data/project_lead_authority_v1.json",
-      "reason": "Freshness source is not fully current."
+      "reason": "Authority contract publishes a non-healthy state."
     },
     {
       "source": "Project Owner Authority",
-      "state": "CURRENT_WITH_REVIEW",
+      "state": "PARTIAL",
       "path": "runtime/data/project_owner_authority_v1.json",
-      "reason": "Freshness source is not fully current."
+      "reason": "Authority contract publishes a non-healthy state."
+    }
+  ],
+  "status_inputs": [
+    {
+      "key": "runtime_refresh",
+      "path": "runtime/data/runtime_refresh_status.json",
+      "exists": true,
+      "state": "OK"
+    },
+    {
+      "key": "admin_enriched_refresh",
+      "path": "runtime/data/admin_enriched_refresh_status.json",
+      "exists": true,
+      "state": "OK"
+    },
+    {
+      "key": "product_access_refresh",
+      "path": "runtime/data/product_access_refresh_status.json",
+      "exists": true,
+      "state": "OK"
+    },
+    {
+      "key": "estate_resource_authority_refresh",
+      "path": "runtime/data/estate_resource_authority_refresh_status_v1.json",
+      "exists": true,
+      "state": "OK"
+    },
+    {
+      "key": "admin_group_expansion",
+      "path": "runtime/data/admin_group_expansion_status.json",
+      "exists": true,
+      "state": "OK"
+    },
+    {
+      "key": "backend_final_truth_chain",
+      "path": "runtime/data/backend_final_truth_chain_status.json",
+      "exists": true,
+      "state": "PASS"
+    },
+    {
+      "key": "group_expansion_recovery",
+      "path": "runtime/data/group_expansion_recovery_status.json",
+      "exists": true,
+      "state": "OK"
     }
   ],
   "inputs": {
     "source_freshness": "runtime/data/source_freshness_audit.json",
     "runtime_refresh": "runtime/data/runtime_refresh_status.json",
-    "user_footprint": "runtime/data/user_footprint.json",
-    "site_registry": "runtime/data/site_registry.json"
+    "admin_enriched_refresh": "runtime/data/admin_enriched_refresh_status.json",
+    "product_access_refresh": "runtime/data/product_access_refresh_status.json",
+    "estate_resource_authority_refresh": "runtime/data/estate_resource_authority_refresh_status_v1.json",
+    "admin_group_expansion": "runtime/data/admin_group_expansion_status.json",
+    "backend_final_truth_chain": "runtime/data/backend_final_truth_chain_status.json",
+    "group_expansion_recovery": "runtime/data/group_expansion_recovery_status.json"
   }
 }

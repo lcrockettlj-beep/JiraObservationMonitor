@@ -45,7 +45,7 @@ def main():
     else:
         steps.append({"key":"estate_product_access", "label":"Refresh Estate Product Access and Estate Access Truth", "command":None, "exists":False, "started_at_utc":now(), "finished_at_utc":now(), "status":"manual_required", "returncode":None, "stdout_tail":"", "stderr_tail":"", "note":"app/builders/estate_product_access.py was not found. Product access data was not faked."})
     if Path('scripts/build_admin_truth_layer_v2.py').exists(): steps.append(run([sys.executable,'scripts/build_admin_truth_layer_v2.py'], 'admin_truth_v2', 'Rebuild Admin Truth v2 after product access refresh'))
-    if Path('scripts/audit_source_freshness.py').exists(): steps.append(run([sys.executable,'scripts/audit_source_freshness.py'], 'source_freshness', 'Rebuild source freshness audit'))
+    steps.append(run([sys.executable,'-m','app.audits.source_freshness'], 'source_freshness', 'Rebuild source freshness audit'))
     if Path('scripts/source_reliability_audit.py').exists(): steps.append(run([sys.executable,'scripts/source_reliability_audit.py'], 'source_reliability', 'Rebuild source reliability status'))
     if any(s['status']=='failed' for s in steps): overall='failed'
     elif any(s['status'] in ('manual_required','missing') for s in steps if s['key']=='estate_product_access'): overall='manual_required'
@@ -54,6 +54,9 @@ def main():
     STATUS.parent.mkdir(parents=True, exist_ok=True)
     STATUS.write_text(json.dumps(payload, indent=2), encoding='utf-8')
     print(json.dumps({"overall_status":overall,"output":str(STATUS)}, indent=2))
+    return payload
 
-if __name__=='__main__': main()
+if __name__=='__main__':
+    result=main()
+    raise SystemExit(0 if result.get('overall_status')=='ok' else 2)
 

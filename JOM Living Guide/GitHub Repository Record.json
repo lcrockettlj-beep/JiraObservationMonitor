@@ -305,5 +305,40 @@
     "supported_unattended_authentication": "unproven",
     "production_collector_status": "blocked_on_supported_unattended_authentication_authority",
     "next_gate": "install_validate_stage_commit_push_nine_booksync_owners_then_seek_atlassian_supported_authentication_authority"
+  },
+  "booksync_controlled_recovery_page_alignment_2026_09_23": {
+    "recorded_at": "2026-09-23T15:55:32.149065+00:00",
+    "branch": "",
+    "baseline_head_before_milestone_commit": "ce742c4a3472a13f42750b54a5a6e9b0b3bb3645",
+    "status": "validated_product_and_runtime_scope_pending_exact_stage_commit_push",
+    "accepted_surfaces": [
+      "Source Health",
+      "Runtime",
+      "Governance Overview",
+      "Governance Projects",
+      "Governance Users",
+      "Estate Report",
+      "Executive Report",
+      "Admin Overview",
+      "Admin Estate Configuration"
+    ],
+    "unavailable_governance_capabilities": [
+      "Configuration",
+      "Permissions",
+      "Policy Compliance"
+    ],
+    "retained_runtime_contracts": [
+      "runtime/data/runtime_refresh_status.json",
+      "runtime/data/site_registry.json",
+      "runtime/data/source_freshness_audit.json",
+      "runtime/data/source_reliability_status.json",
+      "runtime/data/product_access_refresh_status.json"
+    ],
+    "untracked_outside_milestone": [
+      "INSTALL_AND_VALIDATE.ps1",
+      "JOM Living Guide Architecture & Portfolio/"
+    ],
+    "next_workstream": "Admin page 3 of 7 - Discovery",
+    "page_progression_rule": "Luke controls progression page by page"
   }
 }

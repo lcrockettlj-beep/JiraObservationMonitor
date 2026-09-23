@@ -2,3 +2,7 @@
 .sys-truth__priority-group{grid-column:1/-1}.sys-truth__priority-title{margin:6px 0 12px;padding-bottom:8px;border-bottom:1px solid #dfe1e6;color:#092957}.sys-truth__priority-group+.sys-truth__priority-group{margin-top:12px}.sys-truth__priority-group .sys-truth__detail{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:950px){.sys-truth__priority-group .sys-truth__detail{grid-template-columns:1fr}}
 
 .sys-truth__summary article strong{overflow-wrap:anywhere;line-height:1.2}.sys-truth__summary article small{display:block;overflow-wrap:anywhere}.sys-truth__summary article{min-height:150px}
+
+/* JOM Runtime API long-identifier wrapping v2 */
+.sys-truth__contract{min-width:0}
+.sys-truth__contract h3{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word}
