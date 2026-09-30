@@ -285,11 +285,16 @@ def main() -> int:
             categories["mfa_unknown"]["records"].append(record(account, row, identities, footprint, "Directory authority does not provide a proven MFA state.", "Review account security evidence in Atlassian Administration.", policies_url))
         if bool_value(value(row, "forDeletion", "for_deletion")) is True:
             categories["for_deletion"]["records"].append(record(account, row, identities, footprint, "Directory authority marks this account for deletion.", "Review or cancel the deletion within Atlassian Administration.", users_url))
-        status = norm(value(row, "status", "membershipStatus", "accountStatus"))
-        if status == "suspended":
-            categories["suspended_accounts"]["records"].append(record(account, row, identities, footprint, "Directory membership status is suspended.", "Review the account lifecycle in Atlassian Administration.", users_url))
-        if status in {"deactivated", "inactive", "closed"}:
-            categories["deactivated_accounts"]["records"].append(record(account, row, identities, footprint, "Directory account status is deactivated or inactive.", "Review whether the account should remain deactivated or be deleted.", users_url))
+        membership_status = norm(value(row, "membership_status", "membershipStatus"))
+        account_status = norm(value(row, "account_status", "accountStatus", "status"))
+        if membership_status == "suspended":
+            item = record(account, row, identities, footprint, "Directory membership status is suspended.", "Review the account lifecycle in Atlassian Administration.", users_url)
+            item["account_status"] = "suspended"
+            categories["suspended_accounts"]["records"].append(item)
+        if account_status in {"deactivated", "inactive", "closed"}:
+            item = record(account, row, identities, footprint, "Directory account status is deactivated or inactive.", "Review whether the account should remain deactivated or be deleted.", users_url)
+            item["account_status"] = account_status
+            categories["deactivated_accounts"]["records"].append(item)
         claim_status = norm(value(row, "claimStatus", "claim_status"))
         if claim_status in {"unmanaged", "not_managed", "external", "unclaimed"}:
             categories["unmanaged_accounts"]["records"].append(record(account, row, identities, footprint, "Directory claim status does not identify this account as managed.", "Review account claiming and managed-domain settings.", users_url))

@@ -340,5 +340,63 @@
     ],
     "next_workstream": "Admin page 3 of 7 - Discovery",
     "page_progression_rule": "Luke controls progression page by page"
+  },
+  "booksync_admin_recovery_parity_2026_09_30": {
+    "recorded_at": "2026-09-30",
+    "branch": "main",
+    "baseline_head_before_milestone_commit": "7f31737",
+    "status": "accepted_admin_recovery_and_parity_direction_pending_exact_stage_commit_push",
+    "accepted_admin_surfaces": [
+      "Discovery",
+      "Monitoring",
+      "Licensing & Billing",
+      "Users & Access",
+      "System Configuration"
+    ],
+    "users_access": {
+      "directory_suspended_membership": 1,
+      "organisation_inactive_accounts": 38,
+      "directory_for_deletion": 2,
+      "not_invited": "unavailable",
+      "organisation_inactive_display_identity_coverage": "38/38"
+    },
+    "verified_active_jira_users": {
+      "current_value": 111,
+      "successful_requests": 148,
+      "failed_requests": 0,
+      "full_success": true,
+      "safe_to_publish": true
+    },
+    "system_configuration": {
+      "verified_active_source": "available",
+      "commercial_billing": "unavailable_boundary_not_action",
+      "immediate_action_items": 0
+    },
+    "retained_runtime_contracts": [
+      "runtime/data/admin_truth_v2.json",
+      "runtime/data/users_access_actionable_drilldown_v1.json",
+      "runtime/data/verified_active_jira_users_v1.json",
+      "runtime/data/organisation_inactive_display_identity_v1.json"
+    ],
+    "parity_direction": "authority parity for approved operational capabilities, not menu parity",
+    "intentionally_excluded": [
+      "Rovo",
+      "Connectors",
+      "Data Management",
+      "Platform Usage"
+    ],
+    "wider_estate_rule": "Discovery/Estate may represent wider relevant Atlassian applications; Monitoring requires separate proven monitoring authority.",
+    "ux_rule": "Prefer in-page side drawers for evidence and drill-down; JOM remains read-only.",
+    "shadow_it": {
+      "status": "authority_gap_evidence_only",
+      "collector_approved": false,
+      "runtime_contract_approved": false,
+      "discovery_integration_approved": false,
+      "site_registry_integration_approved": false,
+      "browser_session_production_authentication_allowed": false
+    },
+    "future_authentication_candidate": "Atlassian OAuth for supported APIs, not passwords or browser-session credential reuse",
+    "next_workstream": "Continue Atlassian Administration authority-parity audit after clean milestone closeout",
+    "next_gate": "validate_booksync_exact_boundary_stage_commit_push"
   }
 }

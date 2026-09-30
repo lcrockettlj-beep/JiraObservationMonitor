@@ -705,3 +705,35 @@ Immediate next step: install and validate this nine-owner BOOKSYNC replacement p
 - After a clean milestone closeout, resume Admin page 3 of 7, Discovery, under Luke-controlled page-by-page review.
 - Do not proceed independently to later Admin pages.
 
+### 30 September 2026 - Admin recovery closeout and Atlassian Administration authority-parity direction
+
+#### Accepted Admin recovery position
+- The controlled Admin recovery now has accepted page outcomes for Discovery, Monitoring, Licensing & Billing, Users & Access, and System Configuration. Earlier entries remain historical evidence and must not override this current position.
+- Users & Access now separates Directory membership suspension from organisation account lifecycle. Current accepted evidence is Directory suspended membership 1, organisation account_status=inactive 38, Directory for-deletion authority 2, and Not invited unavailable. These values are time-sensitive authority evidence and must not become fixed validator constants.
+- runtime/data/organisation_inactive_display_identity_v1.json is the approved privacy-gated identity authority for the 38 organisation-inactive accounts. Validation proved 38/38 display-name coverage, no stored email, no raw responses, blocked account-ID UI exposure, disabled export/download, Phase 1 trusted-local access, and future Organisation administrator enforcement.
+- Admin Truth suspended_users semantics were corrected to Directory membership_status=suspended. Directory account_status=inactive remains a separate concept and must not be relabelled as Atlassian Administration-wide Deactivated without matching organisation authority.
+- Verified Active Jira Users remains a separate authority from Product Access assignments. The current accepted runtime contract publishes 111 verified-active Jira users with 148 successful requests, zero failed requests, full_success true, and safe_to_publish true.
+- System Configuration consumes Verified Active Jira Users as a configured source, keeps Commercial Billing unavailable as a capability boundary rather than an action, preserves failure-only overall status semantics, keeps Partial/Attention source quality visible, and counts zero immediate actions when only the OK empty-state exists.
+
+#### Atlassian Administration authority-parity direction
+- JOM targets authority parity for approved operational capabilities, not menu parity with admin.atlassian.com. When JOM represents an Atlassian Administration fact, population, scope, status and limitation semantics must reconcile to the approved source authority.
+- Rovo, Connectors, Data Management and Platform Usage are intentionally excluded from JOM parity scope. Their absence is deliberate product scope, not a missing implementation.
+- Discovery and Estate are the intended homes for the wider relevant Atlassian application estate. Monitoring remains limited to applications with proven JOM monitoring contracts; discovery of an application does not imply monitoring support.
+- JOM should keep the operator in the current workspace and use side drawers for evidence and drill-down wherever practical. JOM remains read-only and may direct the operator to Atlassian Administration for administrative changes.
+
+#### Shadow IT authority boundary
+- Atlassian Shadow IT/discovered-app visibility is a proven authority gap in JOM. Current Organisation Discovery proves organisations only and the current Site Registry remains a site lifecycle authority; neither is complete Shadow IT authority.
+- Privacy-safe endpoint probes found no approved public Shadow IT REST route. Browser capture found application-oriented Admin gateway candidates, but Shadow IT semantics, pagination/completeness and supported non-browser authentication were not proven.
+- No Shadow IT collector, runtime contract, Discovery integration or Site Registry integration is approved. Browser-session cookies, session tokens or private AdminHub traffic must not become JOM production authentication architecture.
+- A future JOM sign-in design may evaluate Atlassian OAuth for supported APIs. JOM must never capture Atlassian passwords or reuse browser-session credentials as its integration model.
+
+#### Milestone runtime and repository boundary
+- Controlled cleanup retains runtime/data/admin_truth_v2.json, runtime/data/users_access_actionable_drilldown_v1.json, runtime/data/verified_active_jira_users_v1.json, and the new runtime/data/organisation_inactive_display_identity_v1.json as this milestone's approved runtime authority changes.
+- Generated refresh drift and transient access-audit/runtime artefacts were classified separately and restored or removed before BOOKSYNC. A canonical refresh observed during closeout was allowed to finish before the approved cleanup boundary was re-applied and validated.
+- INSTALL_AND_VALIDATE.ps1 and JOM Living Guide Architecture & Portfolio/ remain outside this milestone. Reports remain report-only evidence.
+
+#### Continuation
+- Immediate gate: validate these BOOKSYNC owners together with the current product/runtime milestone, inspect git diff --check and exact status, then stage only the approved product, runtime and continuity boundary before commit/push.
+- After a clean milestone closeout, continue the JOM to Atlassian Administration authority-parity audit. Shadow IT remains parked as evidence-only until a supported authority is proven.
+- Preserve Luke-controlled progression, audit-first evidence, full owner-file replacements, no hard-coded operational truth, no inferred authority, and no destructive repository action without an explicit gate.
+

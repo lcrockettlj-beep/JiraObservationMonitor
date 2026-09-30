@@ -35,7 +35,7 @@
     text('sys-rail-sources', fmt(summary.configured_sources));
     text('sys-rail-failed', fmt(summary.failed_sources));
     text('sys-rail-guardrails', fmt(summary.guardrails_enabled));
-    text('sys-rail-actions', fmt(actions.length));
+    text('sys-rail-actions', fmt(actions.filter(item => String((item || {}).level || '').toLowerCase() !== 'ok').length));
     renderActions(actions);
     renderSources(data.source_health);
     renderGuardrails(data.guardrails);

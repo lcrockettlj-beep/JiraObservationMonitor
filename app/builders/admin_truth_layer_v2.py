@@ -78,11 +78,13 @@ def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
 
     account_types = summary.get('account_types') if isinstance(summary.get('account_types'), dict) else {}
     account_statuses = summary.get('account_statuses') if isinstance(summary.get('account_statuses'), dict) else {}
+    membership_statuses = summary.get('membership_statuses') if isinstance(summary.get('membership_statuses'), dict) else {}
     claim_statuses = summary.get('claim_statuses') if isinstance(summary.get('claim_statuses'), dict) else {}
 
     app_accounts = sum(safe_int(value) for key, value in account_types.items() if key in {'app', 'service_account', 'service', 'bot'})
     human_users = sum(safe_int(value) for key, value in account_types.items() if key in {'atlassian', 'customer', 'human', 'user'})
-    suspended_users = sum(safe_int(value) for key, value in account_statuses.items() if key in {'suspended', 'disabled', 'deactivated', 'inactive'})
+    suspended_users = sum(safe_int(value) for key, value in membership_statuses.items() if key == 'suspended')
+    inactive_accounts = sum(safe_int(value) for key, value in account_statuses.items() if key in {'inactive', 'deactivated', 'disabled', 'closed'})
     managed_users = sum(safe_int(value) for key, value in claim_statuses.items() if key in {'managed', 'claimed'})
 
     role_key_map = {
@@ -115,6 +117,7 @@ def admin_summary_from_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         'human_users': human_users if complete else 0,
         'app_accounts': app_accounts if complete else 0,
         'suspended_users': suspended_users if complete else 0,
+        'inactive_accounts': inactive_accounts if complete else 0,
         'mfa_enabled': safe_int(summary.get('mfa_enabled')) if complete else 0,
         'mfa_disabled': safe_int(summary.get('mfa_disabled')) if complete else 0,
         'mfa_unknown': safe_int(summary.get('mfa_unknown')) if complete else 0,

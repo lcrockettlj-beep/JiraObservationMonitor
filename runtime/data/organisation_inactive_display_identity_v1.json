@@ -1,0 +1,227 @@
+{
+  "schema": "jom-organisation-inactive-display-identity-v1",
+  "generated_at_utc": "2026-09-28T14:40:15.979374+00:00",
+  "status": "ok",
+  "source": {
+    "authority": "Atlassian Admin organisation users API",
+    "organisation_accounts": 1221,
+    "inactive_accounts": 38,
+    "page_count": 25,
+    "pagination_complete": true
+  },
+  "quality": {
+    "unique_inactive_accounts": 38,
+    "display_name_coverage_complete": true,
+    "email_stored": false,
+    "raw_responses_stored": false,
+    "credentials_stored": false
+  },
+  "privacy": {
+    "account_id_internal_reconciliation_only": true,
+    "account_id_ui_exposure_allowed": false,
+    "email_exposure_allowed": false,
+    "export_allowed": false,
+    "download_allowed": false
+  },
+  "access": {
+    "phase1_mode": "trusted_local_operator",
+    "future_authorized_role": "Organisation administrator",
+    "role_enforcement_active": false
+  },
+  "authority": {
+    "safe_to_serve": true,
+    "reason": "Full organisation pagination produced 38 unique inactive accounts with complete display-name coverage and privacy gates."
+  },
+  "users": [
+    {
+      "account_id": "70121:97e8e274-783e-4ceb-a1f9-3212e7b6a573",
+      "display_name": "Andrés Méndez",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5ec682d104f34b0c2d4bffcc",
+      "display_name": "Ben Langley",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "70121:6cf5b574-2a6b-4020-a025-5fa2b36118fa",
+      "display_name": "Carole Paterson",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "62ffac1a142d0c981fcecfae",
+      "display_name": "Christine Jones",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5bfd9e9cd8fae3561c1949b6",
+      "display_name": "Christopher Billcilff",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "61289d943fe26c0069695d89",
+      "display_name": "Command8877*",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c867b7bf27bc05ae69eb86b",
+      "display_name": "Compliance Admin",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "70121:f0af98d4-e8e7-4228-917d-0a430adfb3cb",
+      "display_name": "Dafydd Williams",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5bfd9e9ee578fa1435daf77b",
+      "display_name": "Deiniol Hughes",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5a9ebff1f102e92a6252f22c",
+      "display_name": "Doyel Barman",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c867c2e5db2976adad45169",
+      "display_name": "Elena Nannoni",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c7848f897d39830259246b6",
+      "display_name": "Elisha Slater",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c867c629d7fc173a5952a42",
+      "display_name": "EvoUser",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5b2d09fc0888225355093d54",
+      "display_name": "Gareth Jones",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c867cafbd78bf5ae58d1739",
+      "display_name": "Gil Givony",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "557058:ba161a45-bbb8-44e8-8cf3-45794ddaef5f",
+      "display_name": "GLI",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c867cba9b23e86ba451a008",
+      "display_name": "GLI Admin",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5eeb9c524167840ab54cf604",
+      "display_name": "GLI Compliance",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "557058:a9039f6e-976a-4931-a2a5-10816359009e",
+      "display_name": "GLI GLI",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "61922d8ab43d5b006a807000",
+      "display_name": "I.Sopirla",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c867d14e4d6272353e2b8dd",
+      "display_name": "Jack Gottlieb",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "712020:ab30a0c8-c74a-4ca0-a0a5-b2c43808fc0c",
+      "display_name": "Jaime Valero",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "557058:d631decc-6fbd-42d5-a3d5-e4ca16a6993b",
+      "display_name": "Janusz Boskowicz",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "712020:5fb6f7a9-916a-4530-a53c-f44424b9c23f",
+      "display_name": "John E Sleeper",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c8695f5a329a40b8555bdd2",
+      "display_name": "John van Schaijk",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5e3438c0e504e30cabd3f61c",
+      "display_name": "Jon Gofton",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c869623f57a154c0a737f91",
+      "display_name": "Juan Pinedo",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "60dc6a040a1f6800702f2de2",
+      "display_name": "Marcin Górny",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5bfd9e9f10c30e4ac8c8aa9f",
+      "display_name": "Mark Koczwara",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c86977440b156730417d1aa",
+      "display_name": "Michael Saurugg",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c8697e9f27bc05ae69eb96a",
+      "display_name": "Nicole LaBrocca",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c86981f33a4404c1086ddac",
+      "display_name": "Performance Monitor",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c869842628919188abaab3c",
+      "display_name": "Quarantine",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5c8698669b23e86ba451a132",
+      "display_name": "Report admin user",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "60dc6a058a72bd006c701b31",
+      "display_name": "Rihards Vinzarajs",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5d84a965ca73870d9c90e3ac",
+      "display_name": "Rúben Páscoa",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "5d9db88287dd6f0dcb4d4c63",
+      "display_name": "Simon Goodman",
+      "account_status": "inactive"
+    },
+    {
+      "account_id": "557058:9b6dbb3d-d523-420f-bee6-650c9c440dd5",
+      "display_name": "Zack Hollis",
+      "account_status": "inactive"
+    }
+  ]
+}

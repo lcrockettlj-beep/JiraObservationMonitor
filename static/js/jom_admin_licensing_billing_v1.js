@@ -36,8 +36,10 @@
     const authority = data.authority || {}, estate = data.estate || {};
     const actions = Array.isArray(data.actions) ? data.actions : [];
     const products = Array.isArray(data.products) ? data.products : [];
-    text('lb-authority-status', data.status === 'ok' ? 'LIVE' : 'REVIEW');
-    text('lb-authority-note', authority.truth_policy || 'OAuth/Admin authority only.');
+    const quality = String(authority.product_access_status || data.status || 'unavailable').toLowerCase();
+    const availability = String(authority.product_access_availability || authority.oauth || 'unavailable').toLowerCase();
+    text('lb-authority-status', availability === 'live' ? (quality === 'ok' ? 'LIVE / OK' : 'LIVE / ' + quality.toUpperCase()) : 'UNAVAILABLE');
+    text('lb-authority-note', authority.truth_policy || 'Licensing availability and authority quality are reported separately.');
     text('lb-org-count', fmt(estate.organisations));
     text('lb-site-count', fmt(estate.monitored_sites));
     text('lb-product-users', fmt(estate.product_users));

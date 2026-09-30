@@ -1,8 +1,6 @@
 (function(){
   'use strict';
   const ENDPOINT = '/api/admin/monitoring';
-  const REFRESH_ENDPOINT = '/api/admin/monitoring/refresh';
-  let refreshPolls = 0;
   const text = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value === null || value === undefined || value === '' ? 'Unavailable' : String(value); };
   const html = (id, value) => { const el = document.getElementById(id); if (el) el.innerHTML = value; };
   const esc = value => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
@@ -30,7 +28,7 @@
   function renderActions(actions){
     const required = (Array.isArray(actions) ? actions : []).filter(item => String(item.level || '').toLowerCase() !== 'ok');
     if (!required.length) {
-      html('mon-action-list', '<article class="admin-mon-action-card admin-mon-action-card--ok"><span>Healthy</span><strong>No action required</strong><p>Monitoring coverage and source health are operating normally.</p><p><b>Next:</b> No operator action is required. Continue routine review.</p></article>');
+      html('mon-action-list', '<article class="admin-mon-action-card admin-mon-action-card--ok"><span>Healthy</span><strong>No immediate Monitoring action</strong><p>No monitored-site source reports failed, error, critical, or unavailable authority.</p><p><b>Next:</b> Continue routine observation. Review Source Health for detailed Attention findings.</p></article>');
       return 0;
     }
     html('mon-action-list', required.map(item => '<article class="admin-mon-action-card"><span>' + esc(status(item.level).label) + '</span><strong>' + esc(item.title || 'Action required') + '</strong><p>' + esc(item.reason || '') + '</p><p><b>Next:</b> ' + esc(item.action || 'Review the affected monitoring source.') + '</p></article>').join(''));
@@ -49,7 +47,7 @@
     const summary = data.summary || {}, actions = Array.isArray(data.actions) ? data.actions : [];
     const overall = status(data.status);
     text('mon-authority-status', overall.label);
-    text('mon-authority-note', overall.tone === 'ok' ? 'All monitored sites are covered and no monitoring sources require attention.' : 'One or more monitoring checks require review. See Operational decisions for the next action.');
+    text('mon-authority-note', overall.tone === 'ok' ? 'Current monitored-site authority is available and no Monitoring source reports a failure.' : 'One or more Monitoring failures or unavailable authorities require review. See Operational decisions.');
     text('mon-total-sites', fmt(summary.total_sites));
     text('mon-monitored-sites', fmt(summary.monitored_sites));
     text('mon-coverage', pct(summary.monitoring_coverage_percent));
@@ -66,8 +64,6 @@
   }
   function fail(error){ text('mon-authority-status', 'Unavailable'); text('mon-authority-note', error && error.message ? error.message : 'Monitoring contract unavailable.'); html('mon-action-list', '<article class="admin-mon-action-card"><strong>Monitoring unavailable</strong><p>The Monitoring contract could not be loaded.</p></article>'); }
   function loadCurrent(){ return fetch(ENDPOINT,{cache:'no-store',headers:{'Accept':'application/json'}}).then(r=>{if(!r.ok)throw new Error(ENDPOINT+' returned HTTP '+r.status);return r.json();}).then(data=>{render(data);return data;}); }
-  function pollRefresh(){ window.setTimeout(()=>{loadCurrent().then(data=>{const refresh=data.authority&&data.authority.refresh?data.authority.refresh:{};if(refresh.running&&refreshPolls<30){refreshPolls+=1;pollRefresh();}}).catch(()=>{});},2000); }
-  function startBackgroundRefresh(){ fetch(REFRESH_ENDPOINT,{method:'POST',cache:'no-store',headers:{'Accept':'application/json'}}).then(r=>r.json()).then(()=>{refreshPolls=0;pollRefresh();}).catch(()=>{}); }
-  function boot(){ loadCurrent().then(startBackgroundRefresh).catch(fail); }
+  function boot(){ loadCurrent().catch(fail); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 }());
