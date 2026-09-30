@@ -398,5 +398,39 @@
     "future_authentication_candidate": "Atlassian OAuth for supported APIs, not passwords or browser-session credential reuse",
     "next_workstream": "Continue Atlassian Administration authority-parity audit after clean milestone closeout",
     "next_gate": "validate_booksync_exact_boundary_stage_commit_push"
+  },
+  "booksync_apps_estate_authority_repair_2026_09_30": {
+    "recorded_at": "2026-09-30",
+    "branch": "main",
+    "baseline_head": "445831e",
+    "status": "apps_estate_authority_repair_pending_exact_stage_commit_push",
+    "product_owner": "app/web.py",
+    "repairs": [
+      "removed static monitored/review/allowed site populations",
+      "runtime-record lifecycle and monitoring semantics retained",
+      "removed org_admin_managed_sites ownership inference",
+      "removed named_access ownership inference",
+      "verified estate_admin_contacts site mapping used as generic admin route only"
+    ],
+    "runtime_reconciliation": {
+      "total_sites_observed": 6,
+      "monitored_sites_observed": 4,
+      "discovered_sites_observed": 2,
+      "values_are_runtime_evidence_not_validator_constants": true
+    },
+    "privacy": {
+      "admin_contact_email_exposed": false,
+      "admin_contact_account_id_exposed": false,
+      "admin_contact_display_name_exposed": false
+    },
+    "boundaries": {
+      "complete_application_inventory": "unavailable",
+      "shadow_it": "evidence_only_no_integration",
+      "runtime_contract_changes": false,
+      "template_changes": false,
+      "javascript_changes": false,
+      "collector_changes": false
+    },
+    "next_gate": "validate_exact_boundary_stage_commit_push"
   }
 }

@@ -1495,3 +1495,22 @@ Immediate next step: install and validate this nine-owner BOOKSYNC replacement p
 - After a clean milestone closeout, continue the JOM to Atlassian Administration authority-parity audit. Shadow IT remains parked as evidence-only until a supported authority is proven.
 - Preserve Luke-controlled progression, audit-first evidence, full owner-file replacements, no hard-coded operational truth, no inferred authority, and no destructive repository action without an explicit gate.
 
+### 30 September 2026 - Apps and Estate runtime-authority repair
+
+#### Accepted repair
+- Apps/Estate parity review proved that source-code site allow-lists were actively re-scoping Site Review, Command Centre and Estate workspace outputs. The hard-coded monitored, review and allowed-site populations were removed from app/web.py.
+- Site existence, lifecycle and monitoring classification now follow the supplied runtime records and canonical Site Registry semantics. Source code must not create, suppress, promote or demote a site by name.
+- Runtime reconciliation proved the current Site Registry population remains six sites: four monitored and two discovered. These values are evidence from the current contract, not fixed validator constants.
+- Site Review no longer infers administrative ownership from a four-site name list or from named-access evidence. Explicit runtime owner fields remain first priority. Where no explicit owner exists, verified estate_admin_contacts_v1.json site mapping supplies only a generic administrative route.
+- Named Site Access remains access-footprint evidence and is not administrative ownership authority.
+- Site Review does not expose Admin Contacts email, account ID or display-name values through this repair. Blocked-resource evidence remains separately owned by Admin Truth; absent ownership authority remains unavailable or unassigned.
+
+#### Preserved boundaries
+- Estate remains a site lifecycle and monitoring workspace. Discovery remains site-oriented until a separate product-neutral wider-application authority is proven. Estate Configuration remains scoped to monitored sites and monitored products.
+- Complete Atlassian application inventory remains unavailable. Shadow IT remains evidence-only with no approved collector, runtime contract, Discovery integration or Site Registry integration.
+- No templates, JavaScript, runtime contracts or collectors were changed for this repair. Runtime timestamp and access-audit drift were restored before BOOKSYNC.
+
+#### Continuation
+- Immediate gate: validate BOOKSYNC and the exact app/web.py-only product boundary, then stage and commit only the approved source and continuity owners.
+- Continue Apps/Atlassian Administration parity from the clean repair milestone. Preserve audit-first evidence, owner boundaries, runtime authority, privacy controls and Luke-controlled progression.
+

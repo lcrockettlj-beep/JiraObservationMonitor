@@ -2748,8 +2748,6 @@ def _jom_site_review_normalised_inventory_site_v1(site_key):
 
 
 def _find_site(site_key: str) -> Dict[str, Any]:
-    if "_jom_current_state_allowed_v1" in globals() and not _jom_current_state_allowed_v1(site_key):
-        return {}
     inventory_site = _jom_site_review_normalised_inventory_site_v1(site_key)
     if inventory_site:
         return _jom_current_state_normalise_site_v1(inventory_site) if "_jom_current_state_normalise_site_v1" in globals() else inventory_site
@@ -2776,14 +2774,22 @@ def _owner_from_known_sources(site_key: str, site: Dict[str, Any]) -> str:
     for key in ["owner", "business_owner", "technical_owner", "contact", "site_owner", "admin_owner"]:
         if site.get(key):
             return str(site.get(key))
-    sources_text = json.dumps(site.get("sources") or site.get("source") or "").lower()
-    org_admin_managed_sites = {"gli-delivery-tm", "gli-global-technology", "gli-it-project", "gli-tracker"}
-    if "named_access" in sources_text or _normalise_site_key(site_key) in org_admin_managed_sites:
-        return "Org Admin / Atlassian administration"
+    target = _normalise_site_key(site_key)
+    admin_contacts = load_json("estate_admin_contacts_v1.json", {})
+    contacts = admin_contacts.get("contacts", []) if isinstance(admin_contacts, dict) else []
+    verified_site_contacts = [
+        row for row in contacts
+        if isinstance(row, dict)
+        and _normalise_site_key(row.get("site_key")) == target
+        and str(row.get("verification") or "").strip().lower() not in {"", "unavailable", "failed", "error", "unverified"}
+    ]
+    if verified_site_contacts:
+        # Site Review needs the authority route, not personal identifiers.
+        return "Organisation administration - verified site admin mapping available"
     admin_truth = load_json("admin_truth_v2.json", {})
     blocked = admin_truth.get("blocked_resources", []) if isinstance(admin_truth, dict) else []
     for item in blocked:
-        if isinstance(item, dict) and _normalise_site_key(item.get("site_key")) == _normalise_site_key(site_key):
+        if isinstance(item, dict) and _normalise_site_key(item.get("site_key")) == target:
             return "Owner not available - access blocked; Atlassian/Product admin required"
     return "Owner not assigned"
 
@@ -2826,7 +2832,7 @@ def _build_site_review_payload(site_key: str) -> Dict[str, Any]:
         "classification": classification,
         "lifecycle_status": lifecycle_status,
         "owner": owner,
-        "contact_route": ("Atlassian/Product admin required" if "blocked" in access.lower() else ("Org admin / Atlassian admin console" if ("named_access" in access.lower() or "Org Admin" in owner) else "Owner/contact not yet sourced")),
+        "contact_route": ("Atlassian/Product admin required" if "blocked" in access.lower() else ("Org admin / Atlassian admin console" if "verified site admin mapping available" in owner.lower() else "Owner/contact not yet sourced")),
         "readiness": {
             "identity": "URL confirmed" if url else "URL missing",
             "ownership": owner,
@@ -4280,8 +4286,6 @@ def _jom_estate_workspace_alignment_normalise_sites_v1(site_registry, admin_inve
         key = _jom_current_state_site_key_v1(item) if "_jom_current_state_site_key_v1" in globals() else str(item.get("site_key") or item.get("key") or "").lower()
         if not key:
             continue
-        if "_jom_current_state_allowed_v1" in globals() and not _jom_current_state_allowed_v1(key):
-            continue
         merged = dict(by_key.get(key, {}))
         merged.update(item)
         by_key[key] = _jom_current_state_normalise_site_v1(merged) if "_jom_current_state_normalise_site_v1" in globals() else merged
@@ -5240,85 +5244,55 @@ def api_runtime_data_path_status():
     })
 
 
-## === JOM CURRENT STATE AUTHORITY RESET v1 START ===
-## Current estate UI truth is live OAuth/runtime authority only.
-## Historical lifecycle/onboarding records are display evidence only and must not drive current scope.
-
-JOM_CURRENT_STATE_MONITORED_KEYS_V1 = {"gli-delivery-tm", "gli-global-technology", "gli-it-project"}
-JOM_CURRENT_STATE_REVIEW_KEYS_V1 = {"gli-tracker"}
-JOM_CURRENT_STATE_ALLOWED_KEYS_V1 = JOM_CURRENT_STATE_MONITORED_KEYS_V1 | JOM_CURRENT_STATE_REVIEW_KEYS_V1
-
-def _jom_current_state_key_v1(value):
-    text = str(value or "").strip().lower()
-    if text.startswith("http") and ".atlassian.net" in text:
-        text = text.split("//", 1)[-1].split(".atlassian.net", 1)[0]
-    return text.rstrip("/")
-
+## === JOM CURRENT STATE RUNTIME AUTHORITY v2 START ===
+# Current estate/site truth is supplied by runtime authority records.
+# No source-code site allow-list may create, suppress, promote, or demote a site.
 def _jom_current_state_site_key_v1(site):
     if not isinstance(site, dict):
         return ""
     for field in ("site_key", "key", "site_name", "name", "url", "site_url", "base_url"):
         value = site.get(field)
         if value:
-            key = _jom_current_state_key_v1(value)
-            if key:
-                return key
+            text = str(value).strip().lower()
+            if "://" in text:
+                text = text.split("://", 1)[1].split("/", 1)[0]
+            if text.endswith(".atlassian.net"):
+                text = text[:-len(".atlassian.net")]
+            return text
     return ""
 
 def _jom_current_state_allowed_v1(site_or_key):
-    key = _jom_current_state_key_v1(site_or_key) if not isinstance(site_or_key, dict) else _jom_current_state_site_key_v1(site_or_key)
-    return key in JOM_CURRENT_STATE_ALLOWED_KEYS_V1
+    # Compatibility helper: source-code membership filtering is retired.
+    # A dict record is eligible when runtime authority supplies a usable site key.
+    # String-only callers are not treated as authoritative membership evidence.
+    return bool(_jom_current_state_site_key_v1(site_or_key)) if isinstance(site_or_key, dict) else bool(str(site_or_key or "").strip())
 
 def _jom_current_state_filter_sites_v1(sites):
-    return [site for site in sites if isinstance(site, dict) and _jom_current_state_allowed_v1(site)]
+    return [site for site in (sites if isinstance(sites, list) else []) if isinstance(site, dict) and _jom_current_state_site_key_v1(site)]
 
 def _jom_current_state_is_monitored_v1(site):
-    key = _jom_current_state_site_key_v1(site)
-    state = str((site or {}).get("classification") or (site or {}).get("lifecycle") or (site or {}).get("collector_onboarding_status") or (site or {}).get("status") or "").lower()
-    return bool(key in JOM_CURRENT_STATE_MONITORED_KEYS_V1 or (isinstance(site, dict) and (site.get("is_monitored") is True or site.get("monitored") is True or site.get("approved_monitored") is True)) or state in {"monitored", "monitoring_enabled"})
+    if not isinstance(site, dict):
+        return False
+    state = str(site.get("classification") or site.get("lifecycle") or site.get("collector_onboarding_status") or site.get("status") or "").strip().lower()
+    return bool(site.get("is_monitored") is True or site.get("monitored") is True or site.get("approved_monitored") is True or state in {"monitored", "monitoring_enabled"})
 
 def _jom_current_state_normalise_site_v1(site):
     site = dict(site) if isinstance(site, dict) else {}
     key = _jom_current_state_site_key_v1(site)
-    site["site_key"] = key
-    site["key"] = key
-    site.setdefault("site_name", site.get("name") or key)
-    site.setdefault("name", site.get("site_name") or key)
-    site.setdefault("site_url", site.get("url") or ("https://" + key + ".atlassian.net" if key else ""))
-    site.setdefault("url", site.get("site_url") or "")
-    if key in JOM_CURRENT_STATE_MONITORED_KEYS_V1:
-        site.update({
-            "classification": "monitored",
-            "lifecycle": "monitored",
-            "collector_onboarding_status": "monitoring_enabled",
-            "is_monitored": True,
-            "monitored": True,
-            "approved_monitored": True,
-            "status": "ok",
-            "health_status": "OK",
-        })
-    elif key in JOM_CURRENT_STATE_REVIEW_KEYS_V1:
-        state = str(site.get("lifecycle") or site.get("classification") or site.get("status") or "discovered").lower()
-        if state not in {"approval_pending", "pending_review", "registered_review", "monitored"}:
-            state = "discovered"
-        site.update({
-            "classification": state,
-            "lifecycle": state,
-            "collector_onboarding_status": state,
-            "is_monitored": False,
-            "monitored": False,
-            "approved_monitored": False,
-            "status": "review",
-            "health_status": "Review",
-        })
-    site["current_state_authority"] = "live_oauth_runtime_authority_only"
+    if key:
+        site.setdefault("site_key", key)
+        site.setdefault("key", key)
+        site.setdefault("site_name", site.get("name") or key)
+        site.setdefault("name", site.get("site_name") or key)
+    # Preserve lifecycle/monitoring facts published by runtime authority.
+    site["current_state_authority"] = "runtime_record_semantics_no_static_site_allowlist"
     return site
 
 def _jom_current_state_summary_v1(sites):
     current = [_jom_current_state_normalise_site_v1(site) for site in _jom_current_state_filter_sites_v1(sites)]
     monitored = [site for site in current if _jom_current_state_is_monitored_v1(site)]
     review = [site for site in current if not _jom_current_state_is_monitored_v1(site)]
-    total = len(monitored) + len(review)
+    total = len(current)
     return {
         "total_sites": total,
         "site_count": total,
@@ -5328,7 +5302,6 @@ def _jom_current_state_summary_v1(sites):
         "pending_onboarding_count": len(review),
         "review_count": len(review),
         "coverage_percent": round((len(monitored) / total) * 100) if total else 0,
-        "current_state_authority": "live_oauth_runtime_authority_only",
+        "current_state_authority": "runtime_record_semantics_no_static_site_allowlist",
     }
-
-## === JOM CURRENT STATE AUTHORITY RESET v1 END ===
+# === JOM CURRENT STATE RUNTIME AUTHORITY v2 END ===
