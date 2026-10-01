@@ -1,6 +1,6 @@
 {
   "schema": "jom-project-inventory-authority-v1",
-  "generated_at_utc": "2026-09-15T11:29:28Z",
+  "generated_at_utc": "2026-10-01T11:01:17Z",
   "timestamp_semantics": {
     "generated_at_utc": "project inventory authority contract generation time",
     "source_collection_time": "not represented",
@@ -62,8 +62,8 @@
     "monitored_site_count": 4,
     "successful_site_count": 4,
     "failed_site_count": 0,
-    "visible_project_count": 74,
-    "collected_project_rows": 74,
+    "visible_project_count": 75,
+    "collected_project_rows": 75,
     "duplicate_site_project_key_count": 0
   },
   "sites": [
@@ -77,8 +77,8 @@
       ],
       "pagination_complete": true,
       "page_count": 1,
-      "visible_project_count": 22,
-      "projects_collected": 22,
+      "visible_project_count": 23,
+      "projects_collected": 23,
       "raw_responses_stored": false
     },
     {
@@ -467,6 +467,20 @@
         "name": "Moncton Test Management",
         "description": ""
       },
+      "source": "jira_cloud_rest_api_v3_project_search"
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "site_name": "gli-delivery-tm",
+      "site_url": "https://gli-delivery-tm.atlassian.net",
+      "project_id": "10449",
+      "project_key": "WIL",
+      "project_name": "Wisconsin Lottery",
+      "project_type_key": "software",
+      "style": "next-gen",
+      "simplified": true,
+      "is_private": false,
+      "project_category": null,
       "source": "jira_cloud_rest_api_v3_project_search"
     },
     {

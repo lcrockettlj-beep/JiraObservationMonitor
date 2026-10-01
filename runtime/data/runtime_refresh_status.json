@@ -1,11 +1,11 @@
 {
   "schema": "jom-runtime-refresh-status-v3.1",
-  "execution_id": "jom-refresh-86b25be30b1543a384df5ad8eab530c0",
+  "execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
   "execution_scope": "canonical_runtime_refresh",
   "parent_execution_id": null,
-  "generated_at_utc": "2026-09-23T11:06:13.106666Z",
-  "started_at_utc": "2026-09-23T11:00:01.806552Z",
-  "finished_at_utc": "2026-09-23T11:06:12.962235Z",
+  "generated_at_utc": "2026-10-01T11:06:19.362950Z",
+  "started_at_utc": "2026-10-01T11:00:01.573513Z",
+  "finished_at_utc": "2026-10-01T11:06:19.082655Z",
   "running": false,
   "overall_status": "ok",
   "current_step": null,
@@ -31,10 +31,10 @@
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_freshness",
       "required": true,
       "scope": "canonical_runtime_refresh_step",
-      "parent_execution_id": "jom-refresh-86b25be30b1543a384df5ad8eab530c0",
+      "parent_execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
       "status": "ok",
-      "started_at_utc": "2026-09-23T11:06:12.978176Z",
-      "finished_at_utc": "2026-09-23T11:06:13.041409Z",
+      "started_at_utc": "2026-10-01T11:06:19.101962Z",
+      "finished_at_utc": "2026-10-01T11:06:19.178804Z",
       "returncode": 0,
       "stdout_tail": "{\n  \"overall_state\": \"ATTENTION\",\n  \"expected\": 16,\n  \"coverage_complete\": true,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_freshness_audit.json\"\n}\n",
       "stderr_tail": ""
@@ -45,12 +45,12 @@
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.audits.source_reliability",
       "required": true,
       "scope": "canonical_runtime_refresh_step",
-      "parent_execution_id": "jom-refresh-86b25be30b1543a384df5ad8eab530c0",
+      "parent_execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
       "status": "ok",
-      "started_at_utc": "2026-09-23T11:06:13.041509Z",
-      "finished_at_utc": "2026-09-23T11:06:13.093878Z",
+      "started_at_utc": "2026-10-01T11:06:19.178996Z",
+      "finished_at_utc": "2026-10-01T11:06:19.334365Z",
       "returncode": 0,
-      "stdout_tail": "{\n  \"overall_status\": \"attention\",\n  \"issues\": 3,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_reliability_status.json\"\n}\n",
+      "stdout_tail": "{\n  \"overall_status\": \"attention\",\n  \"issues\": 4,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\source_reliability_status.json\"\n}\n",
       "stderr_tail": ""
     }
   },
@@ -60,152 +60,152 @@
       "state": "PRESENT",
       "schema": "jom-site-registry-v4-runtime-consolidated",
       "status": null,
-      "contract_generated_at_utc": "2026-09-23T11:00:01Z",
-      "file_last_write_utc": "2026-09-23T11:00:01.905318Z"
+      "contract_generated_at_utc": "2026-10-01T11:00:15Z",
+      "file_last_write_utc": "2026-10-01T11:00:15.513341Z"
     },
     "estate_product_access.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-estate-product-access-v2-live",
       "status": "partial",
-      "contract_generated_at_utc": "2026-09-23T11:00:05Z",
-      "file_last_write_utc": "2026-09-23T11:00:05.006211Z"
+      "contract_generated_at_utc": "2026-10-01T11:00:04Z",
+      "file_last_write_utc": "2026-10-01T11:00:04.675177Z"
     },
     "product_access_refresh_status.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-product-access-refresh-status-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:00:05.083997Z",
-      "file_last_write_utc": "2026-09-23T11:00:05.085024Z"
+      "contract_generated_at_utc": "2026-10-01T11:00:04.765172Z",
+      "file_last_write_utc": "2026-10-01T11:00:04.765771Z"
     },
     "admin_enriched_refresh_status.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-admin-enriched-refresh-status-v6",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:06:12.940898Z",
-      "file_last_write_utc": "2026-09-23T11:06:12.950956Z"
+      "contract_generated_at_utc": "2026-10-01T11:06:19.054065Z",
+      "file_last_write_utc": "2026-10-01T11:06:19.066608Z"
     },
     "estate_monitored_product_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-estate-monitored-product-authority-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:00:29Z",
-      "file_last_write_utc": "2026-09-23T11:00:29.318731Z"
+      "contract_generated_at_utc": "2026-10-01T11:00:30Z",
+      "file_last_write_utc": "2026-10-01T11:00:30.668292Z"
     },
     "users_access_actionable_drilldown_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-users-access-actionable-drilldown-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:06:12Z",
-      "file_last_write_utc": "2026-09-23T11:06:12.912101Z"
+      "contract_generated_at_utc": "2026-10-01T11:06:19Z",
+      "file_last_write_utc": "2026-10-01T11:06:19.028047Z"
     },
     "named_user_display_identity_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-named-user-display-identity-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:00:57Z",
-      "file_last_write_utc": "2026-09-23T11:00:58.961286Z"
+      "contract_generated_at_utc": "2026-10-01T11:01:14Z",
+      "file_last_write_utc": "2026-10-01T11:01:16.208221Z"
     },
     "verified_active_jira_users_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-verified-active-jira-users-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:04:35Z",
-      "file_last_write_utc": "2026-09-23T11:06:04.016207Z"
+      "contract_generated_at_utc": "2026-10-01T11:04:42Z",
+      "file_last_write_utc": "2026-10-01T11:06:10.382875Z"
     },
     "admin_directory_users.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-admin-directory-users-authority-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:00:05Z",
-      "file_last_write_utc": "2026-09-23T11:00:09.561470Z"
+      "contract_generated_at_utc": "2026-10-01T11:00:05Z",
+      "file_last_write_utc": "2026-10-01T11:00:09.213293Z"
     },
     "admin_truth_v2.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-admin-truth-layer-v2",
       "status": null,
-      "contract_generated_at_utc": "2026-09-23T11:00:09Z",
-      "file_last_write_utc": "2026-09-23T11:00:09.651900Z"
+      "contract_generated_at_utc": "2026-10-01T11:00:09Z",
+      "file_last_write_utc": "2026-10-01T11:00:09.347176Z"
     },
     "estate_admin_contacts_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-estate-admin-contacts-v2",
       "status": "live_mapped",
-      "contract_generated_at_utc": "2026-09-23T11:00:29Z",
-      "file_last_write_utc": "2026-09-23T11:00:29.251500Z"
+      "contract_generated_at_utc": "2026-10-01T11:00:29Z",
+      "file_last_write_utc": "2026-10-01T11:00:29.960196Z"
     },
     "named_site_access_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-named-site-access-authority-v1",
       "status": "live",
-      "contract_generated_at_utc": "2026-09-23T11:00:57.835568Z",
-      "file_last_write_utc": "2026-09-23T11:00:57.836157Z"
+      "contract_generated_at_utc": "2026-10-01T11:01:14.478808Z",
+      "file_last_write_utc": "2026-10-01T11:01:14.478542Z"
     },
     "user_footprint.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-user-footprint-v2",
       "status": null,
-      "contract_generated_at_utc": "2026-09-23T11:00:57.748537Z",
-      "file_last_write_utc": "2026-09-23T11:00:57.749365Z"
+      "contract_generated_at_utc": "2026-10-01T11:01:14.352051Z",
+      "file_last_write_utc": "2026-10-01T11:01:14.352148Z"
     },
     "project_inventory_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-inventory-authority-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:01:00Z",
-      "file_last_write_utc": "2026-09-23T11:01:00.199567Z"
+      "contract_generated_at_utc": "2026-10-01T11:01:17Z",
+      "file_last_write_utc": "2026-10-01T11:01:17.816566Z"
     },
     "project_governance_named_identity_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-governance-named-identity-authority-v1",
       "status": "ok",
-      "contract_generated_at_utc": "2026-09-23T11:04:35Z",
-      "file_last_write_utc": "2026-09-23T11:04:35.584008Z"
+      "contract_generated_at_utc": "2026-10-01T11:04:42Z",
+      "file_last_write_utc": "2026-10-01T11:04:42.494687Z"
     },
     "project_lead_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-lead-authority-v1",
       "status": "partial",
-      "contract_generated_at_utc": "2026-09-23T11:04:35Z",
-      "file_last_write_utc": "2026-09-23T11:04:35.653851Z"
+      "contract_generated_at_utc": "2026-10-01T11:04:42Z",
+      "file_last_write_utc": "2026-10-01T11:04:42.584786Z"
     },
     "project_owner_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-owner-authority-v1",
       "status": "partial",
-      "contract_generated_at_utc": "2026-09-23T11:04:35Z",
-      "file_last_write_utc": "2026-09-23T11:04:35.711396Z"
+      "contract_generated_at_utc": "2026-10-01T11:04:42Z",
+      "file_last_write_utc": "2026-10-01T11:04:42.648705Z"
     },
     "source_freshness_audit.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-source-freshness-audit-v4-canonical-inventory",
       "status": null,
-      "contract_generated_at_utc": "2026-09-23T11:06:13.022672Z",
-      "file_last_write_utc": "2026-09-23T11:06:13.034101Z"
+      "contract_generated_at_utc": "2026-10-01T11:06:19.154834Z",
+      "file_last_write_utc": "2026-10-01T11:06:19.168382Z"
     },
     "source_reliability_status.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-source-reliability-status-v2-canonical-inventory",
       "status": "attention",
-      "contract_generated_at_utc": "2026-09-23T11:06:13.086748Z",
-      "file_last_write_utc": "2026-09-23T11:06:13.086498Z"
+      "contract_generated_at_utc": "2026-10-01T11:06:19.321307Z",
+      "file_last_write_utc": "2026-10-01T11:06:19.322092Z"
     }
   },
   "steps": [
@@ -215,10 +215,10 @@
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe scripts/build_site_registry.py --project-root .",
       "required": true,
       "scope": "canonical_runtime_refresh_step",
-      "parent_execution_id": "jom-refresh-86b25be30b1543a384df5ad8eab530c0",
+      "parent_execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
       "status": "ok",
-      "started_at_utc": "2026-09-23T11:00:01.810097Z",
-      "finished_at_utc": "2026-09-23T11:00:01.917552Z",
+      "started_at_utc": "2026-10-01T11:00:01.576876Z",
+      "finished_at_utc": "2026-10-01T11:00:01.669521Z",
       "returncode": 0,
       "stdout_tail": "{\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\site_registry.json\",\n  \"summary\": {\n    \"total_sites\": 6,\n    \"monitored_count\": 4,\n    \"discovered_count\": 2,\n    \"pending_onboarding_count\": 0,\n    \"ignored_count\": 0\n  }\n}\n",
       "stderr_tail": ""
@@ -229,10 +229,10 @@
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.product_access_sources",
       "required": true,
       "scope": "canonical_runtime_refresh_step",
-      "parent_execution_id": "jom-refresh-86b25be30b1543a384df5ad8eab530c0",
+      "parent_execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
       "status": "ok",
-      "started_at_utc": "2026-09-23T11:00:01.922814Z",
-      "finished_at_utc": "2026-09-23T11:00:05.091639Z",
+      "started_at_utc": "2026-10-01T11:00:01.673018Z",
+      "finished_at_utc": "2026-10-01T11:00:04.773887Z",
       "returncode": 0,
       "stdout_tail": "{\n  \"overall_status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\product_access_refresh_status.json\"\n}\n",
       "stderr_tail": ""
@@ -243,10 +243,10 @@
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.runtime.admin_enriched_chain",
       "required": true,
       "scope": "canonical_runtime_refresh_step",
-      "parent_execution_id": "jom-refresh-86b25be30b1543a384df5ad8eab530c0",
+      "parent_execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
       "status": "ok",
-      "started_at_utc": "2026-09-23T11:00:05.096566Z",
-      "finished_at_utc": "2026-09-23T11:06:12.959952Z",
+      "started_at_utc": "2026-10-01T11:00:04.778905Z",
+      "finished_at_utc": "2026-10-01T11:06:19.079615Z",
       "returncode": 0,
       "stdout_tail": "START admin_api_enrichment\nFINISH admin_api_enrichment=ok\nSTART admin_directory_users\nFINISH admin_directory_users=ok\nSTART admin_truth_v2\nFINISH admin_truth_v2=ok\nSTART estate_resource_authority\nFINISH estate_resource_authority=ok\nSTART estate_monitored_product_authority\nFINISH estate_monitored_product_authority=ok\nSTART admin_group_expansion\nFINISH admin_group_expansion=ok\nSTART named_access_truth_v2\nFINISH named_access_truth_v2=ok\nSTART named_access_reconciliation_v2\nFINISH named_access_reconciliation_v2=ok\nSTART user_footprint\nFINISH user_footprint=ok\nSTART named_site_access_authority\nFINISH named_site_access_authority=ok\nSTART named_user_display_identity\nFINISH named_user_display_identity=ok\nSTART project_inventory_authority\nFINISH project_inventory_authority=ok\nSTART project_governance_named_identity\nFINISH project_governance_named_identity=ok\nSTART project_lead_authority\nFINISH project_lead_authority=ok\nSTART project_owner_authority\nFINISH project_owner_authority=ok\nSTART verified_active_jira_users\nFINISH verified_active_jira_users=ok\nSTART users_access_actionable_drilldown\nFINISH users_access_actionable_drilldown=ok\n",
       "stderr_tail": ""

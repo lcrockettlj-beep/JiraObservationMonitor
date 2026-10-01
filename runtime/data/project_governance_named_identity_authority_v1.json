@@ -1,6 +1,6 @@
 {
   "schema": "jom-project-governance-named-identity-authority-v1",
-  "generated_at_utc": "2026-09-15T11:33:37Z",
+  "generated_at_utc": "2026-10-01T11:04:42Z",
   "timestamp_semantics": {
     "generated_at_utc": "project governance named identity authority contract generation time",
     "source_collection_time": "not represented",
@@ -8,16 +8,16 @@
   },
   "status": "ok",
   "summary": {
-    "named_principals": 71,
-    "assignment_count": 287,
-    "existing_named_user_identities": 44,
+    "named_principals": 72,
+    "assignment_count": 298,
+    "existing_named_user_identities": 45,
     "additional_governance_identities": 27,
-    "projects": 74,
-    "project_requests": 74,
-    "project_success": 74,
-    "unique_user_requests": 142,
-    "role_requests": 827,
-    "role_success": 827
+    "projects": 75,
+    "project_requests": 75,
+    "project_success": 75,
+    "unique_user_requests": 143,
+    "role_requests": 832,
+    "role_success": 832
   },
   "quality": {
     "full_success": true,
@@ -277,9 +277,11 @@
         "gli-delivery-tm"
       ],
       "projects": [
-        "gli-delivery-tm:OLTT"
+        "gli-delivery-tm:OLTT",
+        "gli-delivery-tm:OSLE"
       ],
       "roles": [
+        "Administrator",
         "Member"
       ],
       "sources": [
@@ -291,10 +293,16 @@
           "project_key": "OLTT",
           "source_type": "project_role",
           "role_name": "Member"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "OSLE",
+          "source_type": "project_role",
+          "role_name": "Administrator"
         }
       ],
-      "assignment_count": 1,
-      "project_count": 1,
+      "assignment_count": 2,
+      "project_count": 2,
       "existing_named_user_identity": false
     },
     {
@@ -530,10 +538,12 @@
         "gli-delivery-tm:NJL",
         "gli-delivery-tm:OSLT",
         "gli-delivery-tm:OSLVL",
+        "gli-delivery-tm:WIL",
         "gli-delivery-tm:WLC"
       ],
       "roles": [
-        "Administrator"
+        "Administrator",
+        "Member"
       ],
       "sources": [
         "project_role"
@@ -589,13 +599,19 @@
         },
         {
           "site_key": "gli-delivery-tm",
+          "project_key": "WIL",
+          "source_type": "project_role",
+          "role_name": "Member"
+        },
+        {
+          "site_key": "gli-delivery-tm",
           "project_key": "WLC",
           "source_type": "project_role",
           "role_name": "Administrator"
         }
       ],
-      "assignment_count": 9,
-      "project_count": 9,
+      "assignment_count": 10,
+      "project_count": 10,
       "existing_named_user_identity": false
     },
     {
@@ -864,6 +880,7 @@
         "gli-delivery-tm:AUT"
       ],
       "roles": [
+        "Administrator",
         "Member"
       ],
       "sources": [
@@ -874,10 +891,16 @@
           "site_key": "gli-delivery-tm",
           "project_key": "AUT",
           "source_type": "project_role",
+          "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "AUT",
+          "source_type": "project_role",
           "role_name": "Member"
         }
       ],
-      "assignment_count": 1,
+      "assignment_count": 2,
       "project_count": 1,
       "existing_named_user_identity": false
     },
@@ -1921,6 +1944,7 @@
         "gli-delivery-tm:OSLT",
         "gli-delivery-tm:OSLVL",
         "gli-delivery-tm:PAL",
+        "gli-delivery-tm:WIL",
         "gli-delivery-tm:WLC",
         "gli-delivery-tm:WVL"
       ],
@@ -2085,6 +2109,18 @@
         },
         {
           "site_key": "gli-delivery-tm",
+          "project_key": "WIL",
+          "source_type": "project_lead",
+          "role_name": "Project Lead"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "WIL",
+          "source_type": "project_role",
+          "role_name": "Administrator"
+        },
+        {
+          "site_key": "gli-delivery-tm",
           "project_key": "WLC",
           "source_type": "project_lead",
           "role_name": "Project Lead"
@@ -2108,8 +2144,8 @@
           "role_name": "Administrator"
         }
       ],
-      "assignment_count": 29,
-      "project_count": 18,
+      "assignment_count": 31,
+      "project_count": 19,
       "existing_named_user_identity": true
     },
     {
@@ -2172,11 +2208,13 @@
         "gli-delivery-tm:OSLE",
         "gli-delivery-tm:OSLT",
         "gli-delivery-tm:OSLVL",
+        "gli-delivery-tm:WIL",
         "gli-delivery-tm:WLC",
         "gli-delivery-tm:WVL"
       ],
       "roles": [
         "Administrator",
+        "Member",
         "Project Lead",
         "Read Only Viewer"
       ],
@@ -2265,6 +2303,12 @@
         },
         {
           "site_key": "gli-delivery-tm",
+          "project_key": "WIL",
+          "source_type": "project_role",
+          "role_name": "Member"
+        },
+        {
+          "site_key": "gli-delivery-tm",
           "project_key": "WLC",
           "source_type": "project_role",
           "role_name": "Administrator"
@@ -2276,8 +2320,8 @@
           "role_name": "Administrator"
         }
       ],
-      "assignment_count": 15,
-      "project_count": 14,
+      "assignment_count": 16,
+      "project_count": 15,
       "existing_named_user_identity": false
     },
     {
@@ -2614,6 +2658,40 @@
       "assignment_count": 5,
       "project_count": 4,
       "existing_named_user_identity": false
+    },
+    {
+      "display_name": "Narjes Mehrdad",
+      "account_status": "active",
+      "sites": [
+        "gli-it-project"
+      ],
+      "projects": [
+        "gli-it-project:DC",
+        "gli-it-project:DF"
+      ],
+      "roles": [
+        "Project Member"
+      ],
+      "sources": [
+        "project_role"
+      ],
+      "assignments": [
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DC",
+          "source_type": "project_role",
+          "role_name": "Project Member"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DF",
+          "source_type": "project_role",
+          "role_name": "Project Member"
+        }
+      ],
+      "assignment_count": 2,
+      "project_count": 2,
+      "existing_named_user_identity": true
     },
     {
       "display_name": "Narjes Mehrdad",
@@ -3283,9 +3361,12 @@
         "gli-it-project"
       ],
       "projects": [
-        "gli-it-project:DEVPMO"
+        "gli-it-project:DC",
+        "gli-it-project:DEVPMO",
+        "gli-it-project:DF"
       ],
       "roles": [
+        "Project Member",
         "Viewer"
       ],
       "sources": [
@@ -3294,13 +3375,25 @@
       "assignments": [
         {
           "site_key": "gli-it-project",
+          "project_key": "DC",
+          "source_type": "project_role",
+          "role_name": "Project Member"
+        },
+        {
+          "site_key": "gli-it-project",
           "project_key": "DEVPMO",
           "source_type": "project_role",
           "role_name": "Viewer"
+        },
+        {
+          "site_key": "gli-it-project",
+          "project_key": "DF",
+          "source_type": "project_role",
+          "role_name": "Project Member"
         }
       ],
-      "assignment_count": 1,
-      "project_count": 1,
+      "assignment_count": 3,
+      "project_count": 3,
       "existing_named_user_identity": true
     },
     {
@@ -3462,7 +3555,8 @@
         "gli-delivery-tm"
       ],
       "projects": [
-        "gli-delivery-tm:NYL"
+        "gli-delivery-tm:NYL",
+        "gli-delivery-tm:WIL"
       ],
       "roles": [
         "Administrator",
@@ -3483,10 +3577,16 @@
           "project_key": "NYL",
           "source_type": "project_role",
           "role_name": "Member"
+        },
+        {
+          "site_key": "gli-delivery-tm",
+          "project_key": "WIL",
+          "source_type": "project_role",
+          "role_name": "Member"
         }
       ],
-      "assignment_count": 2,
-      "project_count": 1,
+      "assignment_count": 3,
+      "project_count": 2,
       "existing_named_user_identity": false
     }
   ],

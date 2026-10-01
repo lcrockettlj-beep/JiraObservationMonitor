@@ -1,6 +1,6 @@
 {
   "schema": "jom-site-registry-v4-runtime-consolidated",
-  "generated_at_utc": "2026-09-23T12:32:34Z",
+  "generated_at_utc": "2026-10-01T11:23:03Z",
   "timestamp_semantics": {
     "generated_at_utc": "site registry contract generation time",
     "source_collection_time": "not represented",
@@ -80,7 +80,7 @@
       "is_monitored": true,
       "can_approve": false,
       "metrics": {
-        "jira_product_user_count": 57,
+        "jira_product_user_count": 56,
         "jira_product_seat_limit": 4000,
         "jira_role_count": 1
       },
@@ -121,7 +121,7 @@
       "is_monitored": true,
       "can_approve": false,
       "metrics": {
-        "jira_product_user_count": 67,
+        "jira_product_user_count": 68,
         "jira_product_seat_limit": 100,
         "jira_role_count": 1
       },

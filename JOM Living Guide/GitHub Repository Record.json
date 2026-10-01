@@ -432,5 +432,42 @@
       "collector_changes": false
     },
     "next_gate": "validate_exact_boundary_stage_commit_push"
+  },
+  "booksync_operator_navigation_2026_10_01": {
+    "recorded_at": "2026-10-01",
+    "branch": "main",
+    "baseline_head": "fe36a4a",
+    "status": "operator_navigation_and_canonical_runtime_generation_pending_exact_stage_commit_push",
+    "navigation_owner": "templates/_nav.html",
+    "primary_destinations": [
+      "Command Centre",
+      "Applications & Sites",
+      "Discovery",
+      "Users & Access",
+      "Monitoring",
+      "Licensing",
+      "Configuration",
+      "Projects",
+      "Source Health",
+      "Runtime"
+    ],
+    "preserved_secondary_routes": true,
+    "policy_compliance_primary_navigation": false,
+    "product_direction": "simpler read-only operational intelligence layer over Atlassian; plain language first and evidence on demand",
+    "visual_review": [
+      "Command Centre",
+      "Applications & Sites",
+      "Users & Access",
+      "Source Health"
+    ],
+    "canonical_runtime_execution_id": "jom-refresh-9085c43c61d14c23bc5ce55c4d7ad131",
+    "canonical_runtime_execution_status": "ok",
+    "retain_current_source_health": true,
+    "transient_audit_logs_restored": [
+      "runtime/data/named_user_drilldown_access_audit_v1.jsonl",
+      "runtime/data/users_access_actionable_drilldown_access_audit_v1.jsonl"
+    ],
+    "next_workstream": "Source Health UX consolidation pilot",
+    "next_gate": "validate_exact_boundary_stage_commit_push"
   }
 }

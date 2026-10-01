@@ -1,20 +1,20 @@
 {
   "schema": "jom-user-footprint-v2",
-  "generated_at_utc": "2026-09-15T11:29:25.853406Z",
+  "generated_at_utc": "2026-10-01T11:01:14.352051Z",
   "source_status": "generated",
   "reason": "Named access footprint generated from named_access_truth_v2 after reconciliation_v2 passed safe_to_enable_named_access_ui=true.",
   "safe_to_show_named_access_ui": true,
   "reconciliation_source": "reports\\named_access_reconciliation_v2.json",
   "truth_source": "runtime\\data\\live_named_access_contract",
   "summary": {
-    "users_analyzed": 84,
+    "users_analyzed": 82,
     "average_sites_per_user": 1.24,
     "high_duplication_users": 1,
     "medium_duplication_users": 18,
-    "total_product_access_assignments": 104,
+    "total_product_access_assignments": 102,
     "reconciled_api_product_users": 171,
-    "named_minus_api_product": -67,
-    "named_unique_users": 84
+    "named_minus_api_product": -69,
+    "named_unique_users": 82
   },
   "users": [
     {
@@ -1126,23 +1126,6 @@
       "category": "low"
     },
     {
-      "account_id": "712020:5fb6f7a9-916a-4530-a53c-f44424b9c23f",
-      "name": "712020:5fb6f7a9-916a-4530-a53c-f44424b9c23f",
-      "email": "",
-      "sites": [
-        "gli-global-technology"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
       "account_id": "712020:60b7ab80-ec73-4c12-a424-c0286a005733",
       "name": "712020:60b7ab80-ec73-4c12-a424-c0286a005733",
       "email": "",
@@ -1298,23 +1281,6 @@
     {
       "account_id": "712020:a4e31cbc-809f-4a74-bdd1-8e9e8406d519",
       "name": "712020:a4e31cbc-809f-4a74-bdd1-8e9e8406d519",
-      "email": "",
-      "sites": [
-        "gli-global-technology"
-      ],
-      "site_count": 1,
-      "products": [
-        "jira-software"
-      ],
-      "product_access_assignments": 1,
-      "access_sources": [
-        "group"
-      ],
-      "category": "low"
-    },
-    {
-      "account_id": "712020:ab30a0c8-c74a-4ca0-a0a5-b2c43808fc0c",
-      "name": "712020:ab30a0c8-c74a-4ca0-a0a5-b2c43808fc0c",
       "email": "",
       "sites": [
         "gli-global-technology"

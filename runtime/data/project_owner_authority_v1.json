@@ -1,6 +1,6 @@
 {
   "schema": "jom-project-owner-authority-v1",
-  "generated_at_utc": "2026-09-15T11:33:37Z",
+  "generated_at_utc": "2026-10-01T11:04:42Z",
   "timestamp_semantics": {
     "generated_at_utc": "governance owner authority derivation time",
     "upstream_project_lead_generated_at_utc": "source authority contract generation time",
@@ -20,7 +20,7 @@
     "contract": "runtime/data/project_lead_authority_v1.json",
     "schema": "jom-project-lead-authority-v1",
     "status": "partial",
-    "generated_at_utc": "2026-09-15T11:33:37Z",
+    "generated_at_utc": "2026-10-01T11:04:42Z",
     "timestamp_semantics": {
       "generated_at_utc": "upstream Project Lead authority contract generation time"
     },
@@ -35,10 +35,10 @@
     }
   },
   "summary": {
-    "projects": 74,
-    "projects_with_governance_defined_owner": 71,
+    "projects": 75,
+    "projects_with_governance_defined_owner": 72,
     "projects_without_governance_defined_owner_published": 3,
-    "owner_coverage_percent": 95.9,
+    "owner_coverage_percent": 96.0,
     "distinct_governance_defined_owners": 20
   },
   "authority": {
@@ -335,6 +335,21 @@
       "site_key": "gli-delivery-tm",
       "project_key": "PAL",
       "project_name": "PA Lottery",
+      "owner_state": "governance_defined_space_owner_available",
+      "supported_owner_count": 1,
+      "owners": [
+        {
+          "display_name": "Mark DeWolfe",
+          "account_status": "active",
+          "owner_type": "governance_defined_space_owner",
+          "owner_source": "project_lead_authority_v1"
+        }
+      ]
+    },
+    {
+      "site_key": "gli-delivery-tm",
+      "project_key": "WIL",
+      "project_name": "Wisconsin Lottery",
       "owner_state": "governance_defined_space_owner_available",
       "supported_owner_count": 1,
       "owners": [

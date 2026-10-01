@@ -1,9 +1,9 @@
 {
   "schema": "jom-source-reliability-status-v2-canonical-inventory",
-  "generated_at_utc": "2026-09-23T14:21:01.373253Z",
+  "generated_at_utc": "2026-10-01T11:06:19.321307Z",
   "overall_status": "attention",
   "summary": {
-    "issue_count": 3,
+    "issue_count": 4,
     "freshness_overall": "ATTENTION",
     "expected_source_coverage_complete": true,
     "status_input_count": 7
@@ -26,6 +26,12 @@
       "state": "PARTIAL",
       "path": "runtime/data/project_owner_authority_v1.json",
       "reason": "Authority contract publishes a non-healthy state."
+    },
+    {
+      "source": "Runtime Execution",
+      "state": "STALE",
+      "path": "runtime/data/runtime_execution_status.json",
+      "reason": "Expected authority is not current."
     }
   ],
   "status_inputs": [

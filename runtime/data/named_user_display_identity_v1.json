@@ -1,6 +1,6 @@
 {
   "schema": "jom-named-user-display-identity-v1",
-  "generated_at_utc": "2026-09-15T11:29:26Z",
+  "generated_at_utc": "2026-10-01T11:01:14Z",
   "timestamp_semantics": {
     "generated_at_utc": "named user display identity authority contract generation time",
     "source_collection_time": "not represented",
@@ -9,9 +9,9 @@
   "status": "ok",
   "source": {
     "authority": "Atlassian Admin Directory users plus JOM named-access authority",
-    "authoritative_accounts": 148,
-    "named_access_accounts": 84,
-    "matched_accounts": 84,
+    "authoritative_accounts": 146,
+    "named_access_accounts": 82,
+    "matched_accounts": 82,
     "unmatched_accounts": 0,
     "directory_pages": 2
   },
@@ -393,16 +393,6 @@
       "product_access_assignments": 1
     },
     {
-      "account_id": "712020:ab30a0c8-c74a-4ca0-a0a5-b2c43808fc0c",
-      "display_name": "Jaime Valero",
-      "account_status": "inactive",
-      "sites": [
-        "gli-global-technology"
-      ],
-      "site_count": 1,
-      "product_access_assignments": 1
-    },
-    {
       "account_id": "712020:a2992214-dacd-4f06-a998-0487bb2fff4b",
       "display_name": "Jason Gartner",
       "account_status": "active",
@@ -453,16 +443,6 @@
       ],
       "site_count": 2,
       "product_access_assignments": 2
-    },
-    {
-      "account_id": "712020:5fb6f7a9-916a-4530-a53c-f44424b9c23f",
-      "display_name": "John E Sleeper",
-      "account_status": "active",
-      "sites": [
-        "gli-global-technology"
-      ],
-      "site_count": 1,
-      "product_access_assignments": 1
     },
     {
       "account_id": "557058:0deeac49-2a49-400a-8393-8a9cc75761d9",

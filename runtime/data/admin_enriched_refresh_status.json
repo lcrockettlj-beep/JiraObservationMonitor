@@ -1,7 +1,7 @@
 {
   "schema": "jom-admin-enriched-refresh-status-v6",
-  "execution_id": "jom-refresh-2e068e5c6363408a86720724706e820a",
-  "parent_execution_id": "jom-refresh-2e068e5c6363408a86720724706e820a",
+  "execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
+  "parent_execution_id": "jom-refresh-28f30388fc604a4da8303a86ac93e40b",
   "execution_scope": "canonical_runtime_refresh_child",
   "timestamp_semantics": {
     "started_at_utc": "Admin child execution start",
@@ -9,9 +9,9 @@
     "generated_at_utc": "status document write time",
     "contract_timestamps": "producer generation time unless the contract explicitly declares collection semantics"
   },
-  "generated_at_utc": "2026-09-15T11:35:26.077029Z",
-  "started_at_utc": "2026-09-15T11:28:19.636681Z",
-  "finished_at_utc": "2026-09-15T11:35:26.077041Z",
+  "generated_at_utc": "2026-10-01T11:06:19.054065Z",
+  "started_at_utc": "2026-10-01T11:00:04.847746Z",
+  "finished_at_utc": "2026-10-01T11:06:19.054077Z",
   "running": false,
   "overall_status": "ok",
   "dependency_order_enforced": true,
@@ -24,84 +24,84 @@
       "state": "PRESENT",
       "schema": "jom-admin-directory-users-authority-v1",
       "status": "ok",
-      "timestamp": "2026-09-15T11:28:19Z"
+      "timestamp": "2026-10-01T11:00:05Z"
     },
     "estate_monitored_product_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-estate-monitored-product-authority-v1",
       "status": "ok",
-      "timestamp": "2026-09-15T11:28:49Z"
+      "timestamp": "2026-10-01T11:00:30Z"
     },
     "admin_group_expansion.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-admin-group-expansion-v1.2",
       "status": "generated",
-      "timestamp": "2026-09-15T11:29:25.661202Z"
+      "timestamp": "2026-10-01T11:01:02.143567Z"
     },
     "user_footprint.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-user-footprint-v2",
       "status": "generated",
-      "timestamp": "2026-09-15T11:29:25.853406Z"
+      "timestamp": "2026-10-01T11:01:14.352051Z"
     },
     "named_site_access_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-named-site-access-authority-v1",
       "status": "live",
-      "timestamp": "2026-09-15T11:29:25.938895Z"
+      "timestamp": "2026-10-01T11:01:14.478808Z"
     },
     "named_user_display_identity_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-named-user-display-identity-v1",
       "status": "ok",
-      "timestamp": "2026-09-15T11:29:26Z"
+      "timestamp": "2026-10-01T11:01:14Z"
     },
     "verified_active_jira_users_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-verified-active-jira-users-v1",
       "status": "ok",
-      "timestamp": "2026-09-15T11:33:37Z"
+      "timestamp": "2026-10-01T11:04:42Z"
     },
     "users_access_actionable_drilldown_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-users-access-actionable-drilldown-v1",
       "status": "ok",
-      "timestamp": "2026-09-15T11:35:25Z"
+      "timestamp": "2026-10-01T11:06:19Z"
     },
     "project_inventory_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-inventory-authority-v1",
       "status": "ok",
-      "timestamp": "2026-09-15T11:29:28Z"
+      "timestamp": "2026-10-01T11:01:17Z"
     },
     "project_governance_named_identity_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-governance-named-identity-authority-v1",
       "status": "ok",
-      "timestamp": "2026-09-15T11:33:37Z"
+      "timestamp": "2026-10-01T11:04:42Z"
     },
     "project_lead_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-lead-authority-v1",
       "status": "partial",
-      "timestamp": "2026-09-15T11:33:37Z"
+      "timestamp": "2026-10-01T11:04:42Z"
     },
     "project_owner_authority_v1.json": {
       "exists": true,
       "state": "PRESENT",
       "schema": "jom-project-owner-authority-v1",
       "status": "partial",
-      "timestamp": "2026-09-15T11:33:37Z"
+      "timestamp": "2026-10-01T11:04:42Z"
     }
   },
   "steps": [
@@ -110,8 +110,8 @@
       "label": "Refresh Admin enrichment",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_enriched_sources",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:19.640490Z",
-      "finished_at_utc": "2026-09-15T11:28:19.776749Z",
+      "started_at_utc": "2026-10-01T11:00:04.851387Z",
+      "finished_at_utc": "2026-10-01T11:00:05.014114Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"overall_status\": \"manual_required\",\n  \"admin_enriched_state\": \"MISSING\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_enriched_refresh_status.json\"\n}\n",
@@ -122,11 +122,11 @@
       "label": "Refresh privacy-safe paginated Admin Directory authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.admin_named_access_endpoint_probe",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:19.781144Z",
-      "finished_at_utc": "2026-09-15T11:28:21.690071Z",
+      "started_at_utc": "2026-10-01T11:00:05.020986Z",
+      "finished_at_utc": "2026-10-01T11:00:09.232303Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "Admin Directory users authority collected.\n{\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_directory_users.json\",\n  \"status\": \"ok\",\n  \"pagination_complete\": true,\n  \"directory_count\": 1,\n  \"unique_accounts\": 148,\n  \"errors\": 0\n}\n",
+      "stdout_tail": "Admin Directory users authority collected.\n{\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_directory_users.json\",\n  \"status\": \"ok\",\n  \"pagination_complete\": true,\n  \"directory_count\": 1,\n  \"unique_accounts\": 146,\n  \"errors\": 0\n}\n",
       "stderr_tail": ""
     },
     {
@@ -134,11 +134,11 @@
       "label": "Rebuild Admin Truth v2 from current outer-chain Product Access",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.admin_truth_layer_v2",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:21.693107Z",
-      "finished_at_utc": "2026-09-15T11:28:21.778875Z",
+      "started_at_utc": "2026-10-01T11:00:09.236880Z",
+      "finished_at_utc": "2026-10-01T11:00:09.359405Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "Admin Truth Layer v2 generated.\n{\n  \"status\": \"billing_missing\",\n  \"severity\": \"warning\",\n  \"interpretation\": \"API product access users are available but billing seats are missing. Use API as operational count and review billing source.\",\n  \"admin_human_users\": 148,\n  \"billing_jira_seats\": 0,\n  \"api_product_users\": 171,\n  \"api_minus_billing\": 171,\n  \"api_billing_variance_abs\": 171,\n  \"billing_to_human_ratio\": 0.0,\n  \"api_product_to_human_ratio\": 1.16,\n  \"confirmed_product_site_count\": 5,\n  \"accessible_jira_resource_count\": 6,\n  \"blocked_resource_count\": 1\n}\nJSON: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\admin_truth_v2.json\nReport: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\admin_truth_v2.md\n",
+      "stdout_tail": "Admin Truth Layer v2 generated.\n{\n  \"status\": \"billing_missing\",\n  \"severity\": \"warning\",\n  \"interpretation\": \"API product access users are available but billing seats are missing. Use API as operational count and review billing source.\",\n  \"admin_human_users\": 146,\n  \"billing_jira_seats\": 0,\n  \"api_product_users\": 171,\n  \"api_minus_billing\": 171,\n  \"api_billing_variance_abs\": 171,\n  \"billing_to_human_ratio\": 0.0,\n  \"api_product_to_human_ratio\": 1.17,\n  \"confirmed_product_site_count\": 5,\n  \"accessible_jira_resource_count\": 6,\n  \"blocked_resource_count\": 1\n}\nJSON: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\runtime\\data\\admin_truth_v2.json\nReport: C:\\Users\\Luke_C\\Desktop\\JiraObservationMonitor\\reports\\admin_truth_v2.md\n",
       "stderr_tail": ""
     },
     {
@@ -146,11 +146,11 @@
       "label": "Refresh site-resource and ownership authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.estate_resource_authority",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:21.782180Z",
-      "finished_at_utc": "2026-09-15T11:28:49.156196Z",
+      "started_at_utc": "2026-10-01T11:00:09.363911Z",
+      "finished_at_utc": "2026-10-01T11:00:29.979262Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"schema\": \"jom-estate-resource-authority-refresh-status-v1\",\n  \"generated_at_utc\": \"2026-09-15T11:28:49Z\",\n  \"status\": \"ok\",\n  \"summary\": {\n    \"monitored_site_count\": 4,\n    \"assignment_rows\": 220,\n    \"mapped_site_count\": 4,\n    \"mapping_count\": 6,\n    \"contact_count\": 33,\n    \"successful_role_probe_count\": 30,\n    \"not_found_probe_count\": 124,\n    \"unexpected_failed_probe_count\": 0\n  },\n  \"privacy\": {\n    \"personal_records_returned\": false,\n    \"resource_ids_returned\": false,\n    \"probe_account_ids_redacted\": true\n  },\n  \"directory_discovery\": [\n    {\n      \"name\": \"directories\",\n      \"ok\": true,\n      \"status\": 200,\n      \"row_count\": 1\n    },\n    {\n      \"name\": \"workspaces\",\n      \"ok\": true,\n      \"status\": 200,\n      \"row_count\": 20\n    }\n  ]\n}\n",
+      "stdout_tail": "{\n  \"schema\": \"jom-estate-resource-authority-refresh-status-v1\",\n  \"generated_at_utc\": \"2026-10-01T11:00:29Z\",\n  \"status\": \"ok\",\n  \"summary\": {\n    \"monitored_site_count\": 4,\n    \"assignment_rows\": 221,\n    \"mapped_site_count\": 4,\n    \"mapping_count\": 6,\n    \"contact_count\": 33,\n    \"successful_role_probe_count\": 30,\n    \"not_found_probe_count\": 124,\n    \"unexpected_failed_probe_count\": 0\n  },\n  \"privacy\": {\n    \"personal_records_returned\": false,\n    \"resource_ids_returned\": false,\n    \"probe_account_ids_redacted\": true\n  },\n  \"directory_discovery\": [\n    {\n      \"name\": \"directories\",\n      \"ok\": true,\n      \"status\": 200,\n      \"row_count\": 1\n    },\n    {\n      \"name\": \"workspaces\",\n      \"ok\": true,\n      \"status\": 200,\n      \"row_count\": 20\n    }\n  ]\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "contract_present": true,
@@ -163,8 +163,8 @@
       "label": "Rebuild monitored-product authority from current registry and resource mapping",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.estate_monitored_product_authority_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:49.161164Z",
-      "finished_at_utc": "2026-09-15T11:28:49.239852Z",
+      "started_at_utc": "2026-10-01T11:00:29.985680Z",
+      "finished_at_utc": "2026-10-01T11:00:30.679420Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\estate_monitored_product_authority_v1.json\",\n  \"summary\": {\n    \"monitored_site_count\": 4,\n    \"covered_site_count\": 4,\n    \"monitored_product_assignment_count\": 6,\n    \"unique_monitored_products\": [\n      \"confluence\",\n      \"jira-software\"\n    ],\n    \"uncovered_site_count\": 0,\n    \"rejected_mapping_count\": 0\n  }\n}\n",
@@ -175,11 +175,11 @@
       "label": "Collect group-derived product access",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.collect_admin_group_expansion",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:28:49.244674Z",
-      "finished_at_utc": "2026-09-15T11:29:25.679938Z",
+      "started_at_utc": "2026-10-01T11:00:30.683843Z",
+      "finished_at_utc": "2026-10-01T11:01:13.930990Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"source_status\": \"generated\",\n  \"safe\": true,\n  \"groups\": 22,\n  \"member_assignment_count\": 218,\n  \"mapped_site_count\": 4,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_group_expansion.json\"\n}\n",
+      "stdout_tail": "{\n  \"source_status\": \"generated\",\n  \"safe\": true,\n  \"groups\": 22,\n  \"member_assignment_count\": 214,\n  \"mapped_site_count\": 4,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\admin_group_expansion.json\"\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "source_generated": true,
@@ -194,8 +194,8 @@
       "label": "Build Named Access Truth v2",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.named_access_truth_v2",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:29:25.684326Z",
-      "finished_at_utc": "2026-09-15T11:29:25.738483Z",
+      "started_at_utc": "2026-10-01T11:01:13.976747Z",
+      "finished_at_utc": "2026-10-01T11:01:14.098195Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"source_status\": \"generated\",\n  \"safe\": false,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\live_named_access_contract\"\n}\n",
@@ -214,8 +214,8 @@
       "label": "Reconcile Named Access Truth v2",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.reconcile_named_access_truth_v2",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:29:25.742869Z",
-      "finished_at_utc": "2026-09-15T11:29:25.795948Z",
+      "started_at_utc": "2026-10-01T11:01:14.121347Z",
+      "finished_at_utc": "2026-10-01T11:01:14.278229Z",
       "status": "ok",
       "returncode": 0,
       "stdout_tail": "{\n  \"safe\": true,\n  \"status\": \"aligned\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_reconciliation_v2.json\",\n  \"report\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\reports\\\\named_access_recovery_implementation.md\"\n}\n",
@@ -235,11 +235,11 @@
       "label": "Rebuild guarded User Footprint",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.access.user_footprint_source",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:29:25.800576Z",
-      "finished_at_utc": "2026-09-15T11:29:25.860438Z",
+      "started_at_utc": "2026-10-01T11:01:14.283533Z",
+      "finished_at_utc": "2026-10-01T11:01:14.359942Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"source_status\": \"generated\",\n  \"safe\": true,\n  \"users\": 84,\n  \"assignments\": 104,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\user_footprint.json\"\n}\n",
+      "stdout_tail": "{\n  \"source_status\": \"generated\",\n  \"safe\": true,\n  \"users\": 82,\n  \"assignments\": 102,\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\user_footprint.json\"\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "source_generated": true,
@@ -254,11 +254,11 @@
       "label": "Rebuild privacy-minimised Named Site Access authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.named_site_access_authority_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:29:25.865044Z",
-      "finished_at_utc": "2026-09-15T11:29:26.130741Z",
+      "started_at_utc": "2026-10-01T11:01:14.367274Z",
+      "finished_at_utc": "2026-10-01T11:01:14.595880Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\named_site_access_authority_v1.json\",\n  \"status\": \"live\",\n  \"unique_users_with_access\": 84,\n  \"named_access_assignments\": 104,\n  \"site_count\": 4,\n  \"aggregate_site_user_counts\": true,\n  \"identity_drilldown\": false\n}\n",
+      "stdout_tail": "{\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\named_site_access_authority_v1.json\",\n  \"status\": \"live\",\n  \"unique_users_with_access\": 82,\n  \"named_access_assignments\": 102,\n  \"site_count\": 4,\n  \"aggregate_site_user_counts\": true,\n  \"identity_drilldown\": false\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "status_live": true,
@@ -273,11 +273,11 @@
       "label": "Refresh privacy-approved display identity",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.named_user_display_identity_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:29:26.135395Z",
-      "finished_at_utc": "2026-09-15T11:29:27.533067Z",
+      "started_at_utc": "2026-10-01T11:01:14.603143Z",
+      "finished_at_utc": "2026-10-01T11:01:16.228634Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\named_user_display_identity_v1.json\",\n  \"authoritative_accounts\": 148,\n  \"named_access_accounts\": 84,\n  \"matched_accounts\": 84,\n  \"unmatched_accounts\": 0,\n  \"display_name_coverage_complete\": true,\n  \"email_stored\": false,\n  \"authorized_role\": \"Organisation administrator\",\n  \"safe_to_serve\": true\n}\n",
+      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\named_user_display_identity_v1.json\",\n  \"authoritative_accounts\": 146,\n  \"named_access_accounts\": 82,\n  \"matched_accounts\": 82,\n  \"unmatched_accounts\": 0,\n  \"display_name_coverage_complete\": true,\n  \"email_stored\": false,\n  \"authorized_role\": \"Organisation administrator\",\n  \"safe_to_serve\": true\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "status_ok": true,
@@ -293,11 +293,11 @@
       "label": "Refresh read-only Project Inventory authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.project_inventory_authority_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:29:27.537353Z",
-      "finished_at_utc": "2026-09-15T11:29:28.969056Z",
+      "started_at_utc": "2026-10-01T11:01:16.234070Z",
+      "finished_at_utc": "2026-10-01T11:01:17.832137Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"summary\": {\n    \"monitored_site_count\": 4,\n    \"successful_site_count\": 4,\n    \"failed_site_count\": 0,\n    \"visible_project_count\": 74,\n    \"collected_project_rows\": 74,\n    \"duplicate_site_project_key_count\": 0\n  },\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\project_inventory_authority_v1.json\"\n}\n",
+      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"summary\": {\n    \"monitored_site_count\": 4,\n    \"successful_site_count\": 4,\n    \"failed_site_count\": 0,\n    \"visible_project_count\": 75,\n    \"collected_project_rows\": 75,\n    \"duplicate_site_project_key_count\": 0\n  },\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\project_inventory_authority_v1.json\"\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "contract_present": true,
@@ -316,11 +316,11 @@
       "label": "Refresh Project Governance Named Identity authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.project_governance_named_identity_authority_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:29:28.973350Z",
-      "finished_at_utc": "2026-09-15T11:33:37.550575Z",
+      "started_at_utc": "2026-10-01T11:01:17.838163Z",
+      "finished_at_utc": "2026-10-01T11:04:42.523169Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "AL\nPROJECT 21/74 gli-delivery-tm:WLC\nPROJECT 22/74 gli-delivery-tm:WVL\nPROJECT 23/74 gli-global-technology:CIR\nPROJECT 24/74 gli-global-technology:FTS\nPROJECT 25/74 gli-global-technology:IGS\nPROJECT 26/74 gli-global-technology:MT\nPROJECT 27/74 gli-global-technology:POL\nPROJECT 28/74 gli-global-technology:PUR\nPROJECT 29/74 gli-global-technology:RD\nPROJECT 30/74 gli-global-technology:SEC\nPROJECT 31/74 gli-global-technology:TT\nPROJECT 32/74 gli-it-project:ACCESS\nPROJECT 33/74 gli-it-project:ACU\nPROJECT 34/74 gli-it-project:BRS\nPROJECT 35/74 gli-it-project:CDI\nPROJECT 36/74 gli-it-project:CER\nPROJECT 37/74 gli-it-project:CHRON\nPROJECT 38/74 gli-it-project:DC\nPROJECT 39/74 gli-it-project:DEVINF\nPROJECT 40/74 gli-it-project:DEVPMO\nPROJECT 41/74 gli-it-project:DEVQA\nPROJECT 42/74 gli-it-project:DF\nPROJECT 43/74 gli-it-project:DHI\nPROJECT 44/74 gli-it-project:EXTJIRA\nPROJECT 45/74 gli-it-project:FUWTWO\nPROJECT 46/74 gli-it-project:GLAM\nPROJECT 47/74 gli-it-project:GLIDE\nPROJECT 48/74 gli-it-project:GPSFUW\nPROJECT 49/74 gli-it-project:GTS\nPROJECT 50/74 gli-it-project:HACK\nPROJECT 51/74 gli-it-project:HAM\nPROJECT 52/74 gli-it-project:IRIS\nPROJECT 53/74 gli-it-project:IRISNEXT\nPROJECT 54/74 gli-it-project:JA\nPROJECT 55/74 gli-it-project:JSD\nPROJECT 56/74 gli-it-project:JSRL\nPROJECT 57/74 gli-it-project:KONN\nPROJECT 58/74 gli-it-project:LAN\nPROJECT 59/74 gli-it-project:LETGEN\nPROJECT 60/74 gli-it-project:MAINS\nPROJECT 61/74 gli-it-project:MAST\nPROJECT 62/74 gli-it-project:PRO\nPROJECT 63/74 gli-it-project:RUN\nPROJECT 64/74 gli-it-project:SNI\nPROJECT 65/74 gli-it-project:SUBS\nPROJECT 66/74 gli-it-project:TA\nPROJECT 67/74 gli-it-project:TJCMI\nPROJECT 68/74 gli-it-project:TSM\nPROJECT 69/74 gli-it-project:VRFY\nPROJECT 70/74 gli-tracker:ARI\nPROJECT 71/74 gli-tracker:CLX\nPROJECT 72/74 gli-tracker:KAN\nPROJECT 73/74 gli-tracker:PTC\nPROJECT 74/74 gli-tracker:TES\n{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\project_governance_named_identity_authority_v1.json\",\n  \"failure_report\": null,\n  \"summary\": {\n    \"named_principals\": 71,\n    \"assignment_count\": 287,\n    \"existing_named_user_identities\": 44,\n    \"additional_governance_identities\": 27,\n    \"projects\": 74,\n    \"project_requests\": 74,\n    \"project_success\": 74,\n    \"unique_user_requests\": 142,\n    \"role_requests\": 827,\n    \"role_success\": 827\n  },\n  \"request_failures\": 0\n}\n",
+      "stdout_tail": "IL\nPROJECT 22/75 gli-delivery-tm:WLC\nPROJECT 23/75 gli-delivery-tm:WVL\nPROJECT 24/75 gli-global-technology:CIR\nPROJECT 25/75 gli-global-technology:FTS\nPROJECT 26/75 gli-global-technology:IGS\nPROJECT 27/75 gli-global-technology:MT\nPROJECT 28/75 gli-global-technology:POL\nPROJECT 29/75 gli-global-technology:PUR\nPROJECT 30/75 gli-global-technology:RD\nPROJECT 31/75 gli-global-technology:SEC\nPROJECT 32/75 gli-global-technology:TT\nPROJECT 33/75 gli-it-project:ACCESS\nPROJECT 34/75 gli-it-project:ACU\nPROJECT 35/75 gli-it-project:BRS\nPROJECT 36/75 gli-it-project:CDI\nPROJECT 37/75 gli-it-project:CER\nPROJECT 38/75 gli-it-project:CHRON\nPROJECT 39/75 gli-it-project:DC\nPROJECT 40/75 gli-it-project:DEVINF\nPROJECT 41/75 gli-it-project:DEVPMO\nPROJECT 42/75 gli-it-project:DEVQA\nPROJECT 43/75 gli-it-project:DF\nPROJECT 44/75 gli-it-project:DHI\nPROJECT 45/75 gli-it-project:EXTJIRA\nPROJECT 46/75 gli-it-project:FUWTWO\nPROJECT 47/75 gli-it-project:GLAM\nPROJECT 48/75 gli-it-project:GLIDE\nPROJECT 49/75 gli-it-project:GPSFUW\nPROJECT 50/75 gli-it-project:GTS\nPROJECT 51/75 gli-it-project:HACK\nPROJECT 52/75 gli-it-project:HAM\nPROJECT 53/75 gli-it-project:IRIS\nPROJECT 54/75 gli-it-project:IRISNEXT\nPROJECT 55/75 gli-it-project:JA\nPROJECT 56/75 gli-it-project:JSD\nPROJECT 57/75 gli-it-project:JSRL\nPROJECT 58/75 gli-it-project:KONN\nPROJECT 59/75 gli-it-project:LAN\nPROJECT 60/75 gli-it-project:LETGEN\nPROJECT 61/75 gli-it-project:MAINS\nPROJECT 62/75 gli-it-project:MAST\nPROJECT 63/75 gli-it-project:PRO\nPROJECT 64/75 gli-it-project:RUN\nPROJECT 65/75 gli-it-project:SNI\nPROJECT 66/75 gli-it-project:SUBS\nPROJECT 67/75 gli-it-project:TA\nPROJECT 68/75 gli-it-project:TJCMI\nPROJECT 69/75 gli-it-project:TSM\nPROJECT 70/75 gli-it-project:VRFY\nPROJECT 71/75 gli-tracker:ARI\nPROJECT 72/75 gli-tracker:CLX\nPROJECT 73/75 gli-tracker:KAN\nPROJECT 74/75 gli-tracker:PTC\nPROJECT 75/75 gli-tracker:TES\n{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\project_governance_named_identity_authority_v1.json\",\n  \"failure_report\": null,\n  \"summary\": {\n    \"named_principals\": 72,\n    \"assignment_count\": 298,\n    \"existing_named_user_identities\": 45,\n    \"additional_governance_identities\": 27,\n    \"projects\": 75,\n    \"project_requests\": 75,\n    \"project_success\": 75,\n    \"unique_user_requests\": 143,\n    \"role_requests\": 832,\n    \"role_success\": 832\n  },\n  \"request_failures\": 0\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "schema_valid": true,
@@ -337,11 +337,11 @@
       "label": "Derive Project Lead authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.project_lead_authority_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:33:37.556162Z",
-      "finished_at_utc": "2026-09-15T11:33:37.615809Z",
+      "started_at_utc": "2026-10-01T11:04:42.528818Z",
+      "finished_at_utc": "2026-10-01T11:04:42.593035Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"status\": \"partial\",\n  \"output\": \"runtime\\\\data\\\\project_lead_authority_v1.json\",\n  \"summary\": {\n    \"projects\": 74,\n    \"projects_with_supported_active_lead\": 71,\n    \"projects_without_supported_active_lead_published\": 3,\n    \"lead_coverage_percent\": 95.9,\n    \"distinct_supported_active_leads\": 20\n  }\n}\n",
+      "stdout_tail": "{\n  \"status\": \"partial\",\n  \"output\": \"runtime\\\\data\\\\project_lead_authority_v1.json\",\n  \"summary\": {\n    \"projects\": 75,\n    \"projects_with_supported_active_lead\": 72,\n    \"projects_without_supported_active_lead_published\": 3,\n    \"lead_coverage_percent\": 96.0,\n    \"distinct_supported_active_leads\": 20\n  }\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "schema_valid": true,
@@ -357,11 +357,11 @@
       "label": "Derive governance-defined Project Owner authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.project_owner_authority_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:33:37.620734Z",
-      "finished_at_utc": "2026-09-15T11:33:37.695226Z",
+      "started_at_utc": "2026-10-01T11:04:42.597749Z",
+      "finished_at_utc": "2026-10-01T11:04:42.657057Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"status\": \"partial\",\n  \"output\": \"runtime\\\\data\\\\project_owner_authority_v1.json\",\n  \"summary\": {\n    \"projects\": 74,\n    \"projects_with_governance_defined_owner\": 71,\n    \"projects_without_governance_defined_owner_published\": 3,\n    \"owner_coverage_percent\": 95.9,\n    \"distinct_governance_defined_owners\": 20\n  },\n  \"owner_type\": \"governance_defined_space_owner\",\n  \"native_jira_owner_field_present\": false\n}\n",
+      "stdout_tail": "{\n  \"status\": \"partial\",\n  \"output\": \"runtime\\\\data\\\\project_owner_authority_v1.json\",\n  \"summary\": {\n    \"projects\": 75,\n    \"projects_with_governance_defined_owner\": 72,\n    \"projects_without_governance_defined_owner_published\": 3,\n    \"owner_coverage_percent\": 96.0,\n    \"distinct_governance_defined_owners\": 20\n  },\n  \"owner_type\": \"governance_defined_space_owner\",\n  \"native_jira_owner_field_present\": false\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "schema_valid": true,
@@ -380,11 +380,11 @@
       "label": "Refresh verified active Jira users",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.verified_active_jira_users_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:33:37.701047Z",
-      "finished_at_utc": "2026-09-15T11:35:15.907488Z",
+      "started_at_utc": "2026-10-01T11:04:42.661097Z",
+      "finished_at_utc": "2026-10-01T11:06:10.406271Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\verified_active_jira_users_v1.json\",\n  \"scope\": \"jira-software\",\n  \"activity_window_days\": 30,\n  \"authoritative_accounts\": 148,\n  \"successful_requests\": 148,\n  \"failed_requests\": 0,\n  \"verified_active_jira_users\": 112,\n  \"safe_to_publish\": true\n}\n",
+      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\verified_active_jira_users_v1.json\",\n  \"scope\": \"jira-software\",\n  \"activity_window_days\": 30,\n  \"authoritative_accounts\": 146,\n  \"successful_requests\": 146,\n  \"failed_requests\": 0,\n  \"verified_active_jira_users\": 110,\n  \"safe_to_publish\": true\n}\n",
       "stderr_tail": ""
     },
     {
@@ -392,11 +392,11 @@
       "label": "Refresh actionable Users & Access drill-down authority",
       "command": "C:\\Users\\Luke_C\\AppData\\Local\\Programs\\Python\\Python314\\python.exe -m app.builders.users_access_actionable_drilldown_v1",
       "exists": true,
-      "started_at_utc": "2026-09-15T11:35:15.911647Z",
-      "finished_at_utc": "2026-09-15T11:35:26.073418Z",
+      "started_at_utc": "2026-10-01T11:06:10.411172Z",
+      "finished_at_utc": "2026-10-01T11:06:19.050469Z",
       "status": "ok",
       "returncode": 0,
-      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\users_access_actionable_drilldown_v1.json\",\n  \"organisation_accounts\": 1220,\n  \"directory_accounts\": 148,\n  \"counts\": {\n    \"mfa_disabled\": 90,\n    \"mfa_unknown\": 0,\n    \"organisation_administrators\": 4,\n    \"site_administrators\": 4,\n    \"user_access_administrators\": 41,\n    \"high_access_concentration\": 1,\n    \"for_deletion\": 1,\n    \"unmanaged_accounts\": 8,\n    \"suspended_accounts\": 0,\n    \"deactivated_accounts\": 0,\n    \"not_invited\": null\n  },\n  \"not_invited_available\": false,\n  \"email_stored\": false,\n  \"safe_to_serve\": true\n}\n",
+      "stdout_tail": "{\n  \"status\": \"ok\",\n  \"output\": \"C:\\\\Users\\\\Luke_C\\\\Desktop\\\\JiraObservationMonitor\\\\runtime\\\\data\\\\users_access_actionable_drilldown_v1.json\",\n  \"organisation_accounts\": 1220,\n  \"directory_accounts\": 146,\n  \"counts\": {\n    \"mfa_disabled\": 73,\n    \"mfa_unknown\": 0,\n    \"organisation_administrators\": 4,\n    \"site_administrators\": 4,\n    \"user_access_administrators\": 41,\n    \"high_access_concentration\": 1,\n    \"for_deletion\": 0,\n    \"unmanaged_accounts\": 8,\n    \"suspended_accounts\": 0,\n    \"deactivated_accounts\": 0,\n    \"not_invited\": null\n  },\n  \"not_invited_available\": false,\n  \"email_stored\": false,\n  \"safe_to_serve\": true\n}\n",
       "stderr_tail": "",
       "postcondition_gates": {
         "status_ok": true,

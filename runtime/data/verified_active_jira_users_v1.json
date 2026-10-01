@@ -1,6 +1,6 @@
 {
   "schema": "jom-verified-active-jira-users-v1",
-  "generated_at_utc": "2026-09-30T11:04:43Z",
+  "generated_at_utc": "2026-10-01T11:04:42Z",
   "status": "ok",
   "scope": {
     "product_key": "jira-software",
@@ -13,7 +13,7 @@
     "failed_requests": 0
   },
   "summary": {
-    "verified_active_jira_users": 111,
+    "verified_active_jira_users": 110,
     "accounts_with_jira_product_rows": 130,
     "accounts_without_jira_product_rows": 16
   },

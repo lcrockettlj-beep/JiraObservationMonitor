@@ -1,6 +1,6 @@
 {
   "schema": "jom-named-site-access-authority-v1",
-  "generated_at_utc": "2026-09-15T11:29:25.938895Z",
+  "generated_at_utc": "2026-10-01T11:01:14.478808Z",
   "status": "live",
   "authority": "Privacy-minimised named access footprint reconciled with Site Registry and Jira product-access authority",
   "privacy": {
@@ -16,8 +16,8 @@
     "identity_drilldown_reason": "Requires separate privacy and operational approval."
   },
   "summary": {
-    "unique_users_with_access": 84,
-    "named_access_assignments": 104,
+    "unique_users_with_access": 82,
+    "named_access_assignments": 102,
     "site_count": 4,
     "invalid_source_rows": 0
   },
@@ -45,24 +45,24 @@
     },
     {
       "site_key": "gli-global-technology",
-      "named_unique_users": 54,
-      "named_access_assignments": 54,
-      "product_access_assignments": 57,
+      "named_unique_users": 52,
+      "named_access_assignments": 52,
+      "product_access_assignments": 56,
       "registry_match": true,
       "product_authority_match": true,
       "named_count_within_product_count": true,
-      "assignment_gap": 3,
+      "assignment_gap": 4,
       "status": "live"
     },
     {
       "site_key": "gli-it-project",
       "named_unique_users": 47,
       "named_access_assignments": 47,
-      "product_access_assignments": 67,
+      "product_access_assignments": 68,
       "registry_match": true,
       "product_authority_match": true,
       "named_count_within_product_count": true,
-      "assignment_gap": 20,
+      "assignment_gap": 21,
       "status": "live"
     },
     {

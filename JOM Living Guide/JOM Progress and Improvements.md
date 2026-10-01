@@ -907,3 +907,26 @@ Immediate next step: install and validate this nine-owner BOOKSYNC replacement p
 - Immediate gate: validate BOOKSYNC and the exact app/web.py-only product boundary, then stage and commit only the approved source and continuity owners.
 - Continue Apps/Atlassian Administration parity from the clean repair milestone. Preserve audit-first evidence, owner boundaries, runtime authority, privacy controls and Luke-controlled progression.
 
+### 1 October 2026 - Operator navigation milestone and retained canonical runtime generation
+
+#### Accepted operator navigation
+- The primary JOM navigation is now intentionally operator-oriented rather than architecture-oriented. It exposes ten destinations: Command Centre; Applications & Sites; Discovery; Users & Access; Monitoring; Licensing; Configuration; Projects; Source Health; Runtime.
+- Policy & Compliance is removed from primary navigation while its route and page remain available. Reporting, Site Workspace, Site Review, System Configuration, Governance detail, Runtime detail and Source Health detail routes remain preserved for contextual access or later consolidation.
+- The global shell change is owned only by templates/_nav.html. Brand, environment footer, burger control, backdrop, backend routes, page owners, JavaScript, CSS and runtime authority are unchanged by the navigation feature.
+- Visual review accepted the ten-destination shell across Command Centre, Applications & Sites, Users & Access and Source Health. Users & Access remains the reference drawer-led workspace. Source Health is the first planned investigation/drawer consolidation pilot after this milestone closes.
+
+#### Product direction
+- JOM is the simpler, read-only operational intelligence layer over Atlassian. Atlassian remains the administrative action surface. JOM should answer what needs attention, what changed, why it matters, what is affected, what evidence proves it and where to investigate.
+- Parity is required underneath, but the operator experience should use plain language first, technical evidence on demand and contextual side drawers rather than reproducing Atlassian navigation.
+- Primary navigation must represent useful, authority-backed workspaces. Unavailable future capabilities do not automatically receive permanent navigation prominence.
+
+#### Canonical runtime boundary
+- During visual navigation review, canonical refresh execution jom-refresh-9085c43c61d14c23bc5ce55c4d7ad131 completed successfully and produced genuine changes in estate, access, project and Source Health authority. The coherent generation is deliberately retained rather than restored to older values for Git convenience.
+- Current Source Freshness and Source Reliability evidence remains retained, including the current attention state. Execution/provenance contracts remain with the coherent generation.
+- Only named_user_drilldown_access_audit_v1.jsonl and users_access_actionable_drilldown_access_audit_v1.jsonl were restored as transient operator audit activity.
+- Runtime values remain time-sensitive evidence and must not become fixed validator constants.
+
+#### Next workstream
+- Close this milestone with exact-boundary validation, staging, commit and push. Then begin Source Health as UX consolidation pilot number one. Audit authority and current page ownership before replacing internal navigation with investigation drawers or lenses.
+- Preserve Luke-controlled page-by-page progression, existing routes during migration, authority ownership, privacy boundaries and unavailable states.
+
